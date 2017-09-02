@@ -105,6 +105,7 @@ import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
 import com.sabkuchfresh.fragments.MenusSearchFragment;
+import com.sabkuchfresh.fragments.MerchantInfoFragment;
 import com.sabkuchfresh.fragments.NewFeedbackFragment;
 import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
@@ -1135,6 +1136,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return (VendorMenuFragment) getSupportFragmentManager().findFragmentByTag(VendorMenuFragment.class.getName());
     }
 
+    public MerchantInfoFragment getMerchantInfoFragment(){
+        return (MerchantInfoFragment) getSupportFragmentManager().findFragmentByTag(MerchantInfoFragment.class.getName());
+    }
+
     private FreshCheckoutMergedFragment getFreshCheckoutMergedFragment() {
         return (FreshCheckoutMergedFragment) getSupportFragmentManager().findFragmentByTag(FreshCheckoutMergedFragment.class.getName());
     }
@@ -1442,7 +1447,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 visMinOrder = setMinOrderAmountText(fragment);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END);
 
-            } else if (fragment instanceof VendorMenuFragment || fragment instanceof RestaurantImageFragment) {
+            } else if (fragment instanceof VendorMenuFragment
+                    || fragment instanceof RestaurantImageFragment
+                    || fragment instanceof MerchantInfoFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
 
@@ -1695,7 +1702,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             feedHomeAddPostView.setVisibility(View.GONE);
             topBar.title.setLayoutParams(titleLayoutParams);
-            setCollapsingToolbar(fragment instanceof VendorMenuFragment, fragment);
+            setCollapsingToolbar(fragment instanceof MerchantInfoFragment, fragment);
 
 
         } catch (Exception e) {
@@ -2498,16 +2505,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void setPaymentOption(PaymentOption paymentOption) {
         this.paymentOption = paymentOption;
-    }
-
-    private boolean swipeFlag;
-
-    public boolean isSwipeAvailable() {
-        return swipeFlag;
-    }
-
-    public void setSwipeAvailable(boolean swipeFlag) {
-        this.swipeFlag = swipeFlag;
     }
 
 
@@ -4391,7 +4388,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public boolean canExitVendorMenu() {
-        if (getTopFragment() != null && getTopFragment() instanceof VendorMenuFragment && mCurrentState == State.IDLE && currentVerticalOffSet != -1)
+        if (getTopFragment() != null && getTopFragment() instanceof MerchantInfoFragment && mCurrentState == State.IDLE && currentVerticalOffSet != -1)
             return false;
         else
             return true;
@@ -4891,6 +4888,23 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         llCollapRatingStars.removeAllViews();
         llCollapRatingStars.addView(tvCollapRestaurantRating);
         tvCollapRestaurantRating.setText(String.valueOf(rating));
+        addStarsToLayout(llCollapRatingStars, rating, halfStarRes, blankStarRes);
+        if(tvCollapRestaurantRatingCount != null){
+            llCollapRatingStars.addView(tvCollapRestaurantRatingCount);
+            tvCollapRestaurantRatingCount.setText(ratingCount > 0 ? "("+ratingCount+")" : "");
+        }
+    }
+
+    public void clearRestaurantRatingStars(LinearLayout llCollapRatingStars, TextView tvCollapRestaurantRating,
+                                           TextView tvCollapRestaurantRatingCount){
+        llCollapRatingStars.removeAllViews();
+        tvCollapRestaurantRating.setText("");
+        if(tvCollapRestaurantRatingCount != null){
+            tvCollapRestaurantRatingCount.setText("");
+        }
+    }
+
+    public void addStarsToLayout(LinearLayout llCollapRatingStars, Double rating, int halfStarRes, int blankStarRes){
         double ratingInt = rating.intValue();
         for(int i=0; i<5; i++){
             ImageView star = new ImageView(this);
@@ -4918,21 +4932,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
             llCollapRatingStars.addView(star, params);
         }
-        if(tvCollapRestaurantRatingCount != null){
-            llCollapRatingStars.addView(tvCollapRestaurantRatingCount);
-            tvCollapRestaurantRatingCount.setText(ratingCount > 0 ? "("+ratingCount+")" : "");
-        }
     }
-
-    public void clearRestaurantRatingStars(LinearLayout llCollapRatingStars, TextView tvCollapRestaurantRating,
-                                           TextView tvCollapRestaurantRatingCount){
-        llCollapRatingStars.removeAllViews();
-        tvCollapRestaurantRating.setText("");
-        if(tvCollapRestaurantRatingCount != null){
-            tvCollapRestaurantRatingCount.setText("");
-        }
-    }
-
 
     @Bind(R.id.llRightDrawer)
     public LinearLayout llRightDrawer;

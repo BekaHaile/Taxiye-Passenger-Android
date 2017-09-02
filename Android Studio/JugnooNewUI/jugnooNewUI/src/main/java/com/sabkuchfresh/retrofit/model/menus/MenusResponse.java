@@ -285,6 +285,9 @@ public class MenusResponse implements Serializable {
 		@SerializedName("display_address")
 		@Expose
 		private String restaurantAdd;
+		@SerializedName("address")
+		@Expose
+		private String address;
 
 //		@SerializedName("buffer_time")
 		@SerializedName("close_in_buffer")
@@ -327,6 +330,16 @@ public class MenusResponse implements Serializable {
 		@SerializedName("next_slot")
 		@Expose
 		private String next_slot_time;
+
+		@SerializedName("mail_address")
+		@Expose
+		private String mailAddress;
+		@SerializedName("phone_no")
+		@Expose
+		private String phoneNo;
+		@SerializedName("contact")
+		@Expose
+		private String contact;
 
 		public String  getNext_slot_time() {
 			return next_slot_time;
@@ -687,6 +700,38 @@ public class MenusResponse implements Serializable {
 
 		public void setItemInactiveAlertText(String itemInactiveAlertText) {
 			this.itemInactiveAlertText = itemInactiveAlertText;
+		}
+
+		public String getAddress() {
+			return address;
+		}
+
+		public void setAddress(String address) {
+			this.address = address;
+		}
+
+		public String getMailAddress() {
+			return mailAddress;
+		}
+
+		public void setMailAddress(String mailAddress) {
+			this.mailAddress = mailAddress;
+		}
+
+		public String getPhoneNo() {
+			return phoneNo;
+		}
+
+		public void setPhoneNo(String phoneNo) {
+			this.phoneNo = phoneNo;
+		}
+
+		public String getContact() {
+			return contact;
+		}
+
+		public void setContact(String contact) {
+			this.contact = contact;
 		}
 	}
 

@@ -108,10 +108,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         rlSelectedStore.setVisibility(View.GONE);
 
         mBus = (activity).getBus();
-        activity.setSwipeAvailable(false);
 
         activity.fragmentUISetup(this);
-        activity.appBarLayout.setExpanded(true);
         llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
         try {
             if (llRoot != null) {
@@ -266,7 +264,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         try {
-            activity.setSwipeAvailable(true);
             if (!hidden) {
 				activity.fragmentUISetup(this);
 				menusCategoryFragmentsAdapter.notifyDataSetChanged();

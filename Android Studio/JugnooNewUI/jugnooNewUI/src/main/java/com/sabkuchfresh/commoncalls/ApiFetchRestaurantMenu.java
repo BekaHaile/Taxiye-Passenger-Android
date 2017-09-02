@@ -204,7 +204,7 @@ public class ApiFetchRestaurantMenu {
         if (goToCheckout) {
             activity.openCart(AppConstant.ApplicationType.MENUS);
         } else {
-            activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+            activity.getTransactionUtils().openMerchantInfoFragment(activity, activity.getRelativeLayoutContainer());
         }
     }
 

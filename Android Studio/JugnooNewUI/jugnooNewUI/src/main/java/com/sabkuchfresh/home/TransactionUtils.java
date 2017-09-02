@@ -23,6 +23,7 @@ import com.sabkuchfresh.fragments.MealsBulkOrderFragment;
 import com.sabkuchfresh.fragments.MenusFilterCuisinesFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
 import com.sabkuchfresh.fragments.MenusSearchFragment;
+import com.sabkuchfresh.fragments.MerchantInfoFragment;
 import com.sabkuchfresh.fragments.NewFeedbackFragment;
 import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
@@ -94,6 +95,19 @@ public class TransactionUtils {
                     .add(container.getId(), new VendorMenuFragment(),
                             VendorMenuFragment.class.getName())
                     .addToBackStack(VendorMenuFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void openMerchantInfoFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, MerchantInfoFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                    .add(container.getId(), new MerchantInfoFragment(),
+                            MerchantInfoFragment.class.getName())
+                    .addToBackStack(MerchantInfoFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();

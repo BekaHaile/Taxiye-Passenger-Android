@@ -1379,6 +1379,7 @@
     <string name="order_online">Order Online</string>
     <string name="additional_info">Additional Information</string>
     <string name="see_all">See All</string>
+    <string name="open_now_colon">Open Now :</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>
