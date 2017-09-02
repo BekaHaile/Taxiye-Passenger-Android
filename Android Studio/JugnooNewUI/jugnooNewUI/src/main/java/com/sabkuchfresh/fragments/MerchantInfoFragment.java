@@ -3,6 +3,8 @@ package com.sabkuchfresh.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,10 +14,18 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.adapters.RestaurantReviewsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.commoncalls.ApiRestaurantFetchFeedback;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,6 +34,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 
 
 public class MerchantInfoFragment extends Fragment implements GAAction {
@@ -56,9 +67,16 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 	RecyclerView rvTopReviews;
 	@Bind(R.id.llSeeAll)
 	LinearLayout llSeeAll;
+	@Bind(R.id.progressWheel)
+	ProgressWheel progressWheel;
+	@Bind(R.id.tvReviewsHeader)
+	TextView tvReviewsHeader;
+	@Bind(R.id.scrollView)
+	NestedScrollView scrollView;
 
 	private View rootView;
 	private FreshActivity activity;
+	private RestaurantReviewsAdapter reviewsAdapter;
 
 	public MerchantInfoFragment() {
 	}
@@ -73,9 +91,69 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 		activity.fragmentUISetup(this);
 		activity.appBarLayout.setExpanded(true);
 
+		rvTopReviews.setLayoutManager(new LinearLayoutManager(activity));
+		reviewsAdapter = new RestaurantReviewsAdapter(activity, new RestaurantReviewsAdapter.Callback() {
+			@Override
+			public void onEdit(FetchFeedbackResponse.Review review) {
+				activity.setCurrentReview(review);
+				activity.openRestaurantAddReviewFragment(false);
+			}
+
+			@Override
+			public void onShare(FetchFeedbackResponse.Review review) {
+
+			}
+
+			@Override
+			public void onLike(FetchFeedbackResponse.Review review) {
+				GAUtils.event(GACategory.MENUS, GAAction.FEED , GAAction.FEED + GAAction.LIKED);
+			}
+
+			@Override
+			public void onScrollStateChanged(int newState) {
+			}
+
+			@Override
+			public int getRestaurantId() {
+				return activity.getVendorOpened().getRestaurantId();
+			}
+
+			@Override
+			public MenusResponse.Vendor getVendor() {
+				return activity.getVendorOpened();
+			}
+
+			@Override
+			public String getShareTextSelf() {
+				return "";
+			}
+
+			@Override
+			public String getShareTextOther() {
+				return "";
+			}
+
+			@Override
+			public int getShareIsEnabled() {
+				return 0;
+			}
+
+			@Override
+			public int getLikeIsEnabled() {
+				return 0;
+			}
+
+			@Override
+			public RecyclerView getRecyclerView() {
+				return rvTopReviews;
+			}
+		}, restaurantReviews, true);
+		rvTopReviews.setAdapter(reviewsAdapter);
 
 		activity.tvCollapRestaurantDeliveryTime.setText("");
 		activity.clearRestaurantRatingStars(activity.llCollapRatingStars, activity.tvCollapRestaurantRating, null);
+		progressWheel.stopSpinning();
+		progressWheel.setVisibility(View.GONE);
 
 		success();
 
@@ -88,6 +166,10 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 		try {
 			if (!hidden) {
 				activity.fragmentUISetup(this);
+				activity.tvCollapRestaurantDeliveryTime.setVisibility(View.GONE);
+				if(getView() != null) {
+					scrollView.scrollTo(0, 0);
+				}
 			}
 		} catch (Exception e) {
 		}
@@ -115,11 +197,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
 				//merchant info set to views
 				tvMerchantName.setText(activity.getVendorOpened().getName());
-				llRatingStars.removeAllViews();
-				activity.addStarsToLayout(llRatingStars, activity.getVendorOpened().getRating(),
-						R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey);
-				llRatingStars.addView(tvReviewCount);
-				tvReviewCount.setText(activity.getVendorOpened().getReviewCount()+" Ratings");
+				setRatingViews();
 				tvMerchantDisplayAddress.setText(activity.getVendorOpened().getAddress());
 				activity.setTextViewDrawableColor(tvMerchantDisplayAddress, ContextCompat.getColor(activity, R.color.text_color));
 				tvOpensAt.setText("");
@@ -136,34 +214,31 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				tvMerchantMail.setText(activity.getVendorOpened().getMailAddress());
 				tvMerchantContact.setText(activity.getVendorOpened().getContact());
 				tvMerchantAddress.setText(activity.getVendorOpened().getAddress());
+				rvTopReviews.setVisibility(View.GONE);
+				llSeeAll.setVisibility(View.GONE);
+				fetchFeedback();
 			}
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
 	}
 
+	private void setRatingViews() {
+		llRatingStars.removeAllViews();
+		activity.addStarsToLayout(llRatingStars, activity.getVendorOpened().getRating(),
+				R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey);
+		llRatingStars.addView(tvReviewCount);
+		tvReviewCount.setText(activity.getVendorOpened().getReviewCount()+" Ratings");
+	}
+
 	private void setUpCollapseToolbarData() {
 		if (activity.getVendorOpened() != null) {
-			activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName().toUpperCase());
-
 			if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
 				Picasso.with(activity).load(activity.getVendorOpened().getImage())
 						.placeholder(R.drawable.ic_fresh_item_placeholder)
 						.into(activity.ivCollapseRestImage);
 			} else {
 				activity.ivCollapseRestImage.setImageDrawable(null);
-			}
-
-			int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime, R.color.white);
-			activity.tvCollapRestaurantDeliveryTime.setVisibility(visibility == View.VISIBLE ? View.VISIBLE : View.GONE);
-
-			if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
-				activity.llCollapRatingStars.setVisibility(View.VISIBLE);
-				activity.setRestaurantRatingStarsToLL(activity.llCollapRatingStars, activity.tvCollapRestaurantRating,
-						activity.getVendorOpened().getRating(),
-						R.drawable.ic_half_star_green_white, R.drawable.ic_star_white, null, 0);
-			} else {
-				activity.llCollapRatingStars.setVisibility(View.INVISIBLE);
 			}
 		}
 	}
@@ -192,5 +267,57 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				activity.openRestaurantReviewsListFragment();
 				break;
 		}
+	}
+
+
+	private ArrayList<FetchFeedbackResponse.Review> restaurantReviews = new ArrayList<>();
+	private ApiRestaurantFetchFeedback apiRestaurantFetchFeedback;
+	public void fetchFeedback(){
+		if(apiRestaurantFetchFeedback == null){
+			apiRestaurantFetchFeedback = new ApiRestaurantFetchFeedback(activity, new ApiRestaurantFetchFeedback.Callback() {
+				@Override
+				public void onSuccess(FetchFeedbackResponse fetchFeedbackResponse, boolean scrollToTop) {
+					if(getView() != null) {
+						restaurantReviews.clear();
+						restaurantReviews.addAll(fetchFeedbackResponse.getReviews());
+						reviewsAdapter.notifyDataSetChanged();
+						if(restaurantReviews.size() == 0){
+							tvReviewsHeader.setText(R.string.no_reviews_yet_be_first);
+							rvTopReviews.setVisibility(View.GONE);
+							llSeeAll.setVisibility(View.GONE);
+						} else {
+							tvReviewsHeader.setText(R.string.reviews);
+							rvTopReviews.setVisibility(View.VISIBLE);
+							llSeeAll.setVisibility(View.VISIBLE);
+						}
+						if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
+							activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());
+						}
+						if(fetchFeedbackResponse.getRestaurantInfo() != null){
+							if( activity.getVendorOpened() != null) {
+								activity.getVendorOpened().setRating(fetchFeedbackResponse.getRestaurantInfo().getRating());
+								activity.getVendorOpened().setReviewCount(fetchFeedbackResponse.getRestaurantInfo().getReviewCount());
+								setRatingViews();
+							}
+						}
+					}
+				}
+
+				@Override
+				public void onFailure() {
+				}
+
+				@Override
+				public void onRetry(View view) {
+					fetchFeedback();
+				}
+
+				@Override
+				public void onNoRetry(View view) {
+
+				}
+			});
+		}
+		apiRestaurantFetchFeedback.hit(activity.getVendorOpened().getRestaurantId(), false, progressWheel, 1);
 	}
 }

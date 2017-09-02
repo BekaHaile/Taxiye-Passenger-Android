@@ -1380,6 +1380,7 @@
     <string name="additional_info">Additional Information</string>
     <string name="see_all">See All</string>
     <string name="open_now_colon">Open Now :</string>
+    <string name="no_reviews_yet_be_first">No reviews yet!\nBe the first one to add...</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

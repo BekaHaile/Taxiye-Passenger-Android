@@ -88,7 +88,7 @@
             android:layout_marginTop="@dimen/dp_40"
             android:gravity="center"
             android:lineSpacingExtra="5dp"
-            android:text="No reviews yet!\nBe the first one to add..."
+            android:text="@string/no_reviews_yet_be_first"
             android:textColor="@color/text_color"
             android:textSize="@dimen/sp_18"
             app:font="maven"

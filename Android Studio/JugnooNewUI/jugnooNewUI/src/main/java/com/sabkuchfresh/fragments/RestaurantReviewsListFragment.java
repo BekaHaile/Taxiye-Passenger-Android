@@ -145,7 +145,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
             public RecyclerView getRecyclerView() {
                 return recyclerViewReviews;
             }
-        }, restaurantReviews);
+        }, restaurantReviews, false);
         recyclerViewReviews.setAdapter(reviewsAdapter);
         recyclerViewReviews.setEnabled(true);
 
@@ -233,7 +233,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
                 }
             });
         }
-        apiRestaurantFetchFeedback.hit(vendor.getRestaurantId(), scrollToTop);
+        apiRestaurantFetchFeedback.hit(vendor.getRestaurantId(), scrollToTop, null, -1);
     }
 
 

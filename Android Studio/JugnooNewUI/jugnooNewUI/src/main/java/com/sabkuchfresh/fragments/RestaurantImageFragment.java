@@ -52,13 +52,12 @@ public class RestaurantImageFragment extends Fragment {
     @Bind(R.id.iv_rest_original_image)
     ImageView ivRestOriginalImage;
 
-    @Bind(R.id.shadow_view)
-    View shadowView;
-
     @Bind(R.id.llCollapseRating)
     LinearLayout llCollapseRating;
     @Bind(R.id.tvFeedHyperLink)
     public TextView tvFeedHyperLink;
+    @Bind(R.id.shadow_view)
+    View shadowView;
 
     private FreshActivity activity;
     private BlurImageTask loadBlurredImageTask;
@@ -109,6 +108,11 @@ public class RestaurantImageFragment extends Fragment {
                 return gesture.onTouchEvent(event);
             }
         });
+
+        tvCollapRestaurantDeliveryTime.setVisibility(View.VISIBLE);
+        tvRestTitle.setVisibility(View.VISIBLE);
+        llCollapseRating.setVisibility(View.VISIBLE);
+
 
         return view;
     }

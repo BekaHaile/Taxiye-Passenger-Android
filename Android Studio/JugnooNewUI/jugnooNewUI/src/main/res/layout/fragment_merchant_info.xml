@@ -5,10 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
+        android:id="@+id/scrollView"
         >
 
         <LinearLayout
@@ -248,6 +250,7 @@
                 android:id="@+id/tvMerchantMail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_14"
                 android:layout_marginLeft="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_20"
                 android:autoLink="web"
@@ -265,9 +268,9 @@
                 android:id="@+id/tvMerchantContact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_14"
                 android:layout_marginLeft="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_20"
-                android:layout_marginTop="@dimen/dp_16"
                 android:autoLink="web"
                 android:drawableLeft="@drawable/ic_call_merchant"
                 android:drawablePadding="@dimen/dp_8"
@@ -282,10 +285,9 @@
                 android:id="@+id/tvMerchantAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_20"
+                android:layout_marginBottom="@dimen/dp_14"
                 android:layout_marginLeft="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_20"
-                android:layout_marginTop="@dimen/dp_11"
                 android:autoLink="web"
                 android:drawableLeft="@drawable/ic_location_merchant"
                 android:drawablePadding="@dimen/dp_8"
@@ -303,18 +305,39 @@
                 android:background="@drawable/shadow_gradient_seperator"
                 />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_10"
-                android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginTop="@dimen/dp_10"
-                android:text="@string/reviews"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/sp_14"
-                app:font="@string/maven"
-                />
+                <TextView
+                    android:id="@+id/tvReviewsHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:text="@string/reviews"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/sp_14"
+                    app:font="@string/maven"
+                    />
+
+
+                <product.clicklabs.jugnoo.utils.ProgressWheel
+                    android:id="@+id/progressWheel"
+                    xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="@dimen/dp_30"
+                    android:layout_height="@dimen/dp_30"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/dp_15"
+                    wheel:matProg_barColor="@color/theme_color"
+                    wheel:matProg_barWidth="3dp"
+                    wheel:matProg_fillRadius="true"
+                    wheel:matProg_progressIndeterminate="true">
+
+                </product.clicklabs.jugnoo.utils.ProgressWheel>
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -329,7 +352,6 @@
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
                 />
-
 
             <LinearLayout
                 android:id="@+id/llSeeAll"

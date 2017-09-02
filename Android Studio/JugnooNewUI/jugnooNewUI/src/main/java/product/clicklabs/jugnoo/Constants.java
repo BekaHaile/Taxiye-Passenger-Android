@@ -778,4 +778,5 @@ public interface Constants {
     String KEY_RIDES = "rides";
     String KEY_FATAFAT = "fatafat";
     String KEY_ASKLOCAL = "asklocal";
+    String KEY_LIMIT = "limit";
 }

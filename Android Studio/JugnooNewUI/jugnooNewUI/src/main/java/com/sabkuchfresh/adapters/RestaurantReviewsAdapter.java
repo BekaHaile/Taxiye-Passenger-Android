@@ -48,11 +48,13 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 	private FreshActivity activity;
 	private ArrayList<FetchFeedbackResponse.Review> restaurantReviews;
 	private Callback callback;
+	private boolean viewOnly;
 
-	public RestaurantReviewsAdapter(FreshActivity activity, Callback callback, ArrayList<FetchFeedbackResponse.Review> restaurantReviews) {
+	public RestaurantReviewsAdapter(FreshActivity activity, Callback callback, ArrayList<FetchFeedbackResponse.Review> restaurantReviews, boolean viewOnly) {
 		this.activity = activity;
 		this.callback = callback;
 		this.restaurantReviews = restaurantReviews;
+		this.viewOnly = viewOnly;
 	}
 
 	@Override
@@ -81,7 +83,6 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 
 
 			holder.tvName.setText(review.getUserName());
-//			holder.tvDateTime.setText(review.getDate());
 			try {
 				holder.tvDateTime.setText(FeedHomeAdapter.getTimeToDisplay(review.getPostTime(), activity.isTimeAutomatic));
 			} catch (Exception e) {
@@ -203,68 +204,80 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				}
 			});
 
-			if(!TextUtils.isEmpty(review.getReply())){
-				holder.rlRestaurantReply.setVisibility(View.VISIBLE);
-				holder.tvRestName.setText(callback.getVendor().getName());
-				holder.tvRestReply.setText(review.getReply());
-				holder.tvReplyDateTime.setText(FeedHomeAdapter.getTimeToDisplay(review.getReplyTime(), activity.isTimeAutomatic));
-				Picasso.with(activity).load(callback.getVendor().getImage())
-						.resize(activity.getResources().getDimensionPixelSize(R.dimen.dp_50),
-								activity.getResources().getDimensionPixelSize(R.dimen.dp_50))
-						.centerCrop()
-						.transform(new CircleTransform())
-						.into(holder.ivRestImage);
-			} else {
-				holder.rlRestaurantReply.setVisibility(View.GONE);
-			}
+			if(!viewOnly) {
+				if (!TextUtils.isEmpty(review.getReply())) {
+					holder.rlRestaurantReply.setVisibility(View.VISIBLE);
+					holder.tvRestName.setText(callback.getVendor().getName());
+					holder.tvRestReply.setText(review.getReply());
+					holder.tvReplyDateTime.setText(FeedHomeAdapter.getTimeToDisplay(review.getReplyTime(), activity.isTimeAutomatic));
+					Picasso.with(activity).load(callback.getVendor().getImage())
+							.resize(activity.getResources().getDimensionPixelSize(R.dimen.dp_50),
+									activity.getResources().getDimensionPixelSize(R.dimen.dp_50))
+							.centerCrop()
+							.transform(new CircleTransform())
+							.into(holder.ivRestImage);
+				} else {
+					holder.rlRestaurantReply.setVisibility(View.GONE);
+				}
+				holder.tvLikeShareCount.setVisibility(View.VISIBLE);
 
 
-			StringBuilder likeCount = new StringBuilder();
-			StringBuilder shareCount = new StringBuilder();
-			if (review.getLikeCount() > 1) {
-				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.likes));
-			} else {
-				likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.like));
-			}
-			if (review.getShareCount() > 1) {
-				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.shares));
-			} else {
-				shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.share));
-			}
-			holder.ivFeedLike.setVisibility(callback.getLikeIsEnabled() == 1 ? View.VISIBLE : View.GONE);
-			holder.ivFeedShare.setVisibility(callback.getShareIsEnabled() == 1 ? View.VISIBLE : View.GONE);
-			if(callback.getLikeIsEnabled() != 1){
-				likeCount.delete(0, likeCount.length());
-			}
-			if(callback.getShareIsEnabled() != 1){
-				shareCount.delete(0, shareCount.length());
-			}
-			String seperator = (likeCount.length() > 0 && shareCount.length() > 0) ? " | " : "";
-			holder.tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
+				StringBuilder likeCount = new StringBuilder();
+				StringBuilder shareCount = new StringBuilder();
+				if (review.getLikeCount() > 1) {
+					likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.likes));
+				} else {
+					likeCount.append(review.getLikeCount()).append(" ").append(activity.getString(R.string.like));
+				}
+				if (review.getShareCount() > 1) {
+					shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.shares));
+				} else {
+					shareCount.append(review.getShareCount()).append(" ").append(activity.getString(R.string.share));
+				}
+				holder.ivFeedLike.setVisibility(callback.getLikeIsEnabled() == 1 ? View.VISIBLE : View.GONE);
+				holder.ivFeedShare.setVisibility(callback.getShareIsEnabled() == 1 ? View.VISIBLE : View.GONE);
+				if (callback.getLikeIsEnabled() != 1) {
+					likeCount.delete(0, likeCount.length());
+				}
+				if (callback.getShareIsEnabled() != 1) {
+					shareCount.delete(0, shareCount.length());
+				}
+				String seperator = (likeCount.length() > 0 && shareCount.length() > 0) ? " | " : "";
+				holder.tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
 //			holder.tvLikeShareCount.setVisibility((likeCount.length() == 0 && shareCount.length() == 0) ? View.INVISIBLE : View.VISIBLE);
 
-			holder.ivFeedLike.setLiked(review.getIsLiked() >= 1);
+				holder.ivFeedLike.setLiked(review.getIsLiked() >= 1);
 //			if(review.getIsLiked() >= 1){
 //				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_active);
 //			} else {
 //				holder.ivFeedLike.setImageResource(R.drawable.ic_feed_like_normal);
 //			}
-			if(review.getIsShared() >= 1){
-				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_active);
+				if (review.getIsShared() >= 1) {
+					holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_active);
+				} else {
+					holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_normal);
+				}
+
+				holder.ivFeedEdit.setVisibility(review.getIsEditable() == 1 ? View.VISIBLE : View.GONE);
+				holder.ivFeedEdit.setImageDrawable(Utils.getSelector(activity, R.drawable.ic_feed_edit, R.drawable.ic_feed_edit_pressed));
+
+				RelativeLayout.LayoutParams paramsVShadowDown = (RelativeLayout.LayoutParams) holder.vShadowDown.getLayoutParams();
+				if (review.getIsEditable() == 1) {
+					paramsVShadowDown.addRule(RelativeLayout.BELOW, holder.ivFeedEdit.getId());
+				} else {
+					paramsVShadowDown.addRule(RelativeLayout.BELOW, holder.tvLikeShareCount.getId());
+				}
+				holder.vShadowDown.setLayoutParams(paramsVShadowDown);
+				holder.vShadowDown.setVisibility(View.VISIBLE);
 			} else {
-				holder.ivFeedShare.setImageResource(R.drawable.ic_feed_share_normal);
+				holder.rlRestaurantReply.setVisibility(View.GONE);
+				holder.tvLikeShareCount.setVisibility(View.GONE);
+				holder.ivFeedLike.setVisibility(View.GONE);
+				holder.ivFeedShare.setVisibility(View.GONE);
+				holder.ivFeedEdit.setVisibility(View.GONE);
+				holder.vShadowDown.setVisibility(View.GONE);
 			}
 
-			holder.ivFeedEdit.setVisibility(review.getIsEditable() == 1 ? View.VISIBLE : View.GONE);
-			holder.ivFeedEdit.setImageDrawable(Utils.getSelector(activity, R.drawable.ic_feed_edit, R.drawable.ic_feed_edit_pressed));
-
-			RelativeLayout.LayoutParams paramsVShadowDown = (RelativeLayout.LayoutParams) holder.vShadowDown.getLayoutParams();
-			if(review.getIsEditable() == 1){
-				paramsVShadowDown.addRule(RelativeLayout.BELOW, holder.ivFeedEdit.getId());
-			} else {
-				paramsVShadowDown.addRule(RelativeLayout.BELOW, holder.tvLikeShareCount.getId());
-			}
-			holder.vShadowDown.setLayoutParams(paramsVShadowDown);
 
 			holder.ivFeedEdit.setTag(position);
 			holder.ivFeedLike.setTag(position);
