@@ -91,6 +91,7 @@ import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
 import com.sabkuchfresh.feed.ui.views.TypeWriterTextView.Typewriter;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
+import com.sabkuchfresh.fragments.DeliveryHomeFragment;
 import com.sabkuchfresh.fragments.DeliveryStoresFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
@@ -1427,7 +1428,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
 
-            } else if (fragment instanceof MenusFragment) {
+            } else if (fragment instanceof MenusFragment || fragment instanceof DeliveryHomeFragment) {
                 ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
@@ -2140,9 +2141,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private void addMenusFragment() {
         getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new MenusFragment(),
-                        MenusFragment.class.getName())
-                .addToBackStack(MenusFragment.class.getName())
+                .add(relativeLayoutContainer.getId(), new DeliveryHomeFragment(),
+                        DeliveryHomeFragment.class.getName())
+                .addToBackStack(DeliveryHomeFragment.class.getName())
                 .commitAllowingStateLoss();
     }
 

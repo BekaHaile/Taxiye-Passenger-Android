@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <ImageView
+        android:layout_marginTop="@dimen/height_category_bar"
+        android:layout_width="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/ride_end_image_1"
+        android:layout_height="wrap_content" />
+    <include layout="@layout/layout_delivery_category_dropdown"/>
+
+</RelativeLayout>
