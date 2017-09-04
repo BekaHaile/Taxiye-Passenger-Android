@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.pros.models.ProsCatalogueData;
+import com.sabkuchfresh.retrofit.model.RecentOrder;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -38,6 +40,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int VIEW_VENDOR = 4;
     private static final int VIEW_DIVIDER = 5;
     private RecyclerView recyclerView;
+
 
 
     public DeliveryHomeAdapter(Context context, Callback callback, RecyclerView recyclerView) {
@@ -67,8 +70,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_see_all, parent, false);
                 return new ViewSeeAll(v, this);
             case VIEW_VENDOR:
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_see_all, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_restaurant, parent, false);
                 return new ViewSeeAll(v, this);
+            case VIEW_DIVIDER:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_divider_delivery, parent, false);
+                return new ViewDivider(v);
             default:
                 throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
 
@@ -89,7 +95,26 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        return VIEW_ORDER_ITEM;
+        Object object  = dataToDisplay.get(position);
+
+        if(object instanceof DeliveryTitleCategory)
+            return VIEW_TITLE_CATEGORY;
+
+        if(object instanceof DeliverySeeAll)
+            return VIEW_SEE_ALL;
+
+        if(object instanceof DeliveryDivider)
+            return VIEW_DIVIDER;
+
+        if(object instanceof RecentOrder)
+            return VIEW_ORDER_ITEM;
+
+        if(object instanceof MenusResponse.Vendor)
+            return VIEW_VENDOR;
+
+
+
+        throw new IllegalArgumentException();
     }
 
 
@@ -189,8 +214,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             vOrderDeliveredTopSep = itemView.findViewById(R.id.vOrderDeliveredTopSep);
         }
     }
-
-
     static class ViewTitleCategory extends RecyclerView.ViewHolder {
         @Bind(R.id.icon_title)
         ImageView iconTitle;
@@ -202,7 +225,12 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ButterKnife.bind(this, view);
         }
     }
+    private static class ViewDivider extends RecyclerView.ViewHolder {
 
+        ViewDivider(View view) {
+            super(view);
+        }
+    }
     static class ViewSeeAll extends RecyclerView.ViewHolder {
         @Bind(R.id.ll_see_all)
         LinearLayout llSeeAll;
@@ -218,4 +246,36 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
         }
     }
+
+    public static class DeliveryTitleCategory{
+        private String categoryName;
+        private String categoryUrl;
+
+        public DeliveryTitleCategory(String categoryName, String categoryUrl) {
+            this.categoryName = categoryName;
+            this.categoryUrl = categoryUrl;
+        }
+    }
+    public static class DeliverySeeAll{
+        private static DeliverySeeAll deliverySeeAll;
+        private DeliverySeeAll() {
+        }
+        public DeliverySeeAll getInstance(){
+            if(deliverySeeAll==null)
+                deliverySeeAll= new DeliverySeeAll();
+            return deliverySeeAll;
+        }
+    }
+    public static class DeliveryDivider{
+        private static DeliveryDivider deliveryDivider;
+        private DeliveryDivider() {
+        }
+        public DeliveryDivider getInstance(){
+            if(deliveryDivider==null)
+                deliveryDivider= new DeliveryDivider();
+            return deliveryDivider;
+        }
+    }
+
+
 }
