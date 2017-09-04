@@ -601,8 +601,7 @@ public interface Constants {
     String KEY_SUPER_CATEGORY_ID = "super_category_id";
     String KEY_SUPER_CATEGORY = "super_category";
     String KEY_SEARCH_STRING = "search_string";
-    String SP_MENUS_FILTER_SORT_BY = "sp_menus_filter_sort_by";
-    String SP_MENUS_FILTER_MIN_ORDER = "sp_menus_filter_min_order";
+    String SP_MENUS_FILTER_SORT_BY_NEW = "sp_menus_filter_sort_by_new";
     String SP_MENUS_FILTER_DELIVERY_TIME = "sp_menus_filter_delivery_time";
     String SP_MENUS_FILTER_CUISINES_GSON = "sp_menus_filter_cuisines_gson";
     String SP_MENUS_FILTER_QUICK = "sp_menus_filter_quick";

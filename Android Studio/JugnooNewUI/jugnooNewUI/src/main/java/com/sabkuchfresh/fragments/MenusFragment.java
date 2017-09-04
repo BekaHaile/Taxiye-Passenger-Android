@@ -400,20 +400,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     HashMap<String, String> params = new HashMap<>();
 
                     //Sort Keys
-                    if (activity.getSortBySelected() != MenusFilterFragment.SortType.NONE) {
+                    if (!TextUtils.isEmpty(activity.getSortBySelected())) {
                         JSONArray sortArray = new JSONArray();
-                        sortArray.put(("" + activity.getSortBySelected()).toLowerCase());
+                        sortArray.put(activity.getSortBySelected());
                         params.put(Constants.KEY_SORTING, sortArray.toString());
 
                     }
                     //Quick Filter Keys
-                    if (activity.getQuickFilterSelected() != null && activity.getQuickFilterSelected().size() > 0) {
-                        params.put(Constants.KEY_FILTERS, (new JSONArray(activity.getQuickFilterSelected())).toString());
-                    }
-
-                    //Min Order amount filter
-                    if (activity.getMoSelected() != MenusFilterFragment.MinOrder.NONE) {
-                        params.put(Constants.KEY_MIN_ORDER_AMT, "" + activity.getMoSelected().getOrdinal());
+                    if (activity.getFilterSelected() != null && activity.getFilterSelected().size() > 0) {
+                        params.put(Constants.KEY_FILTERS, (new JSONArray(activity.getFilterSelected())).toString());
                     }
 
                     //Cuisines List
@@ -558,7 +553,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                                     recyclerViewRestaurant.setVisibility(View.VISIBLE);
                                                 }
 
-                                                activity.setFilterCuisinesLocal(null);
+                                                activity.setCuisinesAll(null);
+                                                activity.setFiltersAll((ArrayList<String>) menusResponse.getQuickFilters());
+                                                activity.setSortAll((ArrayList<String>) menusResponse.getSortTypes());
                                                 checkIciciPaymentStatusApi(activity);
                                                 if (scrollToTop && recyclerViewRestaurant != null) {
                                                     linearLayoutManager.scrollToPositionWithOffset(0, 0);
@@ -749,10 +746,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public boolean filterApplied() {
         return (activity.getCuisinesSelected().size() > 0
-                || activity.getMoSelected() != MenusFilterFragment.MinOrder.NONE
-                || activity.getDtSelected() != MenusFilterFragment.DeliveryTime.NONE
-                || activity.getSortBySelected() != MenusFilterFragment.SortType.NONE
-                || activity.getQuickFilterSelected().size() > 0);
+                || !TextUtils.isEmpty(activity.getSortBySelected())
+                || activity.getFilterSelected().size() > 0);
     }
 
     private static void checkIciciPaymentStatusApi(final FreshActivity activity) {

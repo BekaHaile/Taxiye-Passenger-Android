@@ -28,7 +28,6 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.datastructure.FilterCuisine;
-import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -230,7 +229,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         vendorsFiltered.clear();
         DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
         for (MenusResponse.Vendor vendor : vendorsComplete) {
-            boolean cuisineMatched = false, moMatched, dtMatched;
+            boolean cuisineMatched = false;
             for (FilterCuisine cuisine : activity.getCuisinesSelected()) {
                 if (vendor.getCuisines().contains(cuisine.getName())) {
                     cuisineMatched = true;
@@ -239,14 +238,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
             cuisineMatched = activity.getCuisinesSelected().size() <= 0 || cuisineMatched;
 
-            moMatched = activity.getMoSelected() == MenusFilterFragment.MinOrder.NONE
-                    || vendor.getMinimumOrderAmount() <= activity.getMoSelected().getOrdinal();
-
-            dtMatched = activity.getDtSelected() == MenusFilterFragment.DeliveryTime.NONE
-                    || vendor.getMinDeliveryTime() <= activity.getDtSelected().getOrdinal();
-
             boolean qfMatched = true;
-            for(String filter : activity.getQuickFilterSelected()) {
+            for(String filter : activity.getFilterSelected()) {
                 if((filter.equalsIgnoreCase(Constants.ACCEPTONLINE) && vendor.getApplicablePaymentMode().equals(ApplicablePaymentMode.CASH.getOrdinal()))
                         || (filter.equalsIgnoreCase(Constants.OFFERSDISCOUNT) && vendor.getOffersDiscounts().equals(0))
                         || (filter.equalsIgnoreCase(Constants.PUREVEGETARIAN) && vendor.getPureVegetarian().equals(0))
@@ -271,7 +264,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
 
 
-            if(cuisineMatched && moMatched && dtMatched && qfMatched){
+            if(cuisineMatched && qfMatched){
                 vendorsFiltered.add(vendor);
             }
         }
@@ -288,13 +281,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     point = rhs.getIsAvailable() - lhs.getIsAvailable();
                 } else if (lhs.getIsAvailable() != 0 && rhs.getIsAvailable() == 0) {
                     point = rhs.getIsAvailable() - lhs.getIsAvailable();
-                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.POPULARITY) {
+                } else if (activity.getSortBySelected().contains("popularity")) {
                     point = rhs.getPopularity() - lhs.getPopularity();
-                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE) {
+                } else if (activity.getSortBySelected().contains("distance")) {
                     point = -(int) (rhs.getDistance() - lhs.getDistance());
-                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE_RANGE) {
+                } else if (activity.getSortBySelected().contains("price_range")) {
                     point = lhs.getPriceRange() - rhs.getPriceRange();
-                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DELIVERY_TIME) {
+                } else if (activity.getSortBySelected().contains("delivery_time")) {
                     point = lhs.getDeliveryTime() - rhs.getDeliveryTime();
                 }
 

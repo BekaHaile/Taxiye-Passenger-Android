@@ -61,6 +61,13 @@ public class MenusResponse implements Serializable {
 	@Expose
 	private List<Category> categories;
 
+	@SerializedName("quick_filters")
+	@Expose
+	private List<String> quickFilters;
+	@SerializedName("sort_types")
+	@Expose
+	private List<String> sortTypes;
+
 
 
 
@@ -215,6 +222,22 @@ public class MenusResponse implements Serializable {
 
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
+	}
+
+	public List<String> getQuickFilters() {
+		return quickFilters;
+	}
+
+	public void setQuickFilters(List<String> quickFilters) {
+		this.quickFilters = quickFilters;
+	}
+
+	public List<String> getSortTypes() {
+		return sortTypes;
+	}
+
+	public void setSortTypes(List<String> sortTypes) {
+		this.sortTypes = sortTypes;
 	}
 
 

@@ -5,45 +5,38 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_transparent_menu_item_selector"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-        android:id="@+id/linearLayoutContent"
+    <ImageView
+        android:id="@+id/imageViewCheck"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_16"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_12"
+        android:src="@drawable/checkbox_signup_checked"
+
+        />
+
+    <TextView
+        android:id="@+id/textViewCuisine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-        <ImageView
-            android:id="@+id/imageViewCheck"
-            android:layout_width="32px"
-            android:layout_height="32px"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="24px"
-            android:src="@drawable/checkbox_signup_checked"
-            android:tag="mwar"
-
-            />
-
-        <TextView
-            android:id="@+id/textViewCuisine"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="26px"
-            android:layout_marginLeft="24px"
-            android:layout_marginTop="26px"
-            android:text="cashback\nkjhkj"
-            android:textColor="@color/text_color_selector"
-            android:textSize="@dimen/text_size_28"
-            />
-
-    </LinearLayout>
+        android:layout_marginBottom="@dimen/dp_12"
+        android:layout_marginLeft="@dimen/dp_12"
+        android:layout_marginTop="@dimen/dp_12"
+        android:text="cashback\nkjhkj"
+        android:layout_toRightOf="@+id/imageViewCheck"
+        android:textColor="@color/text_color_selector"
+        android:textSize="@dimen/sp_14"
+        app:font="@string/maven"
+        />
 
     <ImageView
         android:id="@+id/imageViewSep"
         android:layout_width="match_parent"
-        android:layout_height="2px"
+        android:layout_height="@dimen/dp_1"
         android:background="@color/stroke_light_grey_alpha"
-        android:layout_below="@+id/linearLayoutContent"
+        android:layout_below="@+id/textViewCuisine"
         />
 
 </RelativeLayout>

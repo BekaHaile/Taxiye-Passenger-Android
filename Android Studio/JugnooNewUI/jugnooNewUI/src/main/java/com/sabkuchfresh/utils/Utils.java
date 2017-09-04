@@ -902,6 +902,10 @@ public class Utils {
 		product.clicklabs.jugnoo.utils.Utils.setTextUnderline(textView, text);
 	}
 
+	public static String capEachWord(String source) {
+		return product.clicklabs.jugnoo.utils.Utils.capEachWord(source);
+	}
+
 }
 
 

@@ -3270,9 +3270,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public void saveFilters() {
-        Prefs.with(this).save(Constants.SP_MENUS_FILTER_SORT_BY, sortBySelected.getOrdinal());
-        Prefs.with(this).save(Constants.SP_MENUS_FILTER_MIN_ORDER, moSelected.getOrdinal());
-        Prefs.with(this).save(Constants.SP_MENUS_FILTER_DELIVERY_TIME, dtSelected.getOrdinal());
+        Prefs.with(this).save(Constants.SP_MENUS_FILTER_SORT_BY_NEW, sortBySelected);
         JsonElement element = gson.toJsonTree(cuisinesSelected, new TypeToken<List<FilterCuisine>>() {}.getType());
         if(element != null && element.isJsonArray()) {
             JsonArray jsonArray = element.getAsJsonArray();
@@ -3280,8 +3278,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
 
         StringBuilder sbQF = new StringBuilder();
-        if (quickFilterSelected.size() > 0) {
-            for (String qf : quickFilterSelected) {
+        if (filterSelected.size() > 0) {
+            for (String qf : filterSelected) {
                 sbQF.append(qf).append(",");
             }
         }
@@ -3290,36 +3288,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     public void fetchFiltersFromSP() {
-        int sortBy = Prefs.with(this).getInt(Constants.SP_MENUS_FILTER_SORT_BY, sortBySelected.getOrdinal());
-        if (sortBy == MenusFilterFragment.SortType.POPULARITY.getOrdinal()) {
-            sortBySelected = MenusFilterFragment.SortType.POPULARITY;
-        } else if (sortBy == MenusFilterFragment.SortType.DISTANCE.getOrdinal()) {
-            sortBySelected = MenusFilterFragment.SortType.DISTANCE;
-        } else if (sortBy == MenusFilterFragment.SortType.PRICE_RANGE.getOrdinal()) {
-            sortBySelected = MenusFilterFragment.SortType.PRICE_RANGE;
-        } else if (sortBy == MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED.getOrdinal()) {
-            sortBySelected = MenusFilterFragment.SortType.ONLINEPAYMENTACCEPTED;
-        } else if (sortBy == MenusFilterFragment.SortType.DELIVERY_TIME.getOrdinal()) {
-            sortBySelected = MenusFilterFragment.SortType.DELIVERY_TIME;
-        }
+        sortBySelected = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_SORT_BY_NEW, "");
 
-        int mo = Prefs.with(this).getInt(Constants.SP_MENUS_FILTER_MIN_ORDER, moSelected.getOrdinal());
-        if (mo == MenusFilterFragment.MinOrder.MO150.getOrdinal()) {
-            moSelected = MenusFilterFragment.MinOrder.MO150;
-        } else if (mo == MenusFilterFragment.MinOrder.MO250.getOrdinal()) {
-            moSelected = MenusFilterFragment.MinOrder.MO250;
-        } else if (mo == MenusFilterFragment.MinOrder.MO500.getOrdinal()) {
-            moSelected = MenusFilterFragment.MinOrder.MO500;
-        }
-
-        int dt = Prefs.with(this).getInt(Constants.SP_MENUS_FILTER_DELIVERY_TIME, dtSelected.getOrdinal());
-        if (dt == MenusFilterFragment.DeliveryTime.DT30.getOrdinal()) {
-            dtSelected = MenusFilterFragment.DeliveryTime.DT30;
-        } else if (dt == MenusFilterFragment.DeliveryTime.DT45.getOrdinal()) {
-            dtSelected = MenusFilterFragment.DeliveryTime.DT45;
-        } else if (dt == MenusFilterFragment.DeliveryTime.DT60.getOrdinal()) {
-            dtSelected = MenusFilterFragment.DeliveryTime.DT60;
-        }
         String cuisines = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_CUISINES_GSON, "");
         if (!TextUtils.isEmpty(cuisines)) {
             cuisinesSelected.clear();
@@ -3329,69 +3299,60 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         String qfs = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_QUICK, "");
         if (!TextUtils.isEmpty(qfs)) {
             String arr[] = qfs.split(",");
-            quickFilterSelected.clear();
+            filterSelected.clear();
             for (String qf : arr) {
-                quickFilterSelected.add(qf);
+                filterSelected.add(qf);
             }
         }
 
     }
 
 
-    private MenusFilterFragment.SortType sortBySelected = MenusFilterFragment.SortType.NONE;
-    private MenusFilterFragment.MinOrder moSelected = MenusFilterFragment.MinOrder.NONE;
-    private MenusFilterFragment.DeliveryTime dtSelected = MenusFilterFragment.DeliveryTime.NONE;
+    private String sortBySelected = "";
     private ArrayList<FilterCuisine> cuisinesSelected = new ArrayList<>();
-    private ArrayList<String> quickFilterSelected = new ArrayList<>();
+    private ArrayList<String> filterSelected = new ArrayList<>();
+    private ArrayList<FilterCuisine> cuisinesAll = new ArrayList<>();
+    private ArrayList<String> filtersAll = new ArrayList<>();
+    private ArrayList<String> sortAll = new ArrayList<>();
 
-    public MenusFilterFragment.SortType getSortBySelected() {
+    public String getSortBySelected() {
         return sortBySelected;
     }
 
-    public void setSortBySelected(MenusFilterFragment.SortType sortBySelected) {
+    public void setSortBySelected(String sortBySelected) {
         this.sortBySelected = sortBySelected;
-    }
-
-    public MenusFilterFragment.MinOrder getMoSelected() {
-        return moSelected;
-    }
-
-    public void setMoSelected(MenusFilterFragment.MinOrder moSelected) {
-        this.moSelected = moSelected;
-    }
-
-    public MenusFilterFragment.DeliveryTime getDtSelected() {
-        return dtSelected;
-    }
-
-    public void setDtSelected(MenusFilterFragment.DeliveryTime dtSelected) {
-        this.dtSelected = dtSelected;
     }
 
     public ArrayList<FilterCuisine> getCuisinesSelected() {
         return cuisinesSelected;
     }
 
-    public void setCuisinesSelected(ArrayList<FilterCuisine> cuisinesSelected) {
-        this.cuisinesSelected = cuisinesSelected;
+    public ArrayList<String> getFilterSelected() {
+        return filterSelected;
     }
 
-    public ArrayList<String> getQuickFilterSelected() {
-        return quickFilterSelected;
+    public ArrayList<FilterCuisine> getCuisinesAll() {
+        return cuisinesAll;
     }
 
-    public void setQuickFilterSelected(ArrayList<String> quickFilterSelected) {
-        this.quickFilterSelected = quickFilterSelected;
+    public void setCuisinesAll(ArrayList<FilterCuisine> cuisinesAll) {
+        this.cuisinesAll = cuisinesAll;
     }
 
-    private ArrayList<FilterCuisine> filterCuisinesLocal = null;
-
-    public ArrayList<FilterCuisine> getFilterCuisinesLocal() {
-        return filterCuisinesLocal;
+    public ArrayList<String> getSortAll() {
+        return sortAll;
     }
 
-    public void setFilterCuisinesLocal(ArrayList<FilterCuisine> filterCuisinesLocal) {
-        this.filterCuisinesLocal = filterCuisinesLocal;
+    public void setSortAll(ArrayList<String> sortAll) {
+        this.sortAll = sortAll;
+    }
+
+    public ArrayList<String> getFiltersAll() {
+        return filtersAll;
+    }
+
+    public void setFiltersAll(ArrayList<String> filtersAll) {
+        this.filtersAll = filtersAll;
     }
 
     public boolean checkForAdd() {
