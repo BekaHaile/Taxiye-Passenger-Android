@@ -1,6 +1,5 @@
 package com.sabkuchfresh.fragments;
 
-import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,7 +20,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
-import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
@@ -29,7 +27,6 @@ import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
-import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
@@ -401,7 +398,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             if(!searchOpened || !refreshingAutoComplete) {
                 if (MyApplication.getInstance().isOnline()) {
                     this.lastMenusLatlng = latLng;
-                    ProgressDialog progressDialog = null;
                     if (isPagination) {
                         isPagingApiInProgress = true;
 //                      todo  if (menusRestaurantAdapter != null) {
@@ -409,7 +405,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 //                        }
                     } else {
                         if (loader)
-                            progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
+                            DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
                     }
 
                     if (activity.getTopFragment() instanceof MenusFragment) {
@@ -451,18 +447,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
                     new HomeUtil().putDefaultParams(params);
-                    final ProgressDialog finalProgressDialog = progressDialog;
 
-                    Callback<MenusResponse> callback =
-                            new Callback<MenusResponse>() {
+                    Callback<MenusResponse> callback = new Callback<MenusResponse>() {
                                 @Override
                                 public void success(MenusResponse menusResponse, Response response) {
-                                    try {
-                                        if (finalProgressDialog != null)
-                                            finalProgressDialog.dismiss();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                                    DialogPopup.dismissLoadingDialog();
                                     swipeRefreshLayout.setRefreshing(false);
                                     activity.getTopBar().setPBSearchVisibility(View.GONE);
                                     refreshingAutoComplete = false;
@@ -483,41 +472,23 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                                 //set Variables for pagination
                                                 hasMorePages = menusResponse.getVendors() != null && menusResponse.getVendors().size() > 0 && menusResponse.isPageLengthComplete();
 
-                                                if (isPagination) {
-                                                    vendors.addAll((ArrayList<MenusResponse.Vendor>) menusResponse.getVendors());
-                                                    menusRestaurantAdapter.setList(vendors, menusResponse.getBannerInfos(),
-                                                            menusResponse.getStripInfo(), menusResponse.getShowBanner(), !hasMorePages);
-                                                    menusResponse.setVendors(vendors);
-                                                    activity.setMenusResponse(menusResponse);
-                                                    currentPageCount++;
-                                                    try {
-                                                        if (finalProgressDialog != null)
-                                                            finalProgressDialog.dismiss();
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    return;
-
-                                                }
+//                                                if (isPagination) {
+//                                                    vendors.addAll((ArrayList<MenusResponse.Vendor>) menusResponse.getVendors());
+//                                                    deliveryHomeAdapter.setList(vendors, menusResponse.getBannerInfos(),
+//                                                            menusResponse.getStripInfo(), menusResponse.getShowBanner(), !hasMorePages);
+//                                                    menusResponse.setVendors(vendors);
+//                                                    activity.setMenusResponse(menusResponse);
+//                                                    currentPageCount++;
+//                                                    return;
+//
+//                                                }
                                                 currentPageCount = 1;
                                                 activity.setMenusResponse(menusResponse);
-
-                                                // TODO: 04/09/17 remove this
-                                                if(vendors == null){
-                                                    vendors = new ArrayList<>();
-                                                }
-                                                for(MenusResponse.Category category : menusResponse.getCategories()){
-                                                    vendors.addAll(category.getVendors());
-                                                }
-
-                                                recentOrder.clear();
-                                                recentOrder.addAll(menusResponse.getRecentOrders());
 
                                                 status.clear();
                                                 status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
-                                                menusRestaurantAdapter.setList(vendors, menusResponse.getBannerInfos(),
-                                                        menusResponse.getStripInfo(), menusResponse.getShowBanner(), !hasMorePages);
+                                                deliveryHomeAdapter.setList(menusResponse);
                                                 relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
                                                         && menusResponse.getServiceUnavailable() == 1) ? View.VISIBLE : View.GONE);
                                                 activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
@@ -557,12 +528,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                             }
                                         }
                                     } catch (Exception exception) {
-                                        try {
-                                            if (finalProgressDialog != null)
-                                                finalProgressDialog.dismiss();
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
                                         exception.printStackTrace();
                                     }
                                 }
@@ -574,12 +539,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     }
                                     relativeLayoutNoMenus.setVisibility(View.GONE);
                                     Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
-                                    try {
-                                        if (finalProgressDialog != null)
-                                            finalProgressDialog.dismiss();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                                    DialogPopup.dismissLoadingDialog();
                                     swipeRefreshLayout.setRefreshing(false);
                                     retryDialog(DialogErrorType.CONNECTION_LOST, latLng, loader, isPagination, scrollToTop);
 //                                   todo if (isPagination && menusRestaurantAdapter != null) {
@@ -640,6 +600,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
 
+
+
     private void showPromoFailedAtSignupDialog() {
         try {
             if (Data.userData.getPromoSuccess() == 0) {
@@ -667,7 +629,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     }
 
-    private ArrayList<MenusResponse.Vendor> previousVendors;
+    private MenusResponse previousVendors;
     public void toggleSearch(boolean clearEt) {
         if (searchOpened) {
             searchOpened = false;
@@ -675,10 +637,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             if(activity.getSearchedRestaurantIds()!=null)
             activity.getSearchedRestaurantIds().clear();
             if(previousVendors != null){
-                vendors = previousVendors;
+                activity.setMenusResponse(previousVendors);
             }
-            menusRestaurantAdapter.setList(vendors, menusRestaurantAdapter.getBannerInfos(),
-                    menusRestaurantAdapter.getStripInfo(), menusRestaurantAdapter.getShowBanner(), !hasMorePages);
+            deliveryHomeAdapter.setList(activity.getMenusResponse());
 
             if (keyboardLayoutListener.getKeyBoardState() == 1) {
                 activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
@@ -690,12 +651,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             activity.getTopBar().animateSearchBar(false);
         } else {
             searchOpened = true;
-            previousVendors = vendors;
-            menusRestaurantAdapter.setSearchApiHitOnce(false);
+            previousVendors = activity.getMenusResponse();
+//            deliveryHomeAdapter.setSearchApiHitOnce(false);
             if (clearEt) {
                 activity.getTopBar().etSearch.setText("");
             } else {
-                activity.getTopBar().etSearch.setText(menusRestaurantAdapter.getSearchText());
+//                activity.getTopBar().etSearch.setText(deliveryHomeAdapter.getSearchText());
                 activity.getTopBar().etSearch.setSelection(activity.getTopBar().etSearch.getText().length());
             }
             activity.getTopBar().imageViewMenu.setVisibility(View.GONE);

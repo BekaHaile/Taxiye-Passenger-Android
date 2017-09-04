@@ -907,7 +907,7 @@ public class MenusResponse implements Serializable {
 	}
 
 
-	public class Category{
+	public static class Category{
 		@SerializedName("id")
 		@Expose
 		private int id;
@@ -927,6 +927,17 @@ public class MenusResponse implements Serializable {
 		@Expose
 		private List<Vendor> vendors = new ArrayList<Vendor>();
 
+		private boolean isTypeOrder;
+
+		public Category(boolean isTypeOrder) {
+			this.isTypeOrder = isTypeOrder;
+		}
+
+		public Category(String image, String categoryName) {
+			this.image = image;
+			this.categoryName = categoryName;
+		}
+
 		public int getId() {
 			return id;
 		}
@@ -937,6 +948,10 @@ public class MenusResponse implements Serializable {
 
 		public String getCategoryName() {
 			return categoryName;
+		}
+
+		public boolean isTypeOrder() {
+			return isTypeOrder;
 		}
 
 		public void setCategoryName(String categoryName) {

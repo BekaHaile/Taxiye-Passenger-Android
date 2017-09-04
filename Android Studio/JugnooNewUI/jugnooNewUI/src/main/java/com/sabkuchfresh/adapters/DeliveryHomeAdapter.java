@@ -114,10 +114,39 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public synchronized void setList(MenusResponse menusResponse) {
+    public void setList(MenusResponse menusResponse) {
         this.dataToDisplay = new ArrayList<>();
 
+        if(menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0){
+            int sizeRecentOrders =menusResponse.getRecentOrders().size();
 
+            dataToDisplay.add(new MenusResponse.Category(true));
+            dataToDisplay.add(menusResponse.getRecentOrders().get(0));
+            if(sizeRecentOrders>1){
+                dataToDisplay.add(menusResponse.getRecentOrders().get(1));
+            }
+            if(sizeRecentOrders>2){
+                dataToDisplay.add(new DeliverySeeAll(-1));
+            }
+            dataToDisplay.add(new DeliveryDivider());
+        }
+
+        for(MenusResponse.Category category:  menusResponse.getCategories()){
+            if (category.getVendors()!=null) {
+                dataToDisplay.add(new MenusResponse.Category(category.getImage(),category.getCategoryName()));
+                dataToDisplay.addAll(menusResponse.getVendors());
+                if(category.getCount()>category.getVendors().size()){
+					dataToDisplay.add(new DeliverySeeAll(category.getId()));
+				}
+                dataToDisplay.add(new DeliveryDivider());
+            }
+        }
+
+        //Removes the bottom border
+        if(dataToDisplay.size()>1){
+            dataToDisplay.remove(dataToDisplay.size()-1);
+
+        }
 
         notifyDataSetChanged();
     }
@@ -278,11 +307,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (vendor.getRating() != null && vendor.getRating() >= 1d) {
                 visibilityRating = View.VISIBLE;
                 if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
-                    setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating());
-                }
-                else{
-                    setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating());
-
+                    setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating(), vendor.getReviewCount());
+                } else{
+                    setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating(), vendor.getReviewCount());
                 }
             }
             mHolder.llRatingStars.setVisibility(visibilityRating);
@@ -620,7 +647,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             llOrderDeliveredNo.setOnClickListener(onClickListener);
         }
     }
-    private class ViewTitleCategory extends RecyclerView.ViewHolder {
+    class ViewTitleCategory extends RecyclerView.ViewHolder {
         @Bind(R.id.icon_title)
         ImageView iconTitle;
         @Bind(R.id.tv_cateogory_title)
@@ -637,7 +664,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(view);
         }
     }
-    private class ViewSeeAll extends RecyclerView.ViewHolder {
+    class ViewSeeAll extends RecyclerView.ViewHolder {
         @Bind(R.id.ll_see_all)
         LinearLayout llSeeAll;
 
@@ -684,11 +711,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public static class DeliverySeeAll{
-        private String categoryId;
+        private int categoryId;
 
         private DeliverySeeAll(){}
 
-        public DeliverySeeAll(String categoryId) {
+        public DeliverySeeAll(int categoryId) {
             this.categoryId = categoryId;
         }
     }
@@ -715,12 +742,12 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
-    private void setRatingViews(LinearLayout llRatingStars,TextView tvReviewCount,Double rating) {
+    private void setRatingViews(LinearLayout llRatingStars,TextView tvReviewCount,Double rating, long reviewCount) {
         llRatingStars.removeAllViews();
         activity.addStarsToLayout(llRatingStars, rating,
                 R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey);
         llRatingStars.addView(tvReviewCount);
-        tvReviewCount.setText(activity.getVendorOpened().getReviewCount()+" Ratings");
+        tvReviewCount.setText(reviewCount+" Ratings");
     }
 
     public interface Callback {
