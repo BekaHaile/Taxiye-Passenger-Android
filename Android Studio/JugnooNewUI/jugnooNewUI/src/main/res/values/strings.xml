@@ -1383,6 +1383,9 @@
     <string name="no_reviews_yet_be_first">No reviews yet!\nBe the first one to add...</string>
     <string name="label_select_category">Select Category</string>
     <string name="label_category_all">All</string>
+    <string name="accepts_online_order">Accepts Online Order</string>
+    <string name="chat_enabled">Chat Enabled</string>
+    <string name="top_rated">Top Rated (3.5+)</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

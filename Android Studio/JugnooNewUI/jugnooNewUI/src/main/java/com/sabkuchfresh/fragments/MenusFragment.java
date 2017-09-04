@@ -513,7 +513,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                                 currentPageCount = 1;
                                                 activity.setMenusResponse(menusResponse);
 
-                                                vendors = (ArrayList<MenusResponse.Vendor>) menusResponse.getVendors();
+                                                // TODO: 04/09/17 remove this
+                                                if(vendors == null){
+                                                    vendors = new ArrayList<>();
+                                                }
+                                                for(MenusResponse.Category category : menusResponse.getCategories()){
+                                                    vendors.addAll(category.getVendors());
+                                                }
+
+//                                                vendors = (ArrayList<MenusResponse.Vendor>) menusResponse.getVendors();
 
                                                 recentOrder.clear();
                                                 recentOrder.addAll(menusResponse.getRecentOrders());

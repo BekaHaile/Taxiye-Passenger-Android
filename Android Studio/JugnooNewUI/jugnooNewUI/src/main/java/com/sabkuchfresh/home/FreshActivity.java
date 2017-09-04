@@ -2141,9 +2141,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private void addMenusFragment() {
         getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new DeliveryHomeFragment(),
-                        DeliveryHomeFragment.class.getName())
-                .addToBackStack(DeliveryHomeFragment.class.getName())
+                .add(relativeLayoutContainer.getId(), new MenusFragment(),
+                        MenusFragment.class.getName())
+                .addToBackStack(MenusFragment.class.getName())
                 .commitAllowingStateLoss();
     }
 

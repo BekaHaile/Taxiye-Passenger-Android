@@ -779,4 +779,10 @@ public interface Constants {
     String KEY_FATAFAT = "fatafat";
     String KEY_ASKLOCAL = "asklocal";
     String KEY_LIMIT = "limit";
+    String KEY_EVENT_TYPE = "event_type";
+    String KEY_USER_CLICK = "user_click";
+    String KEY_EVENT_STATUS = "event_status";
+    String KEY_CALL_MODE = "call_mode";
+    String KEY_CHAT_MODE = "chat_mode";
+    String KEY_ORDER_MODE = "order_mode";
 }

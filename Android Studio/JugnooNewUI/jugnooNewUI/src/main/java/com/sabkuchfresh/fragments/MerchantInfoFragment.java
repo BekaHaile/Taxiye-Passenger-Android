@@ -19,6 +19,10 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiRestaurantFetchFeedback;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -26,6 +30,7 @@ import com.sabkuchfresh.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,6 +40,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import retrofit.RetrofitError;
 
 
 public class MerchantInfoFragment extends Fragment implements GAAction {
@@ -253,15 +259,19 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.llChatNow:
+
+				sendUserClickEvent(Constants.KEY_CHAT_MODE);
 				break;
 			case R.id.llCall:
 				Utils.openCallIntent(activity, activity.getVendorOpened().getPhoneNo());
+				sendUserClickEvent(Constants.KEY_CALL_MODE);
 				break;
 			case R.id.llAddReview:
 				activity.openRestaurantAddReviewFragment(true);
 				break;
 			case R.id.bOrderOnline:
 				activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+				sendUserClickEvent(Constants.KEY_ORDER_MODE);
 				break;
 			case R.id.llSeeAll:
 				activity.openRestaurantReviewsListFragment();
@@ -319,5 +329,46 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 			});
 		}
 		apiRestaurantFetchFeedback.hit(activity.getVendorOpened().getRestaurantId(), false, progressWheel, 1);
+	}
+
+
+	public void sendUserClickEvent(String eventName){
+		HashMap<String, String> params = new HashMap<>();
+		params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(activity.getVendorOpened().getRestaurantId()));
+		params.put(Constants.KEY_EVENT_TYPE, Constants.KEY_USER_CLICK);
+		params.put(Constants.KEY_EVENT_STATUS, eventName);
+
+		new ApiCommon<>(activity).showLoader(false).execute(params, ApiName.USER_CLICK_EVENTS,
+				new APICommonCallback<FeedCommonResponse>() {
+			@Override
+			public boolean onNotConnected() {
+				return true;
+			}
+
+			@Override
+			public boolean onException(Exception e) {
+				return true;
+			}
+
+			@Override
+			public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
+
+			}
+
+			@Override
+			public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+				return true;
+			}
+
+			@Override
+			public boolean onFailure(RetrofitError error) {
+				return true;
+			}
+
+			@Override
+			public void onNegativeClick() {
+
+			}
+		});
 	}
 }

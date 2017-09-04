@@ -186,6 +186,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case GET_HANLDE_SUGGESTIONS:
                 RestClient.getFeedApiService().getHandleSuggestions(params, callback);
                 break;
+            case USER_CLICK_EVENTS:
+                RestClient.getMenusApiService().userClickEvents(params, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

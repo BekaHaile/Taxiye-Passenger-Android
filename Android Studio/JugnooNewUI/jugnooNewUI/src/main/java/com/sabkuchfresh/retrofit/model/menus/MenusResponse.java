@@ -57,6 +57,13 @@ public class MenusResponse implements Serializable {
 	@Expose
 	private StripInfo stripInfo;
 
+	@SerializedName("merchant_map")
+	@Expose
+	private List<Category> categories;
+
+
+
+
 
 
 	public Double getRating() {
@@ -200,6 +207,14 @@ public class MenusResponse implements Serializable {
 
 	public void setServiceUnavailable(int serviceUnavailable) {
 		this.serviceUnavailable = serviceUnavailable;
+	}
+
+	public List<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
 	}
 
 
@@ -868,4 +883,73 @@ public class MenusResponse implements Serializable {
 		}
 	}
 
+
+	public class Category{
+		@SerializedName("id")
+		@Expose
+		private int id;
+		@SerializedName("category")
+		@Expose
+		private String categoryName;
+		@SerializedName("image")
+		@Expose
+		private String image;
+		@SerializedName("tags")
+		@Expose
+		private String tagsName;
+		@SerializedName("count")
+		@Expose
+		private int count;
+		@SerializedName("vendors")
+		@Expose
+		private List<Vendor> vendors = new ArrayList<Vendor>();
+
+		public int getId() {
+			return id;
+		}
+
+		public void setId(int id) {
+			this.id = id;
+		}
+
+		public String getCategoryName() {
+			return categoryName;
+		}
+
+		public void setCategoryName(String categoryName) {
+			this.categoryName = categoryName;
+		}
+
+		public String getTagsName() {
+			return tagsName;
+		}
+
+		public void setTagsName(String tagsName) {
+			this.tagsName = tagsName;
+		}
+
+		public int getCount() {
+			return count;
+		}
+
+		public void setCount(int count) {
+			this.count = count;
+		}
+
+		public List<Vendor> getVendors() {
+			return vendors;
+		}
+
+		public void setVendors(List<Vendor> vendors) {
+			this.vendors = vendors;
+		}
+
+		public String getImage() {
+			return image;
+		}
+
+		public void setImage(String image) {
+			this.image = image;
+		}
+	}
 }
