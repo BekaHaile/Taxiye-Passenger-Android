@@ -1,7 +1,13 @@
 package com.sabkuchfresh.adapters;
 
-import android.content.Context;
+import android.content.Intent;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
+import android.os.Handler;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,18 +18,40 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.pros.models.ProsCatalogueData;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RoundBorderTransform;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by shankar on 1/20/17.
@@ -31,27 +59,66 @@ import product.clicklabs.jugnoo.utils.Fonts;
 
 public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
 
-    private Context context;
+    private static final String TAG = DeliveryHomeAdapter.class.getName();
+    private FreshActivity activity;
     private List<Object> dataToDisplay;
+    private ArrayList<String> possibleStatus;
     private Callback callback;
     private static final int VIEW_TITLE_CATEGORY = 1;
     private static final int VIEW_ORDER_ITEM = 2;
     private static final int VIEW_SEE_ALL = 3;
     private static final int VIEW_VENDOR = 4;
     private static final int VIEW_DIVIDER = 5;
+    private static final int OFFERS_PAGER_ITEM = 6;
+    private static final int OFFER_STRIP_ITEM = 7;
     private RecyclerView recyclerView;
 
-
-
-    public DeliveryHomeAdapter(Context context, Callback callback, RecyclerView recyclerView) {
-        this.context = context;
-        this.callback = callback;
-        this.recyclerView = recyclerView;
+    private final static ColorMatrix BW_MATRIX = new ColorMatrix();
+    private final static ColorMatrixColorFilter BW_FILTER;
+    static {
+        BW_MATRIX.setSaturation(0);
+        BW_FILTER = new ColorMatrixColorFilter(BW_MATRIX);
 
     }
 
-    public synchronized void setList(List<Object> elements) {
-        this.dataToDisplay = elements;
+
+    public DeliveryHomeAdapter(FreshActivity activity, Callback callback, RecyclerView recyclerView, ArrayList<String> possibleStatus) {
+        this.activity = activity;
+        this.callback = callback;
+        this.recyclerView = recyclerView;
+        this.possibleStatus = possibleStatus;
+        timerHandler = activity.getHandler();
+        timerHandler.postDelayed(timerRunnable, 1000);
+    }
+
+    private Handler timerHandler;
+    private Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                notifyDataSetChanged();
+                if (timerHandler != null) {
+                    Log.v(TAG, "notifying automaically");
+                    timerHandler.postDelayed(timerRunnable, 60000); //run every minute
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    public void removeHandler(){
+        if(timerHandler != null){
+            timerHandler.removeCallbacks(timerRunnable);
+            timerHandler = null;
+        }
+    }
+
+    public synchronized void setList(MenusResponse menusResponse) {
+        this.dataToDisplay = new ArrayList<>();
+
+
+
         notifyDataSetChanged();
     }
 
@@ -71,10 +138,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 return new ViewSeeAll(v, this);
             case VIEW_VENDOR:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_restaurant, parent, false);
-                return new ViewSeeAll(v, this);
+                return new ViewHolderVendor(v, this);
             case VIEW_DIVIDER:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_divider_delivery, parent, false);
                 return new ViewDivider(v);
+            case OFFERS_PAGER_ITEM:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_offers_pager, parent, false);
+                return new ViewHolderOffers(v);
+            case OFFER_STRIP_ITEM:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.textview_min_order, parent, false);
+                return new ViewHolderOfferStrip(v, this);
             default:
                 throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
 
@@ -85,7 +158,265 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder mholder, int position) {
+        if(mholder instanceof ViewHolderVendor){
+            DeliveryHomeAdapter.ViewHolderVendor mHolder = ((DeliveryHomeAdapter.ViewHolderVendor) mholder);
+            MenusResponse.Vendor vendor = (MenusResponse.Vendor) dataToDisplay.get(position);
+            mHolder.textViewRestaurantName.setText(vendor.getName());
 
+            mHolder.vSep.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
+
+            DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+            String currentSystemTime = dateFormat.format(new Date());
+            long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()), currentSystemTime);
+            long minutes = ((timeDiff1 / (1000L* 60L)));
+            if (minutes <= 0) {
+                vendor.setIsClosed(1);
+            }
+
+            int visMinOrder = View.VISIBLE;
+            if(!TextUtils.isEmpty(vendor.getMinOrderText())){
+                mHolder.textViewMinimumOrder.setText(Utils.trimHTML(Utils.fromHtml(vendor.getMinOrderText())));
+            } else if(vendor.getMinOrderText() == null) {
+                if (vendor.getMinimumOrderAmount() != null && vendor.getMinimumOrderAmount() > 0) {
+                    mHolder.textViewMinimumOrder.setText(activity.getString(R.string.minimum_order_rupee_format, Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
+                } else {
+                    mHolder.textViewMinimumOrder.setText(R.string.no_minimum_order);
+                }
+            } else {
+                visMinOrder = View.GONE;
+            }
+
+            int visDeliveryTime = activity.setVendorDeliveryTimeAndDrawableColorToTextView(vendor, mHolder.textViewDelivery, R.color.text_color);
+            int visibilityCloseTime = View.VISIBLE;
+            RelativeLayout.LayoutParams paramsCloseTime = (RelativeLayout.LayoutParams) mHolder.textViewRestaurantCloseTime.getLayoutParams();
+            RelativeLayout.LayoutParams paramsDelivery = (RelativeLayout.LayoutParams) mHolder.textViewDelivery.getLayoutParams();
+
+            // restaurant is closed or not available
+            if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
+                mHolder.textViewRestaurantCloseTime.setText(R.string.closed);
+                paramsCloseTime.addRule(RelativeLayout.BELOW, mHolder.textViewMinimumOrder.getId());
+                paramsCloseTime.setMargins(paramsCloseTime.leftMargin, (int)(ASSL.Yscale() * 14f), (int)(ASSL.Xscale() * 14f),
+                        paramsCloseTime.bottomMargin);
+
+                paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 23f), paramsDelivery.rightMargin,
+                        (int)(ASSL.Yscale() * 26f));
+                paramsDelivery.addRule(RelativeLayout.RIGHT_OF, mHolder.textViewRestaurantCloseTime.getId());
+                mHolder.imageViewRestaurantImage.setColorFilter(BW_FILTER);
+                mHolder.tvOffer.getBackground().setColorFilter(BW_FILTER);
+                mHolder.textViewMinimumOrder.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
+
+            } else {
+                mHolder.imageViewRestaurantImage.setColorFilter(null);
+                mHolder.tvOffer.getBackground().setColorFilter(null);
+                mHolder.textViewMinimumOrder.setTextColor(ContextCompat.getColor(activity,R.color.order_history_status_color));
+
+                // restaurant about to close
+                if (minutes <= vendor.getBufferTime() && minutes > 0) {
+                    mHolder.textViewRestaurantCloseTime.setText("Closing in " + minutes + (minutes>1?" mins":" min"));
+                    paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 14f), paramsDelivery.rightMargin,
+                            (int)(ASSL.Yscale() * 14f));
+                }
+                // restaurant is open
+                else {
+                    visibilityCloseTime = View.GONE;
+                    paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 14f), paramsDelivery.rightMargin,
+                            (int)(ASSL.Yscale() * 26f));
+                }
+                paramsDelivery.addRule(RelativeLayout.RIGHT_OF, mHolder.imageViewRestaurantImage.getId());
+                paramsCloseTime.addRule(RelativeLayout.BELOW, mHolder.textViewDelivery.getId());
+                paramsCloseTime.setMargins(paramsCloseTime.leftMargin, visDeliveryTime != View.VISIBLE ? (int)(ASSL.Yscale() * 14f) : 0, 0,
+                        paramsCloseTime.bottomMargin);
+            }
+            mHolder.textViewRestaurantCloseTime.setVisibility(visibilityCloseTime);
+            mHolder.textViewRestaurantCloseTime.setLayoutParams(paramsCloseTime);
+            mHolder.textViewDelivery.setLayoutParams(paramsDelivery);
+            mHolder.textViewDelivery.setVisibility(visDeliveryTime == View.VISIBLE ? View.VISIBLE : View.GONE);
+            mHolder.textViewMinimumOrder.setVisibility(visMinOrder);
+
+
+            mHolder.textViewAddressLine.setVisibility(!TextUtils.isEmpty(vendor.getRestaurantAddress()) ? View.VISIBLE : View.GONE);
+            mHolder.textViewAddressLine.setText(vendor.getRestaurantAddress());
+
+
+            int visibilityCuisines = View.VISIBLE;
+            StringBuilder cuisines = new StringBuilder();
+            if (vendor.getCuisines() != null && vendor.getCuisines().size() > 0) {
+                int maxSize = vendor.getCuisines().size() > 3 ? 3 : vendor.getCuisines().size();
+                for (int i = 0; i < maxSize; i++) {
+                    String cuisine = vendor.getCuisines().get(i);
+                    cuisines.append(cuisine);
+                    if (i < maxSize - 1) {
+                        cuisines.append(" ").append(activity.getString(R.string.bullet)).append(" ");
+                    }
+                }
+            } else {
+                visibilityCuisines = View.GONE;
+            }
+            mHolder.textViewRestaurantCusines.setText(cuisines.toString());
+            mHolder.textViewRestaurantCusines.setVisibility(visibilityCuisines);
+
+
+            try {
+                if (!TextUtils.isEmpty(vendor.getImage())) {
+                    float ratio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                    Picasso.with(activity).load(vendor.getImage())
+                            .placeholder(R.drawable.ic_fresh_item_placeholder)
+                            .resize((int)(ratio * 150f), (int)(ratio * 150f))
+                            .centerCrop()
+                            .transform(new RoundBorderTransform((int)(ratio*6f), 0))
+                            .error(R.drawable.ic_fresh_item_placeholder)
+                            .into(mHolder.imageViewRestaurantImage);
+                } else {
+                    mHolder.imageViewRestaurantImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                mHolder.imageViewRestaurantImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
+            }
+
+            int visibilityRating = View.GONE;
+            if (vendor.getRating() != null && vendor.getRating() >= 1d) {
+                visibilityRating = View.VISIBLE;
+                if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
+                    setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating());
+                }
+                else{
+                    setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating());
+
+                }
+            }
+            mHolder.llRatingStars.setVisibility(visibilityRating);
+
+            mHolder.tvOffer.setVisibility(TextUtils.isEmpty(vendor.getOfferText())?View.GONE:View.VISIBLE);
+            mHolder.tvOffer.setText(vendor.getOfferText());
+        } else if(mholder instanceof ViewOrderStatus){
+
+            ViewOrderStatus statusHolder = ((ViewOrderStatus) mholder);
+            try {
+                RecentOrder recentOrder = (RecentOrder) dataToDisplay.get(position);
+                statusHolder.relativeStatusBar.setVisibility(View.VISIBLE);
+                for (int i = 0; i < statusHolder.relativeStatusBar.getChildCount(); i++) {
+                    if (statusHolder.relativeStatusBar.getChildAt(i) instanceof ViewGroup) {
+                        ViewGroup viewGroup = (ViewGroup) (statusHolder.relativeStatusBar.getChildAt(i));
+                        for (int j = 0; j < viewGroup.getChildCount(); j++) {
+                            viewGroup.getChildAt(j).setVisibility(View.GONE);
+                        }
+                    } else {
+                        statusHolder.relativeStatusBar.getChildAt(i).setVisibility(View.GONE);
+                    }
+                }
+                showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
+                statusHolder.tvOrderIdValue.setText("#"+recentOrder.getOrderId().toString());
+                statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
+
+                statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+
+                statusHolder.rlTrackViewOrder.setVisibility(View.VISIBLE);
+                if(recentOrder.getShowLiveTracking() == 1 && recentOrder.getDeliveryId() > 0){
+                    statusHolder.tvTrackOrder.setTextColor(ContextCompat.getColorStateList(activity, R.color.purple_text_color_selector));
+                } else {
+                    statusHolder.tvTrackOrder.setTextColor(ContextCompat.getColor(activity, R.color.purple_text_color_aplha));
+                }
+
+                statusHolder.rlRestaurantInfo.setVisibility(!TextUtils.isEmpty(recentOrder.getRestaurantName()) ? View.VISIBLE : View.GONE);
+                statusHolder.tvRestaurantName.setText(recentOrder.getRestaurantName());
+                if(recentOrder.getOrderAmount() != null) {
+                    statusHolder.tvOrderAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(recentOrder.getOrderAmount())));
+                }
+
+                if(recentOrder.isDeliveryNotDone() ||
+                        recentOrder.getDeliveryConfirmation() == 1 || recentOrder.getDeliveryConfirmation() == 0){
+                    statusHolder.rlOrderNotDelivered.setVisibility(View.VISIBLE);
+                    statusHolder.rlTrackViewOrder.setVisibility(View.GONE);
+                    statusHolder.relativeStatusBar.setVisibility(View.GONE);
+                    Utils.setTextUnderline(statusHolder.tvDeliveryTime, activity.getString(R.string.view_order));
+                    statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColorStateList(activity, R.color.text_color_selector));
+
+                    RelativeLayout.LayoutParams paramsTV = (RelativeLayout.LayoutParams) statusHolder.tvOrderNotDelivered.getLayoutParams();
+                    boolean deliveryMarkedYes = recentOrder.getDeliveryConfirmation() == 1;
+                    int marginTop = activity.getResources().getDimensionPixelSize(deliveryMarkedYes ? R.dimen.dp_8 : R.dimen.dp_14);
+                    statusHolder.tvOrderDeliveredDigIn.setVisibility(deliveryMarkedYes ? View.VISIBLE : View.GONE);
+                    statusHolder.llOrderDeliveredYes.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
+                    statusHolder.llOrderDeliveredNo.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
+                    statusHolder.vOrderDeliveredMidSep.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
+                    statusHolder.vOrderDeliveredTopSep.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
+
+                    if(recentOrder.isDeliveryNotDone() && recentOrder.getDeliveryConfirmation() < 0){
+                        statusHolder.tvOrderNotDelivered.setText(recentOrder.getDeliveryNotDoneMsg());
+                        statusHolder.ivOrderDeliveredYes.setVisibility(View.GONE);
+                        statusHolder.ivOrderDeliveredNo.setVisibility(View.GONE);
+                        statusHolder.tvOrderDeliveredYes.setText(activity.getString(R.string.yes).toUpperCase()); statusHolder.tvOrderDeliveredYes.setTextSize(14);
+                        statusHolder.tvOrderDeliveredNo.setText(activity.getString(R.string.no).toUpperCase()); statusHolder.tvOrderDeliveredNo.setTextSize(14);
+                    }
+                    else if(recentOrder.getDeliveryConfirmation() == 0){ // no case
+                        statusHolder.tvOrderNotDelivered.setText(recentOrder.getDeliveryConfirmationMsg());
+                        statusHolder.ivOrderDeliveredYes.setVisibility(View.VISIBLE);
+                        statusHolder.ivOrderDeliveredYes.setImageResource(Data.isFuguChatEnabled()?R.drawable.ic_restaurant_chat:R.drawable.ic_restaurant_report);
+                        statusHolder.ivOrderDeliveredNo.setVisibility(View.VISIBLE);
+                        statusHolder.tvOrderDeliveredYes.setText(Data.isFuguChatEnabled()?R.string.chat_with_us :R.string.report_issue); statusHolder.tvOrderDeliveredYes.setTextSize(12);
+                        statusHolder.tvOrderDeliveredNo.setText(R.string.call_restaurant); statusHolder.tvOrderDeliveredNo.setTextSize(12);
+                    }
+                    else if(deliveryMarkedYes){ // yes local case
+                        statusHolder.tvOrderNotDelivered.setText(R.string.dig_in_enjoy_food_experience_feedback);
+                    }
+                    paramsTV.setMargins(paramsTV.leftMargin, marginTop, paramsTV.rightMargin, paramsTV.bottomMargin);
+                    statusHolder.tvOrderNotDelivered.setLayoutParams(paramsTV);
+                } else {
+                    statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        } else if (mholder instanceof ViewTitleCategory){
+            ViewTitleCategory holder = (ViewTitleCategory) mholder;
+            MenusResponse.Category category = (MenusResponse.Category) dataToDisplay.get(position);
+            holder.tvCateogoryTitle.setText(category.getCategoryName());
+            if(!TextUtils.isEmpty(category.getImage())){
+                Picasso.with(activity).load(category.getImage())
+                        .placeholder(R.drawable.ic_nav_select_category)
+                        .error(R.drawable.ic_nav_select_category)
+                        .into(holder.iconTitle);
+            } else {
+                holder.iconTitle.setImageResource(R.drawable.ic_nav_select_category);
+            }
+        }  else if (mholder instanceof ViewHolderOffers){
+            List<MenusResponse.BannerInfo> bannerInfos = ((BannerInfosModel) dataToDisplay.get(position)).getBannerInfos();
+            ViewHolderOffers holderOffers = (ViewHolderOffers) mholder;
+            if(holderOffers.menusVendorOffersAdapter == null) {
+                holderOffers.menusVendorOffersAdapter = new MenusVendorOffersAdapter(activity, bannerInfos, new MenusVendorOffersAdapter.Callback() {
+                    @Override
+                    public void onBannerInfoClick(MenusResponse.BannerInfo bannerInfo) {
+                        if (bannerInfo.getRestaurantId() == -1 && bannerInfo.getDeepIndex() != -1) {
+                            callback.onBannerInfoDeepIndexClick(bannerInfo.getDeepIndex());
+                        } else if (bannerInfo.getRestaurantId() != -1 && bannerInfo.getDeepIndex() == -1) {
+                            callback.onRestaurantSelected(bannerInfo.getRestaurantId());
+                        }
+                    }
+                });
+            } else {
+                holderOffers.menusVendorOffersAdapter.setList(bannerInfos);
+            }
+            holderOffers.pagerMenusVendorOffers.setAdapter(holderOffers.menusVendorOffersAdapter);
+
+            holderOffers.tabDots.setupWithViewPager(holderOffers.pagerMenusVendorOffers, true);
+            for (int i = 0; i < holderOffers.tabDots.getTabCount(); i++) {
+                View tab = ((ViewGroup) holderOffers.tabDots.getChildAt(0)).getChildAt(i);
+                ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
+                p.setMargins(activity.getResources().getDimensionPixelSize(R.dimen.dp_4), 0, 0, 0);
+                tab.requestLayout();
+            }
+            if(bannerInfos.size() == 1){
+                holderOffers.tabDots.setVisibility(View.GONE);
+            } else{
+                holderOffers.tabDots.setVisibility(View.VISIBLE);
+            }
+        } else if (mholder instanceof ViewHolderOfferStrip){
+            MenusResponse.StripInfo stripInfo = (MenusResponse.StripInfo) dataToDisplay.get(position);
+            ViewHolderOfferStrip holderStrip = (ViewHolderOfferStrip) mholder;
+            holderStrip.textViewMinOrder.setText((stripInfo != null && !TextUtils.isEmpty(stripInfo.getText())) ? stripInfo.getText() : "");
+        }
     }
 
     @Override
@@ -97,7 +428,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemViewType(int position) {
         Object object  = dataToDisplay.get(position);
 
-        if(object instanceof DeliveryTitleCategory)
+        if(object instanceof MenusResponse.Category)
             return VIEW_TITLE_CATEGORY;
 
         if(object instanceof DeliverySeeAll)
@@ -112,22 +443,41 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(object instanceof MenusResponse.Vendor)
             return VIEW_VENDOR;
 
+        if(object instanceof MenusResponse.StripInfo)
+            return OFFER_STRIP_ITEM;
 
+        if(object instanceof BannerInfosModel)
+            return OFFERS_PAGER_ITEM;
 
         throw new IllegalArgumentException();
     }
 
-
-    public interface Callback {
-        void onItemClick(Object clickedItem);
-
-    }
 
     @Override
     public void onClickItem(View viewClicked, View parentView) {
         int pos = recyclerView.getChildLayoutPosition(parentView);
         if (pos != RecyclerView.NO_POSITION) {
             switch (viewClicked.getId()) {
+                case R.id.rlRoot:
+                    callback.onRestaurantSelected(((MenusResponse.Vendor)dataToDisplay.get(pos)).getRestaurantId());
+                    break;
+                case R.id.tvViewOrder:
+                case R.id.tvDeliveryTime:
+                case R.id.container:
+                    viewOrderClick(pos);
+                    break;
+                case R.id.tvTrackOrder:
+                    liveTrackingClick(pos);
+                    break;
+                case R.id.llOrderDeliveredYes:
+                    orderDeliveredClick(pos, true);
+                    break;
+                case R.id.llOrderDeliveredNo:
+                    orderDeliveredClick(pos, false);
+                    break;
+                case R.id.llSeeAll:
+
+                    break;
                 case R.id.llRoot:
                     break;
 
@@ -139,11 +489,53 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 case R.id.llMain:
                     break;
+                case R.id.textViewMinOrder:
+                    MenusResponse.StripInfo stripInfo = (MenusResponse.StripInfo) dataToDisplay.get(pos);
+                    if(stripInfo != null) {
+                        if (stripInfo.getRestaurantId() == -1 && stripInfo.getDeepIndex() != -1) {
+                            callback.onBannerInfoDeepIndexClick(stripInfo.getDeepIndex());
+                        } else if (stripInfo.getRestaurantId() != -1 && stripInfo.getDeepIndex() == -1) {
+                            callback.onRestaurantSelected(stripInfo.getRestaurantId());
+                        }
+                    }
+                    break;
             }
         }
     }
 
+    private class ViewHolderVendor extends RecyclerView.ViewHolder {
+        public RelativeLayout rlRoot;
+        View vSep;
+        ImageView imageViewRestaurantImage;
+        TextView textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines;
+        TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery,tvOffer;
+        LinearLayout llRatingStars;TextView tvReviewCount;
 
+
+
+
+        public ViewHolderVendor(final View itemView, final ItemListener itemListener) {
+            super(itemView);
+            rlRoot = (RelativeLayout) itemView.findViewById(R.id.rlRoot);
+            rlRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.onClickItem(rlRoot, itemView);
+                }
+            });
+            vSep = itemView.findViewById(R.id.vSep);
+            imageViewRestaurantImage = (ImageView) itemView.findViewById(R.id.imageViewRestaurantImage);
+            textViewRestaurantName = (TextView) itemView.findViewById(R.id.textViewRestaurantName);
+            textViewMinimumOrder = (TextView) itemView.findViewById(R.id.textViewMinimumOrder);
+            textViewRestaurantCusines = (TextView) itemView.findViewById(R.id.textViewRestaurantCusines);
+            textViewRestaurantCloseTime = (TextView) itemView.findViewById(R.id.textViewRestaurantCloseTime);
+            textViewAddressLine = (TextView) itemView.findViewById(R.id.textViewAddressLine);
+            textViewDelivery = (TextView) itemView.findViewById(R.id.textViewDelivery);
+            llRatingStars = (LinearLayout) itemView.findViewById(R.id.llRatingStars);
+            tvReviewCount = (TextView) itemView.findViewById(R.id.tvReviewCount);
+            tvOffer = (TextView)itemView.findViewById(R.id.tv_offer);
+        }
+    }
     private class ViewOrderStatus extends RecyclerView.ViewHolder {
 
         public LinearLayout linear;
@@ -160,27 +552,27 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageView ivOrderDeliveredYes, ivOrderDeliveredNo;
         View vOrderDeliveredMidSep, vOrderDeliveredTopSep;
 
-        ViewOrderStatus(View itemView, ItemListener itemListener) {
+        ViewOrderStatus(final View itemView, final ItemListener itemListener) {
             super(itemView);
             linear = (LinearLayout) itemView.findViewById(R.id.linear);
             container = (RelativeLayout) itemView.findViewById(R.id.container);
             relativeStatusBar = (RelativeLayout) itemView.findViewById(R.id.relativeStatusBar);
             tvOrderId = (TextView) itemView.findViewById(R.id.tvOrderId);
-            tvOrderId.setTypeface(Fonts.mavenRegular(context));
+            tvOrderId.setTypeface(Fonts.mavenRegular(activity));
             tvOrderIdValue = (TextView) itemView.findViewById(R.id.tvOrderIdValue);
-            tvOrderIdValue.setTypeface(Fonts.mavenMedium(context));
+            tvOrderIdValue.setTypeface(Fonts.mavenMedium(activity));
             tvDeliveryBefore = (TextView) itemView.findViewById(R.id.tvDeliveryBefore);
-            tvDeliveryBefore.setTypeface(Fonts.mavenRegular(context));
+            tvDeliveryBefore.setTypeface(Fonts.mavenRegular(activity));
             tvDeliveryTime = (TextView) itemView.findViewById(R.id.tvDeliveryTime);
-            tvDeliveryTime.setTypeface(Fonts.mavenMedium(context));
+            tvDeliveryTime.setTypeface(Fonts.mavenMedium(activity));
             tvStatus0 = (TextView) itemView.findViewById(R.id.tvStatus0);
-            tvStatus0.setTypeface(Fonts.mavenRegular(context));
+            tvStatus0.setTypeface(Fonts.mavenRegular(activity));
             tvStatus1 = (TextView) itemView.findViewById(R.id.tvStatus1);
-            tvStatus1.setTypeface(Fonts.mavenRegular(context));
+            tvStatus1.setTypeface(Fonts.mavenRegular(activity));
             tvStatus2 = (TextView) itemView.findViewById(R.id.tvStatus2);
-            tvStatus2.setTypeface(Fonts.mavenRegular(context));
+            tvStatus2.setTypeface(Fonts.mavenRegular(activity));
             tvStatus3 = (TextView) itemView.findViewById(R.id.tvStatus3);
-            tvStatus3.setTypeface(Fonts.mavenRegular(context));
+            tvStatus3.setTypeface(Fonts.mavenRegular(activity));
             ivStatus0 = (ImageView) itemView.findViewById(R.id.ivStatus0);
             ivStatus1 = (ImageView) itemView.findViewById(R.id.ivStatus1);
             ivStatus2 = (ImageView) itemView.findViewById(R.id.ivStatus2);
@@ -212,9 +604,23 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ivOrderDeliveredNo = (ImageView) itemView.findViewById(R.id.ivOrderDeliveredNo);
             vOrderDeliveredMidSep = itemView.findViewById(R.id.vOrderDeliveredMidSep);
             vOrderDeliveredTopSep = itemView.findViewById(R.id.vOrderDeliveredTopSep);
+
+            View.OnClickListener onClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.onClickItem(v, itemView);
+                }
+            };
+
+            tvViewOrder.setOnClickListener(onClickListener);
+            tvDeliveryTime.setOnClickListener(onClickListener);
+            container.setOnClickListener(onClickListener);
+            tvTrackOrder.setOnClickListener(onClickListener);
+            llOrderDeliveredYes.setOnClickListener(onClickListener);
+            llOrderDeliveredNo.setOnClickListener(onClickListener);
         }
     }
-    static class ViewTitleCategory extends RecyclerView.ViewHolder {
+    private class ViewTitleCategory extends RecyclerView.ViewHolder {
         @Bind(R.id.icon_title)
         ImageView iconTitle;
         @Bind(R.id.tv_cateogory_title)
@@ -231,39 +637,59 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(view);
         }
     }
-    static class ViewSeeAll extends RecyclerView.ViewHolder {
+    private class ViewSeeAll extends RecyclerView.ViewHolder {
         @Bind(R.id.ll_see_all)
         LinearLayout llSeeAll;
 
-        ViewSeeAll(View view, final ItemListener itemListener) {
-            super(view);
-            ButterKnife.bind(this, view);
+        ViewSeeAll(final View itemView, final ItemListener itemListener) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
             llSeeAll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemListener.onClickItem(llSeeAll,llSeeAll);
+                    itemListener.onClickItem(llSeeAll, itemView);
+                }
+            });
+        }
+    }
+    public class ViewHolderOffers extends RecyclerView.ViewHolder {
+        public MenusVendorOffersAdapter menusVendorOffersAdapter;
+        public ViewPager pagerMenusVendorOffers;
+        public TabLayout tabDots;
+
+        public ViewHolderOffers(View view) {
+            super(view);
+            pagerMenusVendorOffers = (ViewPager) view.findViewById(R.id.pagerMenusVendorOffers);
+            tabDots = (TabLayout) view.findViewById(R.id.tabDots);
+        }
+    }
+
+    public class ViewHolderOfferStrip extends RecyclerView.ViewHolder {
+        public TextView textViewMinOrder;
+        public ViewHolderOfferStrip(final View view, final ItemListener itemListener){
+            super(view);
+            textViewMinOrder = (TextView) view.findViewById(R.id.textViewMinOrder);
+            ViewGroup.LayoutParams params = textViewMinOrder.getLayoutParams();
+            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            textViewMinOrder.setLayoutParams(params);
+
+            textViewMinOrder.setVisibility(View.VISIBLE);
+            textViewMinOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.onClickItem(v, view);
                 }
             });
         }
     }
 
-    public static class DeliveryTitleCategory{
-        private String categoryName;
-        private String categoryUrl;
-
-        public DeliveryTitleCategory(String categoryName, String categoryUrl) {
-            this.categoryName = categoryName;
-            this.categoryUrl = categoryUrl;
-        }
-    }
     public static class DeliverySeeAll{
-        private static DeliverySeeAll deliverySeeAll;
-        private DeliverySeeAll() {
-        }
-        public DeliverySeeAll getInstance(){
-            if(deliverySeeAll==null)
-                deliverySeeAll= new DeliverySeeAll();
-            return deliverySeeAll;
+        private String categoryId;
+
+        private DeliverySeeAll(){}
+
+        public DeliverySeeAll(String categoryId) {
+            this.categoryId = categoryId;
         }
     }
     public static class DeliveryDivider{
@@ -276,6 +702,210 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return deliveryDivider;
         }
     }
+    public static class BannerInfosModel{
+        private List<MenusResponse.BannerInfo> bannerInfos;
 
+        public BannerInfosModel(List<MenusResponse.BannerInfo> bannerInfos) {
+            this.bannerInfos = bannerInfos;
+        }
+
+        public List<MenusResponse.BannerInfo> getBannerInfos() {
+            return bannerInfos;
+        }
+    }
+
+
+    private void setRatingViews(LinearLayout llRatingStars,TextView tvReviewCount,Double rating) {
+        llRatingStars.removeAllViews();
+        activity.addStarsToLayout(llRatingStars, rating,
+                R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey);
+        llRatingStars.addView(tvReviewCount);
+        tvReviewCount.setText(activity.getVendorOpened().getReviewCount()+" Ratings");
+    }
+
+    public interface Callback {
+        void onRestaurantSelected(int vendorId);
+        void onBannerInfoDeepIndexClick(int deepIndex);
+        void onNotify(int count);
+    }
+
+    private void showPossibleStatus(ArrayList<String> possibleStatus, int status, ViewOrderStatus statusHolder) {
+        setDefaultState(statusHolder);
+        int selectedSize = (int) (35 * ASSL.Xscale());
+        switch (possibleStatus.size()) {
+            case 4:
+                statusHolder.tvStatus3.setVisibility(View.VISIBLE);
+                statusHolder.ivStatus3.setVisibility(View.VISIBLE);
+                statusHolder.lineStatus3.setVisibility(View.VISIBLE);
+                statusHolder.tvStatus3.setText(possibleStatus.get(3));
+                if (status == 3) {
+                    statusHolder.ivStatus3.setBackgroundResource(R.drawable.circle_order_status_green);
+                    statusHolder.lineStatus3.setBackgroundColor(ContextCompat.getColor(activity, R.color.order_status_green));
+                } else if (status > 3) {
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
+                    statusHolder.ivStatus3.setLayoutParams(layoutParams);
+                    statusHolder.ivStatus3.setBackgroundResource(R.drawable.ic_order_status_green);
+                    statusHolder.lineStatus3.setBackgroundColor(ContextCompat.getColor(activity, R.color.order_status_green));
+                }
+            case 3:
+                statusHolder.tvStatus2.setVisibility(View.VISIBLE);
+                statusHolder.ivStatus2.setVisibility(View.VISIBLE);
+                statusHolder.lineStatus2.setVisibility(View.VISIBLE);
+                statusHolder.tvStatus2.setText(possibleStatus.get(2));
+                if (status == 2) {
+                    statusHolder.ivStatus2.setBackgroundResource(R.drawable.circle_order_status_green);
+                    statusHolder.lineStatus2.setBackgroundColor(ContextCompat.getColor(activity, R.color.order_status_green));
+                } else if (status > 2) {
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
+                    statusHolder.ivStatus2.setLayoutParams(layoutParams);
+                    statusHolder.ivStatus2.setBackgroundResource(R.drawable.ic_order_status_green);
+                    statusHolder.lineStatus2.setBackgroundColor(ContextCompat.getColor(activity, R.color.order_status_green));
+                }
+            case 2:
+                statusHolder.tvStatus1.setVisibility(View.VISIBLE);
+                statusHolder.ivStatus1.setVisibility(View.VISIBLE);
+                statusHolder.lineStatus1.setVisibility(View.VISIBLE);
+                statusHolder.tvStatus1.setText(possibleStatus.get(1));
+                if (status == 1) {
+                    statusHolder.ivStatus1.setBackgroundResource(R.drawable.circle_order_status_green);
+                    statusHolder.lineStatus1.setBackgroundColor(ContextCompat.getColor(activity, R.color.order_status_green));
+                } else if (status > 1) {
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
+                    statusHolder.ivStatus1.setLayoutParams(layoutParams);
+                    statusHolder.ivStatus1.setBackgroundResource(R.drawable.ic_order_status_green);
+                    statusHolder.lineStatus1.setBackgroundColor(ContextCompat.getColor(activity, R.color.order_status_green));
+                }
+            case 1:
+                statusHolder.tvStatus0.setVisibility(View.VISIBLE);
+                statusHolder.ivStatus0.setVisibility(View.VISIBLE);
+                statusHolder.tvStatus0.setText(possibleStatus.get(0));
+                if (status == 0) {
+                    statusHolder.ivStatus0.setBackgroundResource(R.drawable.circle_order_status_green);
+                } else if (status > 0) {
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
+                    statusHolder.ivStatus0.setLayoutParams(layoutParams);
+                    statusHolder.ivStatus0.setBackgroundResource(R.drawable.ic_order_status_green);
+
+                }
+                break;
+        }
+    }
+
+    private void setDefaultState(ViewOrderStatus statusHolder) {
+        int selectedSize = (int) (25 * ASSL.Xscale());
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(selectedSize, selectedSize);
+        statusHolder.ivStatus3.setBackgroundResource(R.drawable.circle_order_status);
+        statusHolder.ivStatus3.setLayoutParams(layoutParams);
+        statusHolder.lineStatus3.setBackgroundColor(ContextCompat.getColor(activity, R.color.rank_5));
+        statusHolder.ivStatus2.setBackgroundResource(R.drawable.circle_order_status);
+        statusHolder.ivStatus2.setLayoutParams(layoutParams);
+        statusHolder.lineStatus2.setBackgroundColor(ContextCompat.getColor(activity, R.color.rank_5));
+        statusHolder.ivStatus1.setBackgroundResource(R.drawable.circle_order_status);
+        statusHolder.ivStatus1.setLayoutParams(layoutParams);
+        statusHolder.lineStatus1.setBackgroundColor(ContextCompat.getColor(activity, R.color.rank_5));
+        statusHolder.ivStatus0.setBackgroundResource(R.drawable.circle_order_status);
+        statusHolder.ivStatus0.setLayoutParams(layoutParams);
+    }
+
+    private void viewOrderClick(int pos){
+        try {
+            Intent intent = new Intent(activity, RideTransactionsActivity.class);
+            intent.putExtra(Constants.KEY_ORDER_ID, ((RecentOrder)dataToDisplay.get(pos)).getOrderId());
+            intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MENUS.getOrdinal());
+            activity.startActivity(intent);
+            activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void liveTrackingClick(int pos){
+        try {
+            RecentOrder order = ((RecentOrder)dataToDisplay.get(pos));
+            if(order.getShowLiveTracking() == 1 && order.getDeliveryId() > 0) {
+                Intent intent = new Intent(activity, RideTransactionsActivity.class);
+                intent.putExtra(Constants.KEY_ORDER_ID, order.getOrderId());
+                intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MENUS.getOrdinal());
+                intent.putExtra(Constants.KEY_OPEN_LIVE_TRACKING, 1);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+
+            } else {
+                Utils.showToast(activity, !TextUtils.isEmpty(order.getTrackDeliveryMessage()) ?
+                        order.getTrackDeliveryMessage() : activity.getString(R.string.tracking_not_available_message));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void orderDeliveredClick(int pos, boolean delivered){
+        try {
+            final RecentOrder order = (RecentOrder) dataToDisplay.get(pos);
+            if(delivered){
+                if(order.isDeliveryNotDone() && order.getDeliveryConfirmation() < 0) {
+                    apiConfirmDelivery(order.getOrderId(), 1, pos);
+                } else {
+                    activity.getHomeUtil().openFuguOrSupport(activity, activity.getRelativeLayoutContainer(),
+                            order.getOrderId(), order.getSupportCategory(), order.getExpectedDeliveryDate(), ProductType.MENUS.getOrdinal());
+                }
+            } else {
+                if (order.isDeliveryNotDone() && order.getDeliveryConfirmation() < 0) {
+                    apiConfirmDelivery(order.getOrderId(), 0, pos);
+                } else {
+                    Utils.openCallIntent(activity, order.getRestaurantNumber());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void apiConfirmDelivery(int orderId, final int isDelivered, final int position) {
+        try {
+            if (MyApplication.getInstance().isOnline()) {
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_ORDER_ID, String.valueOf(orderId));
+                params.put(Constants.KEY_IS_DELIVERED, String.valueOf(isDelivered));
+
+                DialogPopup.showLoadingDialog(activity, "");
+
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getMenusApiService().confirmDeliveryByUser(params, new retrofit.Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt productsResponse, Response response) {
+                        try {
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
+                                    RecentOrder order = (RecentOrder) dataToDisplay.get(position);
+                                    order.setDeliveryConfirmation(isDelivered);
+                                    order.setDeliveryConfirmationMsg(productsResponse.getMessage());
+                                    notifyDataSetChanged();
+                                } else {
+                                    DialogPopup.alertPopup(activity, "", productsResponse.getMessage());
+                                }
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        DialogPopup.dismissLoadingDialog();
+                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    }
+                });
+            } else {
+                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

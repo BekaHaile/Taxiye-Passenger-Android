@@ -301,10 +301,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         if (viewType == MAIN_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_restaurant, parent, false);
-
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-            v.setLayoutParams(layoutParams);
-            ASSL.DoMagic(v);
             return new ViewHolder(v, activity);
         } else if (viewType == FORM_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommend_restaurant, parent, false);

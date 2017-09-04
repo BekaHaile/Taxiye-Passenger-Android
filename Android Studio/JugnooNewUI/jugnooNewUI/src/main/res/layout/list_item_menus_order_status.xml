@@ -32,7 +32,7 @@
                 android:layout_marginLeft="22dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:layout_toLeftOf="@id/tvOrderAmount"
+                android:layout_toLeftOf="@+id/tvOrderAmount"
                 android:layout_alignParentLeft="true"
                 android:ellipsize="end"
                 android:maxLines="1"
