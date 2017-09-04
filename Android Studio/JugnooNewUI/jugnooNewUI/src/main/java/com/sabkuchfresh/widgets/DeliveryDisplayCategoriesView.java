@@ -124,11 +124,9 @@ public class DeliveryDisplayCategoriesView {
                 break;
 
             case R.id.view_bottom_blank:
-
+                OnCategoryClick(layoutChooseCategory);
                 break;
         }
 
     }
-
-
 }

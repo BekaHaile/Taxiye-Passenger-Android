@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@android:color/white"
+    android:layout_height="wrap_content">
+
+    
+    
+    <ImageView
+        android:layout_marginLeft="15dp"
+        android:id="@+id/icon_title"
+        android:src="@drawable/ic_nav_select_category"
+        android:layout_centerVertical="true"
+        android:layout_width="19dp"
+        android:layout_marginRight="15dp"
+        android:layout_height="19dp" />
+    <TextView
+        android:id="@+id/tv_cateogory_title"
+        app:font="@string/maven"
+        android:text="Ongoing Orders"
+        android:textSize="14.5sp"
+        android:layout_marginLeft="50dp"
+        android:textColor="@color/text_color"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/tv_cateogory_title"
+        android:background="@color/stroke_light_grey"/>
+
+</RelativeLayout>

@@ -889,6 +889,13 @@
         name="text_margin">
         16dp
     </dimen>
-    <dimen name="height_category_bar">60dp</dimen>
 
+
+
+    <dimen name="height_choose_category">60dp</dimen>
+    <dimen name="height_divider_choose_category">8dp</dimen>
+
+    <!--Breakdown = height_choose_cateogry + 2 * height_divider_choose_category-->
+    <dimen name="height_category_bar">76dp</dimen>
+    <!--Breakdown = height_choose_cateogry + 2 * height_divider_choose_category-->
 </resources>

@@ -1386,6 +1386,7 @@
     <string name="accepts_online_order">Accepts Online Order</string>
     <string name="chat_enabled">Chat Enabled</string>
     <string name="top_rated">Top Rated (3.5+)</string>
+    <string name="label_see_all">See All</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

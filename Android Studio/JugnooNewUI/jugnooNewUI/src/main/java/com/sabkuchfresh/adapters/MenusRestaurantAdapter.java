@@ -499,13 +499,11 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     paramsDelivery.addRule(RelativeLayout.RIGHT_OF, mHolder.textViewRestaurantCloseTime.getId());
                     mHolder.imageViewRestaurantImage.setColorFilter(BW_FILTER);
                     mHolder.tvOffer.getBackground().setColorFilter(BW_FILTER);
-                    mHolder.viewOffer.getBackground().setColorFilter(BW_FILTER);
                     mHolder.textViewMinimumOrder.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
 
                 } else {
                     mHolder.imageViewRestaurantImage.setColorFilter(null);
                     mHolder.tvOffer.getBackground().setColorFilter(null);
-                    mHolder.viewOffer.getBackground().setColorFilter(null);
                     mHolder.textViewMinimumOrder.setTextColor(ContextCompat.getColor(activity,R.color.order_history_status_color));
 
                     // restaurant about to close
@@ -594,23 +592,24 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 if (vendor.getRating() != null && vendor.getRating() >= 1d) {
                     visibilityRating = View.VISIBLE;
                     if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
-                        activity.setRatingAndGetColor(mHolder.tvRating, vendor.getRating(),"#9d9d9d", true);
+                        setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating());
                     }
                     else{
-                        activity.setRatingAndGetColor(mHolder.tvRating, vendor.getRating(), vendor.getColorCode(), true);
+                        setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating());
+
                     }
                 }
-                mHolder.tvRating.setVisibility(visibilityRating);
+                mHolder.llRatingStars.setVisibility(visibilityRating);
 
 
 
 /*
+
  Edited by Parminder Singh on 2/24/17 at 6:10 PM
  Displaying Offers strip
  **/
 
 				mHolder.tvOffer.setVisibility(TextUtils.isEmpty(vendor.getOfferText())?View.GONE:View.VISIBLE);
-				mHolder.viewOffer.setVisibility(TextUtils.isEmpty(vendor.getOfferText())?View.GONE:View.VISIBLE);
 				mHolder.tvOffer.setText(vendor.getOfferText());
 
 
@@ -832,10 +831,12 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout rlRoot;
-        View vSep, viewOffer;
+        View vSep;
         ImageView imageViewRestaurantImage;
         TextView textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines;
-        TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery, tvRating,tvOffer;
+        TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery,tvOffer;
+        LinearLayout llRatingStars;TextView tvReviewCount;
+
 
 
 
@@ -850,9 +851,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             textViewRestaurantCloseTime = (TextView) itemView.findViewById(R.id.textViewRestaurantCloseTime);textViewRestaurantCloseTime.setTypeface(Fonts.mavenMedium(context));
             textViewAddressLine = (TextView) itemView.findViewById(R.id.textViewAddressLine);textViewAddressLine.setTypeface(Fonts.mavenMedium(context));
             textViewDelivery = (TextView) itemView.findViewById(R.id.textViewDelivery);textViewDelivery.setTypeface(Fonts.mavenMedium(context));
-            tvRating = (TextView) itemView.findViewById(R.id.tvRating);
+            llRatingStars = (LinearLayout) itemView.findViewById(R.id.llRatingStars);
+            tvReviewCount = (TextView) itemView.findViewById(R.id.tvReviewCount);
             tvOffer = (TextView)itemView.findViewById(R.id.tv_offer);
-            viewOffer = itemView.findViewById(R.id.tv_offer_view);
         }
     }
 
@@ -1394,7 +1395,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-
+    private void setRatingViews(LinearLayout llRatingStars,TextView tvReviewCount,Double rating) {
+        llRatingStars.removeAllViews();
+        activity.addStarsToLayout(llRatingStars, rating,
+                R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey);
+        llRatingStars.addView(tvReviewCount);
+        tvReviewCount.setText(activity.getVendorOpened().getReviewCount()+" Ratings");
+    }
 
 
 }

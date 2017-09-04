@@ -5,12 +5,13 @@
 
 
 
-    <ImageView
+    <android.support.v7.widget.RecyclerView
         android:layout_marginTop="@dimen/height_category_bar"
+        android:id="@+id/recycler_delivery_home"
         android:layout_width="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/ride_end_image_1"
         android:layout_height="wrap_content" />
+
+
     <include layout="@layout/layout_delivery_category_dropdown"/>
 
 </RelativeLayout>
