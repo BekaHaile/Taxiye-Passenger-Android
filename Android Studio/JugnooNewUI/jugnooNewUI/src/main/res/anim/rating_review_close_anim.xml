@@ -6,7 +6,7 @@
         android:pivotY="0%"
         android:duration="600" android:fillBefore="false" />-->
     <translate
-        android:duration="@integer/time_category_anim"
+        android:duration="@integer/time_category_anim_close"
         android:fromYDelta="0"
         android:fillBefore="false"
         android:fillAfter="false"

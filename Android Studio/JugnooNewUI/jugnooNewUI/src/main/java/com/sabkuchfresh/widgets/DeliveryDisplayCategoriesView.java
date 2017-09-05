@@ -115,10 +115,15 @@ public class DeliveryDisplayCategoriesView {
                 if(rvCategories.getVisibility()==View.VISIBLE){
                     viewBottomblank.setVisibility(View.GONE);
                     rvCategories.startAnimation(categoryHideAnim);
+                    handler.postDelayed(hideViewsRunnable,activity.getResources().getInteger(R.integer.time_category_anim_close));
                 }else{
+                    viewBottomblank.setAlpha(0);
+                    viewBottomblank.setVisibility(View.VISIBLE);
+                    viewBottomblank.animate().alpha(1).setDuration(activity.getResources().getInteger(R.integer.time_category_anim_open)).start();
                     rvCategories.startAnimation(categoryShowAnim);
+                    handler.postDelayed(hideViewsRunnable,activity.getResources().getInteger(R.integer.time_category_anim_open));
+
                 }
-                handler.postDelayed(hideViewsRunnable,activity.getResources().getInteger(R.integer.time_category_anim));
 
 
                 break;
