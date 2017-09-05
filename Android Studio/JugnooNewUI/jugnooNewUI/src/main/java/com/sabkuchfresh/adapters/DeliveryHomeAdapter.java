@@ -62,6 +62,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final String TAG = DeliveryHomeAdapter.class.getName();
     private FreshActivity activity;
     private List<Object> dataToDisplay;
+    private List<RecentOrder> remainingRecentOrders;
     private ArrayList<String> possibleStatus;
     private Callback callback;
     private static final int VIEW_TITLE_CATEGORY = 1;
@@ -72,6 +73,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int OFFERS_PAGER_ITEM = 6;
     private static final int OFFER_STRIP_ITEM = 7;
     private static final int ITEM_PROGRESS_BAR = 8;
+
+
+    private static final int RECENT_ORDERS_TO_SHOW = 2;
 
     private RecyclerView recyclerView;
 
@@ -122,38 +126,42 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
           this.dataToDisplay = new ArrayList<>();
 
         if(menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0){
-            int sizeRecentOrders =menusResponse.getRecentOrders().size();
+            int sizeRecentOrders = menusResponse.getRecentOrders().size();
 
             dataToDisplay.add(new MenusResponse.Category(true));
-            dataToDisplay.add(menusResponse.getRecentOrders().get(0));
-            if(sizeRecentOrders>1){
-                dataToDisplay.add(menusResponse.getRecentOrders().get(1));
+            int count = Math.min(RECENT_ORDERS_TO_SHOW, sizeRecentOrders);
+            for(int i=0; i<count; i++){
+                dataToDisplay.add(menusResponse.getRecentOrders().get(i));
             }
-            if(sizeRecentOrders>2){
+            if(sizeRecentOrders > RECENT_ORDERS_TO_SHOW){
                 dataToDisplay.add(new DeliverySeeAll(-1));
             }
             dataToDisplay.add(new DeliveryDivider());
         }
 
-        for(MenusResponse.Category category:  menusResponse.getCategories()){
-            if (category.getVendors()!=null) {
-                dataToDisplay.add(new MenusResponse.Category(category.getImage(),category.getCategoryName()));
-                dataToDisplay.addAll(category.getVendors());
-                if(category.getCount()>category.getVendors().size()){
-					dataToDisplay.add(new DeliverySeeAll(category.getId()));
-				}
-                dataToDisplay.add(new DeliveryDivider());
+        if(menusResponse.getCategories() != null) {
+            for (MenusResponse.Category category : menusResponse.getCategories()) {
+                if (category.getVendors() != null) {
+                    dataToDisplay.add(new MenusResponse.Category(category.getImage(), category.getCategoryName()));
+                    dataToDisplay.addAll(category.getVendors());
+                    if (category.getCount() > category.getVendors().size()) {
+                        dataToDisplay.add(new DeliverySeeAll(category.getId()));
+                    }
+                    dataToDisplay.add(new DeliveryDivider());
+                }
             }
         }
 
         //Removes the bottom border
         if(dataToDisplay.size()>1){
-            dataToDisplay.remove(dataToDisplay.size()-1);
+            dataToDisplay.add(0, dataToDisplay.remove(dataToDisplay.size()-1));
 
         }
 
         notifyDataSetChanged();
     }
+
+
 
     public void setList(List<Object> dataToDisplay) {
         this.dataToDisplay = dataToDisplay;
@@ -161,6 +169,31 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
     public List<Object> getDataToDisplay() {
         return dataToDisplay;
+    }
+
+    private void cacheRemainingRecentOrders(List<RecentOrder> recentOrders){
+
+        if(remainingRecentOrders == null){
+            remainingRecentOrders = new ArrayList<>();
+        }
+        remainingRecentOrders.clear();
+        remainingRecentOrders.addAll(recentOrders);
+        if(remainingRecentOrders.size() > 2){
+            remainingRecentOrders.remove(0);
+            remainingRecentOrders.remove(0);
+        }
+    }
+
+    private void fillRemainingRecentOrders(List<RecentOrder> recentOrders){
+        if(remainingRecentOrders == null){
+            remainingRecentOrders = new ArrayList<>();
+        }
+        remainingRecentOrders.clear();
+        remainingRecentOrders.addAll(recentOrders);
+        if(remainingRecentOrders.size() > 2){
+            remainingRecentOrders.remove(0);
+            remainingRecentOrders.remove(0);
+        }
     }
 
     @Override
@@ -413,14 +446,19 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if (mholder instanceof ViewTitleCategory){
             ViewTitleCategory holder = (ViewTitleCategory) mholder;
             MenusResponse.Category category = (MenusResponse.Category) dataToDisplay.get(position);
-            holder.tvCateogoryTitle.setText(category.getCategoryName());
-            if(!TextUtils.isEmpty(category.getImage())){
-                Picasso.with(activity).load(category.getImage())
-                        .placeholder(R.drawable.ic_nav_select_category)
-                        .error(R.drawable.ic_nav_select_category)
-                        .into(holder.iconTitle);
+            if(category.isTypeOrder()){
+                holder.tvCateogoryTitle.setText(R.string.ongoing_orders);
+                holder.iconTitle.setImageResource(R.drawable.ic_ongoing_orders);
             } else {
-                holder.iconTitle.setImageResource(R.drawable.ic_nav_select_category);
+                holder.tvCateogoryTitle.setText(category.getCategoryName());
+                if(!TextUtils.isEmpty(category.getImage())){
+                    Picasso.with(activity).load(category.getImage())
+                            .placeholder(R.drawable.ic_nav_select_category)
+                            .error(R.drawable.ic_nav_select_category)
+                            .into(holder.iconTitle);
+                } else {
+                    holder.iconTitle.setImageResource(R.drawable.ic_nav_select_category);
+                }
             }
         }  else if (mholder instanceof ViewHolderOffers){
             List<MenusResponse.BannerInfo> bannerInfos = ((BannerInfosModel) dataToDisplay.get(position)).getBannerInfos();
@@ -516,8 +554,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 case R.id.llOrderDeliveredNo:
                     orderDeliveredClick(pos, false);
                     break;
-                case R.id.llSeeAll:
+                case R.id.ll_see_all:
+                    if(dataToDisplay.get(pos) instanceof DeliverySeeAll){
+                        if(((DeliverySeeAll)dataToDisplay.get(pos)).getCategoryId() > -1){
 
+                        } else {
+
+                        }
+                    }
                     break;
                 case R.id.llRoot:
                     break;
@@ -754,6 +798,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private DeliverySeeAll(){}
 
         public DeliverySeeAll(int categoryId) {
+            this.categoryId = categoryId;
+        }
+
+        public int getCategoryId() {
+            return categoryId;
+        }
+
+        public void setCategoryId(int categoryId) {
             this.categoryId = categoryId;
         }
     }

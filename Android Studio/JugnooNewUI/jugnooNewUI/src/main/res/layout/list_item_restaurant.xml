@@ -164,6 +164,7 @@
         android:layout_height="@dimen/dp_1"
         android:layout_marginLeft="@dimen/dp_12"
         android:layout_marginRight="@dimen/dp_12"
+        android:layout_below="@+id/textViewRestaurantCloseTime"
         android:background="@color/stroke_light_grey_alpha"
         />
 

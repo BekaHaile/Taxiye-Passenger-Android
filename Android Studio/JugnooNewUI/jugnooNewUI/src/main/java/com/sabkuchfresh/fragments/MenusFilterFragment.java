@@ -233,11 +233,13 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	}
 
 	public void setCuisinesList(){
-		for(FilterCuisine filterCuisine : activity.getCuisinesAll()){
-			filterCuisine.setSelected(activity.getCuisinesSelected().contains(filterCuisine)?1:0);
-		}
-		if(menusFilterCuisinesAdapter != null){
-			menusFilterCuisinesAdapter.setList(activity.getCuisinesAll());
+		if(activity.getCuisinesAll() != null) {
+			for (FilterCuisine filterCuisine : activity.getCuisinesAll()) {
+				filterCuisine.setSelected(activity.getCuisinesSelected().contains(filterCuisine) ? 1 : 0);
+			}
+			if (menusFilterCuisinesAdapter != null) {
+				menusFilterCuisinesAdapter.setList(activity.getCuisinesAll());
+			}
 		}
 	}
 

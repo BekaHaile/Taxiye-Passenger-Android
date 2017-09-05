@@ -6,7 +6,9 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:paddingBottom="12dp"
-    android:paddingTop="12dp">
+    android:paddingTop="12dp"
+    android:background="?android:attr/selectableItemBackground"
+    >
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
@@ -16,7 +18,7 @@
         android:drawableRight="@drawable/ic_arrow_grey"
         android:gravity="center"
         android:text="@string/label_see_all"
-        android:textColor="@color/text_color_hint"
+        android:textColor="@color/text_color_light"
         app:font="@string/maven" />
 </LinearLayout>
 

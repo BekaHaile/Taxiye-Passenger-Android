@@ -11,7 +11,6 @@
         layout="@layout/layout_delivery_address_bar"/>
 
 
-
     <RelativeLayout
         android:layout_marginTop="@dimen/height_category_bar"
         android:layout_width="match_parent"
@@ -27,27 +26,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <RelativeLayout
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewRestaurant"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerViewRestaurant"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fadeScrollbars="true"
-                    android:scrollbars="vertical"
-                    android:splitMotionEvents="false">
-                </android.support.v7.widget.RecyclerView>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_7"
-                    android:background="@drawable/shadow_down_new"
-                    />
-
-            </RelativeLayout>
-
+                android:layout_height="match_parent"
+                android:fadeScrollbars="true"
+                android:scrollbars="vertical"
+                android:splitMotionEvents="false">
+            </android.support.v7.widget.RecyclerView>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
