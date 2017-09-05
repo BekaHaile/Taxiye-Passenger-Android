@@ -71,6 +71,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int VIEW_DIVIDER = 5;
     private static final int OFFERS_PAGER_ITEM = 6;
     private static final int OFFER_STRIP_ITEM = 7;
+    private static final int ITEM_PROGRESS_BAR = 8;
+
     private RecyclerView recyclerView;
 
     private final static ColorMatrix BW_MATRIX = new ColorMatrix();
@@ -114,8 +116,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public void setList(MenusResponse menusResponse) {
-        this.dataToDisplay = new ArrayList<>();
+    public void setList(MenusResponse menusResponse, boolean isPagination) {
+
+        if(!isPagination || dataToDisplay==null)
+          this.dataToDisplay = new ArrayList<>();
 
         if(menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0){
             int sizeRecentOrders =menusResponse.getRecentOrders().size();
@@ -134,7 +138,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         for(MenusResponse.Category category:  menusResponse.getCategories()){
             if (category.getVendors()!=null) {
                 dataToDisplay.add(new MenusResponse.Category(category.getImage(),category.getCategoryName()));
-                dataToDisplay.addAll(menusResponse.getVendors());
+                dataToDisplay.addAll(category.getVendors());
                 if(category.getCount()>category.getVendors().size()){
 					dataToDisplay.add(new DeliverySeeAll(category.getId()));
 				}
@@ -151,6 +155,13 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyDataSetChanged();
     }
 
+    public void setList(List<Object> dataToDisplay) {
+        this.dataToDisplay = dataToDisplay;
+        notifyDataSetChanged();
+    }
+    public List<Object> getDataToDisplay() {
+        return dataToDisplay;
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -177,6 +188,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case OFFER_STRIP_ITEM:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.textview_min_order, parent, false);
                 return new ViewHolderOfferStrip(v, this);
+            case ITEM_PROGRESS_BAR:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progress_bar_feed, parent, false);
+                return new ProgressBarViewHolder(v);
+
             default:
                 throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
 
@@ -192,7 +207,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             MenusResponse.Vendor vendor = (MenusResponse.Vendor) dataToDisplay.get(position);
             mHolder.textViewRestaurantName.setText(vendor.getName());
 
-            mHolder.vSep.setVisibility(position == 0 ? View.GONE : View.VISIBLE);
 
             DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
             String currentSystemTime = dateFormat.format(new Date());
@@ -530,6 +544,24 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    public void showPaginationProgressBar(boolean show) {
+        if(dataToDisplay==null || dataToDisplay.size()==0)
+            return;
+
+        int lastIndexofList = dataToDisplay.size() - 1;
+        boolean isProgressBarExist = dataToDisplay.get(lastIndexofList) instanceof ProgressBarModel;
+        if(show) {
+            if (!isProgressBarExist) {
+                dataToDisplay.add(ProgressBarModel.getInstance());
+                notifyItemInserted(lastIndexofList);
+            }
+        }else{
+           if(dataToDisplay.remove(ProgressBarModel.getInstance()))
+              notifyItemRemoved(lastIndexofList);
+        }
+
+    }
+
     private class ViewHolderVendor extends RecyclerView.ViewHolder {
         public RelativeLayout rlRoot;
         View vSep;
@@ -552,7 +584,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
             vSep = itemView.findViewById(R.id.vSep);
             imageViewRestaurantImage = (ImageView) itemView.findViewById(R.id.imageViewRestaurantImage);
-            textViewRestaurantName = (TextView) itemView.findViewById(R.id.textViewRestaurantName);
+            textViewRestaurantName = (TextView) itemView.findViewById(R.id.textViewRestaurantName); textViewRestaurantName.setTypeface(textViewRestaurantName.getTypeface(), Typeface.BOLD);
             textViewMinimumOrder = (TextView) itemView.findViewById(R.id.textViewMinimumOrder);
             textViewRestaurantCusines = (TextView) itemView.findViewById(R.id.textViewRestaurantCusines);
             textViewRestaurantCloseTime = (TextView) itemView.findViewById(R.id.textViewRestaurantCloseTime);
@@ -709,6 +741,12 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
         }
     }
+    private class ProgressBarViewHolder extends RecyclerView.ViewHolder {
+
+        public ProgressBarViewHolder(View itemView) {
+            super(itemView);
+        }
+    }
 
     public static class DeliverySeeAll{
         private int categoryId;
@@ -727,6 +765,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(deliveryDivider==null)
                 deliveryDivider= new DeliveryDivider();
             return deliveryDivider;
+        }
+    }
+    public static class ProgressBarModel{
+        private static ProgressBarModel progressBarModel;
+        private ProgressBarModel() {
+        }
+        public static ProgressBarModel getInstance(){
+            if(progressBarModel ==null)
+                progressBarModel = new ProgressBarModel();
+            return progressBarModel;
         }
     }
     public static class BannerInfosModel{

@@ -142,7 +142,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     };
 
-    private synchronized void searchVendors(String text, List<Integer> searchedRestaurantIds){
+    private void searchVendors(String text, List<Integer> searchedRestaurantIds){
         if(TextUtils.isEmpty(text)){
             activity.setSearchedRestaurantIds(null);
             activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), false, true);
