@@ -71,7 +71,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private RelativeLayout llRoot;
     private RelativeLayout relativeLayoutNoMenus;
-    //    private MenusRestaurantAdapter menusRestaurantAdapter;
     private DeliveryHomeAdapter deliveryHomeAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewRestaurant;
@@ -347,6 +346,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -355,6 +355,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         try {
             deliveryHomeAdapter.removeHandler();
         } catch (Exception e) {
+            e.printStackTrace();
         }
         super.onDestroyView();
         ASSL.closeActivity(llRoot);
@@ -763,6 +764,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onCategoryClick(MenusResponse.Category category) {
-        expandThisCategoryId(category.getId());
+        if(activity.getCategoryIdOpened() != category.getId()) {
+            expandThisCategoryId(category.getId());
+        }
+    }
+
+    public String getSearchText() {
+        return searchText;
     }
 }

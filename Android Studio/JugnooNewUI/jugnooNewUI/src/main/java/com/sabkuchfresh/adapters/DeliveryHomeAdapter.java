@@ -73,6 +73,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int OFFERS_PAGER_ITEM = 6;
     private static final int OFFER_STRIP_ITEM = 7;
     private static final int ITEM_PROGRESS_BAR = 8;
+    private static final int NO_VENDORS_ITEM = 9;
 
 
     private static final int RECENT_ORDERS_TO_SHOW = 2;
@@ -139,6 +140,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dataToDisplay.add(new DeliveryDivider());
         }
 
+        int vendorsCount = 0;
         if(menusResponse.getCategories() != null) {
             for (MenusResponse.Category category : menusResponse.getCategories()) {
                 if (category.getVendors() != null) {
@@ -152,8 +154,22 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         }
                     }
                     dataToDisplay.add(new DeliveryDivider());
+                    vendorsCount = vendorsCount + category.getVendors().size();
                 }
             }
+        }
+
+        //if no vendors to show
+        if(!isPagination && (vendorsCount == 0)){
+            int messageResId = R.string.no_menus_available_your_location;
+            if(activity.getMenusFragment() != null
+                    && !TextUtils.isEmpty(activity.getMenusFragment().getSearchText())){
+                messageResId = R.string.oops_no_results_found;
+            } else if(activity.isFilterApplied()){
+                messageResId = R.string.no_menus_available_with_these_filters;
+            }
+            dataToDisplay.add(new NoVendorModel(activity.getString(messageResId)));
+            dataToDisplay.add(new DeliveryDivider());
         }
 
         //Removes the bottom border
@@ -228,7 +244,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case ITEM_PROGRESS_BAR:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_progress_bar_feed, parent, false);
                 return new ProgressBarViewHolder(v);
-
+            case NO_VENDORS_ITEM:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_no_vendor, parent, false);
+                return new ViewNoVenderItem(v);
             default:
                 throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
 
@@ -499,6 +517,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             MenusResponse.StripInfo stripInfo = (MenusResponse.StripInfo) dataToDisplay.get(position);
             ViewHolderOfferStrip holderStrip = (ViewHolderOfferStrip) mholder;
             holderStrip.textViewMinOrder.setText((stripInfo != null && !TextUtils.isEmpty(stripInfo.getText())) ? stripInfo.getText() : "");
+        } else if (mholder instanceof ViewNoVenderItem){
+            ViewNoVenderItem holder = (ViewNoVenderItem) mholder;
+            holder.textViewNoMenus.setText(((NoVendorModel)dataToDisplay.get(position)).getMessage());
         }
     }
 
@@ -534,6 +555,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if(object instanceof ProgressBarModel)
             return ITEM_PROGRESS_BAR;
+
+        if(object instanceof NoVendorModel)
+            return NO_VENDORS_ITEM;
 
         Log.e(TAG, ">"+object);
 
@@ -801,6 +825,17 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    private class ViewNoVenderItem extends RecyclerView.ViewHolder {
+        RelativeLayout rlLayoutNoVender;
+        TextView textViewNoMenus;
+
+        ViewNoVenderItem(View itemView) {
+            super(itemView);
+            rlLayoutNoVender = (RelativeLayout) itemView.findViewById(R.id.rlLayoutNoVender);
+            textViewNoMenus = (TextView) itemView.findViewById(R.id.textViewNoMenus);
+        }
+    }
+
     public static class DeliverySeeAll{
         private int categoryId;
 
@@ -847,6 +882,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public List<MenusResponse.BannerInfo> getBannerInfos() {
             return bannerInfos;
+        }
+    }
+    public static class NoVendorModel{
+        private String message;
+        public NoVendorModel(String message){
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
         }
     }
 

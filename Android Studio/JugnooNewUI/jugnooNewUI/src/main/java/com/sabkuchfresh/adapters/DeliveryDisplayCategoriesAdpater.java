@@ -69,23 +69,28 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 	public void onBindViewHolder(RecyclerView.ViewHolder mholder, int position) {
 
 
-		     MenusResponse.Category prosCatalogueDatum = categoriesList.get(position);
-			ViewHolderCategory holder = ((ViewHolderCategory) mholder);
-			holder.tvSuperCategoryName.setText(prosCatalogueDatum.getCategoryName());
+		MenusResponse.Category prosCatalogueDatum = categoriesList.get(position);
+		ViewHolderCategory holder = ((ViewHolderCategory) mholder);
+		if (prosCatalogueDatum.getId() == -1) {
+			holder.tvSuperCategoryName.setText(R.string.all);
+			holder.ivSuperCategoryImage.setImageResource(R.drawable.ic_fresh_new_placeholder);
+			return;
+		}
 
-			try {
-				if (!TextUtils.isEmpty(prosCatalogueDatum.getImage())) {
-					Picasso.with(context).load(prosCatalogueDatum.getImage())
-							.placeholder(R.drawable.ic_fresh_new_placeholder)
-							.error(R.drawable.ic_fresh_new_placeholder)
-							.into(holder.ivSuperCategoryImage);
-				} else {
-					throw new Exception();
-				}
-			} catch (Exception e) {
-				Picasso.with(context).load(R.drawable.ic_fresh_new_placeholder)
+		holder.tvSuperCategoryName.setText(prosCatalogueDatum.getCategoryName());
+
+		try {
+			if (!TextUtils.isEmpty(prosCatalogueDatum.getImage())) {
+				Picasso.with(context).load(prosCatalogueDatum.getImage())
+						.placeholder(R.drawable.ic_fresh_new_placeholder)
+						.error(R.drawable.ic_fresh_new_placeholder)
 						.into(holder.ivSuperCategoryImage);
+			} else {
+				throw new Exception();
 			}
+		} catch (Exception e) {
+			holder.ivSuperCategoryImage.setImageResource(R.drawable.ic_fresh_new_placeholder);
+		}
 
 			/*if (prosCatalogueDatum.getIsEnabled() == 0) {
 				holder.viewBG.setBackgroundResource(R.drawable.bg_white_60_selector_color);
@@ -101,8 +106,6 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 	}
 
 
-
-
 	public interface Callback {
 		void onItemClick(MenusResponse.Category category);
 
@@ -114,7 +117,7 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 		if (pos != RecyclerView.NO_POSITION) {
 			switch (viewClicked.getId()) {
 				case R.id.llRoot:
-					if(callback != null) {
+					if (callback != null) {
 						callback.onItemClick(categoriesList.get(pos));
 					}
 					break;

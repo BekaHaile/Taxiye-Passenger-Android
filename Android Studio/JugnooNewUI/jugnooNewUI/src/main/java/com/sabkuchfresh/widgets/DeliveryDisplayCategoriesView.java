@@ -79,8 +79,6 @@ public class DeliveryDisplayCategoriesView {
         ButterKnife.bind(this, rootView);
         categoryHideAnim = AnimationUtils.loadAnimation(activity, R.anim.rating_review_close_anim);
         categoryShowAnim = AnimationUtils.loadAnimation(activity, R.anim.rating_review_open_anim);
-        ivArrow.setRotation(0);
-        ivArrow.setRotation(rvCategories.getVisibility()==View.VISIBLE?90:-90);
 
 
     }
@@ -96,7 +94,6 @@ public class DeliveryDisplayCategoriesView {
                 @Override
                 public void onItemClick(MenusResponse.Category category) {
                     OnCategoryClick(layoutChooseCategory);
-                    setCategoryLabelIcon(category);
                     if(callback != null){
                         callback.onCategoryClick(category);
                     }
@@ -105,6 +102,7 @@ public class DeliveryDisplayCategoriesView {
             rvCategories.setAdapter(deliveryDisplayCategoriesAdpater);
         }
 
+        deliveryCategoryModel.add(0, new MenusResponse.Category(-1));
         deliveryDisplayCategoriesAdpater.setList(deliveryCategoryModel);
     }
 

@@ -322,10 +322,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return new ViewTitleStatus(v, activity);
         } else if (viewType == NO_VENDORS_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_no_vendor, parent, false);
-
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-            v.setLayoutParams(layoutParams);
-            ASSL.DoMagic(v);
             return new ViewNoVenderItem(v, activity);
         } else if(viewType == OFFERS_PAGER_ITEM){
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_offers_pager, parent, false);
