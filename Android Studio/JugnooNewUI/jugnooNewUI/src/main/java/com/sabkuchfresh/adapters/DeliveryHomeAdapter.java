@@ -556,11 +556,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     break;
                 case R.id.ll_see_all:
                     if(dataToDisplay.get(pos) instanceof DeliverySeeAll){
-                        if(((DeliverySeeAll)dataToDisplay.get(pos)).getCategoryId() > -1){
-
+                        if(((DeliverySeeAll)dataToDisplay.get(pos)).getCategoryId() > 0){
+							callback.openCategory(((DeliverySeeAll)dataToDisplay.get(pos)).getCategoryId());
                         } else {
-
-                        }
+							// TODO: 06/09/17 recent orders see all
+						}
                     }
                     break;
                 case R.id.llRoot:
@@ -853,7 +853,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public interface Callback {
         void onRestaurantSelected(int vendorId);
         void onBannerInfoDeepIndexClick(int deepIndex);
-        void onNotify(int count);
+        void openCategory(int categoryId);
     }
 
     private void showPossibleStatus(ArrayList<String> possibleStatus, int status, ViewOrderStatus statusHolder) {

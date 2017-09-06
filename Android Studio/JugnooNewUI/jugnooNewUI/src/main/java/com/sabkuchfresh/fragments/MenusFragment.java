@@ -65,7 +65,8 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GAAction {
+public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GAAction,
+        DeliveryDisplayCategoriesView.Callback {
     private final String TAG = MenusFragment.class.getSimpleName();
 
     private RelativeLayout llRoot;
@@ -75,6 +76,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewRestaurant;
     private TextView textViewNothingFound;
+    private DeliveryDisplayCategoriesView deliveryDisplayCategoriesView;
 
     private View rootView;
     private FreshActivity activity;
@@ -102,9 +104,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
         activity.setDeliveryAddressView(rootView);
+        activity.setCategoryIdOpened(-1);
 
-        DeliveryDisplayCategoriesView deliveryDisplayCategoriesView = new DeliveryDisplayCategoriesView(activity, rootView.findViewById(R.id.rLCategoryDropDown));
-        deliveryDisplayCategoriesView.setCategories(null);
+        deliveryDisplayCategoriesView = new DeliveryDisplayCategoriesView(activity,
+                rootView.findViewById(R.id.rLCategoryDropDown), this);
 
         Data.AppType = AppConstant.ApplicationType.MENUS;
         Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
@@ -149,26 +152,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         swipeRefreshLayout.setEnabled(true);
 
-//        menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, recentOrder, status, new MenusRestaurantAdapter.Callback() {
-//            @Override
-//            public void onRestaurantSelected(int vendorId) {
-//                activity.fetchRestaurantMenuAPI(vendorId, false, null, null, -1, null);
-//                Utils.hideSoftKeyboard(activity, relativeLayoutNoMenus);
-//            }
-//
-//            @Override
-//            public void onNotify(int count) {
-//            }
-//
-//            @Override
-//            public void onBannerInfoDeepIndexClick(int deepIndex) {
-//                Data.deepLinkIndex = deepIndex;
-//                if(activity != null) {
-//                    activity.openDeepIndex();
-//                }
-//            }
-//        }, recyclerViewRestaurant);
-
         deliveryHomeAdapter = new DeliveryHomeAdapter(activity, new DeliveryHomeAdapter.Callback() {
             @Override
             public void onRestaurantSelected(int vendorId) {
@@ -185,8 +168,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
 
             @Override
-            public void onNotify(int count) {
-
+            public void openCategory(int categoryId) {
+                expandThisCategoryId(categoryId);
             }
         }, recyclerViewRestaurant, status);
 
@@ -312,6 +295,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return rootView;
     }
 
+    public void expandThisCategoryId(int categoryId) {
+        activity.setCategoryIdOpened(categoryId);
+        getAllMenus(true, activity.getSelectedLatLng(), false, true);
+        deliveryDisplayCategoriesView.setCategoryLabelIcon(categoryId);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -422,6 +411,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
                                 deliveryHomeAdapter.setList(menusResponse, false);
+                                if(activity.getCategoryIdOpened() < 0){
+                                    deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
+                                }
 
                                 activity.setMenuRefreshLatLng(latLng);
                                 setUpServiceUnavailability(menusResponse);
@@ -539,6 +531,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
         params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
         params.put(Constants.INTERATED, "1");
+
+        if(activity.getCategoryIdOpened() > 0){
+            params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(activity.getCategoryIdOpened()));
+        }
+
         new HomeUtil().putDefaultParams(params);
         return params;
     }
@@ -760,4 +757,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 
+    @Override
+    public void onCategoryClick(MenusResponse.Category category) {
+        expandThisCategoryId(category.getId());
+    }
 }

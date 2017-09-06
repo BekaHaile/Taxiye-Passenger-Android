@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -12,9 +13,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.DeliveryDisplayCategoriesAdpater;
-import com.sabkuchfresh.retrofit.model.delivery.DeliveryCategoryModel;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
+import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -30,6 +31,8 @@ public class DeliveryDisplayCategoriesView {
 
     private Activity activity;
     public View rootView;
+    @Bind(R.id.iv_switch_category)
+    ImageView ivSwitchCategory;
     @Bind(R.id.recycler_categories)
     RecyclerView rvCategories;
     @Bind(R.id.iv_category_arrow)
@@ -40,6 +43,7 @@ public class DeliveryDisplayCategoriesView {
     View viewBottomblank;
     @Bind(R.id.layout_choose_category)
     RelativeLayout layoutChooseCategory;
+    private Callback callback;
     private DeliveryDisplayCategoriesAdpater deliveryDisplayCategoriesAdpater;
     private Animation categoryHideAnim;
     private Animation categoryShowAnim;
@@ -68,9 +72,10 @@ public class DeliveryDisplayCategoriesView {
 
     }
 
-    public DeliveryDisplayCategoriesView(Activity activity, View rootView) {
+    public DeliveryDisplayCategoriesView(Activity activity, View rootView, Callback callback) {
         this.activity = activity;
         this.rootView = rootView;
+        this.callback = callback;
         ButterKnife.bind(this, rootView);
         categoryHideAnim = AnimationUtils.loadAnimation(activity, R.anim.rating_review_close_anim);
         categoryShowAnim = AnimationUtils.loadAnimation(activity, R.anim.rating_review_open_anim);
@@ -84,27 +89,23 @@ public class DeliveryDisplayCategoriesView {
         tvCategoryName.setText(categoryName);
     }
 
-    public void setCategories(List<DeliveryCategoryModel> deliveryCategoryModel) {
+    public void setCategories(List<MenusResponse.Category> deliveryCategoryModel) {
         if (rvCategories.getAdapter() == null) {
             rvCategories.setLayoutManager(new GridLayoutManager(activity, 4));
             deliveryDisplayCategoriesAdpater = new DeliveryDisplayCategoriesAdpater(activity, new DeliveryDisplayCategoriesAdpater.Callback() {
                 @Override
-                public void onItemClick(DeliveryCategoryModel deliveryCategoryModel) {
-
+                public void onItemClick(MenusResponse.Category category) {
+                    OnCategoryClick(layoutChooseCategory);
+                    setCategoryLabelIcon(category);
+                    if(callback != null){
+                        callback.onCategoryClick(category);
+                    }
                 }
             }, rvCategories);
             rvCategories.setAdapter(deliveryDisplayCategoriesAdpater);
-
         }
 
-        List<DeliveryCategoryModel> deliveryCategoryModell  = new ArrayList<>();
-        deliveryCategoryModell.add(new DeliveryCategoryModel("Bakery",null));
-        deliveryCategoryModell.add(new DeliveryCategoryModel("Beauty",null));
-        deliveryCategoryModell.add(new DeliveryCategoryModel("Grocery",null));
-        deliveryCategoryModell.add(new DeliveryCategoryModel("Ask local",null));
-        deliveryCategoryModell.add(new DeliveryCategoryModel("Fresh",null));
-        deliveryDisplayCategoriesAdpater.setList(deliveryCategoryModell);
-
+        deliveryDisplayCategoriesAdpater.setList(deliveryCategoryModel);
     }
 
     @OnClick({R.id.layout_choose_category, R.id.view_bottom_blank})
@@ -122,10 +123,7 @@ public class DeliveryDisplayCategoriesView {
                     viewBottomblank.animate().alpha(1).setDuration(activity.getResources().getInteger(R.integer.time_category_anim_open)).start();
                     rvCategories.startAnimation(categoryShowAnim);
                     handler.postDelayed(hideViewsRunnable,activity.getResources().getInteger(R.integer.time_category_anim_open));
-
                 }
-
-
                 break;
 
             case R.id.view_bottom_blank:
@@ -133,5 +131,41 @@ public class DeliveryDisplayCategoriesView {
                 break;
         }
 
+    }
+
+    public interface Callback{
+        void onCategoryClick(MenusResponse.Category category);
+    }
+
+    public void setCategoryLabelIcon(int categoryId){
+        if(categoryId > 0) {
+            if (deliveryDisplayCategoriesAdpater != null && deliveryDisplayCategoriesAdpater.getCategoriesList() != null) {
+                for (MenusResponse.Category category : deliveryDisplayCategoriesAdpater.getCategoriesList()) {
+                    if (category.getId() == categoryId) {
+                        setCategoryLabelIcon(category);
+                        break;
+                    }
+                }
+            }
+        } else {
+            tvCategoryName.setText(R.string.all);
+            ivSwitchCategory.setImageResource(R.drawable.ic_nav_select_category);
+        }
+    }
+
+    private void setCategoryLabelIcon(MenusResponse.Category category){
+        tvCategoryName.setText(category.getCategoryName());
+        try {
+            if (!TextUtils.isEmpty(category.getImage())) {
+                Picasso.with(activity).load(category.getImage())
+                        .placeholder(R.drawable.ic_nav_select_category)
+                        .error(R.drawable.ic_nav_select_category)
+                        .into(ivSwitchCategory);
+            } else {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            ivSwitchCategory.setImageResource(R.drawable.ic_nav_select_category);
+        }
     }
 }

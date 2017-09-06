@@ -3,17 +3,14 @@ package com.sabkuchfresh.adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.pros.models.ProsCatalogueData;
-import com.sabkuchfresh.retrofit.model.delivery.DeliveryCategoryModel;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -27,7 +24,7 @@ import product.clicklabs.jugnoo.R;
 public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
 
 	private Context context;
-	private List<DeliveryCategoryModel> categoriesList;
+	private List<MenusResponse.Category> categoriesList;
 	private Callback callback;
 	private RecyclerView recyclerView;
 
@@ -37,7 +34,7 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 		this.recyclerView = recyclerView;
 	}
 
-	public synchronized void setList(List<DeliveryCategoryModel> elements) {
+	public synchronized void setList(List<MenusResponse.Category> elements) {
 		this.categoriesList = elements;
 		notifyDataSetChanged();
 	}
@@ -72,13 +69,13 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 	public void onBindViewHolder(RecyclerView.ViewHolder mholder, int position) {
 
 
-		     DeliveryCategoryModel prosCatalogueDatum = categoriesList.get(position);
+		     MenusResponse.Category prosCatalogueDatum = categoriesList.get(position);
 			ViewHolderCategory holder = ((ViewHolderCategory) mholder);
 			holder.tvSuperCategoryName.setText(prosCatalogueDatum.getCategoryName());
 
 			try {
-				if (!TextUtils.isEmpty(prosCatalogueDatum.getIconUrl())) {
-					Picasso.with(context).load(prosCatalogueDatum.getIconUrl())
+				if (!TextUtils.isEmpty(prosCatalogueDatum.getImage())) {
+					Picasso.with(context).load(prosCatalogueDatum.getImage())
 							.placeholder(R.drawable.ic_fresh_new_placeholder)
 							.error(R.drawable.ic_fresh_new_placeholder)
 							.into(holder.ivSuperCategoryImage);
@@ -107,7 +104,7 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 
 
 	public interface Callback {
-		void onItemClick(DeliveryCategoryModel prosCatalogueDatum);
+		void onItemClick(MenusResponse.Category category);
 
 	}
 
@@ -117,7 +114,9 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 		if (pos != RecyclerView.NO_POSITION) {
 			switch (viewClicked.getId()) {
 				case R.id.llRoot:
-					callback.onItemClick(categoriesList.get(pos));
+					if(callback != null) {
+						callback.onItemClick(categoriesList.get(pos));
+					}
 					break;
 
 
@@ -126,11 +125,7 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 	}
 
 
-
-
-
-
-
-
-
+	public List<MenusResponse.Category> getCategoriesList() {
+		return categoriesList;
+	}
 }

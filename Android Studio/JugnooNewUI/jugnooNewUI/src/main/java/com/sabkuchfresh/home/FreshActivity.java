@@ -2283,29 +2283,24 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         } else if (getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()) {
             getMenusFragment().toggleSearch(true);
-
-
+        } else if (getTopFragment() instanceof MenusFragment && getCategoryIdOpened() > 0) {
+            getMenusFragment().expandThisCategoryId(-1);
+            return;
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finishWithToast();
             return;
         } else {
-
             if (getTopFragment() instanceof FreshSearchFragment) {
                 getFreshSearchFragment().clearArrays();
             } else if (getTopFragment() instanceof MenusSearchFragment) {
                 getMenusSearchFragment().clearArrays();
             }
-
             if (getTopFragment() instanceof RestaurantReviewsListFragment && getRestaurantImageFragment() != null) {
                 super.onBackPressed();
             }
-
             if (getTopFragment() != null && getTopFragment() instanceof FreshSearchFragment)
                 topBar.animateSearchBar(false);
-
-
             super.onBackPressed();
-
         }
     }
 
@@ -4964,5 +4959,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
     public void setSearchedRestaurantIds(List<Integer> searchedRestaurantIds){
         this.searchedRestaurantIds = searchedRestaurantIds;
+    }
+
+    private int categoryIdOpened;
+
+    public int getCategoryIdOpened() {
+        return categoryIdOpened;
+    }
+
+    public void setCategoryIdOpened(int categoryIdOpened) {
+        this.categoryIdOpened = categoryIdOpened;
     }
 }
