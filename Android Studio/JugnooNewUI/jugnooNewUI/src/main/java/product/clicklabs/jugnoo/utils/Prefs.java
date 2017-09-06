@@ -106,7 +106,7 @@ public class Prefs {
 	}
 
 	// to save object in prefrence
-	public void save(String key, Object object) {
+	public <T> void save(String key, Object object, Class<T> a) {
 		if (object == null) {
 			throw new IllegalArgumentException("object is null");
 		}
@@ -115,7 +115,7 @@ public class Prefs {
 			throw new IllegalArgumentException("key is empty or null");
 		}
 
-		editor.putString(key, GSON.toJson(object)).apply();
+		editor.putString(key, GSON.toJson(object, a)).apply();
 	}
 
 	// To get object from prefrences

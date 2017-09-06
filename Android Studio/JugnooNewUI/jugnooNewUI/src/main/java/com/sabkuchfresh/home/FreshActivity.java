@@ -403,6 +403,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 public void onDrawerOpened(View drawerView) {
                     if (drawerView.equals(llRightDrawer)) {
                         filtersChanged = false;
+                        if(getTopFragment() instanceof MenusFragment && getMenusFilterFragment() != null){
+                            getMenusFilterFragment().updateDataLists();
+                        }
                     }
                 }
 
@@ -896,7 +899,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                                         }
                                         if (fragment != null && FreshActivity.this.hasWindowFocus()) {
-                                            ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false, false);
+                                            ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false);
 
 
                                         } else {
@@ -1435,7 +1438,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
-                rlFilterVis = View.VISIBLE;
+                rlFilterVis = getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE;
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.menus));
@@ -1446,7 +1449,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
                 visMinOrder = setMinOrderAmountText(fragment);
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END);
 
             } else if (fragment instanceof VendorMenuFragment
                     || fragment instanceof RestaurantImageFragment
@@ -1670,7 +1672,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             llCheckoutBarSetVisibilityDirect(llCartContainerVis);
             topBar.getIvSearch().setVisibility(ivSearchVis);
             topBar.getLlSearchContainer().setVisibility(llSearchContainerVis);
-            topBar.rlFilter.setVisibility(rlFilterVis);
+            setMenusFilterVisibility(rlFilterVis);
             llAddToCart.setVisibility(llAddToCartVis);
             llPayViewContainer.setVisibility(llPayViewContainerVis);
 
@@ -1709,6 +1711,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setMenusFilterVisibility(int rlFilterVis) {
+        topBar.rlFilter.setVisibility(rlFilterVis);
+        drawerLayout.setDrawerLockMode((rlFilterVis == View.VISIBLE ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED), GravityCompat.END);
     }
 
 
@@ -3265,56 +3272,51 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public void saveFilters() {
-        Prefs.with(this).save(Constants.SP_MENUS_FILTER_SORT_BY_NEW, sortBySelected);
+        if(sortBySelected == null){
+            sortBySelected = new MenusResponse.KeyValuePair("");
+        }
+        Prefs.with(this).save(Constants.SP_MENUS_FILTER_SORT_BY_OBJ, sortBySelected, MenusResponse.KeyValuePair.class);
         JsonElement element = gson.toJsonTree(cuisinesSelected, new TypeToken<List<FilterCuisine>>() {}.getType());
         if(element != null && element.isJsonArray()) {
             JsonArray jsonArray = element.getAsJsonArray();
             Prefs.with(this).save(Constants.SP_MENUS_FILTER_CUISINES_GSON, jsonArray.toString());
         }
 
-        StringBuilder sbQF = new StringBuilder();
-        if (filterSelected.size() > 0) {
-            for (String qf : filterSelected) {
-                sbQF.append(qf).append(",");
-            }
+        JsonElement elementF = gson.toJsonTree(filterSelected, new TypeToken<List<MenusResponse.KeyValuePair>>() {}.getType());
+        if(elementF != null && elementF.isJsonArray()) {
+            JsonArray jsonArray = elementF.getAsJsonArray();
+            Prefs.with(this).save(Constants.SP_MENUS_FILTER_QUICK_OBJ, jsonArray.toString());
         }
-        Prefs.with(this).save(Constants.SP_MENUS_FILTER_QUICK, sbQF.toString());
     }
 
 
     public void fetchFiltersFromSP() {
-        sortBySelected = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_SORT_BY_NEW, "");
+        sortBySelected = Prefs.with(this).getObject(Constants.SP_MENUS_FILTER_SORT_BY_OBJ, MenusResponse.KeyValuePair.class);
 
         String cuisines = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_CUISINES_GSON, "");
         if (!TextUtils.isEmpty(cuisines)) {
-            cuisinesSelected.clear();
             cuisinesSelected = gson.fromJson(cuisines, new TypeToken<List<FilterCuisine>>() {}.getType());
         }
 
-        String qfs = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_QUICK, "");
-        if (!TextUtils.isEmpty(qfs)) {
-            String arr[] = qfs.split(",");
-            filterSelected.clear();
-            for (String qf : arr) {
-                filterSelected.add(qf);
-            }
+        String filters = Prefs.with(this).getString(Constants.SP_MENUS_FILTER_QUICK_OBJ, "");
+        if (!TextUtils.isEmpty(filters)) {
+            filterSelected = gson.fromJson(filters, new TypeToken<List<MenusResponse.KeyValuePair>>() {}.getType());
         }
-
     }
 
 
-    private String sortBySelected = "";
+    private MenusResponse.KeyValuePair sortBySelected;
     private ArrayList<FilterCuisine> cuisinesSelected = new ArrayList<>();
-    private ArrayList<String> filterSelected = new ArrayList<>();
+    private ArrayList<MenusResponse.KeyValuePair> filterSelected = new ArrayList<>();
     private ArrayList<FilterCuisine> cuisinesAll = new ArrayList<>();
-    private ArrayList<String> filtersAll = new ArrayList<>();
-    private ArrayList<String> sortAll = new ArrayList<>();
+    private ArrayList<MenusResponse.KeyValuePair> filtersAll = new ArrayList<>();
+    private ArrayList<MenusResponse.KeyValuePair> sortAll = new ArrayList<>();
 
-    public String getSortBySelected() {
+    public MenusResponse.KeyValuePair getSortBySelected() {
         return sortBySelected;
     }
 
-    public void setSortBySelected(String sortBySelected) {
+    public void setSortBySelected(MenusResponse.KeyValuePair sortBySelected) {
         this.sortBySelected = sortBySelected;
     }
 
@@ -3322,7 +3324,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return cuisinesSelected;
     }
 
-    public ArrayList<String> getFilterSelected() {
+    public ArrayList<MenusResponse.KeyValuePair> getFilterSelected() {
         return filterSelected;
     }
 
@@ -3334,19 +3336,19 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         this.cuisinesAll = cuisinesAll;
     }
 
-    public ArrayList<String> getSortAll() {
+    public ArrayList<MenusResponse.KeyValuePair> getSortAll() {
         return sortAll;
     }
 
-    public void setSortAll(ArrayList<String> sortAll) {
+    public void setSortAll(ArrayList<MenusResponse.KeyValuePair> sortAll) {
         this.sortAll = sortAll;
     }
 
-    public ArrayList<String> getFiltersAll() {
+    public ArrayList<MenusResponse.KeyValuePair> getFiltersAll() {
         return filtersAll;
     }
 
-    public void setFiltersAll(ArrayList<String> filtersAll) {
+    public void setFiltersAll(ArrayList<MenusResponse.KeyValuePair> filtersAll) {
         this.filtersAll = filtersAll;
     }
 
@@ -3517,7 +3519,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else if (appType == AppConstant.ApplicationType.GROCERY && getGroceryFragment() != null) {
                     getGroceryFragment().getAllProducts(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.MENUS && getMenusFragment() != null) {
-                    getMenusFragment().getAllMenus(true, getSelectedLatLng(), false, false);
+                    getMenusFragment().getAllMenus(true, getSelectedLatLng(), false);
                 } else if (appType == AppConstant.ApplicationType.FEED && getFeedHomeFragment() != null) {
                     getFeedHomeFragment().fetchFeedsApi(true, true, true);
                 } else if (appType == AppConstant.ApplicationType.PROS && getProsHomeFragment() != null) {

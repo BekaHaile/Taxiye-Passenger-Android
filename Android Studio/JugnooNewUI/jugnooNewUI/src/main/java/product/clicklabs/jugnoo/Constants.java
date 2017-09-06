@@ -601,10 +601,10 @@ public interface Constants {
     String KEY_SUPER_CATEGORY_ID = "super_category_id";
     String KEY_SUPER_CATEGORY = "super_category";
     String KEY_SEARCH_STRING = "search_string";
-    String SP_MENUS_FILTER_SORT_BY_NEW = "sp_menus_filter_sort_by_new";
+    String SP_MENUS_FILTER_SORT_BY_OBJ = "sp_menus_filter_sort_by_obj";
     String SP_MENUS_FILTER_DELIVERY_TIME = "sp_menus_filter_delivery_time";
     String SP_MENUS_FILTER_CUISINES_GSON = "sp_menus_filter_cuisines_gson";
-    String SP_MENUS_FILTER_QUICK = "sp_menus_filter_quick";
+    String SP_MENUS_FILTER_QUICK_OBJ = "sp_menus_filter_quick_obj";
     String KEY_EVENT = "event";
     String KEY_REFERRAL_POPUP_CONTENT = "referral_popup_content";
     String SP_FRESH_CART_ADDRESS = "sp_fresh_cart_address";

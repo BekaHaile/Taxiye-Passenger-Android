@@ -25,6 +25,7 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.CuisineResponse;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.Utils;
 
 import org.json.JSONObject;
@@ -199,7 +200,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
                     }
 				}
 				activity.getCuisinesSelected().clear();
-				activity.setSortBySelected("");
+				activity.setSortBySelected(null);
 				activity.getFilterSelected().clear();
 
 				adapterSort.notifyDataSetChanged();
@@ -272,8 +273,8 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 
 	private void gaEventQuickFilters(){
 		String quickFilters = null;
-		for (String qf : activity.getFilterSelected()) {
-			quickFilters = qf + ", ";
+		for (MenusResponse.KeyValuePair filter : activity.getFilterSelected()) {
+			quickFilters = filter.getKey() + ", ";
 		}
 		if (quickFilters != null) {
 			GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.QUICK_FILTER, quickFilters.substring(0, quickFilters.length() - 2));
@@ -381,22 +382,28 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				});
 	}
 
+	public void updateDataLists() {
+		if(activity.getCategoryIdOpened() > 0 && activity.getFiltersAll() != null && activity.getSortAll() != null){
+			adapterFilters.setList(activity.getFiltersAll());
+			adapterSort.setList(activity.getSortAll());
+		}
+	}
+
 
 	class MenusFilterAdapter extends RecyclerView.Adapter<MenusFilterAdapter.ViewHolder> implements ItemListener {
 
-		private ArrayList<String> filters;
+		private ArrayList<MenusResponse.KeyValuePair> filters;
 		private boolean isSort;
 		private RecyclerView recyclerView;
 
-		public MenusFilterAdapter(ArrayList<String> filters, boolean isSort, RecyclerView recyclerView) {
+		public MenusFilterAdapter(ArrayList<MenusResponse.KeyValuePair> filters, boolean isSort, RecyclerView recyclerView) {
 			this.filters = filters;
 			this.isSort = isSort;
 			this.recyclerView = recyclerView;
 		}
 
-		public void setList(ArrayList<String> filters, boolean isSort) {
+		public void setList(ArrayList<MenusResponse.KeyValuePair> filters) {
 			this.filters = filters;
-			this.isSort = isSort;
 			notifyDataSetChanged();
 		}
 
@@ -409,11 +416,11 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		@Override
 		public void onBindViewHolder(MenusFilterAdapter.ViewHolder holder, int position) {
 			try {
-				holder.textViewCuisine.setText(Utils.capEachWord(filters.get(position).replace("\\_", " ")));
+				holder.textViewCuisine.setText(Utils.capEachWord(filters.get(position).getValue()));
 				holder.imageViewSep.setVisibility(position == getItemCount()-1 ? View.GONE : View.VISIBLE);
 
 				if(isSort){
-					holder.imageViewCheck.setImageResource(filters.get(position).equalsIgnoreCase(activity.getSortBySelected()) ? R.drawable.ic_radio_button_selected : R.drawable.ic_radio_button_normal);
+					holder.imageViewCheck.setImageResource(filters.get(position).equals(activity.getSortBySelected()) ? R.drawable.ic_radio_button_selected : R.drawable.ic_radio_button_normal);
 				} else {
 					holder.imageViewCheck.setImageResource(activity.getFilterSelected().contains(filters.get(position)) ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
 				}
@@ -438,7 +445,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 							activity.setSortBySelected(filters.get(pos));
 							notifyDataSetChanged();
 							applyRealTimeFilters();
-							GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.SORT_BY, filters.get(pos));
+							GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.SORT_BY, filters.get(pos).getKey());
 						} else {
 							if(activity.getFilterSelected().contains(filters.get(pos))){
 								activity.getFilterSelected().remove(filters.get(pos));

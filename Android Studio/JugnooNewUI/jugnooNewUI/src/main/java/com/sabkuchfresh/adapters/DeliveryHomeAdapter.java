@@ -125,7 +125,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(!isPagination || dataToDisplay==null)
           this.dataToDisplay = new ArrayList<>();
 
-        if(menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0){
+        if(!isPagination && menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0){
             int sizeRecentOrders = menusResponse.getRecentOrders().size();
 
             dataToDisplay.add(new MenusResponse.Category(true));
@@ -142,10 +142,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(menusResponse.getCategories() != null) {
             for (MenusResponse.Category category : menusResponse.getCategories()) {
                 if (category.getVendors() != null) {
-                    dataToDisplay.add(new MenusResponse.Category(category.getImage(), category.getCategoryName()));
+                    if(activity.getCategoryIdOpened() < 0) {
+                        dataToDisplay.add(new MenusResponse.Category(category.getImage(), category.getCategoryName()));
+                    }
                     dataToDisplay.addAll(category.getVendors());
-                    if (category.getCount() > category.getVendors().size()) {
-                        dataToDisplay.add(new DeliverySeeAll(category.getId()));
+                    if(activity.getCategoryIdOpened() < 0) {
+                        if (category.getCount() > category.getVendors().size()) {
+                            dataToDisplay.add(new DeliverySeeAll(category.getId()));
+                        }
                     }
                     dataToDisplay.add(new DeliveryDivider());
                 }
@@ -527,6 +531,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if(object instanceof BannerInfosModel)
             return OFFERS_PAGER_ITEM;
+
+        if(object instanceof ProgressBarModel)
+            return ITEM_PROGRESS_BAR;
+
+        Log.e(TAG, ">"+object);
 
         throw new IllegalArgumentException();
     }

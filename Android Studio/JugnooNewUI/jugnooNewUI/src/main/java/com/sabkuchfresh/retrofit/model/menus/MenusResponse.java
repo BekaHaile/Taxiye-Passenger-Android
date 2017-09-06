@@ -23,9 +23,6 @@ public class MenusResponse implements Serializable {
 	@SerializedName("message")
 	@Expose
 	private String message;
-	@SerializedName("vendors")
-	@Expose
-	private List<Vendor> vendors = new ArrayList<Vendor>();
 	@SerializedName("support_contact")
 	@Expose
 	private String supportContact;
@@ -61,12 +58,6 @@ public class MenusResponse implements Serializable {
 	@Expose
 	private List<Category> categories;
 
-	@SerializedName("quick_filters")
-	@Expose
-	private List<String> quickFilters;
-	@SerializedName("sort_types")
-	@Expose
-	private List<String> sortTypes;
 
 
 	public Double getRating() {
@@ -116,20 +107,6 @@ public class MenusResponse implements Serializable {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-
-	/**
-	 * @return The vendors
-	 */
-//	public List<Vendor> getVendors() {
-//		return vendors;
-//	}
-//
-//	/**
-//	 * @param vendors The vendors
-//	 */
-//	public void setVendors(List<Vendor> vendors) {
-//		this.vendors = vendors;
-//	}
 
 	/**
 	 * @return The supportContact
@@ -202,22 +179,6 @@ public class MenusResponse implements Serializable {
 
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
-	}
-
-	public List<String> getQuickFilters() {
-		return quickFilters;
-	}
-
-	public void setQuickFilters(List<String> quickFilters) {
-		this.quickFilters = quickFilters;
-	}
-
-	public List<String> getSortTypes() {
-		return sortTypes;
-	}
-
-	public void setSortTypes(List<String> sortTypes) {
-		this.sortTypes = sortTypes;
 	}
 
 
@@ -875,11 +836,22 @@ public class MenusResponse implements Serializable {
 		@SerializedName("vendors")
 		@Expose
 		private List<Vendor> vendors = new ArrayList<Vendor>();
+		@SerializedName("filters")
+		@Expose
+		private List<KeyValuePair> filters;
+		@SerializedName("sorting")
+		@Expose
+		private List<KeyValuePair> sorting;
+
 
 		private boolean isTypeOrder;
 
 		public Category(boolean isTypeOrder) {
 			this.isTypeOrder = isTypeOrder;
+		}
+
+		public Category(int id) {
+			this.id = id;
 		}
 
 		public Category(String image, String categoryName) {
@@ -937,6 +909,61 @@ public class MenusResponse implements Serializable {
 
 		public void setImage(String image) {
 			this.image = image;
+		}
+
+		public List<KeyValuePair> getFilters() {
+			return filters;
+		}
+
+		public void setFilters(List<KeyValuePair> filters) {
+			this.filters = filters;
+		}
+
+		public List<KeyValuePair> getSorting() {
+			return sorting;
+		}
+
+		public void setSorting(List<KeyValuePair> sorting) {
+			this.sorting = sorting;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return obj instanceof Category && ((Category)obj).getId() == getId();
+		}
+	}
+
+	public static class KeyValuePair{
+		@SerializedName("key")
+		@Expose
+		private String key;
+		@SerializedName("value")
+		@Expose
+		private String value;
+
+		public KeyValuePair(String key) {
+			this.key = key;
+		}
+
+		public String getKey() {
+			return key;
+		}
+
+		public void setKey(String key) {
+			this.key = key;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return obj instanceof KeyValuePair && ((KeyValuePair)obj).getKey().equals(getKey());
 		}
 	}
 }

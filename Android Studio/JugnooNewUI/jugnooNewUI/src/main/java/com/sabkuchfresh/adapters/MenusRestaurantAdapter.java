@@ -145,13 +145,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private void searchVendors(String text, List<Integer> searchedRestaurantIds){
         if(TextUtils.isEmpty(text)){
             activity.setSearchedRestaurantIds(null);
-            activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), false, true);
+            activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), true);
 
         } else {
             activity.setSearchedRestaurantIds(searchedRestaurantIds);
 
             if(searchedRestaurantIds!=null && searchedRestaurantIds.size()>0){
-                activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), false, true);
+                activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), true);
 
             }else{
                 vendorsComplete.clear();
@@ -239,11 +239,11 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             cuisineMatched = activity.getCuisinesSelected().size() <= 0 || cuisineMatched;
 
             boolean qfMatched = true;
-            for(String filter : activity.getFilterSelected()) {
-                if((filter.equalsIgnoreCase(Constants.ACCEPTONLINE) && vendor.getApplicablePaymentMode().equals(ApplicablePaymentMode.CASH.getOrdinal()))
-                        || (filter.equalsIgnoreCase(Constants.OFFERSDISCOUNT) && vendor.getOffersDiscounts().equals(0))
-                        || (filter.equalsIgnoreCase(Constants.PUREVEGETARIAN) && vendor.getPureVegetarian().equals(0))
-                        || (filter.equalsIgnoreCase(Constants.FREEDELIVERY) && vendor.getFreeDelivery().equals(0))) {
+            for(MenusResponse.KeyValuePair filter : activity.getFilterSelected()) {
+                if((filter.getKey().equalsIgnoreCase(Constants.ACCEPTONLINE) && vendor.getApplicablePaymentMode().equals(ApplicablePaymentMode.CASH.getOrdinal()))
+                        || (filter.getKey().equalsIgnoreCase(Constants.OFFERSDISCOUNT) && vendor.getOffersDiscounts().equals(0))
+                        || (filter.getKey().equalsIgnoreCase(Constants.PUREVEGETARIAN) && vendor.getPureVegetarian().equals(0))
+                        || (filter.getKey().equalsIgnoreCase(Constants.FREEDELIVERY) && vendor.getFreeDelivery().equals(0))) {
                     qfMatched = false;
                     break;
                 }
@@ -281,14 +281,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     point = rhs.getIsAvailable() - lhs.getIsAvailable();
                 } else if (lhs.getIsAvailable() != 0 && rhs.getIsAvailable() == 0) {
                     point = rhs.getIsAvailable() - lhs.getIsAvailable();
-                } else if (activity.getSortBySelected().contains("popularity")) {
-                    point = rhs.getPopularity() - lhs.getPopularity();
-                } else if (activity.getSortBySelected().contains("distance")) {
-                    point = -(int) (rhs.getDistance() - lhs.getDistance());
-                } else if (activity.getSortBySelected().contains("price_range")) {
-                    point = lhs.getPriceRange() - rhs.getPriceRange();
-                } else if (activity.getSortBySelected().contains("delivery_time")) {
-                    point = lhs.getDeliveryTime() - rhs.getDeliveryTime();
+                }
+                if(activity.getSortBySelected() != null) {
+                    if (activity.getSortBySelected().getKey().contains("popularity")) {
+                        point = rhs.getPopularity() - lhs.getPopularity();
+                    } else if (activity.getSortBySelected().getKey().contains("distance")) {
+                        point = -(int) (rhs.getDistance() - lhs.getDistance());
+                    } else if (activity.getSortBySelected().getKey().contains("price_range")) {
+                        point = lhs.getPriceRange() - rhs.getPriceRange();
+                    } else if (activity.getSortBySelected().getKey().contains("delivery_time")) {
+                        point = lhs.getDeliveryTime() - rhs.getDeliveryTime();
+                    }
                 }
 
                 return point;

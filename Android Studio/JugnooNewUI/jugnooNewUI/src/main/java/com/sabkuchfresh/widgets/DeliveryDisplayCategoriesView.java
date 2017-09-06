@@ -140,11 +140,9 @@ public class DeliveryDisplayCategoriesView {
     public void setCategoryLabelIcon(int categoryId){
         if(categoryId > 0) {
             if (deliveryDisplayCategoriesAdpater != null && deliveryDisplayCategoriesAdpater.getCategoriesList() != null) {
-                for (MenusResponse.Category category : deliveryDisplayCategoriesAdpater.getCategoriesList()) {
-                    if (category.getId() == categoryId) {
-                        setCategoryLabelIcon(category);
-                        break;
-                    }
+                int index = deliveryDisplayCategoriesAdpater.getCategoriesList().indexOf(new MenusResponse.Category(categoryId));
+                if(index > -1){
+                    setCategoryLabelIcon(deliveryDisplayCategoriesAdpater.getCategoriesList().get(index));
                 }
             }
         } else {

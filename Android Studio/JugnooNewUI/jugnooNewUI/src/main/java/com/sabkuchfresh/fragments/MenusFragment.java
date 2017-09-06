@@ -297,8 +297,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public void expandThisCategoryId(int categoryId) {
         activity.setCategoryIdOpened(categoryId);
-        getAllMenus(true, activity.getSelectedLatLng(), false, true);
+        getAllMenus(true, activity.getSelectedLatLng(), true);
         deliveryDisplayCategoriesView.setCategoryLabelIcon(categoryId);
+        activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -363,12 +364,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onRefresh() {
-        getAllMenus(false, activity.getSelectedLatLng(), false, true);
+        getAllMenus(false, activity.getSelectedLatLng(), true);
     }
 
     private int currentPageCount = 1;
 
-    public void getAllMenus(final boolean loader, final LatLng latLng, final boolean isPagination, final boolean scrollToTop) {
+    public void getAllMenus(final boolean loader, final LatLng latLng, final boolean scrollToTop) {
         final String searchTextCurr = searchText;
         try {
             if (searchOpened && isMenusApiInProgress)
@@ -406,21 +407,24 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 // TODO: 05/09/17 edit check according to category opened
 
                                 hasMorePages =  menusResponse.getCategories()!=null && menusResponse.isPageLengthComplete();
-                                activity.setMenusResponse(menusResponse);
                                 status.clear();
                                 status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
                                 deliveryHomeAdapter.setList(menusResponse, false);
                                 if(activity.getCategoryIdOpened() < 0){
+                                    activity.setMenusResponse(menusResponse);
                                     deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
+                                } else {
+                                    if(menusResponse.getCategories() != null && menusResponse.getCategories().size() > 0){
+                                        MenusResponse.Category category = menusResponse.getCategories().get(0);
+                                        activity.setFiltersAll((ArrayList<MenusResponse.KeyValuePair>) category.getFilters());
+                                        activity.setSortAll((ArrayList<MenusResponse.KeyValuePair>) category.getSorting());
+                                        activity.setCuisinesAll(null);
+                                    }
                                 }
 
                                 activity.setMenuRefreshLatLng(latLng);
                                 setUpServiceUnavailability(menusResponse);
-
-                                activity.setCuisinesAll(null);
-                                activity.setFiltersAll((ArrayList<String>) menusResponse.getQuickFilters());
-                                activity.setSortAll((ArrayList<String>) menusResponse.getSortTypes());
 
                                 checkIciciPaymentStatusApi(activity);
 
@@ -494,7 +498,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             recyclerViewRestaurant.setVisibility(View.GONE);
         } else {
             activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
-            activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END);
+            activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
             recyclerViewRestaurant.setVisibility(View.VISIBLE);
         }
     }
@@ -504,15 +508,19 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         HashMap<String, String> params = new HashMap<>();
 
         //Sort Keys
-        if (!TextUtils.isEmpty(activity.getSortBySelected())) {
+        if (activity.getSortBySelected() != null) {
             JSONArray sortArray = new JSONArray();
-            sortArray.put(activity.getSortBySelected());
+            sortArray.put(activity.getSortBySelected().getKey());
             params.put(Constants.KEY_SORTING, sortArray.toString());
 
         }
         //Quick Filter Keys
         if (activity.getFilterSelected() != null && activity.getFilterSelected().size() > 0) {
-            params.put(Constants.KEY_FILTERS, (new JSONArray(activity.getFilterSelected())).toString());
+            JSONArray filtersSelected = new JSONArray();
+            for (MenusResponse.KeyValuePair filter : activity.getFilterSelected()) {
+                filtersSelected.put(filter.getKey());
+            }
+            params.put(Constants.KEY_FILTERS, filtersSelected.toString());
         }
 
         //Cuisines List
@@ -542,6 +550,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
     public void fetchNextPage() {
+
+        if(activity.getCategoryIdOpened() < 0){
+            return;
+        }
 
         if (!MyApplication.getInstance().isOnline()) {
             retryDialog(DialogErrorType.NO_NET, activity.getMenuRefreshLatLng(), false, true, false);
@@ -616,7 +628,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         if (isPagination) {
                             fetchNextPage();
                         } else {
-                            getAllMenus(loader, latLng, isPagination, scrollToTop);
+                            getAllMenus(loader, latLng, scrollToTop);
 
                         }
                     }
@@ -711,15 +723,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public void applyFilter(boolean scrollToTop) {
         if (scrollToTop) {
-            getAllMenus(true, activity.getMenuRefreshLatLng(), false, true);
+            getAllMenus(true, activity.getMenuRefreshLatLng(), true);
         }
     }
 
-    public boolean filterApplied() {
-        return (activity.getCuisinesSelected().size() > 0
-                || !TextUtils.isEmpty(activity.getSortBySelected())
-                || activity.getFilterSelected().size() > 0);
-    }
 
     private static void checkIciciPaymentStatusApi(final FreshActivity activity) {
         if (Data.getCurrentIciciUpiTransaction(activity.getAppType()) != null) {
@@ -742,10 +749,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             int oldLength = searchText.length();
             searchText = s;
             if (searchText.length() > 2) {
-                getAllMenus(false, activity.getSelectedLatLng(), false, true);
+                getAllMenus(false, activity.getSelectedLatLng(), true);
             } else {
                 if (oldLength > s.length() && oldLength >= 1 && s.length() == 0) {
-                    getAllMenus(false, activity.getSelectedLatLng(), false, true);
+                    getAllMenus(false, activity.getSelectedLatLng(), true);
                 }
             }
         }
@@ -753,7 +760,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private void recallSearch(String previousSearchText) {
         if (searchOpened && !searchText.trim().equalsIgnoreCase(previousSearchText)) {
-            getAllMenus(false, activity.getSelectedLatLng(), false, true);
+            getAllMenus(false, activity.getSelectedLatLng(), true);
         }
     }
 

@@ -1896,9 +1896,9 @@ public class JSONParser implements Constants {
     }
 
     private void resetMenusFilters(Context context) {
-        Prefs.with(context).save(Constants.SP_MENUS_FILTER_SORT_BY_NEW, "");
+        Prefs.with(context).save(Constants.SP_MENUS_FILTER_SORT_BY_OBJ, "");
         Prefs.with(context).save(Constants.SP_MENUS_FILTER_CUISINES_GSON, "");
-        Prefs.with(context).save(Constants.SP_MENUS_FILTER_QUICK, "");
+        Prefs.with(context).save(Constants.SP_MENUS_FILTER_QUICK_OBJ, "");
     }
 
 

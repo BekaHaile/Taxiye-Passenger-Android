@@ -1197,7 +1197,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         }else {
             Prefs.with(activity).save(Constants.ORDER_STATUS_PENDING_ID,restaurantId);
             Prefs.with(activity).save(Constants.ORDER_STATUS_JSON_ARRAY,jsonArray.toString());
-            Prefs.with(activity).save(Constants.ORDER_STATUS_LAT_LNG,latLng);
+            Prefs.with(activity).save(Constants.ORDER_STATUS_LAT_LNG,latLng, LatLng.class);
             Prefs.with(activity).save(Constants.ORDER_STATUS_ORDER_ID,orderId);
             Prefs.with(activity).save(Constants.ORDER_STATUS_ADDRESS,delAddress);
             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), new LatLng(Data.latitude,Data.longitude), false);
