@@ -403,9 +403,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 public void onDrawerOpened(View drawerView) {
                     if (drawerView.equals(llRightDrawer)) {
                         filtersChanged = false;
-                        if(getTopFragment() instanceof MenusFragment && getMenusFilterFragment() != null){
-                            getMenusFilterFragment().updateDataLists();
-                        }
                     }
                 }
 
@@ -1716,6 +1713,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setMenusFilterVisibility(int rlFilterVis) {
         topBar.rlFilter.setVisibility(rlFilterVis);
         drawerLayout.setDrawerLockMode((rlFilterVis == View.VISIBLE ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED), GravityCompat.END);
+        topBar.ivFilterApplied.setVisibility(isFilterApplied() ? View.VISIBLE : View.GONE);
     }
 
 
@@ -3350,6 +3348,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void setFiltersAll(ArrayList<MenusResponse.KeyValuePair> filtersAll) {
         this.filtersAll = filtersAll;
+    }
+
+    public boolean isFilterApplied(){
+        return sortBySelected != null
+                || cuisinesSelected.size() > 0
+                || filterSelected.size() > 0;
     }
 
     public boolean checkForAdd() {

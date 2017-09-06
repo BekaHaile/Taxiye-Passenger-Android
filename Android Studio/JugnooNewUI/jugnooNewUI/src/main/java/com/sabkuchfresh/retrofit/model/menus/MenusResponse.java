@@ -26,9 +26,6 @@ public class MenusResponse implements Serializable {
 	@SerializedName("support_contact")
 	@Expose
 	private String supportContact;
-	@SerializedName("filter")
-	@Expose
-	private Filters filters;
 	@SerializedName("recent_orders")
 	@Expose
 	private List<RecentOrder> recentOrders = new ArrayList<RecentOrder>();
@@ -57,6 +54,14 @@ public class MenusResponse implements Serializable {
 	@SerializedName("merchant_map")
 	@Expose
 	private List<Category> categories;
+
+
+	@SerializedName("filter_list")
+	@Expose
+	private List<KeyValuePair> filters;
+	@SerializedName("sorting_list")
+	@Expose
+	private List<KeyValuePair> sorting;
 
 
 
@@ -122,14 +127,6 @@ public class MenusResponse implements Serializable {
 		this.supportContact = supportContact;
 	}
 
-	public Filters getFilters() {
-		return filters;
-	}
-
-	public void setFilters(Filters filters) {
-		this.filters = filters;
-	}
-
 	public List<RecentOrder> getRecentOrders() {
 		if (recentOrders == null) {
 			recentOrders = new ArrayList<>();
@@ -179,6 +176,22 @@ public class MenusResponse implements Serializable {
 
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
+	}
+
+	public List<KeyValuePair> getFilters() {
+		return filters;
+	}
+
+	public void setFilters(List<KeyValuePair> filters) {
+		this.filters = filters;
+	}
+
+	public List<KeyValuePair> getSorting() {
+		return sorting;
+	}
+
+	public void setSorting(List<KeyValuePair> sorting) {
+		this.sorting = sorting;
 	}
 
 
@@ -684,78 +697,6 @@ public class MenusResponse implements Serializable {
 	}
 
 
-	public class Filters {
-
-		@SerializedName("price_range")
-		@Expose
-		private List<Integer> priceRange = new ArrayList<Integer>();
-		@SerializedName("delivery_time")
-		@Expose
-		private List<Integer> deliveryTime = new ArrayList<Integer>();
-		@SerializedName("minimum_order_amount")
-		@Expose
-		private List<Integer> minimumOrderAmount = new ArrayList<Integer>();
-		@SerializedName("is_closed")
-		@Expose
-		private List<Integer> isClosed = new ArrayList<Integer>();
-		@SerializedName("distance")
-		@Expose
-		private List<Double> distance = new ArrayList<Double>();
-		@SerializedName("cuisines")
-		@Expose
-		private List<String> cuisines = new ArrayList<String>();
-
-
-		public List<String> getCuisines() {
-			return cuisines;
-		}
-
-		public void setCuisines(List<String> cuisines) {
-			this.cuisines = cuisines;
-		}
-
-		public List<Integer> getPriceRange() {
-			return priceRange;
-		}
-
-		public void setPriceRange(List<Integer> priceRange) {
-			this.priceRange = priceRange;
-		}
-
-		public List<Integer> getDeliveryTime() {
-			return deliveryTime;
-		}
-
-		public void setDeliveryTime(List<Integer> deliveryTime) {
-			this.deliveryTime = deliveryTime;
-		}
-
-		public List<Integer> getMinimumOrderAmount() {
-			return minimumOrderAmount;
-		}
-
-		public void setMinimumOrderAmount(List<Integer> minimumOrderAmount) {
-			this.minimumOrderAmount = minimumOrderAmount;
-		}
-
-		public List<Integer> getIsClosed() {
-			return isClosed;
-		}
-
-		public void setIsClosed(List<Integer> isClosed) {
-			this.isClosed = isClosed;
-		}
-
-		public List<Double> getDistance() {
-			return distance;
-		}
-
-		public void setDistance(List<Double> distance) {
-			this.distance = distance;
-		}
-	}
-
-
 	public class BannerInfo {
 		@SerializedName("image_link")
 		@Expose
@@ -836,12 +777,6 @@ public class MenusResponse implements Serializable {
 		@SerializedName("vendors")
 		@Expose
 		private List<Vendor> vendors = new ArrayList<Vendor>();
-		@SerializedName("filters")
-		@Expose
-		private List<KeyValuePair> filters;
-		@SerializedName("sorting")
-		@Expose
-		private List<KeyValuePair> sorting;
 
 
 		private boolean isTypeOrder;
@@ -909,22 +844,6 @@ public class MenusResponse implements Serializable {
 
 		public void setImage(String image) {
 			this.image = image;
-		}
-
-		public List<KeyValuePair> getFilters() {
-			return filters;
-		}
-
-		public void setFilters(List<KeyValuePair> filters) {
-			this.filters = filters;
-		}
-
-		public List<KeyValuePair> getSorting() {
-			return sorting;
-		}
-
-		public void setSorting(List<KeyValuePair> sorting) {
-			this.sorting = sorting;
 		}
 
 		@Override

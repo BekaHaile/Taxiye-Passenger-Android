@@ -414,12 +414,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 if(activity.getCategoryIdOpened() < 0){
                                     activity.setMenusResponse(menusResponse);
                                     deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
+                                    activity.getCuisinesSelected().clear();
+                                    activity.getFilterSelected().clear();
+                                    activity.setSortBySelected(null);
                                 } else {
-                                    if(menusResponse.getCategories() != null && menusResponse.getCategories().size() > 0){
-                                        MenusResponse.Category category = menusResponse.getCategories().get(0);
-                                        activity.setFiltersAll((ArrayList<MenusResponse.KeyValuePair>) category.getFilters());
-                                        activity.setSortAll((ArrayList<MenusResponse.KeyValuePair>) category.getSorting());
-                                        activity.setCuisinesAll(null);
+                                    if(activity.getMenusFilterFragment() != null){
+                                        activity.getMenusFilterFragment().updateDataLists(menusResponse);
                                     }
                                 }
 
@@ -507,33 +507,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private HashMap<String, String> getMenusApiHashMap(LatLng latLng) {
         HashMap<String, String> params = new HashMap<>();
 
-        //Sort Keys
-        if (activity.getSortBySelected() != null) {
-            JSONArray sortArray = new JSONArray();
-            sortArray.put(activity.getSortBySelected().getKey());
-            params.put(Constants.KEY_SORTING, sortArray.toString());
-
-        }
-        //Quick Filter Keys
-        if (activity.getFilterSelected() != null && activity.getFilterSelected().size() > 0) {
-            JSONArray filtersSelected = new JSONArray();
-            for (MenusResponse.KeyValuePair filter : activity.getFilterSelected()) {
-                filtersSelected.put(filter.getKey());
-            }
-            params.put(Constants.KEY_FILTERS, filtersSelected.toString());
-        }
-
-        //Cuisines List
-        if (activity.getCuisinesSelected() != null && activity.getCuisinesSelected().size() > 0) {
-            ArrayList<Integer> cusiinesSelectedId = new ArrayList<>();
-            for (FilterCuisine cuisine : activity.getCuisinesSelected()) {
-                cusiinesSelectedId.add(cuisine.getId());
-
-            }
-            params.put(Constants.KEY_CUISINE_SELECTED, cusiinesSelectedId.toString());
-        }
-
-
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
         params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
         params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
@@ -542,6 +515,30 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         if(activity.getCategoryIdOpened() > 0){
             params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(activity.getCategoryIdOpened()));
+            //Sort Keys
+            if (activity.getSortBySelected() != null) {
+                JSONArray sortArray = new JSONArray();
+                sortArray.put(activity.getSortBySelected().getKey());
+                params.put(Constants.KEY_SORTING, sortArray.toString());
+
+            }
+            //Quick Filter Keys
+            if (activity.getFilterSelected() != null && activity.getFilterSelected().size() > 0) {
+                JSONArray filtersSelected = new JSONArray();
+                for (MenusResponse.KeyValuePair filter : activity.getFilterSelected()) {
+                    filtersSelected.put(filter.getKey());
+                }
+                params.put(Constants.KEY_FILTERS, filtersSelected.toString());
+            }
+
+            //Cuisines List
+            if (activity.getCuisinesSelected() != null && activity.getCuisinesSelected().size() > 0) {
+                ArrayList<Integer> cusiinesSelectedId = new ArrayList<>();
+                for (FilterCuisine cuisine : activity.getCuisinesSelected()) {
+                    cusiinesSelectedId.add(cuisine.getId());
+                }
+                params.put(Constants.KEY_CUISINE_SELECTED, cusiinesSelectedId.toString());
+            }
         }
 
         new HomeUtil().putDefaultParams(params);

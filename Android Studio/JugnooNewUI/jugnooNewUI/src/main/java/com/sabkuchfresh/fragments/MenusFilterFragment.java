@@ -63,7 +63,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	private RecyclerView rvFilters, rvSort;
 	private MenusFilterAdapter adapterFilters, adapterSort;
 
-	private TextView textViewSelectCuisinesValue;
+	private TextView textViewSelectCuisines, textViewSelectCuisinesValue;
 	private RelativeLayout rlCuisines;
 
 
@@ -82,6 +82,8 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	private LinearLayout llCuisinesList;
 	private RecyclerView recyclerViewCuisinesList;
 	private MenusFilterCuisinesAdapter menusFilterCuisinesAdapter;
+
+	private int lastCategoryIdForCuisines;
 
 
     @Override
@@ -111,7 +113,6 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		recyclerViewCuisinesList.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
 		menusFilterCuisinesAdapter = new MenusFilterCuisinesAdapter(activity.getCuisinesAll(), etSearchCuisine, this);
 		recyclerViewCuisinesList.setAdapter(menusFilterCuisinesAdapter);
-		setCuisinesList();
 
 
 		rvFilters = (RecyclerView) rootView.findViewById(R.id.rvFilters);
@@ -124,9 +125,10 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		rvSort.setAdapter(adapterSort);
 
 		rlCuisines = (RelativeLayout) rootView.findViewById(R.id.rlCuisines);
-		textViewSelectCuisinesValue = (TextView) rootView.findViewById(R.id.textViewSelectCuisinesValue); textViewSelectCuisinesValue.setTypeface(Fonts.mavenMedium(activity));
+		textViewSelectCuisines = (TextView) rootView.findViewById(R.id.textViewSelectCuisines);
+		textViewSelectCuisinesValue = (TextView) rootView.findViewById(R.id.textViewSelectCuisinesValue);
 		textViewSelectCuisinesValue.setVisibility(View.GONE);
-
+		setCuisinesList();
 
 
 		buttonApply = (Button) rootView.findViewById(R.id.buttonApply); buttonApply.setTypeface(Fonts.mavenRegular(activity));
@@ -206,7 +208,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				adapterSort.notifyDataSetChanged();
 				adapterFilters.notifyDataSetChanged();
 				menusFilterCuisinesAdapter.notifyDataSetChanged();
-				setCuisinesSelectedToText();
+				setCuisinesList();
 
 				applyRealTimeFilters();
 				GAUtils.event(GAAction.MENUS, GAAction.FILTERS, GAAction.RESET_BUTTON + GAAction.CLICKED);
@@ -219,29 +221,30 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	}
 
 
-	private void setCuisinesSelectedToText(){
-		textViewSelectCuisinesValue.setText("");
-		if (activity.getCuisinesSelected() != null) {
-			for(FilterCuisine filterCuisine : activity.getCuisinesSelected()){
-				textViewSelectCuisinesValue.append(filterCuisine.getName()+", ");
-            }
+
+	public void setCuisinesList(){
+		String cuisinesSelectedText = "";
+		if(activity.getCuisinesAll() != null) {
+			for (FilterCuisine filterCuisine : activity.getCuisinesAll()) {
+				filterCuisine.setSelected(activity.getCuisinesSelected().contains(filterCuisine) ? 1 : 0);
+				if(filterCuisine.getSelected() == 1) {
+					cuisinesSelectedText = cuisinesSelectedText + filterCuisine.getName() + ", ";
+				}
+			}
+		} else {
+			for (FilterCuisine filterCuisine : activity.getCuisinesSelected()) {
+				cuisinesSelectedText = cuisinesSelectedText + filterCuisine.getName() + ", ";
+			}
 		}
+		if (menusFilterCuisinesAdapter != null) {
+			menusFilterCuisinesAdapter.setList(activity.getCuisinesAll());
+		}
+		textViewSelectCuisinesValue.setText(cuisinesSelectedText);
 		if(textViewSelectCuisinesValue.getText().length() > 2){
 			textViewSelectCuisinesValue.setText(textViewSelectCuisinesValue.getText().toString()
 					.substring(0, textViewSelectCuisinesValue.getText().length()-2));
 		}
 		textViewSelectCuisinesValue.setVisibility(textViewSelectCuisinesValue.getText().length() > 0 ? View.VISIBLE : View.GONE);
-	}
-
-	public void setCuisinesList(){
-		if(activity.getCuisinesAll() != null) {
-			for (FilterCuisine filterCuisine : activity.getCuisinesAll()) {
-				filterCuisine.setSelected(activity.getCuisinesSelected().contains(filterCuisine) ? 1 : 0);
-			}
-			if (menusFilterCuisinesAdapter != null) {
-				menusFilterCuisinesAdapter.setList(activity.getCuisinesAll());
-			}
-		}
 	}
 
 
@@ -252,7 +255,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 			etSearchCuisine.setVisibility(View.GONE);
 			ivSearchCuisine.setVisibility(View.GONE);
 			tvReset.setVisibility(View.VISIBLE);
-			setCuisinesSelectedToText();
+			setCuisinesList();
 			Utils.hideKeyboard(activity);
 			return;
 		}
@@ -300,6 +303,9 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
 				params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
 				params.put(Constants.INTERATED, "1");
+				if(activity.getCategoryIdOpened() > 0) {
+					params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(activity.getCategoryIdOpened()));
+				}
 				new HomeUtil().putDefaultParams(params);
 				ProgressDialog progressDialog = null;
 
@@ -325,9 +331,9 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == cuisineResponse.getFlag()) {
 									if(cuisineResponse.getRanges()!=null){
+										lastCategoryIdForCuisines = activity.getCategoryIdOpened();
 										activity.setCuisinesAll(cuisineResponse.getRanges());
 										setCuisinesList();
-										setCuisinesSelectedToText();
 									}
 								} else {
 									DialogPopup.alertPopup(activity, "", message);
@@ -382,8 +388,17 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				});
 	}
 
-	public void updateDataLists() {
-		if(activity.getCategoryIdOpened() > 0 && activity.getFiltersAll() != null && activity.getSortAll() != null){
+	public void updateDataLists(MenusResponse menusResponse) {
+		if(activity.getCategoryIdOpened() > 0
+				&& menusResponse.getCategories() != null && menusResponse.getCategories().size() > 0){
+			MenusResponse.Category category = menusResponse.getCategories().get(0);
+			activity.setFiltersAll((ArrayList<MenusResponse.KeyValuePair>) menusResponse.getFilters());
+			activity.setSortAll((ArrayList<MenusResponse.KeyValuePair>) menusResponse.getSorting());
+			if(lastCategoryIdForCuisines != category.getId()) {
+				activity.setCuisinesAll(null);
+			}
+			setCuisinesList();
+			textViewSelectCuisines.setText(activity.getString(R.string.select_format, category.getTagsName()));
 			adapterFilters.setList(activity.getFiltersAll());
 			adapterSort.setList(activity.getSortAll());
 		}
