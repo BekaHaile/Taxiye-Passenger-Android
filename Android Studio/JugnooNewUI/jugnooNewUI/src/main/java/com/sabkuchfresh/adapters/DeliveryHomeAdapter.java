@@ -130,11 +130,13 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
 
-        int sizeListBeforeAdding = dataToDisplay.size();
-        if(!isPagination){
-            dataToDisplay.add(new DeliveryDivider());
+        final int sizeListBeforeAdding = dataToDisplay.size();
+        if(isPagination){
+            showPaginationProgressBar(false,false);
+
         }else{
-            sizeListBeforeAdding = dataToDisplay.size();
+            dataToDisplay.add(new DeliveryDivider());
+
         }
 
         if(!isPagination && menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0){
@@ -186,17 +188,23 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
        if(isPagination){
             final int sizeListAfterAddding = dataToDisplay.size();
-           if(sizeListAfterAddding-sizeListBeforeAdding>0){
-               final int finalSizeListBeforeAdding = sizeListBeforeAdding;
-               recyclerView.postDelayed(new Runnable() {
-                   @Override
-                   public void run() {
-                       notifyItemRangeInserted(sizeListAfterAddding-1,sizeListAfterAddding- finalSizeListBeforeAdding);
-
-                   }
-               },recyclerView.getItemAnimator().getRemoveDuration());
-
+            final int diff = sizeListAfterAddding-sizeListBeforeAdding;
+           if(sizeListAfterAddding<sizeListBeforeAdding){
+               if(diff==-1){
+                 notifyItemRemoved(dataToDisplay.size());
+               }else{
+                   notifyItemRangeRemoved(dataToDisplay.size(),(-diff));
+               }
+           }else if(sizeListAfterAddding>sizeListBeforeAdding){
+               if(diff==1){
+                   notifyItemChanged(dataToDisplay.size());
+               }else{
+                   notifyItemRangeChanged(dataToDisplay.size(),diff);
+               }
            }
+
+
+
         }else{
            notifyDataSetChanged();
 
@@ -651,20 +659,27 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public void showPaginationProgressBar(boolean show) {
+    public void showPaginationProgressBar(boolean show, boolean notifyAdapter) {
         if(dataToDisplay==null || dataToDisplay.size()==0)
             return;
 
-        int lastIndexofList = dataToDisplay.size() - 1;
-        boolean isProgressBarExist = dataToDisplay.get(lastIndexofList) instanceof ProgressBarModel;
+        boolean isProgressBarExist = dataToDisplay.get(dataToDisplay.size() - 1) instanceof ProgressBarModel;
         if(show) {
             if (!isProgressBarExist) {
                 dataToDisplay.add(ProgressBarModel.getInstance());
-                recyclerView.post(getProgressDisplayRunnable(true,lastIndexofList));
+                if(notifyAdapter){
+                    recyclerView.post(getProgressDisplayRunnable(true,dataToDisplay.size()));
+
+                }
             }
         }else{
-           if(dataToDisplay.remove(ProgressBarModel.getInstance()))
-               recyclerView.post(getProgressDisplayRunnable(false,lastIndexofList));
+           if(dataToDisplay.remove(ProgressBarModel.getInstance())){
+               if(notifyAdapter){
+                   recyclerView.post(getProgressDisplayRunnable(false,dataToDisplay.size()));
+
+               }
+           }
+
         }
 
     }

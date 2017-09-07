@@ -8,7 +8,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -570,7 +569,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         HashMap<String, String> params = getMenusApiHashMap(activity.getMenuRefreshLatLng());
         params.put(Constants.PAGE_NO, String.valueOf(currentPageCount));
-        deliveryHomeAdapter.showPaginationProgressBar(true);
+        deliveryHomeAdapter.showPaginationProgressBar(true, true);
         isPagingApiInProgress = true;
         Callback<MenusResponse> callback = new Callback<MenusResponse>() {
             @Override
@@ -578,9 +577,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 isPagingApiInProgress = false;
                 activity.getTopBar().setPBSearchVisibility(View.GONE);
                 relativeLayoutNoMenus.setVisibility(View.GONE);
-                deliveryHomeAdapter.showPaginationProgressBar(false);
 
 
+                boolean isProgressBarRemoved = false;
                 String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                 Log.i(TAG, "getAllProducts response = " + responseStr);
                 try {
@@ -592,7 +591,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             //set Variables for pagination
                             currentPageCount++;
                             hasMorePages =  menusResponse.isPageLengthComplete();
-                            deliveryHomeAdapter.setList(menusResponse, true);
+                             deliveryHomeAdapter.setList(menusResponse, true);
+                            isProgressBarRemoved = true;//Set list removes progress bar to accumulate animation of both insert and delete in one go
 
 
                         } else {
@@ -602,6 +602,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
+                if(!isProgressBarRemoved){
+                    deliveryHomeAdapter.showPaginationProgressBar(false, true);
+
+                }
             }
 
             @Override
@@ -610,7 +614,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 relativeLayoutNoMenus.setVisibility(View.GONE);
                 isMenusApiInProgress = false;
                 activity.getTopBar().setPBSearchVisibility(View.GONE);
-                deliveryHomeAdapter.showPaginationProgressBar(false);
+                deliveryHomeAdapter.showPaginationProgressBar(false, true);
                 retryDialog(DialogErrorType.CONNECTION_LOST, activity.getMenuRefreshLatLng(), false, true, false);
 
             }
