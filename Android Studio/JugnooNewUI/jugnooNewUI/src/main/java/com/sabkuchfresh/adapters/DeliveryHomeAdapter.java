@@ -128,6 +128,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(!isPagination || dataToDisplay==null)
           this.dataToDisplay = new ArrayList<>();
 
+
+
+        int sizeListBeforeAdding = dataToDisplay.size();
+        if(!isPagination){
+            dataToDisplay.add(new DeliveryDivider());
+        }else{
+            sizeListBeforeAdding = dataToDisplay.size();
+        }
+
         if(!isPagination && menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0){
             int sizeRecentOrders = menusResponse.getRecentOrders().size();
 
@@ -159,6 +168,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     vendorsCount = vendorsCount + category.getVendors().size();
                 }
             }
+            if(menusResponse.getCategories().size()>0)
+                dataToDisplay.remove(dataToDisplay.size()-1);
         }
 
         //if no vendors to show
@@ -171,16 +182,26 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 messageResId = R.string.no_menus_available_with_these_filters;
             }
             dataToDisplay.add(new NoVendorModel(activity.getString(messageResId)));
-            dataToDisplay.add(new DeliveryDivider());
         }
 
-        //Removes the bottom border
-        if(dataToDisplay.size()>1){
-            dataToDisplay.add(0, dataToDisplay.remove(dataToDisplay.size()-1));
+       if(isPagination){
+            final int sizeListAfterAddding = dataToDisplay.size();
+           if(sizeListAfterAddding-sizeListBeforeAdding>0){
+               final int finalSizeListBeforeAdding = sizeListBeforeAdding;
+               recyclerView.postDelayed(new Runnable() {
+                   @Override
+                   public void run() {
+                       notifyItemRangeInserted(sizeListAfterAddding-1,sizeListAfterAddding- finalSizeListBeforeAdding);
 
-        }
+                   }
+               },recyclerView.getItemAnimator().getRemoveDuration());
 
-        notifyDataSetChanged();
+           }
+        }else{
+           notifyDataSetChanged();
+
+       }
+
     }
 
 
@@ -639,13 +660,48 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(show) {
             if (!isProgressBarExist) {
                 dataToDisplay.add(ProgressBarModel.getInstance());
-                notifyItemInserted(lastIndexofList);
+                recyclerView.post(getProgressDisplayRunnable(true,lastIndexofList));
             }
         }else{
            if(dataToDisplay.remove(ProgressBarModel.getInstance()))
-              notifyItemRemoved(lastIndexofList);
+               recyclerView.post(getProgressDisplayRunnable(false,lastIndexofList));
         }
 
+    }
+
+    private  class ProgressBarDisplayRunnable implements Runnable {
+        private int position;
+        private boolean isInsert;
+
+        public void setPosition(int position) {
+            this.position = position;
+        }
+
+        public void setInsert(boolean insert) {
+            isInsert = insert;
+        }
+
+        @Override
+        public void run() {
+            if(isInsert){
+                notifyItemInserted(position);
+
+            }else{
+                notifyItemRemoved(position);
+
+            }
+
+        }
+    }
+    private ProgressBarDisplayRunnable progressBarDisplayRunnable;
+    private ProgressBarDisplayRunnable getProgressDisplayRunnable(boolean isInsert,int position){
+        if(progressBarDisplayRunnable==null){
+            progressBarDisplayRunnable = new ProgressBarDisplayRunnable();
+        }
+        progressBarDisplayRunnable.setInsert(isInsert);
+        progressBarDisplayRunnable.setPosition(position);
+
+        return progressBarDisplayRunnable;
     }
 
     private class ViewHolderVendor extends RecyclerView.ViewHolder {

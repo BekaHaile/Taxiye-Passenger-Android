@@ -2288,8 +2288,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         } else if (getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()) {
             getMenusFragment().toggleSearch(true);
-        } else if (getTopFragment() instanceof MenusFragment && getCategoryIdOpened() > 0) {
-            getMenusFragment().expandThisCategoryId(-1);
+        } else if (getTopFragment() instanceof MenusFragment && (getCategoryIdOpened() > 0 || getMenusFragment().isCategoryDropDownVisible())) {
+            getMenusFragment().switchCategory(-1, true);
             return;
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finishWithToast();

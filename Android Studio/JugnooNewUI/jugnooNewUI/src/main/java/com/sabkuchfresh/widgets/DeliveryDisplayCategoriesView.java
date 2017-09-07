@@ -132,6 +132,21 @@ public class DeliveryDisplayCategoriesView {
 
     }
 
+    public boolean isDropDownVisible() {
+        return rvCategories!=null && rvCategories.getVisibility()==View.VISIBLE;
+    }
+
+    public void toggleDropDown() {
+
+        try {
+            OnCategoryClick(layoutChooseCategory);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     public interface Callback{
         void onCategoryClick(MenusResponse.Category category);
     }

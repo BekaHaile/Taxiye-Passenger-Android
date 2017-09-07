@@ -31,6 +31,7 @@ import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
 import com.sabkuchfresh.utils.Utils;
+import com.sabkuchfresh.utils.WrapContentLinearLayoutManager;
 import com.sabkuchfresh.widgets.DeliveryDisplayCategoriesView;
 
 import org.json.JSONArray;
@@ -86,7 +87,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     PushDialog pushDialog;
     private boolean resumed = false, searchOpened = false;
     private KeyboardLayoutListener keyboardLayoutListener;
-    private LinearLayoutManager linearLayoutManager;
+    private WrapContentLinearLayoutManager linearLayoutManager;
     private int visibleItemCount;
     private int totalItemCount;
     private int pastVisiblesItems;
@@ -137,7 +138,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         relativeLayoutNoMenus.setVisibility(View.GONE);
 
         recyclerViewRestaurant = (RecyclerView) rootView.findViewById(R.id.recyclerViewRestaurant);
-        linearLayoutManager = new LinearLayoutManager(activity);
+        linearLayoutManager = new WrapContentLinearLayoutManager(activity);
         recyclerViewRestaurant.setLayoutManager(linearLayoutManager);
         recyclerViewRestaurant.setItemAnimator(new DefaultItemAnimator());
         recyclerViewRestaurant.setHasFixedSize(false);
@@ -168,7 +169,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
             @Override
             public void openCategory(int categoryId) {
-                expandThisCategoryId(categoryId);
+                switchCategory(categoryId, false);
             }
         }, recyclerViewRestaurant, status);
 
@@ -294,7 +295,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return rootView;
     }
 
-    public void expandThisCategoryId(int categoryId) {
+    public void switchCategory(int categoryId, boolean isBackPressed) {
+
+        if(deliveryDisplayCategoriesView==null)
+            return;
+
+        if(isBackPressed && deliveryDisplayCategoriesView.isDropDownVisible()){
+            deliveryDisplayCategoriesView.toggleDropDown();
+            return;
+        }
         activity.setCategoryIdOpened(categoryId);
         getAllMenus(true, activity.getSelectedLatLng(), true);
         deliveryDisplayCategoriesView.setCategoryLabelIcon(categoryId);
@@ -765,11 +774,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onCategoryClick(MenusResponse.Category category) {
         if(activity.getCategoryIdOpened() != category.getId()) {
-            expandThisCategoryId(category.getId());
+            switchCategory(category.getId(), false);
         }
     }
 
     public String getSearchText() {
         return searchText;
+    }
+
+    public boolean isCategoryDropDownVisible() {
+        return deliveryDisplayCategoriesView!=null && deliveryDisplayCategoriesView.isDropDownVisible();
     }
 }
