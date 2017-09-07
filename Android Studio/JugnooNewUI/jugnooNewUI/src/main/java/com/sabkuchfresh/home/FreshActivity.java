@@ -3274,6 +3274,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             sortBySelected = new MenusResponse.KeyValuePair("");
         }
         Prefs.with(this).save(Constants.SP_MENUS_FILTER_SORT_BY_OBJ, sortBySelected, MenusResponse.KeyValuePair.class);
+        if(sortBySelected != null && TextUtils.isEmpty(sortBySelected.getKey())){
+            sortBySelected = null;
+        }
         JsonElement element = gson.toJsonTree(cuisinesSelected, new TypeToken<List<FilterCuisine>>() {}.getType());
         if(element != null && element.isJsonArray()) {
             JsonArray jsonArray = element.getAsJsonArray();

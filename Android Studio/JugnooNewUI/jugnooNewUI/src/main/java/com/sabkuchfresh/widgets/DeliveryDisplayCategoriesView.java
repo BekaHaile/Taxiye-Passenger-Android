@@ -101,8 +101,9 @@ public class DeliveryDisplayCategoriesView {
             }, rvCategories);
             rvCategories.setAdapter(deliveryDisplayCategoriesAdpater);
         }
-
-        deliveryCategoryModel.add(0, new MenusResponse.Category(-1));
+        if(deliveryCategoryModel != null) {
+            deliveryCategoryModel.add(0, new MenusResponse.Category(-1));
+        }
         deliveryDisplayCategoriesAdpater.setList(deliveryCategoryModel);
     }
 

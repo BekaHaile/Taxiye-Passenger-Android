@@ -65,6 +65,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<RecentOrder> remainingRecentOrders;
     private ArrayList<String> possibleStatus;
     private Callback callback;
+    private boolean showOrderOptions = false;
+
     private static final int VIEW_TITLE_CATEGORY = 1;
     private static final int VIEW_ORDER_ITEM = 2;
     private static final int VIEW_SEE_ALL = 3;
@@ -404,15 +406,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
                 statusHolder.tvOrderIdValue.setText("#"+recentOrder.getOrderId().toString());
                 statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
-
                 statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
-
-                statusHolder.rlTrackViewOrder.setVisibility(View.VISIBLE);
-                if(recentOrder.getShowLiveTracking() == 1 && recentOrder.getDeliveryId() > 0){
-                    statusHolder.tvTrackOrder.setTextColor(ContextCompat.getColorStateList(activity, R.color.purple_text_color_selector));
-                } else {
-                    statusHolder.tvTrackOrder.setTextColor(ContextCompat.getColor(activity, R.color.purple_text_color_aplha));
-                }
 
                 statusHolder.rlRestaurantInfo.setVisibility(!TextUtils.isEmpty(recentOrder.getRestaurantName()) ? View.VISIBLE : View.GONE);
                 statusHolder.tvRestaurantName.setText(recentOrder.getRestaurantName());
@@ -420,6 +414,21 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     statusHolder.tvOrderAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(recentOrder.getOrderAmount())));
                 }
 
+                // if orders are for view only on Delivery Home Page
+                if(!showOrderOptions){
+                    statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
+                    statusHolder.rlTrackViewOrder.setVisibility(View.GONE);
+                    return;
+                }
+                // track or view order buttons
+                statusHolder.rlTrackViewOrder.setVisibility(View.VISIBLE);
+                if(recentOrder.getShowLiveTracking() == 1 && recentOrder.getDeliveryId() > 0){
+                    statusHolder.tvTrackOrder.setTextColor(ContextCompat.getColorStateList(activity, R.color.purple_text_color_selector));
+                } else {
+                    statusHolder.tvTrackOrder.setTextColor(ContextCompat.getColor(activity, R.color.purple_text_color_aplha));
+                }
+
+                // not delivered views case
                 if(recentOrder.isDeliveryNotDone() ||
                         recentOrder.getDeliveryConfirmation() == 1 || recentOrder.getDeliveryConfirmation() == 0){
                     statusHolder.rlOrderNotDelivered.setVisibility(View.VISIBLE);
@@ -676,7 +685,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public LinearLayout linear;
         RelativeLayout container, relativeStatusBar;
-        TextView tvOrderId, tvOrderIdValue, tvDeliveryBefore, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
+        TextView tvOrderId, tvOrderIdValue, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
         ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
         View lineStatus1, lineStatus2, lineStatus3;
         RelativeLayout rlRestaurantInfo, rlTrackViewOrder;
@@ -697,8 +706,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tvOrderId.setTypeface(Fonts.mavenRegular(activity));
             tvOrderIdValue = (TextView) itemView.findViewById(R.id.tvOrderIdValue);
             tvOrderIdValue.setTypeface(Fonts.mavenMedium(activity));
-            tvDeliveryBefore = (TextView) itemView.findViewById(R.id.tvDeliveryBefore);
-            tvDeliveryBefore.setTypeface(Fonts.mavenRegular(activity));
             tvDeliveryTime = (TextView) itemView.findViewById(R.id.tvDeliveryTime);
             tvDeliveryTime.setTypeface(Fonts.mavenMedium(activity));
             tvStatus0 = (TextView) itemView.findViewById(R.id.tvStatus0);
