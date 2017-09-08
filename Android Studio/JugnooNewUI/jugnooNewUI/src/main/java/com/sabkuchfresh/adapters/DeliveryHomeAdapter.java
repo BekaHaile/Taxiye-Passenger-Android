@@ -66,8 +66,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<RecentOrder> remainingRecentOrders;
     private ArrayList<String> possibleStatus;
     private Callback callback;
-    private boolean showOrderOptions = false;
-    private DeliverySeeAll deliverySeeAllOrders;
+    private boolean ordersExpanded;
+    private DeliverySeeAll deliverySeeAllModel;
 
 
     private static final int VIEW_TITLE_CATEGORY = 1;
@@ -136,14 +136,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final int sizeListBeforeAdding = dataToDisplay.size();
         if(isPagination){
             showPaginationProgressBar(false,false);
-
         }else{
             dataToDisplay.add(new DeliveryDivider());
-
         }
+
 
         if(!isPagination && menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0){
             int sizeRecentOrders = menusResponse.getRecentOrders().size();
+            ordersExpanded = false;
 
             dataToDisplay.add(new MenusResponse.Category(true));
             int count = Math.min(RECENT_ORDERS_TO_SHOW, sizeRecentOrders);
@@ -152,10 +152,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             if(sizeRecentOrders > RECENT_ORDERS_TO_SHOW){
                 cacheRemainingRecentOrders(menusResponse.getRecentOrders());
-                if(deliverySeeAllOrders == null){
-                    deliverySeeAllOrders = new DeliverySeeAll(-1);
+                if(deliverySeeAllModel == null){
+                    deliverySeeAllModel = new DeliverySeeAll(-1);
                 }
-                dataToDisplay.add(deliverySeeAllOrders);
+                dataToDisplay.add(deliverySeeAllModel);
             }
             dataToDisplay.add(new DeliveryDivider());
         }
@@ -180,6 +180,18 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(menusResponse.getCategories().size()>0)
                 dataToDisplay.remove(dataToDisplay.size()-1);
         }
+
+        // promotional banner or strip
+        if(!isPagination && vendorsCount > 0){
+            if(menusResponse.getShowBanner()){
+                if(menusResponse.getBannerInfos() != null && menusResponse.getBannerInfos().size() > 0){
+                    dataToDisplay.add(1, new BannerInfosModel(menusResponse.getBannerInfos()));
+                }
+            } else if(menusResponse.getStripInfo() != null && !TextUtils.isEmpty(menusResponse.getStripInfo().getText())){
+                dataToDisplay.add(1, menusResponse.getStripInfo());
+            }
+        }
+
 
         //if no vendors to show
         if(!isPagination && (vendorsCount == 0)){
@@ -208,6 +220,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                }else{
                    notifyItemRangeChanged(dataToDisplay.size(),diff);
                }
+           }else{
+               notifyDataSetChanged();
            }
 
 
@@ -242,15 +256,35 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    private void fillRemainingRecentOrders(int position){
+    /**
+     *
+     * @param position position is of SeeAll view if show true
+     * else it is of Ongoing Order header view if show false
+     * @param show
+     */
+    private void toggleRemainingOrdersVisibility(int position, boolean show){
         if(remainingRecentOrders != null && remainingRecentOrders.size() > 0){
-            dataToDisplay.addAll(position, remainingRecentOrders);
-            dataToDisplay.remove(deliverySeeAllOrders);
-            if(remainingRecentOrders.size() == 1){
-                notifyItemChanged(position);
+            if(show) {
+                dataToDisplay.addAll(position, remainingRecentOrders);
+                dataToDisplay.remove(deliverySeeAllModel);
+                ordersExpanded = true;
+                int startPosition = position - RECENT_ORDERS_TO_SHOW - 1; // - RECENT_ORDERS_TO_SHOW - 1 is for
+                                                                        // header and already visible orders notifying
+                if(startPosition >= 0){
+                    notifyItemRangeChanged(startPosition, RECENT_ORDERS_TO_SHOW+2);
+                    if (remainingRecentOrders.size() > 1){
+                        notifyItemRangeInserted(position + 1, remainingRecentOrders.size()-1);
+                    }
+                }
             } else {
-                notifyItemRemoved(position);
-                notifyItemRangeInserted(position+1, remainingRecentOrders.size());
+                dataToDisplay.removeAll(remainingRecentOrders);
+                dataToDisplay.add(position+RECENT_ORDERS_TO_SHOW+1, deliverySeeAllModel);
+                ordersExpanded = false;
+                notifyItemRangeChanged(position, RECENT_ORDERS_TO_SHOW+2);
+                if (remainingRecentOrders.size() > 1){
+                    recyclerView.getItemAnimator().getAddDuration();
+                    notifyItemRangeRemoved(position+RECENT_ORDERS_TO_SHOW+2, remainingRecentOrders.size()-1);
+                }
             }
         }
     }
@@ -261,7 +295,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         switch (viewType) {
             case VIEW_TITLE_CATEGORY:
                 View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_delivery_title, parent, false);
-                return new ViewTitleCategory(v);
+                return new ViewTitleCategory(v, this);
             case VIEW_ORDER_ITEM:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_order_status, parent, false);
                 return new ViewOrderStatus(v, this);
@@ -447,7 +481,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
 
                 // if orders are for view only on Delivery Home Page
-                if(!showOrderOptions){
+                if(!ordersExpanded){
                     statusHolder.rlRestaurantInfo.setVisibility(View.GONE);
                     statusHolder.tvDeliveryTime.setText(statusHolder.tvOrderIdValue.getText());
                     statusHolder.tvOrderIdValue.setText(recentOrder.getRestaurantName());
@@ -524,8 +558,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(category.isTypeOrder()){
                 holder.tvCateogoryTitle.setText(R.string.ongoing_orders);
                 holder.iconTitle.setImageResource(R.drawable.ic_ongoing_orders);
+                holder.ivCategoryArrow.setVisibility(ordersExpanded ? View.VISIBLE : View.GONE);
             } else {
                 holder.tvCateogoryTitle.setText(category.getCategoryName());
+                holder.ivCategoryArrow.setVisibility(View.GONE);
                 if(!TextUtils.isEmpty(category.getImage())){
                     Picasso.with(activity).load(category.getImage())
                             .placeholder(R.drawable.ic_nav_select_category)
@@ -645,9 +681,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if(((DeliverySeeAll)dataToDisplay.get(pos)).getCategoryId() > 0){
 							callback.openCategory(((DeliverySeeAll)dataToDisplay.get(pos)).getCategoryId());
                         } else {
-							// TODO: 06/09/17 recent orders see all
-                            fillRemainingRecentOrders(pos);
+                            toggleRemainingOrdersVisibility(pos, true);
 						}
+                    }
+                    break;
+                case R.id.rLCategory:
+                    if(dataToDisplay.get(pos) instanceof MenusResponse.Category
+                            && ((MenusResponse.Category)dataToDisplay.get(pos)).isTypeOrder()
+                            && ordersExpanded){
+                        toggleRemainingOrdersVisibility(pos, false);
                     }
                     break;
                 case R.id.llRoot:
@@ -853,10 +895,20 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageView iconTitle;
         @Bind(R.id.tv_cateogory_title)
         TextView tvCateogoryTitle;
+        @Bind(R.id.iv_category_arrow)
+        ImageView ivCategoryArrow;
+        @Bind(R.id.rLCategory)
+        RelativeLayout rLCategory;
 
-        ViewTitleCategory(View view) {
+        ViewTitleCategory(View view, final ItemListener itemListener) {
             super(view);
             ButterKnife.bind(this, view);
+            rLCategory.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.onClickItem(v, itemView);
+                }
+            });
         }
     }
     private static class ViewDivider extends RecyclerView.ViewHolder {

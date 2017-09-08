@@ -1,34 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    android:id="@+id/rLCategory"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@android:color/white"
-    android:layout_height="wrap_content">
+    android:orientation="vertical">
 
-    
-    
     <ImageView
-        android:layout_marginLeft="15dp"
         android:id="@+id/icon_title"
-        android:src="@drawable/ic_nav_select_category"
-        android:layout_centerVertical="true"
         android:layout_width="19dp"
+        android:layout_height="19dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_height="19dp" />
+        android:src="@drawable/ic_nav_select_category"/>
+
     <TextView
         android:id="@+id/tv_cateogory_title"
-        app:font="@string/maven"
-        android:text="Ongoing Orders"
-        android:textSize="14.5sp"
-        android:layout_marginLeft="50dp"
-        android:textColor="@color/text_color"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_centerVertical="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="10dp"
+        android:text="Ongoing Orders"
+        android:textColor="@color/text_color"
+        android:textSize="14.5sp"
+        app:font="@string/maven"/>
+
+    <ImageView
+        android:id="@+id/iv_category_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:padding="@dimen/dp_10"
+        android:rotation="-90"
+        android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/ic_arrow_grey"/>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
