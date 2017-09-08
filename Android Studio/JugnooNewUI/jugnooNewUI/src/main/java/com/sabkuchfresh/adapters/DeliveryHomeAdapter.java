@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +67,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private ArrayList<String> possibleStatus;
     private Callback callback;
     private boolean showOrderOptions = false;
+    private DeliverySeeAll deliverySeeAllOrders;
+
 
     private static final int VIEW_TITLE_CATEGORY = 1;
     private static final int VIEW_ORDER_ITEM = 2;
@@ -148,7 +151,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 dataToDisplay.add(menusResponse.getRecentOrders().get(i));
             }
             if(sizeRecentOrders > RECENT_ORDERS_TO_SHOW){
-                dataToDisplay.add(new DeliverySeeAll(-1));
+                cacheRemainingRecentOrders(menusResponse.getRecentOrders());
+                if(deliverySeeAllOrders == null){
+                    deliverySeeAllOrders = new DeliverySeeAll(-1);
+                }
+                dataToDisplay.add(deliverySeeAllOrders);
             }
             dataToDisplay.add(new DeliveryDivider());
         }
@@ -223,27 +230,28 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void cacheRemainingRecentOrders(List<RecentOrder> recentOrders){
-
         if(remainingRecentOrders == null){
             remainingRecentOrders = new ArrayList<>();
         }
         remainingRecentOrders.clear();
         remainingRecentOrders.addAll(recentOrders);
-        if(remainingRecentOrders.size() > 2){
-            remainingRecentOrders.remove(0);
-            remainingRecentOrders.remove(0);
+        if(remainingRecentOrders.size() > RECENT_ORDERS_TO_SHOW){
+            for(int i=0; i<RECENT_ORDERS_TO_SHOW; i++) {
+                remainingRecentOrders.remove(0);
+            }
         }
     }
 
-    private void fillRemainingRecentOrders(List<RecentOrder> recentOrders){
-        if(remainingRecentOrders == null){
-            remainingRecentOrders = new ArrayList<>();
-        }
-        remainingRecentOrders.clear();
-        remainingRecentOrders.addAll(recentOrders);
-        if(remainingRecentOrders.size() > 2){
-            remainingRecentOrders.remove(0);
-            remainingRecentOrders.remove(0);
+    private void fillRemainingRecentOrders(int position){
+        if(remainingRecentOrders != null && remainingRecentOrders.size() > 0){
+            dataToDisplay.addAll(position, remainingRecentOrders);
+            dataToDisplay.remove(deliverySeeAllOrders);
+            if(remainingRecentOrders.size() == 1){
+                notifyItemChanged(position);
+            } else {
+                notifyItemRemoved(position);
+                notifyItemRangeInserted(position+1, remainingRecentOrders.size());
+            }
         }
     }
 
@@ -433,9 +441,22 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                 }
                 showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
-                statusHolder.tvOrderIdValue.setText("#"+recentOrder.getOrderId().toString());
+                statusHolder.tvOrderIdValue.setText(Utils.fromHtml("Order: #<b>"+recentOrder.getOrderId().toString()+"</b>"));
+                statusHolder.tvOrderIdValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
                 statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+
+                // if orders are for view only on Delivery Home Page
+                if(!showOrderOptions){
+                    statusHolder.rlRestaurantInfo.setVisibility(View.GONE);
+                    statusHolder.tvDeliveryTime.setText(statusHolder.tvOrderIdValue.getText());
+                    statusHolder.tvOrderIdValue.setText(recentOrder.getRestaurantName());
+                    statusHolder.tvOrderIdValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+
+                    statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
+                    statusHolder.rlTrackViewOrder.setVisibility(View.GONE);
+                    return;
+                }
 
                 statusHolder.rlRestaurantInfo.setVisibility(!TextUtils.isEmpty(recentOrder.getRestaurantName()) ? View.VISIBLE : View.GONE);
                 statusHolder.tvRestaurantName.setText(recentOrder.getRestaurantName());
@@ -443,12 +464,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     statusHolder.tvOrderAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(recentOrder.getOrderAmount())));
                 }
 
-                // if orders are for view only on Delivery Home Page
-                if(!showOrderOptions){
-                    statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
-                    statusHolder.rlTrackViewOrder.setVisibility(View.GONE);
-                    return;
-                }
                 // track or view order buttons
                 statusHolder.rlTrackViewOrder.setVisibility(View.VISIBLE);
                 if(recentOrder.getShowLiveTracking() == 1 && recentOrder.getDeliveryId() > 0){
@@ -631,6 +646,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 							callback.openCategory(((DeliverySeeAll)dataToDisplay.get(pos)).getCategoryId());
                         } else {
 							// TODO: 06/09/17 recent orders see all
+                            fillRemainingRecentOrders(pos);
 						}
                     }
                     break;
@@ -756,7 +772,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public LinearLayout linear;
         RelativeLayout container, relativeStatusBar;
-        TextView tvOrderId, tvOrderIdValue, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
+        TextView tvOrderIdValue, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
         ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
         View lineStatus1, lineStatus2, lineStatus3;
         RelativeLayout rlRestaurantInfo, rlTrackViewOrder;
@@ -773,8 +789,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             linear = (LinearLayout) itemView.findViewById(R.id.linear);
             container = (RelativeLayout) itemView.findViewById(R.id.container);
             relativeStatusBar = (RelativeLayout) itemView.findViewById(R.id.relativeStatusBar);
-            tvOrderId = (TextView) itemView.findViewById(R.id.tvOrderId);
-            tvOrderId.setTypeface(Fonts.mavenRegular(activity));
             tvOrderIdValue = (TextView) itemView.findViewById(R.id.tvOrderIdValue);
             tvOrderIdValue.setTypeface(Fonts.mavenMedium(activity));
             tvDeliveryTime = (TextView) itemView.findViewById(R.id.tvDeliveryTime);

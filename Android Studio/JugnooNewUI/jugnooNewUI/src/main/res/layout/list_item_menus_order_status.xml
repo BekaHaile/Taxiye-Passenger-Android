@@ -81,7 +81,7 @@
             >
 
             <TextView
-                android:id="@+id/tvOrderId"
+                android:id="@+id/tvOrderIdValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -89,18 +89,8 @@
                 android:paddingLeft="22dp"
                 android:text="Order:"
                 android:textColor="@color/text_color"
-                android:textSize="12sp"/>
-
-            <TextView
-                android:id="@+id/tvOrderIdValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/tvOrderId"
-                android:maxLines="1"
-                android:paddingLeft="5dp"
-                android:text="13AF67"
-                android:textColor="@color/text_color"
+                android:layout_toLeftOf="@+id/tvDeliveryTime"
+                android:layout_alignParentLeft="true"
                 android:textSize="12sp"/>
 
             <TextView

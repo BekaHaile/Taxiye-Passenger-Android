@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
     android:id="@+id/ll_see_all"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
     android:gravity="center"
     android:paddingBottom="12dp"
     android:paddingTop="12dp"
-    android:background="?android:attr/selectableItemBackground"
     >
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:alpha="0.7"
         android:drawablePadding="8dp"
         android:drawableRight="@drawable/ic_arrow_grey"
         android:gravity="center"
         android:text="@string/label_see_all"
-        android:textColor="@color/text_color_light"
-        app:font="@string/maven" />
+        android:textColor="#C0595968"
+        app:font="@string/maven"/>
 </LinearLayout>
 
 

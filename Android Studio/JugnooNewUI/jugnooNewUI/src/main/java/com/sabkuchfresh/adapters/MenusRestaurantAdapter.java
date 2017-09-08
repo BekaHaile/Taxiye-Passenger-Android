@@ -365,7 +365,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         }
                     }
                     showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
-                    statusHolder.tvOrderIdValue.setText("#"+recentOrder.getOrderId().toString());
+                    statusHolder.tvOrderIdValue.setText("Order: #"+recentOrder.getOrderId().toString());
                     statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
 
                     statusHolder.tvViewOrder.setTag(position);
@@ -900,7 +900,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         public LinearLayout linear;
         RelativeLayout container, relativeStatusBar;
-        TextView tvOrderId, tvOrderIdValue, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
+        TextView tvOrderIdValue, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
         ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
         View lineStatus1, lineStatus2, lineStatus3;
         RelativeLayout rlRestaurantInfo, rlTrackViewOrder;
@@ -917,8 +917,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             linear = (LinearLayout) itemView.findViewById(R.id.linear);
             container = (RelativeLayout) itemView.findViewById(R.id.container);
             relativeStatusBar = (RelativeLayout) itemView.findViewById(R.id.relativeStatusBar);
-            tvOrderId = (TextView) itemView.findViewById(R.id.tvOrderId);
-            tvOrderId.setTypeface(Fonts.mavenRegular(context));
             tvOrderIdValue = (TextView) itemView.findViewById(R.id.tvOrderIdValue);
             tvOrderIdValue.setTypeface(Fonts.mavenMedium(context));
             tvDeliveryTime = (TextView) itemView.findViewById(R.id.tvDeliveryTime);
