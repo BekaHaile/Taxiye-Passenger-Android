@@ -1,7 +1,5 @@
 package com.sabkuchfresh.fragments;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -563,7 +561,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             public void onClick(View v) {
                 if (getActivity() instanceof FreshActivity && ((FreshActivity) getActivity()).getAppType() == AppConstant.ApplicationType.MENUS)
                     GAUtils.event(GACategory.MENUS, GAAction.CHECKOUT, GAAction.DELIVERY_FROM + GAAction.CLICKED);
-                activity.openVendorMenuFragmentOnBack = true;
+                if(activity.getVendorMenuFragment() == null && activity.getMerchantInfoFragment() == null) {
+                    activity.openVendorMenuFragmentOnBack = true;
+                }
                 activity.performBackPressed(false);
             }
         });

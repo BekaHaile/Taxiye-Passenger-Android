@@ -71,6 +71,13 @@ public class ApiFetchRestaurantMenu {
                 params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(restaurantId));
                 params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
                 params.put(Constants.INTERATED, "1");
+
+                // if api hit from home list where MerchantInfoFragment is not opened and direct Checkout page is
+                // not to be opened
+                if(!directCheckout && activity.getMerchantInfoFragment() == null){
+                    params.put(Constants.KEY_NOT_SEND_MENU, "1");
+                }
+
                 Log.i(TAG, "restaurantMenu params=" + params.toString());
 
                 new HomeUtil().putDefaultParams(params);
@@ -204,7 +211,11 @@ public class ApiFetchRestaurantMenu {
         if (goToCheckout) {
             activity.openCart(AppConstant.ApplicationType.MENUS);
         } else {
-            activity.getTransactionUtils().openMerchantInfoFragment(activity, activity.getRelativeLayoutContainer());
+            if(activity.getMerchantInfoFragment() == null){
+                activity.getTransactionUtils().openMerchantInfoFragment(activity, activity.getRelativeLayoutContainer());
+            } else {
+                activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+            }
         }
     }
 
@@ -226,6 +237,9 @@ public class ApiFetchRestaurantMenu {
             Data.AppType = AppConstant.ApplicationType.MENUS;
             Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
             Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
+        }
+        if(productsResponse.getCategories() == null || productsResponse.getCategories().isEmpty()){
+            productsResponse.setCategories(null);
         }
         activity.setMenuProductsResponse(productsResponse);
     }

@@ -270,7 +270,11 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				activity.openRestaurantAddReviewFragment(true);
 				break;
 			case R.id.bOrderOnline:
-				activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+				if(activity.getMenuProductsResponse().getCategories() != null){
+					activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+				} else {
+					activity.fetchRestaurantMenuAPI(activity.getVendorOpened().getRestaurantId(), false, null, null, -1, null);
+				}
 				sendUserClickEvent(Constants.KEY_ORDER_MODE);
 				break;
 			case R.id.llSeeAll:
