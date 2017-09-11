@@ -37,7 +37,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.RetrofitError;
@@ -207,15 +206,11 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				tvMerchantDisplayAddress.setText(activity.getVendorOpened().getDisplayAddress());
 				activity.setTextViewDrawableColor(tvMerchantDisplayAddress, ContextCompat.getColor(activity, R.color.text_color));
 				tvMerchantDisplayAddress.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getDisplayAddress()) ? View.VISIBLE : View.GONE);
-				tvOpensAt.setText("");
 				if(activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0){
-					tvOpensAt.append(activity.getString(R.string.closed));
+					tvOpensAt.setText(activity.getString(R.string.closed));
 					tvOpensAt.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
 				} else {
-					tvOpensAt.append(activity.getString(R.string.open_now_colon));
-					tvOpensAt.append(" ");
-					tvOpensAt.append(DateOperations.convertDayTimeAPViaFormat(activity.getVendorOpened().getOpensAt())
-							+" - "+DateOperations.convertDayTimeAPViaFormat(activity.getVendorOpened().getCloseIn()));
+					tvOpensAt.setText(activity.getVendorOpened().getRestaurantTimingsStr());
 					tvOpensAt.setTextColor(ContextCompat.getColor(activity, R.color.green_fresh_fab_pressed));
 				}
 				tvMerchantMail.setText(activity.getVendorOpened().getEmail());

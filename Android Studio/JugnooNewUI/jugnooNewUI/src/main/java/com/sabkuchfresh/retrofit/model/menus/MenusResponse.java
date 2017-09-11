@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.DateOperations;
 
 /**
  * Created by shankar on 11/15/16.
@@ -340,6 +341,9 @@ public class MenusResponse implements Serializable {
 		@SerializedName("pay_mode")
 		@Expose
 		private int payMode;
+		@SerializedName("restaurant_timings")
+		@Expose
+		private List<RestaurantTiming> restaurantTimings;
 
 		public boolean isChatModeEnabled() {
 			return chatMode == 1;
@@ -711,6 +715,30 @@ public class MenusResponse implements Serializable {
 		public void setEmail(String email) {
 			this.email = email;
 		}
+
+		public List<RestaurantTiming> getRestaurantTimings() {
+			return restaurantTimings;
+		}
+
+		public void setRestaurantTimings(List<RestaurantTiming> restaurantTimings) {
+			this.restaurantTimings = restaurantTimings;
+		}
+
+		public String getRestaurantTimingsStr(){
+			StringBuilder sb = new StringBuilder();
+			if(restaurantTimings != null){
+				for(RestaurantTiming timing : restaurantTimings){
+					sb.append(DateOperations.convertDayTimeAPViaFormat(timing.getStartTime()))
+							.append(" - ")
+							.append(DateOperations.convertDayTimeAPViaFormat(timing.getEndTime()))
+							.append("\n");
+				}
+			}
+			if(sb.length() > 1){
+				return sb.toString().substring(0, sb.length()-1);
+			}
+			return sb.toString();
+		}
 	}
 
 
@@ -924,4 +952,22 @@ public class MenusResponse implements Serializable {
 			return obj instanceof KeyValuePair && ((KeyValuePair)obj).getKey().equals(getKey());
 		}
 	}
+
+	public static class RestaurantTiming{
+		@SerializedName("start_time")
+		@Expose
+		private String startTime;
+		@SerializedName("end_time")
+		@Expose
+		private String endTime;
+
+		public String getStartTime() {
+			return startTime;
+		}
+
+		public String getEndTime() {
+			return endTime;
+		}
+	}
+
 }
