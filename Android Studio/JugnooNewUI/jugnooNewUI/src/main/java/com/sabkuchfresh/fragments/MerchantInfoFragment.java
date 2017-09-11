@@ -161,7 +161,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 		progressWheel.stopSpinning();
 		progressWheel.setVisibility(View.GONE);
 
-		success();
+		setMerchantInfoToUI();
 
 		return rootView;
 	}
@@ -182,7 +182,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 	}
 
 
-	void success() {
+	void setMerchantInfoToUI() {
 		try {
 			if (activity.getMenuProductsResponse() != null) {
 				if (activity.updateCart) {
@@ -206,6 +206,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				setRatingViews();
 				tvMerchantDisplayAddress.setText(activity.getVendorOpened().getDisplayAddress());
 				activity.setTextViewDrawableColor(tvMerchantDisplayAddress, ContextCompat.getColor(activity, R.color.text_color));
+				tvMerchantDisplayAddress.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getDisplayAddress()) ? View.VISIBLE : View.GONE);
 				tvOpensAt.setText("");
 				if(activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0){
 					tvOpensAt.append(activity.getString(R.string.closed));
@@ -218,11 +219,16 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 					tvOpensAt.setTextColor(ContextCompat.getColor(activity, R.color.green_fresh_fab_pressed));
 				}
 				tvMerchantMail.setText(activity.getVendorOpened().getEmail());
+				tvMerchantMail.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getEmail()) ? View.VISIBLE : View.GONE);
 				tvMerchantContact.setText(activity.getVendorOpened().getCallingNumber());
+				tvMerchantContact.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getCallingNumber()) ? View.VISIBLE : View.GONE);
 				tvMerchantAddress.setText(activity.getVendorOpened().getAddress());
+				tvMerchantAddress.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getAddress()) ? View.VISIBLE : View.GONE);
 				rvTopReviews.setVisibility(View.GONE);
 				llSeeAll.setVisibility(View.GONE);
 				fetchFeedback();
+				llChatNow.setVisibility(activity.getVendorOpened().isChatModeEnabled() ? View.VISIBLE : View.GONE);
+				bOrderOnline.setBackgroundResource(activity.getVendorOpened().getOrderMode() == 1 ? R.drawable.capsule_theme_color_selector : R.drawable.capsule_grey_dark_bg);
 			}
 		} catch (Exception exception) {
 			exception.printStackTrace();
@@ -270,10 +276,16 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				activity.openRestaurantAddReviewFragment(true);
 				break;
 			case R.id.bOrderOnline:
-				if(activity.getMenuProductsResponse().getCategories() != null){
-					activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+				if(activity.getVendorOpened().getOrderMode() == 0){
+					Utils.showToast(activity, activity.getString(R.string.order_online_not_available));
+				} else if (activity.getVendorOpened().getOrderMode() == 2){
+					Utils.showToast(activity, activity.getString(R.string.order_online_closed));
 				} else {
-					activity.fetchRestaurantMenuAPI(activity.getVendorOpened().getRestaurantId(), false, null, null, -1, null);
+					if (activity.getMenuProductsResponse().getCategories() != null) {
+						activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+					} else {
+						activity.fetchRestaurantMenuAPI(activity.getVendorOpened().getRestaurantId(), false, null, null, -1, null);
+					}
 				}
 				sendUserClickEvent(Constants.KEY_ORDER_MODE);
 				break;

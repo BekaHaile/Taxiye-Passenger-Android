@@ -1389,6 +1389,8 @@
     <string name="label_see_all">See All</string>
     <string name="ongoing_orders">Ongoing Orders</string>
     <string name="select_format">Select %s</string>
+    <string name="order_online_not_available">Online ordering not available for this merchant</string>
+    <string name="order_online_closed">Online ordering is closed for this merchant</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

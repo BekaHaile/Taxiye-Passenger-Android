@@ -331,6 +331,27 @@ public class MenusResponse implements Serializable {
 		@SerializedName("email")
 		@Expose
 		private String email;
+		@SerializedName("chat_mode")
+		@Expose
+		private int chatMode;
+		@SerializedName("order_mode")
+		@Expose
+		private int orderMode;
+		@SerializedName("pay_mode")
+		@Expose
+		private int payMode;
+
+		public boolean isChatModeEnabled() {
+			return chatMode == 1;
+		}
+
+		public int getOrderMode() {
+			return orderMode;
+		}
+
+		public int getPayMode() {
+			return payMode;
+		}
 
 		public String getNext_slot_time() {
 			return next_slot_time;
