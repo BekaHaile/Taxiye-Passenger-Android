@@ -521,6 +521,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
         params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
         params.put(Constants.INTERATED, "1");
+        params.put(Constants.PAGE_NO, String.valueOf(0));
 
         if(activity.getCategoryIdOpened() > 0){
             params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(activity.getCategoryIdOpened()));
