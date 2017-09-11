@@ -172,4 +172,10 @@
  -dontwarn com.squareup.okhttp.**
  -dontwarn retrofit2.Platform$Java8
 
+ -keeppackagenames org.jsoup.nodes
+
+ -keep public class org.jsoup.** {
+ 	public *;
+ }
+
 

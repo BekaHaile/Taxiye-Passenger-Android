@@ -96,7 +96,6 @@
 -printusage '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/outputs/mapping/release/usage.txt'
 -dontoptimize
 -optimizations !method/inlining/*
--printmapping '/Users/Saini/Documents/BitBucket/jugnoo-android-autos/Android Studio/JugnooNewUI/jugnooNewUI/build/outputs/mapping/release/mapping.txt'
 -dontusemixedcaseclassnames
 -keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod,Signature,*Annotation*,*Annotation*,*Annotation*,SourceFile,LineNumberTable,InnerClasses,EnclosingMethod,JavascriptInterface,*Annotation*,*Annotation*
 -dontpreverify
