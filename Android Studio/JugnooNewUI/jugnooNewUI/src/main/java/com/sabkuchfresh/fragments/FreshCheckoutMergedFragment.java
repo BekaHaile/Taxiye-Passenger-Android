@@ -3298,7 +3298,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             llDeliveryFrom.setVisibility(View.VISIBLE);
             tvRestName.setText(activity.getVendorOpened().getName());
             if (TextUtils.isEmpty(address)) {
-                tvRestAddress.setText(activity.getVendorOpened().getRestaurantAddress());
+                tvRestAddress.setText(activity.getVendorOpened().getAddress());
             } else {
                 tvRestAddress.setText(address);
             }

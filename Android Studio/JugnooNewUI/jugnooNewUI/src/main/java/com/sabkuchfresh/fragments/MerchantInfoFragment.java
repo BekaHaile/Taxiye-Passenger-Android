@@ -204,7 +204,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				//merchant info set to views
 				tvMerchantName.setText(activity.getVendorOpened().getName());
 				setRatingViews();
-				tvMerchantDisplayAddress.setText(activity.getVendorOpened().getAddress());
+				tvMerchantDisplayAddress.setText(activity.getVendorOpened().getDisplayAddress());
 				activity.setTextViewDrawableColor(tvMerchantDisplayAddress, ContextCompat.getColor(activity, R.color.text_color));
 				tvOpensAt.setText("");
 				if(activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0){
@@ -217,8 +217,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 							+" - "+DateOperations.convertDayTimeAPViaFormat(activity.getVendorOpened().getCloseIn()));
 					tvOpensAt.setTextColor(ContextCompat.getColor(activity, R.color.green_fresh_fab_pressed));
 				}
-				tvMerchantMail.setText(activity.getVendorOpened().getMailAddress());
-				tvMerchantContact.setText(activity.getVendorOpened().getContact());
+				tvMerchantMail.setText(activity.getVendorOpened().getEmail());
+				tvMerchantContact.setText(activity.getVendorOpened().getCallingNumber());
 				tvMerchantAddress.setText(activity.getVendorOpened().getAddress());
 				rvTopReviews.setVisibility(View.GONE);
 				llSeeAll.setVisibility(View.GONE);

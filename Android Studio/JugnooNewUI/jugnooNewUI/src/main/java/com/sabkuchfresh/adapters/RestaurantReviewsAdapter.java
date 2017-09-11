@@ -326,13 +326,13 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 								if(review1.getIsEditable() == 1 && !TextUtils.isEmpty(callback.getShareTextSelf())){
 										content = callback.getShareTextSelf()
 												.replace("{{{restaurant_name}}", activity.getVendorOpened().getName())
-												.replace("{{{restaurant_address}}", activity.getVendorOpened().getRestaurantAddress())
+												.replace("{{{restaurant_address}}", activity.getVendorOpened().getAddress())
 												.replace("{{{review_desc}}}", "\n"+review1.getReviewDesc())
 												.replace("{{{link}}}", "\n"+link);
 								} else if(review1.getIsEditable() == 0 && !TextUtils.isEmpty(callback.getShareTextOther())) {
 									content = callback.getShareTextOther()
 											.replace("{{{restaurant_name}}", activity.getVendorOpened().getName())
-											.replace("{{{restaurant_address}}", activity.getVendorOpened().getRestaurantAddress())
+											.replace("{{{restaurant_address}}", activity.getVendorOpened().getAddress())
 											.replace("{{{review_desc}}}", "\n"+review1.getReviewDesc())
 											.replace("{{{link}}}", "\n"+link);
 								}
@@ -346,7 +346,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 									}
 									sb.append(activity.getVendorOpened().getName())
 											.append(", ")
-											.append(activity.getVendorOpened().getRestaurantAddress())
+											.append(activity.getVendorOpened().getAddress())
 											.append(" @ Jugnoo!\n\n");
 									if(!TextUtils.isEmpty(review1.getReviewDesc())){
 										sb.append(review1.getReviewDesc()).append("\n");

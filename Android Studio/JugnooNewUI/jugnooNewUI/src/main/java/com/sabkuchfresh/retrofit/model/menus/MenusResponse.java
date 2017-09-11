@@ -276,7 +276,7 @@ public class MenusResponse implements Serializable {
 		private String closeIn;
 		@SerializedName("display_address")
 		@Expose
-		private String restaurantAdd;
+		private String displayAddress;
 		@SerializedName("address")
 		@Expose
 		private String address;
@@ -322,15 +322,15 @@ public class MenusResponse implements Serializable {
 		@Expose
 		private String next_slot_time;
 
-		@SerializedName("mail_address")
-		@Expose
-		private String mailAddress;
 		@SerializedName("phone_no")
 		@Expose
 		private String phoneNo;
-		@SerializedName("contact")
+		@SerializedName("calling_number")
 		@Expose
-		private String contact;
+		private String callingNumber;
+		@SerializedName("email")
+		@Expose
+		private String email;
 
 		public String getNext_slot_time() {
 			return next_slot_time;
@@ -344,8 +344,8 @@ public class MenusResponse implements Serializable {
 			return colorCode;
 		}
 
-		public void setRestaurantAdd(String restaurantAdd) {
-			this.restaurantAdd = restaurantAdd;
+		public void setDisplayAddress(String displayAddress) {
+			this.displayAddress = displayAddress;
 		}
 
 		public void setRating(Double rating) {
@@ -589,12 +589,8 @@ public class MenusResponse implements Serializable {
 			this.freeDelivery = freeDelivery;
 		}
 
-		public String getRestaurantAddress() {
-			return restaurantAdd;
-		}
-
-		public void setRestaurantAddress(String restaurantAdd) {
-			this.restaurantAdd = restaurantAdd;
+		public String getDisplayAddress() {
+			return displayAddress;
 		}
 
 		public String getCloseIn() {
@@ -671,14 +667,6 @@ public class MenusResponse implements Serializable {
 			this.address = address;
 		}
 
-		public String getMailAddress() {
-			return mailAddress;
-		}
-
-		public void setMailAddress(String mailAddress) {
-			this.mailAddress = mailAddress;
-		}
-
 		public String getPhoneNo() {
 			return phoneNo;
 		}
@@ -687,12 +675,20 @@ public class MenusResponse implements Serializable {
 			this.phoneNo = phoneNo;
 		}
 
-		public String getContact() {
-			return contact;
+		public String getCallingNumber() {
+			return callingNumber;
 		}
 
-		public void setContact(String contact) {
-			this.contact = contact;
+		public void setCallingNumber(String callingNumber) {
+			this.callingNumber = callingNumber;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
 		}
 	}
 

@@ -405,8 +405,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mHolder.textViewMinimumOrder.setVisibility(visMinOrder);
 
 
-            mHolder.textViewAddressLine.setVisibility(!TextUtils.isEmpty(vendor.getRestaurantAddress()) ? View.VISIBLE : View.GONE);
-            mHolder.textViewAddressLine.setText(vendor.getRestaurantAddress());
+            mHolder.textViewAddressLine.setVisibility(!TextUtils.isEmpty(vendor.getDisplayAddress()) ? View.VISIBLE : View.GONE);
+            mHolder.textViewAddressLine.setText(vendor.getDisplayAddress());
 
 
             int visibilityCuisines = View.VISIBLE;
