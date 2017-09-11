@@ -794,6 +794,12 @@ public class MenusResponse implements Serializable {
 		@SerializedName("vendors")
 		@Expose
 		private List<Vendor> vendors = new ArrayList<Vendor>();
+		@SerializedName("filters")
+		@Expose
+		private List<KeyValuePair> filters;
+		@SerializedName("sorting")
+		@Expose
+		private List<KeyValuePair> sorting;
 
 
 		private boolean isTypeOrder;
@@ -866,6 +872,22 @@ public class MenusResponse implements Serializable {
 		@Override
 		public boolean equals(Object obj) {
 			return obj instanceof Category && ((Category)obj).getId() == getId();
+		}
+
+		public List<KeyValuePair> getSorting() {
+			return sorting;
+		}
+
+		public void setSorting(List<KeyValuePair> sorting) {
+			this.sorting = sorting;
+		}
+
+		public List<KeyValuePair> getFilters() {
+			return filters;
+		}
+
+		public void setFilters(List<KeyValuePair> filters) {
+			this.filters = filters;
 		}
 	}
 

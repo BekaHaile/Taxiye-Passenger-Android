@@ -2288,7 +2288,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         } else if (getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()) {
             getMenusFragment().toggleSearch(true);
-        } else if (getTopFragment() instanceof MenusFragment && (getCategoryIdOpened() > 0 || getMenusFragment().isCategoryDropDownVisible())) {
+        } else if (getTopFragment() instanceof MenusFragment
+                && (getCategoryIdOpened() > 0 || getMenusFragment().isCategoryDropDownVisible())
+                && getMenusResponse().getCategories() != null  // if only more than one category coming from server for the place
+                && getMenusResponse().getCategories().size() > 1) {
             getMenusFragment().switchCategory(-1, true);
             return;
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {

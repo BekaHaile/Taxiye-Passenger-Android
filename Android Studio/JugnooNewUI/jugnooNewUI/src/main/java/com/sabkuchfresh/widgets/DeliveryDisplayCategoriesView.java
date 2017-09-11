@@ -180,4 +180,13 @@ public class DeliveryDisplayCategoriesView {
             ivSwitchCategory.setImageResource(R.drawable.ic_nav_select_category);
         }
     }
+
+    public void setRootVisibility(int visibility){
+        if(visibility == View.GONE){
+            rootView.setVisibility(View.GONE);
+        } else {
+            rootView.setVisibility(View.VISIBLE);
+        }
+    }
+
 }

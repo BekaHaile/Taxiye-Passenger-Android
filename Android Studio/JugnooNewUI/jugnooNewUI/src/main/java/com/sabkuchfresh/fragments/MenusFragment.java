@@ -76,6 +76,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private RecyclerView recyclerViewRestaurant;
     private TextView textViewNothingFound;
     private DeliveryDisplayCategoriesView deliveryDisplayCategoriesView;
+    private RelativeLayout rlMainContainer;
 
     private View rootView;
     private FreshActivity activity;
@@ -129,6 +130,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             e.printStackTrace();
         }
 
+        rlMainContainer = (RelativeLayout) rootView.findViewById(R.id.rlMainContainer);
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView) rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 
@@ -397,7 +399,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             HashMap<String, String> params = getMenusApiHashMap(latLng);
             Callback<MenusResponse> callback = new Callback<MenusResponse>() {
                 @Override
-                public void success(MenusResponse menusResponse, Response response) {
+                public void success(final MenusResponse menusResponse, Response response) {
                     DialogPopup.dismissLoadingDialog();
                     swipeRefreshLayout.setRefreshing(false);
                     activity.getTopBar().setPBSearchVisibility(View.GONE);
@@ -413,24 +415,37 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
 
                                 currentPageCount = 1;
-                                // TODO: 05/09/17 edit check according to category opened
-
                                 hasMorePages =  menusResponse.getCategories()!=null && menusResponse.isPageLengthComplete();
                                 status.clear();
                                 status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
-                                deliveryHomeAdapter.setList(menusResponse, false);
-                                if(activity.getCategoryIdOpened() < 0){
+                                // check if only one category is coming view will be set like single category expanded
+                                if(activity.getCategoryIdOpened() < 0
+                                        && menusResponse.getCategories() != null && menusResponse.getCategories().size() == 1){
+                                    activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
+                                    deliveryHomeAdapter.setList(menusResponse, false);
                                     activity.setMenusResponse(menusResponse);
-                                    deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
-                                    activity.getCuisinesSelected().clear();
-                                    activity.getFilterSelected().clear();
-                                    activity.setSortBySelected(null);
-                                } else {
-                                    if(activity.getMenusFilterFragment() != null){
+                                    showCategoriesDropDown(false);
+                                    if (activity.getMenusFilterFragment() != null) {
                                         activity.getMenusFilterFragment().updateDataLists(menusResponse);
                                     }
+                                    activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
+                                } else {
+                                    deliveryHomeAdapter.setList(menusResponse, false);
+                                    showCategoriesDropDown(menusResponse.getCategories() != null && menusResponse.getCategories().size() > 1);
+                                    if (activity.getCategoryIdOpened() < 0) {
+                                        activity.setMenusResponse(menusResponse);
+                                        deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
+                                        activity.getCuisinesSelected().clear();
+                                        activity.getFilterSelected().clear();
+                                        activity.setSortBySelected(null);
+                                    } else {
+                                        if (activity.getMenusFilterFragment() != null) {
+                                            activity.getMenusFilterFragment().updateDataLists(menusResponse);
+                                        }
+                                    }
                                 }
+
 
                                 activity.setMenuRefreshLatLng(latLng);
                                 setUpServiceUnavailability(menusResponse);
@@ -441,7 +456,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 if (scrollToTop && linearLayoutManager != null) {
                                     linearLayoutManager.scrollToPositionWithOffset(0, 0);
                                 }
-
 
                             } else {
                                 DialogPopup.alertPopup(activity, "", message);
@@ -505,6 +519,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
             activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
             recyclerViewRestaurant.setVisibility(View.GONE);
+            showCategoriesDropDown(false);
         } else {
             activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
             activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
@@ -789,5 +804,17 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public boolean isCategoryDropDownVisible() {
         return deliveryDisplayCategoriesView!=null && deliveryDisplayCategoriesView.isDropDownVisible();
+    }
+
+    private void showCategoriesDropDown(boolean show){
+        RelativeLayout.LayoutParams paramsMain = (RelativeLayout.LayoutParams) rlMainContainer.getLayoutParams();
+        if(show){
+            deliveryDisplayCategoriesView.setRootVisibility(View.VISIBLE);
+            paramsMain.setMargins(0, activity.getResources().getDimensionPixelSize(R.dimen.height_category_bar), 0, 0);
+        } else {
+            deliveryDisplayCategoriesView.setRootVisibility(View.GONE);
+            paramsMain.setMargins(0, 0, 0, 0);
+        }
+        rlMainContainer.setLayoutParams(paramsMain);
     }
 }

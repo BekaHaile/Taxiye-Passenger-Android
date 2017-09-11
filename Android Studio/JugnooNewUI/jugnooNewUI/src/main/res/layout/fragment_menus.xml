@@ -12,6 +12,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/rlMainContainer"
         android:layout_marginTop="@dimen/height_category_bar"
         android:layout_width="match_parent"
         android:layout_below="@+id/llLocation"

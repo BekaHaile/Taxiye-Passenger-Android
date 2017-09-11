@@ -481,16 +481,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
 
                 // if orders are for view only on Delivery Home Page
-                if(!ordersExpanded){
-                    statusHolder.rlRestaurantInfo.setVisibility(View.GONE);
-                    statusHolder.tvDeliveryTime.setText(statusHolder.tvOrderIdValue.getText());
-                    statusHolder.tvOrderIdValue.setText(recentOrder.getRestaurantName());
-                    statusHolder.tvOrderIdValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-
-                    statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
-                    statusHolder.rlTrackViewOrder.setVisibility(View.GONE);
-                    return;
-                }
+//                if(!ordersExpanded){
+//                    statusHolder.rlRestaurantInfo.setVisibility(View.GONE);
+//                    statusHolder.tvDeliveryTime.setText(statusHolder.tvOrderIdValue.getText());
+//                    statusHolder.tvOrderIdValue.setText(recentOrder.getRestaurantName());
+//                    statusHolder.tvOrderIdValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+//
+//                    statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
+//                    statusHolder.rlTrackViewOrder.setVisibility(View.GONE);
+//                    return;
+//                }
 
                 statusHolder.rlRestaurantInfo.setVisibility(!TextUtils.isEmpty(recentOrder.getRestaurantName()) ? View.VISIBLE : View.GONE);
                 statusHolder.tvRestaurantName.setText(recentOrder.getRestaurantName());
