@@ -133,7 +133,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public void setList(MenusResponse menusResponse, boolean isPagination, boolean hasMorePages) {
+    public void setList(MenusResponse menusResponse, boolean isPagination, boolean showAddRestaurantLayout) {
 
         if(!isPagination || dataToDisplay==null)
           this.dataToDisplay = new ArrayList<>();
@@ -212,7 +212,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dataToDisplay.add(new NoVendorModel(activity.getString(messageResId)));
         }
 
-        if(!hasMorePages){
+        if(!showAddRestaurantLayout){
             dataToDisplay.add(FormAddRestaurantModel.getInstance());
         }
 
@@ -1214,7 +1214,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         activity.addStarsToLayout(llRatingStars, rating,
                 R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey);
         llRatingStars.addView(tvReviewCount);
-        tvReviewCount.setText(activity.getResources().getQuantityString(R.plurals.ratings_suffix, (int) reviewCount));
+        tvReviewCount.setText(activity.getResources().getQuantityString(R.plurals.ratings_suffix, (int) reviewCount, (int) reviewCount));
     }
 
     public interface Callback {

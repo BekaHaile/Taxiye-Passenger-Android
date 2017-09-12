@@ -350,6 +350,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 activity.fragmentUISetup(this);
                 if (!activity.isOrderJustCompleted()) {
                     activity.setAddressTextToLocationPlaceHolder();
+                } else {
+                    recyclerViewRestaurant.postDelayed(runnableScrollToTop, 100);
                 }
                 activity.resumeMethod();
                 if (searchOpened) {
@@ -375,6 +377,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             e.printStackTrace();
         }
     }
+
+    private Runnable runnableScrollToTop = new Runnable() {
+        @Override
+        public void run() {
+            recyclerViewRestaurant.scrollToPosition(0);
+        }
+    };
 
     @Override
     public void onDestroyView() {
@@ -451,7 +460,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     activity.getMenusFilterFragment().updateDataLists(menusResponse);
                                 }
                                 showCategoriesDropDown(activity.getMenusResponse().getCategories().size() > 1);
-                                deliveryHomeAdapter.setList(menusResponse, false, hasMorePages);
+                                deliveryHomeAdapter.setList(menusResponse, false, hasMorePages && );
                                 activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
 
 

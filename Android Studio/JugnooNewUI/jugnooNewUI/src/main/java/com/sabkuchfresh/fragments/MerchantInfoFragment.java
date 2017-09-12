@@ -63,8 +63,6 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 	TextView tvOpensAt;
 	@Bind(R.id.ivChatNow)
 	ImageView ivChatNow;
-	@Bind(R.id.llChatNow)
-	LinearLayout llChatNow;
 	@Bind(R.id.llCall)
 	LinearLayout llCall;
 	@Bind(R.id.llAddReview)
@@ -182,18 +180,19 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				activity.fragmentUISetup(this);
 				activity.tvCollapRestaurantDeliveryTime.setVisibility(View.GONE);
 				if(getView() != null) {
-					scrollView.post(new Runnable() {
-						@Override
-						public void run() {
-							scrollView.scrollTo(0, 0);
-						}
-					});
+					scrollView.postDelayed(scrollToTopRunnable, 100);
 				}
 			}
 		} catch (Exception e) {
 		}
 	}
 
+	private Runnable scrollToTopRunnable = new Runnable() {
+		@Override
+		public void run() {
+			scrollView.scrollTo(0, 0);
+		}
+	};
 
 	void setMerchantInfoToUI() {
 		try {

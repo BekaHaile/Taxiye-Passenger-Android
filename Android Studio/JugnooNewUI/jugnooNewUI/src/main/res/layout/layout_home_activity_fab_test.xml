@@ -83,7 +83,7 @@
             fab:fab_colorNormal="@color/purple_menus_fab"
             fab:fab_colorPressed="@color/purple_menus_fab_pressed"
             fab:fab_colorRipple="@color/purple_menus_fab_pressed"
-            fab:fab_label="@string/menus"
+            fab:fab_label="@string/delivery"
             fab:fab_shadowColor="@color/black_50"
             fab:fab_shadowXOffset="1dp"
             fab:fab_shadowYOffset="2dp"
