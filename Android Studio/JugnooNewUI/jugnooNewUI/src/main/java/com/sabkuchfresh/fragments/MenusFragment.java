@@ -437,31 +437,23 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
                                 // check if only one category is coming view will be set like single category expanded
-                                if(activity.getCategoryIdOpened() < 0
-                                        && menusResponse.getCategories() != null && menusResponse.getCategories().size() == 1){
-                                    activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
-                                    deliveryHomeAdapter.setList(menusResponse, false, hasMorePages);
+                                if (activity.getCategoryIdOpened() < 0) {
+                                    if (menusResponse.getCategories().size() == 1) {
+                                        activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
+                                    }
                                     activity.setMenusResponse(menusResponse);
-                                    showCategoriesDropDown(false);
-                                    if (activity.getMenusFilterFragment() != null) {
-                                        activity.getMenusFilterFragment().updateDataLists(menusResponse);
-                                    }
-                                    activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
-                                } else {
-                                    deliveryHomeAdapter.setList(menusResponse, false, hasMorePages);
-                                    showCategoriesDropDown(menusResponse.getCategories() != null && menusResponse.getCategories().size() > 1);
-                                    if (activity.getCategoryIdOpened() < 0) {
-                                        activity.setMenusResponse(menusResponse);
-                                        deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
-                                        activity.getCuisinesSelected().clear();
-                                        activity.getFilterSelected().clear();
-                                        activity.setSortBySelected(null);
-                                    } else {
-                                        if (activity.getMenusFilterFragment() != null) {
-                                            activity.getMenusFilterFragment().updateDataLists(menusResponse);
-                                        }
-                                    }
+                                    deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
+                                    activity.getCuisinesSelected().clear();
+                                    activity.getFilterSelected().clear();
+                                    activity.setSortBySelected(null);
                                 }
+                                if (activity.getMenusFilterFragment() != null) {
+                                    activity.getMenusFilterFragment().updateDataLists(menusResponse);
+                                }
+                                showCategoriesDropDown(activity.getMenusResponse().getCategories().size() > 1);
+                                deliveryHomeAdapter.setList(menusResponse, false, hasMorePages);
+                                activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
+
 
 
                                 activity.setMenuRefreshLatLng(latLng);
@@ -480,6 +472,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
+                        retryDialog(DialogErrorType.SERVER_ERROR, latLng, loader, false, scrollToTop);
                     }
                 }
 

@@ -323,9 +323,9 @@ public class MenusResponse implements Serializable {
 		@Expose
 		private String next_slot_time;
 
-		@SerializedName("phone_no")
+		@SerializedName("contact_list")
 		@Expose
-		private String phoneNo;
+		private String contactList;
 		@SerializedName("calling_number")
 		@Expose
 		private String callingNumber;
@@ -692,12 +692,12 @@ public class MenusResponse implements Serializable {
 			this.address = address;
 		}
 
-		public String getPhoneNo() {
-			return phoneNo;
+		public String getContactList() {
+			return contactList;
 		}
 
-		public void setPhoneNo(String phoneNo) {
-			this.phoneNo = phoneNo;
+		public void setContactList(String contactList) {
+			this.contactList = contactList;
 		}
 
 		public String getCallingNumber() {

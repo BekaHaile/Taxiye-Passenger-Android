@@ -16,6 +16,7 @@ import com.sabkuchfresh.adapters.DeliveryDisplayCategoriesAdpater;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -101,10 +102,12 @@ public class DeliveryDisplayCategoriesView {
             }, rvCategories);
             rvCategories.setAdapter(deliveryDisplayCategoriesAdpater);
         }
+        List<MenusResponse.Category> categoryList = new ArrayList<>();
         if(deliveryCategoryModel != null) {
-            deliveryCategoryModel.add(0, new MenusResponse.Category(-1));
+            categoryList.add(0, new MenusResponse.Category(-1));
+            categoryList.addAll(deliveryCategoryModel);
         }
-        deliveryDisplayCategoriesAdpater.setList(deliveryCategoryModel);
+        deliveryDisplayCategoriesAdpater.setList(categoryList);
     }
 
     @OnClick({R.id.layout_choose_category, R.id.view_bottom_blank})

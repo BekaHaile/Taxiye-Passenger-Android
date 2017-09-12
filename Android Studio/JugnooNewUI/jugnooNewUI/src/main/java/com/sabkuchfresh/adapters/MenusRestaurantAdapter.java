@@ -99,7 +99,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     static {
         BW_MATRIX.setSaturation(0);
         BW_FILTER = new ColorMatrixColorFilter(BW_MATRIX);
-
     }
 
 

@@ -1,16 +1,23 @@
 package com.sabkuchfresh.fragments;
 
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.style.URLSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -54,6 +61,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 	TextView tvMerchantDisplayAddress;
 	@Bind(R.id.tvOpensAt)
 	TextView tvOpensAt;
+	@Bind(R.id.ivChatNow)
+	ImageView ivChatNow;
 	@Bind(R.id.llChatNow)
 	LinearLayout llChatNow;
 	@Bind(R.id.llCall)
@@ -176,7 +185,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 					scrollView.post(new Runnable() {
 						@Override
 						public void run() {
-							scrollView.smoothScrollTo(0, 0);
+							scrollView.scrollTo(0, 0);
 						}
 					});
 				}
@@ -211,24 +220,24 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				tvMerchantDisplayAddress.setText(activity.getVendorOpened().getDisplayAddress());
 				activity.setTextViewDrawableColor(tvMerchantDisplayAddress, ContextCompat.getColor(activity, R.color.text_color));
 				tvMerchantDisplayAddress.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getDisplayAddress()) ? View.VISIBLE : View.GONE);
-				if(activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0){
-					tvOpensAt.setText(activity.getString(R.string.closed));
-					tvOpensAt.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
-				} else {
-					tvOpensAt.setText(activity.getVendorOpened().getRestaurantTimingsStr());
-					tvOpensAt.setTextColor(ContextCompat.getColor(activity, R.color.green_fresh_fab_pressed));
-				}
+				tvOpensAt.setText(activity.getVendorOpened().getRestaurantTimingsStr());
 				tvMerchantMail.setText(activity.getVendorOpened().getEmail());
 				tvMerchantMail.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getEmail()) ? View.VISIBLE : View.GONE);
-				tvMerchantContact.setText(activity.getVendorOpened().getCallingNumber());
-				tvMerchantContact.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getCallingNumber()) ? View.VISIBLE : View.GONE);
+				tvMerchantContact.setText(activity.getVendorOpened().getContactList());
+				tvMerchantContact.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getContactList()) ? View.VISIBLE : View.GONE);
 				tvMerchantAddress.setText(activity.getVendorOpened().getAddress());
 				tvMerchantAddress.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getAddress()) ? View.VISIBLE : View.GONE);
 				rvTopReviews.setVisibility(View.GONE);
 				llSeeAll.setVisibility(View.GONE);
 				fetchFeedback();
-				llChatNow.setVisibility(activity.getVendorOpened().isChatModeEnabled() ? View.VISIBLE : View.GONE);
-				bOrderOnline.setBackgroundResource(activity.getVendorOpened().getOrderMode() == 1 ? R.drawable.capsule_theme_color_selector : R.drawable.capsule_grey_dark_bg);
+				if(!activity.getVendorOpened().isChatModeEnabled()) {
+					ivChatNow.getDrawable().setColorFilter(BW_FILTER);
+				} else {
+					ivChatNow.getDrawable().setColorFilter(null);
+				}
+				bOrderOnline.setBackgroundResource((activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0) ?
+						R.drawable.capsule_grey_dark_bg : R.drawable.capsule_theme_color_selector);
+				bOrderOnline.setVisibility(activity.getVendorOpened().getOrderMode() == 0 ? View.GONE : View.VISIBLE);
 			}
 		} catch (Exception exception) {
 			exception.printStackTrace();
@@ -265,27 +274,25 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.llChatNow:
+				if(activity.getVendorOpened().isChatModeEnabled()) {
 
-				sendUserClickEvent(Constants.KEY_CHAT_MODE);
+					sendUserClickEvent(Constants.KEY_CHAT_MODE);
+				} else {
+					Utils.showToast(activity, activity.getString(R.string.chat_is_not_enabled));
+				}
 				break;
 			case R.id.llCall:
-				Utils.openCallIntent(activity, activity.getVendorOpened().getPhoneNo());
+				Utils.openCallIntent(activity, activity.getVendorOpened().getCallingNumber());
 				sendUserClickEvent(Constants.KEY_CALL_MODE);
 				break;
 			case R.id.llAddReview:
 				activity.openRestaurantAddReviewFragment(true);
 				break;
 			case R.id.bOrderOnline:
-				if(activity.getVendorOpened().getOrderMode() == 0){
-					Utils.showToast(activity, activity.getString(R.string.order_online_not_available));
-				} else if (activity.getVendorOpened().getOrderMode() == 2){
-					Utils.showToast(activity, activity.getString(R.string.order_online_closed));
+				if (activity.getMenuProductsResponse().getCategories() != null) {
+					activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
 				} else {
-					if (activity.getMenuProductsResponse().getCategories() != null) {
-						activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
-					} else {
-						activity.fetchRestaurantMenuAPI(activity.getVendorOpened().getRestaurantId(), false, null, null, -1, null);
-					}
+					activity.fetchRestaurantMenuAPI(activity.getVendorOpened().getRestaurantId(), false, null, null, -1, null);
 				}
 				sendUserClickEvent(Constants.KEY_ORDER_MODE);
 				break;
@@ -386,5 +393,35 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
 			}
 		});
+	}
+
+	private void stripUnderlines(TextView textView) {
+		Spannable s = new SpannableString(textView.getText());
+		URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
+		for (URLSpan span: spans) {
+			int start = s.getSpanStart(span);
+			int end = s.getSpanEnd(span);
+			s.removeSpan(span);
+			span = new URLSpanNoUnderline(span.getURL());
+			s.setSpan(span, start, end, 0);
+		}
+		textView.setText(s);
+	}
+
+	private class URLSpanNoUnderline extends URLSpan {
+		public URLSpanNoUnderline(String url) {
+			super(url);
+		}
+		@Override public void updateDrawState(TextPaint ds) {
+			super.updateDrawState(ds);
+			ds.setUnderlineText(false);
+		}
+	}
+
+	private final static ColorMatrix BW_MATRIX = new ColorMatrix();
+	private final static ColorMatrixColorFilter BW_FILTER;
+	static {
+		BW_MATRIX.setSaturation(0);
+		BW_FILTER = new ColorMatrixColorFilter(BW_MATRIX);
 	}
 }

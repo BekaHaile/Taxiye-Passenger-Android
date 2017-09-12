@@ -661,6 +661,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(object instanceof NoVendorModel)
             return NO_VENDORS_ITEM;
 
+        if(object instanceof FormAddRestaurantModel)
+            return FORM_ITEM;
+
         Log.e(TAG, ">"+object);
 
         throw new IllegalArgumentException();
@@ -761,6 +764,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void resetForm() {
             if(getFormItemModel()!=null){
                 getFormItemModel().clearStrings();
+                notifyItemChanged(dataToDisplay.size()-1);
             }
     }
 

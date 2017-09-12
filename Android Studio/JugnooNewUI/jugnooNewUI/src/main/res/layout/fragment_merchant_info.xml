@@ -122,6 +122,7 @@
                     >
 
                     <ImageView
+                        android:id="@+id/ivChatNow"
                         android:layout_width="@dimen/dp_26"
                         android:layout_height="@dimen/dp_26"
                         android:src="@drawable/ic_chat_now_gradient"
@@ -253,7 +254,7 @@
                 android:layout_marginBottom="@dimen/dp_14"
                 android:layout_marginLeft="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_20"
-                android:autoLink="web"
+                android:autoLink="web|email"
                 android:drawableLeft="@drawable/ic_mail_merchant"
                 android:drawablePadding="@dimen/dp_8"
                 android:gravity="center_vertical"
@@ -272,15 +273,15 @@
                 android:layout_marginBottom="@dimen/dp_14"
                 android:layout_marginLeft="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_20"
-                android:autoLink="web"
                 android:drawableLeft="@drawable/ic_call_merchant"
                 android:drawablePadding="@dimen/dp_8"
                 android:gravity="center_vertical"
                 android:text="+91-9746214255, +92-88888 88888"
                 android:textColor="@color/text_color"
-                android:textColorLink="@color/text_color_link"
+                android:textColorLink="@color/text_color"
                 android:textSize="@dimen/sp_12"
                 app:font="@string/maven_r"
+                android:autoLink="phone"
                 />
 
             <TextView
