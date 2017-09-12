@@ -173,7 +173,12 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				activity.fragmentUISetup(this);
 				activity.tvCollapRestaurantDeliveryTime.setVisibility(View.GONE);
 				if(getView() != null) {
-					scrollView.scrollTo(0, 0);
+					scrollView.post(new Runnable() {
+						@Override
+						public void run() {
+							scrollView.smoothScrollTo(0, 0);
+						}
+					});
 				}
 			}
 		} catch (Exception e) {

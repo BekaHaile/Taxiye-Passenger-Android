@@ -117,8 +117,10 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 
 		rvFilters = (RecyclerView) rootView.findViewById(R.id.rvFilters);
 		rvFilters.setLayoutManager(new LinearLayoutManager(activity));
+		rvFilters.setNestedScrollingEnabled(false);
 		rvSort = (RecyclerView) rootView.findViewById(R.id.rvSort);
 		rvSort.setLayoutManager(new LinearLayoutManager(activity));
+		rvSort.setNestedScrollingEnabled(false);
 		adapterFilters = new MenusFilterAdapter(activity.getFiltersAll(), false, rvFilters);
 		rvFilters.setAdapter(adapterFilters);
 		adapterSort = new MenusFilterAdapter(activity.getSortAll(), true, rvSort);

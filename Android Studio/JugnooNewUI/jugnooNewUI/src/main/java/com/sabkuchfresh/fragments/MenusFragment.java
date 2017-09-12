@@ -77,6 +77,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private TextView textViewNothingFound;
     private DeliveryDisplayCategoriesView deliveryDisplayCategoriesView;
     private RelativeLayout rlMainContainer;
+    private View vDividerLocation;
 
     private View rootView;
     private FreshActivity activity;
@@ -146,6 +147,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         /*textViewNoMenus = (TextView) rootView.findViewById(R.id.textViewNoMenus); textViewNoMenus.setTypeface(Fonts.mavenMedium(activity));*/
 
 
+        vDividerLocation = rootView.findViewById(R.id.vDividerLocation);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.white);
@@ -311,11 +313,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
     }
 
+    private long lastTimeRefreshed = System.currentTimeMillis();
+    private static final long MAX_REFRESH_INTERVAL = 60*1000;
     @Override
     public void onResume() {
         super.onResume();
         if (!isHidden() && resumed) {
-            activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
+            if(System.currentTimeMillis()-lastTimeRefreshed >= MAX_REFRESH_INTERVAL){
+                activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
+            }
             activity.setRefreshCart(false);
         }
         resumed = true;
@@ -400,6 +406,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             Callback<MenusResponse> callback = new Callback<MenusResponse>() {
                 @Override
                 public void success(final MenusResponse menusResponse, Response response) {
+                    lastTimeRefreshed = System.currentTimeMillis();
                     DialogPopup.dismissLoadingDialog();
                     swipeRefreshLayout.setRefreshing(false);
                     activity.getTopBar().setPBSearchVisibility(View.GONE);
@@ -811,9 +818,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if(show){
             deliveryDisplayCategoriesView.setRootVisibility(View.VISIBLE);
             paramsMain.setMargins(0, activity.getResources().getDimensionPixelSize(R.dimen.height_category_bar), 0, 0);
+            vDividerLocation.setVisibility(View.GONE);
         } else {
             deliveryDisplayCategoriesView.setRootVisibility(View.GONE);
             paramsMain.setMargins(0, 0, 0, 0);
+            vDividerLocation.setVisibility(View.VISIBLE);
         }
         rlMainContainer.setLayoutParams(paramsMain);
     }

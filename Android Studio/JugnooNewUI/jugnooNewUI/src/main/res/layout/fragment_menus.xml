@@ -10,7 +10,6 @@
     <include
         layout="@layout/layout_delivery_address_bar"/>
 
-
     <RelativeLayout
         android:id="@+id/rlMainContainer"
         android:layout_marginTop="@dimen/height_category_bar"
@@ -39,6 +38,14 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
+
+    <View
+        android:id="@+id/vDividerLocation"
+        android:layout_below="@+id/llLocation"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/stroke_light_grey_alpha"
+        android:visibility="gone"/>
 
     <include
         android:layout_below="@+id/llLocation"

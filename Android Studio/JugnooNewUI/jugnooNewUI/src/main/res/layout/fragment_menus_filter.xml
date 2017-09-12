@@ -149,10 +149,9 @@
                 android:layout_height="wrap_content"
                 android:splitMotionEvents="false"
                 android:background="@color/white"
-                android:paddingLeft="@dimen/dp_20"
-                android:paddingRight="@dimen/dp_20"
                 android:paddingTop="@dimen/dp_4"
                 android:paddingBottom="@dimen/dp_4"
+                android:nestedScrollingEnabled="false"
                 />
 
 
@@ -190,10 +189,9 @@
                 android:layout_height="wrap_content"
                 android:splitMotionEvents="false"
                 android:background="@color/white"
-                android:paddingLeft="@dimen/dp_20"
-                android:paddingRight="@dimen/dp_20"
                 android:paddingTop="@dimen/dp_4"
                 android:paddingBottom="@dimen/dp_4"
+                android:nestedScrollingEnabled="false"
                 />
 
             <View
@@ -324,8 +322,6 @@
             android:scrollbars="vertical"
             android:splitMotionEvents="false"
             android:background="@color/white"
-            android:paddingLeft="@dimen/dp_20"
-            android:paddingRight="@dimen/dp_20"
             android:paddingTop="@dimen/dp_4"
             android:paddingBottom="@dimen/dp_4"
             />
