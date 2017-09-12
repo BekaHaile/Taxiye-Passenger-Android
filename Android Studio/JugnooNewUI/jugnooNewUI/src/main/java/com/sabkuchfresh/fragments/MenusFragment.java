@@ -51,6 +51,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -173,6 +174,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             @Override
             public void openCategory(int categoryId) {
                 switchCategory(categoryId, false);
+            }
+
+            @Override
+            public void apiRecommendRestaurant(String restaurantName, String locality, String telephone) {
+
+                hitApiRecommendRestaurant(restaurantName,locality,telephone);
+                GAUtils.event(GAAction.MENUS, GAAction.HOME , GAAction.NEW_RESTAURANT + GAAction.SUBMITTED);
+
+
             }
         }, recyclerViewRestaurant, status);
 
@@ -430,7 +440,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 if(activity.getCategoryIdOpened() < 0
                                         && menusResponse.getCategories() != null && menusResponse.getCategories().size() == 1){
                                     activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
-                                    deliveryHomeAdapter.setList(menusResponse, false);
+                                    deliveryHomeAdapter.setList(menusResponse, false, hasMorePages);
                                     activity.setMenusResponse(menusResponse);
                                     showCategoriesDropDown(false);
                                     if (activity.getMenusFilterFragment() != null) {
@@ -438,7 +448,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     }
                                     activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
                                 } else {
-                                    deliveryHomeAdapter.setList(menusResponse, false);
+                                    deliveryHomeAdapter.setList(menusResponse, false, hasMorePages);
                                     showCategoriesDropDown(menusResponse.getCategories() != null && menusResponse.getCategories().size() > 1);
                                     if (activity.getCategoryIdOpened() < 0) {
                                         activity.setMenusResponse(menusResponse);
@@ -614,7 +624,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             //set Variables for pagination
                             currentPageCount++;
                             hasMorePages =  menusResponse.isPageLengthComplete();
-                             deliveryHomeAdapter.setList(menusResponse, true);
+                             deliveryHomeAdapter.setList(menusResponse, true,hasMorePages);
                             isProgressBarRemoved = true;//Set list removes progress bar to accumulate animation of both insert and delete in one go
 
 
@@ -826,4 +836,61 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
         rlMainContainer.setLayoutParams(paramsMain);
     }
+
+    private void hitApiRecommendRestaurant(String restaurantName, String locality, String telephone) {
+        try {
+            if(TextUtils.isEmpty(restaurantName)){
+                product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getString(R.string.restaurant_name_is_neccessary));
+                return;
+            }
+            if (MyApplication.getInstance().isOnline()) {
+                DialogPopup.showLoadingDialog(activity, "");
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
+                params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
+                params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
+                params.put(Constants.INTERATED, "1");
+                params.put(Constants.KEY_RESTAURANT_NAME, restaurantName);
+                params.put(Constants.KEY_RESTAURANT_ADDRESS, locality);
+                params.put(Constants.KEY_RESTAURANT_PHONE, telephone);
+
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getMenusApiService().suggestRestaurant(params, new retrofit.Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt productsResponse, Response response) {
+                        try {
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
+                                    DialogPopup.alertPopupWithListener(activity,
+                                            activity.getString(R.string.thanks_for_recommendation),
+                                            productsResponse.getMessage(),
+                                            activity.getString(R.string.ok),
+                                            null, false, true, true);
+                                    if(deliveryHomeAdapter!=null){
+                                        deliveryHomeAdapter.resetForm();
+
+                                    }
+                                } else {
+                                    DialogPopup.alertPopup(activity, "", productsResponse.getMessage());
+                                }
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e(TAG, "fetchRestaurantViaSearch error" + error.toString());
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

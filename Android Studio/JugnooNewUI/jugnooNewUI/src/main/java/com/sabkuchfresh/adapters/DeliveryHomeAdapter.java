@@ -9,11 +9,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -31,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -79,6 +85,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int OFFER_STRIP_ITEM = 7;
     private static final int ITEM_PROGRESS_BAR = 8;
     private static final int NO_VENDORS_ITEM = 9;
+    private static final int FORM_ITEM = 10;
 
 
     private static final int RECENT_ORDERS_TO_SHOW = 2;
@@ -126,7 +133,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public void setList(MenusResponse menusResponse, boolean isPagination) {
+    public void setList(MenusResponse menusResponse, boolean isPagination, boolean hasMorePages) {
 
         if(!isPagination || dataToDisplay==null)
           this.dataToDisplay = new ArrayList<>();
@@ -205,6 +212,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dataToDisplay.add(new NoVendorModel(activity.getString(messageResId)));
         }
 
+        if(!hasMorePages){
+            dataToDisplay.add(FormAddRestaurantModel.getInstance());
+        }
+
        if(isPagination){
             final int sizeListAfterAddding = dataToDisplay.size();
             final int diff = sizeListAfterAddding-sizeListBeforeAdding;
@@ -260,7 +271,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      *
      * @param position position is of SeeAll view if show true
      * else it is of Ongoing Order header view if show false
-     * @param show
+     *
      */
     private void toggleRemainingOrdersVisibility(int position, boolean show){
         if(remainingRecentOrders != null && remainingRecentOrders.size() > 0){
@@ -320,6 +331,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case NO_VENDORS_ITEM:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_no_vendor, parent, false);
                 return new ViewNoVenderItem(v);
+            case FORM_ITEM :
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommend_restaurant, parent, false);
+                return new ViewHolderRestaurantForm(v, this);
+
             default:
                 throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
 
@@ -336,7 +351,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mHolder.textViewRestaurantName.setText(vendor.getName());
 
 
-            DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+            DateFormat dateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
             String currentSystemTime = dateFormat.format(new Date());
             long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()), currentSystemTime);
             long minutes = ((timeDiff1 / (1000L* 60L)));
@@ -480,17 +495,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
                 statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
 
-                // if orders are for view only on Delivery Home Page
-//                if(!ordersExpanded){
-//                    statusHolder.rlRestaurantInfo.setVisibility(View.GONE);
-//                    statusHolder.tvDeliveryTime.setText(statusHolder.tvOrderIdValue.getText());
-//                    statusHolder.tvOrderIdValue.setText(recentOrder.getRestaurantName());
-//                    statusHolder.tvOrderIdValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-//
-//                    statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
-//                    statusHolder.rlTrackViewOrder.setVisibility(View.GONE);
-//                    return;
-//                }
+
 
                 statusHolder.rlRestaurantInfo.setVisibility(!TextUtils.isEmpty(recentOrder.getRestaurantName()) ? View.VISIBLE : View.GONE);
                 statusHolder.tvRestaurantName.setText(recentOrder.getRestaurantName());
@@ -609,6 +614,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if (mholder instanceof ViewNoVenderItem){
             ViewNoVenderItem holder = (ViewNoVenderItem) mholder;
             holder.textViewNoMenus.setText(((NoVendorModel)dataToDisplay.get(position)).getMessage());
+        }else if (mholder instanceof ViewHolderRestaurantForm) {
+            ViewHolderRestaurantForm titleHolder = (ViewHolderRestaurantForm) mholder;
+            titleHolder.etRestaurantName.setText(getFormItemModel().getRestaurantName());
+            titleHolder.etLocality.setText(getFormItemModel().getLocality());
+            titleHolder.etTelephone.setText(getFormItemModel().getTelephone());
+            titleHolder.etRestaurantName.setSelection(getFormItemModel().getRestaurantName().length());
+
+
         }
     }
 
@@ -713,6 +726,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         }
                     }
                     break;
+                case R.id.bSubmit:
+                    callback.apiRecommendRestaurant(getFormItemModel().getRestaurantName(),getFormItemModel().getLocality(),getFormItemModel().getTelephone());
+                    break;
             }
         }
     }
@@ -742,6 +758,12 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
+    public void resetForm() {
+            if(getFormItemModel()!=null){
+                getFormItemModel().clearStrings();
+            }
+    }
+
     private  class ProgressBarDisplayRunnable implements Runnable {
         private int position;
         private boolean isInsert;
@@ -750,7 +772,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             this.position = position;
         }
 
-        public void setInsert(boolean insert) {
+        private void setInsert(boolean insert) {
             isInsert = insert;
         }
 
@@ -788,7 +810,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
 
-        public ViewHolderVendor(final View itemView, final ItemListener itemListener) {
+        private ViewHolderVendor(final View itemView, final ItemListener itemListener) {
             super(itemView);
             rlRoot = (RelativeLayout) itemView.findViewById(R.id.rlRoot);
             rlRoot.setOnClickListener(new View.OnClickListener() {
@@ -932,21 +954,21 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
         }
     }
-    public class ViewHolderOffers extends RecyclerView.ViewHolder {
-        public MenusVendorOffersAdapter menusVendorOffersAdapter;
-        public ViewPager pagerMenusVendorOffers;
+    private class ViewHolderOffers extends RecyclerView.ViewHolder {
+        private MenusVendorOffersAdapter menusVendorOffersAdapter;
+        private ViewPager pagerMenusVendorOffers;
         public TabLayout tabDots;
 
-        public ViewHolderOffers(View view) {
+        private ViewHolderOffers(View view) {
             super(view);
             pagerMenusVendorOffers = (ViewPager) view.findViewById(R.id.pagerMenusVendorOffers);
             tabDots = (TabLayout) view.findViewById(R.id.tabDots);
         }
     }
 
-    public class ViewHolderOfferStrip extends RecyclerView.ViewHolder {
-        public TextView textViewMinOrder;
-        public ViewHolderOfferStrip(final View view, final ItemListener itemListener){
+    private class ViewHolderOfferStrip extends RecyclerView.ViewHolder {
+        private TextView textViewMinOrder;
+        private ViewHolderOfferStrip(final View view, final ItemListener itemListener){
             super(view);
             textViewMinOrder = (TextView) view.findViewById(R.id.textViewMinOrder);
             ViewGroup.LayoutParams params = textViewMinOrder.getLayoutParams();
@@ -964,7 +986,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
     private class ProgressBarViewHolder extends RecyclerView.ViewHolder {
 
-        public ProgressBarViewHolder(View itemView) {
+        private ProgressBarViewHolder(View itemView) {
             super(itemView);
         }
     }
@@ -980,24 +1002,125 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public static class DeliverySeeAll{
+//    private String restaurantName = "", locality = "", telephone = "";
+    private class ViewHolderRestaurantForm extends RecyclerView.ViewHolder {
+        TextView tvCouldNotFind, tvRecommend;
+        EditText etRestaurantName, etLocality, etTelephone;
+        Button bSubmit;
+
+        ViewHolderRestaurantForm(final View itemView, final ItemListener itemListener) {
+            super(itemView);
+            tvCouldNotFind = (TextView) itemView.findViewById(R.id.tvCouldNotFind);
+            tvCouldNotFind.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+            tvRecommend = (TextView) itemView.findViewById(R.id.tvRecommend);
+            tvRecommend.setTypeface(Fonts.mavenMedium(activity));
+            etRestaurantName = (EditText) itemView.findViewById(R.id.etRestaurantName);
+            etRestaurantName.setTypeface(Fonts.mavenMedium(activity));
+            etLocality = (EditText) itemView.findViewById(R.id.etLocality);
+            etLocality.setTypeface(Fonts.mavenMedium(activity));
+            etTelephone = (EditText) itemView.findViewById(R.id.etTelephone);
+            etTelephone.setTypeface(Fonts.mavenMedium(activity));
+            bSubmit = (Button) itemView.findViewById(R.id.bSubmit);
+            bSubmit.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+
+            etRestaurantName.addTextChangedListener(twRestaurantName);
+            etLocality.addTextChangedListener(twLocality);
+            etTelephone.addTextChangedListener(twTelephone);
+            etTelephone.setOnEditorActionListener(onEditorActionListener);
+            bSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.onClickItem(v,itemView);
+                }
+            });
+        }
+
+        private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
+                callback.apiRecommendRestaurant(getFormItemModel().getRestaurantName(),getFormItemModel().getLocality(),getFormItemModel().getTelephone());
+                return false;
+            }
+        };
+        private TextWatcher twRestaurantName = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    getFormItemModel().setRestaurantName(s.toString().trim());
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        private TextWatcher twLocality = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    getFormItemModel().setLocality(s.toString().trim());
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        private TextWatcher twTelephone = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    getFormItemModel().setTelephone(s.toString().trim());
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+    }
+
+    private static class DeliverySeeAll{
         private int categoryId;
 
-        private DeliverySeeAll(){}
 
-        public DeliverySeeAll(int categoryId) {
+        private DeliverySeeAll(int categoryId) {
             this.categoryId = categoryId;
         }
 
-        public int getCategoryId() {
+        private int getCategoryId() {
             return categoryId;
         }
 
-        public void setCategoryId(int categoryId) {
-            this.categoryId = categoryId;
-        }
     }
-    public static class DeliveryDivider{
+    private static class DeliveryDivider{
         private static DeliveryDivider deliveryDivider;
         private DeliveryDivider() {
         }
@@ -1007,7 +1130,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return deliveryDivider;
         }
     }
-    public static class ProgressBarModel{
+    private static class ProgressBarModel{
         private static ProgressBarModel progressBarModel;
         private ProgressBarModel() {
         }
@@ -1017,20 +1140,62 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return progressBarModel;
         }
     }
-    public static class BannerInfosModel{
+
+    private static class FormAddRestaurantModel{
+        private static FormAddRestaurantModel formAddRestaurantModel;
+        private String restaurantName = "", locality = "", telephone = "";
+        private FormAddRestaurantModel() {
+        }
+        public static FormAddRestaurantModel getInstance(){
+            if(formAddRestaurantModel ==null)
+                formAddRestaurantModel = new FormAddRestaurantModel();
+            return formAddRestaurantModel;
+        }
+
+        public String getRestaurantName() {
+            return restaurantName;
+        }
+
+        public void setRestaurantName(String restaurantName) {
+            this.restaurantName = restaurantName;
+        }
+
+        public String getLocality() {
+            return locality;
+        }
+
+        public void setLocality(String locality) {
+            this.locality = locality;
+        }
+
+        public String getTelephone() {
+            return telephone;
+        }
+
+        public void setTelephone(String telephone) {
+            this.telephone = telephone;
+        }
+
+        public void clearStrings() {
+            restaurantName="";
+            locality="";
+            telephone="";
+        }
+    }
+    private static class BannerInfosModel{
         private List<MenusResponse.BannerInfo> bannerInfos;
 
-        public BannerInfosModel(List<MenusResponse.BannerInfo> bannerInfos) {
+        private BannerInfosModel(List<MenusResponse.BannerInfo> bannerInfos) {
             this.bannerInfos = bannerInfos;
         }
 
-        public List<MenusResponse.BannerInfo> getBannerInfos() {
+        private List<MenusResponse.BannerInfo> getBannerInfos() {
             return bannerInfos;
         }
     }
-    public static class NoVendorModel{
+    private static class NoVendorModel{
         private String message;
-        public NoVendorModel(String message){
+        private NoVendorModel(String message){
             this.message = message;
         }
 
@@ -1045,13 +1210,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         activity.addStarsToLayout(llRatingStars, rating,
                 R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey);
         llRatingStars.addView(tvReviewCount);
-        tvReviewCount.setText(reviewCount+" Ratings");
+        tvReviewCount.setText(activity.getResources().getQuantityString(R.plurals.ratings_suffix, (int) reviewCount));
     }
 
     public interface Callback {
         void onRestaurantSelected(int vendorId);
         void onBannerInfoDeepIndexClick(int deepIndex);
         void openCategory(int categoryId);
+
+        void apiRecommendRestaurant(String restaurantName, String locality, String telephone);
     }
 
     private void showPossibleStatus(ArrayList<String> possibleStatus, int status, ViewOrderStatus statusHolder) {
@@ -1231,6 +1398,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public FormAddRestaurantModel getFormItemModel(){
+        if(dataToDisplay==null || dataToDisplay.size()==0){
+            return null;
+        }
+
+        if(dataToDisplay.get(dataToDisplay.size()-1) instanceof FormAddRestaurantModel){
+            return (FormAddRestaurantModel) dataToDisplay.get(dataToDisplay.size()-1);
+        }
+        return null;
     }
 
 }

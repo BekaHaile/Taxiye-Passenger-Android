@@ -1398,5 +1398,11 @@
         <item quantity="other">%d Likes</item>
     </plurals>
 
+    <plurals name="ratings_suffix">
+        <item quantity="one">%d Rating</item>
+        <item quantity="zero">No Rating</item>
+        <item quantity="other">%d Ratings</item>
+    </plurals>
+
 
 </resources>
