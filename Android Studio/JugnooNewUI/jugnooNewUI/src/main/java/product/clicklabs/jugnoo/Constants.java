@@ -605,6 +605,7 @@ public interface Constants {
     String SP_MENUS_FILTER_DELIVERY_TIME = "sp_menus_filter_delivery_time";
     String SP_MENUS_FILTER_CUISINES_GSON = "sp_menus_filter_cuisines_gson";
     String SP_MENUS_FILTER_QUICK_OBJ = "sp_menus_filter_quick_obj";
+    String SP_MENUS_OPENED_DELIVERY_CATEGORY = "sp_menus_opened_delivery_category";
     String KEY_EVENT = "event";
     String KEY_REFERRAL_POPUP_CONTENT = "referral_popup_content";
     String SP_FRESH_CART_ADDRESS = "sp_fresh_cart_address";

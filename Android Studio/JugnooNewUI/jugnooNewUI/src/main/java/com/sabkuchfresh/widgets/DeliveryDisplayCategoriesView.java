@@ -64,7 +64,6 @@ public class DeliveryDisplayCategoriesView {
                 ivArrow.setRotation(0);
                 ivArrow.setRotation(-90);
             }
-
         }
     };;
 
@@ -115,6 +114,10 @@ public class DeliveryDisplayCategoriesView {
         switch (view.getId()) {
             case R.id.layout_choose_category:
                 layoutChooseCategory.setEnabled(false);
+                // for hiding FAB jeanie
+                if(callback != null){
+                    callback.onDropDownToggle(rvCategories.getVisibility() == View.VISIBLE);
+                }
                 if(rvCategories.getVisibility()==View.VISIBLE){
                     viewBottomblank.setVisibility(View.GONE);
                     rvCategories.startAnimation(categoryHideAnim);
@@ -152,6 +155,7 @@ public class DeliveryDisplayCategoriesView {
 
     public interface Callback{
         void onCategoryClick(MenusResponse.Category category);
+        void onDropDownToggle(boolean shown);
     }
 
     public void setCategoryLabelIcon(int categoryId){

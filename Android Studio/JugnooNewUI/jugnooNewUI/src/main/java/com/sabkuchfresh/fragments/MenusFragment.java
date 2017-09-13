@@ -455,9 +455,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                         activity.setMenusResponse(menusResponse);
                                         deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
                                     }
-                                    activity.getCuisinesSelected().clear();
-                                    activity.getFilterSelected().clear();
-                                    activity.setSortBySelected(null);
+//                                    activity.getCuisinesSelected().clear();
+//                                    activity.getFilterSelected().clear();
+//                                    activity.setSortBySelected(null);
                                 }
                                 if (activity.getMenusFilterFragment() != null) {
                                     activity.getMenusFilterFragment().updateDataLists(menusResponse);
@@ -820,6 +820,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 
+    @Override
+    public void onDropDownToggle(boolean shown) {
+        if(!isHidden()) {
+            activity.getFabViewTest().setRelativeLayoutFABTestVisibility(shown ? View.VISIBLE : View.GONE);
+        }
+    }
+
     public String getSearchText() {
         return searchText;
     }
@@ -833,7 +840,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if(show){
             deliveryDisplayCategoriesView.setRootVisibility(View.VISIBLE);
             paramsMain.setMargins(0, activity.getResources().getDimensionPixelSize(R.dimen.height_category_bar), 0, 0);
-            vDividerLocation.setVisibility(View.GONE);
+            vDividerLocation.setVisibility(View.VISIBLE);
         } else {
             deliveryDisplayCategoriesView.setRootVisibility(View.GONE);
             paramsMain.setMargins(0, 0, 0, 0);
