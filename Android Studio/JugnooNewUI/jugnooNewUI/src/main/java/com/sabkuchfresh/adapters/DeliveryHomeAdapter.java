@@ -569,11 +569,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holder.ivCategoryArrow.setVisibility(View.GONE);
                 if(!TextUtils.isEmpty(category.getImage())){
                     Picasso.with(activity).load(category.getImage())
-                            .placeholder(R.drawable.ic_nav_select_category)
-                            .error(R.drawable.ic_nav_select_category)
+                            .placeholder(R.drawable.ic_fresh_item_placeholder)
+                            .error(R.drawable.ic_fresh_item_placeholder)
                             .into(holder.iconTitle);
                 } else {
-                    holder.iconTitle.setImageResource(R.drawable.ic_nav_select_category);
+                    holder.iconTitle.setImageResource(R.drawable.ic_fresh_item_placeholder);
                 }
             }
         }  else if (mholder instanceof ViewHolderOffers){

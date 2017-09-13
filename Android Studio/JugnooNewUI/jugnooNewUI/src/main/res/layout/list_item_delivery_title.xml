@@ -14,8 +14,9 @@
         android:layout_height="19dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:src="@drawable/ic_nav_select_category"/>
+        android:layout_marginRight="12dp"
+        android:padding="-10dp"
+        android:src="@drawable/ic_fresh_item_placeholder"/>
 
     <TextView
         android:id="@+id/tv_cateogory_title"
@@ -23,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="50dp"
+        android:layout_toRightOf="@+id/icon_title"
         android:layout_marginTop="10dp"
         android:text="Ongoing Orders"
         android:textColor="@color/text_color"

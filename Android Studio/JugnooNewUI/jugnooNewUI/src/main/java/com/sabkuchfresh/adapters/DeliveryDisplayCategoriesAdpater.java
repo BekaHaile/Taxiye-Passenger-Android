@@ -82,14 +82,14 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 		try {
 			if (!TextUtils.isEmpty(prosCatalogueDatum.getImage())) {
 				Picasso.with(context).load(prosCatalogueDatum.getImage())
-						.placeholder(R.drawable.ic_fresh_new_placeholder)
-						.error(R.drawable.ic_fresh_new_placeholder)
+						.placeholder(R.drawable.ic_fresh_item_placeholder)
+						.error(R.drawable.ic_fresh_item_placeholder)
 						.into(holder.ivSuperCategoryImage);
 			} else {
 				throw new Exception();
 			}
 		} catch (Exception e) {
-			holder.ivSuperCategoryImage.setImageResource(R.drawable.ic_fresh_new_placeholder);
+			holder.ivSuperCategoryImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
 		}
 
 			/*if (prosCatalogueDatum.getIsEnabled() == 0) {
