@@ -1395,9 +1395,9 @@
     <string name="order_online_not_available">Online ordering not available for this merchant</string>
     <string name="order_online_closed">Online ordering is closed for this merchant</string>
 
-    <string name="you_have_already_reviewed_this_merchant">You have already reviewed this merchant</string>
+    <string name="you_have_already_reviewed_format">You have already reviewed %s</string>
 
-    <string name="chat_is_not_enabled">Chat is not available for this merchant</string>
+    <string name="chat_is_not_enabled_format">Chat is not available for %s</string>
     <string name="select_tags">Select Tags</string>
 
     <plurals name="like_suffix">

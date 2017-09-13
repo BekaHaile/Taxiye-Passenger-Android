@@ -280,7 +280,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
 					sendUserClickEvent(Constants.KEY_CHAT_MODE);
 				} else {
-					Utils.showToast(activity, activity.getString(R.string.chat_is_not_enabled));
+					Utils.showToast(activity, activity.getString(R.string.chat_is_not_enabled_format, activity.getVendorOpened().getName()));
 				}
 				break;
 			case R.id.llCall:
@@ -291,7 +291,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				if(userHasReviewed == 0) {
 					activity.openRestaurantAddReviewFragment(true);
 				} else {
-					Utils.showToast(activity, activity.getString(R.string.you_have_already_reviewed_this_merchant));
+					Utils.showToast(activity, activity.getString(R.string.you_have_already_reviewed_format, activity.getVendorOpened().getName()));
 				}
 				break;
 			case R.id.bOrderOnline:

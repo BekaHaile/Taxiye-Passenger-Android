@@ -1759,6 +1759,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         LocalBroadcastManager.getInstance(activity).unregisterReceiver(broadcastReceiverWalletUpdate);
         orderPlaced = true;
         activity.saveCheckoutData(true);
+        activity.setCategoryIdOpened(-1);
         long time = 0L;
         Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, time);
         activity.resumeMethod();

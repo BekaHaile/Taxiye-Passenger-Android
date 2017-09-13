@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.DeliveryDisplayCategoriesAdpater;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
+import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,6 +127,7 @@ public class DeliveryDisplayCategoriesView {
                     viewBottomblank.animate().alpha(1).setDuration(activity.getResources().getInteger(R.integer.time_category_anim_open)).start();
                     rvCategories.startAnimation(categoryShowAnim);
                     handler.postDelayed(hideViewsRunnable,activity.getResources().getInteger(R.integer.time_category_anim_open));
+                    Utils.hideSoftKeyboard(activity, viewBottomblank);
                 }
                 break;
 

@@ -249,6 +249,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             public void keyboardOpened() {
                 if (activity.getTopFragment() instanceof MenusFragment) {
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
+                    if(deliveryDisplayCategoriesView.isDropDownVisible()){
+                        deliveryDisplayCategoriesView.toggleDropDown();
+                    }
                 }
             }
 
@@ -401,6 +404,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onRefresh() {
+        activity.setCategoryIdOpened(-1);
         getAllMenus(false, activity.getSelectedLatLng(), true);
     }
 
@@ -457,6 +461,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 if (activity.getMenusFilterFragment() != null) {
                                     activity.getMenusFilterFragment().updateDataLists(menusResponse);
                                 }
+                                deliveryDisplayCategoriesView.setCategoryLabelIcon(activity.getCategoryIdOpened());
                                 showCategoriesDropDown(activity.getMenusResponse().getCategories().size() > 1);
                                 activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
                                 deliveryHomeAdapter.setList(menusResponse, false, !hasMorePages && activity.getCategoryIdOpened()>0);
