@@ -1110,8 +1110,10 @@
     <string name="thank_you">Thank you!</string>
     <string name="your_order_will_be_delivered_between">Your order will be delivered between</string>
     <string name="could_not_find_favorite_restaurant">Couldn’t find your favourite restaurant yet?</string>
+    <string name="could_not_find_favorite_restaurant_format">Couldn’t find your favourite %s yet?</string>
     <string name="why_not_recommend_it">Why not recommend it!</string>
     <string name="restaurant_name_star">Restaurant Name*</string>
+    <string name="restaurant_name_star_format">%s Name*</string>
     <string name="locality_optional">Locality (optional)</string>
     <string name="telephone_number_optional">Telephone Number (optional)</string>
     <string name="restaurant_name_is_neccessary">Restaurant name is neccessary</string>
@@ -1392,6 +1394,7 @@
     <string name="order_online_not_available">Online ordering not available for this merchant</string>
     <string name="order_online_closed">Online ordering is closed for this merchant</string>
     <string name="chat_is_not_enabled">Chat is not enabled for this merchant</string>
+    <string name="you_have_already_reviewed_this_merchant">You have already reviewed this merchant</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

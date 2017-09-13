@@ -168,11 +168,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         int vendorsCount = 0;
+        String categoryName = "";
         if(menusResponse.getCategories() != null) {
             for (MenusResponse.Category category : menusResponse.getCategories()) {
                 if (category.getVendors() != null && category.getVendors().size() > 0) {
                     if(activity.getCategoryIdOpened() < 0) {
                         dataToDisplay.add(new MenusResponse.Category(category.getImage(), category.getCategoryName()));
+                    } else {
+                        categoryName = category.getCategoryName();
                     }
                     dataToDisplay.addAll(category.getVendors());
                     if(activity.getCategoryIdOpened() < 0) {
@@ -200,20 +203,20 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
 
-        //if no vendors to show
-        if(!isPagination && (vendorsCount == 0)){
-            int messageResId = R.string.no_menus_available_your_location;
-            if(activity.getMenusFragment() != null
-                    && !TextUtils.isEmpty(activity.getMenusFragment().getSearchText())){
-                messageResId = R.string.oops_no_results_found;
-            } else if(activity.isFilterApplied()){
-                messageResId = R.string.no_menus_available_with_these_filters;
+        if(menusResponse.getServiceUnavailable() == 1) {
+            //if no vendors to show
+            if (!isPagination && (vendorsCount == 0)) {
+                int messageResId = R.string.no_menus_available_your_location;
+                if (activity.getMenusFragment() != null
+                        && !TextUtils.isEmpty(activity.getMenusFragment().getSearchText())) {
+                    messageResId = R.string.oops_no_results_found;
+                } else if (activity.isFilterApplied()) {
+                    messageResId = R.string.no_menus_available_with_these_filters;
+                }
+                dataToDisplay.add(new NoVendorModel(activity.getString(messageResId)));
             }
-            dataToDisplay.add(new NoVendorModel(activity.getString(messageResId)));
-        }
-
-        if(!showAddRestaurantLayout){
-            dataToDisplay.add(FormAddRestaurantModel.getInstance());
+        } else if(showAddRestaurantLayout){
+            dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(), categoryName));
         }
 
        if(isPagination){
@@ -620,8 +623,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             titleHolder.etLocality.setText(getFormItemModel().getLocality());
             titleHolder.etTelephone.setText(getFormItemModel().getTelephone());
             titleHolder.etRestaurantName.setSelection(getFormItemModel().getRestaurantName().length());
-
-
+            titleHolder.tvCouldNotFind.setText(activity.getString(R.string.could_not_find_favorite_restaurant_format, getFormItemModel().getCategoryName()));
+            titleHolder.etRestaurantName.setHint(activity.getString(R.string.restaurant_name_star_format, getFormItemModel().getCategoryName()));
         }
     }
 
@@ -730,7 +733,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                     break;
                 case R.id.bSubmit:
-                    callback.apiRecommendRestaurant(getFormItemModel().getRestaurantName(),getFormItemModel().getLocality(),getFormItemModel().getTelephone());
+                    callback.apiRecommendRestaurant(getFormItemModel().getCategoryId(), getFormItemModel().getRestaurantName(),getFormItemModel().getLocality(),getFormItemModel().getTelephone());
                     break;
             }
         }
@@ -1043,7 +1046,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-                callback.apiRecommendRestaurant(getFormItemModel().getRestaurantName(),getFormItemModel().getLocality(),getFormItemModel().getTelephone());
+                callback.apiRecommendRestaurant(getFormItemModel().getCategoryId(), getFormItemModel().getRestaurantName(),getFormItemModel().getLocality(),getFormItemModel().getTelephone());
                 return false;
             }
         };
@@ -1148,11 +1151,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static class FormAddRestaurantModel{
         private static FormAddRestaurantModel formAddRestaurantModel;
         private String restaurantName = "", locality = "", telephone = "";
+        private String categoryName;
+        private int categoryId;
         private FormAddRestaurantModel() {
         }
-        public static FormAddRestaurantModel getInstance(){
+        public static FormAddRestaurantModel getInstance(int categoryId, String categoryName){
             if(formAddRestaurantModel ==null)
                 formAddRestaurantModel = new FormAddRestaurantModel();
+            formAddRestaurantModel.setCategoryName(categoryName);
+            formAddRestaurantModel.setCategoryId(categoryId);
             return formAddRestaurantModel;
         }
 
@@ -1184,6 +1191,22 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             restaurantName="";
             locality="";
             telephone="";
+        }
+
+        public String getCategoryName() {
+            return categoryName;
+        }
+
+        public void setCategoryName(String categoryName) {
+            this.categoryName = categoryName;
+        }
+
+        public int getCategoryId() {
+            return categoryId;
+        }
+
+        public void setCategoryId(int categoryId) {
+            this.categoryId = categoryId;
         }
     }
     private static class BannerInfosModel{
@@ -1222,7 +1245,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void onBannerInfoDeepIndexClick(int deepIndex);
         void openCategory(int categoryId);
 
-        void apiRecommendRestaurant(String restaurantName, String locality, String telephone);
+        void apiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone);
     }
 
     private void showPossibleStatus(ArrayList<String> possibleStatus, int status, ViewOrderStatus statusHolder) {

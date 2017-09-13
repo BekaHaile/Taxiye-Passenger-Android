@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.DeliveryDisplayCategoriesAdpater;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -174,18 +172,19 @@ public class DeliveryDisplayCategoriesView {
 
     private void setCategoryLabelIcon(MenusResponse.Category category){
         tvCategoryName.setText(category.getCategoryName());
-        try {
-            if (!TextUtils.isEmpty(category.getImage())) {
-                Picasso.with(activity).load(category.getImage())
-                        .placeholder(R.drawable.ic_nav_select_category)
-                        .error(R.drawable.ic_nav_select_category)
-                        .into(ivSwitchCategory);
-            } else {
-                throw new Exception();
-            }
-        } catch (Exception e) {
-            ivSwitchCategory.setImageResource(R.drawable.ic_nav_select_category);
-        }
+        ivSwitchCategory.setImageResource(R.drawable.ic_nav_select_category);
+//        try {
+//            if (!TextUtils.isEmpty(category.getImage())) {
+//                Picasso.with(activity).load(category.getImage())
+//                        .placeholder(R.drawable.ic_nav_select_category)
+//                        .error(R.drawable.ic_nav_select_category)
+//                        .into(ivSwitchCategory);
+//            } else {
+//                throw new Exception();
+//            }
+//        } catch (Exception e) {
+//            ivSwitchCategory.setImageResource(R.drawable.ic_nav_select_category);
+//        }
     }
 
     public void setRootVisibility(int visibility){

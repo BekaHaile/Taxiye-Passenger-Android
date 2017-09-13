@@ -177,9 +177,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
 
             @Override
-            public void apiRecommendRestaurant(String restaurantName, String locality, String telephone) {
+            public void apiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone) {
 
-                hitApiRecommendRestaurant(restaurantName,locality,telephone);
+                hitApiRecommendRestaurant(categoryId, restaurantName,locality, telephone);
                 GAUtils.event(GAAction.MENUS, GAAction.HOME , GAAction.NEW_RESTAURANT + GAAction.SUBMITTED);
 
 
@@ -464,7 +464,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 }
                                 showCategoriesDropDown(activity.getMenusResponse().getCategories().size() > 1);
                                 activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
-                                deliveryHomeAdapter.setList(menusResponse, false, hasMorePages && activity.getCategoryIdOpened()>0);
+                                deliveryHomeAdapter.setList(menusResponse, false, !hasMorePages && activity.getCategoryIdOpened()>0);
 
 
 
@@ -629,7 +629,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             //set Variables for pagination
                             currentPageCount++;
                             hasMorePages =  menusResponse.isPageLengthComplete();
-                            deliveryHomeAdapter.setList(menusResponse, true,hasMorePages && activity.getCategoryIdOpened()>0);
+                            deliveryHomeAdapter.setList(menusResponse, true,!hasMorePages && activity.getCategoryIdOpened()>0);
                             isProgressBarRemoved = true;//Set list removes progress bar to accumulate animation of both insert and delete in one go
 
 
@@ -849,7 +849,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         rlMainContainer.setLayoutParams(paramsMain);
     }
 
-    private void hitApiRecommendRestaurant(String restaurantName, String locality, String telephone) {
+    private void hitApiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone) {
         try {
             if(TextUtils.isEmpty(restaurantName)){
                 product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getString(R.string.restaurant_name_is_neccessary));
@@ -866,6 +866,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 params.put(Constants.KEY_RESTAURANT_NAME, restaurantName);
                 params.put(Constants.KEY_RESTAURANT_ADDRESS, locality);
                 params.put(Constants.KEY_RESTAURANT_PHONE, telephone);
+                if(categoryId > 0) {
+                    params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(categoryId));
+                }
 
                 new HomeUtil().putDefaultParams(params);
                 RestClient.getMenusApiService().suggestRestaurant(params, new retrofit.Callback<SettleUserDebt>() {

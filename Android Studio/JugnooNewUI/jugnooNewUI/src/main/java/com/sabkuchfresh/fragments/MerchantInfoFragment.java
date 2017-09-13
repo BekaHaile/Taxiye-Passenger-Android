@@ -226,6 +226,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				tvMerchantMail.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getEmail()) ? View.VISIBLE : View.GONE);
 				tvMerchantContact.setText(activity.getVendorOpened().getContactList());
 				tvMerchantContact.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getContactList()) ? View.VISIBLE : View.GONE);
+				stripUnderlines(tvMerchantContact);
 				tvMerchantAddress.setText(activity.getVendorOpened().getAddress());
 				tvMerchantAddress.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getAddress()) ? View.VISIBLE : View.GONE);
 				rvTopReviews.setVisibility(View.GONE);
@@ -287,7 +288,11 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				sendUserClickEvent(Constants.KEY_CALL_MODE);
 				break;
 			case R.id.llAddReview:
-				activity.openRestaurantAddReviewFragment(true);
+				if(userHasReviewed == 0) {
+					activity.openRestaurantAddReviewFragment(true);
+				} else {
+					Utils.showToast(activity, activity.getString(R.string.you_have_already_reviewed_this_merchant));
+				}
 				break;
 			case R.id.bOrderOnline:
 				if (activity.getMenuProductsResponse().getCategories() != null) {
@@ -304,6 +309,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 	}
 
 
+	private int userHasReviewed = 0;
 	private ArrayList<FetchFeedbackResponse.Review> restaurantReviews = new ArrayList<>();
 	private ApiRestaurantFetchFeedback apiRestaurantFetchFeedback;
 	public void fetchFeedback(){
@@ -312,6 +318,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				@Override
 				public void onSuccess(FetchFeedbackResponse fetchFeedbackResponse, boolean scrollToTop) {
 					if(getView() != null) {
+						userHasReviewed = fetchFeedbackResponse.getHasAlreadyRated();
 						restaurantReviews.clear();
 						restaurantReviews.addAll(fetchFeedbackResponse.getReviews());
 						reviewsAdapter.notifyDataSetChanged();
