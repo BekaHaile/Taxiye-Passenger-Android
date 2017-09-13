@@ -102,6 +102,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     private String[] permissionsRequest;
     private int maxNoImages = 5;
     private static final int REQUEST_CODE_SELECT_IMAGES=99;
+    private boolean isKeyboardOpen = true;
 
     public static RestaurantAddReviewFragment newInstance(int restaurantId) {
         RestaurantAddReviewFragment fragment = new RestaurantAddReviewFragment();
@@ -167,14 +168,16 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
         rlRoot.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(rlRoot, null, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
+                isKeyboardOpen= true;
             }
 
             @Override
             public void keyBoardClosed() {
+                isKeyboardOpen= false;
             }
         }));
 
-        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
 
 
@@ -702,7 +705,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
     @Override
     public void onDestroyView() {
-        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onDestroyView();
         if(imageCompressionTask!=null && !imageCompressionTask.isCancelled()) {
             imageCompressionTask.cancel(true);
@@ -713,8 +716,12 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     }
 
 
+    public boolean isKeyboardOpen() {
+        return isKeyboardOpen;
 
+    }
 
-
-
+    public View getFocusEditText() {
+        return etFeedback;
+    }
 }

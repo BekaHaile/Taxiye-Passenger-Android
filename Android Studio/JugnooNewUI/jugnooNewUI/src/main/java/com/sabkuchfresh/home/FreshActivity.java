@@ -64,6 +64,7 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.jugnoo.pay.activities.PaySDKUtils;
 import com.jugnoo.pay.models.MessageRequest;
+import com.picker.image.util.Util;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
@@ -2308,9 +2309,28 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
             if (getTopFragment() != null && getTopFragment() instanceof FreshSearchFragment)
                 topBar.animateSearchBar(false);
-            super.onBackPressed();
+
+            if(getTopFragment() instanceof RestaurantAddReviewFragment && getRestaurantAddReviewFragment().isKeyboardOpen()){
+                try {
+                    Utils.hideSoftKeyboard(FreshActivity.this,getRestaurantAddReviewFragment().getFocusEditText());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                handler.postDelayed(onBackPressRunnable,250);
+
+
+            }else{
+                super.onBackPressed();
+
+            }
         }
     }
+    private Runnable onBackPressRunnable = new Runnable() {
+        @Override
+        public void run() {
+            FreshActivity.super.onBackPressed();
+        }
+    };
 
     private int backPressedCount = 0;
     private void finishWithToast(){
