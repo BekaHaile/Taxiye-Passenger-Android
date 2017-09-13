@@ -329,7 +329,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public void onResume() {
         super.onResume();
         if (!isHidden() && resumed) {
-            if(System.currentTimeMillis()-lastTimeRefreshed >= MAX_REFRESH_INTERVAL){
+            if(activity.isRefreshCart()
+                    || System.currentTimeMillis()-lastTimeRefreshed >= MAX_REFRESH_INTERVAL){
                 activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
             }
             activity.setRefreshCart(false);
@@ -447,11 +448,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                                 // check if only one category is coming view will be set like single category expanded
                                 if (activity.getCategoryIdOpened() < 0) {
-                                    if (menusResponse.getCategories().size() == 1) {
-                                        activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
+                                    if(!isSearchingCase()) {
+                                        if (menusResponse.getCategories().size() == 1) {
+                                            activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
+                                        }
+                                        activity.setMenusResponse(menusResponse);
+                                        deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
                                     }
-                                    activity.setMenusResponse(menusResponse);
-                                    deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
                                     activity.getCuisinesSelected().clear();
                                     activity.getFilterSelected().clear();
                                     activity.setSortBySelected(null);
@@ -460,8 +463,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     activity.getMenusFilterFragment().updateDataLists(menusResponse);
                                 }
                                 showCategoriesDropDown(activity.getMenusResponse().getCategories().size() > 1);
-                                deliveryHomeAdapter.setList(menusResponse, false, hasMorePages && activity.getCategoryIdOpened()>0);
                                 activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
+                                deliveryHomeAdapter.setList(menusResponse, false, hasMorePages && activity.getCategoryIdOpened()>0);
 
 
 
@@ -505,7 +508,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
             isMenusApiInProgress = true;
-            if (searchOpened && searchText.length() > 2) {
+            if (isSearchingCase()) {
                 params.put(Constants.KEY_SEARCH_TEXT, searchText);
                 RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
             } else {
@@ -655,7 +658,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         };
 
-        if (searchOpened && searchText.length() > 2) {
+        if (isSearchingCase()) {
             params.put(Constants.KEY_SEARCH_TEXT, searchText);
             RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
         } else {
@@ -893,6 +896,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean isSearchingCase(){
+        return (searchOpened && searchText.length() > 2);
     }
 
 }

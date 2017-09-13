@@ -190,7 +190,9 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 	private Runnable scrollToTopRunnable = new Runnable() {
 		@Override
 		public void run() {
-			scrollView.scrollTo(0, 0);
+			if(getView() != null) {
+				scrollView.scrollTo(0, 0);
+			}
 		}
 	};
 

@@ -73,7 +73,7 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 		ViewHolderCategory holder = ((ViewHolderCategory) mholder);
 		if (prosCatalogueDatum.getId() == -1) {
 			holder.tvSuperCategoryName.setText(R.string.all);
-			holder.ivSuperCategoryImage.setImageResource(R.drawable.ic_fresh_new_placeholder);
+			holder.ivSuperCategoryImage.setImageResource(R.drawable.ic_category_all);
 			return;
 		}
 

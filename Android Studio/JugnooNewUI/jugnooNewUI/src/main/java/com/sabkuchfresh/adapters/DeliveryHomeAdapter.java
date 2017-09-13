@@ -170,7 +170,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         int vendorsCount = 0;
         if(menusResponse.getCategories() != null) {
             for (MenusResponse.Category category : menusResponse.getCategories()) {
-                if (category.getVendors() != null) {
+                if (category.getVendors() != null && category.getVendors().size() > 0) {
                     if(activity.getCategoryIdOpened() < 0) {
                         dataToDisplay.add(new MenusResponse.Category(category.getImage(), category.getCategoryName()));
                     }
