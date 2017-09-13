@@ -168,14 +168,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         int vendorsCount = 0;
-        String categoryName = "";
         if(menusResponse.getCategories() != null) {
             for (MenusResponse.Category category : menusResponse.getCategories()) {
                 if (category.getVendors() != null && category.getVendors().size() > 0) {
                     if(activity.getCategoryIdOpened() < 0) {
                         dataToDisplay.add(new MenusResponse.Category(category.getImage(), category.getCategoryName()));
-                    } else {
-                        categoryName = category.getCategoryName();
                     }
                     dataToDisplay.addAll(category.getVendors());
                     if(activity.getCategoryIdOpened() < 0) {
@@ -203,7 +200,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
 
-        if(menusResponse.getServiceUnavailable() == 1) {
+        if(menusResponse.getServiceUnavailable() == 1 || activity.getCategoryIdOpened() < 0) {
             //if no vendors to show
             if (!isPagination && (vendorsCount == 0)) {
                 int messageResId = R.string.no_menus_available_your_location;
@@ -216,7 +213,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 dataToDisplay.add(new NoVendorModel(activity.getString(messageResId)));
             }
         } else if(showAddRestaurantLayout){
-            dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(), categoryName));
+            int index = activity.getMenusResponse().getCategories().indexOf(new MenusResponse.Category(activity.getCategoryIdOpened()));
+            if(index > -1){
+                dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(), activity.getMenusResponse().getCategories().get(index).getCategoryName()));
+            }
         }
 
        if(isPagination){

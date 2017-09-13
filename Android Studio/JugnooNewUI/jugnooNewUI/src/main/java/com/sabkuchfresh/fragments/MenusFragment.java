@@ -447,17 +447,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
                                 // check if only one category is coming view will be set like single category expanded
-                                if (activity.getCategoryIdOpened() < 0) {
-                                    if(!isSearchingCase(searchTextCurr)) {
-                                        if (menusResponse.getCategories().size() == 1) {
-                                            activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
-                                        }
-                                        activity.setMenusResponse(menusResponse);
-                                        deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
+                                if (activity.getCategoryIdOpened() < 0 && !isSearchingCase(searchTextCurr)) {
+                                    if (menusResponse.getCategories().size() == 1) {
+                                        activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
                                     }
-//                                    activity.getCuisinesSelected().clear();
-//                                    activity.getFilterSelected().clear();
-//                                    activity.setSortBySelected(null);
+                                    activity.setMenusResponse(menusResponse);
+                                    deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
                                 }
                                 if (activity.getMenusFilterFragment() != null) {
                                     activity.getMenusFilterFragment().updateDataLists(menusResponse);
@@ -728,8 +723,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             activity.getTopBar().etSearch.setText("");
             if (activity.getSearchedRestaurantIds() != null)
                 activity.getSearchedRestaurantIds().clear();
-            if (previousVendors != null) {
-                deliveryHomeAdapter.setList(previousVendors);
+            if(activity.getCategoryIdOpened() < 0) {
+                if (previousVendors != null) {
+                    deliveryHomeAdapter.setList(previousVendors);
+                }
+            } else {
+                getAllMenus(false, activity.getSelectedLatLng(), true);
             }
 
 
