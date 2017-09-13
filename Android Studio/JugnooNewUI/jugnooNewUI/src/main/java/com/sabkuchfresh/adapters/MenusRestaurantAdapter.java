@@ -576,7 +576,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
 
                 int visibilityRating = View.GONE;
-                if (vendor.getRating() != null && vendor.getRating() >= 1d) {
+                if (vendor.getRating() != null && vendor.getRating() >= 0d) {
                     visibilityRating = View.VISIBLE;
                     if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
                         setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating());

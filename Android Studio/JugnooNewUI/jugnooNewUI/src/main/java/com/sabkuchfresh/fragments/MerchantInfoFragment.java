@@ -261,7 +261,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 						.placeholder(R.drawable.ic_fresh_item_placeholder)
 						.into(activity.ivCollapseRestImage);
 			} else {
-				activity.ivCollapseRestImage.setImageDrawable(null);
+				activity.ivCollapseRestImage.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_fresh_item_placeholder));
 			}
 		}
 	}

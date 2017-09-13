@@ -406,7 +406,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				activity.setCuisinesAll(null);
 			}
 			setCuisinesList();
-			textViewSelectCuisines.setText(activity.getString(R.string.select_format, category.getTagsName()));
+//			textViewSelectCuisines.setText(activity.getString(R.string.select_format, category.getTagsName()));
 			adapterFilters.setList(activity.getFiltersAll());
 			adapterSort.setList(activity.getSortAll());
 		}

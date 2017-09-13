@@ -218,7 +218,7 @@
                     android:paddingBottom="@dimen/dp_10"
                     android:paddingLeft="@dimen/dp_20"
                     android:gravity="center_vertical"
-                    android:text="@string/select_cuisines"
+                    android:text="@string/select_tags"
                     android:textColor="@color/text_color_selector"
                     android:textSize="@dimen/sp_14"
                     android:visibility="visible"
@@ -293,13 +293,14 @@
         android:visibility="gone"
         >
         <TextView
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/dp_12"
             android:paddingBottom="@dimen/dp_12"
             android:paddingLeft="@dimen/dp_20"
             android:gravity="center_vertical"
-            android:text="@string/cuisines"
+            android:text="@string/tags"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
             android:textSize="@dimen/sp_12"

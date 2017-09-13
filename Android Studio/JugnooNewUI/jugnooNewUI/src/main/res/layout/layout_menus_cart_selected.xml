@@ -7,8 +7,9 @@
     android:tag="@string/dont_touch_me"
     android:background="@drawable/bg_theme_color_selector"
     android:id="@+id/rlMenusCartSelected"
-    android:visibility="visible"
-    >
+    android:visibility="visible">
+
+
 
     <RelativeLayout
         android:id="@+id/rlMenusCartSelectedInner"
@@ -101,5 +102,12 @@
             />
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/disable_view"
+        android:clickable="true"
+        android:background="@color/black_60"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

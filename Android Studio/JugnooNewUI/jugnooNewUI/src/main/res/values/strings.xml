@@ -898,6 +898,7 @@
     <string name="popularity">Popularity</string>
     <string name="price">Price</string>
     <string name="cuisines">Cuisines</string>
+    <string name="tags">Tags</string>
     <string name="minimum_order">Minimum order amount</string>
     <string name="less_than_150"><![CDATA[<Rs. 150]]></string>
     <string name="less_than_250"><![CDATA[<Rs. 250]]></string>
@@ -1393,8 +1394,11 @@
     <string name="select_format">Select %s</string>
     <string name="order_online_not_available">Online ordering not available for this merchant</string>
     <string name="order_online_closed">Online ordering is closed for this merchant</string>
-    <string name="chat_is_not_enabled">Chat is not enabled for this merchant</string>
+
     <string name="you_have_already_reviewed_this_merchant">You have already reviewed this merchant</string>
+
+    <string name="chat_is_not_enabled">Chat is not available for this merchant</string>
+    <string name="select_tags">Select Tags</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

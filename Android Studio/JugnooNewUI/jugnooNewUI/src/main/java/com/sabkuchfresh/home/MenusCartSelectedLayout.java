@@ -19,7 +19,9 @@ public class MenusCartSelectedLayout {
 	private RelativeLayout rlMenusCartSelected, rlMenusCartSelectedInner;
 	private TextView tvRestName;
 	private LinearLayout llDeleteCart;
+	private View disableView;
 	private int vendorId;
+	private boolean isViewDisabled;
 
 	public RelativeLayout getRlMenusCartSelectedInner() {
 		return rlMenusCartSelectedInner;
@@ -36,11 +38,12 @@ public class MenusCartSelectedLayout {
 		rlMenusCartSelectedInner = (RelativeLayout) root.findViewById(R.id.rlMenusCartSelectedInner);
 		tvRestName = (TextView) root.findViewById(R.id.tvRestName);
 		llDeleteCart = (LinearLayout) root.findViewById(R.id.llDeleteCart);
+		disableView = root.findViewById(R.id.disable_view);
 
 		rlMenusCartSelectedInner.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(vendorId > 0) {
+				if(!isViewDisabled && vendorId > 0) {
 					activity.fetchRestaurantMenuAPI(vendorId, true, null, null, -1, null);
 				}
 			}
@@ -49,7 +52,9 @@ public class MenusCartSelectedLayout {
 		llDeleteCart.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getDialogPopupTwoButtonCapsule().show();
+				if (!isViewDisabled) {
+					getDialogPopupTwoButtonCapsule().show();
+				}
 			}
 		});
 
@@ -96,5 +101,13 @@ public class MenusCartSelectedLayout {
 			}, R.style.Feed_Popup_Theme, activity, activity.getString(R.string.discard_all_items_in_cart));
 		}
 		return dialogPopupTwoButtonCapsule;
+	}
+
+	public void disableView(boolean isDisable){
+		this.isViewDisabled = isDisable;
+		if(disableView!=null){
+			disableView.setVisibility(isDisable?View.VISIBLE:View.GONE);
+
+		}
 	}
 }
