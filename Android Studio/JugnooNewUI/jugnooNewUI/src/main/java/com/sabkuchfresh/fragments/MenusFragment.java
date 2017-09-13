@@ -249,9 +249,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             public void keyboardOpened() {
                 if (activity.getTopFragment() instanceof MenusFragment) {
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
+
                     if(deliveryDisplayCategoriesView.isDropDownVisible()){
                         deliveryDisplayCategoriesView.toggleDropDown();
                     }
+                    activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
                 }
             }
 
@@ -261,6 +263,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
+                    activity.getMenusCartSelectedLayout().setVisibility(View.VISIBLE);
                 }
             }
         });

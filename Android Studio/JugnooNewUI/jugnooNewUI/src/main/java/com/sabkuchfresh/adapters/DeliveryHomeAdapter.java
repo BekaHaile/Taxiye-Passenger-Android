@@ -86,6 +86,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int ITEM_PROGRESS_BAR = 8;
     private static final int NO_VENDORS_ITEM = 9;
     private static final int FORM_ITEM = 10;
+    private static final int BLANK_LAYOUT = 11;
 
 
     private static final int RECENT_ORDERS_TO_SHOW = 2;
@@ -219,6 +220,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         }
 
+        if(!isPagination && activity.getCategoryIdOpened()<0){
+            dataToDisplay.add(BlankFooterModel.getInstance());
+        }
+
        if(isPagination){
             final int sizeListAfterAddding = dataToDisplay.size();
             final int diff = sizeListAfterAddding-sizeListBeforeAdding;
@@ -337,6 +342,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case FORM_ITEM :
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommend_restaurant, parent, false);
                 return new ViewHolderRestaurantForm(v, this);
+            case BLANK_LAYOUT :
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_footer, parent, false);
+                return new ProgressBarViewHolder(v);
 
             default:
                 throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
@@ -464,7 +472,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
 
             int visibilityRating = View.GONE;
-            if (vendor.getRating() != null && vendor.getRating() >= 1d) {
+            if (vendor.getRating() != null && vendor.getRating() >= 0d) {
                 visibilityRating = View.VISIBLE;
                 if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
                     setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating(), vendor.getReviewCount());
@@ -666,6 +674,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if(object instanceof FormAddRestaurantModel)
             return FORM_ITEM;
+
+        if(object instanceof BlankFooterModel)
+            return BLANK_LAYOUT;
 
         Log.e(TAG, ">"+object);
 
@@ -1145,6 +1156,17 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(progressBarModel ==null)
                 progressBarModel = new ProgressBarModel();
             return progressBarModel;
+        }
+    }
+
+    private static class BlankFooterModel{
+        private static BlankFooterModel blankFooterModel;
+        private BlankFooterModel() {
+        }
+        public static BlankFooterModel getInstance(){
+            if(blankFooterModel ==null)
+                blankFooterModel = new BlankFooterModel();
+            return blankFooterModel;
         }
     }
 
