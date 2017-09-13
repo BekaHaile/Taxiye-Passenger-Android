@@ -822,7 +822,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onDropDownToggle(boolean shown) {
-        activity.getMenusCartSelectedLayout().disableView(shown);
+        activity.getMenusCartSelectedLayout().disableView(!shown);
 
         if(!isHidden()) {
             activity.getFabViewTest().setRelativeLayoutFABTestVisibility(shown ? View.VISIBLE : View.GONE);
