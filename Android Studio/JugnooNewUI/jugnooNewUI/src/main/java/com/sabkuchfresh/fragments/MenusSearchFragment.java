@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -61,6 +62,7 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 	private ArrayList<Category> categoriesSearched;
 	private int isVegToggle;
 	private TextView labelItems,labelCategories;
+	private CardView cardViewCategories,cardViewItems;
 
 
 	@Override
@@ -92,6 +94,8 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 			e.printStackTrace();
 		}
         Utils.setupUI(rlRoot, activity);
+		cardViewCategories = (CardView) rootView.findViewById(R.id.cv_categories);
+		cardViewItems = (CardView) rootView.findViewById(R.id.cv_category_items);
 		labelItems = (TextView) rootView.findViewById(R.id.label_items);
 		labelCategories = (TextView) rootView.findViewById(R.id.label_categories);
 		recyclerViewCategoryItems = (RecyclerView)rootView.findViewById(R.id.recyclerViewCategoryItems);
@@ -310,7 +314,9 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 					GAUtils.event(GACategory.MENUS, SEARCH + NOT_FOUND, token);
 				}
 				labelItems.setVisibility(menusCategoryItemsAdapter.getItemCount()>0?View.VISIBLE:View.GONE);
+				cardViewItems.setVisibility(menusCategoryItemsAdapter.getItemCount()>0?View.VISIBLE:View.GONE);
 				labelCategories.setVisibility(menusCategoryCategoriesAdapter.getItemCount()>0?View.VISIBLE:View.GONE);
+				cardViewCategories.setVisibility(menusCategoryCategoriesAdapter.getItemCount()>0?View.VISIBLE:View.GONE);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
