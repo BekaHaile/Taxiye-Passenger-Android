@@ -448,7 +448,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                                 // check if only one category is coming view will be set like single category expanded
                                 if (activity.getCategoryIdOpened() < 0) {
-                                    if(!isSearchingCase()) {
+                                    if(!isSearchingCase(searchTextCurr)) {
                                         if (menusResponse.getCategories().size() == 1) {
                                             activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
                                         }
@@ -508,7 +508,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
             isMenusApiInProgress = true;
-            if (isSearchingCase()) {
+            if (isSearchingCase(searchText)) {
                 params.put(Constants.KEY_SEARCH_TEXT, searchText);
                 RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
             } else {
@@ -658,7 +658,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         };
 
-        if (isSearchingCase()) {
+        if (isSearchingCase(searchText)) {
             params.put(Constants.KEY_SEARCH_TEXT, searchText);
             RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
         } else {
@@ -910,8 +910,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 
-    private boolean isSearchingCase(){
-        return (searchOpened && searchText.length() > 2);
+    private boolean isSearchingCase(String searchTextCurr){
+        return (searchOpened && searchTextCurr.length() > 2);
     }
 
 }
