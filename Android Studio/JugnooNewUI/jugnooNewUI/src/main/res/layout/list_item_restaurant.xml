@@ -59,6 +59,7 @@
         android:layout_toRightOf="@+id/imageViewRestaurantImage"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:layout_marginLeft="-5dp"
         >
 
         <TextView
