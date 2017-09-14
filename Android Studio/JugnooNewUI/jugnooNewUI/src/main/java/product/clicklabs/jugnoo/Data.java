@@ -93,6 +93,7 @@ public class Data {
     private static GroceryData groceryData;
     private static DeliveryData DeliveryData;
     private static MenusData menusData;
+    private static MenusData deliveryCustomer;
     private static PayData payData;
     private static LoginResponse.Feed feedData;
     private static LoginResponse.Pros prosData;
@@ -474,12 +475,16 @@ public class Data {
     public static MenusData getMenusData() {
         return menusData;
     }
-   public static MenusData getDeliveryCustomerData() {
-        return menusData;
+    public static MenusData getDeliveryCustomerData() {
+        return deliveryCustomer;
     }
 
     public static void setMenusData(MenusData menusData) {
         Data.menusData = menusData;
+    }
+
+    public static void setDeliveryCustomerData(MenusData deliveryCustomerData){
+        Data.deliveryCustomer = deliveryCustomerData;
     }
 
     public static PayData getPayData() {

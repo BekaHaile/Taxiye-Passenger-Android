@@ -45,6 +45,14 @@ public class LoginResponse {
 		this.pros = pros;
 	}
 
+	public Menus getDeliveryCustomer() {
+		return deliveryCustomer;
+	}
+
+	public void setDeliveryCustomer(Menus deliveryCustomer) {
+		this.deliveryCustomer = deliveryCustomer;
+	}
+
 	public class Cancellation {
 
 		@SerializedName("message")
@@ -125,6 +133,9 @@ public class LoginResponse {
 	@SerializedName("menus")
 	@Expose
 	private Menus menus;
+	@SerializedName("delivery_customer")
+	@Expose
+	private Menus deliveryCustomer;
 	@SerializedName("pay")
 	@Expose
 	private Pay pay;

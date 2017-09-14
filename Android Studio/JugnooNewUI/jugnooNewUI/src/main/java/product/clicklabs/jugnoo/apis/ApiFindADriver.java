@@ -305,6 +305,22 @@ public class ApiFindADriver {
 			}
 
 			try {
+				if(Data.getDeliveryCustomerData() != null && Data.getDeliveryCustomerData().getPromoCoupons() == null){
+					Data.getDeliveryCustomerData().setPromoCoupons(new ArrayList<PromoCoupon>());
+				} else{
+					Data.getDeliveryCustomerData().getPromoCoupons().clear();
+				}
+				if(findADriverResponse.getDeliveryCustomerPromotions() != null) {
+					Data.getDeliveryCustomerData().getPromoCoupons().addAll(findADriverResponse.getDeliveryCustomerPromotions());
+				}
+				if(findADriverResponse.getDeliveryCustomerCoupons() != null) {
+					Data.getDeliveryCustomerData().getPromoCoupons().addAll(findADriverResponse.getDeliveryCustomerCoupons());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			try {
 				if(Data.getPayData() != null && Data.getPayData().getPromoCoupons() == null){
 					Data.getPayData().setPromoCoupons(new ArrayList<PromoCoupon>());
 				} else{

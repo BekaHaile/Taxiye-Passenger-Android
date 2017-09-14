@@ -117,11 +117,14 @@ public class RideOrderShortView {
 					imageViewProductType.setImageResource(R.drawable.ic_fresh_grey);
 				} else if(datum.getProductType() == ProductType.MENUS.getOrdinal()){
 					imageViewProductType.setImageResource(R.drawable.ic_menus_grey);
+				} else if(datum.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()){
+					imageViewProductType.setImageResource(R.drawable.ic_menus_grey);
 				} else if(datum.getProductType() == ProductType.PAY.getOrdinal()){
 					imageViewProductType.setImageResource(R.drawable.ic_pay_grey);
 				}
 				textViewIssueWithRide.setText(context.getString(R.string.issue_with_the_recent_order));
-				if(datum.getProductType() == ProductType.MENUS.getOrdinal()){
+				if(datum.getProductType() == ProductType.MENUS.getOrdinal()
+						|| datum.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()){
 					textViewDriverName.setText(context.getString(R.string.order_date_colon).replace(":", ""));
 					textViewDriverCarNumber.setText(DateOperations.convertDateOnlyViaFormat(DateOperations.utcToLocalWithTZFallback(datum.getOrderTime())));
 				} else {

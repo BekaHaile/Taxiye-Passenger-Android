@@ -451,7 +451,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 };
 
                 new HomeUtil().putDefaultParams(params);
-                if (productType == ProductType.MENUS.getOrdinal()) {
+                if (productType == ProductType.MENUS.getOrdinal()
+                    || productType == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
                     RestClient.getMenusApiService().orderHistory(params, callback);
                 } else {
                     RestClient.getFreshApiService().orderHistory(params, callback);
@@ -672,7 +673,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
             tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum1.getOrderTime())));
 
-            if (datum1.getProductType() == ProductType.MENUS.getOrdinal()) {
+            if (datum1.getProductType() == ProductType.MENUS.getOrdinal()
+                || datum1.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
                 tvDeliveryTime.setText(activity.getString(R.string.delivered_from_colon));
 
                 tvDeliveryTimeVal.setText("");
@@ -933,7 +935,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 break;
             case R.id.reorderBtn:
                 try {
-                    if(productType==ProductType.MENUS.getOrdinal()){
+                    if(productType==ProductType.MENUS.getOrdinal()
+                        || productType==ProductType.DELIVERY_CUSTOMER.getOrdinal()){
                         if(responseOrderDataApi!=null){
                             JSONArray jsonArray = responseOrderDataApi.getJSONArray("data");
                             if(jsonArray!=null && jsonArray.length()>0){
@@ -1071,8 +1074,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
                         if (PushFlags.STATUS_CHANGED.getOrdinal() == flag) {
                             getOrderData(activity);
-                        } else if (PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
-                            Log.v("menus status ", "menus status tracking");
+                        } else if (PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag
+                            || PushFlags.DELIVERY_CUSTOMER_STATUS.getOrdinal() == flag || PushFlags.DELIVERY_CUSTOMER_STATUS_SILENT.getOrdinal() == flag) {
                             getOrderData(activity);
                         }
                     } catch (Exception e) {
@@ -1189,7 +1192,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     public void reorderMenus(JSONArray jsonArray, int restaurantId, LatLng latLng, String delAddress){
 
 
-        if(activity instanceof FreshActivity && Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,null).equals(Config.getMenusClientId())){
+        if(activity instanceof FreshActivity &&
+                ((productType == ProductType.MENUS.getOrdinal() && Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,null).equals(Config.getMenusClientId()))
+                || (productType == ProductType.DELIVERY_CUSTOMER.getOrdinal() && Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,null).equals(Config.getDeliveryCustomerClientId()))
+                )){
 
             ((FreshActivity)activity).onBackPressed();
 
@@ -1200,7 +1206,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             Prefs.with(activity).save(Constants.ORDER_STATUS_LAT_LNG,latLng, LatLng.class);
             Prefs.with(activity).save(Constants.ORDER_STATUS_ORDER_ID,orderId);
             Prefs.with(activity).save(Constants.ORDER_STATUS_ADDRESS,delAddress);
-            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), new LatLng(Data.latitude,Data.longitude), false);
+            MyApplication.getInstance().getAppSwitcher().switchApp(activity,
+                    productType == ProductType.MENUS.getOrdinal() ? Config.getMenusClientId() : Config.getDeliveryCustomerClientId(),
+                    new LatLng(Data.latitude,Data.longitude), false);
 
 
         }

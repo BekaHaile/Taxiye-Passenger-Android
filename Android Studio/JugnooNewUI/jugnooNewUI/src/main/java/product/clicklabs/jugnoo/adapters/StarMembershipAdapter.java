@@ -64,6 +64,10 @@ public class StarMembershipAdapter extends BaseAdapter {
 				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_purple_menu_fab);
 				viewHolder.ivOfferring.setImageResource(R.drawable.ic_menus);
 			}
+			else if(benefits.get(position).getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()){
+				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_purple_menu_fab);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_menus);
+			}
 			else if(benefits.get(position).getProductType() == ProductType.PROS.getOrdinal()){
 				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_pink_pros_fab);
 				viewHolder.ivOfferring.setImageResource(R.drawable.ic_pros);

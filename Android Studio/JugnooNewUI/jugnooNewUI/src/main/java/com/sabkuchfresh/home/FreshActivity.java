@@ -3296,7 +3296,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public void saveFilters() {
-        Prefs.with(this).save(Constants.SP_MENUS_OPENED_DELIVERY_CATEGORY, categoryIdOpened);
         if(sortBySelected == null){
             sortBySelected = new MenusResponse.KeyValuePair("");
         }
@@ -3319,7 +3318,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     public void fetchFiltersFromSP() {
-        categoryIdOpened = Prefs.with(this).getInt(Constants.SP_MENUS_OPENED_DELIVERY_CATEGORY, -1);
         sortBySelected = Prefs.with(this).getObject(Constants.SP_MENUS_FILTER_SORT_BY_OBJ, MenusResponse.KeyValuePair.class);
         if(sortBySelected != null && TextUtils.isEmpty(sortBySelected.getKey())){
             sortBySelected = null;

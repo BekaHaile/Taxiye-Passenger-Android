@@ -137,6 +137,12 @@ public class FindADriverResponse {
     @SerializedName("menus_coupons")
     @Expose
     private List<CouponInfo> menusCoupons = new ArrayList<>();
+    @SerializedName("delivery_customer_promotions")
+    @Expose
+    private List<PromotionInfo> deliveryCustomerPromotions = new ArrayList<>();
+    @SerializedName("delivery_customer_coupons")
+    @Expose
+    private List<CouponInfo> deliveryCustomerCoupons = new ArrayList<>();
     @SerializedName("pay_promotions")
     @Expose
     private List<PromotionInfo> payPromotions = new ArrayList<>();
@@ -433,7 +439,7 @@ public class FindADriverResponse {
     public Integer getMenusEnabled() {
         return menusEnabled;
     }
-public Integer getDeliveryCustomerEnabled() {
+    public Integer getDeliveryCustomerEnabled() {
         return deliveryCustomerEnabled;
     }
 
@@ -495,6 +501,22 @@ public Integer getDeliveryCustomerEnabled() {
 
     public void setMenusCoupons(List<CouponInfo> menusCoupons) {
         this.menusCoupons = menusCoupons;
+    }
+
+    public List<PromotionInfo> getDeliveryCustomerPromotions() {
+        return deliveryCustomerPromotions;
+    }
+
+    public void setDeliveryCustomerPromotions(List<PromotionInfo> deliveryCustomerPromotions) {
+        this.deliveryCustomerPromotions = deliveryCustomerPromotions;
+    }
+
+    public List<CouponInfo> getDeliveryCustomerCoupons() {
+        return deliveryCustomerCoupons;
+    }
+
+    public void setDeliveryCustomerCoupons(List<CouponInfo> deliveryCustomerCoupons) {
+        this.deliveryCustomerCoupons = deliveryCustomerCoupons;
     }
 
     public Integer getPayEnabled() {
