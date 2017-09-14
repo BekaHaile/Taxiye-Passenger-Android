@@ -3237,7 +3237,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
     private boolean isMenusOpen() {
-        return type == AppConstant.ApplicationType.MENUS;
+        return type == AppConstant.ApplicationType.MENUS ;
     }
 
     private boolean isFreshOpen() {
@@ -3616,7 +3616,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             if(orderStatus!=Constants.NO_VALID_STATUS){
                     //Only if the payment is processing corresponding to that order ID
                 if(activity.getPlaceOrderResponse()!=null && activity.getPlaceOrderResponse().getOrderId()==intent.getIntExtra(Constants.KEY_ORDER_ID,0)) {
-                    onIciciStatusResponse(IciciPaymentRequestStatus.parseStatus(intent.getBooleanExtra(Constants.IS_MENUS, false), orderStatus),
+                    onIciciStatusResponse(IciciPaymentRequestStatus.parseStatus(intent.getBooleanExtra(Constants.IS_MENUS_OR_DELIVERY, false), orderStatus),
                             intent.hasExtra(Constants.KEY_MESSAGE) ? intent.getStringExtra(Constants.KEY_MESSAGE) : "");
                 }
 

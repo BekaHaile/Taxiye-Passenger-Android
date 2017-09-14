@@ -1006,41 +1006,6 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
     public void saveHistoryCardToSP(HistoryResponse.Datum orderHistory) {
         try {
-            // TODO: 19/03/17 check for reorderMenus cart fill
-//            JSONObject jCart = new JSONObject();
-//            if (orderHistory.getOrderItems() != null) {
-//                Gson gson = new Gson();
-//                for (HistoryResponse.OrderItem orderItem : orderHistory.getOrderItems()) {
-//                    if (orderItem.getItemQuantity() > 0) {
-//                        try {
-//                            SubItem subItem1 = new SubItem();
-//                            subItem1.setSubItemId(orderItem.getSubItemId());
-//                            subItem1.setPrice(orderItem.getUnitAmount());
-//                            subItem1.setStock(50);
-//                            subItem1.setSubItemQuantitySelected(orderItem.getItemQuantity());
-//                            subItem1.setSubItemName(orderItem.getItemName());
-//                            subItem1.setBaseUnit(orderItem.getUnit());
-//                            subItem1.setSubItemImage(orderItem.getSubItemImage());
-//
-//                            jCart.put(String.valueOf(orderItem.getSubItemId()), gson.toJson(subItem1, SubItem.class));
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//            }
-//            jCart.put(Constants.KEY_CITY_ID, orderHistory.getCityId());
-//            if(orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
-//                Prefs.with(activity).save(Constants.SP_FRESH_CART, jCart.toString());
-//                sendMessage(0, orderHistory);
-//            } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()){
-//                Prefs.with(activity).save(Constants.SP_GROCERY_CART, jCart.toString());
-//                sendMessage(2, orderHistory);
-//            } else if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
-//                Prefs.with(activity).save(Constants.SP_MENUS_CART, jCart.toString());
-//                sendMessage(3, orderHistory);
-//            }
-
             DialogPopup.showLoadingDialog(activity, "Please wait...");
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1052,16 +1017,6 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void sendMessage(int type, HistoryResponse.Datum orderHistory) {
-        Log.d("sender", "Broadcasting message");
-        Intent intent = new Intent(Data.LOCAL_BROADCAST);
-        // You can also include some extra data.
-        intent.putExtra("message", "This is my message!");
-        intent.putExtra("open_type", type);
-        Data.setDatumToReOrder(orderHistory);
-        LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
     }
 
     private BroadcastReceiver orderUpdateBroadcast = new BroadcastReceiver() {

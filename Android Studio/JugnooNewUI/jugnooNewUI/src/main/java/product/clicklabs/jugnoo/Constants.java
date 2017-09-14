@@ -551,6 +551,7 @@ public interface Constants {
     String SP_MEALS_CHECKOUT_SAVE_DATA = "sp_meals_checkout_save_data";
     String SP_GROCERY_CHECKOUT_SAVE_DATA = "sp_grocery_checkout_save_data";
     String SP_MENUS_CHECKOUT_SAVE_DATA = "sp_menus_checkout_save_data";
+    String SP_DELIVERY_CUSTOMER_CHECKOUT_SAVE_DATA = "sp_menus_checkout_save_data";
 
     String KEY_VALID_STOCK_COUNT = "valid_stock_count";
     String INTENT_ACTION_ORDER_STATUS_UPDATE = "INTENT_ACTION_ORDER_STATUS_UPDATE";
@@ -727,7 +728,7 @@ public interface Constants {
     String PLACE_ORDER_DATA = "place_order_response";
     String ICICI_ORDER_STATUS = "order_status";
     int NO_VALID_STATUS = -1001;
-    String IS_MENUS = "is_menus";
+    String IS_MENUS_OR_DELIVERY = "is_menus";
     String IS_DELIVERY_CUSTOMER = "is_delivery_customer";
     String KEY_VENDOR = "vendor";
 
