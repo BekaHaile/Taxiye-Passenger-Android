@@ -263,7 +263,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
-                    activity.getMenusCartSelectedLayout().setVisibility(View.VISIBLE);
+                    activity.getMenusCartSelectedLayout().checkForVisibility();
                 }
             }
         });
@@ -526,7 +526,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 
+    private boolean serviceUnavailable;
     private void setUpServiceUnavailability(MenusResponse menusResponse) {
+		serviceUnavailable = (menusResponse.getRecentOrders().size() == 0 && menusResponse.getServiceUnavailable() == 1);
         relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0 && menusResponse.getServiceUnavailable() == 1) ? View.VISIBLE : View.GONE);
 
         if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
@@ -921,4 +923,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return (searchOpened && searchTextCurr.length() > 2);
     }
 
+	public boolean isServiceUnavailable() {
+		return serviceUnavailable;
+	}
 }

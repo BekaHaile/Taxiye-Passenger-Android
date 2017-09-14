@@ -49,8 +49,8 @@ public class TopBar implements GAAction, GACategory {
     public ImageView ivSearchCross, ivSearch, ivFilterApplied;
     public RelativeLayout rlFilter;
 
-    public RelativeLayout llSearchCartContainer;
-    public LinearLayout llSearchCart;
+    private RelativeLayout llSearchCartContainer;
+    private LinearLayout llSearchCart;
     private Animation searchBarAnimation;
     private Animation searchBarCloseAnimation;
     public ImageView ivFreshSort;

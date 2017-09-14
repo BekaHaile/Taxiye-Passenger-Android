@@ -64,7 +64,6 @@ import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.jugnoo.pay.activities.PaySDKUtils;
 import com.jugnoo.pay.models.MessageRequest;
-import com.picker.image.util.Util;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
@@ -1431,6 +1430,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             } else if (fragment instanceof MenusFragment || fragment instanceof DeliveryHomeFragment) {
                 ivSearchVis = View.VISIBLE;
+				if(llSearchCartVis == View.VISIBLE
+						&& getMenusFragment() != null && getMenusFragment().isServiceUnavailable()){
+					llSearchCartVis = View.GONE;
+				}
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
