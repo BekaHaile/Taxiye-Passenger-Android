@@ -12,5 +12,6 @@ public interface PaperDBKeys {
 	String DB_PLACE_ORDER_RESP = "db_place_order_resp";
 	String DB_STAR_PURCHASE_RESP = "db_star_purchase_resp";
 	String DB_MENUS_CART = "db_menus_cart";
+	String DB_DELIVERY_CUSTOMER_CART = "db_delivery_customer_cart";
 	String HISTORY_PRODUCT_TYPES = "history_product_types";
 }

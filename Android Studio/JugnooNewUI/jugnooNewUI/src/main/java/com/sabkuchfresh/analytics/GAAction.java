@@ -238,5 +238,5 @@ public interface GAAction {
 	String BULK_ORDER_NEXT_PAGE = "Bulk Order Next Page ";
 	String BULK_ORDER_CTA = "Bulk Order CTA ";
 
-	java.lang.String DELIVERY = "Delivery";
+	String DELIVERY = "Delivery";
 }

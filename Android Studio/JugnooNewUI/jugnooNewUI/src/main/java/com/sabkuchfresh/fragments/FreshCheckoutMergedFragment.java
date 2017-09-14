@@ -1460,6 +1460,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     chargeDetails.put(TYPE, "Grocery");
                 } else if (type == AppConstant.ApplicationType.MENUS) {
                     chargeDetails.put(TYPE, "Menus");
+                } else if (type == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
+                    chargeDetails.put(TYPE, "Delivery Customer");
                 } else {
                     chargeDetails.put(TYPE, "Fresh");
                 }
@@ -1716,6 +1718,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 bundle.putString("product_type", "Menus");
             } else if (type == AppConstant.ApplicationType.MEALS) {
                 bundle.putString("product_type", "Meals");
+            } else if (type == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
+                bundle.putString("product_type", "Delivery Customer");
             } else if (type == AppConstant.ApplicationType.FRESH) {
                 bundle.putString("product_type", "Fresh");
             }
