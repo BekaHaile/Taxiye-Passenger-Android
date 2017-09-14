@@ -97,6 +97,7 @@ public class AppSwitcher {
 							|| (clientId.equalsIgnoreCase(Config.getPayClientId()) && Data.userData.getPayEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getFeedClientId()) && Data.userData.getFeedEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getProsClientId()) && Data.userData.getProsEnabled() != 1)
+							|| (clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && Data.userData.getDeliveryCustomerEnabled() != 1)
 							){
 						clientId = Config.getAutosClientId();
 					}
@@ -249,6 +250,19 @@ public class AppSwitcher {
 						new ApiUpdateClientId().updateClientId(clientId, latLng);
 						Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 					}
+				}else if (clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && !(activity instanceof FreshActivity)) {
+					if (Data.getDeliveryCustomerData() == null) {
+						new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
+								true, callback);
+					} else {
+						intent.setClass(activity, FreshActivity.class);
+						activity.startActivity(intent);
+						activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+						ActivityCompat.finishAffinity(activity);
+
+						new ApiUpdateClientId().updateClientId(clientId, latLng);
+						Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+					}
 				}
 				else if (clientId.equalsIgnoreCase(Config.getPayClientId()) && !(activity instanceof MainActivity)) {
 					if (Data.getPayData() == null) {
@@ -340,6 +354,7 @@ public class AppSwitcher {
 							|| (clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.getMenusData() == null)
 							|| (clientId.equalsIgnoreCase(Config.getFeedClientId()) && Data.getFeedData() == null)
 							|| (clientId.equalsIgnoreCase(Config.getProsClientId()) && Data.getProsData() == null)
+							|| (clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && Data.getDeliveryCustomerData() == null)
 							) {
 						new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
 								true, callback);
@@ -439,6 +454,18 @@ public class AppSwitcher {
 				}
 			}
 			else if(clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.getMenusData() == null){
+				if(Data.autoData != null) {
+					intent.setClass(activity, HomeActivity.class);
+					clientId = Config.getAutosClientId();
+					if (data != null) {
+						intent.setData(data);
+					}
+				}
+				else if(Data.getFreshData() != null){
+					intent.setClass(activity, FreshActivity.class);
+					clientId = Config.getFreshClientId();
+				}
+			}else if(clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && Data.getDeliveryCustomerData() == null){
 				if(Data.autoData != null) {
 					intent.setClass(activity, HomeActivity.class);
 					clientId = Config.getAutosClientId();

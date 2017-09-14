@@ -398,6 +398,9 @@ public class ApiFindADriver {
 			if(findADriverResponse.getMenusEnabled() != null) {
 				Data.userData.setMenusEnabled(findADriverResponse.getMenusEnabled());
 			}
+			if(findADriverResponse.getDeliveryCustomerEnabled() != null) {
+				Data.userData.setDeliveryCustomerEnabled(findADriverResponse.getDeliveryCustomerEnabled());
+			}
 			if(findADriverResponse.getPayEnabled() != null) {
 				Data.userData.setPayEnabled(findADriverResponse.getPayEnabled());
 			}

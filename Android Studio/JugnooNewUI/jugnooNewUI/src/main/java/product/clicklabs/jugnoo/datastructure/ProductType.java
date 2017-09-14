@@ -9,6 +9,7 @@ public enum ProductType {
 	PAY(6),
 	FEED(7),
 	PROS(8),
+	DELIVERY_CUSTOMER(9),
 	NOT_SURE(-1)
 	;
 

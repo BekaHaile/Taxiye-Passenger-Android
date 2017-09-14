@@ -53,6 +53,8 @@ public class FABViewTest implements GACategory, GAAction {
     public FloatingActionButton fabPayTest;
     public FloatingActionButton fabFeedTest;
     public FloatingActionButton fabProsTest;
+    private FloatingActionButton fabDeliveryCustomer;
+
     public View view;
     private boolean isOpened;
     private final String GENIE_OPEN = "Genie Open";
@@ -79,6 +81,7 @@ public class FABViewTest implements GACategory, GAAction {
             fabFreshTest = (FloatingActionButton) view.findViewById(R.id.fabFreshTest);
             fabAutosTest = (FloatingActionButton) view.findViewById(R.id.fabAutosTest);
             fabMenusTest = (FloatingActionButton) view.findViewById(R.id.fabMenusTest);
+            fabDeliveryCustomer = (FloatingActionButton) view.findViewById(R.id.fabDeliveryCustomer);
             fabPayTest = (FloatingActionButton) view.findViewById(R.id.fabPayTest);
             fabFeedTest = (FloatingActionButton) view.findViewById(R.id.fabFeedTest);
             fabProsTest = (FloatingActionButton) view.findViewById(R.id.fabProsTest);
@@ -87,11 +90,13 @@ public class FABViewTest implements GACategory, GAAction {
             fabMealsTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
             fabFreshTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
             fabMenusTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
+            fabDeliveryCustomer.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
             fabAutosTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
             fabPayTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
             fabFeedTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
             fabProsTest.setLabelTextColor(ContextCompat.getColor(activity, R.color.black));
             fabMenusTest.setOnClickListener(clickListener);
+            fabDeliveryCustomer.setOnClickListener(clickListener);
             fabPayTest.setOnClickListener(clickListener);
             fabMealsTest.setOnClickListener(clickListener);
             fabFreshTest.setOnClickListener(clickListener);
@@ -226,7 +231,7 @@ public class FABViewTest implements GACategory, GAAction {
                     && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
                     && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
                     && (Data.userData.getFeedEnabled() == 0)
-                    && Data.userData.getProsEnabled() == 0
+                    && Data.userData.getProsEnabled() == 0 && Data.userData.getDeliveryCustomerEnabled() == 0
                     && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                 relativeLayoutFABTest.setVisibility(View.GONE);
             } else {
@@ -252,6 +257,13 @@ public class FABViewTest implements GACategory, GAAction {
                 } else {
                     if(isOpened) {
                         fabMenusTest.setVisibility(View.VISIBLE);
+                    }
+                }
+                if(Data.userData.getDeliveryCustomerEnabled() != 1){
+                    fabDeliveryCustomer.setVisibility(View.GONE);
+                } else {
+                    if(isOpened) {
+                        fabDeliveryCustomer.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -300,6 +312,9 @@ public class FABViewTest implements GACategory, GAAction {
 
             if (Data.userData.getMenusEnabled() == 1) {
                 fabMenusTest.setVisibility(View.VISIBLE);
+            }
+            if (Data.userData.getDeliveryCustomerEnabled() == 1) {
+                fabDeliveryCustomer.setVisibility(View.VISIBLE);
             }
 
             if (Data.userData.getPayEnabled() == 1) {
@@ -372,6 +387,7 @@ public class FABViewTest implements GACategory, GAAction {
                     selectedOffering = RIDES;
                     break;
                 case R.id.fabMenusTest:
+
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -379,6 +395,17 @@ public class FABViewTest implements GACategory, GAAction {
                         }
                     }, 300);
                     selectedOffering = GAAction.MENUS;
+                    break;
+
+                case R.id.fabDeliveryCustomer:
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getDeliveryCustomerClientId(), finalLatLng, false);
+                        }
+                    }, 300);
+                    selectedOffering = GAAction.DELIVERY;
                     break;
                 case R.id.fabPayTest:
                     new Handler().postDelayed(new Runnable() {
@@ -515,6 +542,8 @@ public class FABViewTest implements GACategory, GAAction {
             return MEALS;
         } else if (clientId.equalsIgnoreCase(Config.getMenusClientId())) {
             return GACategory.MENUS;
+        }else if (clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId())) {
+            return GACategory.DELIVERY_CUSTOMER;
         } else if (clientId.equalsIgnoreCase(Config.getPayClientId())) {
             return PAY;
         } else if (clientId.equalsIgnoreCase(Config.getFeedClientId())) {

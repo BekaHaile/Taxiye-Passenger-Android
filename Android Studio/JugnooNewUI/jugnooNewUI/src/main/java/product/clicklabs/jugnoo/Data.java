@@ -474,6 +474,9 @@ public class Data {
     public static MenusData getMenusData() {
         return menusData;
     }
+   public static MenusData getDeliveryCustomerData() {
+        return menusData;
+    }
 
     public static void setMenusData(MenusData menusData) {
         Data.menusData = menusData;

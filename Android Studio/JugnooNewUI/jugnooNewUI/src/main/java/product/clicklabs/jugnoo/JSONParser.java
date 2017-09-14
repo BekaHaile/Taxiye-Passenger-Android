@@ -221,6 +221,7 @@ public class JSONParser implements Constants {
         int payEnabled = userData.optInt(KEY_PAY_ENABLED, 0);
         int feedEnabled = userData.optInt(KEY_FEED_ENABLED, 0);
         int prosEnabled = userData.optInt(KEY_PROS_ENABLED, 0);
+        int deliveryCustomerEnabled = userData.optInt(KEY_DELIVERY_CUSTOMER_ENABLED, 0);
         String defaultClientId = userData.optString(KEY_DEFAULT_CLIENT_ID, Config.getAutosClientId());
 
         int inviteFriendButton = userData.optInt(KEY_INVITE_FRIEND_BUTTON, 0);
@@ -245,7 +246,7 @@ public class JSONParser implements Constants {
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled,
                 fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled, notificationPreferenceEnabled,
                 mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled, feedEnabled, prosEnabled,
-                inviteFriendButton, defaultClientId, integratedJugnooEnabled,
+                deliveryCustomerEnabled,inviteFriendButton, defaultClientId, integratedJugnooEnabled,
                 topupCardEnabled, showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled, showJeanieHelpText,
                 showOfferDialog, showTutorial, signupOnboarding);
 

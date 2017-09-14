@@ -17,6 +17,7 @@ public abstract class PromoCoupon implements Serializable {
 	public abstract Integer getMeals();
 	public abstract Integer getGrocery();
 	public abstract Integer getMenus();
+	public abstract Integer getDeliveryCustomer();
 	public abstract Integer getPay();
 	public abstract String getInvalidMessage();
 	public abstract String getExpiryDate();
@@ -34,6 +35,7 @@ public abstract class PromoCoupon implements Serializable {
 					&& (c1.getMeals().equals(c2.getMeals()))
 					&& (c1.getGrocery().equals(c2.getGrocery()))
 					&& (c1.getMenus().equals(c2.getMenus()))
+					&& (c1.getDeliveryCustomer().equals(c2.getDeliveryCustomer()))
 					&& (c1.getPay().equals(c2.getPay()))) {
 				return true;
 			}

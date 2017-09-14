@@ -74,8 +74,9 @@
             fab:fab_shadowYOffset="2dp"
             fab:fab_size="mini"/>
 
+
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
-            android:id="@+id/fabMenusTest"
+            android:id="@+id/fabDeliveryCustomer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_menus"
@@ -88,6 +89,21 @@
             fab:fab_shadowXOffset="1dp"
             fab:fab_shadowYOffset="2dp"
             fab:fab_size="mini"/>
+        <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
+            android:id="@+id/fabMenusTest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_menus"
+            android:tag="DontTouchMe"
+            fab:fab_colorNormal="@color/purple_menus_fab"
+            fab:fab_colorPressed="@color/purple_menus_fab_pressed"
+            fab:fab_colorRipple="@color/purple_menus_fab_pressed"
+            fab:fab_label="@string/menus"
+            fab:fab_shadowColor="@color/black_50"
+            fab:fab_shadowXOffset="1dp"
+            fab:fab_shadowYOffset="2dp"
+            fab:fab_size="mini"/>
+
 
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabFreshTest"

@@ -330,6 +330,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             showLayoutOfferings(holder.linearLayoutSubPay);
             showLayoutOfferings(holder.linearLayoutSubMeals);
             showLayoutOfferings(holder.linearLayoutSubPros);
+            showLayoutOfferings(holder.linearlayoutDeliveryCustomer);
             holder.linearLayoutSubAutos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -378,6 +379,16 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     holder.imageViewArrow.setRotation(270);
                  //   holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, GAAction.MENUS);
+                }
+            });
+
+            holder.linearlayoutDeliveryCustomer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onClickAction(MenuInfoTags.DELIVERY.getTag());
+                    holder.imageViewArrow.setRotation(270);
+                 //   holder.linearLayoutSubCategories.setVisibility(View.GONE);
+                    GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, GAAction.DELIVERY);
                 }
             });
 
@@ -646,6 +657,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             else if(MenuInfoTags.MENUS.getTag().equalsIgnoreCase(tag)){
                 drawerLayout.closeDrawer(GravityCompat.START);
                 MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), getLatLng(), false);
+            }else if(MenuInfoTags.DELIVERY_CUSTOMER.getTag().equalsIgnoreCase(tag)){
+                drawerLayout.closeDrawer(GravityCompat.START);
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getDeliveryCustomerClientId(), getLatLng(), false);
             }
             else if(MenuInfoTags.PAY.getTag().equalsIgnoreCase(tag)){
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -677,6 +691,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         && Data.userData.getDeliveryEnabled() == 0
                         && Data.userData.getGroceryEnabled() == 0
                         && Data.userData.getMenusEnabled() == 0
+                        && Data.userData.getDeliveryCustomerEnabled() == 0
                         && Data.userData.getPayEnabled() == 0
                         && Data.userData.getFeedEnabled() == 0
                         && Data.userData.getProsEnabled() == 0) {
@@ -707,6 +722,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         holder.linearLayoutSubMenus.setVisibility(View.VISIBLE);
                     } else {
                         holder.linearLayoutSubMenus.setVisibility(View.GONE);
+                    }
+                   if(Data.userData.getDeliveryCustomerEnabled() == 1){
+                        holder.linearlayoutDeliveryCustomer.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.linearlayoutDeliveryCustomer.setVisibility(View.GONE);
                     }
 
                     if(Data.userData.getPayEnabled() == 1){
@@ -756,7 +776,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         public TextView  textViewCategories, textViewAutos, textViewFresh, textViewMeals,
                 textViewGrocery, textViewMenus, textViewPay, textViewFeed, textViewPros;
         public LinearLayout linearLayoutCategories, linearLayoutSubCategories, linearLayoutSubMeals, linearLayoutSubFresh, linearLayoutSubAutos,
-            linearLayoutSubGrocery, linearLayoutSubMenus, linearLayoutSubPay, linearLayoutSubFeed, linearLayoutSubPros;
+            linearLayoutSubGrocery, linearLayoutSubMenus, linearLayoutSubPay, linearLayoutSubFeed, linearLayoutSubPros, linearlayoutDeliveryCustomer;
 
         public ViewHeaderHolder(View convertView, Activity context) {
             super(convertView);
@@ -783,6 +803,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             linearLayoutSubPay = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubPay);
             linearLayoutSubFeed = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubFeed);
             linearLayoutSubPros = (LinearLayout) convertView.findViewById(R.id.linearLayoutSubPros);
+            linearlayoutDeliveryCustomer = (LinearLayout) convertView.findViewById(R.id.linearLayoutDeliveryCustomer);
 
 
 
