@@ -407,7 +407,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onRefresh() {
-        activity.setCategoryIdOpened(-1);
+//        activity.setCategoryIdOpened(-1);
         getAllMenus(false, activity.getSelectedLatLng(), true);
     }
 
