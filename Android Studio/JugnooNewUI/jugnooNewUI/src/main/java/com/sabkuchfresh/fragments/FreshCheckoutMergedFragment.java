@@ -54,7 +54,6 @@ import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.adapters.MenusCartItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
-import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.commoncalls.ApiCancelOrder;
@@ -298,7 +297,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         checkoutSaveData = new CheckoutSaveData();
 
 
-        if (isMenusOpen()) {
+        if (isMenusOrDeliveryOpen()) {
             try {
                 if (itemsInCart == null) {
                     itemsInCart = new ArrayList<>();
@@ -409,7 +408,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         tvStarOffer.setTypeface(Fonts.mavenMedium(activity));
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
 
-        if (isMenusOpen()) {
+        if (isMenusOrDeliveryOpen()) {
             menusCartItemsAdapter = new MenusCartItemsAdapter(activity, itemsInCart, true, this);
             listViewCart.setAdapter(menusCartItemsAdapter);
         } else {
@@ -438,7 +437,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         textViewNoDeliverySlot.setTypeface(Fonts.mavenMedium(activity));
         textViewNoDeliverySlot.setVisibility(View.GONE);
 
-        if (type == AppConstant.ApplicationType.MENUS) {
+        if (isMenusOrDeliveryOpen()) {
             linearLayoutDeliverySlot.setVisibility(View.GONE);
         }
 
@@ -447,7 +446,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         editTextDeliveryInstructions = (EditText) rootView.findViewById(R.id.editTextDeliveryInstructions);
         editTextDeliveryInstructions.setTypeface(Fonts.mavenRegular(activity));
 
-        if (type == AppConstant.ApplicationType.MENUS) {
+        if (isMenusOrDeliveryOpen()) {
             textViewDeliveryInstructionsText.setText(R.string.delivery_instructions_for_menus);
             editTextDeliveryInstructions.setHint(R.string.add_special_notes_for_menus);
         } else {
@@ -559,8 +558,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         rlDeliveryFrom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (getActivity() instanceof FreshActivity && ((FreshActivity) getActivity()).getAppType() == AppConstant.ApplicationType.MENUS)
-                    GAUtils.event(GACategory.MENUS, GAAction.CHECKOUT, GAAction.DELIVERY_FROM + GAAction.CLICKED);
+                if (getActivity() instanceof FreshActivity && isMenusOrDeliveryOpen())
+                    GAUtils.event(activity.getGaCategory(), GAAction.CHECKOUT, GAAction.DELIVERY_FROM + GAAction.CLICKED);
                 if(activity.getVendorMenuFragment() == null && activity.getMerchantInfoFragment() == null) {
                     activity.openVendorMenuFragmentOnBack = true;
                 }
@@ -590,13 +589,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         activity.buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((type == AppConstant.ApplicationType.MENUS && getSubTotalAmount(false) < activity.getVendorOpened().getMinimumOrderAmount())) {
+                if ((isMenusOrDeliveryOpen() && getSubTotalAmount(false) < activity.getVendorOpened().getMinimumOrderAmount())) {
                     Utils.showToast(activity, getResources().getString(R.string.minimum_order_amount_is_format,
                             Utils.getMoneyDecimalFormatWithoutFloat().format(activity.getVendorOpened().getMinimumOrderAmount())));
                     setSlideInitial();
                 } else if (activity.buttonPlaceOrder.getText().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.connection_lost_try_again))) {
                     getCheckoutDataAPI(selectedSubscription, false);
-                } else if (type != AppConstant.ApplicationType.MENUS && activity.getSlotSelected() == null) {
+                } else if (!isMenusOrDeliveryOpen() && activity.getSlotSelected() == null) {
                     product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getResources().getString(R.string.please_select_a_delivery_slot));
                     setSlideInitial();
                 } else if (addressSelectedNotValid() || TextUtils.isEmpty(activity.getSelectedAddress())) {
@@ -833,7 +832,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 chargesList.add(taxForDisplay);
             }
         }
-        if (isMenusOpen()) {
+        if (isMenusOrDeliveryOpen()) {
             totalTaxAmount = 0d;
             for (Charges charges1 : activity.getMenuProductsResponse().getCharges()) {
                 Tax tax = new Tax(charges1.getText(), getCalculatedCharges(charges1, activity.getMenuProductsResponse().getCharges()));
@@ -863,13 +862,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         chargesList.add(taxTotal);
         chargesAdapter.notifyDataSetChanged();
 
-       /* if (linearLayoutCartExpansion.getVisibility() == View.VISIBLE) {
-            textViewCartTotalUndiscount.setVisibility(View.GONE);
-        } else {
-            textViewCartTotalUndiscount.setVisibility(View.VISIBLE);
-            textViewCartTotalUndiscount.setText(activity.getString(R.string.rupees_value_format,
-                    Utils.getMoneyDecimalFormat().format(taxTotal.getValue())));
-        }*/
 
         if (dialogOrderComplete == null || dialogOrderComplete.getDialog()==null ||!dialogOrderComplete.getDialog().isShowing()) {
             if (payableAmount() > 0) {
@@ -889,13 +881,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
     private void updateStarLayout() {
-        if ((type == AppConstant.ApplicationType.MEALS || isMenusOpen())
+        if ((type == AppConstant.ApplicationType.MEALS || isMenusOrDeliveryOpen())
                 && Data.userData != null && Data.userData.isSubscriptionActive()
                 && activity.getUserCheckoutResponse() != null
                 && activity.getUserCheckoutResponse().getSubscription() != null) {
-            double totalUndiscounted = isMenusOpen() ? getSubTotalAmount(false) : totalUndiscounted();
+            double totalUndiscounted = isMenusOrDeliveryOpen() ? getSubTotalAmount(false) : totalUndiscounted();
             double cashbackValue = activity.getUserCheckoutResponse().getSubscription().getCashback(totalUndiscounted);
-            cashbackValue = isMenusOpen() ? Math.round(cashbackValue) : Math.round(totalUndiscounted - Math.round(totalUndiscounted - cashbackValue));
+            cashbackValue = isMenusOrDeliveryOpen() ? Math.round(cashbackValue) : Math.round(totalUndiscounted - Math.round(totalUndiscounted - cashbackValue));
             if (cashbackValue > 0d) {
                 cvStarSavings.setVisibility(View.VISIBLE);
                 String cashbackText = TextUtils.isEmpty(activity.getUserCheckoutResponse().getSubscription().getCashbackText())
@@ -1087,7 +1079,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     MyApplication.getInstance().getWalletCore().getPaymentOptionAccAvailability(activity.getPaymentOption().getOrdinal())));
 
             try {
-                if (type == AppConstant.ApplicationType.MENUS) {
+                if (isMenusOrDeliveryOpen()) {
                     if (activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal()) {
                         activity.setPaymentOption(PaymentOption.CASH);
                     } else if (activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.ONLINE.getOrdinal()
@@ -1387,7 +1379,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 chargeDetails.put("Payment mode", "" + activity.getPaymentOption());
                 chargeDetails.put(TOTAL_AMOUNT, "" + getSubTotalAmount(false));
                 chargeDetails.put(DISCOUNT_AMOUNT, "" + getTotalPromoAmount());
-                if (type != AppConstant.ApplicationType.MENUS) {
+                if (!isMenusOrDeliveryOpen()) {
                     chargeDetails.put(START_TIME, "" + String.valueOf(activity.getSlotSelected().getStartTime()));
                     chargeDetails.put(END_TIME, "" + String.valueOf(activity.getSlotSelected().getEndTime()));
                 }
@@ -1413,7 +1405,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     }
 
                 }
-                if (!isMenusOpen()) {
+                if (!isMenusOrDeliveryOpen()) {
                     params.put(Constants.KEY_DELIVERY_SLOT_ID, String.valueOf(activity.getSlotSelected().getDeliverySlotId()));
                 }
                 params.put(Constants.KEY_DELIVERY_ADDRESS, String.valueOf(activity.getSelectedAddress()));
@@ -1422,14 +1414,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     params.put(Constants.KEY_DELIVERY_ADDRESS_TYPE, String.valueOf(activity.getSelectedAddressType()));
                 }
                 params.put(Constants.KEY_DELIVERY_NOTES, String.valueOf(activity.getSpecialInst()));
-                if (activity.getAppType() == AppConstant.ApplicationType.MEALS) {
-                    params.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
-                } else if (activity.getAppType() == AppConstant.ApplicationType.MENUS) {
-                    params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
-                } else {
-                    params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
-                }
-                if (type == AppConstant.ApplicationType.MENUS) {
+                params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
+                if (isMenusOrDeliveryOpen()) {
                     params.put(Constants.KEY_CART, cartItemsMenus());
                 } else {
                     params.put(Constants.KEY_CART, cartItemsFM());
@@ -1467,7 +1453,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
                 params.put(Constants.INTERATED, "1");
 
-                if (type == AppConstant.ApplicationType.MENUS) {
+                if (isMenusOrDeliveryOpen()) {
                     params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(activity.getVendorOpened().getRestaurantId()));
                 }
 
@@ -1490,9 +1476,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     params.put(Constants.KEY_VENDOR_ID, String.valueOf(activity.getOpenedVendorId()));
                 }
 
-                //for menus reorder case
+                //for menus or delivery reorder case
 
-                if (type == AppConstant.ApplicationType.MENUS ) {
+                if (isMenusOrDeliveryOpen()) {
                     //send order ID of old order if order has been reorder,this value is saved when cart is made from reoder and cleared everytime the cart is cleared
                     int cartReorderId = Prefs.with(activity).getInt(Constants.CART_STATUS_REORDER_ID,-1);
                     if(cartReorderId!=-1){
@@ -1594,24 +1580,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                                 try {
                                                     String fragName;
                                                     if (validStockCount == 0) {
-                                                        if (type == AppConstant.ApplicationType.MEALS) {
-                                                            if (activity.isMealAddonItemsAvailable()) {
-                                                                fragName = MealAddonItemsFragment.class.getName();
-                                                            } else {
-                                                                fragName = FreshCheckoutMergedFragment.class.getName();
-                                                            }
-                                                        } else if (type == AppConstant.ApplicationType.GROCERY) {
-                                                            fragName = FreshCheckoutMergedFragment.class.getName();
-                                                        } else if (type == AppConstant.ApplicationType.MENUS) {
-                                                            fragName = FreshCheckoutMergedFragment.class.getName();
+                                                        if (type == AppConstant.ApplicationType.MEALS && activity.isMealAddonItemsAvailable()) {
+                                                            fragName = MealAddonItemsFragment.class.getName();
                                                         } else {
                                                             fragName = FreshCheckoutMergedFragment.class.getName();
                                                         }
                                                     } else {
                                                         if (type == AppConstant.ApplicationType.MEALS && activity.isMealAddonItemsAvailable()) {
                                                             fragName = MealAddonItemsFragment.class.getName();
-                                                        } else if (type == AppConstant.ApplicationType.MENUS) {
-                                                            fragName = FreshCheckoutMergedFragment.class.getName();
                                                         } else {
                                                             fragName = FreshCheckoutMergedFragment.class.getName();
                                                         }
@@ -1628,7 +1604,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         final int isEmpty = jObj.optInt(Constants.KEY_IS_EMPTY, 0);
                                         final int emptyCart = jObj.optInt(Constants.KEY_EMPTY_CART, 0);
                                         final int outOfRange = jObj.optInt(Constants.KEY_OUT_OF_RANGE, 0);
-                                        if (type == AppConstant.ApplicationType.MENUS && outOfRange == 1) {
+                                        if (isMenusOrDeliveryOpen() && outOfRange == 1) {
                                             outOfRangeDialog(message);
                                         } else {
                                             DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
@@ -1636,7 +1612,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                                 public void onClick(View v) {
                                                     if (emptyCart == 1) {
                                                         clearMenusCartAndGoToMenusFragment();
-                                                    } else if (type == AppConstant.ApplicationType.MENUS
+                                                    } else if (isMenusOrDeliveryOpen()
                                                             && ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag
                                                             && isEmpty == 1) {
                                                         activity.clearMenusCart(activity.getAppType());
@@ -1687,7 +1663,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 };
 
                 new HomeUtil().putDefaultParams(params);
-                if (type == AppConstant.ApplicationType.MENUS) {
+                if (isMenusOrDeliveryOpen()) {
                     RestClient.getMenusApiService().placeOrder(params, callback);
                 } else {
                     RestClient.getFreshApiService().placeOrder(params, callback);
@@ -1779,7 +1755,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
 
         String restaurantName = "";
-        if (type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null) {
+        if (isMenusOrDeliveryOpen() && activity.getVendorOpened() != null) {
             restaurantName = activity.getVendorOpened().getName();
         }
         placeOrderResponse.setSlot(activity.getSlotSelected());
@@ -1822,13 +1798,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             productType = ProductType.MEALS.getOrdinal();
         } else if (type == AppConstant.ApplicationType.MENUS) {
             productType = ProductType.MENUS.getOrdinal();
+        } else if (type == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
+            productType = ProductType.DELIVERY_CUSTOMER.getOrdinal();
         } else {
             productType = ProductType.FRESH.getOrdinal();
         }
 
         String deliverySlot = "", deliveryDay = "";
         boolean showDeliverySlot = true;
-        if (type == AppConstant.ApplicationType.MENUS) {
+        if (type == AppConstant.ApplicationType.MENUS || type == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
             showDeliverySlot = false;
         } else {
             deliverySlot = DateOperations.convertDayTimeAPViaFormat(slot.getStartTime())
@@ -2033,7 +2011,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
                 // for pay only in fresh and meals
-                if (type != AppConstant.ApplicationType.MENUS
+                if (!isMenusOrDeliveryOpen()
                         && Data.getPayData() != null && Data.userData.getPayEnabled() == 1) {
                     linearLayoutWalletContainer.addView(relativeLayoutJugnooPay);
                 }
@@ -2046,7 +2024,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
 
         try {
-            if (type == AppConstant.ApplicationType.MENUS) {
+            if (isMenusOrDeliveryOpen()) {
                 setPaymentOptionVisibility(activity.getVendorOpened().getApplicablePaymentMode());
             } else if (type == AppConstant.ApplicationType.FRESH) {
                 setPaymentOptionVisibility(getPaymentInfoMode());
@@ -2103,6 +2081,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 promoCoupons = Data.userData.getCoupons(ProductType.GROCERY);
             } else if (type == AppConstant.ApplicationType.MENUS) {
                 filterCouponsByApplicationPaymentMode(activity.getVendorOpened().getApplicablePaymentMode(), ProductType.MENUS);
+            } else if (type == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
+                filterCouponsByApplicationPaymentMode(activity.getVendorOpened().getApplicablePaymentMode(), ProductType.DELIVERY_CUSTOMER);
             } else {
                 filterCouponsByApplicationPaymentMode(getPaymentInfoMode(), ProductType.FRESH);
             }
@@ -2161,13 +2141,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
      * @return returns true if some coupon is selected or can't be selected else false
      */
     private boolean selectAutoSelectedCouponAtCheckout() {
-        String clientId = Config.getFreshClientId();
-        if (type == AppConstant.ApplicationType.MEALS) {
-            clientId = Config.getMealsClientId();
-        } else if (type == AppConstant.ApplicationType.MENUS) {
-            clientId = Config.getMenusClientId();
-        }
-
+        String clientId = Config.getLastOpenedClientId(activity);
         boolean couponSelected = false;
         try {
             int promoCouponId = Prefs.with(activity).getInt(Constants.SP_USE_COUPON_ + clientId, -1);
@@ -2290,7 +2264,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 params.put(Constants.KEY_CURRENT_LONGITUDE, String.valueOf(Data.longitude));
 
 
-                if (isMenusOpen()) {
+                if (isMenusOrDeliveryOpen()) {
                     params.put(Constants.KEY_CART, cartItemsMenus());
                 } else {
                     params.put(Constants.KEY_CART, cartItemsFM());
@@ -2301,20 +2275,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 if (type == AppConstant.ApplicationType.MEALS) {
                     params.put(Constants.STORE_ID, "" + Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType));
                     params.put(Constants.GROUP_ID, "" + activity.getProductsResponse().getCategories().get(0).getCurrentGroupId());
-                } else if (isMenusOpen()) {
+                } else if (isMenusOrDeliveryOpen()) {
                     params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(activity.getVendorOpened().getRestaurantId()));
                     String data = new Gson().toJson(activity.getVendorOpened(), MenusResponse.Vendor.class);
                     params.put(Constants.KEY_RESTAURANT_DATA, data);
                 }
 
                 params.put(Constants.INTERATED, "1");
-                if (type == AppConstant.ApplicationType.MEALS) {
-                    params.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
-                } else if (isMenusOpen()) {
-                    params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
-                } else {
-                    params.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
-                }
+                params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
 
                 if (selectedSlot != -1) {
                     params.put(Constants.KEY_USER_SELECTED_SLOT, String.valueOf(selectedSlot));
@@ -2375,7 +2343,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             Utils.showToast(activity, activity.getResources().getString(R.string.star_could_not_be_added));
                                         }
                                         setSubscriptionView();
-                                        if (isMenusOpen()) {
+                                        if (isMenusOrDeliveryOpen()) {
                                             getSubscriptionFromCheckout(userCheckoutResponse);
                                             if (userCheckoutResponse.getCharges() != null) {
                                                 activity.getMenuProductsResponse().setCharges(userCheckoutResponse.getCharges());
@@ -2394,7 +2362,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                                         updateAddressView();
 
-                                        if (type == AppConstant.ApplicationType.MENUS
+                                        if (isMenusOrDeliveryOpen()
                                                 && userCheckoutResponse.getRestaurantInfo() != null
                                                 && !TextUtils.isEmpty(userCheckoutResponse.getRestaurantInfo().getAddress())) {
                                             updateDeliveryFromView(userCheckoutResponse.getRestaurantInfo().getAddress());
@@ -2446,6 +2414,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             if (userCheckoutResponse.getCoupons() != null) {
                                                 Data.getMenusData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
                                             }
+                                        } else if (type == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
+                                            if (Data.getDeliveryCustomerData().getPromoCoupons() == null) {
+                                                Data.getDeliveryCustomerData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                                            }
+                                            Data.getDeliveryCustomerData().getPromoCoupons().clear();
+                                            if (userCheckoutResponse.getPromotions() != null) {
+                                                Data.getDeliveryCustomerData().getPromoCoupons().addAll(userCheckoutResponse.getPromotions());
+                                            }
+                                            if (userCheckoutResponse.getCoupons() != null) {
+                                                Data.getDeliveryCustomerData().getPromoCoupons().addAll(userCheckoutResponse.getCoupons());
+                                            }
                                         } else {
                                             if (Data.getFreshData().getPromoCoupons() == null) {
                                                 Data.getFreshData().setPromoCoupons(new ArrayList<PromoCoupon>());
@@ -2487,7 +2466,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                     final int redirect = jObj.optInt(Constants.KEY_REDIRECT, 0);
                                     final int emptyCart = jObj.optInt(Constants.KEY_EMPTY_CART, 0);
                                     final int outOfRange = jObj.optInt(Constants.KEY_OUT_OF_RANGE, 0);
-                                    if (type == AppConstant.ApplicationType.MENUS && outOfRange == 1) {
+                                    if (isMenusOrDeliveryOpen() && outOfRange == 1) {
                                         outOfRangeDialog(message);
                                     } else {
                                         DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
@@ -2527,7 +2506,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     }
                 };
                 new HomeUtil().putDefaultParams(params);
-                if (isMenusOpen()) {
+                if (isMenusOrDeliveryOpen()) {
                     RestClient.getMenusApiService().userCheckoutData(params, callback);
                 } else {
                     RestClient.getFreshApiService().userCheckoutData(params, callback);
@@ -2627,14 +2606,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private void getSubscriptionFromCheckout(UserCheckoutResponse userCheckoutResponse) {
         if (Data.userData.getShowSubscriptionData() == 1 && !Data.userData.isSubscriptionActive() && userCheckoutResponse.getShowStarSubscriptions() == 1) {
             if (userCheckoutResponse.getSubscriptionInfo() != null && userCheckoutResponse.getSubscriptionInfo().getSubscriptionId() != null) {
-                if (isMenusOpen()) {
+                if (isMenusOrDeliveryOpen()) {
                     menusCartItemsAdapter.setResults(itemsInCart, userCheckoutResponse.getSubscriptionInfo());
                 } else {
                     freshCartItemsAdapter.setResults(subItemsInCart, userCheckoutResponse.getSubscriptionInfo());
                 }
                 cvBecomeStar.setVisibility(View.GONE);
             } else {
-                if (isMenusOpen()) {
+                if (isMenusOrDeliveryOpen()) {
                     menusCartItemsAdapter.setResults(itemsInCart, userCheckoutResponse.getSubscriptionInfo());
                 } else {
                     freshCartItemsAdapter.setResults(subItemsInCart, null);
@@ -2878,7 +2857,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
     public void deleteCart() {
-        if (isMenusOpen()) {
+        if (isMenusOrDeliveryOpen()) {
             for (Item item : itemsInCart) {
                 item.getItemSelectedList().clear();
             }
@@ -2899,7 +2878,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
     private void checkIfEmpty() {
-        if (isMenusOpen()) {
+        if (isMenusOrDeliveryOpen()) {
             if (itemsInCart.size() == 0) {
                 activity.performBackPressed(false);
             }
@@ -2980,7 +2959,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private void updateCartDataView() {
         try {
             Pair<Double, Integer> pair;
-            if (isMenusOpen()) {
+            if (isMenusOrDeliveryOpen()) {
                 pair = activity.updateCartValuesGetTotalPrice();
             } else {
                 pair = activity.getSubItemInCartTotalPrice();
@@ -2989,7 +2968,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             updateCartTopBarView(pair);
             updateCartUI();
 
-            if(activity.getAppType()== AppConstant.ApplicationType.MENUS && activity.getVendorOpened()!=null){
+            if(isMenusOrDeliveryOpen() && activity.getVendorOpened()!=null){
 
                 double diffDouble = activity.getVendorOpened().getMinimumOrderAmount()-subTotalAmount;
                 if(diffDouble>0){
@@ -3069,7 +3048,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
     private double totalUndiscounted() {
-        if (isMenusOpen()) {
+        if (isMenusOrDeliveryOpen()) {
             return getSubTotalAmount(true) + totalTaxAmount + getTotalTaxValue();
         } else {
             return getSubTotalAmount(true) + deliveryCharges() + getTotalTaxValue();
@@ -3093,7 +3072,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
     private double jcUsed() {
-        if (isMenusOpen() && activity.getPaymentOption() == PaymentOption.CASH) {
+        if (isMenusOrDeliveryOpen() && activity.getPaymentOption() == PaymentOption.CASH) {
             return 0d;
         } else {
             return Math.min(totalAmount(), Data.userData.getJugnooBalance());
@@ -3193,7 +3172,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     }
                 };
                 new HomeUtil().putDefaultParams(params);
-                if (isMenusOpen()) {
+                if (isMenusOrDeliveryOpen()) {
                     RestClient.getMenusApiService().placeOrderCallback(params, callback);
                 } else {
                     RestClient.getFreshApiService().placeOrderCallback(params, callback);
@@ -3238,6 +3217,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private boolean isMenusOpen() {
         return type == AppConstant.ApplicationType.MENUS ;
+    }
+
+    public boolean isMenusOrDeliveryOpen(){
+        return type== AppConstant.ApplicationType.MENUS || type==AppConstant.ApplicationType.DELIVERY_CUSTOMER;
     }
 
     private boolean isFreshOpen() {
@@ -3299,7 +3282,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
     private void updateDeliveryFromView(String address) {
-        if (isMenusOpen() && activity.getVendorOpened() != null) {
+        if (isMenusOrDeliveryOpen() && activity.getVendorOpened() != null) {
             llDeliveryFrom.setVisibility(View.VISIBLE);
             tvRestName.setText(activity.getVendorOpened().getName());
             if (TextUtils.isEmpty(address)) {
@@ -3397,7 +3380,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         });
                     }
                     apiCancelOrder.hit(activity.getPlaceOrderResponse().getOrderId(),Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()),
-                            -1,isMenusOpen()?ProductType.MENUS.getOrdinal():ProductType.FRESH.getOrdinal(),reason,"");
+                            -1,isMenusOrDeliveryOpen()?ProductType.MENUS.getOrdinal():ProductType.FRESH.getOrdinal(),reason,"");
                 }
             }
 
@@ -3427,7 +3410,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if(activity.getPlaceOrderResponse()!=null){
             activity.getPlaceOrderResponse().setSlot(activity.getSlotSelected());
             String restaurantName = "";
-            if (type == AppConstant.ApplicationType.MENUS && activity.getVendorOpened() != null) {
+            if (isMenusOrDeliveryOpen() && activity.getVendorOpened() != null) {
                 restaurantName = activity.getVendorOpened().getName();
             }
             activity.getPlaceOrderResponse().setRestaurantName(restaurantName);
@@ -3540,7 +3523,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 };
             }
 
-            if (isMenusOpen()) {
+            if (isMenusOrDeliveryOpen()) {
 
 
                 RestClient.getMenusApiService().checkPaymentStatus(params, iciciPaymentStatusCallback);
