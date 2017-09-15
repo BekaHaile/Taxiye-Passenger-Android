@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.RestaurantReviewsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -54,7 +55,8 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
     public static RestaurantReviewsListFragment newInstance(MenusResponse.Vendor vendor){
         RestaurantReviewsListFragment fragment = new RestaurantReviewsListFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.KEY_VENDOR, vendor);
+        Gson gson = new Gson();
+        bundle.putString(Constants.KEY_VENDOR, gson.toJson(vendor, MenusResponse.Vendor.class));
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -62,7 +64,8 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
 
     private void fetchArguments(){
         Bundle bundle = getArguments();
-        vendor = (MenusResponse.Vendor) bundle.getSerializable(Constants.KEY_VENDOR);
+        Gson gson = new Gson();
+        vendor = gson.fromJson(bundle.getString(Constants.KEY_VENDOR), MenusResponse.Vendor.class);
     }
 
     @Override

@@ -7,7 +7,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 /**
  * Created by shankar on 11/15/16.
  */
-public class MenusResponse implements Serializable {
+public class MenusResponse {
 
 	@SerializedName("flag")
 	@Expose
@@ -197,7 +196,7 @@ public class MenusResponse implements Serializable {
 	}
 
 
-	public class Vendor implements Serializable {
+	public class Vendor {
 
 		@SerializedName("restaurant_id")
 		@Expose
