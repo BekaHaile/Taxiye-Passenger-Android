@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.RestaurantReviewsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -42,6 +43,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
@@ -271,39 +273,46 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 		ButterKnife.unbind(this);
 	}
 
-	@OnClick({R.id.llChatNow, R.id.llCall, R.id.llAddReview, R.id.bOrderOnline, R.id.llSeeAll})
+	@OnClick({R.id.llChatNow, R.id.llCall, R.id.llAddReview, R.id.bOrderOnline, R.id.llSeeAll, R.id.tvMerchantAddress})
 	public void onViewClicked(View view) {
-		switch (view.getId()) {
-			case R.id.llChatNow:
-				if(activity.getVendorOpened().isChatModeEnabled()) {
+		try {
+			switch (view.getId()) {
+				case R.id.llChatNow:
+					if(activity.getVendorOpened().isChatModeEnabled()) {
 
-					sendUserClickEvent(Constants.KEY_CHAT_MODE);
-				} else {
-					Utils.showToast(activity, activity.getString(R.string.chat_is_not_enabled_format, activity.getVendorOpened().getName()));
-				}
-				break;
-			case R.id.llCall:
-				Utils.openCallIntent(activity, activity.getVendorOpened().getCallingNumber());
-				sendUserClickEvent(Constants.KEY_CALL_MODE);
-				break;
-			case R.id.llAddReview:
-				if(userHasReviewed == 0) {
-					activity.openRestaurantAddReviewFragment(true);
-				} else {
-					Utils.showToast(activity, activity.getString(R.string.you_have_already_reviewed_format, activity.getVendorOpened().getName()));
-				}
-				break;
-			case R.id.bOrderOnline:
-				if (activity.getMenuProductsResponse().getCategories() != null) {
-					activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
-				} else {
-					activity.fetchRestaurantMenuAPI(activity.getVendorOpened().getRestaurantId(), false, null, null, -1, null);
-				}
-				sendUserClickEvent(Constants.KEY_ORDER_MODE);
-				break;
-			case R.id.llSeeAll:
-				activity.openRestaurantReviewsListFragment();
-				break;
+						sendUserClickEvent(Constants.KEY_CHAT_MODE);
+					} else {
+						Utils.showToast(activity, activity.getString(R.string.chat_is_not_enabled_format, activity.getVendorOpened().getName()));
+					}
+					break;
+				case R.id.llCall:
+					Utils.openCallIntent(activity, activity.getVendorOpened().getCallingNumber());
+					sendUserClickEvent(Constants.KEY_CALL_MODE);
+					break;
+				case R.id.llAddReview:
+					if(userHasReviewed == 0) {
+						activity.openRestaurantAddReviewFragment(true);
+					} else {
+						Utils.showToast(activity, activity.getString(R.string.you_have_already_reviewed_format, activity.getVendorOpened().getName()));
+					}
+					break;
+				case R.id.bOrderOnline:
+					if (activity.getMenuProductsResponse().getCategories() != null) {
+						activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+					} else {
+						activity.fetchRestaurantMenuAPI(activity.getVendorOpened().getRestaurantId(), false, null, null, -1, null);
+					}
+					sendUserClickEvent(Constants.KEY_ORDER_MODE);
+					break;
+				case R.id.llSeeAll:
+					activity.openRestaurantReviewsListFragment();
+					break;
+				case R.id.tvMerchantAddress:
+					Utils.openMapsDirections(activity, new LatLng(Data.latitude, Data.longitude), activity.getVendorOpened().getLatLng());
+					break;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
