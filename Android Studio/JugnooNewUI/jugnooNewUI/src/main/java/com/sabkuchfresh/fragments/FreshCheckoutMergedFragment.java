@@ -3229,10 +3229,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private void clearMenusCartAndGoToMenusFragment() {
         activity.clearMenusCart(activity.getAppType());
-        activity.setRefreshCart(true);
-        activity.performBackPressed(false);
-        activity.setRefreshCart(true);
-        activity.performBackPressed(false);
+        if(activity.getVendorMenuFragment() != null) {
+            activity.setRefreshCart(true);
+            activity.performBackPressed(false);
+        }
+        if(activity.getMerchantInfoFragment() != null) {
+            activity.setRefreshCart(true);
+            activity.performBackPressed(false);
+        }
         activity.setRefreshCart(true);
         activity.performBackPressed(false);
     }
