@@ -638,9 +638,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             titleHolder.etRestaurantName.setText(getFormItemModel().getRestaurantName());
             titleHolder.etLocality.setText(getFormItemModel().getLocality());
             titleHolder.etTelephone.setText(getFormItemModel().getTelephone());
-            titleHolder.etRestaurantName.setSelection(getFormItemModel().getRestaurantName().length());
             titleHolder.tvCouldNotFind.setText(activity.getString(R.string.could_not_find_favorite_restaurant_format, getFormItemModel().getCategoryName()));
             titleHolder.etRestaurantName.setHint(activity.getString(R.string.restaurant_name_star_format, getFormItemModel().getCategoryName()));
+            titleHolder.etRestaurantName.clearFocus();
+            titleHolder.etLocality.clearFocus();
+            titleHolder.etTelephone.clearFocus();
         }
     }
 

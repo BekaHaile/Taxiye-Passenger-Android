@@ -496,12 +496,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     lastClientId = Config.getGroceryClientId();
                 } else if (lastClientId.equalsIgnoreCase(Config.getMenusClientId()) || lastClientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId())) {
                     getTopBar().etSearch.setHint(getString(R.string.search_items_menus));
-                    fetchFiltersFromSP();
+                    int appType = lastClientId.equals(Config.getMenusClientId())?AppConstant.ApplicationType.MENUS:
+                            AppConstant.ApplicationType.DELIVERY_CUSTOMER;
+                    fetchFiltersFromSP(appType);
                     openCart();
                     addMenusFragment();
 
-                    Prefs.with(this).save(Constants.APP_TYPE,lastClientId.equals(Config.getMenusClientId())?AppConstant.ApplicationType.MENUS:
-                            AppConstant.ApplicationType.DELIVERY_CUSTOMER);
+                    Prefs.with(this).save(Constants.APP_TYPE, appType);
 
 
                     getHandler().post(new Runnable() {
@@ -3278,8 +3279,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
 
-    public void fetchFiltersFromSP() {
-        boolean isMenus = getAppType()==AppConstant.ApplicationType.MENUS;
+    public void fetchFiltersFromSP(int appType) {
+        boolean isMenus = appType==AppConstant.ApplicationType.MENUS;
 
         sortBySelected = Prefs.with(this).getObject(isMenus?Constants.SP_MENUS_FILTER_SORT_BY_OBJ:Constants.SP_DELIVERY_CUSTOMER_FILTER_SORT_BY_OBJ, MenusResponse.KeyValuePair.class);
         if(sortBySelected != null && TextUtils.isEmpty(sortBySelected.getKey())){
