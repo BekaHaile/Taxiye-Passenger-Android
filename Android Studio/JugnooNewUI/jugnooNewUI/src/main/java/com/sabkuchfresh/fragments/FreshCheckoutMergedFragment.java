@@ -3233,6 +3233,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         activity.performBackPressed(false);
         activity.setRefreshCart(true);
         activity.performBackPressed(false);
+        activity.setRefreshCart(true);
+        activity.performBackPressed(false);
     }
 
     private Double getCalculatedCharges(Charges charges, List<Charges> chargesList) {
