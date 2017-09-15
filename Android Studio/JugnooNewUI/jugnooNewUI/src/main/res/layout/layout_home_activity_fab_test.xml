@@ -79,16 +79,16 @@
             android:id="@+id/fabDeliveryCustomer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_menus"
+            android:src="@drawable/ic_delivery_customer"
             android:tag="DontTouchMe"
-            fab:fab_colorNormal="@color/purple_delivery_customer_fab"
-            fab:fab_colorPressed="@color/purple_delivery_customer_fab_pressed"
-            fab:fab_colorRipple="@color/purple_delivery_customer_fab_pressed"
             fab:fab_label="@string/delivery"
             fab:fab_shadowColor="@color/black_50"
             fab:fab_shadowXOffset="1dp"
             fab:fab_shadowYOffset="2dp"
-            fab:fab_size="mini"/>
+            fab:fab_size="mini"
+            app:fab_colorNormal="@color/green_delivery_customer_fab"
+            app:fab_colorPressed="@color/green_delivery_customer_fab_pressed"
+            app:fab_colorRipple="@color/green_delivery_customer_fab_pressed" />
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabMenusTest"
             android:layout_width="wrap_content"

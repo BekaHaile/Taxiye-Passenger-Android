@@ -1400,7 +1400,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 rlFilterVis = getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE;
 
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(getResources().getString(R.string.delivery));
+                topBar.title.setText(getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER ? R.string.delivery : R.string.menus);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 topBar.getLlSearchCart().setLayoutTransition(null);
 
