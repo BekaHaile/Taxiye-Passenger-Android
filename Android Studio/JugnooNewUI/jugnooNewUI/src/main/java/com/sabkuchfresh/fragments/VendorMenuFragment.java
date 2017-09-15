@@ -119,7 +119,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             e.printStackTrace();
         }
 
-        GAUtils.trackScreenView(MENUS+RESTAURANT_HOME);
+        GAUtils.trackScreenView(activity.getGaCategory()+RESTAURANT_HOME);
 
 
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
@@ -163,7 +163,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     tabClickFlag = false;
                 } else {
                     Log.d(TAG, "onPageSelected = " + position);
-                    GAUtils.event(GAAction.MENUS, GAAction.RESTAURANT_HOME , GAAction.TABS + GAAction.SLIDED);
+                    GAUtils.event(activity.getGaCategory(), GAAction.RESTAURANT_HOME , GAAction.TABS + GAAction.SLIDED);
                 }
             }
 

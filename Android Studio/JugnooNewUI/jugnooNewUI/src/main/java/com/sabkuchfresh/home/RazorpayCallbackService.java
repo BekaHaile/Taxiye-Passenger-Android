@@ -48,8 +48,8 @@ public class RazorpayCallbackService extends IntentService {
 
 			Response response = null;
 			new HomeUtil().putDefaultParams(map);
-			if(appType == AppConstant.ApplicationType.MENUS){
-				map.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
+			if(appType == AppConstant.ApplicationType.MENUS || appType == AppConstant.ApplicationType.DELIVERY_CUSTOMER){
+				map.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(this));
 				response = RestClient.getMenusApiService().razorpayPlaceOrderCallback(map);
 
 			} else if(appType == AppConstant.ApplicationType.MEALS){

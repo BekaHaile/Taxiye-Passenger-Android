@@ -13,14 +13,12 @@ import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.adapters.MenusItemCustomizeAdapter;
 import com.sabkuchfresh.analytics.GAAction;
-import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
-import com.sabkuchfresh.utils.AppConstant;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
@@ -100,17 +98,13 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 									if(allItemsFinished)
 									activity.performBackPressed(false);
 
-									if(activity.getAppType()== AppConstant.ApplicationType.MENUS) {
-										GAUtils.event(GACategory.MENUS, GAAction.CUSTOMIZE_ITEM, GAAction.ITEM + GAAction.DECREASED);
-									}
+										GAUtils.event(activity.getGaCategory(), GAAction.CUSTOMIZE_ITEM, GAAction.ITEM + GAAction.DECREASED);
 
 								}
 
 								@Override
 								public void onItemPlusClick(){
-									if(activity.getAppType()== AppConstant.ApplicationType.MENUS) {
-										GAUtils.event(GACategory.MENUS, GAAction.CUSTOMIZE_ITEM, GAAction.ITEM + GAAction.INCREASED);
-									}
+										GAUtils.event(activity.getGaCategory(), GAAction.CUSTOMIZE_ITEM, GAAction.ITEM + GAAction.INCREASED);
 								}
 							});
 					rvCustomizeItem.setAdapter(menusItemCustomizeAdapter);
@@ -137,9 +131,7 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 							} else {
 								menusItemCustomizeAdapter.getItem().getItemSelectedList().add(menusItemCustomizeAdapter.getItemSelected());
 							}
-							if(activity.getAppType()== AppConstant.ApplicationType.MENUS) {
-								GAUtils.event(GACategory.MENUS, GAAction.CUSTOMIZE_ITEM, GAAction.ADD_TO_CART + GAAction.CLICKED);
-							}
+								GAUtils.event(activity.getGaCategory(), GAAction.CUSTOMIZE_ITEM, GAAction.ADD_TO_CART + GAAction.CLICKED);
 							activity.performBackPressed(false);
 							activity.getVendorMenuFragment().onUpdateListEvent(new UpdateMainList(true));
 						}
@@ -151,7 +143,7 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 			e.printStackTrace();
 		}
 
-		GAUtils.trackScreenView(MENUS+CUSTOMIZE_ITEM);
+		GAUtils.trackScreenView(activity.getGaCategory()+CUSTOMIZE_ITEM);
 		activity.getHandler().postDelayed(new Runnable() {
 			@Override
 			public void run() {

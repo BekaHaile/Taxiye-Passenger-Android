@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.RestaurantReviewsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
-import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiRestaurantFetchFeedback;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
@@ -118,7 +117,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
 			@Override
 			public void onLike(FetchFeedbackResponse.Review review) {
-				GAUtils.event(GACategory.MENUS, GAAction.FEED , GAAction.FEED + GAAction.LIKED);
+				GAUtils.event(activity.getGaCategory(), GAAction.FEED , GAAction.FEED + GAAction.LIKED);
 			}
 
 			@Override

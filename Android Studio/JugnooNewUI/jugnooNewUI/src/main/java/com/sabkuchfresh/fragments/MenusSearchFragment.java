@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.MenusCategoryCategoriesAdapter;
@@ -311,7 +310,7 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 				}
 
 				if(menusCategoryItemsAdapter.getItemCount() == 0) {
-					GAUtils.event(GACategory.MENUS, SEARCH + NOT_FOUND, token);
+					GAUtils.event(activity.getGaCategory(), SEARCH + NOT_FOUND, token);
 				}
 				labelItems.setVisibility(menusCategoryItemsAdapter.getItemCount()>0?View.VISIBLE:View.GONE);
 				cardViewItems.setVisibility(menusCategoryItemsAdapter.getItemCount()>0?View.VISIBLE:View.GONE);

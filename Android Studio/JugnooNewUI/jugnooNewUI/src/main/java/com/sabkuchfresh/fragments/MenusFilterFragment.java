@@ -101,7 +101,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 			e.printStackTrace();
 		}
 
-		GAUtils.trackScreenView(MENUS+FILTERS);
+		GAUtils.trackScreenView(activity.getGaCategory()+FILTERS);
 
 		scrollViewRoot = (ScrollView) rootView.findViewById(R.id.scrollViewRoot);
 		ivBack = (ImageView) rootView.findViewById(R.id.ivBack);
@@ -159,8 +159,8 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				gaEventQuickFilters();
 
 
-				GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.SORT_BY, String.valueOf(activity.getSortBySelected()));
-				GAUtils.event(GAAction.MENUS, GAAction.FILTERS , GAAction.APPLY_BUTTON + GAAction.CLICKED);
+				GAUtils.event(activity.getGaCategory(), GAAction.FILTERS + GAAction.SORT_BY, String.valueOf(activity.getSortBySelected()));
+				GAUtils.event(activity.getGaCategory(), GAAction.FILTERS , GAAction.APPLY_BUTTON + GAAction.CLICKED);
 
 
 				if(activity != null){
@@ -213,7 +213,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				setCuisinesList();
 
 				applyRealTimeFilters();
-				GAUtils.event(GAAction.MENUS, GAAction.FILTERS, GAAction.RESET_BUTTON + GAAction.CLICKED);
+				GAUtils.event(activity.getGaCategory(), GAAction.FILTERS, GAAction.RESET_BUTTON + GAAction.CLICKED);
 			}
 		});
 
@@ -282,7 +282,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 			quickFilters = filter.getKey() + ", ";
 		}
 		if (quickFilters != null) {
-			GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.QUICK_FILTER, quickFilters.substring(0, quickFilters.length() - 2));
+			GAUtils.event(activity.getGaCategory(), GAAction.FILTERS + GAAction.QUICK_FILTER, quickFilters.substring(0, quickFilters.length() - 2));
 		}
 	}
 
@@ -303,7 +303,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
 				params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
-				params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
+				params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
 				params.put(Constants.INTERATED, "1");
 				if(activity.getCategoryIdOpened() > 0) {
 					params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(activity.getCategoryIdOpened()));
@@ -468,7 +468,7 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 							activity.setSortBySelected(filters.get(pos));
 							notifyDataSetChanged();
 							applyRealTimeFilters();
-							GAUtils.event(GAAction.MENUS, GAAction.FILTERS + GAAction.SORT_BY, filters.get(pos).getKey());
+							GAUtils.event(activity.getGaCategory(), GAAction.FILTERS + GAAction.SORT_BY, filters.get(pos).getKey());
 						} else {
 							if(activity.getFilterSelected().contains(filters.get(pos))){
 								activity.getFilterSelected().remove(filters.get(pos));

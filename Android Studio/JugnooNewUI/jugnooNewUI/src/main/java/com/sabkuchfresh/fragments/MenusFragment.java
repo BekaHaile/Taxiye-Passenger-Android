@@ -49,6 +49,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -111,9 +112,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         deliveryDisplayCategoriesView = new DeliveryDisplayCategoriesView(activity,
                 rootView.findViewById(R.id.rLCategoryDropDown), this);
 
-        Data.AppType = AppConstant.ApplicationType.MENUS;
-        Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
-        GAUtils.trackScreenView(MENUS + HOME);
+        Data.AppType = Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()) 
+                ? AppConstant.ApplicationType.DELIVERY_CUSTOMER : AppConstant.ApplicationType.MENUS;
+        Prefs.with(activity).save(Constants.APP_TYPE, Data.AppType);
+        GAUtils.trackScreenView(activity.getGaCategory() + HOME);
 
         llRoot = (RelativeLayout) rootView.findViewById(R.id.llRoot);
         try {
@@ -145,7 +147,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerViewRestaurant.setLayoutManager(linearLayoutManager);
         recyclerViewRestaurant.setItemAnimator(new DefaultItemAnimator());
         recyclerViewRestaurant.setHasFixedSize(false);
-        /*textViewNoMenus = (TextView) rootView.findViewById(R.id.textViewNoMenus); textViewNoMenus.setTypeface(Fonts.mavenMedium(activity));*/
 
 
         vDividerLocation = rootView.findViewById(R.id.vDividerLocation);
@@ -180,17 +181,17 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             public void apiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone) {
 
                 hitApiRecommendRestaurant(categoryId, restaurantName,locality, telephone);
-                GAUtils.event(GAAction.MENUS, GAAction.HOME , GAAction.NEW_RESTAURANT + GAAction.SUBMITTED);
+                GAUtils.event(activity.getGaCategory(), GAAction.HOME , GAAction.NEW_RESTAURANT + GAAction.SUBMITTED);
 
 
             }
         }, recyclerViewRestaurant, status);
 
         recyclerViewRestaurant.setAdapter(deliveryHomeAdapter);
-        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
+        activity.setLocalityAddressFirstTime(activity.getAppType());
 
         try {
-            if (Data.getMenusData() != null && Data.getMenusData().getPendingFeedback() == 1) {
+            if (getMenusOrDeliveryData() != null && getMenusOrDeliveryData().getPendingFeedback() == 1) {
 
                 activity.getHandler().postDelayed(new Runnable() {
                     @Override
@@ -206,17 +207,17 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         try {
             if (Data.userData.getPromoSuccess() == 0) {
                 showPromoFailedAtSignupDialog();
-            } else if (Data.getMenusData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
-                Data.getMenusData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
+            } else if (getMenusOrDeliveryData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
+                getMenusOrDeliveryData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
                 showPopup();
-            } else if (Data.getMenusData().getPopupData() != null) {
+            } else if (getMenusOrDeliveryData().getPopupData() != null) {
                 pushDialog = new PushDialog(activity, new PushDialog.Callback() {
                     @Override
                     public void onButtonClicked(int deepIndex) {
 
                     }
                 });
-                pushDialog.show(Data.getMenusData().getPopupData());
+                pushDialog.show(getMenusOrDeliveryData().getPopupData());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -302,7 +303,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     int percentage = (int) (100.0 * offset / (float) (range - extent));
 
                     if (percentage > 0 && percentage % 10 == 0) {
-                        GAUtils.event(MENUS, HOME + LIST_SCROLLED, percentage + "%");
+                        GAUtils.event(activity.getGaCategory(), HOME + LIST_SCROLLED, percentage + "%");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -312,6 +313,14 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         });
         return rootView;
+    }
+
+    private MenusData getMenusOrDeliveryData() {
+        if (activity.getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
+            return Data.getDeliveryCustomerData();
+        } else {
+            return Data.getMenusData();
+        }
     }
 
     public void switchCategory(int categoryId, boolean isBackPressed) {
@@ -337,7 +346,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if (!isHidden() && resumed) {
             if(activity.isRefreshCart()
                     || System.currentTimeMillis()-lastTimeRefreshed >= MAX_REFRESH_INTERVAL){
-                activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
+                activity.setLocalityAddressFirstTime(activity.getAppType());
             }
             activity.setRefreshCart(false);
         }
@@ -371,7 +380,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     @Override
                     public void run() {
                         if (refreshCartFinal) {
-                            activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
+                            activity.setLocalityAddressFirstTime(activity.getAppType());
                         }
                         activity.setRefreshCart(false);
                     }
@@ -561,7 +570,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
         params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
         params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
-        params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
+        params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
         params.put(Constants.INTERATED, "1");
         params.put(Constants.PAGE_NO, String.valueOf(0));
 
@@ -872,7 +881,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
-                params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
+                params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
                 params.put(Constants.INTERATED, "1");
                 params.put(Constants.KEY_RESTAURANT_NAME, restaurantName);
                 params.put(Constants.KEY_RESTAURANT_ADDRESS, locality);

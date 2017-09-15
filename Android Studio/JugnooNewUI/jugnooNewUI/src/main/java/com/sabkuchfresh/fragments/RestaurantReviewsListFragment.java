@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.RestaurantReviewsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
-import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiRestaurantFetchFeedback;
 import com.sabkuchfresh.home.FreshActivity;
@@ -75,7 +74,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
 
-        GAUtils.trackScreenView(MENUS+FEED);
+        GAUtils.trackScreenView(activity.getGaCategory()+FEED);
 
         recyclerViewReviews = (RecyclerView) rootView.findViewById(R.id.recyclerViewReviews);
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(activity));
@@ -96,7 +95,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
 
             @Override
             public void onLike(FetchFeedbackResponse.Review review) {
-                GAUtils.event(GACategory.MENUS, GAAction.FEED , GAAction.FEED + GAAction.LIKED);
+                GAUtils.event(activity.getGaCategory(), GAAction.FEED , GAAction.FEED + GAAction.LIKED);
             }
 
             @Override

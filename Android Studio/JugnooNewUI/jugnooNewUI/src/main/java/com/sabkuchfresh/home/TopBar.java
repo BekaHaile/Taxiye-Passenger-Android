@@ -105,7 +105,8 @@ public class TopBar implements GAAction, GACategory {
         buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (Data.AppType == com.sabkuchfresh.utils.AppConstant.ApplicationType.MENUS) {
+                if (Data.AppType == com.sabkuchfresh.utils.AppConstant.ApplicationType.MENUS
+                        || Data.AppType == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
                     Utils.showToast(activity, Config.getMenusServerUrlName());
                 } else {
                     Utils.showToast(activity, Config.getFreshServerUrlName());
@@ -143,7 +144,9 @@ public class TopBar implements GAAction, GACategory {
                     public void onAnimationEnd(Animation animation) {
                         llSearchContainer.setVisibility(View.GONE);
                         llSearchContainer.invalidate();
-                        if (activity instanceof FreshActivity && ((FreshActivity) activity).getTopFragment() != null && ((FreshActivity) activity).getTopFragment() instanceof MenusFragment) {
+                        if (activity instanceof FreshActivity
+                                && ((FreshActivity) activity).getTopFragment() != null
+                                && ((FreshActivity) activity).getTopFragment() instanceof MenusFragment) {
                             imageViewBack.setVisibility(View.GONE);
                             imageViewBack.invalidate();
                             title.setAlpha(0.0f);
@@ -206,6 +209,8 @@ public class TopBar implements GAAction, GACategory {
                             GAUtils.event(JUGNOO, MEALS+HOME, LEFT_MENU_ICON+CLICKED);
                         } else if(appType == AppConstant.ApplicationType.MENUS){
                             GAUtils.event(JUGNOO, GAAction.MENUS+HOME, LEFT_MENU_ICON+CLICKED);
+                        } else if(appType == AppConstant.ApplicationType.DELIVERY_CUSTOMER){
+                            GAUtils.event(JUGNOO, GAAction.DELIVERY+HOME, LEFT_MENU_ICON+CLICKED);
                         } else if(appType == AppConstant.ApplicationType.FEED){
                             GAUtils.event(JUGNOO, FEED+HOME, LEFT_MENU_ICON+CLICKED);
                         } else if(appType == AppConstant.ApplicationType.PROS){
