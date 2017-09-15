@@ -47,6 +47,8 @@ public class SendFeedbackQuery {
                         Data.getGroceryData().setPendingFeedback(0);
                     } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
                         Data.getMenusData().setPendingFeedback(0);
+                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getDeliveryCustomerClientId())) {
+                        Data.getDeliveryCustomerData().setPendingFeedback(0);
                     }
                 }
 
@@ -98,7 +100,7 @@ public class SendFeedbackQuery {
                     }
                 };
                 new HomeUtil().putDefaultParams(params);
-                if (productType == ProductType.MENUS) {
+                if (productType == ProductType.MENUS || productType == ProductType.DELIVERY_CUSTOMER) {
                     RestClient.getMenusApiService().orderFeedback(params, callback);
                 } else {
                     RestClient.getFreshApiService().orderFeedback(params, callback);

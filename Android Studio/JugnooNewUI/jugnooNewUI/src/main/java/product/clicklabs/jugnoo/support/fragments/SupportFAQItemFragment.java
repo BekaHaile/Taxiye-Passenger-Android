@@ -304,6 +304,8 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 					category = GACategory.MEALS;
 				} else if(productType == ProductType.MENUS.getOrdinal()) {
 					category = GACategory.MENUS;
+				} else if(productType == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
+					category = GACategory.DELIVERY_CUSTOMER;
 				}
 				GAUtils.event(category, SUPPORT, TICKET_RAISED);
 			}

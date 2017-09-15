@@ -91,7 +91,7 @@ public class MenusCartSelectedLayout {
 			dialogPopupTwoButtonCapsule = new DialogPopupTwoButtonCapsule(new DialogPopupTwoButtonCapsule.DialogCallback() {
 				@Override
 				public void onLeftClick() {
-					activity.clearMenusCart();
+					activity.clearMenusCart(activity.getAppType());
 					activity.getMenusCartSelectedLayout().checkForVisibility();
 				}
 

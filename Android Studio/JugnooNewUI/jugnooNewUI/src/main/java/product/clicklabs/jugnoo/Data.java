@@ -642,6 +642,9 @@ public class Data {
     public static long CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE(){
         return Config.getConfigMode()==ConfigMode.LIVE?57:610;
     }
+    public static long CHANNEL_ID_FUGU_DELIVERY_CUSTOMER_DELIVERY_LATE(){
+        return Config.getConfigMode()==ConfigMode.LIVE?57:610;
+    }
 
 	public static void saveCurrentIciciUpiTransaction(PlaceOrderResponse placeOrderResponse, int applicationType){
 

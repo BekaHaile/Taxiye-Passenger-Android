@@ -69,7 +69,7 @@ public class ApiFetchRestaurantMenu {
                 params.put(Constants.KEY_LATITUDE, String.valueOf(latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(longitude));
                 params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(restaurantId));
-                params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
+                params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
                 params.put(Constants.INTERATED, "1");
 
                 // if api hit from home list where MerchantInfoFragment is not opened and direct Checkout page is
@@ -108,7 +108,7 @@ public class ApiFetchRestaurantMenu {
                                         }*/
 
 
-                                        activity.clearMenusCart();
+                                        activity.clearMenusCart(activity.getAppType());
                                         setVendorDataToFreshActivity(productsResponse);
 
                                         ArrayList<ItemSelected> itemsSelected = prepareMenuItemsArray(cartItemToSet);
@@ -169,7 +169,7 @@ public class ApiFetchRestaurantMenu {
                                         setVendorDataToFreshActivity(productsResponse);
                                         activity.updateItemListFromSPDB();
                                         if (activity.getVendorOpened().getIsClosed() == 1) {
-                                            activity.clearMenusCart();
+                                            activity.clearMenusCart(activity.getAppType());
                                         }
                                         updateCartAndSetJeanie(jObj);
                                         openNextFragment(directCheckout);
@@ -209,7 +209,7 @@ public class ApiFetchRestaurantMenu {
 
     private void openNextFragment(boolean goToCheckout) {
         if (goToCheckout) {
-            activity.openCart(AppConstant.ApplicationType.MENUS);
+            activity.openCart(activity.getAppType());
         } else {
             if(activity.getMerchantInfoFragment() == null){
                 activity.getTransactionUtils().openMerchantInfoFragment(activity, activity.getRelativeLayoutContainer());

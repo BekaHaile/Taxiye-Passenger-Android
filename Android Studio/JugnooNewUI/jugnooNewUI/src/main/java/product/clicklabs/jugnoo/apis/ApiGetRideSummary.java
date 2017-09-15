@@ -114,10 +114,13 @@ public class ApiGetRideSummary {
 									e.printStackTrace();
 								}
 								HistoryResponse.Datum finalDatum = null;
-								if (showPanelResponse.getDatum() != null && showPanelResponse.getDatum().getProductType() != null) {
+								if (productType != ProductType.MENUS && productType != ProductType.DELIVERY_CUSTOMER
+										&& showPanelResponse.getDatum() != null && showPanelResponse.getDatum().getProductType() != null) {
 									finalDatum = showPanelResponse.getDatum();
-								} else if(showPanelResponse.getMenusDatum() != null && showPanelResponse.getMenusDatum().getProductType() != null){
+								} else if(productType == ProductType.MENUS && showPanelResponse.getMenusDatum() != null && showPanelResponse.getMenusDatum().getProductType() != null){
 									finalDatum = showPanelResponse.getMenusDatum();
+								} else if(productType == ProductType.DELIVERY_CUSTOMER && showPanelResponse.getMenusDatum() != null && showPanelResponse.getMenusDatum().getProductType() != null){
+									finalDatum = showPanelResponse.getDeliveryCustomerDatum();
 								}
 								int supportCategory = finalSupportCategory;
 								if(productType == ProductType.NOT_SURE || supportCategory == SupportCategory.NOT_SURE.getOrdinal()) {

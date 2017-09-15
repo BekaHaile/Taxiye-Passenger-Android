@@ -41,8 +41,6 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-import static com.sabkuchfresh.analytics.GAAction.ORDER_PLACED;
-
 
 public class OrderCompleteReferralDialog  extends OrderCompletDialog implements GAAction, GACategory {
 
@@ -95,7 +93,8 @@ public class OrderCompleteReferralDialog  extends OrderCompletDialog implements 
 				TextView tvOrderDayVal = (TextView) dialog.findViewById(R.id.tvOrderDayVal);
 				tvOrderDayVal.setTypeface(fonts.mavenMedium(context));
 
-				if(productType == ProductType.MENUS.getOrdinal()){
+				if(productType == ProductType.MENUS.getOrdinal()
+						|| productType == ProductType.DELIVERY_CUSTOMER.getOrdinal()){
 					rlOrderDay.setVisibility(View.GONE);
 					tvOrderTimeVal.setVisibility(View.GONE);
 					tvYourOrder.setText(orderText);

@@ -91,7 +91,6 @@ import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
 import com.sabkuchfresh.feed.ui.views.TypeWriterTextView.Typewriter;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
-import com.sabkuchfresh.fragments.DeliveryHomeFragment;
 import com.sabkuchfresh.fragments.DeliveryStoresFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
@@ -2733,7 +2732,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
 
-        public void clearMenusCart(int appType) {
+    public void clearMenusCart(int appType) {
         Prefs.with(this).remove(Constants.CART_STATUS_REORDER_ID);
         Paper.book().delete(appType==AppConstant.ApplicationType.MENUS?DB_MENUS_CART:DB_DELIVERY_CUSTOMER_CART);
         createAppCart(Prefs.with(this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,Config.getMenusClientId()));

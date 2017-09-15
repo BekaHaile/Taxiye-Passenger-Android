@@ -1639,7 +1639,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                                     } else if (type == AppConstant.ApplicationType.MENUS
                                                             && ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag
                                                             && isEmpty == 1) {
-                                                        activity.clearMenusCart();
+                                                        activity.clearMenusCart(activity.getAppType());
                                                         if(activity.getVendorMenuFragment() != null) {
                                                             activity.setRefreshCart(true);
                                                             activity.performBackPressed(false);
@@ -3245,7 +3245,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
     private void clearMenusCartAndGoToMenusFragment() {
-        activity.clearMenusCart();
+        activity.clearMenusCart(activity.getAppType());
         activity.setRefreshCart(true);
         activity.performBackPressed(false);
         activity.setRefreshCart(true);
