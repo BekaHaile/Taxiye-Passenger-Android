@@ -6,6 +6,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
+import com.sabkuchfresh.fragments.MenusFragment;
 
 import product.clicklabs.jugnoo.R;
 
@@ -64,7 +65,7 @@ public class MenusCartSelectedLayout {
 	public void checkForVisibility(){
 		try {
 			RestaurantCart restaurantCart = activity.getMenusCart().getRestaurantCartFilled();
-			if(restaurantCart != null){
+			if(restaurantCart != null && activity.getTopFragment() instanceof MenusFragment){
 				vendorId = restaurantCart.getRestaurant().getRestaurantId();
 				String oldRestaurantName = restaurantCart.getRestaurant().getName();
 				rlMenusCartSelected.setVisibility(View.VISIBLE);
@@ -78,7 +79,7 @@ public class MenusCartSelectedLayout {
 	}
 
 	public void setVisibility(int visibility){
-		if(visibility == View.VISIBLE){
+		if(visibility == View.VISIBLE && activity.getTopFragment() instanceof MenusFragment){
 			rlMenusCartSelected.setVisibility(View.VISIBLE);
 		} else {
 			rlMenusCartSelected.setVisibility(View.GONE);
