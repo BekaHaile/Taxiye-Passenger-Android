@@ -53,7 +53,6 @@ import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -118,13 +117,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         GAUtils.trackScreenView(activity.getGaCategory() + HOME);
 
         llRoot = (RelativeLayout) rootView.findViewById(R.id.llRoot);
-        try {
-            if (llRoot != null) {
-                new ASSL(activity, llRoot, 1134, 720, false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         try {
             if (!TextUtils.isEmpty(Data.userData.getUserId())) {
@@ -409,8 +401,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             e.printStackTrace();
         }
         super.onDestroyView();
-        ASSL.closeActivity(llRoot);
-        System.gc();
     }
 
 

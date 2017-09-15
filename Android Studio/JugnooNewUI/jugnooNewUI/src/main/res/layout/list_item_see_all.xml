@@ -7,14 +7,15 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center"
-    android:paddingBottom="12dp"
-    android:paddingTop="12dp"
+    android:orientation="vertical"
     >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp"
         android:alpha="0.7"
         android:drawablePadding="8dp"
         android:drawableRight="@drawable/ic_arrow_grey"
@@ -22,6 +23,12 @@
         android:text="@string/label_see_all"
         android:textColor="#C0595968"
         app:font="@string/maven"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:background="@color/stroke_light_grey_alpha"
+        />
 </LinearLayout>
 
 

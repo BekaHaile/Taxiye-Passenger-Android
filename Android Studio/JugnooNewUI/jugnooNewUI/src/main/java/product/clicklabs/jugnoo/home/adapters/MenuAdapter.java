@@ -385,7 +385,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             holder.linearlayoutDeliveryCustomer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickAction(MenuInfoTags.DELIVERY.getTag());
+                    onClickAction(MenuInfoTags.DELIVERY_CUSTOMER.getTag());
                     holder.imageViewArrow.setRotation(270);
                  //   holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, GAAction.DELIVERY);

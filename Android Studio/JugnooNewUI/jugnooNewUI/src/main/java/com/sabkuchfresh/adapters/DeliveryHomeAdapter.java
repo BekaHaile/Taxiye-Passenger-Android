@@ -89,7 +89,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int BLANK_LAYOUT = 11;
 
 
-    private static final int RECENT_ORDERS_TO_SHOW = 2;
+    private static final int RECENT_ORDERS_TO_SHOW = 1;
 
     private RecyclerView recyclerView;
 
@@ -564,6 +564,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
                 }
 
+                // if orders are not expanded vDivider will be gone, else visibile
+                if(remainingRecentOrders != null && remainingRecentOrders.size() > 0){
+                    statusHolder.vDivider.setVisibility((ordersExpanded
+                        && !recentOrder.getOrderId().equals(remainingRecentOrders.get(remainingRecentOrders.size()-1).getOrderId())) ? View.VISIBLE : View.GONE);
+                } else {
+                    statusHolder.vDivider.setVisibility(View.GONE);
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -864,7 +872,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView tvOrderDeliveredDigIn, tvOrderNotDelivered, tvOrderDeliveredYes, tvOrderDeliveredNo;
         LinearLayout llOrderDeliveredYes, llOrderDeliveredNo;
         ImageView ivOrderDeliveredYes, ivOrderDeliveredNo;
-        View vOrderDeliveredMidSep, vOrderDeliveredTopSep;
+        View vOrderDeliveredMidSep, vOrderDeliveredTopSep, vDivider;
 
         ViewOrderStatus(final View itemView, final ItemListener itemListener) {
             super(itemView);
@@ -914,6 +922,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ivOrderDeliveredNo = (ImageView) itemView.findViewById(R.id.ivOrderDeliveredNo);
             vOrderDeliveredMidSep = itemView.findViewById(R.id.vOrderDeliveredMidSep);
             vOrderDeliveredTopSep = itemView.findViewById(R.id.vOrderDeliveredTopSep);
+            vDivider = itemView.findViewById(R.id.vDivider);
 
             View.OnClickListener onClickListener = new View.OnClickListener() {
                 @Override
