@@ -139,6 +139,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerViewRestaurant.setLayoutManager(linearLayoutManager);
         recyclerViewRestaurant.setItemAnimator(new DefaultItemAnimator());
         recyclerViewRestaurant.setHasFixedSize(false);
+        recyclerViewRestaurant.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+        recyclerViewRestaurant.requestFocus();
 
 
         vDividerLocation = rootView.findViewById(R.id.vDividerLocation);
