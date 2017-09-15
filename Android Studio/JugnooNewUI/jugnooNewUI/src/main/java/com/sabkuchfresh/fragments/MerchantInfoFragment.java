@@ -64,6 +64,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 	TextView tvOpensAt;
 	@Bind(R.id.ivChatNow)
 	ImageView ivChatNow;
+	@Bind(R.id.llChatNow)
+	LinearLayout llChatNow;
 	@Bind(R.id.llCall)
 	LinearLayout llCall;
 	@Bind(R.id.llAddReview)
@@ -238,6 +240,9 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				} else {
 					ivChatNow.getDrawable().setColorFilter(null);
 				}
+				// TODO: 15/09/17 temporarily disabled till P2M FUGU
+				llChatNow.setVisibility(View.GONE);
+
 				bOrderOnline.setBackgroundResource((activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0) ?
 						R.drawable.capsule_grey_dark_bg : R.drawable.capsule_theme_color_selector);
 				bOrderOnline.setVisibility(activity.getVendorOpened().getOrderMode() == 0 ? View.GONE : View.VISIBLE);

@@ -31,14 +31,14 @@ public class DeliveryDisplayCategoriesView {
 
     private Activity activity;
     public View rootView;
-    @Bind(R.id.iv_switch_category)
-    ImageView ivSwitchCategory;
     @Bind(R.id.recycler_categories)
     RecyclerView rvCategories;
     @Bind(R.id.iv_category_arrow)
     ImageView ivArrow;
     @Bind(R.id.tv_category_name)
     TextView tvCategoryName;
+    @Bind(R.id.label_select_category)
+    TextView tvSelectCategory;
     @Bind(R.id. view_bottom_blank)
     View viewBottomblank;
     @Bind(R.id.layout_choose_category)
@@ -65,6 +65,7 @@ public class DeliveryDisplayCategoriesView {
             }
         }
     };;
+    private boolean canExpand;
 
     @SuppressWarnings("Unused")
     private DeliveryDisplayCategoriesView() {
@@ -112,22 +113,24 @@ public class DeliveryDisplayCategoriesView {
     public void OnCategoryClick(View view) {
         switch (view.getId()) {
             case R.id.layout_choose_category:
-                layoutChooseCategory.setEnabled(false);
-                // for hiding FAB jeanie
-                if(callback != null){
-                    callback.onDropDownToggle(rvCategories.getVisibility() == View.VISIBLE);
-                }
-                if(rvCategories.getVisibility()==View.VISIBLE){
-                    viewBottomblank.setVisibility(View.GONE);
-                    rvCategories.startAnimation(categoryHideAnim);
-                    handler.postDelayed(hideViewsRunnable,activity.getResources().getInteger(R.integer.time_category_anim_close));
-                }else{
-                    viewBottomblank.setAlpha(0);
-                    viewBottomblank.setVisibility(View.VISIBLE);
-                    viewBottomblank.animate().alpha(1).setDuration(activity.getResources().getInteger(R.integer.time_category_anim_open)).start();
-                    rvCategories.startAnimation(categoryShowAnim);
-                    handler.postDelayed(hideViewsRunnable,activity.getResources().getInteger(R.integer.time_category_anim_open));
-                    Utils.hideSoftKeyboard(activity, viewBottomblank);
+                if(canExpand) {
+                    layoutChooseCategory.setEnabled(false);
+                    // for hiding FAB jeanie
+                    if (callback != null) {
+                        callback.onDropDownToggle(rvCategories.getVisibility() == View.VISIBLE);
+                    }
+                    if (rvCategories.getVisibility() == View.VISIBLE) {
+                        viewBottomblank.setVisibility(View.GONE);
+                        rvCategories.startAnimation(categoryHideAnim);
+                        handler.postDelayed(hideViewsRunnable, activity.getResources().getInteger(R.integer.time_category_anim_close));
+                    } else {
+                        viewBottomblank.setAlpha(0);
+                        viewBottomblank.setVisibility(View.VISIBLE);
+                        viewBottomblank.animate().alpha(1).setDuration(activity.getResources().getInteger(R.integer.time_category_anim_open)).start();
+                        rvCategories.startAnimation(categoryShowAnim);
+                        handler.postDelayed(hideViewsRunnable, activity.getResources().getInteger(R.integer.time_category_anim_open));
+                        Utils.hideSoftKeyboard(activity, viewBottomblank);
+                    }
                 }
                 break;
 
@@ -168,13 +171,11 @@ public class DeliveryDisplayCategoriesView {
             }
         } else {
             tvCategoryName.setText(R.string.all);
-            ivSwitchCategory.setImageResource(R.drawable.ic_nav_select_category);
         }
     }
 
     private void setCategoryLabelIcon(MenusResponse.Category category){
         tvCategoryName.setText(category.getCategoryName());
-        ivSwitchCategory.setImageResource(R.drawable.ic_nav_select_category);
 //        try {
 //            if (!TextUtils.isEmpty(category.getImage())) {
 //                Picasso.with(activity).load(category.getImage())
@@ -194,6 +195,18 @@ public class DeliveryDisplayCategoriesView {
             rootView.setVisibility(View.GONE);
         } else {
             rootView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void setViewAccCategoriesCount(int categoriesCount){
+        if(categoriesCount <= 1){
+            ivArrow.setVisibility(View.GONE);
+            tvSelectCategory.setVisibility(View.GONE);
+            canExpand = false;
+        } else {
+            ivArrow.setVisibility(View.VISIBLE);
+            tvSelectCategory.setVisibility(View.VISIBLE);
+            canExpand = true;
         }
     }
 
