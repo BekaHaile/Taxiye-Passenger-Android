@@ -773,6 +773,7 @@ public interface Constants {
     String ORDER_STATUS_LAT_LNG = "order_status_lat_lng";
     String ORDER_STATUS_ORDER_ID = "order_status_id";
     String CART_STATUS_REORDER_ID = "cart_status_reorder_id";
+    String CART_STATUS_REORDER_ID_CUSTOMER_DELIVERY = "cart_status_reorder_id_customer_delivery";
     String KEY_REODER_ID = "prev_order_id";
     String ORDER_STATUS_ADDRESS = "order_status_address";
     String SHOULD_REFRESH_ADDRESS = "should_refresh_address";

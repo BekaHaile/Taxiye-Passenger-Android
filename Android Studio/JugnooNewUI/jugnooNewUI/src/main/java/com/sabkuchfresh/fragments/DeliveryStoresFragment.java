@@ -80,7 +80,7 @@ public class DeliveryStoresFragment extends Fragment implements GAAction{
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    activity.openCart(activity.getAppType());
+                                    activity.openCart(activity.getAppType(), false);
                                 }
                             },
                             new View.OnClickListener() {

@@ -365,7 +365,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, false, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
                 @Override
                 public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
-                    activity.openCart(AppConstant.ApplicationType.FRESH);
+                    activity.openCart(AppConstant.ApplicationType.FRESH, true);
                 }
             });
         }

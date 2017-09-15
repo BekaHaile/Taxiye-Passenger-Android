@@ -457,7 +457,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         if (getMealAddonItemsFragment() == null && isMealAddonItemsAvailable()) {
                             getTransactionUtils().addMealAddonItemsFragment(FreshActivity.this, relativeLayoutContainer);
                         } else {
-                            openCart(appType);
+                            openCart(appType, false);
                         }
 
 
@@ -617,7 +617,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     }
 
-    private void checkForReorderMenus() {
+    public void checkForReorderMenus() {
 
 
         try {
@@ -656,6 +656,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 setSelectedLatLng(reorderLatLng);
                 setSelectedAddressId(0);
                 setSelectedAddressType("");
+            }
+            setRefreshCart(true);
+            saveAddressRefreshBoolean(this,false);
+            if(getFreshCheckoutMergedFragment()!=null){
+                getFreshCheckoutMergedFragment().setDeliveryAddressUpdated(true);
             }
         }
     }
@@ -2734,7 +2739,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     public void clearMenusCart(int appType) {
-        Prefs.with(this).remove(Constants.CART_STATUS_REORDER_ID);
+        Prefs.with(this).remove(appType== AppConstant.ApplicationType.MENUS?Constants.CART_STATUS_REORDER_ID:Constants.CART_STATUS_REORDER_ID_CUSTOMER_DELIVERY);
         Paper.book().delete(appType==AppConstant.ApplicationType.MENUS?DB_MENUS_CART:DB_DELIVERY_CUSTOMER_CART);
         createAppCart(Prefs.with(this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,Config.getMenusClientId()));
         updateItemListFromSPDB();
@@ -3159,9 +3164,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     }
 
-    public void openCart(int appType) {
+    public void openCart(int appType, boolean forceCheckout) {
         if (isMenusOrDeliveryOpen() && getVendorOpened() != null) {
-            if (canExitVendorMenu()){
+            if (forceCheckout || canExitVendorMenu()){
                 getTransactionUtils().openCheckoutMergedFragment(FreshActivity.this, relativeLayoutContainer);
             }
 
@@ -4234,6 +4239,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
     }
+
 
     private LocationUpdate locationUpdate = new LocationUpdate() {
         @Override

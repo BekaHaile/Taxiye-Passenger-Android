@@ -481,7 +481,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, false, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
                 @Override
                 public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
-                    activity.openCart(AppConstant.ApplicationType.MEALS);
+                    activity.openCart(AppConstant.ApplicationType.MEALS, true);
                 }
             });
         }

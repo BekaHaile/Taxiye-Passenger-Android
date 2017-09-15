@@ -935,8 +935,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 break;
             case R.id.reorderBtn:
                 try {
-                    if(productType==ProductType.MENUS.getOrdinal()
-                        || productType==ProductType.DELIVERY_CUSTOMER.getOrdinal()){
+                    if(productType==ProductType.MENUS.getOrdinal() || productType==ProductType.DELIVERY_CUSTOMER.getOrdinal()){
                         if(responseOrderDataApi!=null){
                             JSONArray jsonArray = responseOrderDataApi.getJSONArray("data");
                             if(jsonArray!=null && jsonArray.length()>0){

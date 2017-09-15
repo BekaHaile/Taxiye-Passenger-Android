@@ -150,7 +150,7 @@ public class ApiFetchRestaurantMenu {
                                                 @Override
                                                 public void onClick(View v) {
                                                     activity.setReorderLatlngToAdrress(reOrderLatlng,reorderAddress);
-                                                    Prefs.with(activity).save(Constants.CART_STATUS_REORDER_ID,reorderId);//save reoderId in cart to send in checkout
+                                                    Prefs.with(activity).save(activity.getAppType()== AppConstant.ApplicationType.MENUS?Constants.CART_STATUS_REORDER_ID:Constants.CART_STATUS_REORDER_ID_CUSTOMER_DELIVERY,reorderId);//save reoderId in cart to send in checkout
                                                     openNextFragment(true);
                                                     updateCartAndSetJeanie(jObj);
                                                 }
@@ -158,7 +158,7 @@ public class ApiFetchRestaurantMenu {
 
                                         }else{
                                             //Everything is okay go to checkout
-                                            Prefs.with(activity).save(Constants.CART_STATUS_REORDER_ID,reorderId);//save reoderId in cart to send in checkout
+                                            Prefs.with(activity).save(activity.getAppType()== AppConstant.ApplicationType.MENUS?Constants.CART_STATUS_REORDER_ID:Constants.CART_STATUS_REORDER_ID_CUSTOMER_DELIVERY,reorderId);//save reoderId in cart to send in checkout
                                             activity.setReorderLatlngToAdrress(reOrderLatlng,reorderAddress);
                                             openNextFragment(true);
                                             updateCartAndSetJeanie(jObj);
@@ -209,7 +209,7 @@ public class ApiFetchRestaurantMenu {
 
     private void openNextFragment(boolean goToCheckout) {
         if (goToCheckout) {
-            activity.openCart(activity.getAppType());
+            activity.openCart(activity.getAppType(), true);
         } else {
             if(activity.getMerchantInfoFragment() == null){
                 activity.getTransactionUtils().openMerchantInfoFragment(activity, activity.getRelativeLayoutContainer());

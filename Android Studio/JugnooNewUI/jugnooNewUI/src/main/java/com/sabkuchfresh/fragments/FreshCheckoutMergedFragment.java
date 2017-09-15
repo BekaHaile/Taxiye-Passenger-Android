@@ -1479,8 +1479,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 //for menus or delivery reorder case
 
                 if (isMenusOrDeliveryOpen()) {
-                    //send order ID of old order if order has been reorder,this value is saved when cart is made from reoder and cleared everytime the cart is cleared
-                    int cartReorderId = Prefs.with(activity).getInt(Constants.CART_STATUS_REORDER_ID,-1);
+                    //send order ID of old order if order has been reorder,this value is saved when cart is made from reorder and cleared everytime the cart is cleared
+                    int cartReorderId = Prefs.with(activity).getInt(activity.getAppType()== AppConstant.ApplicationType.MENUS?Constants.CART_STATUS_REORDER_ID:Constants.CART_STATUS_REORDER_ID_CUSTOMER_DELIVERY,-1);
                     if(cartReorderId!=-1){
                         params.put(Constants.KEY_REODER_ID, String.valueOf(cartReorderId));
 

@@ -179,8 +179,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.imageViewProductType.setImageResource(R.drawable.ic_menus);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_purple_menu_fab);
                 } else if (orderHistory.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
-                    holder.imageViewProductType.setImageResource(R.drawable.ic_menus);
-                    holder.imageViewProductType.setBackgroundResource(R.drawable.circle_purple_menu_fab);
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_delivery_customer);
+                    holder.imageViewProductType.setBackgroundResource(R.drawable.circle_green_delivery_customer_fab);
                 } else if (orderHistory.getProductType() == ProductType.PAY.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_pay_grey);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_yellow);

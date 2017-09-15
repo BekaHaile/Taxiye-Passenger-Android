@@ -753,7 +753,7 @@ public class MenusResponse implements Serializable {
 	}
 
 
-	public class BannerInfo {
+	public class BannerInfo implements Serializable{
 		@SerializedName("image_link")
 		@Expose
 		private String imageLink;
@@ -783,7 +783,7 @@ public class MenusResponse implements Serializable {
 		}
 	}
 
-	public class StripInfo {
+	public class StripInfo implements Serializable {
 		@SerializedName("text")
 		@Expose
 		private String text;
@@ -814,7 +814,7 @@ public class MenusResponse implements Serializable {
 	}
 
 
-	public static class Category {
+	public static class Category implements Serializable {
 		@SerializedName("id")
 		@Expose
 		private int id;
