@@ -386,8 +386,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     }
                 }, 300);
                 activity.getMenusCartSelectedLayout().checkForVisibility();
+
+
             } else {
                 activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
+                if(isCategoryDropDownVisible()){
+                    deliveryDisplayCategoriesView.toggleDropDown();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -464,8 +469,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                                 // check if only one category is coming view will be set like single category expanded
                                 if (activity.getCategoryIdOpened() < 0 && !isSearchingCase(searchTextCurr)) {
-                                    if (menusResponse.getCategories().size() == 1) {
-                                        activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
+                         if (menusResponse.getCategories().size() == 1) {
+                                                        activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
                                     }
                                     activity.setMenusResponse(menusResponse);
                                     deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
@@ -840,10 +845,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onDropDownToggle(boolean shown) {
-        activity.getMenusCartSelectedLayout().disableView(!shown);
-
-        if(!isHidden()) {
-            activity.getFabViewTest().setRelativeLayoutFABTestVisibility(shown ? View.VISIBLE : View.GONE);
+        try {
+            activity.getMenusCartSelectedLayout().disableView(!shown);
+            if(!isHidden()) {
+                activity.getFabViewTest().setRelativeLayoutFABTestVisibility(shown ? View.VISIBLE : View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
