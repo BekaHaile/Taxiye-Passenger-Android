@@ -588,6 +588,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 getMenusOrDeliveryData().setPendingFeedback(0);
             } else {
                 activity.finish();
+                return;
             }
             if (MyApplication.getInstance().isOnline()) {
                 //DialogPopup.showLoadingDialog(activity, "loading...");
@@ -746,6 +747,19 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     SendFeedbackQuery sendFeedbackQuery;
 
     private void sumbitMenusOrDeliveryFeedback(final String reviewDesc, final String comments, final int score) {
+        if (lastClientId.equals(Config.getFreshClientId())) {
+            Data.getFreshData().setPendingFeedback(0);
+        } else if (lastClientId.equals(Config.getMealsClientId())) {
+            Data.getMealsData().setPendingFeedback(0);
+        } else if (lastClientId.equals(Config.getGroceryClientId())) {
+            Data.getGroceryData().setPendingFeedback(0);
+        } else if (lastClientId.equals(Config.getMenusClientId())
+                || lastClientId.equals(Config.getDeliveryCustomerClientId())) {
+            getMenusOrDeliveryData().setPendingFeedback(0);
+        } else {
+            activity.finish();
+            return;
+        }
         DialogPopup.showLoadingDialog(activity, "");
         if (sendFeedbackQuery == null) {
             sendFeedbackQuery = new SendFeedbackQuery();

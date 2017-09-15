@@ -98,6 +98,7 @@ public class AppSwitcher {
 							|| (clientId.equalsIgnoreCase(Config.getFeedClientId()) && Data.userData.getFeedEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getProsClientId()) && Data.userData.getProsEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && Data.userData.getDeliveryCustomerEnabled() != 1)
+							|| (Data.userData.getIntegratedJugnooEnabled() == 0)
 							){
 						clientId = Config.getAutosClientId();
 					}

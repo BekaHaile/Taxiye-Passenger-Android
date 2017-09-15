@@ -365,9 +365,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 								&& closeTracking == 1
 								&& (PushFlags.STATUS_CHANGED.getOrdinal() == flag
 								|| PushFlags.MENUS_STATUS.getOrdinal() == flag
-								|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag
-								|| PushFlags.DELIVERY_CUSTOMER_STATUS.getOrdinal() == flag
-								|| PushFlags.DELIVERY_CUSTOMER_STATUS_SILENT.getOrdinal() == flag)) {
+								|| PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag)) {
 							activity.finish();
 							activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 							new Handler().postDelayed(new Runnable() {

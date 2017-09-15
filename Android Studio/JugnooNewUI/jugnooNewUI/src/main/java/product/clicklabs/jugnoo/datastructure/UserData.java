@@ -173,7 +173,6 @@ public class UserData {
 		this.freshEnabled = freshEnabled;
 		this.groceryEnabled = groceryEnabled;
 		this.menusEnabled = menusEnabled;
-		this.deliveryCustomerEnabled = deliveryEnabled;
 		this.payEnabled = payEnabled;
 		this.deliveryEnabled = deliveryEnabled;
 		this.feedEnabled = feedEnabled;

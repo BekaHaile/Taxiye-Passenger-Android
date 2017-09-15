@@ -3517,7 +3517,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     getMealFragment().getAllProducts(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.GROCERY && getGroceryFragment() != null) {
                     getGroceryFragment().getAllProducts(true, getSelectedLatLng());
-                } else if (isMenusOrDeliveryOpen()&& getMenusFragment() != null) {
+                } else if ((appType == AppConstant.ApplicationType.MENUS || appType == AppConstant.ApplicationType.DELIVERY_CUSTOMER)
+                        && getMenusFragment() != null) {
                     getMenusFragment().getAllMenus(true, getSelectedLatLng(), false);
                 } else if (appType == AppConstant.ApplicationType.FEED && getFeedHomeFragment() != null) {
                     getFeedHomeFragment().fetchFeedsApi(true, true, true);
