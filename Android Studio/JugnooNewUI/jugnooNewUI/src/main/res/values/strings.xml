@@ -1117,7 +1117,7 @@
     <string name="restaurant_name_star_format">%s Name*</string>
     <string name="locality_optional">Locality (optional)</string>
     <string name="telephone_number_optional">Telephone Number (optional)</string>
-    <string name="restaurant_name_is_neccessary">Restaurant name is neccessary</string>
+    <string name="restaurant_name_is_neccessary">Name is required</string>
 
     <string name="star_icon">&#xe900;</string>
     <string name="back_arrow">&#xe901;</string>
@@ -1247,7 +1247,7 @@
     <string name="label_sample">Label e.g. Friend’s Home</string>
     <string name="flat_number_hint">Flat Number/ House No./ Apt Name</string>
     <string name="landmark">Landmark</string>
-    <string name="tracking_not_available_message">Tracking available once your order is dispatched</string>
+    <string name="tracking_not_available_message">Live tracking will be enabled after order dispatch.</string>
     <string name="some_error_occured_try_again">Some error occured\\nTry again</string>
     <string name="you_are_first_in_queue">You are first in queue</string>
     <string name="enter_location">Enter location</string>

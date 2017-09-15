@@ -119,7 +119,7 @@ public class ApiGetRideSummary {
 									finalDatum = showPanelResponse.getDatum();
 								} else if(productType == ProductType.MENUS && showPanelResponse.getMenusDatum() != null && showPanelResponse.getMenusDatum().getProductType() != null){
 									finalDatum = showPanelResponse.getMenusDatum();
-								} else if(productType == ProductType.DELIVERY_CUSTOMER && showPanelResponse.getMenusDatum() != null && showPanelResponse.getMenusDatum().getProductType() != null){
+								} else if(productType == ProductType.DELIVERY_CUSTOMER && showPanelResponse.getDeliveryCustomerDatum() != null && showPanelResponse.getDeliveryCustomerDatum().getProductType() != null){
 									finalDatum = showPanelResponse.getDeliveryCustomerDatum();
 								}
 								int supportCategory = finalSupportCategory;

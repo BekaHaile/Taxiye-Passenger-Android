@@ -439,5 +439,10 @@
         android:layout_height="@dimen/dp_1"
         android:background="@color/stroke_light_grey_alpha"
         />
+    <View
+        android:id="@+id/vDivider"
+        android:layout_width="match_parent"
+          android:background="@drawable/shadow_gradient_seperator"
+          android:layout_height="8dp"/>
 
 </LinearLayout>

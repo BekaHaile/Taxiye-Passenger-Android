@@ -2,6 +2,7 @@ package com.sabkuchfresh.retrofit.model.menus;
 
 import android.content.Context;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
@@ -344,6 +345,12 @@ public class MenusResponse implements Serializable {
 		@SerializedName("restaurant_timings")
 		@Expose
 		private List<RestaurantTiming> restaurantTimings;
+		@SerializedName("latitude")
+		@Expose
+		private double latitude;
+		@SerializedName("longitude")
+		@Expose
+		private double longitude;
 
 		public boolean isChatModeEnabled() {
 			return chatMode == 1;
@@ -738,6 +745,10 @@ public class MenusResponse implements Serializable {
 				return sb.toString().substring(0, sb.length()-1);
 			}
 			return sb.toString();
+		}
+
+		public LatLng getLatLng() {
+			return new LatLng(latitude, longitude);
 		}
 	}
 

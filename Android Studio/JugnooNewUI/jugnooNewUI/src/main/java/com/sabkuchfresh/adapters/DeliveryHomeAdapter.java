@@ -89,7 +89,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int BLANK_LAYOUT = 11;
 
 
-    private static final int RECENT_ORDERS_TO_SHOW = 2;
+    private static final int RECENT_ORDERS_TO_SHOW = 1;
 
     private RecyclerView recyclerView;
 
@@ -135,6 +135,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void setList(MenusResponse menusResponse, boolean isPagination, boolean showAddRestaurantLayout) {
+
+        // for stopping scrolling to form layout editText in case of less vendors
+        recyclerView.requestFocus();
 
         if(!isPagination || dataToDisplay==null)
           this.dataToDisplay = new ArrayList<>();
@@ -564,6 +567,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
                 }
 
+                // if orders are not expanded vDivider will be gone, else visibile
+                if(remainingRecentOrders != null && remainingRecentOrders.size() > 0){
+                    statusHolder.vDivider.setVisibility((ordersExpanded
+                        && !recentOrder.getOrderId().equals(remainingRecentOrders.get(remainingRecentOrders.size()-1).getOrderId())) ? View.VISIBLE : View.GONE);
+                } else {
+                    statusHolder.vDivider.setVisibility(View.GONE);
+                }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -630,9 +641,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             titleHolder.etRestaurantName.setText(getFormItemModel().getRestaurantName());
             titleHolder.etLocality.setText(getFormItemModel().getLocality());
             titleHolder.etTelephone.setText(getFormItemModel().getTelephone());
-            titleHolder.etRestaurantName.setSelection(getFormItemModel().getRestaurantName().length());
             titleHolder.tvCouldNotFind.setText(activity.getString(R.string.could_not_find_favorite_restaurant_format, getFormItemModel().getCategoryName()));
             titleHolder.etRestaurantName.setHint(activity.getString(R.string.restaurant_name_star_format, getFormItemModel().getCategoryName()));
+            titleHolder.etRestaurantName.clearFocus();
+            titleHolder.etLocality.clearFocus();
+            titleHolder.etTelephone.clearFocus();
         }
     }
 
@@ -864,7 +877,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView tvOrderDeliveredDigIn, tvOrderNotDelivered, tvOrderDeliveredYes, tvOrderDeliveredNo;
         LinearLayout llOrderDeliveredYes, llOrderDeliveredNo;
         ImageView ivOrderDeliveredYes, ivOrderDeliveredNo;
-        View vOrderDeliveredMidSep, vOrderDeliveredTopSep;
+        View vOrderDeliveredMidSep, vOrderDeliveredTopSep, vDivider;
 
         ViewOrderStatus(final View itemView, final ItemListener itemListener) {
             super(itemView);
@@ -914,6 +927,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ivOrderDeliveredNo = (ImageView) itemView.findViewById(R.id.ivOrderDeliveredNo);
             vOrderDeliveredMidSep = itemView.findViewById(R.id.vOrderDeliveredMidSep);
             vOrderDeliveredTopSep = itemView.findViewById(R.id.vOrderDeliveredTopSep);
+            vDivider = itemView.findViewById(R.id.vDivider);
 
             View.OnClickListener onClickListener = new View.OnClickListener() {
                 @Override
@@ -1458,5 +1472,4 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         return null;
     }
-
 }

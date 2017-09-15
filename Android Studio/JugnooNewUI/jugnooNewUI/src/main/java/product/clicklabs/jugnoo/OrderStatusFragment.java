@@ -1029,8 +1029,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
                         if (PushFlags.STATUS_CHANGED.getOrdinal() == flag) {
                             getOrderData(activity);
-                        } else if (PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag
-                            || PushFlags.DELIVERY_CUSTOMER_STATUS.getOrdinal() == flag || PushFlags.DELIVERY_CUSTOMER_STATUS_SILENT.getOrdinal() == flag) {
+                        } else if (PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
                             getOrderData(activity);
                         }
                     } catch (Exception e) {

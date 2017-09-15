@@ -53,7 +53,6 @@ import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -118,13 +117,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         GAUtils.trackScreenView(activity.getGaCategory() + HOME);
 
         llRoot = (RelativeLayout) rootView.findViewById(R.id.llRoot);
-        try {
-            if (llRoot != null) {
-                new ASSL(activity, llRoot, 1134, 720, false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         try {
             if (!TextUtils.isEmpty(Data.userData.getUserId())) {
@@ -147,9 +139,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerViewRestaurant.setLayoutManager(linearLayoutManager);
         recyclerViewRestaurant.setItemAnimator(new DefaultItemAnimator());
         recyclerViewRestaurant.setHasFixedSize(false);
+        recyclerViewRestaurant.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+        recyclerViewRestaurant.requestFocus();
 
 
-        vDividerLocation = rootView.findViewById(R.id.vDividerLocation);
+        vDividerLocation = rootView.findViewById(R.id.vDividerLocation); vDividerLocation.setVisibility(View.VISIBLE);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.white);
@@ -414,8 +408,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             e.printStackTrace();
         }
         super.onDestroyView();
-        ASSL.closeActivity(llRoot);
-        System.gc();
     }
 
 
@@ -479,7 +471,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     activity.getMenusFilterFragment().updateDataLists(menusResponse);
                                 }
                                 deliveryDisplayCategoriesView.setCategoryLabelIcon(activity.getCategoryIdOpened());
-                                showCategoriesDropDown(activity.getMenusResponse().getCategories().size() > 1);
+                                showCategoriesDropDown(true, activity.getMenusResponse().getCategories().size());
                                 activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
                                 deliveryHomeAdapter.setList(menusResponse, false, !hasMorePages && activity.getCategoryIdOpened()>0);
 
@@ -560,11 +552,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
             activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
             recyclerViewRestaurant.setVisibility(View.GONE);
-            showCategoriesDropDown(false);
+            showCategoriesDropDown(false, 0);
+            activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
         } else {
             activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
             activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
             recyclerViewRestaurant.setVisibility(View.VISIBLE);
+            activity.getMenusCartSelectedLayout().checkForVisibility();
         }
     }
 
@@ -863,16 +857,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return deliveryDisplayCategoriesView!=null && deliveryDisplayCategoriesView.isDropDownVisible();
     }
 
-    private void showCategoriesDropDown(boolean show){
+    private void showCategoriesDropDown(boolean show, int categoriesCount){
         RelativeLayout.LayoutParams paramsMain = (RelativeLayout.LayoutParams) rlMainContainer.getLayoutParams();
-        if(show){
+        if(activity.getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER && show && categoriesCount > 0){
             deliveryDisplayCategoriesView.setRootVisibility(View.VISIBLE);
             paramsMain.setMargins(0, activity.getResources().getDimensionPixelSize(R.dimen.height_category_bar), 0, 0);
-            vDividerLocation.setVisibility(View.VISIBLE);
+            deliveryDisplayCategoriesView.setViewAccCategoriesCount(categoriesCount);
         } else {
             deliveryDisplayCategoriesView.setRootVisibility(View.GONE);
             paramsMain.setMargins(0, 0, 0, 0);
-            vDividerLocation.setVisibility(View.VISIBLE);
         }
         rlMainContainer.setLayoutParams(paramsMain);
     }

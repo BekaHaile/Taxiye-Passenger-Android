@@ -8,7 +8,7 @@
     android:background="@android:color/transparent"
     android:orientation="vertical"
     android:tag="@string/dont_touch_me"
-    android:visibility="gone"
+    android:visibility="visible"
     >
 
 
@@ -71,37 +71,37 @@
             android:layout_marginTop="20dp"
             android:src="@drawable/ic_nav_select_category"/>
 
-        <View
-            android:id="@+id/centerpointY"
-            android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_centerVertical="true"/>
-
-        <TextView
-            android:id="@+id/label_select_category"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/centerpointY"
+            android:orientation="vertical"
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@id/iv_switch_category"
-            android:text="@string/label_select_category"
-            android:textColor="@color/text_color_hint"
+            android:layout_centerVertical="true"
+            >
 
-            android:textSize="12sp"
-            app:font="@string/maven"/>
+            <TextView
+                android:id="@+id/label_select_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_select_category"
+                android:textColor="@color/text_color_hint"
+                android:textSize="12sp"
+                android:layout_marginBottom="@dimen/dp_3"
+                app:font="@string/maven"/>
 
 
-        <TextView
-            android:id="@+id/tv_category_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/centerpointY"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@id/iv_switch_category"
-            android:text="@string/label_category_all"
-            android:textColor="@color/text_color"
-            android:textSize="14.5sp"
-            app:font="@string/maven"/>
+            <TextView
+                android:id="@+id/tv_category_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_category_all"
+                android:textColor="@color/text_color"
+                android:textSize="14.5sp"
+                app:font="@string/maven"/>
+        </LinearLayout>
+
+
 
 
         <ImageView
