@@ -461,14 +461,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 status.clear();
                                 status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
-                                // check if only one category is coming view will be set like single category expanded
-                                if (activity.getCategoryIdOpened() < 0 && !isSearchingCase(searchTextCurr)) {
+                                //no category opened, no filters applied and no search ongoing
+                                if (activity.getCategoryIdOpened() < 0 && !activity.isFilterApplied() && !isSearchingCase(searchTextCurr)) {
                                     if (menusResponse.getCategories().size() == 1) {
                                         activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
                                     }
                                     activity.setMenusResponse(menusResponse);
                                     deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
                                 }
+
                                 if (activity.getMenusFilterFragment() != null) {
                                     activity.getMenusFilterFragment().updateDataLists(menusResponse);
                                 }

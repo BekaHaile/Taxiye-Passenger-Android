@@ -416,6 +416,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         if(getMenusFilterFragment() != null){
                             getMenusFilterFragment().performBackPress(false);
                         }
+                        topBar.ivFilterApplied.setVisibility(isFilterApplied() ? View.VISIBLE : View.GONE);
                     }
                 }
 

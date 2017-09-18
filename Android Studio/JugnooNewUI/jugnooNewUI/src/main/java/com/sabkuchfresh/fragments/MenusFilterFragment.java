@@ -2,6 +2,7 @@ package com.sabkuchfresh.fragments;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -218,11 +219,16 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		});
 
 
-
 		return rootView;
 	}
 
-
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		if(activity.getMenusResponse() != null) {
+			updateDataLists(activity.getMenusResponse());
+		}
+	}
 
 	public void setCuisinesList(){
 		String cuisinesSelectedText = "";

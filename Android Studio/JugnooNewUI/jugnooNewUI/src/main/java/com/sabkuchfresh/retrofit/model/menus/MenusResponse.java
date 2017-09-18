@@ -158,6 +158,9 @@ public class MenusResponse {
 	}
 
 	public List<KeyValuePair> getFilters() {
+		if(filters == null){
+			filters = new ArrayList<>();
+		}
 		return filters;
 	}
 
@@ -166,6 +169,9 @@ public class MenusResponse {
 	}
 
 	public List<KeyValuePair> getSorting() {
+		if(sorting == null){
+			sorting = new ArrayList<>();
+		}
 		return sorting;
 	}
 

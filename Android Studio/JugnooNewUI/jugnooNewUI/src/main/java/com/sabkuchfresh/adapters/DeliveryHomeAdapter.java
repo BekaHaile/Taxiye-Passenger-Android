@@ -137,7 +137,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void setList(MenusResponse menusResponse, boolean isPagination, boolean hasMorePages) {
 
         // for stopping scrolling to form layout editText in case of less vendors
-        recyclerView.requestFocus();
+        if(activity.getMenusFragment() != null && !activity.getMenusFragment().getSearchOpened()) {
+            recyclerView.requestFocus();
+        }
 
         if(!isPagination || dataToDisplay==null)
           this.dataToDisplay = new ArrayList<>();
