@@ -2077,7 +2077,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 setLocalityAddressFirstTime(Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType));
                 orderJustCompleted = false;
             }
-        }, 1000);
+        }, 300);
         clearEtFocus();
     }
 

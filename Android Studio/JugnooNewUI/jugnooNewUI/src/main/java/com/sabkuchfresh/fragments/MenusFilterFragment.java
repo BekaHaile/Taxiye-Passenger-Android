@@ -474,7 +474,11 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 				switch (viewClicked.getId()){
 					case R.id.relative:
 						if(isSort){
-							activity.setSortBySelected(filters.get(pos));
+							if(activity.getSortBySelected() != null && activity.getSortBySelected().equals(filters.get(pos))){
+								activity.setSortBySelected(null);
+							} else {
+								activity.setSortBySelected(filters.get(pos));
+							}
 							notifyDataSetChanged();
 							applyRealTimeFilters();
 							GAUtils.event(activity.getGaCategory(), GAAction.FILTERS + GAAction.SORT_BY, filters.get(pos).getKey());

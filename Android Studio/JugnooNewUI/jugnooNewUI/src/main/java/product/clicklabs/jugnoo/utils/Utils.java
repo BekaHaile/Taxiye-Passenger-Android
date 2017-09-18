@@ -919,6 +919,13 @@ public class Utils implements GAAction, GACategory{
 		}
 		return decimalFormat2Decimal;
 	}
+	private static DecimalFormat decimalFormat1Decimal;
+	public static DecimalFormat getDecimalFormat1Decimal(){
+		if(decimalFormat1Decimal == null){
+			decimalFormat1Decimal = new DecimalFormat("0.0");
+		}
+		return decimalFormat1Decimal;
+	}
 
 	public static String getDoubleTwoDigits(Double amount){
 		String finalVal;

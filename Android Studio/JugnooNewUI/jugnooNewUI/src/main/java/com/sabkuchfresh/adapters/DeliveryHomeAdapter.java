@@ -466,7 +466,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             int visibilityRating = View.GONE;
             if (vendor.getRating() != null && vendor.getRating() >= 0d) {
                 visibilityRating = View.VISIBLE;
-                ((ViewHolderVendor) mholder).tvReviewCount.setText(Utils.getDecimalFormat2Decimal().format(vendor.getRating()));
+                ((ViewHolderVendor) mholder).tvReviewCount.setText(Utils.getDecimalFormat1Decimal().format(vendor.getRating()));
 
                 if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
                     ((ViewHolderVendor) mholder).tvReviewCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_star_white_10,0,0,0);
@@ -662,7 +662,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + " - " + deliveryTime;
         }
 
-        return deliveryTime + "mins";
+        return deliveryTime + " mins";
     }
 
     @Override
