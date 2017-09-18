@@ -35,6 +35,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Pair;
@@ -4277,15 +4278,25 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
      * @param vendor restaurant object
      * @param textView textView to set delivery time to
      * @param colorResId resource id of color file for color to set to textView's drawable
+     * @param isColor
      * @return returns the visibility for textView
      */
-    public int setVendorDeliveryTimeAndDrawableColorToTextView(MenusResponse.Vendor vendor, TextView textView, int colorResId) {
+    public int setVendorDeliveryTimeAndDrawableColorToTextView(MenusResponse.Vendor vendor, TextView textView, int colorResId, boolean isColor) {
         if (!TextUtils.isEmpty(vendor.getDeliveryTimeText())) {
-            textView.setText(Utils.trimHTML(Utils.fromHtml(vendor.getDeliveryTimeText())));
+            textView.setText(Utils.trimHTML(Utils.fromHtml(vendor.getDeliveryTimeText() + " ")));
             setTextViewDrawableColor(textView, ContextCompat.getColor(this, colorResId));
             return View.VISIBLE;
         } else if (vendor.getDeliveryTimeText() == null) {
-            final String prefix;
+            showDeliveryStringWithTime(vendor, textView, colorResId, true);
+            return View.VISIBLE;
+        } else {
+            return View.GONE;
+        }
+    }
+
+    public int showDeliveryStringWithTime(MenusResponse.Vendor vendor, TextView textView, int colorResId, boolean showPrefixes) {
+        try {
+            String prefix =null;
             final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
             final SpannableStringBuilder sb;
             if (vendor.getIsClosed() == 0) {
@@ -4293,12 +4304,21 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if (vendor.getMinDeliveryTime() != null) {
                     deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + "-" + deliveryTime;
                 }
+
+
+
+
                 prefix = getString(R.string.delivers_in);
-                sb = new SpannableStringBuilder(deliveryTime + " mins");
+
+
+                sb = new SpannableStringBuilder(deliveryTime + " mins ");
 
             } else {
+
                 prefix = getString(R.string.opens_at);
-                sb = new SpannableStringBuilder(String.valueOf(DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt())));
+
+
+                sb = new SpannableStringBuilder(String.valueOf(DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt() + " ")));
             }
             sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             textView.setText(prefix);
@@ -4306,11 +4326,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             textView.append(sb);
             textView.append(".");
             setTextViewDrawableColor(textView, ContextCompat.getColor(this, colorResId));
-            return View.VISIBLE;
-        } else {
+        } catch (Exception e) {
+            e.printStackTrace();
             return View.GONE;
         }
+        return View.VISIBLE;
     }
+
+
 
     public FABViewTest getFabViewTest() {
         return fabViewTest;
@@ -4331,6 +4354,25 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         return ratingColor;
     }
+
+
+    public int setRatingAndGetColorNewMenus(TextView tv, Double rating, String colorCode, boolean setBackgroundColor) {
+        Spannable spannable = new SpannableString(getString(R.string.star_icon) + " " + rating);
+        spannable.setSpan(new CustomTypeFaceSpan("", Fonts.iconsFont(this)), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv.setText(spannable);
+        int ratingColor;
+        if (colorCode != null && colorCode.startsWith("#") && colorCode.length() == 7) ratingColor = Color.parseColor(colorCode);
+        else
+            ratingColor = Color.GREEN; //default Green Color
+
+        if (setBackgroundColor) {
+            spannable.setSpan(new ForegroundColorSpan(Color.parseColor("#fac917")), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        return ratingColor;
+    }
+
+
 
     public int getParsedColor(String colorCode, Integer defaultColor){
         int ratingColor;

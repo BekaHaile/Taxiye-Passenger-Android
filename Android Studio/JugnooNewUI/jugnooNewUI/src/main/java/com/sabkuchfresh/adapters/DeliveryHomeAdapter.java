@@ -1,8 +1,10 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -24,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.picker.image.util.Util;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -31,6 +34,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundBorderTransform;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -363,34 +367,20 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 vendor.setIsClosed(1);
             }
 
-            int visMinOrder = View.VISIBLE;
-            if(!TextUtils.isEmpty(vendor.getMinOrderText())){
-                mHolder.textViewMinimumOrder.setText(Utils.trimHTML(Utils.fromHtml(vendor.getMinOrderText())));
-            } else if(vendor.getMinOrderText() == null) {
-                if (vendor.getMinimumOrderAmount() != null && vendor.getMinimumOrderAmount() > 0) {
-                    mHolder.textViewMinimumOrder.setText(activity.getString(R.string.minimum_order_rupee_format, Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
-                } else {
-                    mHolder.textViewMinimumOrder.setText(R.string.no_minimum_order);
-                }
-            } else {
-                visMinOrder = View.GONE;
-            }
+            int visMinOrder = vendor.getMinimumOrderAmount() != null && vendor.getMinimumOrderAmount() > 0? View.VISIBLE:View.GONE;
+            String deliveryTime = showDeliveryStringWithTime(vendor, mHolder.textViewDelivery);
+            String distance = getDistanceRestaurant(vendor);
 
-            int visDeliveryTime = activity.setVendorDeliveryTimeAndDrawableColorToTextView(vendor, mHolder.textViewDelivery, R.color.text_color);
             int visibilityCloseTime = View.VISIBLE;
             RelativeLayout.LayoutParams paramsCloseTime = (RelativeLayout.LayoutParams) mHolder.textViewRestaurantCloseTime.getLayoutParams();
-            RelativeLayout.LayoutParams paramsDelivery = (RelativeLayout.LayoutParams) mHolder.textViewDelivery.getLayoutParams();
 
             // restaurant is closed or not available
             if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
-                mHolder.textViewRestaurantCloseTime.setText(R.string.closed);
-                paramsCloseTime.addRule(RelativeLayout.BELOW, mHolder.textViewMinimumOrder.getId());
+                mHolder.textViewRestaurantCloseTime.setText(activity.getString(R.string.closed) + " ");
+               /* paramsCloseTime.addRule(RelativeLayout.BELOW, mHolder.textViewMinimumOrder.getId());
                 paramsCloseTime.setMargins(paramsCloseTime.leftMargin, (int)(ASSL.Yscale() * 14f), (int)(ASSL.Xscale() * 14f),
-                        paramsCloseTime.bottomMargin);
+                        paramsCloseTime.bottomMargin);*/
 
-                paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 23f), paramsDelivery.rightMargin,
-                        (int)(ASSL.Yscale() * 26f));
-                paramsDelivery.addRule(RelativeLayout.RIGHT_OF, mHolder.textViewRestaurantCloseTime.getId());
                 mHolder.imageViewRestaurantImage.setColorFilter(BW_FILTER);
                 mHolder.tvOffer.getBackground().setColorFilter(BW_FILTER);
                 mHolder.textViewMinimumOrder.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
@@ -398,34 +388,43 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 mHolder.imageViewRestaurantImage.setColorFilter(null);
                 mHolder.tvOffer.getBackground().setColorFilter(null);
-                mHolder.textViewMinimumOrder.setTextColor(ContextCompat.getColor(activity,R.color.order_history_status_color));
+                mHolder.textViewMinimumOrder.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
 
                 // restaurant about to close
                 if (minutes <= vendor.getBufferTime() && minutes > 0) {
-                    mHolder.textViewRestaurantCloseTime.setText("Closing in " + minutes + (minutes>1?" mins":" min"));
-                    paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 14f), paramsDelivery.rightMargin,
-                            (int)(ASSL.Yscale() * 14f));
+                    mHolder.textViewRestaurantCloseTime.setText("Closing in " + minutes + (minutes>1?" mins ":" min" ));
+
                 }
                 // restaurant is open
                 else {
                     visibilityCloseTime = View.GONE;
-                    paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 14f), paramsDelivery.rightMargin,
-                            (int)(ASSL.Yscale() * 26f));
+
                 }
-                paramsDelivery.addRule(RelativeLayout.RIGHT_OF, mHolder.imageViewRestaurantImage.getId());
-                paramsCloseTime.addRule(RelativeLayout.BELOW, mHolder.textViewDelivery.getId());
+               /* paramsCloseTime.addRule(RelativeLayout.BELOW, mHolder.textViewDelivery.getId());
                 paramsCloseTime.setMargins(paramsCloseTime.leftMargin, visDeliveryTime != View.VISIBLE ? (int)(ASSL.Yscale() * 14f) : 0, 0,
-                        paramsCloseTime.bottomMargin);
+                        paramsCloseTime.bottomMargin);*/
             }
             mHolder.textViewRestaurantCloseTime.setVisibility(visibilityCloseTime);
-            mHolder.textViewRestaurantCloseTime.setLayoutParams(paramsCloseTime);
-            mHolder.textViewDelivery.setLayoutParams(paramsDelivery);
-            mHolder.textViewDelivery.setVisibility(visDeliveryTime == View.VISIBLE ? View.VISIBLE : View.GONE);
+//            mHolder.textViewRestaurantCloseTime.setLayoutParams(paramsCloseTime);
+            if(deliveryTime!=null){
+                ((ViewHolderVendor) mholder).textViewDelivery.setText(distance + activity.getString(R.string.bullet) + " " + deliveryTime);
+
+            }else{
+                ((ViewHolderVendor) mholder).textViewDelivery.setText(distance);
+
+            }
+//            mHolder.textViewDelivery.setVisibility(visDeliveryTime == View.VISIBLE ? View.VISIBLE : View.GONE);
+
+            if(visMinOrder==View.VISIBLE){
+                mHolder.textViewMinimumOrder.setText(activity.getString(visibilityCloseTime==View.VISIBLE?R.string.minimum_order_rupee_short_format:R.string.minimum_order_rupee_format,
+                        Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
+            }
+
             mHolder.textViewMinimumOrder.setVisibility(visMinOrder);
 
 
-            mHolder.textViewAddressLine.setVisibility(!TextUtils.isEmpty(vendor.getDisplayAddress()) ? View.VISIBLE : View.GONE);
-            mHolder.textViewAddressLine.setText(vendor.getDisplayAddress());
+            //mHolder.textViewAddressLine.setVisibility(!TextUtils.isEmpty(vendor.getDisplayAddress()) ? View.VISIBLE : View.GONE);
+            //mHolder.textViewAddressLine.setText(vendor.getDisplayAddress());
 
 
             int visibilityCuisines = View.VISIBLE;
@@ -467,15 +466,19 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             int visibilityRating = View.GONE;
             if (vendor.getRating() != null && vendor.getRating() >= 0d) {
                 visibilityRating = View.VISIBLE;
+                ((ViewHolderVendor) mholder).tvReviewCount.setText(Utils.getDecimalFormat2Decimal().format(vendor.getRating()));
+
                 if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
-                    setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating(), vendor.getReviewCount());
+                    ((ViewHolderVendor) mholder).tvReviewCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_star_white_10,0,0,0);
                 } else{
-                    setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating(), vendor.getReviewCount());
+                    ((ViewHolderVendor) mholder).tvReviewCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_star_yellow_10,0,0,0);
+
                 }
             }
-            mHolder.llRatingStars.setVisibility(visibilityRating);
+            mHolder.tvReviewCount.setVisibility(visibilityRating);
+            mHolder.viewReviewShadow.setVisibility(visibilityRating);
 
-            mHolder.tvOffer.setVisibility(TextUtils.isEmpty(vendor.getOfferText())?View.GONE:View.VISIBLE);
+            mHolder.tvOffer.setVisibility(TextUtils.isEmpty(vendor.getOfferText())?View.INVISIBLE:View.VISIBLE);
             mHolder.tvOffer.setText(vendor.getOfferText());
         } else if(mholder instanceof ViewOrderStatus){
 
@@ -637,6 +640,29 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             titleHolder.etLocality.clearFocus();
             titleHolder.etTelephone.clearFocus();
         }
+    }
+
+    private String getDistanceRestaurant(MenusResponse.Vendor vendor) {
+        if(vendor.getDistance()>1){
+           return Utils.getDecimalFormat2Decimal().format(vendor.getDistance()) + " kms " ;
+        }
+        double distance = vendor.getDistance() * 1000;
+        return Utils.getDecimalFormat2Decimal().format(vendor.getDistance()) + " m " ;
+
+
+    }
+
+    private String showDeliveryStringWithTime(MenusResponse.Vendor vendor, TextView textViewDelivery) {
+        if(vendor.getDeliveryTime()==null){
+            return null;
+        }
+
+        String deliveryTime = String.valueOf(vendor.getDeliveryTime());
+        if (vendor.getMinDeliveryTime() != null) {
+            deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + " - " + deliveryTime;
+        }
+
+        return deliveryTime + "mins";
     }
 
     @Override
@@ -825,8 +851,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         View vSep;
         ImageView imageViewRestaurantImage;
         TextView textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines;
-        TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery,tvOffer;
-        LinearLayout llRatingStars;TextView tvReviewCount;
+        TextView textViewRestaurantCloseTime, textViewDelivery,tvOffer;
+        TextView tvReviewCount;
+        View viewReviewShadow;
+//        TextView textViewAddressLine;
 
 
 
@@ -846,11 +874,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textViewMinimumOrder = (TextView) itemView.findViewById(R.id.textViewMinimumOrder);
             textViewRestaurantCusines = (TextView) itemView.findViewById(R.id.textViewRestaurantCusines);
             textViewRestaurantCloseTime = (TextView) itemView.findViewById(R.id.textViewRestaurantCloseTime);
-            textViewAddressLine = (TextView) itemView.findViewById(R.id.textViewAddressLine);
+            viewReviewShadow = (View) itemView.findViewById(R.id.view_review_shadow);
+//            textViewAddressLine = (TextView) itemView.findViewById(R.id.textViewAddressLine);
             textViewDelivery = (TextView) itemView.findViewById(R.id.textViewDelivery);
-            llRatingStars = (LinearLayout) itemView.findViewById(R.id.llRatingStars);
-            tvReviewCount = (TextView) itemView.findViewById(R.id.tvReviewCount);
-            tvOffer = (TextView)itemView.findViewById(R.id.tv_offer);
+            tvReviewCount = (TextView) itemView.findViewById(R.id.tvReviewCount);tvReviewCount.setTypeface(tvReviewCount.getTypeface(),Typeface.BOLD);
+            tvOffer = (TextView)itemView.findViewById(R.id.tv_offer);tvOffer.setTypeface(tvOffer.getTypeface(),Typeface.BOLD);
         }
     }
     private class ViewOrderStatus extends RecyclerView.ViewHolder {

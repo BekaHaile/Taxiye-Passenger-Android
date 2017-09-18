@@ -1070,7 +1070,8 @@
     <string name="free_delivery">Free Delivery</string>
 
     <string name="delivers_in">Delivers in</string>
-    <string name="minimum_order_rupee_format">Minimum Order amount \u20B9%s</string>
+    <string name="minimum_order_rupee_format">Minimum Order  \u20B9%s</string>
+    <string name="minimum_order_rupee_short_format"> \u2022 Min  \u20B9%s</string>
     <string name="jugnoo_star">Jugnoo star</string>
     <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for JUGNOO STARS.</string>
     <string name="no">No</string>

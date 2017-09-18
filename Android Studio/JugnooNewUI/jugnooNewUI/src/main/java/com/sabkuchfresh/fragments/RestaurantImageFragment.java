@@ -176,7 +176,7 @@ public class RestaurantImageFragment extends Fragment {
 
                 tvRestTitle.setText(activity.getVendorOpened().getName().toUpperCase());
 
-                int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), tvCollapRestaurantDeliveryTime, R.color.white);
+                int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), tvCollapRestaurantDeliveryTime, R.color.white, true);
                 tvCollapRestaurantDeliveryTime.setVisibility(visibility == View.VISIBLE ? View.VISIBLE : View.GONE);
 
                 if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {

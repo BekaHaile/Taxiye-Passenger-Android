@@ -429,7 +429,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 activity.ivCollapseRestImage.setImageDrawable(null);
             }
 
-            int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime, R.color.white);
+            int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime, R.color.white, true);
 			activity.tvCollapRestaurantDeliveryTime.setVisibility(visibility == View.VISIBLE ? View.VISIBLE : View.GONE);
 
             if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {

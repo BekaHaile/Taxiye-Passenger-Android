@@ -469,7 +469,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     visMinOrder = View.GONE;
                 }
 
-                int visDeliveryTime = activity.setVendorDeliveryTimeAndDrawableColorToTextView(vendor, mHolder.textViewDelivery, R.color.text_color);
+                int visDeliveryTime = activity.setVendorDeliveryTimeAndDrawableColorToTextView(vendor, mHolder.textViewDelivery, R.color.text_color, true);
                 int visibilityCloseTime = View.VISIBLE;
                 RelativeLayout.LayoutParams paramsCloseTime = (RelativeLayout.LayoutParams) mHolder.textViewRestaurantCloseTime.getLayoutParams();
                 RelativeLayout.LayoutParams paramsDelivery = (RelativeLayout.LayoutParams) mHolder.textViewDelivery.getLayoutParams();
@@ -517,8 +517,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 mHolder.textViewMinimumOrder.setVisibility(visMinOrder);
 
 
-                mHolder.textViewAddressLine.setVisibility(!TextUtils.isEmpty(vendor.getDisplayAddress()) ? View.VISIBLE : View.GONE);
-                mHolder.textViewAddressLine.setText(vendor.getDisplayAddress());
+
+
 
 
                 int visibilityCuisines = View.VISIBLE;
@@ -821,8 +821,9 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         View vSep;
         ImageView imageViewRestaurantImage;
         TextView textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines;
-        TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery,tvOffer;
+        TextView textViewRestaurantCloseTime, textViewDelivery,tvOffer;
         LinearLayout llRatingStars;TextView tvReviewCount;
+        TextView textViewAddressLine;
 
 
 
@@ -836,7 +837,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             textViewMinimumOrder = (TextView) itemView.findViewById(R.id.textViewMinimumOrder); textViewMinimumOrder.setTypeface(Fonts.mavenMedium(context));
             textViewRestaurantCusines = (TextView) itemView.findViewById(R.id.textViewRestaurantCusines); textViewRestaurantCusines.setTypeface(Fonts.mavenMedium(context));
             textViewRestaurantCloseTime = (TextView) itemView.findViewById(R.id.textViewRestaurantCloseTime);textViewRestaurantCloseTime.setTypeface(Fonts.mavenMedium(context));
-            textViewAddressLine = (TextView) itemView.findViewById(R.id.textViewAddressLine);textViewAddressLine.setTypeface(Fonts.mavenMedium(context));
+//            textViewAddressLine = (TextView) itemView.findViewById(R.id.textViewAddressLine);textViewAddressLine.setTypeface(Fonts.mavenMedium(context));
             textViewDelivery = (TextView) itemView.findViewById(R.id.textViewDelivery);textViewDelivery.setTypeface(Fonts.mavenMedium(context));
             llRatingStars = (LinearLayout) itemView.findViewById(R.id.llRatingStars);
             tvReviewCount = (TextView) itemView.findViewById(R.id.tvReviewCount);
