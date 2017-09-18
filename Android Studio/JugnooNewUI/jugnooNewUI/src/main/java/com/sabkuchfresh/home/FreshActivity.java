@@ -1641,16 +1641,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             llAddToCart.setVisibility(llAddToCartVis);
             llPayViewContainer.setVisibility(llPayViewContainerVis);
 
-            RelativeLayout.LayoutParams titleLayoutParams = (RelativeLayout.LayoutParams) topBar.title.getLayoutParams();
-            if (topBar.getLlSearchCart().getVisibility() == View.VISIBLE) {
-                topBar.title.setGravity(Gravity.LEFT);
-                titleLayoutParams.setMargins((int) (ASSL.Xscale() * 20f), 0, 0, 0);
-                titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.getLlSearchCart().getId());
-                topBar.title.setPadding(0, 0, 0, 0);
-            }
-            else {
-                topBar.title.setGravity(Gravity.CENTER);
-                titleLayoutParams.setMargins(0, 0, (int) (ASSL.Xscale() * 50f), 0);
+            if (llSearchCartVis == View.VISIBLE) {
+                setTitleAlignment(false);
+            } else {
+                setTitleAlignment(true);
             }
             if(fragment instanceof FeedReserveSpotFragment
                     || fragment instanceof FeedSpotReservedSharingFragment
@@ -1658,24 +1652,38 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 					|| fragment instanceof FeedChangeCityFragment
 					|| fragment instanceof RestaurantReviewsListFragment
                     || fragment instanceof RestaurantAddReviewFragment
-                    || fragment instanceof FeedbackFragment
-                    || fragment instanceof MealFragment
-                    || fragment instanceof ProsHomeFragment){
-                topBar.title.setGravity(Gravity.CENTER);
-				titleLayoutParams.setMargins(0, 0, (int) (ASSL.Xscale() * 50f), 0);
+                    || fragment instanceof FeedbackFragment){
+                setTitleAlignment(true);
+            } else if (fragment instanceof MenusFragment
+                    || fragment instanceof FreshHomeFragment
+                    || fragment instanceof MealFragment){
+                setTitleAlignment(false);
             }
 
 
             topBar.ivFreshSort.setVisibility(freshSortVis);
 
             feedHomeAddPostView.setVisibility(View.GONE);
-            topBar.title.setLayoutParams(titleLayoutParams);
             setCollapsingToolbar(fragment instanceof MerchantInfoFragment, fragment);
 
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setTitleAlignment(boolean center){
+        RelativeLayout.LayoutParams titleLayoutParams = (RelativeLayout.LayoutParams) topBar.title.getLayoutParams();
+        if(center){
+            topBar.title.setGravity(Gravity.CENTER);
+            titleLayoutParams.setMargins(0, 0, (int) (ASSL.Xscale() * 50f), 0);
+        } else {
+            topBar.title.setGravity(Gravity.LEFT);
+            titleLayoutParams.setMargins((int) (ASSL.Xscale() * 20f), 0, 0, 0);
+            titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.getLlSearchCart().getId());
+            topBar.title.setPadding(0, 0, 0, 0);
+        }
+        topBar.title.setLayoutParams(titleLayoutParams);
     }
 
     public void setMenusFilterVisibility(int rlFilterVis) {

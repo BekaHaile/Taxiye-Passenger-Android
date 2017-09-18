@@ -406,8 +406,10 @@ public class Data {
                 Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
             } else if (AppLinkIndex.MEAL_PAGE.getOrdinal() == Data.deepLinkIndex) {
                 Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMealsClientId());
-            } else if (AppLinkIndex.DELIVERY_PAGE.getOrdinal() == Data.deepLinkIndex) {
-                Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryClientId());
+            } else if (AppLinkIndex.MENUS_PAGE.getOrdinal() == Data.deepLinkIndex) {
+                Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
+            } else if (AppLinkIndex.DELIVERY_CUSTOMER_PAGE.getOrdinal() == Data.deepLinkIndex) {
+                Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryCustomerClientId());
             }
         } catch (Exception e1) {
             e1.printStackTrace();

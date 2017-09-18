@@ -107,6 +107,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         activity.fragmentUISetup(this);
         activity.setDeliveryAddressView(rootView);
         activity.setCategoryIdOpened(-1);
+        activity.getTopBar().getLlSearchCart().setVisibility(View.GONE); //only for first time
 
         deliveryDisplayCategoriesView = new DeliveryDisplayCategoriesView(activity,
                 rootView.findViewById(R.id.rLCategoryDropDown), this);
@@ -379,7 +380,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         activity.setRefreshCart(false);
                     }
                 }, 300);
-                activity.getMenusCartSelectedLayout().checkForVisibility();
+                if(!serviceUnavailable){
+                    activity.getMenusCartSelectedLayout().checkForVisibility();
+                }
 
 
             } else {
@@ -534,7 +537,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private boolean serviceUnavailable;
     private void setUpServiceUnavailability(MenusResponse menusResponse) {
-		serviceUnavailable = (menusResponse.getRecentOrders().size() == 0 && menusResponse.getServiceUnavailable() == 1);
+		serviceUnavailable = (menusResponse.getServiceUnavailable() == 1);
         relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0 && menusResponse.getServiceUnavailable() == 1) ? View.VISIBLE : View.GONE);
 
         if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
@@ -555,11 +558,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             showCategoriesDropDown(false, 0);
             activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
         } else {
-            activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
+            activity.getTopBar().getLlSearchCart().setVisibility(serviceUnavailable ? View.GONE : View.VISIBLE);
             activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
             recyclerViewRestaurant.setVisibility(View.VISIBLE);
             activity.getMenusCartSelectedLayout().checkForVisibility();
         }
+        activity.setTitleAlignment(false);
     }
 
     @NonNull
