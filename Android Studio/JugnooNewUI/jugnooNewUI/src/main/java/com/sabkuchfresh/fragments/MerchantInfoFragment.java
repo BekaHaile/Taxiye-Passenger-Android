@@ -13,6 +13,8 @@ import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.URLSpan;
+import android.text.util.Linkify;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiRestaurantFetchFeedback;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.sabkuchfresh.feed.ui.adapters.FeedHomeAdapter;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
@@ -38,6 +41,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -198,7 +202,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 			}
 		}
 	};
-
+	Pattern httpPattern = Pattern.compile("[a-z]+:\\/\\/[^ \\n]*");
 	void setMerchantInfoToUI() {
 		try {
 			if (activity.getMenuProductsResponse() != null) {
@@ -226,9 +230,14 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 				tvMerchantDisplayAddress.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getDisplayAddress()) ? View.VISIBLE : View.GONE);
 				tvOpensAt.setText(activity.getVendorOpened().getRestaurantTimingsStr());
 				tvMerchantMail.setText(activity.getVendorOpened().getEmail());
+				Linkify.addLinks(tvMerchantMail, Patterns.EMAIL_ADDRESS,"mailto: ");
+				Linkify.addLinks(tvMerchantMail, httpPattern,"");
+				Linkify.addLinks(tvMerchantMail,Patterns.WEB_URL,"http://");
+				stripUnderlines(tvMerchantMail);
 				tvMerchantMail.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getEmail()) ? View.VISIBLE : View.GONE);
 				tvMerchantContact.setText(activity.getVendorOpened().getContactList());
 				tvMerchantContact.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getContactList()) ? View.VISIBLE : View.GONE);
+				Linkify.addLinks(tvMerchantContact, FeedHomeAdapter.PATTERN_PHONE_NUMBER_LOCAL_PATTERN,"tel: ");
 				stripUnderlines(tvMerchantContact);
 				tvMerchantAddress.setText(activity.getVendorOpened().getAddress());
 				tvMerchantAddress.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getAddress()) ? View.VISIBLE : View.GONE);
