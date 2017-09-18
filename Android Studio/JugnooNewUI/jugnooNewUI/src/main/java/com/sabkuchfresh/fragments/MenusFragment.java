@@ -474,7 +474,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 }
                                 deliveryDisplayCategoriesView.setCategoryLabelIcon(activity.getCategoryIdOpened());
                                 showCategoriesDropDown(true, activity.getMenusResponse().getCategories().size());
-                                deliveryHomeAdapter.setList(menusResponse, false, !hasMorePages && activity.getCategoryIdOpened()>0);
+                                deliveryHomeAdapter.setList(menusResponse, false, hasMorePages);
 
 
 
@@ -643,7 +643,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             //set Variables for pagination
                             currentPageCount++;
                             hasMorePages =  menusResponse.isPageLengthComplete();
-                            deliveryHomeAdapter.setList(menusResponse, true,!hasMorePages && activity.getCategoryIdOpened()>0);
+                            deliveryHomeAdapter.setList(menusResponse, true, hasMorePages);
                             isProgressBarRemoved = true;//Set list removes progress bar to accumulate animation of both insert and delete in one go
 
 

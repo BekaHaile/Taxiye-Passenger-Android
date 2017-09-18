@@ -134,7 +134,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public void setList(MenusResponse menusResponse, boolean isPagination, boolean showAddRestaurantLayout) {
+    public void setList(MenusResponse menusResponse, boolean isPagination, boolean hasMorePages) {
 
         // for stopping scrolling to form layout editText in case of less vendors
         recyclerView.requestFocus();
@@ -151,7 +151,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dataToDisplay.add(new DeliveryDivider());
         }
 
-
+        // recent orders
         if(!isPagination && menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0){
             int sizeRecentOrders = menusResponse.getRecentOrders().size();
             ordersExpanded = false;
@@ -171,31 +171,13 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dataToDisplay.add(new DeliveryDivider());
         }
 
+        // vendors
         int vendorsCount = 0;
         if(menusResponse.getVendors() != null){
             dataToDisplay.addAll(menusResponse.getVendors());
             vendorsCount = menusResponse.getVendors().size();
         }
 
-//        if(menusResponse.getCategories() != null) {
-//            for (MenusResponse.Category category : menusResponse.getCategories()) {
-//                if (category.getVendors() != null && category.getVendors().size() > 0) {
-//                    if(activity.getCategoryIdOpened() < 0) {
-//                        dataToDisplay.add(new MenusResponse.Category(category.getImage(), category.getCategoryName()));
-//                    }
-//                    dataToDisplay.addAll(category.getVendors());
-//                    if(activity.getCategoryIdOpened() < 0) {
-//                        if (category.getCount() > category.getVendors().size()) {
-//                            dataToDisplay.add(new DeliverySeeAll(category.getId()));
-//                        }
-//                    }
-//                    dataToDisplay.add(new DeliveryDivider());
-//                    vendorsCount = vendorsCount + category.getVendors().size();
-//                }
-//            }
-//            if(menusResponse.getCategories().size()>0)
-//                dataToDisplay.remove(dataToDisplay.size()-1);
-//        }
 
         // promotional banner or strip
         if(!isPagination && vendorsCount > 0){
@@ -208,30 +190,31 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         }
 
-
-        if(menusResponse.getServiceUnavailable() == 1 || activity.getCategoryIdOpened() < 0) {
-            //if no vendors to show
-            if (!isPagination && (vendorsCount == 0)) {
-                int messageResId = R.string.no_menus_available_your_location;
-                if (activity.getMenusFragment() != null
-                        && !TextUtils.isEmpty(activity.getMenusFragment().getSearchText())) {
-                    messageResId = R.string.oops_no_results_found;
-                } else if (activity.isFilterApplied()) {
-                    messageResId = R.string.no_menus_available_with_these_filters;
+        // service unavailable case
+        if(menusResponse.getServiceUnavailable() == 1 && vendorsCount == 0){
+            int messageResId = R.string.no_menus_available_your_location;
+            if (activity.getMenusFragment() != null
+                    && !TextUtils.isEmpty(activity.getMenusFragment().getSearchText())) {
+                messageResId = R.string.oops_no_results_found;
+            } else if (activity.isFilterApplied()) {
+                messageResId = R.string.no_menus_available_with_these_filters;
+            }
+            dataToDisplay.add(new NoVendorModel(activity.getString(messageResId)));
+        }
+        // no more pages case
+        else if(!hasMorePages) {
+            if (activity.getCategoryIdOpened() < 0) {
+                dataToDisplay.add(BlankFooterModel.getInstance());
+            } else {
+                int index = activity.getMenusResponse().getCategories().indexOf(new MenusResponse.Category(activity.getCategoryIdOpened()));
+                if (index > -1) {
+                    dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(), activity.getMenusResponse().getCategories().get(index).getCategoryName()));
                 }
-                dataToDisplay.add(new NoVendorModel(activity.getString(messageResId)));
-            }
-        } else if(showAddRestaurantLayout){
-            int index = activity.getMenusResponse().getCategories().indexOf(new MenusResponse.Category(activity.getCategoryIdOpened()));
-            if(index > -1){
-                dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(), activity.getMenusResponse().getCategories().get(index).getCategoryName()));
             }
         }
 
-        if(!isPagination && activity.getCategoryIdOpened()<0){
-            dataToDisplay.add(BlankFooterModel.getInstance());
-        }
 
+        // notify logic
        if(isPagination){
             final int sizeListAfterAddding = dataToDisplay.size();
             final int diff = sizeListAfterAddding-sizeListBeforeAdding;
