@@ -1380,7 +1380,7 @@
     <string name="chat_now">Chat Now</string>
     <string name="call">Call</string>
     <string name="add_review">Add Review</string>
-    <string name="order_online">Order Online</string>
+    <string name="order_online">"Order Online "</string>
     <string name="additional_info">Additional Information</string>
     <string name="see_all">See All</string>
     <string name="open_now_colon">Open Now :</string>
@@ -1400,6 +1400,7 @@
 
     <string name="chat_is_not_enabled_format">Chat is not available for %s</string>
     <string name="select_tags">Select Tags</string>
+    <string name="open_now">Open Now</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

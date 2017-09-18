@@ -63,7 +63,6 @@
         android:drawableLeft="@drawable/ic_star_yellow_10"
         android:layout_alignRight="@id/imageViewRestaurantImage"
         android:layout_alignBottom="@id/imageViewRestaurantImage"
-        android:layout_marginLeft="@dimen/dp_15"
         android:gravity="right|bottom"
         android:paddingBottom="2dp"
         android:paddingRight="2dp"

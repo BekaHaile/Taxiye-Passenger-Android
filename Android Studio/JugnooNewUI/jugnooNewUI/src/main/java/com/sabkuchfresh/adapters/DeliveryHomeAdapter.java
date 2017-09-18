@@ -30,6 +30,7 @@ import com.picker.image.util.Util;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
+import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundBorderTransform;
 
@@ -406,21 +407,76 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             mHolder.textViewRestaurantCloseTime.setVisibility(visibilityCloseTime);
 //            mHolder.textViewRestaurantCloseTime.setLayoutParams(paramsCloseTime);
-            if(deliveryTime!=null){
-                ((ViewHolderVendor) mholder).textViewDelivery.setText(distance + activity.getString(R.string.bullet) + " " + deliveryTime);
+            if(activity.getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER){
+                ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setVisibility(View.VISIBLE);
+                if(!TextUtils.isEmpty(vendor.getDisplayAddress())){
+                    ((ViewHolderVendor) mholder).textViewDelivery.setText(distance + activity.getString(R.string.bullet) + " " + vendor.getDisplayAddress());
 
-            }else{
-                ((ViewHolderVendor) mholder).textViewDelivery.setText(distance);
+                }else{
+                    ((ViewHolderVendor) mholder).textViewDelivery.setText(distance);
+
+                }
+                if(vendor.getOrderMode()==0){
+                    ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                    ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+                        if(vendor.getIsClosed()==1 || vendor.getIsAvailable()==0){
+                            ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setText(R.string.closed);
+                        }else{
+                            ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setText(R.string.open_now);
+                        }
+                } else {
+                    if(vendor.getIsClosed()==1 || vendor.getIsAvailable()==0){
+                        ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                        ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
+                    } else {
+                        if (minutes <= vendor.getBufferTime() && minutes > 0) {
+                            ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_exclamation_red, 0, 0, 0);
+                            ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
+                        } else {
+                            ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                            ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setText(R.string.order_online);
+                            ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
+                        }
+                    }
+                }
+                if(deliveryTime!=null){
+                    mHolder.textViewMinimumOrder.setText(activity.getString(R.string.bullet)  + " " +  deliveryTime);
+
+                    mHolder.textViewMinimumOrder.setVisibility(View.VISIBLE);
+
+                }else{
+                    mHolder.textViewMinimumOrder.setVisibility(View.GONE);
+
+                }
+
+
+            } else {
+                if(deliveryTime!=null){
+                    ((ViewHolderVendor) mholder).textViewDelivery.setText(distance + activity.getString(R.string.bullet) + " " + deliveryTime);
+
+                }else{
+                    ((ViewHolderVendor) mholder).textViewDelivery.setText(distance);
+
+                }
+                if(visMinOrder==View.VISIBLE){
+                    mHolder.textViewMinimumOrder.setText(activity.getString(visibilityCloseTime==View.VISIBLE?R.string.minimum_order_rupee_short_format:R.string.minimum_order_rupee_format,
+                            Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
+                }
+
+                mHolder.textViewMinimumOrder.setVisibility(visMinOrder);
+                ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
+                if(vendor.getIsClosed()==1 || vendor.getIsAvailable()==0){
+                    ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                }else{
+                    ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_exclamation_red, 0, 0, 0);
+
+                }
 
             }
+
 //            mHolder.textViewDelivery.setVisibility(visDeliveryTime == View.VISIBLE ? View.VISIBLE : View.GONE);
 
-            if(visMinOrder==View.VISIBLE){
-                mHolder.textViewMinimumOrder.setText(activity.getString(visibilityCloseTime==View.VISIBLE?R.string.minimum_order_rupee_short_format:R.string.minimum_order_rupee_format,
-                        Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
-            }
 
-            mHolder.textViewMinimumOrder.setVisibility(visMinOrder);
 
 
             //mHolder.textViewAddressLine.setVisibility(!TextUtils.isEmpty(vendor.getDisplayAddress()) ? View.VISIBLE : View.GONE);
@@ -466,7 +522,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             int visibilityRating = View.GONE;
             if (vendor.getRating() != null && vendor.getRating() >= 0d) {
                 visibilityRating = View.VISIBLE;
-                ((ViewHolderVendor) mholder).tvReviewCount.setText(Utils.getDecimalFormat1Decimal().format(vendor.getRating()));
+                ((ViewHolderVendor) mholder).tvReviewCount.setText(Utils.getDecimalFormat1Decimal().format(vendor.getRating()) + " ");
 
                 if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
                     ((ViewHolderVendor) mholder).tvReviewCount.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_star_white_10,0,0,0);
