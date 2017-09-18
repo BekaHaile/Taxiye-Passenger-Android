@@ -8,7 +8,7 @@
     android:background="@android:color/transparent"
     android:orientation="vertical"
     android:tag="@string/dont_touch_me"
-    android:visibility="visible"
+    android:visibility="gone"
     >
 
 

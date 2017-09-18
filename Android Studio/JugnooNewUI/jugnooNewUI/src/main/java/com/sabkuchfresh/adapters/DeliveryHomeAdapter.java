@@ -172,25 +172,30 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         int vendorsCount = 0;
-        if(menusResponse.getCategories() != null) {
-            for (MenusResponse.Category category : menusResponse.getCategories()) {
-                if (category.getVendors() != null && category.getVendors().size() > 0) {
-                    if(activity.getCategoryIdOpened() < 0) {
-                        dataToDisplay.add(new MenusResponse.Category(category.getImage(), category.getCategoryName()));
-                    }
-                    dataToDisplay.addAll(category.getVendors());
-                    if(activity.getCategoryIdOpened() < 0) {
-                        if (category.getCount() > category.getVendors().size()) {
-                            dataToDisplay.add(new DeliverySeeAll(category.getId()));
-                        }
-                    }
-                    dataToDisplay.add(new DeliveryDivider());
-                    vendorsCount = vendorsCount + category.getVendors().size();
-                }
-            }
-            if(menusResponse.getCategories().size()>0)
-                dataToDisplay.remove(dataToDisplay.size()-1);
+        if(menusResponse.getVendors() != null){
+            dataToDisplay.addAll(menusResponse.getVendors());
+            vendorsCount = menusResponse.getVendors().size();
         }
+
+//        if(menusResponse.getCategories() != null) {
+//            for (MenusResponse.Category category : menusResponse.getCategories()) {
+//                if (category.getVendors() != null && category.getVendors().size() > 0) {
+//                    if(activity.getCategoryIdOpened() < 0) {
+//                        dataToDisplay.add(new MenusResponse.Category(category.getImage(), category.getCategoryName()));
+//                    }
+//                    dataToDisplay.addAll(category.getVendors());
+//                    if(activity.getCategoryIdOpened() < 0) {
+//                        if (category.getCount() > category.getVendors().size()) {
+//                            dataToDisplay.add(new DeliverySeeAll(category.getId()));
+//                        }
+//                    }
+//                    dataToDisplay.add(new DeliveryDivider());
+//                    vendorsCount = vendorsCount + category.getVendors().size();
+//                }
+//            }
+//            if(menusResponse.getCategories().size()>0)
+//                dataToDisplay.remove(dataToDisplay.size()-1);
+//        }
 
         // promotional banner or strip
         if(!isPagination && vendorsCount > 0){

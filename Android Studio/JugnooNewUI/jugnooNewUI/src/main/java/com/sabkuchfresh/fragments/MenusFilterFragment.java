@@ -391,25 +391,28 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	}
 
 	public void updateDataLists(MenusResponse menusResponse) {
+		ArrayList<MenusResponse.KeyValuePair> filters = new ArrayList<>();
+		ArrayList<MenusResponse.KeyValuePair> sorting = new ArrayList<>();
+		filters.addAll(menusResponse.getFilters());
+		sorting.addAll(menusResponse.getSorting());
+
 		if(activity.getCategoryIdOpened() > 0
 				&& menusResponse.getCategories() != null && menusResponse.getCategories().size() > 0){
-			MenusResponse.Category category = menusResponse.getCategories().get(0);
-			if(menusResponse.getFilters() == null){
-				menusResponse.setFilters(category.getFilters());
-			}
-			if(menusResponse.getSorting() == null){
-				menusResponse.setSorting(category.getSorting());
-			}
-			activity.setFiltersAll((ArrayList<MenusResponse.KeyValuePair>) menusResponse.getFilters());
-			activity.setSortAll((ArrayList<MenusResponse.KeyValuePair>) menusResponse.getSorting());
+			MenusResponse.Category category = menusResponse.getCategories().get(menusResponse.getCategories()
+					.indexOf(new MenusResponse.Category(activity.getCategoryIdOpened())));
+			filters.addAll(category.getFilters());
+			sorting.addAll(category.getSorting());
 			if(lastCategoryIdForCuisines != category.getId()) {
 				activity.setCuisinesAll(null);
 			}
-			setCuisinesList();
-//			textViewSelectCuisines.setText(activity.getString(R.string.select_format, category.getTagsName()));
-			adapterFilters.setList(activity.getFiltersAll());
-			adapterSort.setList(activity.getSortAll());
 		}
+
+		activity.setFiltersAll(filters);
+		activity.setSortAll(sorting);
+
+		setCuisinesList();
+		adapterFilters.setList(activity.getFiltersAll());
+		adapterSort.setList(activity.getSortAll());
 	}
 
 

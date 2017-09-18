@@ -1403,7 +1403,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
-                rlFilterVis = getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE;
+                rlFilterVis = View.VISIBLE;
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER ? R.string.delivery : R.string.menus);

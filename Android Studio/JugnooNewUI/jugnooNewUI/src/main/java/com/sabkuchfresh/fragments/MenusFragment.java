@@ -330,7 +330,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         activity.setCategoryIdOpened(categoryId);
         getAllMenus(true, activity.getSelectedLatLng(), true);
         deliveryDisplayCategoriesView.setCategoryLabelIcon(categoryId);
-        activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
     }
 
     private long lastTimeRefreshed = System.currentTimeMillis();
@@ -458,14 +457,14 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
 
                                 currentPageCount = 1;
-                                hasMorePages =  menusResponse.getCategories()!=null && menusResponse.isPageLengthComplete();
+                                hasMorePages =  menusResponse.isPageLengthComplete();
                                 status.clear();
                                 status.addAll(menusResponse.getRecentOrdersPossibleStatus());
 
                                 // check if only one category is coming view will be set like single category expanded
                                 if (activity.getCategoryIdOpened() < 0 && !isSearchingCase(searchTextCurr)) {
-                         if (menusResponse.getCategories().size() == 1) {
-                                                        activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
+                                    if (menusResponse.getCategories().size() == 1) {
+                                        activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
                                     }
                                     activity.setMenusResponse(menusResponse);
                                     deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
@@ -475,7 +474,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 }
                                 deliveryDisplayCategoriesView.setCategoryLabelIcon(activity.getCategoryIdOpened());
                                 showCategoriesDropDown(true, activity.getMenusResponse().getCategories().size());
-                                activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
                                 deliveryHomeAdapter.setList(menusResponse, false, !hasMorePages && activity.getCategoryIdOpened()>0);
 
 
@@ -559,7 +557,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
         } else {
             activity.getTopBar().getLlSearchCart().setVisibility(serviceUnavailable ? View.GONE : View.VISIBLE);
-            activity.setMenusFilterVisibility(activity.getCategoryIdOpened() > 0 ? View.VISIBLE : View.GONE);
             recyclerViewRestaurant.setVisibility(View.VISIBLE);
             activity.getMenusCartSelectedLayout().checkForVisibility();
         }
@@ -579,30 +576,30 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         if(activity.getCategoryIdOpened() > 0){
             params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(activity.getCategoryIdOpened()));
-            //Sort Keys
-            if (activity.getSortBySelected() != null) {
-                JSONArray sortArray = new JSONArray();
-                sortArray.put(activity.getSortBySelected().getKey());
-                params.put(Constants.KEY_SORTING, sortArray.toString());
+        }
+        //Sort Keys
+        if (activity.getSortBySelected() != null) {
+            JSONArray sortArray = new JSONArray();
+            sortArray.put(activity.getSortBySelected().getKey());
+            params.put(Constants.KEY_SORTING, sortArray.toString());
 
+        }
+        //Quick Filter Keys
+        if (activity.getFilterSelected() != null && activity.getFilterSelected().size() > 0) {
+            JSONArray filtersSelected = new JSONArray();
+            for (MenusResponse.KeyValuePair filter : activity.getFilterSelected()) {
+                filtersSelected.put(filter.getKey());
             }
-            //Quick Filter Keys
-            if (activity.getFilterSelected() != null && activity.getFilterSelected().size() > 0) {
-                JSONArray filtersSelected = new JSONArray();
-                for (MenusResponse.KeyValuePair filter : activity.getFilterSelected()) {
-                    filtersSelected.put(filter.getKey());
-                }
-                params.put(Constants.KEY_FILTERS, filtersSelected.toString());
-            }
+            params.put(Constants.KEY_FILTERS, filtersSelected.toString());
+        }
 
-            //Cuisines List
-            if (activity.getCuisinesSelected() != null && activity.getCuisinesSelected().size() > 0) {
-                ArrayList<Integer> cusiinesSelectedId = new ArrayList<>();
-                for (FilterCuisine cuisine : activity.getCuisinesSelected()) {
-                    cusiinesSelectedId.add(cuisine.getId());
-                }
-                params.put(Constants.KEY_CUISINE_SELECTED, cusiinesSelectedId.toString());
+        //Cuisines List
+        if (activity.getCuisinesSelected() != null && activity.getCuisinesSelected().size() > 0) {
+            ArrayList<Integer> cusiinesSelectedId = new ArrayList<>();
+            for (FilterCuisine cuisine : activity.getCuisinesSelected()) {
+                cusiinesSelectedId.add(cuisine.getId());
             }
+            params.put(Constants.KEY_CUISINE_SELECTED, cusiinesSelectedId.toString());
         }
 
         new HomeUtil().putDefaultParams(params);
@@ -612,9 +609,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public void fetchNextPage() {
 
-        if(activity.getCategoryIdOpened() < 0){
-            return;
-        }
+//        if(activity.getCategoryIdOpened() < 0){
+//            return;
+//        }
 
         if (!MyApplication.getInstance().isOnline()) {
             retryDialog(DialogErrorType.NO_NET, activity.getMenuRefreshLatLng(), false, true, false);

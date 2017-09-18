@@ -33,58 +33,36 @@ public class MenusResponse {
 	@SerializedName("recent_orders_possible_status")
 	@Expose
 	private List<String> recentOrdersPossibleStatus = new ArrayList<String>();
-
-	@SerializedName("rating")
-	private Double rating;
-
-	@SerializedName("review_count")
-	private long reviewCount;
-
 	@SerializedName("banner_info")
 	@Expose
 	private List<BannerInfo> bannerInfos;
-
-
 	@SerializedName("show_banner")
 	@Expose
 	private boolean showBanner;
 	@SerializedName("strip_info")
 	@Expose
 	private StripInfo stripInfo;
-
-	@SerializedName("merchant_map")
-	@Expose
-	private List<Category> categories;
-
-
-	@SerializedName("filter_list")
-	@Expose
-	private List<KeyValuePair> filters;
-	@SerializedName("sorting_list")
-	@Expose
-	private List<KeyValuePair> sorting;
-
-
-
-	public Double getRating() {
-		return rating == null ? null : Math.round(rating * 10.0) / 10.0;
-	}
-
-	public long getReviewCount() {
-		return reviewCount;
-	}
-
-	@SerializedName("rating_color")
-	private String colorCode;
 	@SerializedName("is_complete")
 	private int isPageLengthComplete;
-
 	@SerializedName("service_unavailable")
 	private int serviceUnavailable;
 
-	public String getColorCode() {
-		return colorCode;
-	}
+
+	@SerializedName("category_map")
+	@Expose
+	private List<Category> categories;
+	@SerializedName("filters_generic")
+	@Expose
+	private List<KeyValuePair> filters;
+	@SerializedName("sort_generic")
+	@Expose
+	private List<KeyValuePair> sorting;
+	@SerializedName("vendors")
+	@Expose
+	private List<Vendor> vendors = new ArrayList<Vendor>();
+
+
+
 
 	/**
 	 * @return The flag
@@ -829,9 +807,6 @@ public class MenusResponse {
 		@SerializedName("count")
 		@Expose
 		private int count;
-		@SerializedName("vendors")
-		@Expose
-		private List<Vendor> vendors = new ArrayList<Vendor>();
 		@SerializedName("filters")
 		@Expose
 		private List<KeyValuePair> filters;
@@ -889,14 +864,6 @@ public class MenusResponse {
 
 		public void setCount(int count) {
 			this.count = count;
-		}
-
-		public List<Vendor> getVendors() {
-			return vendors;
-		}
-
-		public void setVendors(List<Vendor> vendors) {
-			this.vendors = vendors;
 		}
 
 		public String getImage() {
@@ -978,6 +945,14 @@ public class MenusResponse {
 		public String getEndTime() {
 			return endTime;
 		}
+	}
+
+	public List<Vendor> getVendors() {
+		return vendors;
+	}
+
+	public void setVendors(List<Vendor> vendors) {
+		this.vendors = vendors;
 	}
 
 }
