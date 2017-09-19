@@ -688,11 +688,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return null;
         }
 
-        if(vendor.getDistance()>1){
-           return Utils.getDecimalFormat2Decimal().format(vendor.getDistance()) + " kms " ;
-        }
-        double distance = vendor.getDistance() * 1000;
-        return Utils.getDecimalFormat2Decimal().format(distance) + " m " ;
+        return Utils.getDecimalFormat2Decimal().format(vendor.getDistance()) + " kms " ;
+
 
 
     }
@@ -704,7 +701,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         String deliveryTime = String.valueOf(vendor.getDeliveryTime());
         if (vendor.getMinDeliveryTime() != null) {
-            deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + " - " + deliveryTime;
+            deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + "-" + deliveryTime;
         }
 
         return deliveryTime + " mins";
@@ -1563,6 +1560,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public static  int setRestaurantOpenStatus(TextView textView, MenusResponse.Vendor vendor, boolean setVisibility){
+
+
+
+
         int visibilityCloseTime = View.VISIBLE;
         DateFormat dateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
         String currentSystemTime = dateFormat.format(new Date());

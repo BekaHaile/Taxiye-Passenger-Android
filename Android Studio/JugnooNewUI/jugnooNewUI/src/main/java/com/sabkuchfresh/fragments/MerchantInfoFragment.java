@@ -326,8 +326,21 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                     }
                 } catch (Exception e) {
-                    tvOpenStatus.setText("");
-                    tvlabelBullet.setText("");
+
+                    if(activity.getVendorOpened().getIsClosed()!=null && activity.getVendorOpened().getIsAvailable()!=null){
+                        if(activity.getVendorOpened().getIsClosed()==1 || activity.getVendorOpened().getIsAvailable()==0){
+                            tvOpenStatus.setText("Closed ");
+                            tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
+                        }else{
+                            tvOpenStatus.setText("Open Now ");
+                            tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+                        }
+                    }else{
+                        tvOpenStatus.setText("");
+                        tvlabelBullet.setText("");
+
+                    }
+
                     e.printStackTrace();
                 }
 
