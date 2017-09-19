@@ -447,6 +447,7 @@
                 />
 
             <TextView
+                android:id="@+id/tvRateRestaurant"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -456,6 +457,7 @@
                 android:textColor="@color/pf_grey_light"
                 android:textSize="@dimen/sp_14"
                 app:font="@string/maven"
+                android:visibility="gone"
                 />
 
             <com.sabkuchfresh.utils.RatingBarMenuFeedback
@@ -467,7 +469,7 @@
                 android:layout_marginTop="@dimen/dp_8"
                 android:numStars="5"
                 android:rating="0"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:animate="false"
                 app:halfStars="false"
                 app:maxStars="5"
@@ -550,6 +552,7 @@
                 android:layout_marginLeft="@dimen/dp_15"
                 android:layout_marginRight="@dimen/dp_15"
                 android:layout_marginTop="@dimen/dp_4"
+                android:visibility="gone"
                 android:background="@color/stroke_light_grey_alpha"
                 />
 

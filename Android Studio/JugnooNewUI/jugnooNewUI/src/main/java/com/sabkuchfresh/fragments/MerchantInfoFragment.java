@@ -1,5 +1,7 @@
 package com.sabkuchfresh.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
@@ -19,6 +21,7 @@ import android.text.style.URLSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -124,6 +127,10 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     TextView tvSubmitReview;
     @Bind(R.id.tvReviewTextCount)
     TextView tvReviewTextCount;
+    @Bind(R.id.tvRateRestaurant)
+    TextView tvRateRestaurant;
+    @Bind(R.id.vAddReviewSep)
+    View vAddReviewSep;
 
     private View rootView;
     private FreshActivity activity;
@@ -205,6 +212,9 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         activity.clearRestaurantRatingStars(activity.llCollapRatingStars, activity.tvCollapRestaurantRating, null);
         progressWheel.stopSpinning();
         progressWheel.setVisibility(View.GONE);
+        tvRateRestaurant.setVisibility(View.GONE);
+        ratingBarReview.setVisibility(View.GONE);
+        vAddReviewSep.setVisibility(View.GONE);
 
         restaurantId = activity.getVendorOpened() != null ? activity.getVendorOpened().getRestaurantId() : 0;
         setMerchantInfoToUI();
@@ -418,7 +428,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     }
                     break;
                 case R.id.llCall:
-                    Utils.openCallIntent(activity, activity.getVendorOpened().getCallingNumber());
+                    callVendor();
                     sendUserClickEvent(Constants.KEY_CALL_MODE);
                     break;
 
@@ -474,6 +484,11 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 public void onSuccess(FetchFeedbackResponse fetchFeedbackResponse, boolean scrollToTop) {
                     if (getView() != null) {
                         userHasReviewed = fetchFeedbackResponse.getHasAlreadyRated();
+
+                        tvRateRestaurant.setVisibility(userHasReviewed == 1 ? View.GONE : View.VISIBLE);
+                        ratingBarReview.setVisibility(userHasReviewed == 1 ? View.GONE : View.VISIBLE);
+                        vAddReviewSep.setVisibility(userHasReviewed == 1 ? View.GONE : View.VISIBLE);
+
                         restaurantReviews.clear();
                         restaurantReviews.addAll(fetchFeedbackResponse.getReviews());
                         reviewsAdapter.notifyDataSetChanged();
@@ -673,7 +688,6 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
 
 
-                            activity.performBackPressed(false);
                             Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
                             RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();
                             if (frag != null) {
@@ -728,5 +742,34 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
             e.printStackTrace();
         }
     }
+
+	private void callVendor(){
+		try {
+			String callingNumbers = activity.getVendorOpened().getContactList();
+			String[] arr = callingNumbers.split("\\,\\ ");
+			if(arr.length == 1){
+				Utils.openCallIntent(activity, arr[0]);
+				return;
+			}
+
+			AlertDialog.Builder builderSingle = new AlertDialog.Builder(activity);
+			builderSingle.setTitle("Call");
+
+			final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1);
+			arrayAdapter.addAll(arr);
+
+			builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					String strName = arrayAdapter.getItem(which);
+					Utils.openCallIntent(activity, strName);
+				}
+			});
+			builderSingle.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 }
