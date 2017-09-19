@@ -418,9 +418,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                         if(vendor.getIsClosed()==1 || vendor.getIsAvailable()==0){
-                            ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setText(R.string.closed);
+                            ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setText(activity.getString(R.string.closed) +" ");
                         }else{
-                            ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setText(R.string.open_now);
+                            ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setText(activity.getString(R.string.open_now) +" ");
                         }
                 } else {
                     if(vendor.getIsClosed()==1 || vendor.getIsAvailable()==0){
@@ -438,7 +438,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                 }
                 if(deliveryTime!=null){
-                    mHolder.textViewMinimumOrder.setText(activity.getString(R.string.bullet)  + " " +  deliveryTime);
+                    mHolder.textViewMinimumOrder.setText( activity.getString(R.string.bullet)  + " " +  deliveryTime);
 
                     mHolder.textViewMinimumOrder.setVisibility(View.VISIBLE);
 
@@ -696,7 +696,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public static String showDeliveryStringWithTime(MenusResponse.Vendor vendor) {
         if(vendor.getOrderMode() == 0){
-            return vendor.getRestaurantTimingsStr();
+            return DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt())+"-"+DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn());
         }
         if(vendor.getDeliveryTime()==null){
             return null;
