@@ -695,6 +695,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public static String showDeliveryStringWithTime(MenusResponse.Vendor vendor) {
+        if(vendor.getOrderMode() == 0){
+            return vendor.getRestaurantTimingsStr();
+        }
         if(vendor.getDeliveryTime()==null){
             return null;
         }
