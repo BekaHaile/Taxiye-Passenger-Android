@@ -37,7 +37,6 @@ public class RatingBarMenuFeedback extends LinearLayout {
     private static final int MEDIUM_RATING_YELLOW = Color.parseColor("#FFD365");
     private static final int GOOD_RATING_GREEN = Color.parseColor("#8DCF61");
     private static final int RATING_DISABLED_COLOR = Color.parseColor("#efefef");
-//    private static final int NO_RATING_COLOR = Color.GRAY;
     private static final int NO_RATING_COLOR =Color.parseColor("#595968");
     private boolean mAnimate=true;
     private boolean mDisplayText=true;
@@ -60,8 +59,12 @@ public class RatingBarMenuFeedback extends LinearLayout {
     private int mStarOnResource ;
     private int mStarOffResource;
     private int mStarHalfResource = R.drawable.ic_menu_feedback_star_off;
+    private int belowTextColor;
+    private boolean singleColor;
+    private int starColor, noStarColor;
     private TextView[] mStarsViews;
-    private float mStarPadding;
+    private float mStarPadding, viewMargin;
+    private float mTextSize, compoundDrawablePadding, viewMinWidth;
     private IRatingBarCallbacks onScoreChanged;
     private int mLastStarId;
     private boolean mOnlyForDisplay;
@@ -117,6 +120,8 @@ public class RatingBarMenuFeedback extends LinearLayout {
             int attr = a.getIndex(i);
             if (attr == R.styleable.CustomRatingBar_maxStars)
                 mMaxStars = a.getInt(attr, 5);
+            else if (attr == R.styleable.CustomRatingBar_belowTextColor)
+                belowTextColor = a.getColor(attr, ContextCompat.getColor(context, R.color.text_color));
             else if (attr == R.styleable.CustomRatingBar_stars)
                 mCurrentScore = a.getFloat(attr, 2.5f);
             else if (attr == R.styleable.CustomRatingBar_starHalf)
@@ -127,6 +132,14 @@ public class RatingBarMenuFeedback extends LinearLayout {
                 mStarOffResource = a.getResourceId(attr, android.R.drawable.star_off);
             else if (attr == R.styleable.CustomRatingBar_starPadding)
                 mStarPadding = a.getDimension(attr, 0);
+            else if (attr == R.styleable.CustomRatingBar_belowTextSize)
+                mTextSize = a.getDimension(attr, 0);
+            else if (attr == R.styleable.CustomRatingBar_viewMargin)
+                viewMargin = a.getDimension(attr, 0);
+            else if (attr == R.styleable.CustomRatingBar_viewMinWidth)
+                viewMinWidth = a.getDimension(attr, 0);
+            else if (attr == R.styleable.CustomRatingBar_compoundDrawablePadding)
+                compoundDrawablePadding = a.getDimension(attr, 0);
             else if (attr == R.styleable.CustomRatingBar_onlyForDisplay)
                 mOnlyForDisplay = a.getBoolean(attr, false);
             else if (attr == R.styleable.CustomRatingBar_halfStars)
@@ -135,6 +148,12 @@ public class RatingBarMenuFeedback extends LinearLayout {
                 mAnimate = a.getBoolean(attr, true);
             else if (attr == R.styleable.CustomRatingBar_displayText)
                 mDisplayText = a.getBoolean(attr, true);
+            else if (attr == R.styleable.CustomRatingBar_singleColor)
+                singleColor = a.getBoolean(attr, false);
+            else if (attr == R.styleable.CustomRatingBar_starColor)
+                starColor = a.getColor(attr, ContextCompat.getColor(context, R.color.theme_color));
+            else if (attr == R.styleable.CustomRatingBar_noStarColor)
+                noStarColor = a.getColor(attr, ContextCompat.getColor(context, R.color.text_color_light));
         }
         a.recycle();
     }
@@ -192,16 +211,20 @@ public class RatingBarMenuFeedback extends LinearLayout {
             if (i <= mCurrentScore) {
                 mStarsViews[i - 1].setCompoundDrawablesWithIntrinsicBounds(0, mStarOnResource, 0, 0);
 
-                switch (i) {
-                    case 1:
-                        mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(LOW_RATING_RED, PorterDuff.Mode.SRC_ATOP);
-                        break;
-                    case 2:
-                        mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(MEDIUM_RATING_YELLOW, PorterDuff.Mode.SRC_ATOP);
-                        break;
-                    default:
-                        mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(GOOD_RATING_GREEN, PorterDuff.Mode.SRC_ATOP);
-                        break;
+                if(singleColor){
+                    mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(starColor, PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    switch (i) {
+                        case 1:
+                            mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(LOW_RATING_RED, PorterDuff.Mode.SRC_ATOP);
+                            break;
+                        case 2:
+                            mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(MEDIUM_RATING_YELLOW, PorterDuff.Mode.SRC_ATOP);
+                            break;
+                        default:
+                            mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(GOOD_RATING_GREEN, PorterDuff.Mode.SRC_ATOP);
+                            break;
+                    }
                 }
 
 
@@ -211,8 +234,11 @@ public class RatingBarMenuFeedback extends LinearLayout {
                 else
                     mStarsViews[i - 1].setCompoundDrawablesWithIntrinsicBounds(0, mStarOffResource, 0, 0);
 
-
-                mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(NO_RATING_COLOR, PorterDuff.Mode.SRC_ATOP);
+                if(singleColor){
+                    mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(noStarColor, PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(NO_RATING_COLOR, PorterDuff.Mode.SRC_ATOP);
+                }
             }
 
             if (mDisplayText) {
@@ -244,21 +270,21 @@ public class RatingBarMenuFeedback extends LinearLayout {
 
     private TextView createStar() {
         TextView v = new TextView(getContext());
-        v.setMinWidth((int) (ASSL.Xscale() * 100.0f));
-        v.setCompoundDrawablePadding((int) (ASSL.Yscale() * 20.0f));
+        v.setMinWidth((int) (viewMinWidth > 0 ? viewMinWidth : (ASSL.Xscale() * 100.0f)));
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
-        params.leftMargin = (int) (ASSL.Xscale() * 5.0f);
-        params.rightMargin = (int) (ASSL.Xscale() * 5.0f);
-        params.bottomMargin = (int) (ASSL.Yscale() * 25.0f);
-        params.topMargin = (int) (ASSL.Yscale() * 25.0f);
+        params.leftMargin = (int) (viewMargin > 0 ? viewMargin : (ASSL.Xscale() * 5.0f));
+        params.rightMargin = (int) (viewMargin > 0 ? viewMargin : (ASSL.Xscale() * 5.0f));
+        params.bottomMargin = (int) (viewMargin > 0 ? viewMargin : (ASSL.Yscale() * 25.0f));
+        params.topMargin = (int) (viewMargin > 0 ? viewMargin : (ASSL.Yscale() * 25.0f));
         v.setGravity(Gravity.CENTER);
-        v.setCompoundDrawablePadding((int) (ASSL.Yscale() * 12.0f));
-        v.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.0f);
+        v.setCompoundDrawablePadding((int) (compoundDrawablePadding > 0 ? compoundDrawablePadding : (ASSL.Yscale() * 12.0f)));
+        v.setTextSize(TypedValue.COMPLEX_UNIT_SP, mTextSize > 0 ? mTextSize : 14.0f);
         v.setTypeface(Fonts.mavenMedium(getContext()), Typeface.BOLD);
-        v.setTextColor(ContextCompat.getColor(getContext(), R.color.text_color));
+        v.setTextColor(belowTextColor > 0 ? belowTextColor : ContextCompat.getColor(getContext(), R.color.text_color));
         v.setLayoutParams(params);
         v.setCompoundDrawablesWithIntrinsicBounds(0, mStarOffResource, 0, 0);
+        v.setPadding((int)mStarPadding, (int)mStarPadding, (int)mStarPadding, (int)mStarPadding);
         return v;
     }
 

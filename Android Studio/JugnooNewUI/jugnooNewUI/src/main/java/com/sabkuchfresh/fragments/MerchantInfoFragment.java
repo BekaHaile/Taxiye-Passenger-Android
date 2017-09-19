@@ -2,16 +2,19 @@ package com.sabkuchfresh.fragments;
 
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Patterns;
@@ -19,6 +22,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,8 +38,10 @@ import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
+import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 import com.sabkuchfresh.utils.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -48,10 +54,21 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
+import retrofit.Callback;
 import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.MultipartTypedOutput;
+import retrofit.mime.TypedString;
 
 
 public class MerchantInfoFragment extends Fragment implements GAAction {
@@ -92,10 +109,19 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 	TextView tvReviewsHeader;
 	@Bind(R.id.scrollView)
 	NestedScrollView scrollView;
+	@Bind(R.id.ratingBarReview)
+	RatingBarMenuFeedback ratingBarReview;
+	@Bind(R.id.etReview)
+	EditText etReview;
+	@Bind(R.id.tvSubmitReview)
+	TextView tvSubmitReview;
+	@Bind(R.id.tvReviewTextCount)
+	TextView tvReviewTextCount;
 
 	private View rootView;
 	private FreshActivity activity;
 	private RestaurantReviewsAdapter reviewsAdapter;
+	private int restaurantId;
 
 	public MerchantInfoFragment() {
 	}
@@ -110,6 +136,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 		activity.fragmentUISetup(this);
 		activity.appBarLayout.setExpanded(true);
 
+		tvReviewsHeader.setTypeface(tvReviewsHeader.getTypeface(), Typeface.BOLD);
 		rvTopReviews.setLayoutManager(new LinearLayoutManager(activity));
 		reviewsAdapter = new RestaurantReviewsAdapter(activity, new RestaurantReviewsAdapter.Callback() {
 			@Override
@@ -174,7 +201,42 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 		progressWheel.stopSpinning();
 		progressWheel.setVisibility(View.GONE);
 
+		restaurantId = activity.getVendorOpened() != null ? activity.getVendorOpened().getRestaurantId() : 0;
 		setMerchantInfoToUI();
+
+		etReview.setVisibility(View.GONE);
+		tvSubmitReview.setVisibility(View.GONE);
+		tvReviewTextCount.setVisibility(View.GONE);
+		ratingBarReview.setOnScoreChanged(new RatingBarMenuFeedback.IRatingBarCallbacks() {
+			@Override
+			public void scoreChanged(float score) {
+				etReview.setVisibility(score > 0 ? View.VISIBLE : View.GONE);
+				tvSubmitReview.setVisibility(score > 0 ? View.VISIBLE : View.GONE);
+				tvReviewTextCount.setVisibility(score > 0 ? (etReview.getText().toString().trim().length() > 0 ? View.VISIBLE : View.GONE) : View.GONE);
+				if(score <= 0){
+					Utils.hideSoftKeyboard(activity, etReview);
+				}
+			}
+		});
+
+		etReview.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				etReview.setBackgroundResource(s.length() > 0 ? R.drawable.bg_white_r_b_new : R.drawable.bg_menu_item_selector_color_r_extra);
+				tvReviewTextCount.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+				tvReviewTextCount.setText(s.length()+"/500");
+			}
+		});
 
 		return rootView;
 	}
@@ -287,7 +349,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 		ButterKnife.unbind(this);
 	}
 
-	@OnClick({R.id.llChatNow, R.id.llCall, R.id.llAddReview, R.id.bOrderOnline, R.id.llSeeAll, R.id.tvMerchantAddress})
+	@OnClick({R.id.llChatNow, R.id.llCall, R.id.llAddReview, R.id.bOrderOnline, R.id.llSeeAll, R.id.tvMerchantAddress,
+	R.id.tvSubmitReview})
 	public void onViewClicked(View view) {
 		try {
 			switch (view.getId()) {
@@ -311,7 +374,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 					}
 					break;
 				case R.id.bOrderOnline:
-					if (activity.getMenuProductsResponse().getCategories() != null) {
+					if (activity.getMenuProductsResponse().getCategories() != null
+							&& activity.getVendorOpened().getRestaurantId().equals(activity.getMenuProductsResponse().getVendor().getRestaurantId())) {
 						activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
 					} else {
 						activity.fetchRestaurantMenuAPI(activity.getVendorOpened().getRestaurantId(), false, null, null, -1, null);
@@ -323,6 +387,18 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 					break;
 				case R.id.tvMerchantAddress:
 					Utils.openMapsDirections(activity, new LatLng(Data.latitude, Data.longitude), activity.getVendorOpened().getLatLng());
+					break;
+				case R.id.tvSubmitReview:
+					String reviewText = etReview.getText().toString().trim();
+					if(reviewText.length() > 500){
+						Utils.showToast(activity, activity.getString(R.string.feedback_must_be_in_500));
+						return;
+					}
+					if(ratingBarReview.getScore() <= 0){
+						Utils.showToast(activity,getString(R.string.error_no_rating));
+						return;
+					}
+					uploadFeedback(reviewText);
 					break;
 			}
 		} catch (Exception e) {
@@ -438,6 +514,10 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 		textView.setText(s);
 	}
 
+	public int getRestaurantId() {
+		return restaurantId;
+	}
+
 	private class URLSpanNoUnderline extends URLSpan {
 		public URLSpanNoUnderline(String url) {
 			super(url);
@@ -454,4 +534,141 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 		BW_MATRIX.setSaturation(0);
 		BW_FILTER = new ColorMatrixColorFilter(BW_MATRIX);
 	}
+
+
+	private void uploadFeedback(final String reviewDesc) {
+
+		final MultipartTypedOutput params = new MultipartTypedOutput();
+		try {
+			if (!MyApplication.getInstance().isOnline())
+				return;
+
+			if (Config.getLastOpenedClientId(activity).equals(Config.getFreshClientId())) {
+				Data.getFreshData().setPendingFeedback(0);
+			} else if (Config.getLastOpenedClientId(activity).equals(Config.getMealsClientId())) {
+				Data.getMealsData().setPendingFeedback(0);
+			} else if (Config.getLastOpenedClientId(activity).equals(Config.getGroceryClientId())) {
+				Data.getGroceryData().setPendingFeedback(0);
+			} else if (Config.getLastOpenedClientId(activity).equals(Config.getMenusClientId())) {
+				Data.getMenusData().setPendingFeedback(0);
+			} else if (Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId())) {
+				Data.getDeliveryCustomerData().setPendingFeedback(0);
+			}
+
+
+
+
+			params.addPart(Constants.KEY_ACCESS_TOKEN, new TypedString(Data.userData.accessToken));
+			params.addPart(Constants.RATING_TYPE, new TypedString(Constants.RATING_TYPE_STAR));
+			params.addPart(Constants.INTERATED, new TypedString("1"));
+
+
+			int score = Math.round(ratingBarReview.getScore());
+			if(score>=1)
+				params.addPart(Constants.RATING, new TypedString(String.valueOf(score)));
+
+
+
+			if (!TextUtils.isEmpty(reviewDesc)) {
+				params.addPart(Constants.KEY_REVIEW_DESC, new TypedString(reviewDesc));
+			}
+
+
+			if (activity.getVendorOpened().getRestaurantId() > 0) {
+				params.addPart(Constants.KEY_RESTAURANT_ID, new TypedString(String.valueOf(activity.getVendorOpened().getRestaurantId())));
+			}
+
+			params.addPart(Constants.KEY_CLIENT_ID, new TypedString("" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId())));
+
+			Callback<OrderHistoryResponse> callback = new Callback<OrderHistoryResponse>() {
+				@Override
+				public void success(final OrderHistoryResponse notificationInboxResponse, Response response) {
+					DialogPopup.dismissLoadingDialog();
+					try {
+						if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+
+
+
+							if(activity.getCurrentReview()==null){
+								if (!TextUtils.isEmpty(reviewDesc)) {
+									GAUtils.event(activity.getGaCategory(), GAAction.ADD_FEED , GAAction.TEXT + GAAction.ADDED);
+								}
+
+
+								int score = Math.round(ratingBarReview.getScore());
+								if(score>=1)
+								{
+									GAUtils.event(activity.getGaCategory(), GAAction.ADD_FEED  + GAAction.RATING_ADDED, String.valueOf(score));
+
+								}
+
+
+								GAUtils.event(activity.getGaCategory(), GAAction.ADD_FEED , GAAction.FEED + GAAction.ADDED);
+
+							} else{
+								GAUtils.event(activity.getGaCategory(), GAAction.ADD_FEED , GAAction.FEED + GAAction.EDITED);
+
+							}
+
+
+
+
+
+							activity.performBackPressed(false);
+							Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
+							RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();
+							if (frag != null) {
+								frag.fetchFeedback(true);
+							}
+						} else {
+							DialogPopup.alertPopup(activity, "", notificationInboxResponse.getMessage());
+						}
+					} catch (Exception e) {
+						DialogPopup.dismissLoadingDialog();
+						e.printStackTrace();
+					}
+				}
+
+				@Override
+				public void failure(RetrofitError error) {
+					DialogPopup.dismissLoadingDialog();
+					DialogPopup.dialogNoInternet(activity, DialogErrorType.CONNECTION_LOST,
+							new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+								@Override
+								public void positiveClick(View view) {
+									uploadFeedback(reviewDesc);
+								}
+
+								@Override
+								public void neutralClick(View view) {
+
+								}
+
+								@Override
+								public void negativeClick(View view) {
+
+								}
+							});
+				}
+			};
+
+
+			new HomeUtil().putDefaultParamsMultipart(params);
+			if(activity.getCurrentReview()==null) {
+				RestClient.getMenusApiService().orderFeedback(params, callback);
+			}
+			else
+			{
+				//Editing old review
+				params.addPart(Constants.KEY_FEEDBACK_ID,new TypedString(activity.getCurrentReview().getFeedbackId()+""));
+				RestClient.getMenusApiService().editFeedback(params, callback);
+			}
+
+		} catch (Exception e) {
+			DialogPopup.dismissLoadingDialog();
+			e.printStackTrace();
+		}
+	}
+
+
 }

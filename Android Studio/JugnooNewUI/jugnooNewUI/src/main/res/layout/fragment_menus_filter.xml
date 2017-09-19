@@ -75,7 +75,7 @@
             android:layout_toRightOf="@+id/ivBack"
             android:background="@drawable/bg_menu_item_color_f7_r"
             android:gravity="center_vertical"
-            android:hint="@string/start_typing_a_cuisine"
+            android:hint="@string/start_typing_tags"
             android:inputType="text"
             android:maxLines="1"
             android:paddingBottom="@dimen/dp_9"

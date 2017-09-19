@@ -594,10 +594,18 @@
         <attr name="starOn" format="reference|integer"/>
         <attr name="starHalf" format="reference|integer"/>
         <attr name="starPadding" format="dimension"/>
+        <attr name="belowTextSize" format="dimension"/>
+        <attr name="belowTextColor" format="color"/>
+        <attr name="compoundDrawablePadding" format="dimension"/>
+        <attr name="viewMargin" format="dimension"/>
+        <attr name="viewMinWidth" format="dimension"/>
         <attr name="onlyForDisplay" format="boolean"/>
         <attr name="halfStars" format="boolean"/>
         <attr name="animate" format="boolean"/>
         <attr name="displayText" format="boolean"/>
+        <attr name="singleColor" format="boolean"/>
+        <attr name="starColor" format="color"/>
+        <attr name="noStarColor" format="color"/>
     </declare-styleable>
 
 

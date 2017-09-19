@@ -294,6 +294,7 @@
     <color name="promo_text_color_light_grey">#8d8d8d</color>
 
     <color name="text_color_link">#4990e2</color>
+    <color name="star_color_yellow">#fbd95c</color>
 
 
 </resources>

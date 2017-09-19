@@ -7,16 +7,18 @@
     >
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:id="@+id/scrollView"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:animateLayoutChanges="true"
+            >
 
 
             <TextView
@@ -113,10 +115,10 @@
                     android:id="@+id/llChatNow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/dp_50"
                     android:background="?android:attr/selectableItemBackground"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:layout_marginRight="@dimen/dp_50"
                     >
 
                     <ImageView
@@ -343,6 +345,113 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginBottom="@dimen/dp_14"
+                android:background="@color/stroke_light_grey_alpha"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_6"
+                android:gravity="center_horizontal"
+                android:text="@string/rate_the_restaurant"
+                android:textColor="@color/pf_grey_light"
+                android:textSize="@dimen/sp_14"
+                app:font="@string/maven"
+                />
+
+            <com.sabkuchfresh.utils.RatingBarMenuFeedback
+                android:id="@+id/ratingBarReview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/dp_8"
+                android:layout_marginTop="@dimen/dp_8"
+                android:numStars="5"
+                android:rating="0"
+                android:visibility="visible"
+                app:animate="false"
+                app:halfStars="false"
+                app:maxStars="5"
+                app:onlyForDisplay="false"
+                app:starOff="@drawable/ic_menu_feedback_star_off"
+                app:starOn="@drawable/ic_menu_feedback_star_on"
+                app:belowTextSize="1sp"
+                app:belowTextColor="@color/transparent"
+                app:compoundDrawablePadding="@dimen/dp_1"
+                app:starPadding="0dp"
+                app:viewMargin="@dimen/dp_5"
+                app:viewMinWidth="@dimen/dp_20"
+                app:displayText="false"
+                app:singleColor="true"
+                app:starColor="@color/star_color_yellow"
+                app:noStarColor="@color/nl_white_dark"
+                />
+
+            <EditText
+                android:id="@+id/etReview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginRight="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_4"
+                android:background="@drawable/bg_menu_item_selector_color_r_extra"
+                android:hint="@string/say_something"
+                android:padding="@dimen/dp_10"
+                android:textColor="@color/text_color"
+                android:textColorHint="@color/text_color_light"
+                android:textSize="@dimen/sp_14"
+                android:visibility="gone"
+                app:font="@string/maven"
+                android:inputType="text|textMultiLine"
+                android:maxLines="3"
+                android:maxLength="500"
+                android:overScrollMode="always"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
+                />
+            
+            <TextView
+                android:id="@+id/tvReviewTextCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/dp_20"
+                android:textSize="@dimen/sp_9"
+                android:textColor="@color/text_color_hint"
+                android:text="500"
+                android:layout_marginTop="-20dp"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:gravity="right"
+                android:visibility="gone"
+                app:font="@string/maven"
+                />
+
+
+            <TextView
+                android:id="@+id/tvSubmitReview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_5"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/dp_10"
+                android:text="@string/submit_your_rating"
+                android:textColor="@color/text_color_theme_selector"
+                android:textSize="@dimen/sp_14"
+                android:visibility="gone"
+                app:font="@string/maven"
+                android:background="?android:attr/selectableItemBackground"
+                />
+
+
+            <View
+                android:id="@+id/vAddReviewSep"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="@dimen/dp_4"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginRight="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_4"
                 android:background="@color/stroke_light_grey_alpha"
                 />
 

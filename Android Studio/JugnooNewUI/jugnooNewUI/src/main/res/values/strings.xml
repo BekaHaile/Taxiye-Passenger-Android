@@ -1401,6 +1401,10 @@
     <string name="chat_is_not_enabled_format">Chat is not available for %s</string>
     <string name="select_tags">Select Tags</string>
     <string name="open_now">Open Now</string>
+    <string name="start_typing_tags">Start typing tags</string>
+    <string name="rate_the_restaurant">Rate the Restaurant</string>
+    <string name="submit_your_rating">Submit Your Rating</string>
+    <string name="say_something">Say something</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

@@ -166,13 +166,16 @@ public class ApiFetchRestaurantMenu {
 
 
                                     } else {
-                                        setVendorDataToFreshActivity(productsResponse);
-                                        activity.updateItemListFromSPDB();
-                                        if (activity.getVendorOpened().getIsClosed() == 1) {
-                                            activity.clearMenusCart(activity.getAppType());
+                                        if(activity.getMerchantInfoFragment() == null
+                                                || (activity.getMerchantInfoFragment().getRestaurantId() == restaurantId)) {
+                                            setVendorDataToFreshActivity(productsResponse);
+                                            activity.updateItemListFromSPDB();
+                                            if (activity.getVendorOpened().getIsClosed() == 1) {
+                                                activity.clearMenusCart(activity.getAppType());
+                                            }
+                                            updateCartAndSetJeanie(jObj);
+                                            openNextFragment(directCheckout);
                                         }
-                                        updateCartAndSetJeanie(jObj);
-                                        openNextFragment(directCheckout);
 
 
                                     }

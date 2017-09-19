@@ -48,8 +48,13 @@ public class MenusFilterCuisinesAdapter extends RecyclerView.Adapter<MenusFilter
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				editTextSearch.setError(searchVendors(s.toString()) == 0 ?
-						editTextSearch.getContext().getString(R.string.no_cuisine_found) : null);
+				if(MenusFilterCuisinesAdapter.this.cuisines != null
+						&& MenusFilterCuisinesAdapter.this.cuisines.size() > 0) {
+					editTextSearch.setError(searchVendors(s.toString()) == 0 ?
+							editTextSearch.getContext().getString(R.string.no_results_found) : null);
+				} else {
+					editTextSearch.setError(null);
+				}
 			}
 		});
 		this.callback = callback;
