@@ -319,9 +319,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
                 try {
                     tvlabelBullet.setText(activity.getString(R.string.bullet) + " ");
-                    if (DeliveryHomeAdapter.setRestaurantOpenStatus(tvOpensAt, activity.getVendorOpened(), false) == View.VISIBLE) {
+                    if (DeliveryHomeAdapter.setRestaurantOpenStatus(tvOpenStatus, activity.getVendorOpened(), false) == View.VISIBLE) {
                         tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
-
                     } else {
                         tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                     }
@@ -338,7 +337,6 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     }else{
                         tvOpenStatus.setText("");
                         tvlabelBullet.setText("");
-
                     }
 
                     e.printStackTrace();
