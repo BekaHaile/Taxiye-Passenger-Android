@@ -557,7 +557,7 @@ public class DateOperations {
 
 	public static String convertDayTimeAPViaFormat(String dateTime) {
 		SimpleDateFormat sdfFrom = new SimpleDateFormat("HH:mm:ss");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("h:mm a");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("hh:mm a");
 		try {
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);

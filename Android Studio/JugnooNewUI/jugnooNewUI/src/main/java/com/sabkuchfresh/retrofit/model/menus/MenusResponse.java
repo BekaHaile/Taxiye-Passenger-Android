@@ -193,7 +193,7 @@ public class MenusResponse {
 		private String image;
 		@SerializedName("minimum_order_amount")
 		@Expose
-		private Double minimumOrderAmount;
+		private double minimumOrderAmount;
 		@SerializedName("delivery_amount_threshold")
 		@Expose
 		private Double deliveryAmountThreshold;
@@ -420,7 +420,7 @@ public class MenusResponse {
 		/**
 		 * @return The minimumOrderAmount
 		 */
-		public Double getMinimumOrderAmount() {
+		public double getMinimumOrderAmount() {
 			return minimumOrderAmount;
 		}
 

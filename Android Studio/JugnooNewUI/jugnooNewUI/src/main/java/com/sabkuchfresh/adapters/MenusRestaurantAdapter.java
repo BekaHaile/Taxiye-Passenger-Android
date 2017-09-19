@@ -460,7 +460,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 if(!TextUtils.isEmpty(vendor.getMinOrderText())){
                     mHolder.textViewMinimumOrder.setText(Utils.trimHTML(Utils.fromHtml(vendor.getMinOrderText())));
                 } else if(vendor.getMinOrderText() == null) {
-                    if (vendor.getMinimumOrderAmount() != null && vendor.getMinimumOrderAmount() > 0) {
+                    if (vendor.getMinimumOrderAmount() > 0) {
                         mHolder.textViewMinimumOrder.setText(activity.getString(R.string.minimum_order_rupee_format, Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
                     } else {
                         mHolder.textViewMinimumOrder.setText(R.string.no_minimum_order);
