@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 /**
  * For fetching feedback reviews for a particular restaurant
@@ -59,7 +60,7 @@ public class ApiRestaurantFetchFeedback {
 				RestClient.getMenusApiService().restaurantFetchFeedbacks(params, new retrofit.Callback<FetchFeedbackResponse>() {
 					@Override
 					public void success(FetchFeedbackResponse feedbackResponse, Response response) {
-//						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						DialogPopup.dismissLoadingDialog();
 						if(progressWheel != null) {
 							progressWheel.setVisibility(View.GONE);

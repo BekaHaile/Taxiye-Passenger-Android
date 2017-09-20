@@ -100,6 +100,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     ProgressWheel progressWheel;
     @Bind(R.id.tvReviewsHeader)
     TextView tvReviewsHeader;
+    @Bind(R.id.tvNoReviews)
+    TextView tvNoReviews;
     @Bind(R.id.scrollView)
     NestedScrollView scrollView;
     @Bind(R.id.tvCuisines)
@@ -216,6 +218,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         tvRateRestaurant.setVisibility(View.GONE);
         ratingBarReview.setVisibility(View.GONE);
         vAddReviewSep.setVisibility(View.GONE);
+        tvNoReviews.setVisibility(View.GONE);
 
         restaurantId = activity.getVendorOpened() != null ? activity.getVendorOpened().getRestaurantId() : 0;
         setMerchantInfoToUI();
@@ -505,14 +508,13 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         restaurantReviews.addAll(fetchFeedbackResponse.getReviews());
                         reviewsAdapter.notifyDataSetChanged();
                         if (restaurantReviews.size() == 0) {
-                            tvReviewsHeader.setText(R.string.no_reviews_yet_be_first);
-                            tvReviewsHeader.setTypeface(Fonts.mavenMedium(activity));
+                            tvNoReviews.setVisibility(View.VISIBLE);
                             rvTopReviews.setVisibility(View.GONE);
                             llSeeAll.setVisibility(View.GONE);
                         } else {
-                            tvReviewsHeader.setText(R.string.reviews);
+                            tvNoReviews.setVisibility(View.GONE);
                             rvTopReviews.setVisibility(View.VISIBLE);
-                            llSeeAll.setVisibility(fetchFeedbackResponse.getRestaurantInfo().getReviewCount() > 2 ? View.VISIBLE : View.GONE);
+                            llSeeAll.setVisibility(fetchFeedbackResponse.getReviewCount() > 2 ? View.VISIBLE : View.GONE);
                         }
                         if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
                             activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());

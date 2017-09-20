@@ -417,7 +417,7 @@
                     android:layout_marginBottom="@dimen/dp_10"
                     android:layout_marginLeft="@dimen/dp_20"
                     android:layout_marginTop="@dimen/dp_10"
-                    android:text="@string/reviews"
+                    android:text="@string/reviews_and_ratings"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_14"
                     app:font="@string/maven"
@@ -563,6 +563,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
+                />
+
+            <TextView
+                android:id="@+id/tvNoReviews"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_20"
+                android:paddingBottom="@dimen/dp_10"
+                android:text="@string/no_reviews_yet_be_first"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_14"
+                app:font="@string/maven"
                 />
 
             <LinearLayout
