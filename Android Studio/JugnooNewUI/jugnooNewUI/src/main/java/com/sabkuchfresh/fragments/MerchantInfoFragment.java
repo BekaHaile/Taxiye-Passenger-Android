@@ -64,7 +64,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.Callback;
@@ -322,6 +321,14 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     tvReviewCount.setVisibility(View.GONE);
                 }
 
+                tvlabelBullet.setText(activity.getString(R.string.bullet) + " ");
+                tvOpensAt.setText(activity.getVendorOpened().getRestaurantTimingsStr());
+                if(tvOpensAt.getText().length() == 0 && !TextUtils.isEmpty(activity.getVendorOpened().getNextOpenText())){
+                    tvOpensAt.setText(activity.getVendorOpened().getNextOpenText());
+                } else {
+                    tvlabelBullet.setText("");
+                }
+
                 setOpenCloseStateText(true);
                 activity.getHandler().postDelayed(timerRunnable, 6000);
 
@@ -346,12 +353,6 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
 
 
-                tvOpensAt.setText(activity.getVendorOpened().getRestaurantTimingsStr());
-                if(tvOpensAt.getText().length() == 0 && !TextUtils.isEmpty(activity.getVendorOpened().getNextOpenText())){
-                    tvOpensAt.setText(activity.getVendorOpened().getNextOpenText());
-                } else {
-                    tvlabelBullet.setText("");
-                }
                 String addressToSet;
                 if (DeliveryHomeAdapter.getDistanceRestaurant(activity.getVendorOpened()) != null) {
                     addressToSet = DeliveryHomeAdapter.getDistanceRestaurant(activity.getVendorOpened()) + activity.getString(R.string.bullet) + " " + activity.getVendorOpened().getAddress();
@@ -702,6 +703,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
                             ratingBarReview.setScore(0f);
                             etReview.setText("");
+                            fetchFeedback();
 
                             Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
                             RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();
@@ -792,7 +794,6 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         public void run() {
             try {
                 setOpenCloseStateText(false);
-                Log.v(TAG, "notifying automaically");
                 activity.getHandler().postDelayed(timerRunnable, 60000); //run every minute
             } catch (Exception e) {
                 e.printStackTrace();

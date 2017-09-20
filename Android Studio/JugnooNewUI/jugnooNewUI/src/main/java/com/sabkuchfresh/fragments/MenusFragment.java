@@ -379,7 +379,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         activity.setRefreshCart(false);
                     }
                 }, 300);
-                if(!serviceUnavailable){
+                if(!serviceUnavailable ||
+                        (activity.getMenusResponse() != null && activity.getMenusResponse().getRecentOrders().size() > 0)){
                     activity.getMenusCartSelectedLayout().checkForVisibility();
                 }
 
