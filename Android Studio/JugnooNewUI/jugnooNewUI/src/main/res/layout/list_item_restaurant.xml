@@ -101,25 +101,6 @@
         android:textSize="@dimen/sp_14"
         app:font="@string/maven_r" />
 
-   <!-- <TextView
-        android:id="@+id/textViewAddressLine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textViewRestaurantCusines"
-        android:layout_marginRight="@dimen/dp_5"
-        android:layout_marginTop="@dimen/dp_5"
-        android:layout_toRightOf="@+id/imageViewRestaurantImage"
-        android:drawableLeft="@drawable/ic_restaurant_location"
-        android:drawablePadding="@dimen/dp_2"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:paddingBottom="@dimen/dp_1"
-        android:paddingLeft="@dimen/dp_2"
-        android:text="Sector 28 B"
-        android:textColor="@color/text_color"
-        android:textSize="@dimen/sp_11"
-        app:font="@string/maven" />-->
-
 
     <TextView
         android:id="@+id/textViewDelivery"

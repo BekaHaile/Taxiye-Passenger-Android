@@ -252,6 +252,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 etReview.setBackgroundResource(s.length() > 0 ? R.drawable.bg_white_r_b_new : R.drawable.bg_menu_item_selector_color_r_extra);
                 tvReviewTextCount.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
                 tvReviewTextCount.setText(s.length()+"/500");
+                tvSubmitReview.setText(s.length() > 0 ? R.string.submit_your_review : R.string.submit_your_rating);
             }
         });
 
@@ -511,7 +512,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         } else {
                             tvReviewsHeader.setText(R.string.reviews);
                             rvTopReviews.setVisibility(View.VISIBLE);
-                            llSeeAll.setVisibility(View.VISIBLE);
+                            llSeeAll.setVisibility(fetchFeedbackResponse.getRestaurantInfo().getReviewCount() > 2 ? View.VISIBLE : View.GONE);
                         }
                         if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
                             activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());
@@ -697,7 +698,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
 
 
-
+                            ratingBarReview.setScore(0f);
+                            etReview.setText("");
 
                             Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
                             RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();

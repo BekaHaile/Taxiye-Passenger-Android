@@ -139,6 +139,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
         etReviewMaxLength = getResources().getInteger(R.integer.edt_add_review_max_length);
         etFeedback = (EditText) rootView.findViewById(R.id.etFeedback);
+        etFeedback.setHint(Config.getLastOpenedClientId(activity).equals(Config.getMenusClientId())?R.string.what_you_love_about_restaurant:R.string.tell_us_about_exp);
         bSubmit = (Button) rootView.findViewById(R.id.btnSubmit);
         bSubmit.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -913,6 +913,7 @@
     <string name="bullet_spaces"> \u2022 &#032;</string>
     <string name="select_cuisines">Select Cuisines</string>
     <string name="search_a_cuisine">Search a cuisine</string>
+    <string name="search_3dot">Search...</string>
     <string name="more_info">More info</string>
     <string name="previous_vendor_cart_message_format">You have added some items in cart from %s.\nAre you sure you want to clear the cart?</string>
     <string name="minimum_order_amount_is_format">Minimum order amount is \u20B9%s</string>
@@ -1135,6 +1136,7 @@
     <string name="auto_renewal">Auto Renewal</string>
     <string name="upgrade_now">Upgrade Now</string>
     <string name="what_you_love_about_restaurant">Tell us about your experience: Your meal, packaging, and service?</string>
+    <string name="tell_us_about_exp">Tell us about your experience</string>
     <string name="feedback_must_be_in_500">Feedback must be in 500 characters</string>
     <string name="thanks_for_your_valuable_feedback">Thanks for your valuable feedback</string>
     <string name="feedback_menu_what_amazing">What was amazing?</string>
@@ -1406,6 +1408,7 @@
     <string name="start_typing_tags">Start typing tags</string>
     <string name="rate_the_restaurant">Rate the Restaurant</string>
     <string name="submit_your_rating">Submit Your Rating</string>
+    <string name="submit_your_review">Submit Your Review</string>
     <string name="say_something">Say something</string>
     <string name="locate">Locate</string>
 

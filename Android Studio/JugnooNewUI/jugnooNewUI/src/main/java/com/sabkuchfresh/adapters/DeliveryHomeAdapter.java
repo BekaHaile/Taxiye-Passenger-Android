@@ -195,7 +195,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         // service unavailable case
-        if(menusResponse.getServiceUnavailable() == 1 && vendorsCount == 0){
+        if(menusResponse.getServiceUnavailable() == 1 || (vendorsCount == 0 && activity.getCategoryIdOpened() < 0)){
             int messageResId = R.string.no_menus_available_your_location;
             if (activity.getMenusFragment() != null
                     && !TextUtils.isEmpty(activity.getMenusFragment().getSearchText())) {
@@ -641,11 +641,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(vendor.getDistance()==null){
             return null;
         }
-
-        return Utils.getDecimalFormat2Decimal().format(vendor.getDistance()) + " kms " ;
-
-
-
+        String suffix = vendor.getDistance() > 1 ? "kms" : (vendor.getDistance() == 1 ? "km" : "m");
+        double dist = vendor.getDistance() > 1 ? vendor.getDistance() : vendor.getDistance()/1000d;
+        return Utils.getDecimalFormat2Decimal().format(dist) + " "+suffix+" " ;
     }
 
     public static String showDeliveryStringWithTime(MenusResponse.Vendor vendor) {

@@ -92,6 +92,8 @@ public class RatingBarMenuFeedback extends LinearLayout {
             score = Math.round(score);
         mCurrentScore = score;
         refreshStars();
+        if (onScoreChanged != null)
+            onScoreChanged.scoreChanged(mCurrentScore);
     }
 
 
