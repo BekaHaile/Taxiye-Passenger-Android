@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.StyleSpan;
@@ -81,7 +82,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
 
         recyclerViewReviews = (RecyclerView) rootView.findViewById(R.id.recyclerViewReviews);
         recyclerViewReviews.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerViewReviews.setItemAnimator(new DefaultItemAnimator());
+        ((SimpleItemAnimator) recyclerViewReviews.getItemAnimator()).setSupportsChangeAnimations(false);
         recyclerViewReviews.setHasFixedSize(false);
         restaurantReviews = new ArrayList<>();
         reviewsAdapter = new RestaurantReviewsAdapter(activity, new RestaurantReviewsAdapter.Callback() {

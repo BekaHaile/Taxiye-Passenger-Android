@@ -391,7 +391,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             });
 
             menusCartSelectedLayout = new MenusCartSelectedLayout(this, findViewById(R.id.vMenusCartSaved));
-
+            menusCartSelectedLayout.setVisibility(View.GONE);
+            llCheckoutBar.setAlpha(0);
 
             drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
                 @Override
@@ -4849,6 +4850,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         if(llCheckoutBar != null) {
+            llCheckoutBar.setAlpha(1);
             llCheckoutBar.setVisibility(View.VISIBLE);
             llCheckoutBar.post(new Runnable() {
                 @Override
