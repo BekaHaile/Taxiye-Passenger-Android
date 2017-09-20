@@ -226,8 +226,8 @@
                     android:text="150"/>
             </RelativeLayout>
 
-            
-            
+
+
             <LinearLayout
                 android:id="@+id/llOffer"
                 android:paddingTop="15dp"
@@ -240,7 +240,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                
+
                 <ImageView
                     android:src="@drawable/ic_merchant_offer_active"
                     android:layout_width="20dp"
@@ -262,7 +262,7 @@
                     app:font="@string/maven"
                     />
             </LinearLayout>
-            
+
 
 
 
@@ -510,8 +510,9 @@
                 android:overScrollMode="always"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical"
+                android:gravity="left"
                 />
-            
+
             <TextView
                 android:id="@+id/tvReviewTextCount"
                 android:layout_width="match_parent"
@@ -520,8 +521,8 @@
                 android:textSize="@dimen/sp_9"
                 android:textColor="@color/text_color_hint"
                 android:text="500"
-                android:layout_marginTop="-20dp"
-                android:layout_marginBottom="@dimen/dp_20"
+                android:layout_marginTop="-15dp"
+                android:layout_marginBottom="@dimen/dp_15"
                 android:gravity="right"
                 android:visibility="gone"
                 app:font="@string/maven"

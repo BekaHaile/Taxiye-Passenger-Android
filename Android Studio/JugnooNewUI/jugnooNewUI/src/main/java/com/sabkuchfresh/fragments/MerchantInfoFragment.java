@@ -248,6 +248,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
             @Override
             public void afterTextChanged(Editable s) {
+                etReview.setMinHeight(s.length() > 0 ? activity.getResources().getDimensionPixelSize(R.dimen.dp_60):0);
                 etReview.setBackgroundResource(s.length() > 0 ? R.drawable.bg_white_r_b_new : R.drawable.bg_menu_item_selector_color_r_extra);
                 tvReviewTextCount.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
                 tvReviewTextCount.setText(s.length()+"/500");
@@ -317,7 +318,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     tvReviewCount.setVisibility(View.GONE);
                 }
 
-                setOpenCloseStateText();
+                setOpenCloseStateText(true);
                 activity.getHandler().postDelayed(timerRunnable, 6000);
 
                 if (activity.getVendorOpened().getOrderMode() == 0) {
@@ -374,9 +375,11 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         }
     }
 
-    private void setOpenCloseStateText() {
+    private void setOpenCloseStateText(boolean firstTime) {
         try {
-			tvlabelBullet.setText(activity.getString(R.string.bullet) + " ");
+			if(firstTime || tvOpensAt.getText().length() > 0){
+                tvlabelBullet.setText(activity.getString(R.string.bullet) + " ");
+			}
 			if (DeliveryHomeAdapter.setRestaurantOpenStatus(tvOpenStatus, activity.getVendorOpened(), false) == View.VISIBLE) {
 				tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
 			} else {
@@ -784,7 +787,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         @Override
         public void run() {
             try {
-                setOpenCloseStateText();
+                setOpenCloseStateText(false);
                 Log.v(TAG, "notifying automaically");
                 activity.getHandler().postDelayed(timerRunnable, 60000); //run every minute
             } catch (Exception e) {

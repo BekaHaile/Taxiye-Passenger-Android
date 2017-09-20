@@ -393,7 +393,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         }
                     }
                 }
-                if(deliveryTime!=null){
+                if(!TextUtils.isEmpty(deliveryTime)){
                     mHolder.textViewMinimumOrder.setText( activity.getString(R.string.bullet)  + " " +  deliveryTime);
 
                     mHolder.textViewMinimumOrder.setVisibility(View.VISIBLE);
@@ -405,7 +405,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
             } else {
-                if(deliveryTime!=null){
+                if(!TextUtils.isEmpty(deliveryTime)){
                     ((ViewHolderVendor) mholder).textViewDelivery.setText(distance + activity.getString(R.string.bullet) + " " + deliveryTime);
 
                 }else{

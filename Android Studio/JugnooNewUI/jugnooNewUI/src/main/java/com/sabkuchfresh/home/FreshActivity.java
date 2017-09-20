@@ -1861,7 +1861,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else if (fragment instanceof VendorMenuFragment || fragment instanceof MenusSearchFragment) {
                     int textViewMinOrderVis = View.GONE;
                     if (getVendorOpened() != null ) {
-                        if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
+                        if(!TextUtils.isEmpty(getVendorOpened().getNext_slot_time())){
+                            textViewMinOrder.setText(getVendorOpened().getNext_slot_time());
+                            textViewMinOrderVis = View.VISIBLE;
+                        } else if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                             textViewMinOrderVis = View.VISIBLE;
                             textViewMinOrder.setText(getString(R.string.minimum_order) + " "
                                     + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));

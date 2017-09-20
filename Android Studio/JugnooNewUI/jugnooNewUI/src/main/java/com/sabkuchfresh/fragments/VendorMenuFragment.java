@@ -274,14 +274,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     public void run() {
                         try {
 
-                            if(activity.getVendorOpened()!=null && !TextUtils.isEmpty(activity.getVendorOpened().getNext_slot_time())){
-                                activity.textViewMinOrder.setText(activity.getVendorOpened().getNext_slot_time());
-                                activity.textViewMinOrder.setVisibility(View.VISIBLE);
-                            }else if(!activity.isOrderJustCompleted()){
+                            if(!activity.isOrderJustCompleted()){
                                 activity.setMinOrderAmountText(VendorMenuFragment.this);
                             }
-
-
                         } catch (Exception e) {
                         }
                     }
@@ -448,11 +443,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 viewPromoTitle.setVisibility(View.GONE);
                 rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.GONE);
             }
-            if(!TextUtils.isEmpty(activity.getVendorOpened().getNext_slot_time())){
-                activity.textViewMinOrder.setText(activity.getVendorOpened().getNext_slot_time());
-                activity.textViewMinOrder.setVisibility(View.VISIBLE);
-            }
-
+            activity.setMinOrderAmountText(VendorMenuFragment.this);
         }
     }
 
