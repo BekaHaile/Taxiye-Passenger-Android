@@ -48,6 +48,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -196,7 +197,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         // service unavailable case
         if(menusResponse.getServiceUnavailable() == 1 || (vendorsCount == 0 && activity.getCategoryIdOpened() < 0)){
-            int messageResId = R.string.no_menus_available_your_location;
+            int messageResId = Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()) ?
+                    R.string.no_delivery_available_your_location : R.string.no_menus_available_your_location;
             if (activity.getMenusFragment() != null
                     && !TextUtils.isEmpty(activity.getMenusFragment().getSearchText())) {
                 messageResId = R.string.oops_no_results_found;
