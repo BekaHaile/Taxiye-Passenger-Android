@@ -255,7 +255,7 @@
                     android:layout_gravity="center"
                     android:gravity="center_vertical"
                     android:text="20% off on selected orders"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/text_color_selector"
                     android:textColorLink="@color/text_color_link"
                     android:textSize="@dimen/sp_14"
                     app:font="@string/maven"

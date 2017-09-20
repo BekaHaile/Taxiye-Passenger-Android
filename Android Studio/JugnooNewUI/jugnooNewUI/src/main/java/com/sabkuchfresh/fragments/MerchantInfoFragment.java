@@ -64,6 +64,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.Callback;
@@ -426,7 +427,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     }
 
     @OnClick({R.id.llChatNow, R.id.llCall, R.id.bOrderOnline, R.id.llSeeAll, R.id.llLocate,
-            R.id.tvSubmitReview})
+            R.id.tvSubmitReview, R.id.llOffer})
     public void onViewClicked(View view) {
         try {
             switch (view.getId()) {
@@ -477,6 +478,14 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     }
                     uploadFeedback(reviewText);
                     break;
+
+                case R.id.llOffer:
+                    if(activity.getMenuProductsResponse() != null && activity.getMenuProductsResponse().getMenusPromotionInfo() != null) {
+                        DialogPopup.alertPopupLeftOriented(activity, activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText(),
+                                activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoTC(), true, true, true, true,
+                                R.color.theme_color, 16, 13, Fonts.mavenMedium(activity));
+                    }
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -505,6 +514,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         reviewsAdapter.notifyDataSetChanged();
                         if (restaurantReviews.size() == 0) {
                             tvReviewsHeader.setText(R.string.no_reviews_yet_be_first);
+                            tvReviewsHeader.setTypeface(Fonts.mavenMedium(activity));
                             rvTopReviews.setVisibility(View.GONE);
                             llSeeAll.setVisibility(View.GONE);
                         } else {
