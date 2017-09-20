@@ -1026,10 +1026,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 public void run() {
                     try {
                         int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
+                        int orderId = intent.getIntExtra(Constants.KEY_ORDER_ID, 0);
                         if (PushFlags.STATUS_CHANGED.getOrdinal() == flag) {
                             getOrderData(activity);
                         } else if (PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
-                            getOrderData(activity);
+                            if(orderId == OrderStatusFragment.this.orderId) {
+                                getOrderData(activity);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

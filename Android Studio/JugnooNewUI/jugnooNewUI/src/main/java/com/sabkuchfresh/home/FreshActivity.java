@@ -863,14 +863,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                                         }
                                         if (fragment != null && FreshActivity.this.hasWindowFocus()) {
-                                            ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false);
-
-
+                                            if(Config.getLastOpenedClientId(FreshActivity.this).equals(intent.getStringExtra(Constants.KEY_CLIENT_ID))) {
+                                                ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false);
+                                            }
                                         } else {
                                             Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
                                             intent1.putExtra(Constants.KEY_FLAG, flag);
                                             intent1.putExtra(Constants.KEY_ORDER_ID, intent.getIntExtra(Constants.KEY_ORDER_ID, -1));
                                             intent1.putExtra(Constants.KEY_CLOSE_TRACKING, intent.getIntExtra(Constants.KEY_CLOSE_TRACKING, 0));
+                                            intent1.putExtra(Constants.KEY_CLIENT_ID, intent.getStringExtra(Constants.KEY_CLIENT_ID));
                                             LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
                                         }
                                     } else if (Constants.OPEN_DEEP_INDEX == flag) {
