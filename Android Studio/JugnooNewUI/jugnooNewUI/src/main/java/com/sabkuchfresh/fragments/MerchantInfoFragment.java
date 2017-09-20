@@ -380,10 +380,11 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     }
 
     private void setOpenCloseStateText(boolean firstTime) {
+        if(firstTime || tvOpensAt.getText().length() > 0){
+            tvlabelBullet.setText(activity.getString(R.string.bullet) + " ");
+        }
         try {
-			if(firstTime || tvOpensAt.getText().length() > 0){
-                tvlabelBullet.setText(activity.getString(R.string.bullet) + " ");
-			}
+
 			if (DeliveryHomeAdapter.setRestaurantOpenStatus(tvOpenStatus, activity.getVendorOpened(), false) == View.VISIBLE) {
 				tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
 			} else {
