@@ -49,7 +49,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -65,6 +64,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import retrofit.Callback;
@@ -287,7 +287,6 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
             }
         }
     };
-    Pattern httpPattern = Pattern.compile("[a-z]+:\\/\\/[^ \\n]*");
 
     void setMerchantInfoToUI() {
         try {
@@ -318,30 +317,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     tvReviewCount.setVisibility(View.GONE);
                 }
 
-                try {
-                    tvlabelBullet.setText(activity.getString(R.string.bullet) + " ");
-                    if (DeliveryHomeAdapter.setRestaurantOpenStatus(tvOpenStatus, activity.getVendorOpened(), false) == View.VISIBLE) {
-                        tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
-                    } else {
-                        tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
-                    }
-                } catch (Exception e) {
-
-                    if(activity.getVendorOpened().getIsClosed()!=null && activity.getVendorOpened().getIsAvailable()!=null){
-                        if(activity.getVendorOpened().getIsClosed()==1 || activity.getVendorOpened().getIsAvailable()==0){
-                            tvOpenStatus.setText("Closed ");
-                            tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
-                        }else{
-                            tvOpenStatus.setText("Open Now ");
-                            tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
-                        }
-                    }else{
-                        tvOpenStatus.setText("");
-                        tvlabelBullet.setText("");
-                    }
-
-                    e.printStackTrace();
-                }
+                setOpenCloseStateText();
+                activity.getHandler().postDelayed(timerRunnable, 6000);
 
                 if (activity.getVendorOpened().getOrderMode() == 0) {
                     layoutOrderDetails.setVisibility(View.GONE);
@@ -363,19 +340,13 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 }
 
 
-                setRatingViews();
 
                 tvOpensAt.setText(activity.getVendorOpened().getRestaurantTimingsStr());
-            /*	tvMerchantMail.setText(activity.getVendorOpened().getEmail());
-                Linkify.addLinks(tvMerchantMail, Patterns.EMAIL_ADDRESS,"mailto: ");
-				Linkify.addLinks(tvMerchantMail, httpPattern,"");
-				Linkify.addLinks(tvMerchantMail,Patterns.WEB_URL,"http://");
-				stripUnderlines(tvMerchantMail);
-				tvMerchantMail.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getEmail()) ? View.VISIBLE : View.GONE);
-				tvMerchantContact.setText(activity.getVendorOpened().getContactList());
-				tvMerchantContact.setVisibility(!TextUtils.isEmpty(activity.getVendorOpened().getContactList()) ? View.VISIBLE : View.GONE);
-				Linkify.addLinks(tvMerchantContact, FeedHomeAdapter.PATTERN_PHONE_NUMBER_LOCAL_PATTERN,"tel: ");
-				stripUnderlines(tvMerchantContact);*/
+                if(tvOpensAt.getText().length() == 0 && !TextUtils.isEmpty(activity.getVendorOpened().getNextOpenText())){
+                    tvOpensAt.setText(activity.getVendorOpened().getNextOpenText());
+                } else {
+                    tvlabelBullet.setText("");
+                }
                 String addressToSet;
                 if (DeliveryHomeAdapter.getDistanceRestaurant(activity.getVendorOpened()) != null) {
                     addressToSet = DeliveryHomeAdapter.getDistanceRestaurant(activity.getVendorOpened()) + activity.getString(R.string.bullet) + " " + activity.getVendorOpened().getAddress();
@@ -393,7 +364,6 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     ivChatNow.getDrawable().setColorFilter(null);
                 }
                 // TODO: 15/09/17 temporarily disabled till P2M FUGU
-//				llChatNow.setVisibility(View.GONE);
 
                 bOrderOnline.setBackgroundResource((activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0) ?
                         R.drawable.capsule_grey_dark_bg : R.drawable.capsule_theme_color_selector);
@@ -404,8 +374,29 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         }
     }
 
-    private void setRatingViews() {
-
+    private void setOpenCloseStateText() {
+        try {
+			tvlabelBullet.setText(activity.getString(R.string.bullet) + " ");
+			if (DeliveryHomeAdapter.setRestaurantOpenStatus(tvOpenStatus, activity.getVendorOpened(), false) == View.VISIBLE) {
+				tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
+			} else {
+				tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+			}
+		} catch (Exception e) {
+			if(activity.getVendorOpened().getIsClosed()!=null && activity.getVendorOpened().getIsAvailable()!=null){
+				if(activity.getVendorOpened().getIsClosed()==1 || activity.getVendorOpened().getIsAvailable()==0){
+					tvOpenStatus.setText("Closed ");
+					tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
+				}else{
+					tvOpenStatus.setText("Open Now ");
+					tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+				}
+			}else{
+				tvOpenStatus.setText("");
+				tvlabelBullet.setText("");
+			}
+			e.printStackTrace();
+		}
     }
 
     private void setUpCollapseToolbarData() {
@@ -423,6 +414,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        removeRunnable();
         ButterKnife.unbind(this);
     }
 
@@ -443,14 +435,6 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     callVendor();
                     sendUserClickEvent(Constants.KEY_CALL_MODE);
                     break;
-
-                /*case R.id.llAddReview:
-                    if(userHasReviewed == 0) {
-						activity.openRestaurantAddReviewFragment(true);
-					} else {
-						Utils.showToast(activity, activity.getString(R.string.you_have_already_reviewed_format, activity.getVendorOpened().getName()));
-					}
-					break;*/
                 case R.id.bOrderOnline:
                     if (activity.getMenuProductsResponse().getCategories() != null
                             && activity.getVendorOpened().getRestaurantId().equals(activity.getMenuProductsResponse().getVendor().getRestaurantId())) {
@@ -467,16 +451,20 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     Utils.openMapsDirections(activity, new LatLng(Data.latitude, Data.longitude), activity.getVendorOpened().getLatLng());
                     break;
                 case R.id.tvSubmitReview:
-                    String reviewText = etReview.getText().toString().trim();
-                    if(reviewText.length() > 500){
-                        Utils.showToast(activity, activity.getString(R.string.feedback_must_be_in_500));
-                        return;
+                    if(userHasReviewed == 0) {
+                        String reviewText = etReview.getText().toString().trim();
+                        if (reviewText.length() > 500) {
+                            Utils.showToast(activity, activity.getString(R.string.feedback_must_be_in_500));
+                            return;
+                        }
+                        if (ratingBarReview.getScore() <= 0) {
+                            Utils.showToast(activity, getString(R.string.error_no_rating));
+                            return;
+                        }
+                        uploadFeedback(reviewText);
+                    } else {
+                        Utils.showToast(activity, activity.getString(R.string.you_have_already_reviewed_format, activity.getVendorOpened().getName()));
                     }
-                    if(ratingBarReview.getScore() <= 0){
-                        Utils.showToast(activity,getString(R.string.error_no_rating));
-                        return;
-                    }
-                    uploadFeedback(reviewText);
                     break;
 
                 case R.id.llOffer:
@@ -529,7 +517,6 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                             if (activity.getVendorOpened() != null) {
                                 activity.getVendorOpened().setRating(fetchFeedbackResponse.getRestaurantInfo().getRating());
                                 activity.getVendorOpened().setReviewCount(fetchFeedbackResponse.getRestaurantInfo().getReviewCount());
-                                setRatingViews();
                             }
                         }
                     }
@@ -792,5 +779,22 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 		}
 	}
 
+
+    private Runnable timerRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                setOpenCloseStateText();
+                Log.v(TAG, "notifying automaically");
+                activity.getHandler().postDelayed(timerRunnable, 60000); //run every minute
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    public void removeRunnable(){
+        activity.getHandler().removeCallbacks(timerRunnable);
+    }
 
 }

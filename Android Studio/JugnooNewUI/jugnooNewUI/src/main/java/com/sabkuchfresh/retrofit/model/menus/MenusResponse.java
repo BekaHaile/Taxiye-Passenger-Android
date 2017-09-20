@@ -306,6 +306,9 @@ public class MenusResponse {
 		@SerializedName("next_slot")
 		@Expose
 		private String next_slot_time;
+		@SerializedName("next_open_text")
+		@Expose
+		private String nextOpenText;
 
 		@SerializedName("contact_list")
 		@Expose
@@ -732,6 +735,14 @@ public class MenusResponse {
 
 		public LatLng getLatLng() {
 			return new LatLng(latitude, longitude);
+		}
+
+		public String getNextOpenText() {
+			return nextOpenText;
+		}
+
+		public void setNextOpenText(String nextOpenText) {
+			this.nextOpenText = nextOpenText;
 		}
 	}
 

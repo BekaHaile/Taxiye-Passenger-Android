@@ -650,7 +650,12 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public static String showDeliveryStringWithTime(MenusResponse.Vendor vendor) {
         if(vendor.getOrderMode() == 0){
-            return DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt())+"-"+DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn());
+            if(!TextUtils.isEmpty(vendor.getOpensAt()) && !TextUtils.isEmpty(vendor.getCloseIn())
+                    && !"00:00:00".equals(vendor.getOpensAt()) && !"00:00:00".equals(vendor.getCloseIn())) {
+                return DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt()) + "-" + DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn());
+            } else {
+                return "";
+            }
         }
         if(vendor.getDeliveryTime()==null){
             return null;
@@ -1520,7 +1525,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         int visibilityCloseTime = View.VISIBLE;
         DateFormat dateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
         String currentSystemTime = dateFormat.format(new Date());
-        long timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()), currentSystemTime);
+        long timeDiff1 = 2*Constants.HOUR_MILLIS;
+        if(!TextUtils.isEmpty(vendor.getCloseIn())){
+            timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()), currentSystemTime);
+        }
         long minutes = ((timeDiff1 / (1000L* 60L)));
         if (minutes <= 0) {
             vendor.setIsClosed(1);
