@@ -405,7 +405,7 @@ public class FABViewTest implements GACategory, GAAction {
                             MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getDeliveryCustomerClientId(), finalLatLng, false);
                         }
                     }, 300);
-                    selectedOffering = GAAction.DELIVERY;
+                    selectedOffering = GACategory.DELIVERY_CUSTOMER;
                     break;
                 case R.id.fabPayTest:
                     new Handler().postDelayed(new Runnable() {

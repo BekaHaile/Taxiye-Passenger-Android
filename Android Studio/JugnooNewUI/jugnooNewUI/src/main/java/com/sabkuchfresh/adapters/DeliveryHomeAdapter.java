@@ -644,7 +644,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return null;
         }
         String suffix = vendor.getDistance() > 1 ? "kms" : (vendor.getDistance() == 1 ? "km" : "m");
-        double dist = vendor.getDistance() > 1 ? vendor.getDistance() : vendor.getDistance()/1000d;
+        double dist = vendor.getDistance() > 1 ? vendor.getDistance() : vendor.getDistance()*1000d;
         return Utils.getDecimalFormat2Decimal().format(dist) + " "+suffix+" " ;
     }
 

@@ -795,4 +795,6 @@ public interface Constants {
     String KEY_ORDER_MODE = "order_mode";
     String KEY_MERCHANT_CATEGORY_ID = "merchant_category_id";
     String KEY_NOT_SEND_MENU = "not_send_menu";
+
+    boolean openMerchantInfo = false;
 }

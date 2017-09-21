@@ -120,6 +120,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         }
 
         GAUtils.trackScreenView(activity.getGaCategory()+RESTAURANT_HOME);
+        GAUtils.trackScreenView(activity.getGaCategory()+RESTAURANT_HOME+V2);
 
 
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);

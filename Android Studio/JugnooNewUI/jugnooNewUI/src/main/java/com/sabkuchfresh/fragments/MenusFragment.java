@@ -116,6 +116,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 ? AppConstant.ApplicationType.DELIVERY_CUSTOMER : AppConstant.ApplicationType.MENUS;
         Prefs.with(activity).save(Constants.APP_TYPE, Data.AppType);
         GAUtils.trackScreenView(activity.getGaCategory() + HOME);
+        GAUtils.trackScreenView(activity.getGaCategory() + HOME + V2);
 
         llRoot = (RelativeLayout) rootView.findViewById(R.id.llRoot);
 

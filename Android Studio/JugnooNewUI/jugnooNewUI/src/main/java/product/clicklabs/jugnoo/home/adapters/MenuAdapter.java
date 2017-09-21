@@ -388,7 +388,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     onClickAction(MenuInfoTags.DELIVERY_CUSTOMER.getTag());
                     holder.imageViewArrow.setRotation(270);
                  //   holder.linearLayoutSubCategories.setVisibility(View.GONE);
-                    GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, GAAction.DELIVERY);
+                    GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, GACategory.DELIVERY_CUSTOMER);
                 }
             });
 

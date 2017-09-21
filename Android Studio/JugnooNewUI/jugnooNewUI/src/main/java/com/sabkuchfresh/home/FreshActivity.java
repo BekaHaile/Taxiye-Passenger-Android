@@ -1668,9 +1668,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             topBar.ivFreshSort.setVisibility(freshSortVis);
 
             feedHomeAddPostView.setVisibility(View.GONE);
-            boolean isEnable = Config.getLastOpenedClientId(this).equals(Config.getDeliveryCustomerClientId()) ?
-                    fragment instanceof MerchantInfoFragment : fragment instanceof VendorMenuFragment;
-            setCollapsingToolbar(isEnable, fragment);
+            setCollapsingToolbar(collapsingToolBarEnabled(fragment), fragment);
 
 
         } catch (Exception e) {
@@ -4430,9 +4428,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public boolean canExitVendorMenu() {
-        boolean isEnable = Config.getLastOpenedClientId(this).equals(Config.getDeliveryCustomerClientId()) ?
-                getTopFragment() instanceof MerchantInfoFragment : getTopFragment() instanceof VendorMenuFragment;
-        if (getTopFragment() != null && isEnable && mCurrentState == State.IDLE && currentVerticalOffSet != -1)
+        if (getTopFragment() != null && collapsingToolBarEnabled(getTopFragment()) && mCurrentState == State.IDLE && currentVerticalOffSet != -1)
             return false;
         else
             return true;
@@ -5072,6 +5068,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public boolean isMenusOrDeliveryOpen(){
          return getAppType()== AppConstant.ApplicationType.MENUS || getAppType()==AppConstant.ApplicationType.DELIVERY_CUSTOMER;
+    }
+
+    private boolean collapsingToolBarEnabled(Fragment fragment){
+        boolean isEnable = shouldOpenMerchantInfoFragment() ?
+                fragment instanceof MerchantInfoFragment : fragment instanceof VendorMenuFragment;
+        return isEnable;
+    }
+
+    public boolean shouldOpenMerchantInfoFragment(){
+        return Config.getLastOpenedClientId(this).equals(Config.getDeliveryCustomerClientId()) || Constants.openMerchantInfo;
     }
 
 }

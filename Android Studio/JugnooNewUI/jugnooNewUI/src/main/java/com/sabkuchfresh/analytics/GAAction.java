@@ -106,6 +106,7 @@ public interface GAAction {
 	String APPLY_BUTTON = "Apply Button ";
 	String RESET_BUTTON = "Reset Button ";
 	String RESTAURANT_HOME = "Restaurant Home ";
+	String MERCHANT_INFO = "Merchant Info ";
 	String TABS = "Tabs ";
 	String SLIDED = "Slided ";
 	String EXPANDED = "Expanded ";
@@ -238,5 +239,5 @@ public interface GAAction {
 	String BULK_ORDER_NEXT_PAGE = "Bulk Order Next Page ";
 	String BULK_ORDER_CTA = "Bulk Order CTA ";
 
-	String DELIVERY = "Delivery";
+	String V2 = "V2 ";
 }

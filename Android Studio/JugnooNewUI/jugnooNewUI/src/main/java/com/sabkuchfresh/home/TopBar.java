@@ -210,7 +210,7 @@ public class TopBar implements GAAction, GACategory {
                         } else if(appType == AppConstant.ApplicationType.MENUS){
                             GAUtils.event(JUGNOO, GAAction.MENUS+HOME, LEFT_MENU_ICON+CLICKED);
                         } else if(appType == AppConstant.ApplicationType.DELIVERY_CUSTOMER){
-                            GAUtils.event(JUGNOO, GAAction.DELIVERY+HOME, LEFT_MENU_ICON+CLICKED);
+                            GAUtils.event(JUGNOO, GACategory.DELIVERY_CUSTOMER+HOME, LEFT_MENU_ICON+CLICKED);
                         } else if(appType == AppConstant.ApplicationType.FEED){
                             GAUtils.event(JUGNOO, FEED+HOME, LEFT_MENU_ICON+CLICKED);
                         } else if(appType == AppConstant.ApplicationType.PROS){

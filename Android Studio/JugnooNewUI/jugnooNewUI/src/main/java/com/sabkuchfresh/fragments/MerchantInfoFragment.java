@@ -224,6 +224,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         restaurantId = activity.getVendorOpened() != null ? activity.getVendorOpened().getRestaurantId() : 0;
         setMerchantInfoToUI();
 
+        GAUtils.trackScreenView(activity.getGaCategory() + MERCHANT_INFO + V2);
+
         etReview.setVisibility(View.GONE);
         tvSubmitReview.setVisibility(View.GONE);
         tvReviewTextCount.setVisibility(View.GONE);

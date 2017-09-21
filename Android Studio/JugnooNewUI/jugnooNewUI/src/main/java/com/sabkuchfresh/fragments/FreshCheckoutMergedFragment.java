@@ -277,6 +277,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
 
         GAUtils.trackScreenView(activity.getGaCategory() + CHECKOUT);
+        GAUtils.trackScreenView(activity.getGaCategory() + CHECKOUT + V2);
 
         linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
         tvMinOrderLabelDisplay=(TextView)rootView.findViewById(R.id.tv_min_order_label);
