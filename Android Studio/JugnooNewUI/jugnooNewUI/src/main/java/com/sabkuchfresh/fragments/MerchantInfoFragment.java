@@ -210,6 +210,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         }, restaurantReviews, true);
         rvTopReviews.setAdapter(reviewsAdapter);
 
+        activity.tvCollapRestaurantName.setVisibility(View.GONE);
+        activity.llCollapseRating.setVisibility(View.GONE);
         activity.tvCollapRestaurantDeliveryTime.setText("");
         activity.clearRestaurantRatingStars(activity.llCollapRatingStars, activity.tvCollapRestaurantRating, null);
         progressWheel.stopSpinning();
@@ -275,8 +277,10 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
             if (!hidden) {
                 activity.fragmentUISetup(this);
                 activity.tvCollapRestaurantDeliveryTime.setVisibility(View.GONE);
+                activity.tvCollapRestaurantName.setVisibility(View.GONE);
+                activity.llCollapseRating.setVisibility(View.GONE);
                 if (getView() != null) {
-                    scrollView.postDelayed(scrollToTopRunnable, 100);
+                    scrollView.postDelayed(scrollToTopRunnable, 30);
                 }
             }
         } catch (Exception e) {

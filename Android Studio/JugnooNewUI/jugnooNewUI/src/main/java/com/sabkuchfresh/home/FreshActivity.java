@@ -1668,7 +1668,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             topBar.ivFreshSort.setVisibility(freshSortVis);
 
             feedHomeAddPostView.setVisibility(View.GONE);
-            setCollapsingToolbar(fragment instanceof MerchantInfoFragment, fragment);
+            boolean isEnable = Config.getLastOpenedClientId(this).equals(Config.getDeliveryCustomerClientId()) ?
+                    fragment instanceof MerchantInfoFragment : fragment instanceof VendorMenuFragment;
+            setCollapsingToolbar(isEnable, fragment);
 
 
         } catch (Exception e) {
@@ -4428,7 +4430,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public boolean canExitVendorMenu() {
-        if (getTopFragment() != null && getTopFragment() instanceof MerchantInfoFragment && mCurrentState == State.IDLE && currentVerticalOffSet != -1)
+        boolean isEnable = Config.getLastOpenedClientId(this).equals(Config.getDeliveryCustomerClientId()) ?
+                getTopFragment() instanceof MerchantInfoFragment : getTopFragment() instanceof VendorMenuFragment;
+        if (getTopFragment() != null && isEnable && mCurrentState == State.IDLE && currentVerticalOffSet != -1)
             return false;
         else
             return true;

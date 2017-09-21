@@ -414,6 +414,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
     private void setUpCollapseToolbarData() {
         if (activity.getVendorOpened() != null) {
+            activity.tvCollapRestaurantName.setVisibility(View.VISIBLE);
+            activity.llCollapseRating.setVisibility(View.VISIBLE);
             activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName().toUpperCase());
 
             if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
