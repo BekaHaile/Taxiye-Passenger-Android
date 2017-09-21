@@ -61,7 +61,9 @@ public class MenusResponse {
 	@Expose
 	private List<Vendor> vendors = new ArrayList<Vendor>();
 
-
+	@SerializedName("is_open_merchant_info")
+	@Expose
+	private int isOpenMerchantInfo;
 
 
 	/**
@@ -177,6 +179,14 @@ public class MenusResponse {
 
 	public void setSorting(List<KeyValuePair> sorting) {
 		this.sorting = sorting;
+	}
+
+	public boolean isOpenMerchantInfo() {
+		return isOpenMerchantInfo == 1;
+	}
+
+	public void setIsOpenMerchantInfo(int isOpenMerchantInfo) {
+		this.isOpenMerchantInfo = isOpenMerchantInfo;
 	}
 
 

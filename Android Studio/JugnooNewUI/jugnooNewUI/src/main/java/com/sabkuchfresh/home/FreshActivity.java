@@ -5077,7 +5077,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public boolean shouldOpenMerchantInfoFragment(){
-        return Config.getLastOpenedClientId(this).equals(Config.getDeliveryCustomerClientId()) || Constants.openMerchantInfo;
+        return Config.getLastOpenedClientId(this).equals(Config.getDeliveryCustomerClientId())
+                || (getMenusResponse() != null && getMenusResponse().isOpenMerchantInfo());
     }
 
 }

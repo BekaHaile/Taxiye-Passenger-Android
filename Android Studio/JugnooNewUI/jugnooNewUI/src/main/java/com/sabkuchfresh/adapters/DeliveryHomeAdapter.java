@@ -33,6 +33,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundBorderTransform;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -645,7 +646,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         String suffix = vendor.getDistance() > 1 ? "kms" : (vendor.getDistance() == 1 ? "km" : "m");
         double dist = vendor.getDistance() > 1 ? vendor.getDistance() : vendor.getDistance()*1000d;
-        return Utils.getDecimalFormat2Decimal().format(dist) + " "+suffix+" " ;
+        DecimalFormat df = vendor.getDistance() > 1 ? Utils.getDecimalFormat1Decimal() : Utils.getMoneyDecimalFormatWithoutFloat();
+        return df.format(dist) + " "+suffix+" " ;
     }
 
     public static String showDeliveryStringWithTime(MenusResponse.Vendor vendor) {
