@@ -2,20 +2,21 @@ package com.sabkuchfresh.retrofit.model.menus;
 
 import android.content.Context;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.DateOperations;
 
 /**
  * Created by shankar on 11/15/16.
  */
-public class MenusResponse implements Serializable {
+public class MenusResponse {
 
 	@SerializedName("flag")
 	@Expose
@@ -23,144 +24,92 @@ public class MenusResponse implements Serializable {
 	@SerializedName("message")
 	@Expose
 	private String message;
-	@SerializedName("vendors")
-	@Expose
-	private List<Vendor> vendors = new ArrayList<Vendor>();
 	@SerializedName("support_contact")
 	@Expose
 	private String supportContact;
-	@SerializedName("filter")
-	@Expose
-	private Filters filters;
 	@SerializedName("recent_orders")
 	@Expose
 	private List<RecentOrder> recentOrders = new ArrayList<RecentOrder>();
 	@SerializedName("recent_orders_possible_status")
 	@Expose
 	private List<String> recentOrdersPossibleStatus = new ArrayList<String>();
-
-	@SerializedName("rating")
-	private Double rating;
-
-	@SerializedName("review_count")
-	private long reviewCount;
-
 	@SerializedName("banner_info")
 	@Expose
 	private List<BannerInfo> bannerInfos;
-
-
 	@SerializedName("show_banner")
 	@Expose
 	private boolean showBanner;
 	@SerializedName("strip_info")
 	@Expose
 	private StripInfo stripInfo;
-
-
-
-	public Double getRating() {
-		return rating==null?null:Math.round(rating * 10.0) / 10.0;
-	}
-
-	public long getReviewCount() {
-		return reviewCount;
-	}
-
-	@SerializedName("rating_color")
-	private String colorCode;
 	@SerializedName("is_complete")
 	private int isPageLengthComplete;
-
 	@SerializedName("service_unavailable")
 	private int serviceUnavailable;
 
-	public String getColorCode() {
-		return colorCode;
-	}
+
+	@SerializedName("category_map")
+	@Expose
+	private List<Category> categories;
+	@SerializedName("filters_generic")
+	@Expose
+	private List<KeyValuePair> filters;
+	@SerializedName("sort_generic")
+	@Expose
+	private List<KeyValuePair> sorting;
+	@SerializedName("vendors")
+	@Expose
+	private List<Vendor> vendors = new ArrayList<Vendor>();
+
+	@SerializedName("is_open_merchant_info")
+	@Expose
+	private int isOpenMerchantInfo;
+
 
 	/**
-	 *
-	 * @return
-	 * The flag
+	 * @return The flag
 	 */
 	public Integer getFlag() {
 		return flag;
 	}
 
 	/**
-	 *
-	 * @param flag
-	 * The flag
+	 * @param flag The flag
 	 */
 	public void setFlag(Integer flag) {
 		this.flag = flag;
 	}
 
 	/**
-	 *
-	 * @return
-	 * The message
+	 * @return The message
 	 */
 	public String getMessage() {
 		return message;
 	}
 
 	/**
-	 *
-	 * @param message
-	 * The message
+	 * @param message The message
 	 */
 	public void setMessage(String message) {
 		this.message = message;
 	}
 
 	/**
-	 *
-	 * @return
-	 * The vendors
-	 */
-	public List<Vendor> getVendors() {
-		return vendors;
-	}
-
-	/**
-	 *
-	 * @param vendors
-	 * The vendors
-	 */
-	public void setVendors(List<Vendor> vendors) {
-		this.vendors = vendors;
-	}
-
-	/**
-	 *
-	 * @return
-	 * The supportContact
+	 * @return The supportContact
 	 */
 	public String getSupportContact() {
 		return supportContact;
 	}
 
 	/**
-	 *
-	 * @param supportContact
-	 * The support_contact
+	 * @param supportContact The support_contact
 	 */
 	public void setSupportContact(String supportContact) {
 		this.supportContact = supportContact;
 	}
 
-	public Filters getFilters() {
-		return filters;
-	}
-
-	public void setFilters(Filters filters) {
-		this.filters = filters;
-	}
-
 	public List<RecentOrder> getRecentOrders() {
-		if(recentOrders == null){
+		if (recentOrders == null) {
 			recentOrders = new ArrayList<>();
 		}
 		return recentOrders;
@@ -191,7 +140,7 @@ public class MenusResponse implements Serializable {
 	}
 
 	public boolean isPageLengthComplete() {
-		return isPageLengthComplete==1;
+		return isPageLengthComplete == 1;
 	}
 
 	public int getServiceUnavailable() {
@@ -202,8 +151,46 @@ public class MenusResponse implements Serializable {
 		this.serviceUnavailable = serviceUnavailable;
 	}
 
+	public List<Category> getCategories() {
+		return categories;
+	}
 
-	public class Vendor implements Serializable{
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
+
+	public List<KeyValuePair> getFilters() {
+		if(filters == null){
+			filters = new ArrayList<>();
+		}
+		return filters;
+	}
+
+	public void setFilters(List<KeyValuePair> filters) {
+		this.filters = filters;
+	}
+
+	public List<KeyValuePair> getSorting() {
+		if(sorting == null){
+			sorting = new ArrayList<>();
+		}
+		return sorting;
+	}
+
+	public void setSorting(List<KeyValuePair> sorting) {
+		this.sorting = sorting;
+	}
+
+	public boolean isOpenMerchantInfo() {
+		return isOpenMerchantInfo == 1;
+	}
+
+	public void setIsOpenMerchantInfo(int isOpenMerchantInfo) {
+		this.isOpenMerchantInfo = isOpenMerchantInfo;
+	}
+
+
+	public class Vendor {
 
 		@SerializedName("restaurant_id")
 		@Expose
@@ -216,7 +203,7 @@ public class MenusResponse implements Serializable {
 		private String image;
 		@SerializedName("minimum_order_amount")
 		@Expose
-		private Double minimumOrderAmount;
+		private double minimumOrderAmount;
 		@SerializedName("delivery_amount_threshold")
 		@Expose
 		private Double deliveryAmountThreshold;
@@ -284,13 +271,15 @@ public class MenusResponse implements Serializable {
 		private String closeIn;
 		@SerializedName("display_address")
 		@Expose
-		private String restaurantAdd;
+		private String displayAddress;
+		@SerializedName("address")
+		@Expose
+		private String address;
 
-//		@SerializedName("buffer_time")
+		//		@SerializedName("buffer_time")
 		@SerializedName("close_in_buffer")
 		@Expose
 		private Long bufferTime;
-
 
 
 		@SerializedName("rating")
@@ -310,7 +299,7 @@ public class MenusResponse implements Serializable {
 		private String itemInactiveAlertText;
 
 		public Double getRating() {
-			return rating==null?null:Math.round(rating * 10.0) / 10.0;
+			return rating == null ? 4D : Math.round(rating * 10.0) / 10.0;
 		}
 
 		public long getReviewCount() {
@@ -327,8 +316,51 @@ public class MenusResponse implements Serializable {
 		@SerializedName("next_slot")
 		@Expose
 		private String next_slot_time;
+		@SerializedName("next_open_text")
+		@Expose
+		private String nextOpenText;
 
-		public String  getNext_slot_time() {
+		@SerializedName("contact_list")
+		@Expose
+		private String contactList;
+		@SerializedName("calling_number")
+		@Expose
+		private String callingNumber;
+		@SerializedName("email")
+		@Expose
+		private String email;
+		@SerializedName("chat_mode")
+		@Expose
+		private int chatMode;
+		@SerializedName("order_mode")
+		@Expose
+		private int orderMode;
+		@SerializedName("pay_mode")
+		@Expose
+		private int payMode;
+		@SerializedName("restaurant_timings")
+		@Expose
+		private List<RestaurantTiming> restaurantTimings;
+		@SerializedName("latitude")
+		@Expose
+		private double latitude;
+		@SerializedName("longitude")
+		@Expose
+		private double longitude;
+
+		public boolean isChatModeEnabled() {
+			return chatMode == 1;
+		}
+
+		public int getOrderMode() {
+			return orderMode;
+		}
+
+		public int getPayMode() {
+			return payMode;
+		}
+
+		public String getNext_slot_time() {
 			return next_slot_time;
 		}
 
@@ -340,8 +372,8 @@ public class MenusResponse implements Serializable {
 			return colorCode;
 		}
 
-		public void setRestaurantAdd(String restaurantAdd) {
-			this.restaurantAdd = restaurantAdd;
+		public void setDisplayAddress(String displayAddress) {
+			this.displayAddress = displayAddress;
 		}
 
 		public void setRating(Double rating) {
@@ -357,90 +389,70 @@ public class MenusResponse implements Serializable {
 		}
 
 		/**
-		 *
-		 * @return
-		 * The restaurantId
+		 * @return The restaurantId
 		 */
 		public Integer getRestaurantId() {
 			return restaurantId;
 		}
 
 		/**
-		 *
-		 * @param restaurantId
-		 * The restaurantId
+		 * @param restaurantId The restaurantId
 		 */
 		public void setRestaurantId(Integer restaurantId) {
 			this.restaurantId = restaurantId;
 		}
 
 		/**
-		 *
-		 * @return
-		 * The name
+		 * @return The name
 		 */
 		public String getName() {
 			return name;
 		}
 
 		/**
-		 *
-		 * @param name
-		 * The vendor_name
+		 * @param name The vendor_name
 		 */
 		public void setName(String name) {
 			this.name = name;
 		}
 
 		/**
-		 *
-		 * @return
-		 * The image
+		 * @return The image
 		 */
 		public String getImage() {
 			return image;
 		}
 
 		/**
-		 *
-		 * @param image
-		 * The image
+		 * @param image The image
 		 */
 		public void setImage(String image) {
 			this.image = image;
 		}
 
 		/**
-		 *
-		 * @return
-		 * The minimumOrderAmount
+		 * @return The minimumOrderAmount
 		 */
-		public Double getMinimumOrderAmount() {
+		public double getMinimumOrderAmount() {
 			return minimumOrderAmount;
 		}
 
 		/**
-		 *
-		 * @param minimumOrderAmount
-		 * The minimum_order_amount
+		 * @param minimumOrderAmount The minimum_order_amount
 		 */
 		public void setMinimumOrderAmount(Double minimumOrderAmount) {
 			this.minimumOrderAmount = minimumOrderAmount;
 		}
 
 		/**
-		 *
-		 * @return
-		 * The isClosed
+		 * @return The isClosed
 		 */
 		public Integer getIsClosed() {
 			return isClosed;
 		}
 
 		/**
-		 *
-		 * @param isClosed
-		 * The is_closed
+		 * @param isClosed The is_closed
 		 */
 		public void setIsClosed(Integer isClosed) {
 			this.isClosed = isClosed;
@@ -452,45 +464,35 @@ public class MenusResponse implements Serializable {
 		}
 
 		/**
-		 *
-		 * @param isAvailable
-		 * The is_closed
+		 * @param isAvailable The is_closed
 		 */
 		public void setIsAvailable(Integer isAvailable) {
 			this.isAvailable = isAvailable;
 		}
 
 		/**
-		 *
-		 * @return
-		 * The distance
+		 * @return The distance
 		 */
 		public Double getDistance() {
 			return distance;
 		}
 
 		/**
-		 *
-		 * @param distance
-		 * The distance
+		 * @param distance The distance
 		 */
 		public void setDistance(Double distance) {
 			this.distance = distance;
 		}
 
 		/**
-		 *
-		 * @return
-		 * The cuisines
+		 * @return The cuisines
 		 */
 		public List<String> getCuisines() {
 			return cuisines;
 		}
 
 		/**
-		 *
-		 * @param cuisines
-		 * The cuisines
+		 * @param cuisines The cuisines
 		 */
 		public void setCuisines(List<String> cuisines) {
 			this.cuisines = cuisines;
@@ -578,12 +580,12 @@ public class MenusResponse implements Serializable {
 
 
 		public Integer getPureVegetarian() {
-			if(pureVegetarian != null) {
+			if (pureVegetarian != null) {
 				return pureVegetarian;
 			} else {
 				return 0;
 			}
-		//	return pureVegetarian;
+			//	return pureVegetarian;
 		}
 
 		public void setPureVegetarian(Integer pureVegetarian) {
@@ -591,12 +593,12 @@ public class MenusResponse implements Serializable {
 		}
 
 		public Integer getOffersDiscounts() {
-			if(offersDiscounts != null) {
+			if (offersDiscounts != null) {
 				return offersDiscounts;
 			} else {
 				return 0;
 			}
-		//	return offersDiscounts;
+			//	return offersDiscounts;
 		}
 
 		public void setOffersDiscounts(Integer offersDiscounts) {
@@ -604,7 +606,7 @@ public class MenusResponse implements Serializable {
 		}
 
 		public Integer getFreeDelivery() {
-			if(freeDelivery != null) {
+			if (freeDelivery != null) {
 				return freeDelivery;
 			} else {
 				return 0;
@@ -615,12 +617,8 @@ public class MenusResponse implements Serializable {
 			this.freeDelivery = freeDelivery;
 		}
 
-		public String getRestaurantAddress() {
-			return restaurantAdd;
-		}
-
-		public void setRestaurantAddress(String restaurantAdd) {
-			this.restaurantAdd = restaurantAdd;
+		public String getDisplayAddress() {
+			return displayAddress;
 		}
 
 		public String getCloseIn() {
@@ -640,7 +638,7 @@ public class MenusResponse implements Serializable {
 		}
 
 		public Double getDeliveryAmountThreshold() {
-			if(deliveryAmountThreshold == null){
+			if (deliveryAmountThreshold == null) {
 				deliveryAmountThreshold = 0D;
 			}
 			return deliveryAmountThreshold;
@@ -651,7 +649,7 @@ public class MenusResponse implements Serializable {
 		}
 
 		public Integer getShowFreeDeliveryText() {
-			if(showFreeDeliveryText == null){
+			if (showFreeDeliveryText == null) {
 				showFreeDeliveryText = 0;
 			}
 			return showFreeDeliveryText;
@@ -688,82 +686,78 @@ public class MenusResponse implements Serializable {
 		public void setItemInactiveAlertText(String itemInactiveAlertText) {
 			this.itemInactiveAlertText = itemInactiveAlertText;
 		}
-	}
 
-
-	public class Filters{
-
-		@SerializedName("price_range")
-		@Expose
-		private List<Integer> priceRange = new ArrayList<Integer>();
-		@SerializedName("delivery_time")
-		@Expose
-		private List<Integer> deliveryTime = new ArrayList<Integer>();
-		@SerializedName("minimum_order_amount")
-		@Expose
-		private List<Integer> minimumOrderAmount = new ArrayList<Integer>();
-		@SerializedName("is_closed")
-		@Expose
-		private List<Integer> isClosed = new ArrayList<Integer>();
-		@SerializedName("distance")
-		@Expose
-		private List<Double> distance = new ArrayList<Double>();
-		@SerializedName("cuisines")
-		@Expose
-		private List<String> cuisines = new ArrayList<String>();
-
-
-		public List<String> getCuisines() {
-			return cuisines;
+		public String getAddress() {
+			return address;
 		}
 
-		public void setCuisines(List<String> cuisines) {
-			this.cuisines = cuisines;
+		public void setAddress(String address) {
+			this.address = address;
 		}
 
-		public List<Integer> getPriceRange() {
-			return priceRange;
+		public String getContactList() {
+			return contactList;
 		}
 
-		public void setPriceRange(List<Integer> priceRange) {
-			this.priceRange = priceRange;
+		public void setContactList(String contactList) {
+			this.contactList = contactList;
 		}
 
-		public List<Integer> getDeliveryTime() {
-			return deliveryTime;
+		public String getCallingNumber() {
+			return callingNumber;
 		}
 
-		public void setDeliveryTime(List<Integer> deliveryTime) {
-			this.deliveryTime = deliveryTime;
+		public void setCallingNumber(String callingNumber) {
+			this.callingNumber = callingNumber;
 		}
 
-		public List<Integer> getMinimumOrderAmount() {
-			return minimumOrderAmount;
+		public String getEmail() {
+			return email;
 		}
 
-		public void setMinimumOrderAmount(List<Integer> minimumOrderAmount) {
-			this.minimumOrderAmount = minimumOrderAmount;
+		public void setEmail(String email) {
+			this.email = email;
 		}
 
-		public List<Integer> getIsClosed() {
-			return isClosed;
+		public List<RestaurantTiming> getRestaurantTimings() {
+			return restaurantTimings;
 		}
 
-		public void setIsClosed(List<Integer> isClosed) {
-			this.isClosed = isClosed;
+		public void setRestaurantTimings(List<RestaurantTiming> restaurantTimings) {
+			this.restaurantTimings = restaurantTimings;
 		}
 
-		public List<Double> getDistance() {
-			return distance;
+		public String getRestaurantTimingsStr(){
+			StringBuilder sb = new StringBuilder();
+			if(restaurantTimings != null){
+				for(RestaurantTiming timing : restaurantTimings){
+					sb.append(DateOperations.convertDayTimeAPViaFormat(timing.getStartTime()))
+							.append(" - ")
+							.append(DateOperations.convertDayTimeAPViaFormat(timing.getEndTime()))
+							.append("\n");
+				}
+			}
+			if(sb.length() > 1){
+				return sb.toString().substring(0, sb.length()-1);
+			}
+			return sb.toString();
 		}
 
-		public void setDistance(List<Double> distance) {
-			this.distance = distance;
+		public LatLng getLatLng() {
+			return new LatLng(latitude, longitude);
+		}
+
+		public String getNextOpenText() {
+			return nextOpenText;
+		}
+
+		public void setNextOpenText(String nextOpenText) {
+			this.nextOpenText = nextOpenText;
 		}
 	}
 
 
-	public class BannerInfo{
+	public class BannerInfo {
 		@SerializedName("image_link")
 		@Expose
 		private String imageLink;
@@ -779,21 +773,21 @@ public class MenusResponse implements Serializable {
 		}
 
 		public Integer getRestaurantId() {
-			if(restaurantId == null){
+			if (restaurantId == null) {
 				restaurantId = -1;
 			}
 			return restaurantId;
 		}
 
 		public Integer getDeepIndex() {
-			if(deepIndex == null){
+			if (deepIndex == null) {
 				deepIndex = -1;
 			}
 			return deepIndex;
 		}
 	}
 
-	public class StripInfo{
+	public class StripInfo {
 		@SerializedName("text")
 		@Expose
 		private String text;
@@ -805,14 +799,14 @@ public class MenusResponse implements Serializable {
 		private Integer deepIndex;
 
 		public Integer getRestaurantId() {
-			if(restaurantId == null){
+			if (restaurantId == null) {
 				restaurantId = -1;
 			}
 			return restaurantId;
 		}
 
 		public Integer getDeepIndex() {
-			if(deepIndex == null){
+			if (deepIndex == null) {
 				deepIndex = -1;
 			}
 			return deepIndex;
@@ -821,6 +815,171 @@ public class MenusResponse implements Serializable {
 		public String getText() {
 			return text;
 		}
+	}
+
+
+	public static class Category {
+		@SerializedName("id")
+		@Expose
+		private int id;
+		@SerializedName("category")
+		@Expose
+		private String categoryName;
+		@SerializedName("image")
+		@Expose
+		private String image;
+		@SerializedName("tags")
+		@Expose
+		private String tagsName;
+		@SerializedName("count")
+		@Expose
+		private int count;
+		@SerializedName("filters")
+		@Expose
+		private List<KeyValuePair> filters;
+		@SerializedName("sorting")
+		@Expose
+		private List<KeyValuePair> sorting;
+
+
+		private boolean isTypeOrder;
+
+		public Category(boolean isTypeOrder) {
+			this.isTypeOrder = isTypeOrder;
+		}
+
+		public Category(int id) {
+			this.id = id;
+		}
+
+		public Category(String image, String categoryName) {
+			this.image = image;
+			this.categoryName = categoryName;
+		}
+
+		public int getId() {
+			return id;
+		}
+
+		public void setId(int id) {
+			this.id = id;
+		}
+
+		public String getCategoryName() {
+			return categoryName;
+		}
+
+		public boolean isTypeOrder() {
+			return isTypeOrder;
+		}
+
+		public void setCategoryName(String categoryName) {
+			this.categoryName = categoryName;
+		}
+
+		public String getTagsName() {
+			return tagsName;
+		}
+
+		public void setTagsName(String tagsName) {
+			this.tagsName = tagsName;
+		}
+
+		public int getCount() {
+			return count;
+		}
+
+		public void setCount(int count) {
+			this.count = count;
+		}
+
+		public String getImage() {
+			return image;
+		}
+
+		public void setImage(String image) {
+			this.image = image;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return obj instanceof Category && ((Category)obj).getId() == getId();
+		}
+
+		public List<KeyValuePair> getSorting() {
+			return sorting;
+		}
+
+		public void setSorting(List<KeyValuePair> sorting) {
+			this.sorting = sorting;
+		}
+
+		public List<KeyValuePair> getFilters() {
+			return filters;
+		}
+
+		public void setFilters(List<KeyValuePair> filters) {
+			this.filters = filters;
+		}
+	}
+
+	public static class KeyValuePair{
+		@SerializedName("key")
+		@Expose
+		private String key;
+		@SerializedName("value")
+		@Expose
+		private String value;
+
+		public KeyValuePair(String key) {
+			this.key = key;
+		}
+
+		public String getKey() {
+			return key;
+		}
+
+		public void setKey(String key) {
+			this.key = key;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return obj instanceof KeyValuePair && ((KeyValuePair)obj).getKey().equals(getKey());
+		}
+	}
+
+	public static class RestaurantTiming{
+		@SerializedName("start_time")
+		@Expose
+		private String startTime;
+		@SerializedName("end_time")
+		@Expose
+		private String endTime;
+
+		public String getStartTime() {
+			return startTime;
+		}
+
+		public String getEndTime() {
+			return endTime;
+		}
+	}
+
+	public List<Vendor> getVendors() {
+		return vendors;
+	}
+
+	public void setVendors(List<Vendor> vendors) {
+		this.vendors = vendors;
 	}
 
 }

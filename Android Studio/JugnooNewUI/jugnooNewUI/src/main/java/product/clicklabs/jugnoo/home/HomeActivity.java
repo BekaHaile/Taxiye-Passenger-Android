@@ -4123,6 +4123,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 dataFoundNull = true;
             } else if(clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.getMenusData() == null){
                 dataFoundNull = true;
+            } else if(clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && Data.getDeliveryCustomerData() == null){
+                dataFoundNull = true;
             } else if(clientId.equalsIgnoreCase(Config.getPayClientId()) && Data.getPayData() == null){
                 dataFoundNull = true;
             } else if(clientId.equalsIgnoreCase(Config.getFeedClientId()) && Data.getFeedData() == null){
@@ -5036,6 +5038,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) &&
                         (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
                         && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
+                        && (Data.userData.getDeliveryCustomerEnabled() == 0)
                         && (Data.userData.getFeedEnabled() == 0)
                         && Data.userData.getProsEnabled() == 0) {
                     //imageViewFabFake.setVisibility(View.GONE);
@@ -8581,8 +8584,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     textViewInitialSearch.setText(autoCompleteSearchResult.getNameForText());
                     zoomedForSearch = true;
                     lastSearchLatLng = null;
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                    switchPassengerScreen(passengerScreenMode);
                 } else if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
                     textViewDestSearch.setText(autoCompleteSearchResult.getNameForText());
                     dropAddressName = autoCompleteSearchResult.getNameForText();
@@ -8663,6 +8664,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 				if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     progressBarInitialSearch.stopSpinning();
                     progressBarInitialSearch.setVisibility(View.GONE);
+                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(passengerScreenMode);
 					if (map != null && searchResult != null) {
 						try {
 	//                        Prefs.with(this).save(SP_FRESH_LAST_ADDRESS_OBJ, new Gson().toJson(searchResult, SearchResult.class));
@@ -9579,6 +9582,16 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                     Bundle bundle = new Bundle();
                                     bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
                                     MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getMenusClientId(), null,
+                                            getCurrentPlaceLatLng(), bundle);
+                                }
+                            } else if(type == 4){
+                                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                                    drawerLayout.closeDrawer(GravityCompat.START);
+                                }
+                                if (Prefs.with(HomeActivity.this).getString(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()).equals(Config.getAutosClientId())) {
+                                    Bundle bundle = new Bundle();
+                                    bundle.putBoolean(Constants.KEY_APP_CART_SWITCH_BUNDLE, true);
+                                    MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getDeliveryCustomerClientId(), null,
                                             getCurrentPlaceLatLng(), bundle);
                                 }
                             }

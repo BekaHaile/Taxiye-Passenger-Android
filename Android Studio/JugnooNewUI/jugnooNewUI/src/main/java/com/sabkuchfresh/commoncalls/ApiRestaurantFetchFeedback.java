@@ -17,9 +17,11 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 /**
  * For fetching feedback reviews for a particular restaurant
@@ -36,22 +38,34 @@ public class ApiRestaurantFetchFeedback {
 		this.callback = callback;
 	}
 
-	public void hit(int restaurantId, final boolean scrollToTop) {
+	public void hit(int restaurantId, final boolean scrollToTop, final ProgressWheel progressWheel, int limit) {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
 
-				DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+				if(progressWheel == null) {
+					DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+				} else {
+					progressWheel.setVisibility(View.VISIBLE);
+					progressWheel.spin();
+				}
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(restaurantId));
+				if(limit == 1) {
+					params.put(Constants.KEY_LIMIT, "1");
+				}
 
 				new HomeUtil().putDefaultParams(params);
 				RestClient.getMenusApiService().restaurantFetchFeedbacks(params, new retrofit.Callback<FetchFeedbackResponse>() {
 					@Override
 					public void success(FetchFeedbackResponse feedbackResponse, Response response) {
-//						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 						DialogPopup.dismissLoadingDialog();
+						if(progressWheel != null) {
+							progressWheel.setVisibility(View.GONE);
+							progressWheel.stopSpinning();
+						}
 						try {
 							String message = feedbackResponse.getMessage();
 							if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, feedbackResponse.getFlag(),
@@ -71,6 +85,10 @@ public class ApiRestaurantFetchFeedback {
 					@Override
 					public void failure(RetrofitError error) {
 						DialogPopup.dismissLoadingDialog();
+						if(progressWheel != null) {
+							progressWheel.setVisibility(View.GONE);
+							progressWheel.stopSpinning();
+						}
 						retryDialog(DialogErrorType.CONNECTION_LOST);
 						callback.onFailure();
 					}

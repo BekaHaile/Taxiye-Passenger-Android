@@ -40,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -900,6 +901,14 @@ public class Utils {
 
 	public static void setTextUnderline(TextView textView, String text){
 		product.clicklabs.jugnoo.utils.Utils.setTextUnderline(textView, text);
+	}
+
+	public static String capEachWord(String source) {
+		return product.clicklabs.jugnoo.utils.Utils.capEachWord(source);
+	}
+
+	public static void openMapsDirections(Context context, LatLng source, LatLng dest){
+		product.clicklabs.jugnoo.utils.Utils.openMapsDirections(context, source, dest);
 	}
 
 }

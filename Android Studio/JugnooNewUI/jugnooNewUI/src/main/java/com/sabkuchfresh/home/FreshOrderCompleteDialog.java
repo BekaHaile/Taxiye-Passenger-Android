@@ -86,7 +86,7 @@ public class FreshOrderCompleteDialog extends OrderCompletDialog {
 			else if(appType == AppConstant.ApplicationType.GROCERY) {
 				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_grocery));
 			}
-			else if(appType == AppConstant.ApplicationType.MENUS) {
+			else if(appType == AppConstant.ApplicationType.MENUS || appType == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
 				if(placeOrderResponse == null || TextUtils.isEmpty(placeOrderResponse.getOrderPlacedMessage())) {
 					textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_menus_format, restaurantName));
 				} else {

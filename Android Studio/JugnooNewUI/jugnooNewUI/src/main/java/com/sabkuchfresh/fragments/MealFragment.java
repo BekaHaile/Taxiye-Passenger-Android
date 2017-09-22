@@ -427,6 +427,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                         noMealsView.setVisibility(View.VISIBLE);
                                         activity.llCheckoutBarSetVisibilityDirect(View.GONE);
                                     }
+                                    activity.setTitleAlignment(false);
 
                                     if (activity.getProductsResponse() != null
                                             && activity.getProductsResponse().getCategories() != null) {
@@ -481,7 +482,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, false, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
                 @Override
                 public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
-                    activity.openCart(AppConstant.ApplicationType.MEALS);
+                    activity.openCart(AppConstant.ApplicationType.MEALS, true);
                 }
             });
         }

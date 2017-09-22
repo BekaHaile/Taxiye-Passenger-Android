@@ -44,6 +44,11 @@ public class FetchFeedbackResponse {
 	@SerializedName("restaurant_info")
 	@Expose
 	private RestaurantInfo restaurantInfo;
+	@SerializedName("has_already_rated")
+	@Expose
+	private int hasAlreadyRated;
+	@SerializedName("review_count")
+	private long reviewCount;
 
 
 	public Integer getFlag() {
@@ -138,6 +143,22 @@ public class FetchFeedbackResponse {
 
 	public void setRestaurantInfo(RestaurantInfo restaurantInfo) {
 		this.restaurantInfo = restaurantInfo;
+	}
+
+	public int getHasAlreadyRated() {
+		return hasAlreadyRated;
+	}
+
+	public void setHasAlreadyRated(int hasAlreadyRated) {
+		this.hasAlreadyRated = hasAlreadyRated;
+	}
+
+	public long getReviewCount() {
+		return reviewCount;
+	}
+
+	public void setReviewCount(long reviewCount) {
+		this.reviewCount = reviewCount;
 	}
 
 	public class Review {

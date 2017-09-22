@@ -222,6 +222,8 @@ public class SupportRideIssuesFragment extends Fragment implements  Constants, G
 							getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.GROCERY);
 						} else if (datum.getProductType() == ProductType.MENUS.getOrdinal()){
 							getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.MENUS);
+						} else if (datum.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()){
+							getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.DELIVERY_CUSTOMER);
 						} else if (datum.getProductType() == ProductType.PAY.getOrdinal()){
 							getRideSummaryAPI(activity, engagementId, -1, supportCategory, true, ProductType.PAY);
 						}
@@ -275,6 +277,7 @@ public class SupportRideIssuesFragment extends Fragment implements  Constants, G
 						|| datum.getProductType() == ProductType.GROCERY.getOrdinal()
 						|| datum.getProductType() == ProductType.GROCERY.getOrdinal()
 						|| datum.getProductType() == ProductType.MENUS.getOrdinal()
+						|| datum.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()
 						|| datum.getProductType() == ProductType.PAY.getOrdinal()){
 					getRideSummaryAPI(activity, engagementId, orderId, supportCategory, false, ProductType.NOT_SURE);
 				}

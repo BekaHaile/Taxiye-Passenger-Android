@@ -346,6 +346,16 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		super.onCreate(savedInstanceState);
 		try {
 
+			// to check if this is root task or not
+			if (!isTaskRoot()
+					&& getIntent().hasCategory(Intent.CATEGORY_LAUNCHER)
+					&& getIntent().getAction() != null
+					&& getIntent().getAction().equals(Intent.ACTION_MAIN)) {
+
+				finish();
+				return;
+			}
+
 			Fabric.with(this, new Crashlytics());
 			Data.setFuguChatBundle(getIntent().getExtras());
 

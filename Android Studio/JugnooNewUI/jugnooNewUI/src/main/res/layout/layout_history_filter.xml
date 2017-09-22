@@ -273,6 +273,47 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rlDeliveryCustomer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="@dimen/dp_13"
+                        android:layout_marginTop="@dimen/dp_13"
+                        android:layout_toRightOf="@+id/ivDeliveryCustomerRadio"
+                        android:gravity="center_vertical"
+                        android:text="@string/delivery"
+                        android:textColor="@color/text_color_selector"
+                        android:textSize="@dimen/sp_14"
+                        android:visibility="visible"
+                        app:font="@string/maven"
+                        />
+
+
+                    <ImageView
+                        android:id="@+id/ivDeliveryCustomerRadio"
+                        android:layout_width="@dimen/dp_17"
+                        android:layout_height="@dimen/dp_17"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp_13"
+                        android:layout_marginRight="@dimen/dp_13"
+                        android:src="@drawable/check_box_unchecked"
+                        />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_1"
+                        android:background="@color/stroke_light_grey_alpha"
+                        />
+
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/rlPros"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

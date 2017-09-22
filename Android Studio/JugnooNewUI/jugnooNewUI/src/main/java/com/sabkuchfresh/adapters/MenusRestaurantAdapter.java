@@ -28,7 +28,6 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.datastructure.FilterCuisine;
-import com.sabkuchfresh.fragments.MenusFilterFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -100,7 +99,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     static {
         BW_MATRIX.setSaturation(0);
         BW_FILTER = new ColorMatrixColorFilter(BW_MATRIX);
-
     }
 
 
@@ -143,16 +141,16 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     };
 
-    private synchronized void searchVendors(String text, List<Integer> searchedRestaurantIds){
+    private void searchVendors(String text, List<Integer> searchedRestaurantIds){
         if(TextUtils.isEmpty(text)){
             activity.setSearchedRestaurantIds(null);
-            activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), false, true);
+            activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), true);
 
         } else {
             activity.setSearchedRestaurantIds(searchedRestaurantIds);
 
             if(searchedRestaurantIds!=null && searchedRestaurantIds.size()>0){
-                activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), false, true);
+                activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), true);
 
             }else{
                 vendorsComplete.clear();
@@ -230,7 +228,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         vendorsFiltered.clear();
         DateFormat dateFormat = new SimpleDateFormat("hh:mm a");
         for (MenusResponse.Vendor vendor : vendorsComplete) {
-            boolean cuisineMatched = false, moMatched, dtMatched;
+            boolean cuisineMatched = false;
             for (FilterCuisine cuisine : activity.getCuisinesSelected()) {
                 if (vendor.getCuisines().contains(cuisine.getName())) {
                     cuisineMatched = true;
@@ -239,18 +237,12 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
             cuisineMatched = activity.getCuisinesSelected().size() <= 0 || cuisineMatched;
 
-            moMatched = activity.getMoSelected() == MenusFilterFragment.MinOrder.NONE
-                    || vendor.getMinimumOrderAmount() <= activity.getMoSelected().getOrdinal();
-
-            dtMatched = activity.getDtSelected() == MenusFilterFragment.DeliveryTime.NONE
-                    || vendor.getMinDeliveryTime() <= activity.getDtSelected().getOrdinal();
-
             boolean qfMatched = true;
-            for(String filter : activity.getQuickFilterSelected()) {
-                if((filter.equalsIgnoreCase(Constants.ACCEPTONLINE) && vendor.getApplicablePaymentMode().equals(ApplicablePaymentMode.CASH.getOrdinal()))
-                        || (filter.equalsIgnoreCase(Constants.OFFERSDISCOUNT) && vendor.getOffersDiscounts().equals(0))
-                        || (filter.equalsIgnoreCase(Constants.PUREVEGETARIAN) && vendor.getPureVegetarian().equals(0))
-                        || (filter.equalsIgnoreCase(Constants.FREEDELIVERY) && vendor.getFreeDelivery().equals(0))) {
+            for(MenusResponse.KeyValuePair filter : activity.getFilterSelected()) {
+                if((filter.getKey().equalsIgnoreCase(Constants.ACCEPTONLINE) && vendor.getApplicablePaymentMode().equals(ApplicablePaymentMode.CASH.getOrdinal()))
+                        || (filter.getKey().equalsIgnoreCase(Constants.OFFERSDISCOUNT) && vendor.getOffersDiscounts().equals(0))
+                        || (filter.getKey().equalsIgnoreCase(Constants.PUREVEGETARIAN) && vendor.getPureVegetarian().equals(0))
+                        || (filter.getKey().equalsIgnoreCase(Constants.FREEDELIVERY) && vendor.getFreeDelivery().equals(0))) {
                     qfMatched = false;
                     break;
                 }
@@ -271,7 +263,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
 
 
-            if(cuisineMatched && moMatched && dtMatched && qfMatched){
+            if(cuisineMatched && qfMatched){
                 vendorsFiltered.add(vendor);
             }
         }
@@ -288,14 +280,17 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     point = rhs.getIsAvailable() - lhs.getIsAvailable();
                 } else if (lhs.getIsAvailable() != 0 && rhs.getIsAvailable() == 0) {
                     point = rhs.getIsAvailable() - lhs.getIsAvailable();
-                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.POPULARITY) {
-                    point = rhs.getPopularity() - lhs.getPopularity();
-                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DISTANCE) {
-                    point = -(int) (rhs.getDistance() - lhs.getDistance());
-                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.PRICE_RANGE) {
-                    point = lhs.getPriceRange() - rhs.getPriceRange();
-                } else if (activity.getSortBySelected() == MenusFilterFragment.SortType.DELIVERY_TIME) {
-                    point = lhs.getDeliveryTime() - rhs.getDeliveryTime();
+                }
+                if(activity.getSortBySelected() != null) {
+                    if (activity.getSortBySelected().getKey().contains("popularity")) {
+                        point = rhs.getPopularity() - lhs.getPopularity();
+                    } else if (activity.getSortBySelected().getKey().contains("distance")) {
+                        point = -(int) (rhs.getDistance() - lhs.getDistance());
+                    } else if (activity.getSortBySelected().getKey().contains("price_range")) {
+                        point = lhs.getPriceRange() - rhs.getPriceRange();
+                    } else if (activity.getSortBySelected().getKey().contains("delivery_time")) {
+                        point = lhs.getDeliveryTime() - rhs.getDeliveryTime();
+                    }
                 }
 
                 return point;
@@ -308,10 +303,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         if (viewType == MAIN_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_restaurant, parent, false);
-
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-            v.setLayoutParams(layoutParams);
-            ASSL.DoMagic(v);
             return new ViewHolder(v, activity);
         } else if (viewType == FORM_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommend_restaurant, parent, false);
@@ -330,10 +321,6 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             return new ViewTitleStatus(v, activity);
         } else if (viewType == NO_VENDORS_ITEM) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_no_vendor, parent, false);
-
-            RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
-            v.setLayoutParams(layoutParams);
-            ASSL.DoMagic(v);
             return new ViewNoVenderItem(v, activity);
         } else if(viewType == OFFERS_PAGER_ITEM){
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_offers_pager, parent, false);
@@ -377,7 +364,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         }
                     }
                     showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
-                    statusHolder.tvOrderIdValue.setText("#"+recentOrder.getOrderId().toString());
+                    statusHolder.tvOrderIdValue.setText("Order: #"+recentOrder.getOrderId().toString());
                     statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
 
                     statusHolder.tvViewOrder.setTag(position);
@@ -473,7 +460,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 if(!TextUtils.isEmpty(vendor.getMinOrderText())){
                     mHolder.textViewMinimumOrder.setText(Utils.trimHTML(Utils.fromHtml(vendor.getMinOrderText())));
                 } else if(vendor.getMinOrderText() == null) {
-                    if (vendor.getMinimumOrderAmount() != null && vendor.getMinimumOrderAmount() > 0) {
+                    if (vendor.getMinimumOrderAmount() > 0) {
                         mHolder.textViewMinimumOrder.setText(activity.getString(R.string.minimum_order_rupee_format, Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
                     } else {
                         mHolder.textViewMinimumOrder.setText(R.string.no_minimum_order);
@@ -482,7 +469,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     visMinOrder = View.GONE;
                 }
 
-                int visDeliveryTime = activity.setVendorDeliveryTimeAndDrawableColorToTextView(vendor, mHolder.textViewDelivery, R.color.text_color);
+                int visDeliveryTime = activity.setVendorDeliveryTimeAndDrawableColorToTextView(vendor, mHolder.textViewDelivery, R.color.text_color, true);
                 int visibilityCloseTime = View.VISIBLE;
                 RelativeLayout.LayoutParams paramsCloseTime = (RelativeLayout.LayoutParams) mHolder.textViewRestaurantCloseTime.getLayoutParams();
                 RelativeLayout.LayoutParams paramsDelivery = (RelativeLayout.LayoutParams) mHolder.textViewDelivery.getLayoutParams();
@@ -499,13 +486,11 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     paramsDelivery.addRule(RelativeLayout.RIGHT_OF, mHolder.textViewRestaurantCloseTime.getId());
                     mHolder.imageViewRestaurantImage.setColorFilter(BW_FILTER);
                     mHolder.tvOffer.getBackground().setColorFilter(BW_FILTER);
-                    mHolder.viewOffer.getBackground().setColorFilter(BW_FILTER);
                     mHolder.textViewMinimumOrder.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
 
                 } else {
                     mHolder.imageViewRestaurantImage.setColorFilter(null);
                     mHolder.tvOffer.getBackground().setColorFilter(null);
-                    mHolder.viewOffer.getBackground().setColorFilter(null);
                     mHolder.textViewMinimumOrder.setTextColor(ContextCompat.getColor(activity,R.color.order_history_status_color));
 
                     // restaurant about to close
@@ -532,8 +517,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 mHolder.textViewMinimumOrder.setVisibility(visMinOrder);
 
 
-                mHolder.textViewAddressLine.setVisibility(!TextUtils.isEmpty(vendor.getRestaurantAddress()) ? View.VISIBLE : View.GONE);
-                mHolder.textViewAddressLine.setText(vendor.getRestaurantAddress());
+
+
 
 
                 int visibilityCuisines = View.VISIBLE;
@@ -591,26 +576,27 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                 }
 
                 int visibilityRating = View.GONE;
-                if (vendor.getRating() != null && vendor.getRating() >= 1d) {
+                if (vendor.getRating() != null && vendor.getRating() >= 0d) {
                     visibilityRating = View.VISIBLE;
                     if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
-                        activity.setRatingAndGetColor(mHolder.tvRating, vendor.getRating(),"#9d9d9d", true);
+                        setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating());
                     }
                     else{
-                        activity.setRatingAndGetColor(mHolder.tvRating, vendor.getRating(), vendor.getColorCode(), true);
+                        setRatingViews(mHolder.llRatingStars,mHolder.tvReviewCount,vendor.getRating());
+
                     }
                 }
-                mHolder.tvRating.setVisibility(visibilityRating);
+                mHolder.llRatingStars.setVisibility(visibilityRating);
 
 
 
 /*
+
  Edited by Parminder Singh on 2/24/17 at 6:10 PM
  Displaying Offers strip
  **/
 
 				mHolder.tvOffer.setVisibility(TextUtils.isEmpty(vendor.getOfferText())?View.GONE:View.VISIBLE);
-				mHolder.viewOffer.setVisibility(TextUtils.isEmpty(vendor.getOfferText())?View.GONE:View.VISIBLE);
 				mHolder.tvOffer.setText(vendor.getOfferText());
 
 
@@ -832,10 +818,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     class ViewHolder extends RecyclerView.ViewHolder {
         public RelativeLayout rlRoot;
-        View vSep, viewOffer;
+        View vSep;
         ImageView imageViewRestaurantImage;
         TextView textViewRestaurantName, textViewMinimumOrder, textViewRestaurantCusines;
-        TextView textViewRestaurantCloseTime, textViewAddressLine, textViewDelivery, tvRating,tvOffer;
+        TextView textViewRestaurantCloseTime, textViewDelivery,tvOffer;
+        LinearLayout llRatingStars;TextView tvReviewCount;
+        TextView textViewAddressLine;
+
 
 
 
@@ -848,11 +837,11 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             textViewMinimumOrder = (TextView) itemView.findViewById(R.id.textViewMinimumOrder); textViewMinimumOrder.setTypeface(Fonts.mavenMedium(context));
             textViewRestaurantCusines = (TextView) itemView.findViewById(R.id.textViewRestaurantCusines); textViewRestaurantCusines.setTypeface(Fonts.mavenMedium(context));
             textViewRestaurantCloseTime = (TextView) itemView.findViewById(R.id.textViewRestaurantCloseTime);textViewRestaurantCloseTime.setTypeface(Fonts.mavenMedium(context));
-            textViewAddressLine = (TextView) itemView.findViewById(R.id.textViewAddressLine);textViewAddressLine.setTypeface(Fonts.mavenMedium(context));
+//            textViewAddressLine = (TextView) itemView.findViewById(R.id.textViewAddressLine);textViewAddressLine.setTypeface(Fonts.mavenMedium(context));
             textViewDelivery = (TextView) itemView.findViewById(R.id.textViewDelivery);textViewDelivery.setTypeface(Fonts.mavenMedium(context));
-            tvRating = (TextView) itemView.findViewById(R.id.tvRating);
+            llRatingStars = (LinearLayout) itemView.findViewById(R.id.llRatingStars);
+            tvReviewCount = (TextView) itemView.findViewById(R.id.tvReviewCount);
             tvOffer = (TextView)itemView.findViewById(R.id.tv_offer);
-            viewOffer = itemView.findViewById(R.id.tv_offer_view);
         }
     }
 
@@ -911,7 +900,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
         public LinearLayout linear;
         RelativeLayout container, relativeStatusBar;
-        TextView tvOrderId, tvOrderIdValue, tvDeliveryBefore, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
+        TextView tvOrderIdValue, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
         ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
         View lineStatus1, lineStatus2, lineStatus3;
         RelativeLayout rlRestaurantInfo, rlTrackViewOrder;
@@ -928,12 +917,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             linear = (LinearLayout) itemView.findViewById(R.id.linear);
             container = (RelativeLayout) itemView.findViewById(R.id.container);
             relativeStatusBar = (RelativeLayout) itemView.findViewById(R.id.relativeStatusBar);
-            tvOrderId = (TextView) itemView.findViewById(R.id.tvOrderId);
-            tvOrderId.setTypeface(Fonts.mavenRegular(context));
             tvOrderIdValue = (TextView) itemView.findViewById(R.id.tvOrderIdValue);
             tvOrderIdValue.setTypeface(Fonts.mavenMedium(context));
-            tvDeliveryBefore = (TextView) itemView.findViewById(R.id.tvDeliveryBefore);
-            tvDeliveryBefore.setTypeface(Fonts.mavenRegular(context));
             tvDeliveryTime = (TextView) itemView.findViewById(R.id.tvDeliveryTime);
             tvDeliveryTime.setTypeface(Fonts.mavenMedium(context));
             tvStatus0 = (TextView) itemView.findViewById(R.id.tvStatus0);
@@ -1394,7 +1379,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
-
+    private void setRatingViews(LinearLayout llRatingStars,TextView tvReviewCount,Double rating) {
+        llRatingStars.removeAllViews();
+        activity.addStarsToLayout(llRatingStars, rating,
+                R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey);
+        llRatingStars.addView(tvReviewCount);
+        tvReviewCount.setText(activity.getVendorOpened().getReviewCount()+" Ratings");
+    }
 
 
 }

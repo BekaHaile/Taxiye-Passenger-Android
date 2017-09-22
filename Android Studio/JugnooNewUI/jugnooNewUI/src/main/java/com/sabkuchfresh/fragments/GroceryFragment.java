@@ -106,7 +106,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
         mBus = (activity).getBus();
         Data.AppType = AppConstant.ApplicationType.GROCERY;
         Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.GROCERY);
-        activity.setSwipeAvailable(true);
 
 		try {
 			if(!TextUtils.isEmpty(Data.userData.getUserId())) {
@@ -275,7 +274,6 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
     @Override
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
-        activity.setSwipeAvailable(true);
 		if(!hidden){
 			freshCategoryFragmentsAdapter.notifyDataSetChanged();
 			tabs.notifyDataSetChanged();

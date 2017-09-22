@@ -52,13 +52,12 @@ public class RestaurantImageFragment extends Fragment {
     @Bind(R.id.iv_rest_original_image)
     ImageView ivRestOriginalImage;
 
-    @Bind(R.id.shadow_view)
-    View shadowView;
-
     @Bind(R.id.llCollapseRating)
     LinearLayout llCollapseRating;
     @Bind(R.id.tvFeedHyperLink)
     public TextView tvFeedHyperLink;
+    @Bind(R.id.shadow_view)
+    View shadowView;
 
     private FreshActivity activity;
     private BlurImageTask loadBlurredImageTask;
@@ -109,6 +108,11 @@ public class RestaurantImageFragment extends Fragment {
                 return gesture.onTouchEvent(event);
             }
         });
+
+        tvCollapRestaurantDeliveryTime.setVisibility(View.VISIBLE);
+        tvRestTitle.setVisibility(View.VISIBLE);
+        llCollapseRating.setVisibility(View.VISIBLE);
+
 
         return view;
     }
@@ -172,7 +176,7 @@ public class RestaurantImageFragment extends Fragment {
 
                 tvRestTitle.setText(activity.getVendorOpened().getName().toUpperCase());
 
-                int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), tvCollapRestaurantDeliveryTime, R.color.white);
+                int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), tvCollapRestaurantDeliveryTime, R.color.white, true);
                 tvCollapRestaurantDeliveryTime.setVisibility(visibility == View.VISIBLE ? View.VISIBLE : View.GONE);
 
                 if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {

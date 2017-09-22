@@ -93,6 +93,7 @@ public class Data {
     private static GroceryData groceryData;
     private static DeliveryData DeliveryData;
     private static MenusData menusData;
+    private static MenusData deliveryCustomer;
     private static PayData payData;
     private static LoginResponse.Feed feedData;
     private static LoginResponse.Pros prosData;
@@ -405,8 +406,10 @@ public class Data {
                 Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
             } else if (AppLinkIndex.MEAL_PAGE.getOrdinal() == Data.deepLinkIndex) {
                 Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMealsClientId());
-            } else if (AppLinkIndex.DELIVERY_PAGE.getOrdinal() == Data.deepLinkIndex) {
-                Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryClientId());
+            } else if (AppLinkIndex.MENUS_PAGE.getOrdinal() == Data.deepLinkIndex) {
+                Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
+            } else if (AppLinkIndex.DELIVERY_CUSTOMER_PAGE.getOrdinal() == Data.deepLinkIndex) {
+                Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryCustomerClientId());
             }
         } catch (Exception e1) {
             e1.printStackTrace();
@@ -474,9 +477,16 @@ public class Data {
     public static MenusData getMenusData() {
         return menusData;
     }
+    public static MenusData getDeliveryCustomerData() {
+        return deliveryCustomer;
+    }
 
     public static void setMenusData(MenusData menusData) {
         Data.menusData = menusData;
+    }
+
+    public static void setDeliveryCustomerData(MenusData deliveryCustomerData){
+        Data.deliveryCustomer = deliveryCustomerData;
     }
 
     public static PayData getPayData() {
@@ -632,6 +642,9 @@ public class Data {
     }
 
     public static long CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE(){
+        return Config.getConfigMode()==ConfigMode.LIVE?57:610;
+    }
+    public static long CHANNEL_ID_FUGU_DELIVERY_CUSTOMER_DELIVERY_LATE(){
         return Config.getConfigMode()==ConfigMode.LIVE?57:610;
     }
 

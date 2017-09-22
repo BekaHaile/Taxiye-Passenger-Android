@@ -36,7 +36,6 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -134,6 +133,18 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             if(isVegCheck(isVegToggle, item)) {
                 subItems.add(item);
             }
+        }
+        if(subItems.size() > 0){
+            Item itemHeader = new Item();
+            itemHeader.setItemName(context.getString(R.string.label_searched_items));
+            itemHeader.setIsSubCategory(1);
+            subItems.add(0, itemHeader);
+        }
+        if(categoriesSearched != null && categoriesSearched.size() > 0){
+            Item itemHeaderCT = new Item();
+            itemHeaderCT.setItemName(context.getString(R.string.label_relevant_categories));
+            itemHeaderCT.setIsSubCategory(1);
+            subItems.add(itemHeaderCT);
         }
         if(notify) {
             notifyDataSetChanged();
@@ -360,8 +371,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         } else if(holder instanceof SubCategoryViewHolder) {
             SubCategoryViewHolder subCategoryHolder = ((SubCategoryViewHolder) holder);
             subCategoryHolder.tvSubCategoryName.setText(subItems.get(position).getItemName().toUpperCase());
-        }
-        else if(holder instanceof CategoryViewHolder) {
+        } else if(holder instanceof CategoryViewHolder) {
             CategoryViewHolder categoryViewHolder = ((CategoryViewHolder) holder);
             position = position - subItems.size();
 
@@ -392,7 +402,6 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     ((FreshActivity) context).openMenusItemCustomizeFragment(item1.getCategoryPos(), item1.getSubCategoryPos(), item1.getItemPos());
                 }
             } else {
-                long time = System.currentTimeMillis();
                 boolean isNewItemAdded =false;
                 if (item1.getItemSelectedList().size() > 0) {
                     item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() + 1);
@@ -407,7 +416,6 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 }
                 notifyDataSetChanged();
                 callback.onPlusClicked(pos, item1, isNewItemAdded);
-                Log.e("MenusCategoryItemsAdapter", "=> "+(System.currentTimeMillis() - time));
             }
         } else {
             Utils.showToast(context, context.getString(R.string.order_quantity_limited));
@@ -416,7 +424,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemCount() {
-        return subItems == null ? 0 : subItems.size() + categoriesCount() + (isVendorMenuFragment ?1:0);
+        return subItems == null ? 0 : subItems.size() + categoriesCount() + (isVendorMenuFragment ?1:1);
     }
 
 

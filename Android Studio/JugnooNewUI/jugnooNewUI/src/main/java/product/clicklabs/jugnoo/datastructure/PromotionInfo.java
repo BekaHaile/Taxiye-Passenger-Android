@@ -36,6 +36,9 @@ public class PromotionInfo extends PromoCoupon implements Serializable{
 	@SerializedName("menus")
 	@Expose
 	private Integer menus;
+	@SerializedName("delivery_customer")
+	@Expose
+	private Integer deliveryCustomer;
 	@SerializedName("pay")
 	@Expose
 	private Integer pay;
@@ -172,6 +175,14 @@ public class PromotionInfo extends PromoCoupon implements Serializable{
 			return 0;
 		}
 		return menus;
+	}
+
+	@Override
+	public Integer getDeliveryCustomer() {
+		if(deliveryCustomer == null){
+			return 0;
+		}
+		return deliveryCustomer;
 	}
 
 	public void setMenus(Integer menus) {

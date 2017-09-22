@@ -451,7 +451,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 };
 
                 new HomeUtil().putDefaultParams(params);
-                if (productType == ProductType.MENUS.getOrdinal()) {
+                if (productType == ProductType.MENUS.getOrdinal()
+                    || productType == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
                     RestClient.getMenusApiService().orderHistory(params, callback);
                 } else {
                     RestClient.getFreshApiService().orderHistory(params, callback);
@@ -672,7 +673,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
             tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum1.getOrderTime())));
 
-            if (datum1.getProductType() == ProductType.MENUS.getOrdinal()) {
+            if (datum1.getProductType() == ProductType.MENUS.getOrdinal()
+                || datum1.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
                 tvDeliveryTime.setText(activity.getString(R.string.delivered_from_colon));
 
                 tvDeliveryTimeVal.setText("");
@@ -933,7 +935,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 break;
             case R.id.reorderBtn:
                 try {
-                    if(productType==ProductType.MENUS.getOrdinal()){
+                    if(productType==ProductType.MENUS.getOrdinal() || productType==ProductType.DELIVERY_CUSTOMER.getOrdinal()){
                         if(responseOrderDataApi!=null){
                             JSONArray jsonArray = responseOrderDataApi.getJSONArray("data");
                             if(jsonArray!=null && jsonArray.length()>0){
@@ -1003,41 +1005,6 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
     public void saveHistoryCardToSP(HistoryResponse.Datum orderHistory) {
         try {
-            // TODO: 19/03/17 check for reorderMenus cart fill
-//            JSONObject jCart = new JSONObject();
-//            if (orderHistory.getOrderItems() != null) {
-//                Gson gson = new Gson();
-//                for (HistoryResponse.OrderItem orderItem : orderHistory.getOrderItems()) {
-//                    if (orderItem.getItemQuantity() > 0) {
-//                        try {
-//                            SubItem subItem1 = new SubItem();
-//                            subItem1.setSubItemId(orderItem.getSubItemId());
-//                            subItem1.setPrice(orderItem.getUnitAmount());
-//                            subItem1.setStock(50);
-//                            subItem1.setSubItemQuantitySelected(orderItem.getItemQuantity());
-//                            subItem1.setSubItemName(orderItem.getItemName());
-//                            subItem1.setBaseUnit(orderItem.getUnit());
-//                            subItem1.setSubItemImage(orderItem.getSubItemImage());
-//
-//                            jCart.put(String.valueOf(orderItem.getSubItemId()), gson.toJson(subItem1, SubItem.class));
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-//            }
-//            jCart.put(Constants.KEY_CITY_ID, orderHistory.getCityId());
-//            if(orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
-//                Prefs.with(activity).save(Constants.SP_FRESH_CART, jCart.toString());
-//                sendMessage(0, orderHistory);
-//            } else if(orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()){
-//                Prefs.with(activity).save(Constants.SP_GROCERY_CART, jCart.toString());
-//                sendMessage(2, orderHistory);
-//            } else if(orderHistory.getProductType() == ProductType.MENUS.getOrdinal()){
-//                Prefs.with(activity).save(Constants.SP_MENUS_CART, jCart.toString());
-//                sendMessage(3, orderHistory);
-//            }
-
             DialogPopup.showLoadingDialog(activity, "Please wait...");
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1051,16 +1018,6 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         }
     }
 
-    private void sendMessage(int type, HistoryResponse.Datum orderHistory) {
-        Log.d("sender", "Broadcasting message");
-        Intent intent = new Intent(Data.LOCAL_BROADCAST);
-        // You can also include some extra data.
-        intent.putExtra("message", "This is my message!");
-        intent.putExtra("open_type", type);
-        Data.setDatumToReOrder(orderHistory);
-        LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
-    }
-
     private BroadcastReceiver orderUpdateBroadcast = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, final Intent intent) {
@@ -1069,11 +1026,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 public void run() {
                     try {
                         int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
+                        int orderId = intent.getIntExtra(Constants.KEY_ORDER_ID, 0);
                         if (PushFlags.STATUS_CHANGED.getOrdinal() == flag) {
                             getOrderData(activity);
                         } else if (PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
-                            Log.v("menus status ", "menus status tracking");
-                            getOrderData(activity);
+                            if(orderId == OrderStatusFragment.this.orderId) {
+                                getOrderData(activity);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1189,7 +1148,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     public void reorderMenus(JSONArray jsonArray, int restaurantId, LatLng latLng, String delAddress){
 
 
-        if(activity instanceof FreshActivity && Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,null).equals(Config.getMenusClientId())){
+        if(activity instanceof FreshActivity &&
+                ((productType == ProductType.MENUS.getOrdinal() && Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,null).equals(Config.getMenusClientId()))
+                || (productType == ProductType.DELIVERY_CUSTOMER.getOrdinal() && Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,null).equals(Config.getDeliveryCustomerClientId()))
+                )){
 
             ((FreshActivity)activity).onBackPressed();
 
@@ -1197,10 +1159,12 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         }else {
             Prefs.with(activity).save(Constants.ORDER_STATUS_PENDING_ID,restaurantId);
             Prefs.with(activity).save(Constants.ORDER_STATUS_JSON_ARRAY,jsonArray.toString());
-            Prefs.with(activity).save(Constants.ORDER_STATUS_LAT_LNG,latLng);
+            Prefs.with(activity).save(Constants.ORDER_STATUS_LAT_LNG,latLng, LatLng.class);
             Prefs.with(activity).save(Constants.ORDER_STATUS_ORDER_ID,orderId);
             Prefs.with(activity).save(Constants.ORDER_STATUS_ADDRESS,delAddress);
-            MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), new LatLng(Data.latitude,Data.longitude), false);
+            MyApplication.getInstance().getAppSwitcher().switchApp(activity,
+                    productType == ProductType.MENUS.getOrdinal() ? Config.getMenusClientId() : Config.getDeliveryCustomerClientId(),
+                    new LatLng(Data.latitude,Data.longitude), false);
 
 
         }

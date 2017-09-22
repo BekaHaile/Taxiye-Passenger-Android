@@ -57,7 +57,7 @@ public class UserData {
 	private int freeChargeEnabled;
 	private double freeChargeBalance = -1;
 
-	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled,
+	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, deliveryCustomerEnabled,
 			inviteFriendButton, payEnabled, feedEnabled, prosEnabled;
 
 	private ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
@@ -107,7 +107,7 @@ public class UserData {
 					String fatafatUrlLink,
 					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled,
-					int payEnabled, int feedEnabled, int prosEnabled,
+					int payEnabled, int feedEnabled, int prosEnabled,int deliveryCustomerEnabled,
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
 					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding){
@@ -177,6 +177,7 @@ public class UserData {
 		this.deliveryEnabled = deliveryEnabled;
 		this.feedEnabled = feedEnabled;
 		this.prosEnabled = prosEnabled;
+		this.deliveryCustomerEnabled = deliveryCustomerEnabled;
 
 		this.inviteFriendButton = inviteFriendButton;
 
@@ -762,6 +763,9 @@ public class UserData {
 			if(Data.getMenusData() != null && Data.getMenusData().getPromoCoupons() != null) {
 				count += Data.getMenusData().getPromoCoupons().size();
 			}
+			if(Data.getDeliveryCustomerData() != null && Data.getDeliveryCustomerData().getPromoCoupons() != null) {
+				count += Data.getDeliveryCustomerData().getPromoCoupons().size();
+			}
 			if(Data.getPayData() != null && Data.getPayData().getPromoCoupons() != null) {
 				count += Data.getPayData().getPromoCoupons().size();
 			}
@@ -794,6 +798,10 @@ public class UserData {
 			if (Data.getMenusData() != null) {
 				coupons.addAll(Data.getMenusData().getPromoCoupons());
 			}
+		}else if (productType == ProductType.DELIVERY_CUSTOMER) {
+			if (Data.getDeliveryCustomerData() != null) {
+				coupons.addAll(Data.getDeliveryCustomerData().getPromoCoupons());
+			}
 		} else if (productType == ProductType.PAY) {
 			if (Data.getPayData() != null) {
 				coupons.addAll(Data.getPayData().getPromoCoupons());
@@ -819,6 +827,7 @@ public class UserData {
 						|| (productType == ProductType.MEALS && promoCoupon.getMeals().equals(1))
 						|| (productType == ProductType.GROCERY && promoCoupon.getGrocery().equals(1))
 						|| (productType == ProductType.MENUS && promoCoupon.getMenus().equals(1))
+						|| (productType == ProductType.DELIVERY_CUSTOMER && promoCoupon.getDeliveryCustomer().equals(1))
 						|| (productType == ProductType.PAY && promoCoupon.getPay().equals(1))) {
 					coupons.add(promoCoupon);
 				}
@@ -881,6 +890,9 @@ public class UserData {
 
 	public int getMenusEnabled() {
 		return menusEnabled;
+	}
+   public int getDeliveryCustomerEnabled() {
+		return deliveryCustomerEnabled;
 	}
 
 	public void setMenusEnabled(int menusEnabled) {
@@ -1032,6 +1044,10 @@ public class UserData {
 
 	public void setProsEnabled(int prosEnabled) {
 		this.prosEnabled = prosEnabled;
+	}
+
+	public void setDeliveryCustomerEnabled(Integer deliveryCustomerEnabled) {
+		this.deliveryCustomerEnabled = deliveryCustomerEnabled;
 	}
 
 	//	"meals_enabled": 1,

@@ -624,7 +624,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
         public LinearLayout linear;
         public RelativeLayout container, relativeStatusBar;
-        public TextView tvOrderId, tvOrderIdValue,tvDeliveryBefore, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
+        public TextView tvOrderIdValue, tvDeliveryTime, tvStatus0, tvStatus1, tvStatus2, tvStatus3;
         public ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
         public View lineStatus1, lineStatus2, lineStatus3;
 
@@ -633,9 +633,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             linear = (LinearLayout) itemView.findViewById(R.id.linear);
             container = (RelativeLayout) itemView.findViewById(R.id.container);
             relativeStatusBar = (RelativeLayout) itemView.findViewById(R.id.relativeStatusBar);
-            tvOrderId = (TextView) itemView.findViewById(R.id.tvOrderId); tvOrderId.setTypeface(Fonts.mavenRegular(context));
             tvOrderIdValue = (TextView) itemView.findViewById(R.id.tvOrderIdValue); tvOrderIdValue.setTypeface(Fonts.mavenMedium(context));
-            tvDeliveryBefore = (TextView) itemView.findViewById(R.id.tvDeliveryBefore); tvDeliveryBefore.setTypeface(Fonts.mavenRegular(context));
             tvDeliveryTime = (TextView) itemView.findViewById(R.id.tvDeliveryTime); tvDeliveryTime.setTypeface(Fonts.mavenMedium(context));
             tvStatus0 = (TextView) itemView.findViewById(R.id.tvStatus0); tvStatus0.setTypeface(Fonts.mavenRegular(context));
             tvStatus1 = (TextView) itemView.findViewById(R.id.tvStatus1); tvStatus1.setTypeface(Fonts.mavenRegular(context));

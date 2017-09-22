@@ -69,8 +69,17 @@ public class ApiFetchRestaurantMenu {
                 params.put(Constants.KEY_LATITUDE, String.valueOf(latitude));
                 params.put(Constants.KEY_LONGITUDE, String.valueOf(longitude));
                 params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(restaurantId));
-                params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
+                params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
                 params.put(Constants.INTERATED, "1");
+
+                // if api hit from home list where MerchantInfoFragment is not opened and direct Checkout page is
+                // not to be opened
+                if(!directCheckout
+                        && activity.shouldOpenMerchantInfoFragment()
+                        && activity.getMerchantInfoFragment() == null){
+                    params.put(Constants.KEY_NOT_SEND_MENU, "1");
+                }
+
                 Log.i(TAG, "restaurantMenu params=" + params.toString());
 
                 new HomeUtil().putDefaultParams(params);
@@ -101,7 +110,7 @@ public class ApiFetchRestaurantMenu {
                                         }*/
 
 
-                                        activity.clearMenusCart();
+                                        activity.clearMenusCart(activity.getAppType());
                                         setVendorDataToFreshActivity(productsResponse);
 
                                         ArrayList<ItemSelected> itemsSelected = prepareMenuItemsArray(cartItemToSet);
@@ -143,7 +152,7 @@ public class ApiFetchRestaurantMenu {
                                                 @Override
                                                 public void onClick(View v) {
                                                     activity.setReorderLatlngToAdrress(reOrderLatlng,reorderAddress);
-                                                    Prefs.with(activity).save(Constants.CART_STATUS_REORDER_ID,reorderId);//save reoderId in cart to send in checkout
+                                                    Prefs.with(activity).save(activity.getAppType()== AppConstant.ApplicationType.MENUS?Constants.CART_STATUS_REORDER_ID:Constants.CART_STATUS_REORDER_ID_CUSTOMER_DELIVERY,reorderId);//save reoderId in cart to send in checkout
                                                     openNextFragment(true);
                                                     updateCartAndSetJeanie(jObj);
                                                 }
@@ -151,7 +160,7 @@ public class ApiFetchRestaurantMenu {
 
                                         }else{
                                             //Everything is okay go to checkout
-                                            Prefs.with(activity).save(Constants.CART_STATUS_REORDER_ID,reorderId);//save reoderId in cart to send in checkout
+                                            Prefs.with(activity).save(activity.getAppType()== AppConstant.ApplicationType.MENUS?Constants.CART_STATUS_REORDER_ID:Constants.CART_STATUS_REORDER_ID_CUSTOMER_DELIVERY,reorderId);//save reoderId in cart to send in checkout
                                             activity.setReorderLatlngToAdrress(reOrderLatlng,reorderAddress);
                                             openNextFragment(true);
                                             updateCartAndSetJeanie(jObj);
@@ -159,13 +168,16 @@ public class ApiFetchRestaurantMenu {
 
 
                                     } else {
-                                        setVendorDataToFreshActivity(productsResponse);
-                                        activity.updateItemListFromSPDB();
-                                        if (activity.getVendorOpened().getIsClosed() == 1) {
-                                            activity.clearMenusCart();
+                                        if(activity.getMerchantInfoFragment() == null
+                                                || (activity.getMerchantInfoFragment().getRestaurantId() == restaurantId)) {
+                                            setVendorDataToFreshActivity(productsResponse);
+                                            activity.updateItemListFromSPDB();
+                                            if (activity.getVendorOpened().getIsClosed() == 1) {
+                                                activity.clearMenusCart(activity.getAppType());
+                                            }
+                                            updateCartAndSetJeanie(jObj);
+                                            openNextFragment(directCheckout);
                                         }
-                                        updateCartAndSetJeanie(jObj);
-                                        openNextFragment(directCheckout);
 
 
                                     }
@@ -202,9 +214,14 @@ public class ApiFetchRestaurantMenu {
 
     private void openNextFragment(boolean goToCheckout) {
         if (goToCheckout) {
-            activity.openCart(AppConstant.ApplicationType.MENUS);
+            activity.openCart(activity.getAppType(), true);
         } else {
-            activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+            if(activity.shouldOpenMerchantInfoFragment()
+                    && activity.getMerchantInfoFragment() == null){
+                activity.getTransactionUtils().openMerchantInfoFragment(activity, activity.getRelativeLayoutContainer());
+            } else {
+                activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+            }
         }
     }
 
@@ -226,6 +243,9 @@ public class ApiFetchRestaurantMenu {
             Data.AppType = AppConstant.ApplicationType.MENUS;
             Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
             Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getMenusClientId());
+        }
+        if(productsResponse.getCategories() == null || productsResponse.getCategories().isEmpty()){
+            productsResponse.setCategories(null);
         }
         activity.setMenuProductsResponse(productsResponse);
     }

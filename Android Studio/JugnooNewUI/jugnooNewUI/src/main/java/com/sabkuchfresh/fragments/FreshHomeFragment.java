@@ -330,6 +330,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         relativeLayoutNoMenus.setVisibility(View.VISIBLE);
         textViewNothingFound.setText(!TextUtils.isEmpty(message) ? message : getString(R.string.nothing_found_near_you));
         activity.llCheckoutBarSetVisibilityDirect(View.GONE);
+        activity.setTitleAlignment(false);
     }
 
     public void stopOhSnap(){
@@ -337,6 +338,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
         activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
         activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
         activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
+        activity.setTitleAlignment(false);
     }
 
     @Override
@@ -365,7 +367,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, false, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
                 @Override
                 public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
-                    activity.openCart(AppConstant.ApplicationType.FRESH);
+                    activity.openCart(AppConstant.ApplicationType.FRESH, true);
                 }
             });
         }
