@@ -1627,12 +1627,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
 							rating, "", "");
                     if (Data.isFuguChatEnabled()) {
-                        try {
-                            FuguConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
-                        }
+                        fuguCustomerHelpRides();
                     } else {
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
                         intent.putExtra(INTENT_KEY_FROM_BAD, 1);
@@ -6790,6 +6785,13 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled));
 
+            String fuguChannelId = null, fuguChannelName = null;
+            ArrayList<String> fuguTags = null;
+            JSONParser.parseFuguChannelDetails(jObj, fuguChannelId, fuguChannelName, fuguTags);
+            Data.autoData.setFuguChannelId(fuguChannelId);
+            Data.autoData.setFuguChannelName(fuguChannelName);
+            Data.autoData.setFuguTags(fuguTags);
+
             MyApplication.getInstance().getDatabase2().insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), new LatLng(latitude, longitude));
 
             if(ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag){
@@ -7767,15 +7769,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 @Override
                 public void onInAppCustomerSupportClick(View view) {
                     if (Data.isFuguChatEnabled()) {
-                        try {
-                            FuguConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
-                        }
+                        fuguCustomerHelpRides();
                     } else {
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
-//                    intent.putExtra(INTENT_KEY_FROM_BAD, 1);
                         intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
                         startActivity(intent);
                         overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -7793,6 +7789,20 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 }
             }).show(Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0));
         }
+    }
+
+    public void fuguCustomerHelpRides() {
+        try {
+			if(!TextUtils.isEmpty(Data.autoData.getFuguChannelId())){
+				FuguConfig.getInstance().openChatByTransactionId(Data.autoData.getFuguChannelId(),String.valueOf(Data.getFuguUserData().getUserId()),
+						Data.autoData.getFuguChannelName(), Data.autoData.getFuguTags());
+			}else {
+				FuguConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
+		}
     }
 
     private void dismissSOSDialog(){

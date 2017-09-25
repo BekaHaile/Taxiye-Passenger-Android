@@ -795,4 +795,7 @@ public interface Constants {
     String KEY_ORDER_MODE = "order_mode";
     String KEY_MERCHANT_CATEGORY_ID = "merchant_category_id";
     String KEY_NOT_SEND_MENU = "not_send_menu";
+    String KEY_FUGU_CHANNEL_ID = "fugu_channel_id";
+    String KEY_FUGU_CHANNEL_NAME = "fugu_channel_name";
+    String KEY_FUGU_TAGS = "fugu_tags";
 }

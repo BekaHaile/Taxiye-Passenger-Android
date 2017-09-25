@@ -18,6 +18,7 @@ import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Store;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -1150,6 +1151,10 @@ public class JSONParser implements Constants {
 
         String supportNumber = jLastRideData.optString(KEY_SUPPORT_NUMBER, "");
 
+        String fuguChannelId = null, fuguChannelName = null;
+        ArrayList<String> fuguTags = null;
+        parseFuguChannelDetails(jLastRideData, fuguChannelId, fuguChannelName, fuguTags);
+
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
 				jLastRideData.getString("drop_address"),
@@ -1164,10 +1169,25 @@ public class JSONParser implements Constants {
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
                 rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
                 sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge, totalRide, status, supportNumber
-                ,jLastRideData.optString("invoice_additional_text_cabs", ""));
+                ,jLastRideData.optString("invoice_additional_text_cabs", ""), fuguChannelId, fuguChannelName, fuguTags);
 	}
 
 
+	public static void parseFuguChannelDetails(JSONObject jLastRideData, String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags) {
+        if(jLastRideData.has(KEY_FUGU_CHANNEL_ID)){
+            fuguChannelId = jLastRideData.optString(KEY_FUGU_CHANNEL_ID);
+            fuguChannelName = jLastRideData.optString(KEY_FUGU_CHANNEL_NAME);
+            JSONArray jTags = jLastRideData.optJSONArray(KEY_FUGU_TAGS);
+            fuguTags = new ArrayList<>();
+            for(int i=0; i<jTags.length(); i++){
+                try {
+                    fuguTags.add(jTags.getString(i));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
     public String getUserStatus(Context context, String accessToken, int currentUserStatus, ApiFindADriver apiFindADriver,
                                 LatLng latLng) {
@@ -1229,6 +1249,8 @@ public class JSONParser implements Constants {
             long cancellationTimeOffset = 0;
             ArrayList<String> fellowRiders = new ArrayList<>();
             PlaceOrderResponse.ReferralPopupContent referralPopupContent = null;
+            String fuguChannelId = null, fuguChannelName = null;
+            ArrayList<String> fuguTags = null;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1330,6 +1352,8 @@ public class JSONParser implements Constants {
                             vehicleType = jObject.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
                             iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
 
+                            parseFuguChannelDetails(jObject, fuguChannelId, fuguChannelName, fuguTags);
+
                             try{
                                 cancelRideThrashHoldTime = jObject.optString("cancel_ride_threshold_time", "");
                                 cancellationCharges = jObject.optInt("cancellation_charge", 0);
@@ -1415,6 +1439,10 @@ public class JSONParser implements Constants {
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);
+
+                Data.autoData.setFuguChannelId(fuguChannelId);
+                Data.autoData.setFuguChannelName(fuguChannelName);
+                Data.autoData.setFuguTags(fuguTags);
 
                 Log.e("Data.autoData.getAssignedDriverInfo() on login", "=" + Data.autoData.getAssignedDriverInfo().latLng);
 
