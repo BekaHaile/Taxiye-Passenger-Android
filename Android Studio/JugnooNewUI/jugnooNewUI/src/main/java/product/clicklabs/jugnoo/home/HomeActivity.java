@@ -415,7 +415,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 5; // in meters
 
     public static final float MAX_ZOOM = 16;
-    private static final int MAP_ANIMATE_DURATION = 1000;
+    private static final int MAP_ANIMATE_DURATION = 500;
 
     public static final double FIX_ZOOM_DIAGONAL = 358;
     private final float MAP_PADDING = 100f;
@@ -863,7 +863,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 Data.autoData.setPickupLatLng(specialPicupLatLng);
                 getApiFindADriver().setRefreshLatLng(specialPicupLatLng);
                 specialPickupSelected = true;
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), getMapAnimateDuration(), null);
                 selectedSpecialPickup  = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText()+", ";
                 textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress());
                 GAUtils.event(RIDES, HOME, SPECIAL_PICKUP_CHOOSED);
@@ -2742,7 +2742,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 try {
                     setCentrePinAccToGoogleMapPadding();
                     zoomAfterFindADriver = true;
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), getMapAnimateDuration(), null);
                     mapTouched = true;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -3129,7 +3129,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                         //poolPathZoomAtConfirm();
                                     } else {
                                         if (map != null && Data.autoData.getPickupLatLng() != null) {
-                                            map.animateCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()), MAP_ANIMATE_DURATION, null);
+                                            map.animateCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()), getMapAnimateDuration(), null);
                                         }
                                     }
                                 }
@@ -5287,7 +5287,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                         || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                                         || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
                                         && bounds != null) {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), MAP_ANIMATE_DURATION, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), getMapAnimateDuration(), null);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -5324,7 +5324,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 public void run() {
                     try {
                         if ("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) && !isSpecialPickupScreenOpened() && !isPoolRideAtConfirmation()) {
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), getMapAnimateDuration(), null);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -5358,9 +5358,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         public void run() {
                             try {
                                 if(finalFixedZoom){
-                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), getMapAnimateDuration(), null);
                                 } else {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), MAP_ANIMATE_DURATION, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), getMapAnimateDuration(), null);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -7039,7 +7039,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     LatLng lastMapCentre = map.getCameraPosition().target;
                     LatLng currentLoc = new LatLng(location.getLatitude(), location.getLongitude());
                     if(MapUtils.distance(lastMapCentre, currentLoc) > MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
-                        map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), MAP_ANIMATE_DURATION, null);
+                        map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), getMapAnimateDuration(), null);
                     }
                 } else {
                     destroyHighSpeedAccuracyFusedLocationFetcher();
@@ -7591,7 +7591,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
             try {
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), getMapAnimateDuration(), null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -8292,7 +8292,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                         map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, FIX_ZOOM_DIAGONAL),
                                 (int) (minRatio * MAP_PADDING)),
-                                MAP_ANIMATE_DURATION, null);
+                                getMapAnimateDuration(), null);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -8624,7 +8624,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 //                    .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
             if(searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())){
                 textViewInitialSearch.setText(searchResult.getNameForText());
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, new GoogleMap.CancelableCallback() {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), getMapAnimateDuration(), new GoogleMap.CancelableCallback() {
                     @Override
                     public void onFinish() {
                         setPickupAddressZoomedOnce = true;
@@ -9729,5 +9729,14 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             handler = new Handler();
         }
         return handler;
+    }
+
+    private int getMapAnimateDuration(){
+        if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+            return 1500;
+        }
+        return MAP_ANIMATE_DURATION;
     }
 }
