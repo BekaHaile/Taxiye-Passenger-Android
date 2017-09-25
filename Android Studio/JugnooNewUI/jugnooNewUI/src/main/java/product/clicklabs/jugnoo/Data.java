@@ -548,18 +548,23 @@ public class Data {
             return null;
 
 
-        return new CaptureUserData.Builder().userUniqueKey(userData.userIdentifier).fullName(userData.userName).email(userData.userEmail).phoneNumber(userData.phoneNo).build();
+        return new CaptureUserData.Builder().userUniqueKey(userData.userIdentifier).fullName(userData.userName).email(userData.userEmail)
+                .phoneNumber(userData.phoneNo)
+                .city(userData.getCity())
+                .latitude(Data.loginLatitude)
+                .longitude(Data.loginLongitude)
+                .build();
 
 
     }
 
     public static void initializeFuguHandler(Activity context, CaptureUserData userData) {
-
+        int APP_TYPE = 1;
 
         if (Config.getConfigMode() == ConfigMode.LIVE) {
-            FuguConfig.init(context.getString(R.string.fugu_key), context, "live", userData);
+            FuguConfig.init(APP_TYPE, context.getString(R.string.fugu_key), context, "live", userData);
         } else {
-            FuguConfig.init(context.getString(R.string.fugu_key_test), context, "test", userData);
+            FuguConfig.init(APP_TYPE, context.getString(R.string.fugu_key_test), context, "test", userData);
         }
 
         FuguConfig.getInstance().setHomeUpIndicatorDrawableId(R.drawable.ic_back_selector);
@@ -638,7 +643,7 @@ public class Data {
     }
 
     public static long CHANNEL_ID_FUGU_BULK_MEALS(){
-        return Config.getConfigMode()==ConfigMode.LIVE?556:599;
+        return Config.getConfigMode()==ConfigMode.LIVE?556:437;
     }
 
     public static long CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE(){
