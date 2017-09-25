@@ -415,7 +415,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 5; // in meters
 
     public static final float MAX_ZOOM = 16;
-    private static final int MAP_ANIMATE_DURATION = 300;
+    private static final int MAP_ANIMATE_DURATION = 1000;
 
     public static final double FIX_ZOOM_DIAGONAL = 358;
     private final float MAP_PADDING = 100f;
@@ -6304,7 +6304,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                     if(driverMarkerInRide != null && latLngsListForDriverAnimation != null && latLngsListForDriverAnimation.size() > 1) {
 										int untrackedPathColor = Data.autoData.getDropLatLng() != null ? getResources().getColor(R.color.google_path_polyline_color) : Color.TRANSPARENT;
 										MarkerAnimation.animateMarkerOnList(driverMarkerInRide, latLngsListForDriverAnimation,
-												new LatLngInterpolator.LinearFixed(), map,
+												new LatLngInterpolator.LinearFixed(), true, map,
 												RIDE_ELAPSED_PATH_COLOR,
 												untrackedPathColor, ASSL.Xscale() * 7f);
 									} else {

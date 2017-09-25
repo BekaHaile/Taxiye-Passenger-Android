@@ -375,7 +375,7 @@ public class MapUtils {
 			});
 
 			markerRotationValueAnimator.setFloatValues(0, 1);
-			markerRotationValueAnimator.setDuration(700);
+			markerRotationValueAnimator.setDuration(600);
 			markerRotationValueAnimator.start();
 		}
 	}
