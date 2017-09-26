@@ -1627,7 +1627,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
 							rating, "", "");
                     if (Data.isFuguChatEnabled()) {
-                        fuguCustomerHelpRides();
+                        fuguCustomerHelpRides(false);
                     } else {
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
                         intent.putExtra(INTENT_KEY_FROM_BAD, 1);
@@ -7768,7 +7768,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 @Override
                 public void onInAppCustomerSupportClick(View view) {
                     if (Data.isFuguChatEnabled()) {
-                        fuguCustomerHelpRides();
+                        fuguCustomerHelpRides(true);
                     } else {
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
                         intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
@@ -7790,9 +7790,14 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         }
     }
 
-    public void fuguCustomerHelpRides() {
+    private final String FUGU_TAG_SOS = "SOS";
+    public void fuguCustomerHelpRides(boolean fromSos) {
         try {
 			if(!TextUtils.isEmpty(Data.autoData.getFuguChannelId())){
+                if(fromSos){
+                    Data.autoData.getFuguTags().remove(FUGU_TAG_SOS);
+                    Data.autoData.getFuguTags().add(FUGU_TAG_SOS);
+                }
 				FuguConfig.getInstance().openChatByTransactionId(Data.autoData.getFuguChannelId(),String.valueOf(Data.getFuguUserData().getUserId()),
 						Data.autoData.getFuguChannelName(), Data.autoData.getFuguTags());
 			}else {

@@ -178,4 +178,5 @@
  	public *;
  }
 
+-dontwarn io.branch.**
 
