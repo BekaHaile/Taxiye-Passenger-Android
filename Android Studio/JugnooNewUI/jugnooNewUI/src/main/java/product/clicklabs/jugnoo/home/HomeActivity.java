@@ -6785,12 +6785,11 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled));
 
-            String fuguChannelId = null, fuguChannelName = null;
-            ArrayList<String> fuguTags = null;
-            JSONParser.parseFuguChannelDetails(jObj, fuguChannelId, fuguChannelName, fuguTags);
-            Data.autoData.setFuguChannelId(fuguChannelId);
-            Data.autoData.setFuguChannelName(fuguChannelName);
-            Data.autoData.setFuguTags(fuguTags);
+            JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
+            JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);
+            Data.autoData.setFuguChannelId(fuguChannelData.getFuguChannelId());
+            Data.autoData.setFuguChannelName(fuguChannelData.getFuguChannelName());
+            Data.autoData.setFuguTags(fuguChannelData.getFuguTags());
 
             MyApplication.getInstance().getDatabase2().insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), new LatLng(latitude, longitude));
 

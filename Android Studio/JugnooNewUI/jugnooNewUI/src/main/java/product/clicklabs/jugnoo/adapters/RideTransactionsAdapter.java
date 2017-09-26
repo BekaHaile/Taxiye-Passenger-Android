@@ -360,8 +360,6 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
         } else if (vehicleType == VehicleTypeValue.TAXI.getOrdinal()) {
             if (rideType == RideTypeValue.POOL.getOrdinal()) {
-                // TODO: 06/07/17 change icon
-//                return R.drawable.ic_history_carpool;
                 return R.drawable.ic_pool_white;
             } else {
                 return R.drawable.ic_car_white;
