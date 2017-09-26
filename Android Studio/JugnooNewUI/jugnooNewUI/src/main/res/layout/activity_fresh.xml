@@ -40,7 +40,14 @@
                  app:scrimVisibleHeightTrigger="50px">-->
 
 
+                <LinearLayout
+                    android:id="@+id/llCollapParent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/dp_1"
+                    >
                 <include layout="@layout/restaurant_collapse_details" />
+                </LinearLayout>
 
 
                 <android.support.v7.widget.Toolbar

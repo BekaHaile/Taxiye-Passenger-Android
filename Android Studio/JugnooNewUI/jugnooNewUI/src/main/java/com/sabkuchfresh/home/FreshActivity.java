@@ -1709,6 +1709,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         relativeLayoutContainer.requestLayout();
 
 
+        findViewById(R.id.llCollapParent).setMinimumHeight(getResources().getDimensionPixelSize(fragment instanceof RestaurantImageFragment ? R.dimen.dp_90 : R.dimen.dp_1));
         if (isEnable) {
             findViewById(R.id.layout_rest_details).setVisibility(View.VISIBLE);
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
