@@ -494,16 +494,25 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 												int pathColor = ContextCompat.getColor(activity, R.color.theme_color);
 												int untrackedPathColor = ContextCompat.getColor(activity, R.color.text_color_30alpha);
+												float pathWidth = ASSL.Xscale() * 7f;
 												if (showDeliveryRoute != 1) {
 													pathColor = Color.TRANSPARENT;
 													untrackedPathColor = Color.TRANSPARENT;
 												}
+												boolean animateRoute = false;
+												if(!animateRoute) {
+													PolylineOptions polylineOptionsUntracked = new PolylineOptions().color(untrackedPathColor).width(pathWidth).geodesic(true);
+													for (LatLng latLng : latLngsAnimateDriver) {
+														polylineOptionsUntracked.add(latLng);
+													}
+													polylineUntracked = googleMap.addPolyline(polylineOptionsUntracked);
+												}
 
 												MarkerAnimation.animateMarkerOnList(markerDriver, latLngsAnimateDriver,
-														new LatLngInterpolator.LinearFixed(), false, googleMap,
+														new LatLngInterpolator.LinearFixed(), animateRoute, googleMap,
 														pathColor,
 														untrackedPathColor,
-														ASSL.Xscale() * 7f);
+														pathWidth, callbackAnim);
 												latLngsDriverAnim.clear();
 												latLngsDriverAnim.addAll(latLngsAnimateDriver);
 											} else {
@@ -556,6 +565,28 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		};
 		return timerTask;
 	}
+
+	private Polyline polylineUntracked;
+	private MarkerAnimation.CallbackAnim callbackAnim = new MarkerAnimation.CallbackAnim() {
+		@Override
+		public void onPathFound(List<LatLng> latLngs) {
+
+		}
+
+		@Override
+		public void onAnimComplete() {
+			if(polylineUntracked != null){
+				polylineUntracked.remove();
+			}
+		}
+
+		@Override
+		public void onAnimNotDone() {
+			if(polylineUntracked != null){
+				polylineUntracked.remove();
+			}
+		}
+	};
 
 	private MarkerOptions getMarkerOptionsForResource(LatLng latLng, int resId, float width, float height,
 													  float xAnchor, float yAnchor, int zIndex) {

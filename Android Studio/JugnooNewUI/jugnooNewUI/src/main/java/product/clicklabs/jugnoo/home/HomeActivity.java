@@ -6301,7 +6301,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 										MarkerAnimation.animateMarkerOnList(driverMarkerInRide, latLngsListForDriverAnimation,
 												new LatLngInterpolator.LinearFixed(), true, map,
 												RIDE_ELAPSED_PATH_COLOR,
-												untrackedPathColor, ASSL.Xscale() * 7f);
+												untrackedPathColor, ASSL.Xscale() * 7f, null);
 									} else {
                                         MarkerAnimation.clearPolylines();
                                     }

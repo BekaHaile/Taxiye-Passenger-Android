@@ -143,8 +143,8 @@ public class MarkerAnimation {
 
 
     public static void animateMarkerOnList(Marker marker, List<LatLng> list, final LatLngInterpolator latLngInterpolator, boolean animateRoute,
-                                           GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth){
-        getDirectionsAsyncs.add(new GetDirectionsAsync("-1", marker, latLngInterpolator, null, list, animateRoute,
+                                           GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth, CallbackAnim  callback){
+        getDirectionsAsyncs.add(new GetDirectionsAsync("-1", marker, latLngInterpolator, callback, list, animateRoute,
                 googleMap, pathResolvedColor, untrackedPathColor, pathWidth));
         Log.e("getDirectionsAsyncs.size", "="+getDirectionsAsyncs.size());
         if(getDirectionsAsyncs.size() == 1){
