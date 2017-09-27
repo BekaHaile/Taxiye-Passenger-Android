@@ -103,6 +103,8 @@ public class SupportActivity extends BaseAppCompatActivity {
 				pt = ProductType.GROCERY;
 			} else if(productType == ProductType.MENUS.getOrdinal()){
 				pt = ProductType.MENUS;
+			} else if(productType == ProductType.DELIVERY_CUSTOMER.getOrdinal()){
+				pt = ProductType.DELIVERY_CUSTOMER;
 			} else if(productType == ProductType.PAY.getOrdinal()){
 				pt = ProductType.PAY;
 			}

@@ -6,10 +6,10 @@
         android:pivotY="0%"
         android:duration="600" android:fillBefore="false" />-->
     <translate
-        android:duration="400"
+        android:duration="@integer/time_category_anim_close"
         android:fromYDelta="-100%"
         android:fillBefore="false"
         android:fillAfter="false"
-        android:toYDelta="0" />
-    <alpha android:fromAlpha="0" android:toAlpha="1" android:duration="400"/>
+        android:toYDelta="0.0" />
+    <!--<alpha android:fromAlpha="0" android:toAlpha="1" android:duration="200"/>-->
 </set>

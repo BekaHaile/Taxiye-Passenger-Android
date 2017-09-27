@@ -1,26 +1,24 @@
 package com.sabkuchfresh.fragments;
 
-import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.sabkuchfresh.adapters.MenusRestaurantAdapter;
+import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
@@ -28,17 +26,19 @@ import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
-import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
 import com.sabkuchfresh.utils.Utils;
+import com.sabkuchfresh.utils.WrapContentLinearLayoutManager;
+import com.sabkuchfresh.widgets.DeliveryDisplayCategoriesView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -49,9 +49,10 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
@@ -65,27 +66,30 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GAAction {
+public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GAAction,
+        DeliveryDisplayCategoriesView.Callback {
     private final String TAG = MenusFragment.class.getSimpleName();
 
-    private LinearLayout llRoot;
+    private RelativeLayout llRoot;
     private RelativeLayout relativeLayoutNoMenus;
-    private MenusRestaurantAdapter menusRestaurantAdapter;
+    private DeliveryHomeAdapter deliveryHomeAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewRestaurant;
     private TextView textViewNothingFound;
+    private DeliveryDisplayCategoriesView deliveryDisplayCategoriesView;
+    private RelativeLayout rlMainContainer;
+    private View vDividerLocation;
 
     private View rootView;
     private FreshActivity activity;
 
-    private ArrayList<MenusResponse.Vendor> vendors = new ArrayList<>();
-    private ArrayList<RecentOrder> recentOrder = new ArrayList<>();
+
     private ArrayList<String> status = new ArrayList<>();
 
     PushDialog pushDialog;
     private boolean resumed = false, searchOpened = false;
     private KeyboardLayoutListener keyboardLayoutListener;
-    private LinearLayoutManager linearLayoutManager;
+    private WrapContentLinearLayoutManager linearLayoutManager;
     private int visibleItemCount;
     private int totalItemCount;
     private int pastVisiblesItems;
@@ -99,24 +103,22 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_menus, container, false);
-
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
         activity.setDeliveryAddressView(rootView);
+        activity.setCategoryIdOpened(-1);
+        activity.getTopBar().getLlSearchCart().setVisibility(View.GONE); //only for first time
 
-        Data.AppType = AppConstant.ApplicationType.MENUS;
-        Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);
+        deliveryDisplayCategoriesView = new DeliveryDisplayCategoriesView(activity,
+                rootView.findViewById(R.id.rLCategoryDropDown), this);
 
-        GAUtils.trackScreenView(MENUS+HOME);
+        Data.AppType = Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()) 
+                ? AppConstant.ApplicationType.DELIVERY_CUSTOMER : AppConstant.ApplicationType.MENUS;
+        Prefs.with(activity).save(Constants.APP_TYPE, Data.AppType);
+        GAUtils.trackScreenView(activity.getGaCategory() + HOME);
+        GAUtils.trackScreenView(activity.getGaCategory() + HOME + V2);
 
-        llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
-        try {
-            if (llRoot != null) {
-                new ASSL(activity, llRoot, 1134, 720, false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        llRoot = (RelativeLayout) rootView.findViewById(R.id.llRoot);
 
         try {
             if (!TextUtils.isEmpty(Data.userData.getUserId())) {
@@ -126,6 +128,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             e.printStackTrace();
         }
 
+        rlMainContainer = (RelativeLayout) rootView.findViewById(R.id.rlMainContainer);
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         ((TextView) rootView.findViewById(R.id.textViewOhSnap)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 
@@ -134,13 +137,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         relativeLayoutNoMenus.setVisibility(View.GONE);
 
         recyclerViewRestaurant = (RecyclerView) rootView.findViewById(R.id.recyclerViewRestaurant);
-        linearLayoutManager = new LinearLayoutManager(activity);
+        linearLayoutManager = new WrapContentLinearLayoutManager(activity);
         recyclerViewRestaurant.setLayoutManager(linearLayoutManager);
         recyclerViewRestaurant.setItemAnimator(new DefaultItemAnimator());
         recyclerViewRestaurant.setHasFixedSize(false);
-        /*textViewNoMenus = (TextView) rootView.findViewById(R.id.textViewNoMenus); textViewNoMenus.setTypeface(Fonts.mavenMedium(activity));*/
+        recyclerViewRestaurant.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+        recyclerViewRestaurant.requestFocus();
 
 
+        vDividerLocation = rootView.findViewById(R.id.vDividerLocation); vDividerLocation.setVisibility(View.VISIBLE);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.white);
@@ -148,7 +153,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         swipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
         swipeRefreshLayout.setEnabled(true);
 
-        menusRestaurantAdapter = new MenusRestaurantAdapter(activity, vendors, recentOrder, status, new MenusRestaurantAdapter.Callback() {
+        deliveryHomeAdapter = new DeliveryHomeAdapter(activity, new DeliveryHomeAdapter.Callback() {
             @Override
             public void onRestaurantSelected(int vendorId) {
                 activity.fetchRestaurantMenuAPI(vendorId, false, null, null, -1, null);
@@ -156,91 +161,81 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
 
             @Override
-            public void onNotify(int count) {
-            }
-
-            @Override
             public void onBannerInfoDeepIndexClick(int deepIndex) {
                 Data.deepLinkIndex = deepIndex;
-                if(activity != null) {
+                if (activity != null) {
                     activity.openDeepIndex();
                 }
             }
-        }, recyclerViewRestaurant);
 
-        recyclerViewRestaurant.setAdapter(menusRestaurantAdapter);
-
-        recyclerViewRestaurant.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
+            public void openCategory(int categoryId) {
+                switchCategory(categoryId, false);
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
+            public void apiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone) {
 
-                try {
-                    int offset = recyclerView.computeVerticalScrollOffset();
-                    int extent = recyclerView.computeVerticalScrollExtent();
-                    int range = recyclerView.computeVerticalScrollRange();
+                hitApiRecommendRestaurant(categoryId, restaurantName,locality, telephone);
+                GAUtils.event(activity.getGaCategory(), GAAction.HOME , GAAction.NEW_RESTAURANT + GAAction.SUBMITTED);
 
-                    int percentage = (int)(100.0 * offset / (float)(range - extent));
 
-                    if(percentage > 0 && percentage % 10 == 0) {
-                        GAUtils.event(MENUS, HOME + LIST_SCROLLED, percentage + "%");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+            }
+        }, recyclerViewRestaurant, status);
+
+        recyclerViewRestaurant.setAdapter(deliveryHomeAdapter);
+        activity.setLocalityAddressFirstTime(activity.getAppType());
+
+        if(!activity.checkForReorderMenus()) {
+            // to open pending feedback page
+            try {
+                if (getMenusOrDeliveryData() != null && getMenusOrDeliveryData().getPendingFeedback() == 1) {
+
+                    activity.getHandler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            activity.openFeedback();
+                        }
+                    }, 300);
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        });
 
-        activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
-
-        try {
-            if (Data.getMenusData() != null && Data.getMenusData().getPendingFeedback() == 1) {
-
-                activity.getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        activity.openFeedback();
-                    }
-                }, 300);
+            // to open restaurant page if from deep link
+            try {
+                if (!"-1".equalsIgnoreCase(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"))) {
+                    int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"));
+                    activity.fetchRestaurantMenuAPI(restId, false, null, null, -1, null);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+        // dialogs at login
         try {
             if (Data.userData.getPromoSuccess() == 0) {
                 showPromoFailedAtSignupDialog();
-            } else if (Data.getMenusData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
-                Data.getMenusData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
+            } else if (getMenusOrDeliveryData().getIsFatafatEnabled() == AppConstant.IsFatafatEnabled.NOT_ENABLED) {
+                getMenusOrDeliveryData().setIsFatafatEnabled(AppConstant.IsFatafatEnabled.ENABLED);
                 showPopup();
-            } else if (Data.getMenusData().getPopupData() != null) {
+            } else if (getMenusOrDeliveryData().getPopupData() != null) {
                 pushDialog = new PushDialog(activity, new PushDialog.Callback() {
                     @Override
                     public void onButtonClicked(int deepIndex) {
 
                     }
                 });
-                pushDialog.show(Data.getMenusData().getPopupData());
+                pushDialog.show(getMenusOrDeliveryData().getPopupData());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try {
-            if (!"-1".equalsIgnoreCase(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"))) {
-                int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"));
-                activity.fetchRestaurantMenuAPI(restId, false, null, null, -1, null);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
-        }
 
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -258,6 +253,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             public void keyboardOpened() {
                 if (activity.getTopFragment() instanceof MenusFragment) {
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
+
+                    if(deliveryDisplayCategoriesView.isDropDownVisible()){
+                        deliveryDisplayCategoriesView.toggleDropDown();
+                    }
+                    activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
                 }
             }
 
@@ -267,51 +267,89 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
+                    activity.getMenusCartSelectedLayout().checkForVisibility();
                 }
             }
         });
         keyboardLayoutListener.setResizeTextView(false);
 
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
-		llRoot.post(new Runnable() {
-			@Override
-			public void run() {
-				if(getView() != null){
-					activity.getMenusCartSelectedLayout().checkForVisibility();
-				}
-			}
-		});
+        llRoot.post(new Runnable() {
+            @Override
+            public void run() {
+                if (getView() != null) {
+                    activity.getMenusCartSelectedLayout().checkForVisibility();
+                }
+            }
+        });
 
         recyclerViewRestaurant.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                //To implement Pagination
                 if (dy > 0) {
-
                     visibleItemCount = linearLayoutManager.getChildCount();
                     totalItemCount = linearLayoutManager.getItemCount();
                     pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
 
                     if (!isPagingApiInProgress && hasMorePages) {
                         if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                            getAllMenus(true,lastMenusLatlng, true, false);
+                            fetchNextPage();
                         }
                     }
                 }
+
+                try {
+                    int offset = recyclerView.computeVerticalScrollOffset();
+                    int extent = recyclerView.computeVerticalScrollExtent();
+                    int range = recyclerView.computeVerticalScrollRange();
+
+                    int percentage = (int) (100.0 * offset / (float) (range - extent));
+
+                    if (percentage > 0 && percentage % 10 == 0) {
+                        GAUtils.event(activity.getGaCategory(), HOME + LIST_SCROLLED, percentage + "%");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-
-
 
 
         });
         return rootView;
     }
 
+    private MenusData getMenusOrDeliveryData() {
+        if (activity.getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
+            return Data.getDeliveryCustomerData();
+        } else {
+            return Data.getMenusData();
+        }
+    }
+
+    public void switchCategory(int categoryId, boolean isBackPressed) {
+
+        if(deliveryDisplayCategoriesView==null)
+            return;
+
+        if(isBackPressed && deliveryDisplayCategoriesView.isDropDownVisible()){
+            deliveryDisplayCategoriesView.toggleDropDown();
+            return;
+        }
+        activity.setCategoryIdOpened(categoryId);
+        getAllMenus(true, activity.getSelectedLatLng(), true);
+        deliveryDisplayCategoriesView.setCategoryLabelIcon(categoryId);
+    }
+
+    private long lastTimeRefreshed = System.currentTimeMillis();
+    private static final long MAX_REFRESH_INTERVAL = 60*1000;
     @Override
     public void onResume() {
         super.onResume();
         if (!isHidden() && resumed) {
-            activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
+            if(activity.isRefreshCart()
+                    || System.currentTimeMillis()-lastTimeRefreshed >= MAX_REFRESH_INTERVAL){
+                activity.setLocalityAddressFirstTime(activity.getAppType());
+            }
             activity.setRefreshCart(false);
         }
         resumed = true;
@@ -322,306 +360,339 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         super.onHiddenChanged(hidden);
         try {
             if (!hidden) {
-                if(activity.openVendorMenuFragmentOnBack){
+                if (activity.openVendorMenuFragmentOnBack) {
                     activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
                     activity.openVendorMenuFragmentOnBack = false;
                     return;
                 }
-				activity.fragmentUISetup(this);
-				if(!activity.isOrderJustCompleted()) {
-					activity.setAddressTextToLocationPlaceHolder();
-				}
-				activity.resumeMethod();
-//                applyFilter(false);
+                activity.fragmentUISetup(this);
+                if (!activity.isOrderJustCompleted()) {
+                    activity.setAddressTextToLocationPlaceHolder();
+                } else {
+                    recyclerViewRestaurant.postDelayed(runnableScrollToTop, 100);
+                }
+                activity.resumeMethod();
                 if (searchOpened) {
-					searchOpened = false;
-					toggleSearch(false);
-				}
+                    searchOpened = false;
+                    toggleSearch(false);
+                }
 
-				final boolean refreshCartFinal = activity.isRefreshCart();
-				activity.getHandler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						if (refreshCartFinal) {
-							activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MENUS);
-						}
-						activity.setRefreshCart(false);
-					}
-				}, 300);
-				activity.getMenusCartSelectedLayout().checkForVisibility();
-			} else {
-				activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
-			}
+                final boolean refreshCartFinal = activity.isRefreshCart();
+                activity.getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (refreshCartFinal) {
+                            activity.setLocalityAddressFirstTime(activity.getAppType());
+                        }
+                        activity.setRefreshCart(false);
+                    }
+                }, 300);
+                if(!serviceUnavailable ||
+                        (activity.getMenusResponse() != null && activity.getMenusResponse().getRecentOrders().size() > 0)){
+                    activity.getMenusCartSelectedLayout().checkForVisibility();
+                }
+
+
+            } else {
+                activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
+                if(isCategoryDropDownVisible()){
+                    deliveryDisplayCategoriesView.toggleDropDown();
+                }
+            }
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
+    private Runnable runnableScrollToTop = new Runnable() {
+        @Override
+        public void run() {
+            recyclerViewRestaurant.scrollToPosition(0);
+        }
+    };
 
     @Override
     public void onDestroyView() {
         try {
-            menusRestaurantAdapter.removeHandler();
+            deliveryHomeAdapter.removeHandler();
         } catch (Exception e) {
+            e.printStackTrace();
         }
         super.onDestroyView();
-        ASSL.closeActivity(llRoot);
-        System.gc();
     }
 
 
     @Override
     public void onRefresh() {
-        getAllMenus(false, activity.getSelectedLatLng(), false, true);
+//        activity.setCategoryIdOpened(-1);
+        getAllMenus(false, activity.getSelectedLatLng(), true);
     }
 
-    private LatLng lastMenusLatlng;
-    private int currentPageCount=1 ;
-    public void getAllMenus(final boolean loader, final LatLng latLng, final boolean isPagination, final boolean scrollToTop) {
+    private int currentPageCount = 1;
+
+    public void getAllMenus(final boolean loader, final LatLng latLng, final boolean scrollToTop) {
         final String searchTextCurr = searchText;
         try {
-            if(!searchOpened || !refreshingAutoComplete) {
-                if (MyApplication.getInstance().isOnline()) {
-                    this.lastMenusLatlng = latLng;
-                    ProgressDialog progressDialog = null;
-                    if (isPagination) {
-                        isPagingApiInProgress = true;
-                        if (menusRestaurantAdapter != null) {
-                            menusRestaurantAdapter.showProgressBar(true);
-                        }
-                    } else {
-                        if (loader)
-                            progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, activity.getResources().getString(R.string.loading));
-                    }
+            if (searchOpened && isMenusApiInProgress)
+                return;
 
-                    if (activity.getTopFragment() instanceof MenusFragment) {
-                        activity.getTopBar().ivFilterApplied.setVisibility(filterApplied() ? View.VISIBLE : View.GONE);
-                    }
+            if (!MyApplication.getInstance().isOnline()) {
+                retryDialog(DialogErrorType.NO_NET, latLng, loader, false, scrollToTop);
+                swipeRefreshLayout.setRefreshing(false);
+                return;
+            }
 
 
-                    HashMap<String, String> params = new HashMap<>();
+            if (loader)
+                DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
-                    //Sort Keys
-                    if (activity.getSortBySelected() != MenusFilterFragment.SortType.NONE) {
-                        JSONArray sortArray = new JSONArray();
-                        sortArray.put(("" + activity.getSortBySelected()).toLowerCase());
-                        params.put(Constants.KEY_SORTING, sortArray.toString());
-
-                    }
-                    //Quick Filter Keys
-                    if (activity.getQuickFilterSelected() != null && activity.getQuickFilterSelected().size() > 0) {
-                        params.put(Constants.KEY_FILTERS, (new JSONArray(activity.getQuickFilterSelected())).toString());
-                    }
-
-                    //Min Order amount filter
-                    if (activity.getMoSelected() != MenusFilterFragment.MinOrder.NONE) {
-                        params.put(Constants.KEY_MIN_ORDER_AMT, "" + activity.getMoSelected().getOrdinal());
-                    }
-
-                    //Cuisines List
-                    if (activity.getCuisinesSelected() != null && activity.getCuisinesSelected().size() > 0) {
-                        ArrayList<Integer> cusiinesSelectedId = new ArrayList<>();
-                        for (FilterCuisine cuisine : activity.getCuisinesSelected()) {
-                            cusiinesSelectedId.add(cuisine.getId());
-
-                        }
-                        params.put(Constants.KEY_CUISINE_SELECTED, cusiinesSelectedId.toString());
-                    }
-
-
-                    //Search query
-//                if(activity.getSearchedRestaurantIds() != null && activity.getSearchedRestaurantIds().size() > 0){
-//                    params.put(Constants.RESTAURANT_IDS, activity.getSearchedRestaurantIds().toString());
-//                }
-
-
-                    params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                    params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
-                    params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
-                    params.put(Constants.KEY_CLIENT_ID, Config.getMenusClientId());
-                    params.put(Constants.INTERATED, "1");
-                    params.put(Constants.PAGE_NO, isPagination ? String.valueOf(currentPageCount) : "0");
-
-
-                    new HomeUtil().putDefaultParams(params);
-                    final ProgressDialog finalProgressDialog = progressDialog;
-
-                    Callback<MenusResponse> callback =
-                            new Callback<MenusResponse>() {
-                                @Override
-                                public void success(MenusResponse menusResponse, Response response) {
-                                    try {
-                                        if (finalProgressDialog != null)
-                                            finalProgressDialog.dismiss();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    swipeRefreshLayout.setRefreshing(false);
-                                    activity.getTopBar().setPBSearchVisibility(View.GONE);
-                                    refreshingAutoComplete = false;
-                                    recallSearch(searchTextCurr);
-
-                                    if (isPagination) {
-                                        isPagingApiInProgress = false;
-                                    }
-                                    relativeLayoutNoMenus.setVisibility(View.GONE);
-                                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                                    Log.i(TAG, "getAllProducts response = " + responseStr);
-                                    try {
-                                        JSONObject jObj = new JSONObject(responseStr);
-                                        String message = menusResponse.getMessage();
-                                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                                            if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
-
-                                                //set Variables for pagination
-                                                hasMorePages = menusResponse.getVendors() != null && menusResponse.getVendors().size() > 0 && menusResponse.isPageLengthComplete();
-
-                                                // sort vendors list according to searched ids
-//                                    if(menusResponse.getVendors() != null && menusResponse.getVendors().size()>0
-//                                            && activity.getSearchedRestaurantIds() != null && activity.getSearchedRestaurantIds().size() > 0){
-//                                        Collections.sort(menusResponse.getVendors(), new Comparator<MenusResponse.Vendor>() {
-//                                            @Override
-//                                            public int compare(MenusResponse.Vendor o1, MenusResponse.Vendor o2) {
-//                                                int i1 = activity.getSearchedRestaurantIds().indexOf(o1.getRestaurantId());
-//                                                int i2 = activity.getSearchedRestaurantIds().indexOf(o2.getRestaurantId());
-//                                                if(i1 != -1 && i2 != -1){
-//                                                    return i1 - i2;
-//                                                } else if(i1 != -1){
-//                                                    return -1;
-//                                                } else {
-//                                                    return 1;
-//                                                }
-//                                            }
-//                                        });
-//                                    }
-
-
-                                                if (isPagination) {
-                                                    vendors.addAll((ArrayList<MenusResponse.Vendor>) menusResponse.getVendors());
-                                                    menusRestaurantAdapter.setList(vendors, menusResponse.getBannerInfos(),
-                                                            menusResponse.getStripInfo(), menusResponse.getShowBanner(), !hasMorePages);
-                                                    menusResponse.setVendors(vendors);
-                                                    activity.setMenusResponse(menusResponse);
-                                                    currentPageCount++;
-                                                    try {
-                                                        if (finalProgressDialog != null)
-                                                            finalProgressDialog.dismiss();
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
-                                                    }
-                                                    return;
-
-                                                }
-                                                currentPageCount = 1;
-                                                activity.setMenusResponse(menusResponse);
-
-                                                vendors = (ArrayList<MenusResponse.Vendor>) menusResponse.getVendors();
-
-                                                recentOrder.clear();
-                                                recentOrder.addAll(menusResponse.getRecentOrders());
-
-                                                status.clear();
-                                                status.addAll(menusResponse.getRecentOrdersPossibleStatus());
-
-                                                menusRestaurantAdapter.setList(vendors, menusResponse.getBannerInfos(),
-                                                        menusResponse.getStripInfo(), menusResponse.getShowBanner(), !hasMorePages);
-//                                    applyFilter(false);
-                                                // TODO: 22/08/17 service unavailability check
-                                                relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0
-                                                        && menusResponse.getServiceUnavailable() == 1) ? View.VISIBLE : View.GONE);
-                                                activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
-
-                                                if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
-                                                    activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
-                                                    activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
-                                                    activity.llCheckoutBarSetVisibilityDirect(View.GONE);
-                                                    if (searchOpened) {
-                                                        toggleSearch(true);
-                                                        activity.getHandler().postDelayed(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                Utils.hideSoftKeyboard(activity, activity.getTopBar().etSearch);
-                                                            }
-                                                        }, 100);
-                                                    }
-                                                    activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
-                                                    recyclerViewRestaurant.setVisibility(View.GONE);
-                                                } else {
-                                                    activity.getTopBar().getLlSearchCart().setVisibility(View.VISIBLE);
-                                                    activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.END);
-                                                    recyclerViewRestaurant.setVisibility(View.VISIBLE);
-                                                }
-
-                                                activity.setFilterCuisinesLocal(null);
-                                                checkIciciPaymentStatusApi(activity);
-                                                if (scrollToTop && recyclerViewRestaurant != null) {
-                                                    linearLayoutManager.scrollToPositionWithOffset(0, 0);
-                                                }
-
-
-                                            } else {
-                                                DialogPopup.alertPopup(activity, "", message);
-                                            }
-                                        }
-                                    } catch (Exception exception) {
-                                        try {
-                                            if (finalProgressDialog != null)
-                                                finalProgressDialog.dismiss();
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                        }
-                                        exception.printStackTrace();
-                                    }
-                                }
-
-                                @Override
-                                public void failure(RetrofitError error) {
-                                    if (isPagination) {
-                                        isPagingApiInProgress = false;
-                                    }
-                                    relativeLayoutNoMenus.setVisibility(View.GONE);
-                                    Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
-                                    try {
-                                        if (finalProgressDialog != null)
-                                            finalProgressDialog.dismiss();
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                    swipeRefreshLayout.setRefreshing(false);
-                                    retryDialog(DialogErrorType.CONNECTION_LOST, latLng, loader, isPagination, scrollToTop);
-                                    if (isPagination && menusRestaurantAdapter != null) {
-                                        menusRestaurantAdapter.showProgressBar(false);
-                                    }
-                                    activity.getTopBar().setPBSearchVisibility(View.GONE);
-                                    refreshingAutoComplete = false;
-                                    recallSearch(searchTextCurr);
-                                }
-                            };
-
-                            if(searchOpened && !isPagination && !swipeRefreshLayout.isRefreshing()){
-                                activity.getTopBar().setPBSearchVisibility(View.VISIBLE);
-                            }
-                    if (searchOpened && searchText.length() > 2) {
-                        params.put(Constants.KEY_SEARCH_TEXT, searchText);
-                        refreshingAutoComplete = true;
-                        RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
-                    } else {
-                        refreshingAutoComplete = true;
-                        RestClient.getMenusApiService().nearbyRestaurants(params, callback);
-                    }
-
-                } else {
-                    retryDialog(DialogErrorType.NO_NET, latLng, loader, isPagination, scrollToTop);
+            HashMap<String, String> params = getMenusApiHashMap(latLng);
+            Callback<MenusResponse> callback = new Callback<MenusResponse>() {
+                @Override
+                public void success(final MenusResponse menusResponse, Response response) {
+                    lastTimeRefreshed = System.currentTimeMillis();
+                    DialogPopup.dismissLoadingDialog();
                     swipeRefreshLayout.setRefreshing(false);
-                    if (isPagination && menusRestaurantAdapter != null) {
-                        menusRestaurantAdapter.showProgressBar(false);
+                    activity.getTopBar().setPBSearchVisibility(View.GONE);
+                    isMenusApiInProgress = false;
+                    recallSearch(searchTextCurr);
+                    relativeLayoutNoMenus.setVisibility(View.GONE);
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    Log.i(TAG, "getAllProducts response = " + responseStr);
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        String message = menusResponse.getMessage();
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                            if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
+
+                                currentPageCount = 1;
+                                hasMorePages =  menusResponse.isPageLengthComplete();
+                                status.clear();
+                                status.addAll(menusResponse.getRecentOrdersPossibleStatus());
+
+                                //no category opened, no filters applied and no search ongoing
+                                if (activity.getCategoryIdOpened() < 0 && !activity.isFilterApplied() && !isSearchingCase(searchTextCurr)) {
+                                    if (menusResponse.getCategories().size() == 1) {
+                                        activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
+                                    }
+                                    activity.setMenusResponse(menusResponse);
+                                    deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
+                                }
+                                if(activity.getMenusResponse() == null){
+                                    activity.setMenusResponse(menusResponse);
+                                }
+
+                                if (activity.getMenusFilterFragment() != null) {
+                                    activity.getMenusFilterFragment().updateDataLists(menusResponse);
+                                }
+                                deliveryDisplayCategoriesView.setCategoryLabelIcon(activity.getCategoryIdOpened());
+                                showCategoriesDropDown(true, activity.getMenusResponse().getCategories().size());
+                                deliveryHomeAdapter.setList(menusResponse, false, hasMorePages);
+
+
+
+                                activity.setMenuRefreshLatLng(latLng);
+                                setUpServiceUnavailability(menusResponse);
+
+                                checkIciciPaymentStatusApi(activity);
+
+
+                                if (scrollToTop && linearLayoutManager != null) {
+                                    linearLayoutManager.scrollToPositionWithOffset(0, 0);
+                                }
+
+                            } else {
+                                DialogPopup.alertPopup(activity, "", message);
+                            }
+                        }
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        retryDialog(DialogErrorType.SERVER_ERROR, latLng, loader, false, scrollToTop);
                     }
                 }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                    relativeLayoutNoMenus.setVisibility(View.GONE);
+                    Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
+                    DialogPopup.dismissLoadingDialog();
+                    swipeRefreshLayout.setRefreshing(false);
+                    activity.getTopBar().setPBSearchVisibility(View.GONE);
+                    isMenusApiInProgress = false;
+                    retryDialog(DialogErrorType.CONNECTION_LOST, latLng, loader, false, scrollToTop);
+
+                }
+            };
+
+            if (searchOpened && !swipeRefreshLayout.isRefreshing()) {
+                activity.getTopBar().setPBSearchVisibility(View.VISIBLE);
             }
+
+
+            isMenusApiInProgress = true;
+            if (isSearchingCase(searchText)) {
+                params.put(Constants.KEY_SEARCH_TEXT, searchText);
+                RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
+            } else {
+                RestClient.getMenusApiService().nearbyRestaurants(params, callback);
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
             swipeRefreshLayout.setRefreshing(false);
-            refreshingAutoComplete = false;
-            recallSearch(searchTextCurr);
+            isMenusApiInProgress = false;
         }
+    }
+
+    private boolean serviceUnavailable;
+    private void setUpServiceUnavailability(MenusResponse menusResponse) {
+		serviceUnavailable = (menusResponse.getServiceUnavailable() == 1);
+        relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0 && menusResponse.getServiceUnavailable() == 1) ? View.VISIBLE : View.GONE);
+
+        if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
+            activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
+            activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
+            activity.llCheckoutBarSetVisibilityDirect(View.GONE);
+            if (searchOpened) {
+                toggleSearch(true);
+                activity.getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Utils.hideSoftKeyboard(activity, activity.getTopBar().etSearch);
+                    }
+                }, 100);
+            }
+            activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
+            recyclerViewRestaurant.setVisibility(View.GONE);
+            showCategoriesDropDown(false, 0);
+            activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
+        } else {
+            activity.getTopBar().getLlSearchCart().setVisibility(serviceUnavailable ? View.GONE : View.VISIBLE);
+            recyclerViewRestaurant.setVisibility(View.VISIBLE);
+            activity.getMenusCartSelectedLayout().checkForVisibility();
+        }
+        activity.setTitleAlignment(false);
+    }
+
+    @NonNull
+    private HashMap<String, String> getMenusApiHashMap(LatLng latLng) {
+        HashMap<String, String> params = new HashMap<>();
+
+        params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+        params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
+        params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
+        params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
+        params.put(Constants.INTERATED, "1");
+        params.put(Constants.PAGE_NO, String.valueOf(0));
+
+        if(activity.getCategoryIdOpened() > 0){
+            params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(activity.getCategoryIdOpened()));
+        }
+        //Sort Keys
+        if (activity.getSortBySelected() != null) {
+            JSONArray sortArray = new JSONArray();
+            sortArray.put(activity.getSortBySelected().getKey());
+            params.put(Constants.KEY_SORTING, sortArray.toString());
+
+        }
+        //Quick Filter Keys
+        if (activity.getFilterSelected() != null && activity.getFilterSelected().size() > 0) {
+            JSONArray filtersSelected = new JSONArray();
+            for (MenusResponse.KeyValuePair filter : activity.getFilterSelected()) {
+                filtersSelected.put(filter.getKey());
+            }
+            params.put(Constants.KEY_FILTERS, filtersSelected.toString());
+        }
+
+        //Cuisines List
+        if (activity.getCuisinesSelected() != null && activity.getCuisinesSelected().size() > 0) {
+            ArrayList<Integer> cusiinesSelectedId = new ArrayList<>();
+            for (FilterCuisine cuisine : activity.getCuisinesSelected()) {
+                cusiinesSelectedId.add(cuisine.getId());
+            }
+            params.put(Constants.KEY_CUISINE_SELECTED, cusiinesSelectedId.toString());
+        }
+
+        new HomeUtil().putDefaultParams(params);
+        return params;
+    }
+
+
+    public void fetchNextPage() {
+
+//        if(activity.getCategoryIdOpened() < 0){
+//            return;
+//        }
+
+        if (!MyApplication.getInstance().isOnline()) {
+            retryDialog(DialogErrorType.NO_NET, activity.getMenuRefreshLatLng(), false, true, false);
+            swipeRefreshLayout.setRefreshing(false);
+            return;
+        }
+
+        HashMap<String, String> params = getMenusApiHashMap(activity.getMenuRefreshLatLng());
+        params.put(Constants.PAGE_NO, String.valueOf(currentPageCount));
+        deliveryHomeAdapter.showPaginationProgressBar(true, true);
+        isPagingApiInProgress = true;
+        Callback<MenusResponse> callback = new Callback<MenusResponse>() {
+            @Override
+            public void success(MenusResponse menusResponse, Response response) {
+                isPagingApiInProgress = false;
+                activity.getTopBar().setPBSearchVisibility(View.GONE);
+                relativeLayoutNoMenus.setVisibility(View.GONE);
+
+
+                boolean isProgressBarRemoved = false;
+                String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                Log.i(TAG, "getAllProducts response = " + responseStr);
+                try {
+                    JSONObject jObj = new JSONObject(responseStr);
+                    String message = menusResponse.getMessage();
+                    if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                        if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
+
+                            //set Variables for pagination
+                            currentPageCount++;
+                            hasMorePages =  menusResponse.isPageLengthComplete();
+                            deliveryHomeAdapter.setList(menusResponse, true, hasMorePages);
+                            isProgressBarRemoved = true;//Set list removes progress bar to accumulate animation of both insert and delete in one go
+
+
+                        } else {
+                            DialogPopup.alertPopup(activity, "", message);
+                        }
+                    }
+                } catch (Exception exception) {
+                    exception.printStackTrace();
+                }
+                if(!isProgressBarRemoved){
+                    deliveryHomeAdapter.showPaginationProgressBar(false, true);
+
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                isPagingApiInProgress = false;
+                relativeLayoutNoMenus.setVisibility(View.GONE);
+                isMenusApiInProgress = false;
+                activity.getTopBar().setPBSearchVisibility(View.GONE);
+                deliveryHomeAdapter.showPaginationProgressBar(false, true);
+                retryDialog(DialogErrorType.CONNECTION_LOST, activity.getMenuRefreshLatLng(), false, true, false);
+
+            }
+        };
+
+        if (isSearchingCase(searchText)) {
+            params.put(Constants.KEY_SEARCH_TEXT, searchText);
+            RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
+        } else {
+            RestClient.getMenusApiService().nearbyRestaurants(params, callback);
+        }
+
+
     }
 
     private void retryDialog(DialogErrorType dialogErrorType, final LatLng latLng, final boolean loader, final boolean isPagination, final boolean scrollToTop) {
@@ -630,7 +701,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        getAllMenus(loader, latLng, isPagination, scrollToTop);
+                        if (isPagination) {
+                            fetchNextPage();
+                        } else {
+                            getAllMenus(loader, latLng, scrollToTop);
+
+                        }
                     }
 
                     @Override
@@ -641,7 +717,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     @Override
                     public void negativeClick(View view) {
                     }
-                },Data.getCurrentIciciUpiTransaction(activity.getAppType())==null);
+                }, Data.getCurrentIciciUpiTransaction(activity.getAppType()) == null);
     }
 
 
@@ -664,59 +740,58 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     private void showPopup() {
-        //123
         new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
             @Override
             public void onDismiss() {
-                //activity.orderComplete();
             }
         }).showNoDeliveryDialog();
 
     }
 
-    private ArrayList<MenusResponse.Vendor> previousVendors;
+    private List<Object> previousVendors;
     public void toggleSearch(boolean clearEt) {
         if (searchOpened) {
             searchOpened = false;
             activity.getTopBar().etSearch.setText("");
-            if(activity.getSearchedRestaurantIds()!=null)
-            activity.getSearchedRestaurantIds().clear();
-//            getAllMenus(true, activity.getSelectedLatLng(), false, true);
-            if(previousVendors != null){
-                vendors = previousVendors;
+            if (activity.getSearchedRestaurantIds() != null)
+                activity.getSearchedRestaurantIds().clear();
+            if(activity.getCategoryIdOpened() < 0) {
+                if (previousVendors != null) {
+                    deliveryHomeAdapter.setList(previousVendors);
+                }
+            } else {
+                getAllMenus(false, activity.getSelectedLatLng(), true);
             }
-            menusRestaurantAdapter.setList(vendors, menusRestaurantAdapter.getBannerInfos(),
-                    menusRestaurantAdapter.getStripInfo(), menusRestaurantAdapter.getShowBanner(), !hasMorePages);
 
-            //  activity.fragmentUISetup(this);
+
             if (keyboardLayoutListener.getKeyBoardState() == 1) {
                 activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
             }
             if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
-                //activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                 activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
             }
             activity.getTopBar().animateSearchBar(false);
+
         } else {
             searchOpened = true;
-            previousVendors = vendors;
-            menusRestaurantAdapter.setSearchApiHitOnce(false);
+            previousVendors = deliveryHomeAdapter.getDataToDisplay();
+
             if (clearEt) {
                 activity.getTopBar().etSearch.setText("");
             } else {
-                activity.getTopBar().etSearch.setText(menusRestaurantAdapter.getSearchText());
+                activity.getTopBar().etSearch.setText(searchText);
                 activity.getTopBar().etSearch.setSelection(activity.getTopBar().etSearch.getText().length());
             }
+
+
             activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
             activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
             activity.getTopBar().title.setVisibility(View.GONE);
             activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
-
             activity.getTopBar().setSearchVisibility(View.VISIBLE);
             activity.getTopBar().ivSearch.setVisibility(View.GONE);
             activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-
             activity.getTopBar().etSearch.requestFocus();
             Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
         }
@@ -726,29 +801,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return searchOpened;
     }
 
-    public MenusRestaurantAdapter getMenusRestaurantAdapter() {
-        return menusRestaurantAdapter;
-    }
-
-    public void applyFilter(boolean scrollToTop){
-//        menusRestaurantAdapter.applyFilter();
-
-        if(scrollToTop) {
-            getAllMenus(true, lastMenusLatlng, false, true);
+    public void applyFilter(boolean scrollToTop) {
+        if (scrollToTop) {
+            getAllMenus(true, activity.getMenuRefreshLatLng(), true);
         }
-
     }
 
-    public boolean filterApplied() {
-        return (activity.getCuisinesSelected().size() > 0
-                || activity.getMoSelected() != MenusFilterFragment.MinOrder.NONE
-                || activity.getDtSelected() != MenusFilterFragment.DeliveryTime.NONE
-                || activity.getSortBySelected() != MenusFilterFragment.SortType.NONE
-                || activity.getQuickFilterSelected().size() > 0);
-    }
 
     private static void checkIciciPaymentStatusApi(final FreshActivity activity) {
-        if(Data.getCurrentIciciUpiTransaction(activity.getAppType())!=null){
+        if (Data.getCurrentIciciUpiTransaction(activity.getAppType()) != null) {
             activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction(activity.getAppType()));
             ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, true, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
                 @Override
@@ -761,25 +822,132 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     private String searchText = "";
-    private boolean refreshingAutoComplete = false;
-    public void searchRestaurant(String s){
-        if(searchOpened) {
+    private boolean isMenusApiInProgress = false;
+
+    public void searchRestaurant(String s) {
+        if (searchOpened) {
             int oldLength = searchText.length();
             searchText = s;
             if (searchText.length() > 2) {
-                getAllMenus(false, activity.getSelectedLatLng(), false, true);
+                getAllMenus(false, activity.getSelectedLatLng(), true);
             } else {
                 if (oldLength > s.length() && oldLength >= 1 && s.length() == 0) {
-                    getAllMenus(false, activity.getSelectedLatLng(), false, true);
+                    getAllMenus(false, activity.getSelectedLatLng(), true);
                 }
             }
         }
     }
 
-    private void recallSearch(String previousSearchText){
+    private void recallSearch(String previousSearchText) {
         if (searchOpened && !searchText.trim().equalsIgnoreCase(previousSearchText)) {
-            getAllMenus(false, activity.getSelectedLatLng(), false, true);
+            getAllMenus(false, activity.getSelectedLatLng(), true);
         }
     }
 
+    @Override
+    public void onCategoryClick(MenusResponse.Category category) {
+        if(activity.getCategoryIdOpened() != category.getId()) {
+            switchCategory(category.getId(), false);
+        }
+    }
+
+    @Override
+    public void onDropDownToggle(boolean shown) {
+        try {
+            activity.getMenusCartSelectedLayout().disableView(!shown);
+            if(!isHidden()) {
+                activity.getFabViewTest().setRelativeLayoutFABTestVisibility(shown ? View.VISIBLE : View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getSearchText() {
+        return searchText;
+    }
+
+    public boolean isCategoryDropDownVisible() {
+        return deliveryDisplayCategoriesView!=null && deliveryDisplayCategoriesView.isDropDownVisible();
+    }
+
+    private void showCategoriesDropDown(boolean show, int categoriesCount){
+        RelativeLayout.LayoutParams paramsMain = (RelativeLayout.LayoutParams) rlMainContainer.getLayoutParams();
+        if(activity.getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER && show && categoriesCount > 0){
+            deliveryDisplayCategoriesView.setRootVisibility(View.VISIBLE);
+            paramsMain.setMargins(0, activity.getResources().getDimensionPixelSize(R.dimen.height_category_bar), 0, 0);
+            deliveryDisplayCategoriesView.setViewAccCategoriesCount(categoriesCount);
+        } else {
+            deliveryDisplayCategoriesView.setRootVisibility(View.GONE);
+            paramsMain.setMargins(0, 0, 0, 0);
+        }
+        rlMainContainer.setLayoutParams(paramsMain);
+    }
+
+    private void hitApiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone) {
+        try {
+            if(TextUtils.isEmpty(restaurantName)){
+                product.clicklabs.jugnoo.utils.Utils.showToast(activity, activity.getString(R.string.restaurant_name_is_neccessary));
+                return;
+            }
+            if (MyApplication.getInstance().isOnline()) {
+                DialogPopup.showLoadingDialog(activity, "");
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
+                params.put(Constants.KEY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
+                params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
+                params.put(Constants.INTERATED, "1");
+                params.put(Constants.KEY_RESTAURANT_NAME, restaurantName);
+                params.put(Constants.KEY_RESTAURANT_ADDRESS, locality);
+                params.put(Constants.KEY_RESTAURANT_PHONE, telephone);
+                if(categoryId > 0) {
+                    params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(categoryId));
+                }
+
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getMenusApiService().suggestRestaurant(params, new retrofit.Callback<SettleUserDebt>() {
+                    @Override
+                    public void success(SettleUserDebt productsResponse, Response response) {
+                        try {
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, productsResponse.getFlag(), productsResponse.getError(), productsResponse.getMessage())) {
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == productsResponse.getFlag()) {
+                                    DialogPopup.alertPopupWithListener(activity,
+                                            activity.getString(R.string.thanks_for_recommendation),
+                                            productsResponse.getMessage(),
+                                            activity.getString(R.string.ok),
+                                            null, false, true, true);
+                                    if(deliveryHomeAdapter!=null){
+                                        deliveryHomeAdapter.resetForm();
+
+                                    }
+                                } else {
+                                    DialogPopup.alertPopup(activity, "", productsResponse.getMessage());
+                                }
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e(TAG, "fetchRestaurantViaSearch error" + error.toString());
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isSearchingCase(String searchTextCurr){
+        return (searchOpened && searchTextCurr.length() > 2);
+    }
+
+	public boolean isServiceUnavailable() {
+		return serviceUnavailable;
+	}
 }

@@ -15,7 +15,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -30,7 +29,6 @@ import com.picker.image.model.ImageEntry;
 import com.picker.image.util.Picker;
 import com.sabkuchfresh.adapters.EditReviewImagesAdapter;
 import com.sabkuchfresh.analytics.GAAction;
-import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
@@ -102,6 +100,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     private String[] permissionsRequest;
     private int maxNoImages = 5;
     private static final int REQUEST_CODE_SELECT_IMAGES=99;
+    private boolean isKeyboardOpen = true;
 
     public static RestaurantAddReviewFragment newInstance(int restaurantId) {
         RestaurantAddReviewFragment fragment = new RestaurantAddReviewFragment();
@@ -136,10 +135,11 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
             e.printStackTrace();
         }
 
-        GAUtils.trackScreenView(MENUS+ADD_FEED);
+        GAUtils.trackScreenView(activity.getGaCategory()+ADD_FEED);
 
         etReviewMaxLength = getResources().getInteger(R.integer.edt_add_review_max_length);
         etFeedback = (EditText) rootView.findViewById(R.id.etFeedback);
+        etFeedback.setHint(Config.getLastOpenedClientId(activity).equals(Config.getMenusClientId())?R.string.what_you_love_about_restaurant:R.string.tell_us_about_exp);
         bSubmit = (Button) rootView.findViewById(R.id.btnSubmit);
         bSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,14 +167,16 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
         rlRoot.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(rlRoot, null, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
+                isKeyboardOpen= true;
             }
 
             @Override
             public void keyBoardClosed() {
+                isKeyboardOpen= false;
             }
         }));
 
-        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+//        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
 
 
@@ -549,14 +551,16 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
             if (!MyApplication.getInstance().isOnline())
                  return;
 
-            if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+            if (Config.getLastOpenedClientId(activity).equals(Config.getFreshClientId())) {
                 Data.getFreshData().setPendingFeedback(0);
-            } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())) {
+            } else if (Config.getLastOpenedClientId(activity).equals(Config.getMealsClientId())) {
                 Data.getMealsData().setPendingFeedback(0);
-            } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())) {
+            } else if (Config.getLastOpenedClientId(activity).equals(Config.getGroceryClientId())) {
                 Data.getGroceryData().setPendingFeedback(0);
-            } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
+            } else if (Config.getLastOpenedClientId(activity).equals(Config.getMenusClientId())) {
                 Data.getMenusData().setPendingFeedback(0);
+            } else if (Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId())) {
+                Data.getDeliveryCustomerData().setPendingFeedback(0);
             }
 
 
@@ -616,25 +620,25 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
                                 if(activity.getCurrentReview()==null){
                                     if (!TextUtils.isEmpty(reviewDesc)) {
-                                        GAUtils.event(GACategory.MENUS, GAAction.ADD_FEED , GAAction.TEXT + GAAction.ADDED);
+                                        GAUtils.event(activity.getGaCategory(), GAAction.ADD_FEED , GAAction.TEXT + GAAction.ADDED);
                                     }
 
                                     if(objectList!=null && objectList.size()>0){
-                                        GAUtils.event(GACategory.MENUS, GAAction.ADD_FEED , GAAction.PHOTO + GAAction.ADDED);
+                                        GAUtils.event(activity.getGaCategory(), GAAction.ADD_FEED , GAAction.PHOTO + GAAction.ADDED);
                                     }
 
                                     int score = Math.round(customRatingBar.getScore());
                                     if(score>=1)
                                     {
-                                        GAUtils.event(GACategory.MENUS, GAAction.ADD_FEED  + GAAction.RATING_ADDED, String.valueOf(score));
+                                        GAUtils.event(activity.getGaCategory(), GAAction.ADD_FEED  + GAAction.RATING_ADDED, String.valueOf(score));
 
                                     }
 
 
-                                        GAUtils.event(GACategory.MENUS, GAAction.ADD_FEED , GAAction.FEED + GAAction.ADDED);
+                                        GAUtils.event(activity.getGaCategory(), GAAction.ADD_FEED , GAAction.FEED + GAAction.ADDED);
 
                                 } else{
-                                    GAUtils.event(GACategory.MENUS, GAAction.ADD_FEED , GAAction.FEED + GAAction.EDITED);
+                                    GAUtils.event(activity.getGaCategory(), GAAction.ADD_FEED , GAAction.FEED + GAAction.EDITED);
 
                                 }
 
@@ -702,7 +706,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
     @Override
     public void onDestroyView() {
-        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+//        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onDestroyView();
         if(imageCompressionTask!=null && !imageCompressionTask.isCancelled()) {
             imageCompressionTask.cancel(true);
@@ -713,8 +717,12 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     }
 
 
+    public boolean isKeyboardOpen() {
+        return isKeyboardOpen;
 
+    }
 
-
-
+    public View getFocusEditText() {
+        return etFeedback;
+    }
 }

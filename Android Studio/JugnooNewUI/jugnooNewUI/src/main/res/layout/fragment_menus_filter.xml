@@ -52,14 +52,14 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_10"
-            android:background="@drawable/capsule_text_color_selector"
+            android:background="@drawable/capsule_white_grey_border_selector"
             android:gravity="center"
             android:paddingBottom="@dimen/dp_5"
             android:paddingLeft="@dimen/dp_15"
             android:paddingRight="@dimen/dp_15"
             android:paddingTop="@dimen/dp_5"
             android:text="@string/reset"
-            android:textColor="@color/white"
+            android:textColor="@color/text_color_selector"
             android:textSize="@dimen/sp_12"
             app:font="maven"
 
@@ -75,7 +75,7 @@
             android:layout_toRightOf="@+id/ivBack"
             android:background="@drawable/bg_menu_item_color_f7_r"
             android:gravity="center_vertical"
-            android:hint="@string/start_typing_a_cuisine"
+            android:hint="@string/search_3dot"
             android:inputType="text"
             android:maxLines="1"
             android:paddingBottom="@dimen/dp_9"
@@ -109,6 +109,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rlTopBar"
+        android:tag="@string/dont_touch_me"
         android:background="@color/menu_item_selector_color_F7"
         >
 
@@ -119,404 +120,93 @@
 
 
             <TextView
-                android:id="@+id/textViewQuickFilters"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30px"
-                android:layout_marginTop="30px"
+                android:layout_marginTop="@dimen/dp_7"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_20"
                 android:gravity="center_vertical"
                 android:text="@string/quick_filters"
                 android:textAllCaps="true"
-                android:textColor="@color/text_color_hint"
-                android:textSize="@dimen/text_size_24"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_12"
                 android:visibility="visible"
+                android:background="@color/white"
+                app:font="@string/maven"
                 />
 
-            <LinearLayout
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="30px"
-                android:layout_marginRight="30px"
-                android:layout_marginTop="10px"
-                android:background="@drawable/bg_white_r_b_new"
-                android:orientation="vertical"
-                >
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutOffersDiscount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_transparent_menu_item_selector">
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/stroke_light_grey_alpha"
+                />
 
 
-                    <TextView
-                        android:id="@+id/textViewOffersDiscount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="26px"
-                        android:layout_marginTop="26px"
-                        android:layout_toRightOf="@+id/imageViewOffersDiscount"
-                        android:gravity="center_vertical"
-                        android:text="@string/offers_discount"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_28"
-                        android:visibility="visible"
-                        />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvFilters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:splitMotionEvents="false"
+                android:background="@color/white"
+                android:paddingTop="@dimen/dp_4"
+                android:paddingBottom="@dimen/dp_4"
+                android:nestedScrollingEnabled="false"
+                />
 
 
-                    <ImageView
-                        android:id="@+id/imageViewOffersDiscount"
-                        android:layout_width="33px"
-                        android:layout_height="33px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="26px"
-                        android:layout_marginRight="26px"
-                        android:src="@drawable/check_box_unchecked"
-                        android:tag="mwar"
-                        />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:background="@color/stroke_light_grey_alpha"
-                    />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutFreeDelivery"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_transparent_menu_item_selector"
-                    >
-
-
-                    <TextView
-                        android:id="@+id/textViewFreeDelivery"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="26px"
-                        android:layout_marginTop="26px"
-                        android:layout_toRightOf="@+id/imageViewFreeDelivery"
-                        android:gravity="center_vertical"
-                        android:text="@string/free_delivery"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_28"
-                        android:visibility="visible"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewFreeDelivery"
-                        android:layout_width="33px"
-                        android:layout_height="33px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="26px"
-                        android:layout_marginRight="26px"
-                        android:src="@drawable/check_box_unchecked"
-                        android:tag="mwar"
-                        />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:background="@color/stroke_light_grey_alpha"
-                    />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutAcceptOnline"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_transparent_menu_item_selector">
-
-
-                    <TextView
-                        android:id="@+id/textViewAcceptOnline"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="26px"
-                        android:layout_marginTop="26px"
-                        android:layout_toRightOf="@+id/imageViewAcceptOnline"
-                        android:gravity="center_vertical"
-                        android:text="@string/accepts_online_payment"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_28"
-                        android:visibility="visible"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewAcceptOnline"
-                        android:layout_width="33px"
-                        android:layout_height="33px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="26px"
-                        android:layout_marginRight="26px"
-                        android:src="@drawable/check_box_unchecked"
-                        android:tag="mwar"
-                        />
-
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:background="@color/stroke_light_grey_alpha"
-                    />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutPureVeg"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_transparent_menu_item_selector"
-                    >
-
-
-                    <TextView
-                        android:id="@+id/textViewPureVeg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="26px"
-                        android:layout_marginTop="26px"
-                        android:layout_toRightOf="@+id/imageViewPureVeg"
-                        android:gravity="center_vertical"
-                        android:text="@string/pure_veg"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_28"
-                        android:visibility="visible"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewPureVeg"
-                        android:layout_width="33px"
-                        android:layout_height="33px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="26px"
-                        android:layout_marginRight="26px"
-                        android:src="@drawable/check_box_unchecked"
-                        android:tag="mwar"
-                        />
-
-                </RelativeLayout>
-
-            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_4"
+                android:background="@drawable/shadow_down_new"
+                android:alpha="0.6"
+                />
 
             <TextView
-                android:id="@+id/textViewSortBy"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30px"
-                android:layout_marginTop="30px"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingBottom="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_20"
                 android:gravity="center_vertical"
                 android:text="@string/sort_by"
                 android:textAllCaps="true"
-                android:textColor="@color/text_color_hint"
-                android:textSize="@dimen/text_size_24"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_12"
                 android:visibility="visible"
+                android:background="@color/white"
+                app:font="@string/maven"
                 />
-
-
-            <LinearLayout
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="30px"
-                android:layout_marginRight="30px"
-                android:layout_marginTop="10px"
-                android:background="@drawable/bg_white_r_b_new"
-                android:orientation="vertical"
-                >
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutDeliveryTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_transparent_menu_item_selector"
-                    >
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="26px"
-                        android:layout_marginTop="26px"
-                        android:layout_toRightOf="@+id/imageViewRadioDeliveryTime"
-                        android:gravity="center_vertical"
-                        android:text="@string/delivery_time_wo_colon"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_28"
-                        android:visibility="visible"
-                        app:font="maven"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewRadioDeliveryTime"
-                        android:layout_width="33px"
-                        android:layout_height="33px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="26px"
-                        android:layout_marginRight="26px"
-                        android:src="@drawable/ic_radio_button_normal"
-                        />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:background="@color/stroke_light_grey_alpha"
-                    />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutPopularity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_transparent_menu_item_selector">
-
-
-                    <TextView
-                        android:id="@+id/textViewPopularity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="26px"
-                        android:layout_marginTop="26px"
-                        android:layout_toRightOf="@+id/imageViewRadioPopularity"
-                        android:gravity="center_vertical"
-                        android:text="@string/popularity"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_28"
-                        android:visibility="visible"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewRadioPopularity"
-                        android:layout_width="33px"
-                        android:layout_height="33px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="26px"
-                        android:layout_marginRight="26px"
-                        android:src="@drawable/ic_radio_button_normal"
-                        android:tag="mwar"
-                        />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:background="@color/stroke_light_grey_alpha"
-                    />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_transparent_menu_item_selector"
-                    >
-
-
-                    <TextView
-                        android:id="@+id/textViewPrice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="26px"
-                        android:layout_marginTop="26px"
-                        android:layout_toRightOf="@+id/imageViewRadioPrice"
-                        android:gravity="center_vertical"
-                        android:text="@string/price"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_28"
-                        android:visibility="visible"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewRadioPrice"
-                        android:layout_width="33px"
-                        android:layout_height="33px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="26px"
-                        android:layout_marginRight="26px"
-                        android:src="@drawable/ic_radio_button_normal"
-                        />
-
-                </RelativeLayout>
-
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:background="@color/stroke_light_grey_alpha"
-                    />
-
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutDistance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_transparent_menu_item_selector">
-
-
-                    <TextView
-                        android:id="@+id/textViewDistance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginBottom="26px"
-                        android:layout_marginTop="26px"
-                        android:layout_toRightOf="@+id/imageViewRadioDistance"
-                        android:gravity="center_vertical"
-                        android:text="@string/distance"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_28"
-                        android:visibility="visible"
-                        />
-
-
-                    <ImageView
-                        android:id="@+id/imageViewRadioDistance"
-                        android:layout_width="33px"
-                        android:layout_height="33px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="26px"
-                        android:layout_marginRight="26px"
-                        android:src="@drawable/ic_radio_button_normal"
-                        />
-
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/textViewCuisines"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30px"
-                android:layout_marginTop="30px"
-                android:gravity="center_vertical"
-                android:text="@string/cuisines"
-                android:textAllCaps="true"
-                android:textColor="@color/text_color_hint"
-                android:textSize="@dimen/text_size_24"
-                android:visibility="visible"
+                android:layout_height="@dimen/dp_1"
+                android:background="@color/stroke_light_grey_alpha"
                 />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvSort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:splitMotionEvents="false"
+                android:background="@color/white"
+                android:paddingTop="@dimen/dp_4"
+                android:paddingBottom="@dimen/dp_4"
+                android:nestedScrollingEnabled="false"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_4"
+                android:background="@drawable/shadow_down_new"
+                android:alpha="0.6"
+                />
+
 
             <RelativeLayout
-                android:id="@+id/cardViewCuisines"
+                android:id="@+id/rlCuisines"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="30px"
-                android:layout_marginRight="30px"
-                android:layout_marginTop="10px"
-                android:background="@drawable/bg_white_rbn_menu_item_selector"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
                 >
 
                 <TextView
@@ -524,14 +214,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginBottom="26px"
-                    android:layout_marginLeft="32px"
-                    android:layout_marginTop="26px"
+                    android:paddingTop="@dimen/dp_10"
+                    android:paddingBottom="@dimen/dp_10"
+                    android:paddingLeft="@dimen/dp_20"
                     android:gravity="center_vertical"
-                    android:text="@string/select_cuisines"
+                    android:text="@string/select_tags"
                     android:textColor="@color/text_color_selector"
-                    android:textSize="@dimen/text_size_28"
+                    android:textSize="@dimen/sp_14"
                     android:visibility="visible"
+                    app:font="@string/maven"
                     />
 
 
@@ -540,8 +231,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10px"
-                    android:layout_marginRight="10px"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:layout_marginRight="@dimen/dp_5"
                     android:layout_toLeftOf="@+id/imageViewCuisinesForward"
                     android:layout_toRightOf="@+id/textViewSelectCuisines"
                     android:ellipsize="end"
@@ -549,285 +240,30 @@
                     android:maxLines="2"
                     android:text="@string/select_cuisines"
                     android:textColor="@color/green_rupee"
-                    android:textSize="@dimen/text_size_20"
+                    android:textSize="@dimen/sp_10"
                     android:visibility="visible"
+                    app:font="@string/maven"
                     />
 
                 <ImageView
                     android:id="@+id/imageViewCuisinesForward"
-                    android:layout_width="21px"
-                    android:layout_height="37px"
+                    android:layout_width="@dimen/dp_11"
+                    android:layout_height="@dimen/dp_18"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="26px"
-                    android:padding="4px"
-                    android:src="@drawable/ic_arrow_orange"
+                    android:layout_marginRight="@dimen/dp_13"
+                    android:padding="@dimen/dp_2"
+                    android:src="@drawable/ic_arrow_grey"
                     android:tag="mwar"/>
 
 
             </RelativeLayout>
-
-
-            <TextView
-                android:id="@+id/textViewMinimumOrder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30px"
-                android:layout_marginTop="30px"
-                android:gravity="center_vertical"
-                android:text="@string/minimum_order_amount"
-                android:textAllCaps="true"
-                android:textColor="@color/text_color_hint"
-                android:textSize="@dimen/text_size_24"
-                android:visibility="visible"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_4"
+                android:background="@drawable/shadow_down_new"
+                android:alpha="0.6"
                 />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginLeft="30px"
-                android:layout_marginRight="30px"
-                android:layout_marginTop="10px"
-                android:layout_marginBottom="30px"
-                android:background="@drawable/bg_white_r_b_new"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                >
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutMO150"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_transparent_menu_item_selector">
-
-                    <TextView
-                        android:id="@+id/textViewMO150"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:paddingBottom="30px"
-                        android:paddingTop="30px"
-                        android:text="@string/less_than_150"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_26"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewMO150"
-                        android:layout_width="match_parent"
-                        android:layout_height="8px"
-                        android:layout_alignParentBottom="true"
-                        android:background="@drawable/bg_rectangle_gradient_normal"
-                        />
-
-                </RelativeLayout>
-
-
-                <View
-                    android:layout_width="2px"
-                    android:layout_height="match_parent"
-                    android:background="@color/stroke_light_grey_alpha"
-                    />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutMO250"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_transparent_menu_item_selector">
-
-                    <TextView
-                        android:id="@+id/textViewMO250"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:paddingBottom="30px"
-                        android:paddingTop="30px"
-                        android:text="@string/less_than_250"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_26"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewMO250"
-                        android:layout_width="match_parent"
-                        android:layout_height="8px"
-                        android:layout_alignParentBottom="true"
-                        android:background="@drawable/bg_rectangle_gradient_normal"
-                        />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="2px"
-                    android:layout_height="match_parent"
-                    android:background="@color/stroke_light_grey_alpha"
-                    />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutMO500"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_transparent_menu_item_selector">
-
-                    <TextView
-                        android:id="@+id/textViewMO500"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:paddingBottom="30px"
-                        android:paddingTop="30px"
-                        android:text="@string/less_than_500"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_26"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewMO500"
-                        android:layout_width="match_parent"
-                        android:layout_height="8px"
-                        android:layout_alignParentBottom="true"
-                        android:background="@drawable/bg_rectangle_gradient_normal"
-                        />
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/textViewDeliveryTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30px"
-                android:layout_marginTop="30px"
-                android:gravity="center_vertical"
-                android:text="@string/delivery_time_wo_colon"
-                android:textAllCaps="true"
-                android:textColor="@color/text_color_hint"
-                android:textSize="@dimen/text_size_24"
-                android:visibility="gone"
-                />
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginBottom="30px"
-                android:layout_marginLeft="30px"
-                android:layout_marginRight="30px"
-                android:layout_marginTop="10px"
-                android:background="@drawable/bg_white_r_b_new"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                >
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutDT30"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_transparent_menu_item_selector">
-
-                    <TextView
-                        android:id="@+id/textViewDT30"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:paddingBottom="30px"
-                        android:paddingTop="30px"
-                        android:text="@string/min_30"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_26"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewDT30"
-                        android:layout_width="match_parent"
-                        android:layout_height="8px"
-                        android:layout_alignParentBottom="true"
-                        android:background="@drawable/bg_rectangle_gradient_normal"
-                        />
-
-                </RelativeLayout>
-
-
-                <View
-                    android:layout_width="2px"
-                    android:layout_height="match_parent"
-                    android:background="@color/stroke_light_grey_alpha"
-                    />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutDT45"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_transparent_menu_item_selector">
-
-                    <TextView
-                        android:id="@+id/textViewDT45"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:paddingBottom="30px"
-                        android:paddingTop="30px"
-                        android:text="@string/min_45"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_26"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewDT45"
-                        android:layout_width="match_parent"
-                        android:layout_height="8px"
-                        android:layout_alignParentBottom="true"
-                        android:background="@drawable/bg_rectangle_gradient_normal"
-                        />
-
-                </RelativeLayout>
-
-                <View
-                    android:layout_width="2px"
-                    android:layout_height="match_parent"
-                    android:background="@color/stroke_light_grey_alpha"
-                    />
-
-                <RelativeLayout
-                    android:id="@+id/relativeLayoutDT60"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_transparent_menu_item_selector">
-
-                    <TextView
-                        android:id="@+id/textViewDT60"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:paddingBottom="30px"
-                        android:paddingTop="30px"
-                        android:text="@string/min_60"
-                        android:textColor="@color/text_color_selector"
-                        android:textSize="@dimen/text_size_26"
-                        />
-
-                    <ImageView
-                        android:id="@+id/imageViewDT60"
-                        android:layout_width="match_parent"
-                        android:layout_height="8px"
-                        android:layout_alignParentBottom="true"
-                        android:background="@drawable/bg_rectangle_gradient_normal"
-                        />
-
-                </RelativeLayout>
-
-            </LinearLayout>
 
 
             <Button
@@ -856,40 +292,47 @@
         android:tag="@string/dont_touch_me"
         android:visibility="gone"
         >
-
         <TextView
-            android:layout_width="wrap_content"
+
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_15"
-            android:layout_marginTop="@dimen/dp_15"
+            android:paddingTop="@dimen/dp_12"
+            android:paddingBottom="@dimen/dp_12"
+            android:paddingLeft="@dimen/dp_20"
             android:gravity="center_vertical"
-            android:text="@string/cuisines"
+            android:text="@string/tags"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
             android:textSize="@dimen/sp_12"
             app:font="maven"
+            android:background="@color/white"
+            android:layout_marginTop="@dimen/dp_7"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:background="@color/stroke_light_grey_alpha"
             />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewCuisinesList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="-1dp"
-            android:layout_marginLeft="@dimen/dp_12"
-            android:layout_marginRight="@dimen/dp_12"
-            android:layout_marginTop="@dimen/dp_9"
-            android:background="@drawable/bg_white_r_b_new"
             android:fadeScrollbars="true"
             android:scrollbars="vertical"
-            android:splitMotionEvents="false"/>
+            android:splitMotionEvents="false"
+            android:background="@color/white"
+            android:paddingTop="@dimen/dp_4"
+            android:paddingBottom="@dimen/dp_4"
+            />
     </LinearLayout>
-
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/shadow_new_height"
-        android:layout_below="@+id/rlTopBar"
+        android:layout_height="@dimen/dp_7"
         android:background="@drawable/shadow_down_new"
+        android:layout_below="@+id/rlTopBar"
         />
 
 </RelativeLayout>

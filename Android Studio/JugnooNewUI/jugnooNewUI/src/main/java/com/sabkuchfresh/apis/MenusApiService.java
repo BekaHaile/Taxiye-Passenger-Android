@@ -1,6 +1,7 @@
 package com.sabkuchfresh.apis;
 
 import com.jugnoo.pay.models.SendMoneyCallbackResponse;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.retrofit.model.OrderCancelReasonsResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
@@ -127,5 +128,10 @@ public interface MenusApiService {
 	@POST("/fetch_restaurant_via_search_v2")
 	void fetchRestaurantViaSearchV2(@FieldMap Map<String, String> params,
 						   Callback<MenusResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/user_click_events")
+	void userClickEvents(@FieldMap Map<String, String> params,
+							   Callback<FeedCommonResponse> callback);
 
 }

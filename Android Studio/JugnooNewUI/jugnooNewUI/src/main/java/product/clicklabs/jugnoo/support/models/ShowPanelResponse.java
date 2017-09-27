@@ -25,6 +25,9 @@ public class ShowPanelResponse {
 	@SerializedName("menus_data")
 	@Expose
 	private HistoryResponse.Datum menusDatum;
+	@SerializedName("delivery_customer_data")
+	@Expose
+	private HistoryResponse.Datum deliveryCustomerDatum;
 
 
 	public SupportData getSupportData() {
@@ -49,6 +52,10 @@ public class ShowPanelResponse {
 
 	public void setMenusDatum(HistoryResponse.Datum menusDatum) {
 		this.menusDatum = menusDatum;
+	}
+
+	public HistoryResponse.Datum getDeliveryCustomerDatum() {
+		return deliveryCustomerDatum;
 	}
 
 

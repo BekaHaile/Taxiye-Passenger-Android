@@ -93,7 +93,7 @@ public class ApiCancelOrder {
 				};
 
 				new HomeUtil().putDefaultParams(params);
-				if (productType == ProductType.MENUS.getOrdinal()) {
+				if (productType == ProductType.MENUS.getOrdinal() || productType == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
 					RestClient.getMenusApiService().cancelOrder(params, callback);
 				} else {
 					RestClient.getFreshApiService().cancelOrder(params, callback);

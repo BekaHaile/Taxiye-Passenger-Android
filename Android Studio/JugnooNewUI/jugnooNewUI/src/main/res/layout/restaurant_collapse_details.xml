@@ -20,7 +20,8 @@
         android:id="@+id/shadow_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black_70"/>
+        android:background="@color/black_50"
+        />
 
     <ImageView
         android:id="@+id/iv_rest_original_image"
@@ -46,7 +47,7 @@
         android:text=""
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_22"
-        android:visibility="visible"
+        android:visibility="gone"
         app:font="maven"
         />
 
@@ -62,7 +63,9 @@
         android:text=""
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_36"
-        app:font="avenir"/>
+        app:font="avenir"
+        android:visibility="gone"
+        />
 
 
     <LinearLayout
@@ -73,6 +76,7 @@
         android:layout_alignParentRight="true"
         android:gravity="right|bottom"
         android:orientation="vertical"
+        android:visibility="gone"
         >
 
         <TextView

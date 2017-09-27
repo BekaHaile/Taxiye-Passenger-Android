@@ -16,6 +16,7 @@ public interface Events {
     String FRESH_CHARGED = "Fresh - Charged";
     String GROCERY_ADDED_TO_CART = "Grocery - Added to Cart";
     String MENUS_ADDED_TO_CART = "Menus - Added to Cart";
+    String DELIVERY_CUSTOMER_ADDED_TO_CART = "Delivery Customer - Added to Cart";
 
     String PROMO_CODE = "Promo Code";
     String CHANNEL = "Channel";
@@ -59,6 +60,7 @@ public interface Events {
     String IS_PUSH_FRESH_ENABLED = "is_push_fresh_enabled";
     String IS_PUSH_GROCERY_ENABLED = "is_push_grocery_enabled";
     String IS_PUSH_MENUS_ENABLED = "is_push_menus_enabled";
+    String IS_PUSH_DELIVERY_CUSTOMER_ENABLED = "is_push_delivery_customer_enabled";
     String IS_PUSH_PAY_ENABLED = "is_push_pay_enabled";
     String IS_PUSH_FEED_ENABLED = "is_push_feed_enabled";
 

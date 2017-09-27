@@ -275,6 +275,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             else if(AppLinkIndex.MENUS_PAGE.getOrdinal() == deepInt){
                 MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), new LatLng(Data.latitude, Data.longitude), true);
             }
+            else if(AppLinkIndex.DELIVERY_CUSTOMER_PAGE.getOrdinal() == deepInt){
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getDeliveryCustomerClientId(), new LatLng(Data.latitude, Data.longitude), true);
+            }
             else if(AppLinkIndex.PAY_PAGE.getOrdinal() == deepInt){
                 MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getPayClientId(), new LatLng(Data.latitude, Data.longitude), true);
             }

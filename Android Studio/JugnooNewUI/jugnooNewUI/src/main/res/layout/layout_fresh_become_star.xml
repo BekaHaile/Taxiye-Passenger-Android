@@ -15,13 +15,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!--<ImageView-->
+            <!--android:id="@+id/ivStar"-->
+            <!--android:layout_width="@dimen/px_80"-->
+            <!--android:layout_height="@dimen/px_80"-->
+            <!--android:layout_marginLeft="@dimen/px_25"-->
+            <!--android:layout_marginTop="@dimen/px_22"-->
+            <!--android:src="@drawable/star" />-->
+
         <ImageView
             android:id="@+id/ivStar"
-            android:layout_width="@dimen/px_80"
-            android:layout_height="@dimen/px_80"
-            android:layout_marginLeft="@dimen/px_25"
-            android:layout_marginTop="@dimen/px_22"
-            android:src="@drawable/star" />
+            android:layout_width="110px"
+            android:layout_height="110px"
+            android:src="@drawable/star"
+            />
 
         <LinearLayout
             android:id="@+id/llStarContent"

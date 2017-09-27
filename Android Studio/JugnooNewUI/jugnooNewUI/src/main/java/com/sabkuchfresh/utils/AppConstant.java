@@ -23,6 +23,7 @@ public class AppConstant {
         int PAY = 5;
         int FEED =  6;
         int PROS =  7;
+        int DELIVERY_CUSTOMER =  8;
     }
 
     public static interface EventTracker {

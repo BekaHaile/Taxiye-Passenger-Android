@@ -136,7 +136,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
         mBus = (activity).getBus();
         Data.AppType = AppConstant.ApplicationType.FRESH;
         Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
-        activity.setSwipeAvailable(true);
 
 		try {
 			if(!TextUtils.isEmpty(Data.userData.getUserId())) {
@@ -297,7 +296,6 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
     @Override
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
-        activity.setSwipeAvailable(true);
 		if(!hidden){
 			freshCategoryFragmentsAdapter.notifyDataSetChanged();
 			tabs.notifyDataSetChanged();

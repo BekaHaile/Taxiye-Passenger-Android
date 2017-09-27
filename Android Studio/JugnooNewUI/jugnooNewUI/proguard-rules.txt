@@ -177,5 +177,5 @@
  -keep public class org.jsoup.** {
  	public *;
  }
-
+-dontwarn io.branch.**
 

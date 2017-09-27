@@ -52,6 +52,8 @@ public enum AppLinkIndex {
 
 	PROS_PAGE(24), // open Pros Screen
 
+	DELIVERY_CUSTOMER_PAGE(25), // open Delivery Customer Screen
+
 	;
 
 	private int ordinal;

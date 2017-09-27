@@ -371,6 +371,8 @@ public class HomeUtil {
 			return ProductType.GROCERY;
 		} else if(productType == ProductType.MENUS.getOrdinal()){
 			return ProductType.MENUS;
+		} else if(productType == ProductType.DELIVERY_CUSTOMER.getOrdinal()){
+			return ProductType.DELIVERY_CUSTOMER;
 		} else if(productType == ProductType.PAY.getOrdinal()){
 			return ProductType.PAY;
 		} else if(productType == ProductType.FEED.getOrdinal()){
@@ -387,6 +389,8 @@ public class HomeUtil {
 			try {
 				if(productType == ProductType.MENUS.getOrdinal()){
 					FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
+				} else if(productType == ProductType.DELIVERY_CUSTOMER.getOrdinal()){
+					FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_DELIVERY_CUSTOMER_DELIVERY_LATE());
 				} else {
 					FuguConfig.getInstance().showConversations(activity,activity.getString(R.string.fugu_support_title));
 				}
@@ -407,11 +411,11 @@ public class HomeUtil {
 				new TransactionUtils().openItemInFragment(activity, container, -1, "",
 						activity.getResources().getString(R.string.support_main_title), item, "",
 						orderId, deliveryDate,
-						Config.getSupportNumber(activity), ProductType.MENUS.getOrdinal());
+						Config.getSupportNumber(activity), productType);
 			} else {
 				new TransactionUtils().openRideIssuesFragment(activity, container,
 						-1, orderId, null, null, 0, false, 0, null,
-						supportCategory, ProductType.MENUS.getOrdinal(), deliveryDate);
+						supportCategory, productType, deliveryDate);
 			}
 		}
 	}

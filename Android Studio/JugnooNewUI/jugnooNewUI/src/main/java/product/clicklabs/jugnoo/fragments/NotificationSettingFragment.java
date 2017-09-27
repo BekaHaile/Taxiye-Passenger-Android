@@ -268,6 +268,8 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
             profileUpdate.put(Events.IS_PUSH_GROCERY_ENABLED, notificationPrefData.getStatus());
         } else if(notificationPrefData.getName().toLowerCase().contains(Constants.KEY_MENUS)){
             profileUpdate.put(Events.IS_PUSH_MENUS_ENABLED, notificationPrefData.getStatus());
+        } else if(notificationPrefData.getName().toLowerCase().contains(Constants.KEY_DELIVERY_CUSTOMER)){
+            profileUpdate.put(Events.IS_PUSH_DELIVERY_CUSTOMER_ENABLED, notificationPrefData.getStatus());
         } else if(notificationPrefData.getName().toLowerCase().contains(Constants.KEY_PAY)){
             profileUpdate.put(Events.IS_PUSH_PAY_ENABLED, notificationPrefData.getStatus());
         } else if(notificationPrefData.getName().toLowerCase().contains(Constants.KEY_FEED)){

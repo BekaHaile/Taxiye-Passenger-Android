@@ -436,6 +436,7 @@ public interface Constants {
     String KEY_MEALS = "meals";
     String KEY_GROCERY = "grocery";
     String KEY_MENUS = "menus";
+    String KEY_DELIVERY_CUSTOMER = "delivery_customer";
     String KEY_PAY = "pay";
     String KEY_FEED = "feed";
     String KEY_PROS = "pros";
@@ -461,6 +462,7 @@ public interface Constants {
     String KEY_FEED_ENABLED = "feed_enabled";
     String KEY_PROS_ENABLED = "pros_enabled";
     String KEY_DELIVERY_ENABLED = "delivery_enabled";
+    String KEY_DELIVERY_CUSTOMER_ENABLED = "delivery_customer_enabled";
     String KEY_ORDER_HISTORY = "order_history";
     String INTENT_KEY_FROM_BAD = "FromBad";
     String KEY_MASTER_COUPON = "master_coupon";
@@ -549,6 +551,7 @@ public interface Constants {
     String SP_MEALS_CHECKOUT_SAVE_DATA = "sp_meals_checkout_save_data";
     String SP_GROCERY_CHECKOUT_SAVE_DATA = "sp_grocery_checkout_save_data";
     String SP_MENUS_CHECKOUT_SAVE_DATA = "sp_menus_checkout_save_data";
+    String SP_DELIVERY_CUSTOMER_CHECKOUT_SAVE_DATA = "sp_menus_checkout_save_data";
 
     String KEY_VALID_STOCK_COUNT = "valid_stock_count";
     String INTENT_ACTION_ORDER_STATUS_UPDATE = "INTENT_ACTION_ORDER_STATUS_UPDATE";
@@ -601,11 +604,13 @@ public interface Constants {
     String KEY_SUPER_CATEGORY_ID = "super_category_id";
     String KEY_SUPER_CATEGORY = "super_category";
     String KEY_SEARCH_STRING = "search_string";
-    String SP_MENUS_FILTER_SORT_BY = "sp_menus_filter_sort_by";
-    String SP_MENUS_FILTER_MIN_ORDER = "sp_menus_filter_min_order";
     String SP_MENUS_FILTER_DELIVERY_TIME = "sp_menus_filter_delivery_time";
+    String SP_MENUS_FILTER_SORT_BY_OBJ = "sp_menus_filter_sort_by_obj";
     String SP_MENUS_FILTER_CUISINES_GSON = "sp_menus_filter_cuisines_gson";
-    String SP_MENUS_FILTER_QUICK = "sp_menus_filter_quick";
+    String SP_MENUS_FILTER_QUICK_OBJ = "sp_menus_filter_quick_obj";
+    String SP_DELIVERY_CUSTOMER_FILTER_SORT_BY_OBJ = "sp_delivery_customer_filter_sort_by_obj";
+    String SP_DELIVERY_CUSTOMER_FILTER_CUISINES_GSON = "sp_delivery_customer_filter_cuisines_gson";
+    String SP_DELIVERY_CUSTOMER_FILTER_QUICK_OBJ = "sp_delivery_customer_filter_quick_obj";
     String KEY_EVENT = "event";
     String KEY_REFERRAL_POPUP_CONTENT = "referral_popup_content";
     String SP_FRESH_CART_ADDRESS = "sp_fresh_cart_address";
@@ -711,6 +716,7 @@ public interface Constants {
     String KEY_OPEN_LIVE_TRACKING = "open_live_tracking";
     String SP_ASKLOCAL_LAST_ADDRESS_OBJ = "sp_asklocal_last_address_obj";
     String SP_MENUS_CART_ADDRESS = "sp_menus_cart_address";
+    String SP_DELIVERY_CUSTOMER_CART_ADDRESS = "sp_delivery_customer_cart_address";
     String SP_CACHE_CLEAR_TIME = "sp_cache_clear_time";
     String KEY_OUT_OF_RANGE = "out_of_range";
     String KEY_IS_DELIVERED = "is_delivered";
@@ -722,7 +728,8 @@ public interface Constants {
     String PLACE_ORDER_DATA = "place_order_response";
     String ICICI_ORDER_STATUS = "order_status";
     int NO_VALID_STATUS = -1001;
-    String IS_MENUS = "is_menus";
+    String IS_MENUS_OR_DELIVERY = "is_menus";
+    String IS_DELIVERY_CUSTOMER = "is_delivery_customer";
     String KEY_VENDOR = "vendor";
 
     String SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK = "sp_restaurant_feedback_id_to_deep_link";
@@ -766,6 +773,7 @@ public interface Constants {
     String ORDER_STATUS_LAT_LNG = "order_status_lat_lng";
     String ORDER_STATUS_ORDER_ID = "order_status_id";
     String CART_STATUS_REORDER_ID = "cart_status_reorder_id";
+    String CART_STATUS_REORDER_ID_CUSTOMER_DELIVERY = "cart_status_reorder_id_customer_delivery";
     String KEY_REODER_ID = "prev_order_id";
     String ORDER_STATUS_ADDRESS = "order_status_address";
     String SHOULD_REFRESH_ADDRESS = "should_refresh_address";
@@ -778,4 +786,13 @@ public interface Constants {
     String KEY_RIDES = "rides";
     String KEY_FATAFAT = "fatafat";
     String KEY_ASKLOCAL = "asklocal";
+    String KEY_LIMIT = "limit";
+    String KEY_EVENT_TYPE = "event_type";
+    String KEY_USER_CLICK = "user_click";
+    String KEY_EVENT_STATUS = "event_status";
+    String KEY_CALL_MODE = "call_mode";
+    String KEY_CHAT_MODE = "chat_mode";
+    String KEY_ORDER_MODE = "order_mode";
+    String KEY_MERCHANT_CATEGORY_ID = "merchant_category_id";
+    String KEY_NOT_SEND_MENU = "not_send_menu";
 }

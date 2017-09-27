@@ -59,9 +59,21 @@ public class PromCouponResponse {
     @SerializedName("menus_promotions")
     @Expose
     private List<PromotionInfo> menusPromotions = new ArrayList<>();
+
+    public List<PromotionInfo> getDeliveryCustomerPromotions() {
+        return deliveryCustomerPromotions;
+    }
+
+    @SerializedName("delivery_customer_promotions")
+    @Expose
+
+    private List<PromotionInfo> deliveryCustomerPromotions = new ArrayList<>();
     @SerializedName("menus_coupons")
     @Expose
     private List<CouponInfo> menusCoupons = new ArrayList<>();
+    @SerializedName("delivery_customer_coupons")
+    @Expose
+    private List<CouponInfo> deliveryCustomerCoupons = new ArrayList<>();
     @SerializedName("pay_promotions")
     @Expose
     private List<PromotionInfo> payPromotions = new ArrayList<>();
@@ -242,4 +254,9 @@ public class PromCouponResponse {
     public void setPayCoupons(List<CouponInfo> payCoupons) {
         this.payCoupons = payCoupons;
     }
+
+    public List<CouponInfo> getDeliveryCustomerCoupons() {
+        return deliveryCustomerCoupons;
+    }
+
 }

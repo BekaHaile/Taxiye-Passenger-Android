@@ -46,6 +46,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
 import com.sabkuchfresh.analytics.GAAction;
@@ -918,6 +919,13 @@ public class Utils implements GAAction, GACategory{
 		}
 		return decimalFormat2Decimal;
 	}
+	private static DecimalFormat decimalFormat1Decimal;
+	public static DecimalFormat getDecimalFormat1Decimal(){
+		if(decimalFormat1Decimal == null){
+			decimalFormat1Decimal = new DecimalFormat("0.0");
+		}
+		return decimalFormat1Decimal;
+	}
 
 	public static String getDoubleTwoDigits(Double amount){
 		String finalVal;
@@ -1009,6 +1017,17 @@ public class Utils implements GAAction, GACategory{
 			return ret;
 		}
 
+	}
+
+	public static void openMapsDirections(Context context, LatLng source, LatLng dest){
+		try {
+			Intent intent = new Intent(Intent.ACTION_VIEW,
+					Uri.parse("http://maps.google.com/maps?saddr="+source.latitude+","+source.longitude+"&daddr="+dest.latitude+","+dest.longitude));
+			context.startActivity(intent);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Utils.showToast(context, "Could not open directions");
+		}
 	}
 }
 

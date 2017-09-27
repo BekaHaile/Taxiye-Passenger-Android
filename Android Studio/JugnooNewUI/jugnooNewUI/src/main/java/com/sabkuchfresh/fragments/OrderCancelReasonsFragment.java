@@ -397,7 +397,7 @@ public class OrderCancelReasonsFragment extends Fragment implements GAAction, GA
 				};
 
 				new HomeUtil().putDefaultParams(params);
-				if (productType == ProductType.MENUS.getOrdinal()) {
+				if (productType == ProductType.MENUS.getOrdinal() || productType == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
 					RestClient.getMenusApiService().fetchCancellationReasons(params, callback);
 				} else {
 					RestClient.getFreshApiService().fetchCancellationReasons(params, callback);

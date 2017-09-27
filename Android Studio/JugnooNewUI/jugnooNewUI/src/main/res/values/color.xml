@@ -193,6 +193,7 @@
     <color name="color_fresh_border">#b8e986</color>
     <color name="color_grocery_border">#50e3c2</color>
     <color name="color_menus_border">#f8e81c</color>
+    <color name="color_delivery_customer_border">#f8e81c</color>
     <color name="color_pay_border">#cf9df6</color>
 
     <color name="color_menu_item_desc">#7e7e8e</color>
@@ -220,6 +221,8 @@
     <color name="green_fresh_fab_pressed">#5eb145</color>
     <color name="purple_menus_fab">#b368a9</color>
     <color name="purple_menus_fab_pressed">#9f5495</color>
+    <color name="green_delivery_customer_fab">#3dcf5a</color>
+    <color name="green_delivery_customer_fab_pressed">#993dcf5a</color>
     <color name="yellow_pay_fab">#faaf40</color>
     <color name="yellow_pay_fab_pressed">#e69b2c</color>
 
@@ -289,6 +292,9 @@
 
     <color name="promo_all_text_color">#ec8c81</color>
     <color name="promo_text_color_light_grey">#8d8d8d</color>
+
+    <color name="text_color_link">#4990e2</color>
+    <color name="star_color_yellow">#fbd95c</color>
 
 
 </resources>

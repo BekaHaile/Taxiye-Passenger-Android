@@ -6,6 +6,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
+import com.sabkuchfresh.fragments.MenusFragment;
 
 import product.clicklabs.jugnoo.R;
 
@@ -19,7 +20,9 @@ public class MenusCartSelectedLayout {
 	private RelativeLayout rlMenusCartSelected, rlMenusCartSelectedInner;
 	private TextView tvRestName;
 	private LinearLayout llDeleteCart;
+	private View disableView;
 	private int vendorId;
+	private boolean isViewDisabled;
 
 	public RelativeLayout getRlMenusCartSelectedInner() {
 		return rlMenusCartSelectedInner;
@@ -36,11 +39,12 @@ public class MenusCartSelectedLayout {
 		rlMenusCartSelectedInner = (RelativeLayout) root.findViewById(R.id.rlMenusCartSelectedInner);
 		tvRestName = (TextView) root.findViewById(R.id.tvRestName);
 		llDeleteCart = (LinearLayout) root.findViewById(R.id.llDeleteCart);
+		disableView = root.findViewById(R.id.disable_view);
 
 		rlMenusCartSelectedInner.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(vendorId > 0) {
+				if(!isViewDisabled && vendorId > 0) {
 					activity.fetchRestaurantMenuAPI(vendorId, true, null, null, -1, null);
 				}
 			}
@@ -49,7 +53,9 @@ public class MenusCartSelectedLayout {
 		llDeleteCart.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				getDialogPopupTwoButtonCapsule().show();
+				if (!isViewDisabled) {
+					getDialogPopupTwoButtonCapsule().show();
+				}
 			}
 		});
 
@@ -59,7 +65,7 @@ public class MenusCartSelectedLayout {
 	public void checkForVisibility(){
 		try {
 			RestaurantCart restaurantCart = activity.getMenusCart().getRestaurantCartFilled();
-			if(restaurantCart != null){
+			if(restaurantCart != null && activity.getTopFragment() instanceof MenusFragment){
 				vendorId = restaurantCart.getRestaurant().getRestaurantId();
 				String oldRestaurantName = restaurantCart.getRestaurant().getName();
 				rlMenusCartSelected.setVisibility(View.VISIBLE);
@@ -67,23 +73,13 @@ public class MenusCartSelectedLayout {
 			} else {
 				rlMenusCartSelected.setVisibility(View.GONE);
 			}
-
-//			JSONObject jsonSavedCart = new JSONObject(Prefs.with(activity).getString(Constants.SP_MENUS_CART, Constants.EMPTY_JSON_OBJECT));
-//			vendorId = jsonSavedCart.optInt(Constants.KEY_RESTAURANT_ID, -1);
-//			if(vendorId > 0){
-//				String oldRestaurantName = jsonSavedCart.optString(Constants.KEY_RESTAURANT_NAME, "");
-//				rlMenusCartSelected.setVisibility(View.VISIBLE);
-//				tvRestName.setText(oldRestaurantName);
-//			} else {
-//				rlMenusCartSelected.setVisibility(View.GONE);
-//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void setVisibility(int visibility){
-		if(visibility == View.VISIBLE){
+		if(visibility == View.VISIBLE && activity.getTopFragment() instanceof MenusFragment){
 			rlMenusCartSelected.setVisibility(View.VISIBLE);
 		} else {
 			rlMenusCartSelected.setVisibility(View.GONE);
@@ -96,7 +92,7 @@ public class MenusCartSelectedLayout {
 			dialogPopupTwoButtonCapsule = new DialogPopupTwoButtonCapsule(new DialogPopupTwoButtonCapsule.DialogCallback() {
 				@Override
 				public void onLeftClick() {
-					activity.clearMenusCart();
+					activity.clearMenusCart(activity.getAppType());
 					activity.getMenusCartSelectedLayout().checkForVisibility();
 				}
 
@@ -106,5 +102,13 @@ public class MenusCartSelectedLayout {
 			}, R.style.Feed_Popup_Theme, activity, activity.getString(R.string.discard_all_items_in_cart));
 		}
 		return dialogPopupTwoButtonCapsule;
+	}
+
+	public void disableView(boolean isDisable){
+		this.isViewDisabled = isDisable;
+		if(disableView!=null){
+			disableView.setVisibility(isDisable?View.VISIBLE:View.GONE);
+
+		}
 	}
 }

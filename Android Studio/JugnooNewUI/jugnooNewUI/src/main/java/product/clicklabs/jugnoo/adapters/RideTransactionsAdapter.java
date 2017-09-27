@@ -140,6 +140,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     || orderHistory.getProductType() == ProductType.MEALS.getOrdinal()
                     || orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()
                     || orderHistory.getProductType() == ProductType.MENUS.getOrdinal()
+                    || orderHistory.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()
                     || orderHistory.getProductType() == ProductType.PAY.getOrdinal()) {
                 holder.textViewStatus.setText(R.string.status_colon);
                 holder.textViewStatusValue.setText(orderHistory.getOrderStatus());
@@ -153,7 +154,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewFrom.setText(R.string.address_colon);
                 holder.textViewFromValue.setText(orderHistory.getDeliveryAddress());
                 holder.textViewDetails.setText(R.string.details_colon);
-                if (orderHistory.getProductType() == ProductType.MENUS.getOrdinal()) {
+                if (orderHistory.getProductType() == ProductType.MENUS.getOrdinal()
+                        || orderHistory.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
                     holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(orderHistory.getOrderTime())));
                 } else {
                     holder.textViewDetailsValue.setText(orderHistory.getExpectedDeliveryDate() + ", " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
@@ -176,7 +178,9 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 } else if (orderHistory.getProductType() == ProductType.MENUS.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_menus);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_purple_menu_fab);
-
+                } else if (orderHistory.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_delivery_customer);
+                    holder.imageViewProductType.setBackgroundResource(R.drawable.circle_green_delivery_customer_fab);
                 } else if (orderHistory.getProductType() == ProductType.PAY.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_pay_grey);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_yellow);

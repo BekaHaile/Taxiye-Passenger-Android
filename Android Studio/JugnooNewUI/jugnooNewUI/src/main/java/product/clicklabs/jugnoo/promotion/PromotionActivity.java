@@ -348,6 +348,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                                         ArrayList<PromoCoupon> pcAll,
                                         ArrayList<PromoCoupon> pcRides,
                                         ArrayList<PromoCoupon> pcMenus,
+                                        ArrayList<PromoCoupon> pcDeliveryCustomer,
                                         ArrayList<PromoCoupon> pcFatafat,
                                         ArrayList<PromoCoupon> pcMeals){
         if(promoCouponsMaster != null) {
@@ -356,6 +357,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                 if(pcAll != null
                         && promoCoupon.getAutos() == 1
                         && promoCoupon.getMenus() == 1
+                        && promoCoupon.getDeliveryCustomer() == 1
                         && (promoCoupon.getFresh() == 1 || promoCoupon.getGrocery() == 1)
                         && promoCoupon.getMeals() == 1){
                     pcAll.add(promoCoupon);
@@ -365,6 +367,9 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                     }
                     if (promoCoupon.getMenus() == 1) {
                         pcMenus.add(promoCoupon);
+                    }
+                    if (promoCoupon.getDeliveryCustomer() == 1) {
+                        pcDeliveryCustomer.add(promoCoupon);
                     }
                     if (promoCoupon.getFresh() == 1 || promoCoupon.getGrocery() == 1) {
                         pcFatafat.add(promoCoupon);
@@ -566,11 +571,12 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
 
         ArrayList<PromoCoupon> pcRides = new ArrayList<PromoCoupon>();
         ArrayList<PromoCoupon> pcMenus = new ArrayList<PromoCoupon>();
+        ArrayList<PromoCoupon> pcDeliveryCustomer = new ArrayList<PromoCoupon>();
         ArrayList<PromoCoupon> pcFatafat = new ArrayList<PromoCoupon>();
         ArrayList<PromoCoupon> pcMeals = new ArrayList<PromoCoupon>();
 
-        fillMasterPromoCoupons(promCouponResponse.getCommonPromotions(), null, pcRides, pcMenus, pcFatafat, pcMeals);
-        fillMasterPromoCoupons(promCouponResponse.getCommonCoupons(), null, pcRides, pcMenus, pcFatafat, pcMeals);
+        fillMasterPromoCoupons(promCouponResponse.getCommonPromotions(), null, pcRides, pcMenus, pcDeliveryCustomer, pcFatafat, pcMeals);
+        fillMasterPromoCoupons(promCouponResponse.getCommonCoupons(), null, pcRides, pcMenus, pcDeliveryCustomer, pcFatafat, pcMeals);
 
         if(promCouponResponse.getAutosPromotions() != null)
             pcRides.addAll(promCouponResponse.getAutosPromotions());
@@ -581,6 +587,11 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             pcMenus.addAll(promCouponResponse.getMenusPromotions());
         if(promCouponResponse.getMenusCoupons() != null)
             pcMenus.addAll(promCouponResponse.getMenusCoupons());
+
+        if(promCouponResponse.getDeliveryCustomerPromotions() != null)
+            pcDeliveryCustomer.addAll(promCouponResponse.getDeliveryCustomerPromotions());
+        if(promCouponResponse.getDeliveryCustomerCoupons() != null)
+            pcDeliveryCustomer.addAll(promCouponResponse.getDeliveryCustomerCoupons());
 
         if(promCouponResponse.getFreshPromotions() != null)
             pcFatafat.addAll(promCouponResponse.getFreshPromotions());
@@ -613,6 +624,10 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             offeringPromotions.add(new OfferingPromotion(getString(R.string.menus), Config.getMenusClientId(),
                     R.drawable.ic_menus_grey, pcMenus));
         }
+        if(pcDeliveryCustomer.size() > 0) {
+            offeringPromotions.add(new OfferingPromotion(getString(R.string.delivery), Config.getDeliveryCustomerClientId(),
+                    R.drawable.ic_menus_grey, pcDeliveryCustomer));
+        }
     }
 
 
@@ -622,11 +637,12 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         ArrayList<PromoCoupon> pcAll = new ArrayList<PromoCoupon>();
         ArrayList<PromoCoupon> pcRides = new ArrayList<PromoCoupon>();
         ArrayList<PromoCoupon> pcMenus = new ArrayList<PromoCoupon>();
+        ArrayList<PromoCoupon> pcDeliveryCustomer = new ArrayList<PromoCoupon>();
         ArrayList<PromoCoupon> pcFatafat = new ArrayList<PromoCoupon>();
         ArrayList<PromoCoupon> pcMeals = new ArrayList<PromoCoupon>();
 
-        fillMasterPromoCoupons(promCouponResponse.getCommonPromotions(), pcAll, pcRides, pcMenus, pcFatafat, pcMeals);
-        fillMasterPromoCoupons(promCouponResponse.getCommonCoupons(), pcAll, pcRides, pcMenus, pcFatafat, pcMeals);
+        fillMasterPromoCoupons(promCouponResponse.getCommonPromotions(), pcAll, pcRides, pcMenus, pcDeliveryCustomer, pcFatafat, pcMeals);
+        fillMasterPromoCoupons(promCouponResponse.getCommonCoupons(), pcAll, pcRides, pcMenus, pcDeliveryCustomer, pcFatafat, pcMeals);
 
         if(promCouponResponse.getAutosPromotions() != null)
             pcRides.addAll(promCouponResponse.getAutosPromotions());
@@ -637,6 +653,11 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             pcMenus.addAll(promCouponResponse.getMenusPromotions());
         if(promCouponResponse.getMenusCoupons() != null)
             pcMenus.addAll(promCouponResponse.getMenusCoupons());
+
+        if(promCouponResponse.getDeliveryCustomerPromotions() != null)
+            pcDeliveryCustomer.addAll(promCouponResponse.getDeliveryCustomerPromotions());
+        if(promCouponResponse.getDeliveryCustomerCoupons() != null)
+            pcDeliveryCustomer.addAll(promCouponResponse.getDeliveryCustomerCoupons());
 
         if(promCouponResponse.getFreshPromotions() != null)
             pcFatafat.addAll(promCouponResponse.getFreshPromotions());
@@ -681,6 +702,12 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             pcMenus = countAndRemoveDuplicatePromoCoupons(pcMenus);
             for(PromoCoupon pc : pcMenus){
                 promosList.add(new Promo(getString(R.string.menus), Config.getMenusClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab));
+            }
+        }
+        if(pcDeliveryCustomer.size() > 0) {
+            pcDeliveryCustomer = countAndRemoveDuplicatePromoCoupons(pcDeliveryCustomer);
+            for(PromoCoupon pc : pcDeliveryCustomer){
+                promosList.add(new Promo(getString(R.string.delivery), Config.getDeliveryCustomerClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab));
             }
         }
 

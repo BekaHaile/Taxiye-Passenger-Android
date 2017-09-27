@@ -157,7 +157,7 @@ public class DeliveryInfo {
 
 	public Double getApplicableDeliveryCharges(int type, double subTotalAmount){
 		double charges = 0;
-		if(type == AppConstant.ApplicationType.MENUS){
+		if(type == AppConstant.ApplicationType.MENUS || type == AppConstant.ApplicationType.DELIVERY_CUSTOMER){
 			charges = getDeliveryChargesBeforeThreshold();
 		} else {
 			if(subTotalAmount < getMinAmount()) {

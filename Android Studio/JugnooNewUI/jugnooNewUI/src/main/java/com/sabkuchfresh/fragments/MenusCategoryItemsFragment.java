@@ -15,14 +15,12 @@ import android.widget.LinearLayout;
 
 import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
-import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
-import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -106,7 +104,7 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                 mSwipeRefreshLayout.setSize(SwipeRefreshLayout.DEFAULT);
 
                 int type = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
-                if (type == AppConstant.ApplicationType.MENUS) {
+                if (activity.isMenusOrDeliveryOpen()) {
                     mSwipeRefreshLayout.setEnabled(false);
                 } else {
                     mSwipeRefreshLayout.setEnabled(true);
@@ -127,11 +125,11 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                                     activity.saveDeliveryAddressModel();
                                 }
                                 activity.updateCartValuesGetTotalPrice();
-                                if (activity.getAppType() == AppConstant.ApplicationType.MENUS){
+                                if (activity.isMenusOrDeliveryOpen()){
                                     if(isNewItemAdded)
-                                       GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME , GAAction.ITEM + GAAction.ADDED);
+                                       GAUtils.event(activity.getGaCategory(), GAAction.RESTAURANT_HOME , GAAction.ITEM + GAAction.ADDED);
                                     else
-                                        GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME , GAAction.ITEM + GAAction.INCREASED);
+                                        GAUtils.event(activity.getGaCategory(), GAAction.RESTAURANT_HOME , GAAction.ITEM + GAAction.INCREASED);
                                 }
 
                             }
@@ -139,9 +137,9 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                             @Override
                             public void onMinusClicked(int position, Item item) {
                                 activity.updateCartValuesGetTotalPrice();
-                                if (activity.getAppType() == AppConstant.ApplicationType.MENUS){
+                                if (activity.isMenusOrDeliveryOpen()){
 
-                                    GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME , GAAction.ITEM + GAAction.DECREASED);
+                                    GAUtils.event(activity.getGaCategory(), GAAction.RESTAURANT_HOME , GAAction.ITEM + GAAction.DECREASED);
                                 }
                             }
 

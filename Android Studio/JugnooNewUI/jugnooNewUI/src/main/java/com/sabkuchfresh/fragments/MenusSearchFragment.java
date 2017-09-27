@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.adapters.MenusCategoryCategoriesAdapter;
 import com.sabkuchfresh.adapters.MenusCategoryItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -26,7 +23,6 @@ import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.Subcategory;
-import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -38,7 +34,6 @@ import java.util.TreeSet;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -47,12 +42,8 @@ import product.clicklabs.jugnoo.utils.Prefs;
 @SuppressLint("ValidFragment")
 public class MenusSearchFragment extends Fragment implements GACategory, GAAction {
 
-	private NestedScrollView rlRoot;
-
 	private RecyclerView recyclerViewCategoryItems;
-	private RecyclerView recyclerViewCategories;
 	private MenusCategoryItemsAdapter menusCategoryItemsAdapter;
-	private MenusCategoryCategoriesAdapter menusCategoryCategoriesAdapter;
 	private TextView textViewPlaceholder;
 
 	private View rootView;
@@ -60,7 +51,6 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 	private ArrayList<Item> itemsInSearch;
 	private ArrayList<Category> categoriesSearched;
 	private int isVegToggle;
-	private TextView labelItems,labelCategories;
 
 
 	@Override
@@ -83,26 +73,10 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 
 		GAUtils.trackScreenView(activity.getGaCategory()+HOME+SEARCH);
 
-		rlRoot = (NestedScrollView) rootView.findViewById(R.id.rlRoot);
-		try {
-			if(rlRoot != null) {
-				new ASSL(activity, rlRoot, 1134, 720, false);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-        Utils.setupUI(rlRoot, activity);
-		labelItems = (TextView) rootView.findViewById(R.id.label_items);
-		labelCategories = (TextView) rootView.findViewById(R.id.label_categories);
 		recyclerViewCategoryItems = (RecyclerView)rootView.findViewById(R.id.recyclerViewCategoryItems);
-		recyclerViewCategories = (RecyclerView)rootView.findViewById(R.id.recyclerViewCategories);
 		recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
 		recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewCategoryItems.setHasFixedSize(false);
-		recyclerViewCategories.setLayoutManager(new LinearLayoutManager(activity));
-		recyclerViewCategories.setItemAnimator(new DefaultItemAnimator());
-		recyclerViewCategoryItems.setNestedScrollingEnabled(false);
-		recyclerViewCategories.setNestedScrollingEnabled(false);
 		textViewPlaceholder = (TextView) rootView.findViewById(R.id.textViewPlaceholder); textViewPlaceholder.setTypeface(Fonts.mavenRegular(activity));
 		textViewPlaceholder.setVisibility(View.GONE);
 
@@ -177,17 +151,6 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 						}
 					}
 				});
-		menusCategoryCategoriesAdapter = new MenusCategoryCategoriesAdapter(activity, categoriesSearched, new MenusCategoryCategoriesAdapter.Callback() {
-			@Override
-			public void onCategoryClick(Category category) {
-				if(category != null){
-					activity.setScrollToCategoryId(category.getCategoryId());
-					activity.onBackPressed();
-				}
-			}
-		});
-		menusCategoryCategoriesAdapter.setList(null);
-		recyclerViewCategories.setAdapter(menusCategoryCategoriesAdapter);
 		recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);
 
 
@@ -298,19 +261,16 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
 			try {
-				menusCategoryItemsAdapter.setList(itemsInSearch, true, null);
-				menusCategoryCategoriesAdapter.setList(categoriesSearched);
-				if(menusCategoryItemsAdapter.getItemCount() > 0 || menusCategoryCategoriesAdapter.getItemCount()>0){
+				menusCategoryItemsAdapter.setList(itemsInSearch, true, categoriesSearched);
+				if(menusCategoryItemsAdapter.getItemCount() > 0){
 					textViewPlaceholder.setVisibility(View.GONE);
 				} else{
 					textViewPlaceholder.setVisibility(View.VISIBLE);
 				}
 
 				if(menusCategoryItemsAdapter.getItemCount() == 0) {
-					GAUtils.event(GACategory.MENUS, SEARCH + NOT_FOUND, token);
+					GAUtils.event(activity.getGaCategory(), SEARCH + NOT_FOUND, token);
 				}
-				labelItems.setVisibility(menusCategoryItemsAdapter.getItemCount()>0?View.VISIBLE:View.GONE);
-				labelCategories.setVisibility(menusCategoryCategoriesAdapter.getItemCount()>0?View.VISIBLE:View.GONE);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -388,7 +348,6 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 		super.onHiddenChanged(hidden);
 		try {
 			menusCategoryItemsAdapter.notifyDataSetChanged();
-			menusCategoryCategoriesAdapter.notifyDataSetChanged();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -410,14 +369,6 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 			activity.setMinOrderAmountText(MenusSearchFragment.this);
 
 		}
-	}
-
-
-    @Override
-	public void onDestroy() {
-		super.onDestroy();
-        ASSL.closeActivity(rlRoot);
-        System.gc();
 	}
 
 

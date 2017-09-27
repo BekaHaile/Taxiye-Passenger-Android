@@ -898,6 +898,7 @@
     <string name="popularity">Popularity</string>
     <string name="price">Price</string>
     <string name="cuisines">Cuisines</string>
+    <string name="tags">Tags</string>
     <string name="minimum_order">Minimum order amount</string>
     <string name="less_than_150"><![CDATA[<Rs. 150]]></string>
     <string name="less_than_250"><![CDATA[<Rs. 250]]></string>
@@ -909,8 +910,10 @@
     <string name="filters">Filters</string>
     <string name="reset">Reset</string>
     <string name="bullet">\u2022</string>
+    <string name="bullet_spaces"> \u2022 &#032;</string>
     <string name="select_cuisines">Select Cuisines</string>
     <string name="search_a_cuisine">Search a cuisine</string>
+    <string name="search_3dot">Search...</string>
     <string name="more_info">More info</string>
     <string name="previous_vendor_cart_message_format">You have added some items in cart from %s.\nAre you sure you want to clear the cart?</string>
     <string name="minimum_order_amount_is_format">Minimum order amount is \u20B9%s</string>
@@ -1062,6 +1065,7 @@
 
     <string name="no_menus_available_with_these_filters">Sorry, no results found. Try again with fewer filters.</string>
     <string name="no_menus_available_your_location">Sorry, online ordering isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
+    <string name="no_delivery_available_your_location">Sorry, delivery isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
     <string name="oops_no_results_found">Oops, No results found</string>
     <string name="quick_filters">Quick Filters</string>
     <string name="offers_discount">Offers Discount</string>
@@ -1069,7 +1073,9 @@
     <string name="free_delivery">Free Delivery</string>
 
     <string name="delivers_in">Delivers in</string>
-    <string name="minimum_order_rupee_format">Minimum Order amount \u20B9%s</string>
+    <string name="minimum_order_rupee_format">Min Order \u20B9%s</string>
+    <string name="minimum_order_rupee_short_format"> \u2022 Min  \u20B9%s</string>
+    <string name="rupee_format">\u20B9%s</string>
     <string name="jugnoo_star">Jugnoo star</string>
     <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for JUGNOO STARS.</string>
     <string name="no">No</string>
@@ -1110,11 +1116,13 @@
     <string name="thank_you">Thank you!</string>
     <string name="your_order_will_be_delivered_between">Your order will be delivered between</string>
     <string name="could_not_find_favorite_restaurant">Couldn’t find your favourite restaurant yet?</string>
+    <string name="could_not_find_favorite_restaurant_format">Couldn’t find your favourite %s yet?</string>
     <string name="why_not_recommend_it">Why not recommend it!</string>
     <string name="restaurant_name_star">Restaurant Name*</string>
+    <string name="restaurant_name_star_format">%s Name*</string>
     <string name="locality_optional">Locality (optional)</string>
     <string name="telephone_number_optional">Telephone Number (optional)</string>
-    <string name="restaurant_name_is_neccessary">Restaurant name is neccessary</string>
+    <string name="restaurant_name_is_neccessary">Name is required</string>
 
     <string name="star_icon">&#xe900;</string>
     <string name="back_arrow">&#xe901;</string>
@@ -1129,6 +1137,7 @@
     <string name="auto_renewal">Auto Renewal</string>
     <string name="upgrade_now">Upgrade Now</string>
     <string name="what_you_love_about_restaurant">Tell us about your experience: Your meal, packaging, and service?</string>
+    <string name="tell_us_about_exp">Tell us about your experience</string>
     <string name="feedback_must_be_in_500">Feedback must be in 500 characters</string>
     <string name="thanks_for_your_valuable_feedback">Thanks for your valuable feedback</string>
     <string name="feedback_menu_what_amazing">What was amazing?</string>
@@ -1244,7 +1253,7 @@
     <string name="label_sample">Label e.g. Friend’s Home</string>
     <string name="flat_number_hint">Flat Number/ House No./ Apt Name</string>
     <string name="landmark">Landmark</string>
-    <string name="tracking_not_available_message">Tracking available once your order is dispatched</string>
+    <string name="tracking_not_available_message">Live tracking will be enabled after order dispatch.</string>
     <string name="some_error_occured_try_again">Some error occured\\nTry again</string>
     <string name="you_are_first_in_queue">You are first in queue</string>
     <string name="enter_location">Enter location</string>
@@ -1300,6 +1309,7 @@
     <string name="call_restaurant">Call Restaurant</string>
     <string name="accepts_online_payment">Accepts Online Payment</string>
     <string name="reviews">Reviews</string>
+    <string name="reviews_and_ratings">Reviews &amp; Ratings</string>
     <string name="order_is_late">Order is late</string>
     <string name="something_went_wrong">Something went wrong</string>
     <string name="no_reviews_yet">No reviews yet!</string>
@@ -1373,10 +1383,49 @@
     <string name="how_was_your_experience">How was your Experience?</string>
     <string name="to_use_this_coupon">To use this coupon, select it at the time of checkout.</string>
     <string name="are_you_sure_want_to_disable_emergency">Are you sure you want to disable Emergency mode?</string>
+    <string name="chat_now">Chat Now</string>
+    <string name="call">Call</string>
+    <string name="add_review">Add Review</string>
+    <string name="order_online">"Order Online "</string>
+    <string name="additional_info">Additional Information</string>
+    <string name="see_all">See All</string>
+    <string name="open_now_colon">Open Now :</string>
+    <string name="no_reviews_yet_be_first">No reviews yet!\nBe the first one to add...</string>
+    <string name="label_select_category">Select Category</string>
+    <string name="label_category_all">All</string>
+    <string name="accepts_online_order">Accepts Online Order</string>
+    <string name="chat_enabled">Chat Enabled</string>
+    <string name="top_rated">Top Rated (3.5+)</string>
+    <string name="label_see_all">See All</string>
+    <string name="ongoing_orders">Ongoing Orders</string>
+    <string name="select_format">Select %s</string>
+    <string name="order_online_not_available">Online ordering not available for this merchant</string>
+    <string name="order_online_closed">Online ordering is closed for this merchant</string>
+
+    <string name="you_have_already_reviewed_format">You have already reviewed %s</string>
+
+    <string name="chat_is_not_enabled_format">Chat is not available for %s</string>
+    <string name="select_tags">Select Tags</string>
+    <string name="open_now">Open Now</string>
+    <string name="start_typing_tags">Start typing tags</string>
+    <string name="rate_the_restaurant">Rate the Restaurant</string>
+    <string name="rate_format">Rate %s</string>
+    <string name="submit_your_rating">Submit Your Rating</string>
+    <string name="submit_your_review">Submit Your Review</string>
+    <string name="say_something">Say something</string>
+    <string name="locate">Locate</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>
         <item quantity="zero">Like</item>
         <item quantity="other">%d Likes</item>
     </plurals>
+
+    <plurals name="ratings_suffix">
+        <item quantity="one">%d Rating</item>
+        <item quantity="zero">No Rating</item>
+        <item quantity="other">%d Ratings</item>
+    </plurals>
+
+
 </resources>

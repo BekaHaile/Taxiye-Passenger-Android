@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rLCategoryDropDown"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    android:tag="@string/dont_touch_me"
+    android:visibility="gone"
+    >
+
+
+    <View
+        android:id="@+id/view_gradient_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_divider_choose_category"
+        android:layout_below="@+id/layout_choose_category"
+        android:background="@drawable/shadow_gradient_seperator"
+        android:visibility="gone"
+        />
+
+
+    <View
+        android:id="@+id/view_bottom_blank"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_choose_category"
+        android:layout_marginTop="1dp"
+        android:background="@color/black_60"
+        android:clickable="true"
+        android:visibility="gone"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_categories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_choose_category"
+        android:background="@android:color/white"
+        android:paddingBottom="3dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:visibility="invisible">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+    <View
+        android:id="@+id/view_gradient"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_divider_choose_category"
+        android:background="@drawable/shadow_gradient_seperator"/>
+
+
+    <RelativeLayout
+        android:id="@id/layout_choose_category"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_choose_category"
+        android:layout_below="@id/view_gradient"
+        android:background="@android:color/white">
+
+
+        <ImageView
+            android:id="@+id/iv_switch_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/ic_nav_select_category"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/iv_switch_category"
+            android:layout_centerVertical="true"
+            >
+
+            <TextView
+                android:id="@+id/label_select_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_select_category"
+                android:textColor="@color/text_color_hint"
+                android:textSize="12sp"
+                android:layout_marginBottom="@dimen/dp_3"
+                app:font="@string/maven"/>
+
+
+            <TextView
+                android:id="@+id/tv_category_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_category_all"
+                android:textColor="@color/text_color"
+                android:textSize="14.5sp"
+                app:font="@string/maven"/>
+        </LinearLayout>
+
+
+
+
+        <ImageView
+            android:id="@+id/iv_category_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:rotation="90"
+            android:src="@drawable/ic_arrow_grey"/>
+
+        <View
+            android:id="@+id/divider_selection_categories"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/stroke_light_grey_alpha"/>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

@@ -108,10 +108,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         rlSelectedStore.setVisibility(View.GONE);
 
         mBus = (activity).getBus();
-        activity.setSwipeAvailable(false);
 
         activity.fragmentUISetup(this);
-        activity.appBarLayout.setExpanded(true);
         llRoot = (LinearLayout) rootView.findViewById(R.id.llRoot);
         try {
             if (llRoot != null) {
@@ -121,7 +119,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             e.printStackTrace();
         }
 
-        GAUtils.trackScreenView(MENUS+RESTAURANT_HOME);
+        GAUtils.trackScreenView(activity.getGaCategory()+RESTAURANT_HOME);
+        GAUtils.trackScreenView(activity.getGaCategory()+RESTAURANT_HOME+V2);
 
 
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
@@ -165,7 +164,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     tabClickFlag = false;
                 } else {
                     Log.d(TAG, "onPageSelected = " + position);
-                    GAUtils.event(GAAction.MENUS, GAAction.RESTAURANT_HOME , GAAction.TABS + GAAction.SLIDED);
+                    GAUtils.event(activity.getGaCategory(), GAAction.RESTAURANT_HOME , GAAction.TABS + GAAction.SLIDED);
                 }
             }
 
@@ -266,7 +265,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         try {
-            activity.setSwipeAvailable(true);
             if (!hidden) {
 				activity.fragmentUISetup(this);
 				menusCategoryFragmentsAdapter.notifyDataSetChanged();
@@ -277,14 +275,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     public void run() {
                         try {
 
-                            if(activity.getVendorOpened()!=null && !TextUtils.isEmpty(activity.getVendorOpened().getNext_slot_time())){
-                                activity.textViewMinOrder.setText(activity.getVendorOpened().getNext_slot_time());
-                                activity.textViewMinOrder.setVisibility(View.VISIBLE);
-                            }else if(!activity.isOrderJustCompleted()){
+                            if(!activity.isOrderJustCompleted()){
                                 activity.setMinOrderAmountText(VendorMenuFragment.this);
                             }
-
-
                         } catch (Exception e) {
                         }
                     }
@@ -422,6 +415,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
     private void setUpCollapseToolbarData() {
         if (activity.getVendorOpened() != null) {
+            activity.tvCollapRestaurantName.setVisibility(View.VISIBLE);
+            activity.llCollapseRating.setVisibility(View.VISIBLE);
             activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName().toUpperCase());
 
             if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
@@ -432,7 +427,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 activity.ivCollapseRestImage.setImageDrawable(null);
             }
 
-            int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime, R.color.white);
+            int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime, R.color.white, true);
 			activity.tvCollapRestaurantDeliveryTime.setVisibility(visibility == View.VISIBLE ? View.VISIBLE : View.GONE);
 
             if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
@@ -451,11 +446,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 viewPromoTitle.setVisibility(View.GONE);
                 rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.GONE);
             }
-            if(!TextUtils.isEmpty(activity.getVendorOpened().getNext_slot_time())){
-                activity.textViewMinOrder.setText(activity.getVendorOpened().getNext_slot_time());
-                activity.textViewMinOrder.setVisibility(View.VISIBLE);
-            }
-
+            activity.setMinOrderAmountText(VendorMenuFragment.this);
         }
     }
 

@@ -4,10 +4,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/px_30"
-    android:paddingLeft="@dimen/px_30"
+    android:paddingTop="@dimen/px_40"
+    android:paddingLeft="@dimen/px_20"
     android:paddingRight="@dimen/px_30"
-    android:paddingBottom="@dimen/px_20"
+    android:paddingBottom="@dimen/px_10"
     android:text="CLASSIC PIZZA"
     android:textColor="@color/text_color"
     android:textSize="@dimen/text_size_22"/>
