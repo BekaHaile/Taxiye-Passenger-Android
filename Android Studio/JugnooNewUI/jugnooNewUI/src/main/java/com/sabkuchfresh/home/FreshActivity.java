@@ -616,13 +616,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             fuguNotificationConfig.handleFuguPushNotification(FreshActivity.this, Data.getFuguChatBundle());
             Data.setFuguChatBundle(null);
         }
-        checkForReorderMenus();
 
     }
 
-    public void checkForReorderMenus() {
+    public boolean checkForReorderMenus() {
 
-
+        boolean reorderCase = false;
         try {
             Integer restaurantId = Prefs.with(this).getInt(Constants.ORDER_STATUS_PENDING_ID,-1);
             Integer orderId = Prefs.with(this).getInt(Constants.ORDER_STATUS_ORDER_ID,-1);
@@ -631,7 +630,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             String reoderAddress = Prefs.with(this).getString(Constants.ORDER_STATUS_ADDRESS,null);
             if(restaurantId!=-1 && jsonArray!=null){
 
-
+                reorderCase = true;
                 fetchRestaurantMenuAPI(restaurantId,true,new JSONArray(jsonArray), reorderLatLng, orderId, reoderAddress);
             }
         } catch (JSONException e) {
@@ -641,6 +640,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         Prefs.with(this).remove(Constants.ORDER_STATUS_JSON_ARRAY);
         Prefs.with(this).remove(Constants.ORDER_STATUS_ORDER_ID);
         Prefs.with(this).remove(Constants.ORDER_STATUS_LAT_LNG);
+        return reorderCase;
     }
 
     public void setReorderLatlngToAdrress(LatLng reorderLatLng,String  reoderAddress) {

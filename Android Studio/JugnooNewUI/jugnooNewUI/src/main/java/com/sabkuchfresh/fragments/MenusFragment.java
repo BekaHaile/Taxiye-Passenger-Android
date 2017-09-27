@@ -186,20 +186,37 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerViewRestaurant.setAdapter(deliveryHomeAdapter);
         activity.setLocalityAddressFirstTime(activity.getAppType());
 
-        try {
-            if (getMenusOrDeliveryData() != null && getMenusOrDeliveryData().getPendingFeedback() == 1) {
+        if(!activity.checkForReorderMenus()) {
+            // to open pending feedback page
+            try {
+                if (getMenusOrDeliveryData() != null && getMenusOrDeliveryData().getPendingFeedback() == 1) {
 
-                activity.getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+                    activity.getHandler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
 
-                        activity.openFeedback();
-                    }
-                }, 300);
+                            activity.openFeedback();
+                        }
+                    }, 300);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            // to open restaurant page if from deep link
+            try {
+                if (!"-1".equalsIgnoreCase(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"))) {
+                    int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"));
+                    activity.fetchRestaurantMenuAPI(restId, false, null, null, -1, null);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
+            }
         }
+
+        // dialogs at login
         try {
             if (Data.userData.getPromoSuccess() == 0) {
                 showPromoFailedAtSignupDialog();
@@ -219,16 +236,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             e.printStackTrace();
         }
 
-        try {
-            if (!"-1".equalsIgnoreCase(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"))) {
-                int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"));
-                activity.fetchRestaurantMenuAPI(restId, false, null, null, -1, null);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
-        }
 
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
