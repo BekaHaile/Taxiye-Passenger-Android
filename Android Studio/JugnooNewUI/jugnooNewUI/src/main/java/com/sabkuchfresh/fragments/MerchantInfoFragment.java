@@ -509,6 +509,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         tvRateRestaurant.setVisibility(userHasReviewed == 1 ? View.GONE : View.VISIBLE);
                         ratingBarReview.setVisibility(userHasReviewed == 1 ? View.GONE : View.VISIBLE);
                         vAddReviewSep.setVisibility(userHasReviewed == 1 ? View.GONE : View.VISIBLE);
+                        tvRateRestaurant.setText(activity.getString(R.string.rate_format, activity.getVendorOpened().getName()));
 
                         restaurantReviews.clear();
                         restaurantReviews.addAll(fetchFeedbackResponse.getReviews());
