@@ -1409,6 +1409,7 @@
     <string name="open_now">Open Now</string>
     <string name="start_typing_tags">Start typing tags</string>
     <string name="rate_the_restaurant">Rate the Restaurant</string>
+    <string name="rate_format">Rate %s</string>
     <string name="submit_your_rating">Submit Your Rating</string>
     <string name="submit_your_review">Submit Your Review</string>
     <string name="say_something">Say something</string>

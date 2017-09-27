@@ -1863,7 +1863,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     return 1;
                 } else if (fragment instanceof VendorMenuFragment || fragment instanceof MenusSearchFragment) {
                     int textViewMinOrderVis = View.GONE;
-                    if (getVendorOpened() != null ) {
+                    if (getVendorOpened() != null && !(getTopFragment() instanceof MenusFragment)) {
                         if(!TextUtils.isEmpty(getVendorOpened().getNext_slot_time())){
                             textViewMinOrder.setText(getVendorOpened().getNext_slot_time());
                             textViewMinOrderVis = View.VISIBLE;
