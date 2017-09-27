@@ -7794,8 +7794,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     public void fuguCustomerHelpRides(boolean fromSos) {
         try {
 			if(!TextUtils.isEmpty(Data.autoData.getFuguChannelId())){
+                Data.autoData.getFuguTags().remove(FUGU_TAG_SOS);
                 if(fromSos){
-                    Data.autoData.getFuguTags().remove(FUGU_TAG_SOS);
                     Data.autoData.getFuguTags().add(FUGU_TAG_SOS);
                 }
 				FuguConfig.getInstance().openChatByTransactionId(Data.autoData.getFuguChannelId(),String.valueOf(Data.getFuguUserData().getUserId()),
