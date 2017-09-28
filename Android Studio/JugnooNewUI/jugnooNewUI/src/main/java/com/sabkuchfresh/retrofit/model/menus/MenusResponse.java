@@ -470,6 +470,10 @@ public class MenusResponse {
 			this.isAvailable = isAvailable;
 		}
 
+		public boolean isClosed(){
+			return (getIsClosed() == 1 || getIsAvailable() == 0);
+		}
+
 		/**
 		 * @return The distance
 		 */

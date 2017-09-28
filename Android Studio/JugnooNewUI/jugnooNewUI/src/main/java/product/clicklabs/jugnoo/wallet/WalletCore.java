@@ -644,17 +644,17 @@ public class WalletCore {
 				if (paymentModeConfigData.getEnabled() == 1) {
 					if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
 							&& Data.userData.getPaytmEnabled() == 1
-							&& Data.userData.getPaytmBalance() >= 1) {
+							&& Data.userData.getPaytmBalance() >= 0) {
 						paymentModeConfigDataDefault = paymentModeConfigData;
 						break;
 					} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
                             && Data.userData.getMobikwikEnabled() == 1
-                            && Data.userData.getMobikwikBalance() >= 1) {
+                            && Data.userData.getMobikwikBalance() >= 0) {
                         paymentModeConfigDataDefault = paymentModeConfigData;
                         break;
                     } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()
                             && Data.userData.getFreeChargeEnabled() == 1
-                            && Data.userData.getFreeChargeBalance() >= 1) {
+                            && Data.userData.getFreeChargeBalance() >= 0) {
                         paymentModeConfigDataDefault = paymentModeConfigData;
                         break;
                     } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.JUGNOO_PAY.getOrdinal()
@@ -698,17 +698,17 @@ public class WalletCore {
 					if (paymentModeConfigData.getEnabled() == 1) {
 						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
 								&& Data.userData.getPaytmEnabled() == 1
-								&& Data.userData.getPaytmBalance() >= 1) {
+								&& Data.userData.getPaytmBalance() >= 0) {
 							paymentModeConfigDataDefault = paymentModeConfigData;
 							break;
 						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
 								&& Data.userData.getMobikwikEnabled() == 1
-								&& Data.userData.getMobikwikBalance() >= 1) {
+								&& Data.userData.getMobikwikBalance() >= 0) {
 							paymentModeConfigDataDefault = paymentModeConfigData;
 							break;
 						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()
 								&& Data.userData.getFreeChargeEnabled() == 1
-								&& Data.userData.getFreeChargeBalance() >= 1) {
+								&& Data.userData.getFreeChargeBalance() >= 0) {
 							paymentModeConfigDataDefault = paymentModeConfigData;
 							break;
 						}

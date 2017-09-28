@@ -18,6 +18,7 @@ import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Store;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -1150,6 +1151,9 @@ public class JSONParser implements Constants {
 
         String supportNumber = jLastRideData.optString(KEY_SUPPORT_NUMBER, "");
 
+        FuguChannelData fuguChannelData = new FuguChannelData();
+        parseFuguChannelDetails(jLastRideData, fuguChannelData);
+
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
 				jLastRideData.getString("drop_address"),
@@ -1164,10 +1168,27 @@ public class JSONParser implements Constants {
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
                 rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
                 sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge, totalRide, status, supportNumber
-                ,jLastRideData.optString("invoice_additional_text_cabs", ""));
+                ,jLastRideData.optString("invoice_additional_text_cabs", ""),
+                fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags());
 	}
 
 
+	public static void parseFuguChannelDetails(JSONObject jLastRideData, FuguChannelData fuguChannelData) {
+        if(jLastRideData.has(KEY_FUGU_CHANNEL_ID) && fuguChannelData != null){
+            fuguChannelData.setFuguChannelId(jLastRideData.optString(KEY_FUGU_CHANNEL_ID));
+            fuguChannelData.setFuguChannelName(jLastRideData.optString(KEY_FUGU_CHANNEL_NAME));
+            JSONArray jTags = jLastRideData.optJSONArray(KEY_FUGU_TAGS);
+            ArrayList<String> fuguTags = new ArrayList<>();
+            for(int i=0; i<jTags.length(); i++){
+                try {
+                    fuguTags.add(jTags.getString(i));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            fuguChannelData.setFuguTags(fuguTags);
+        }
+    }
 
     public String getUserStatus(Context context, String accessToken, int currentUserStatus, ApiFindADriver apiFindADriver,
                                 LatLng latLng) {
@@ -1229,6 +1250,7 @@ public class JSONParser implements Constants {
             long cancellationTimeOffset = 0;
             ArrayList<String> fellowRiders = new ArrayList<>();
             PlaceOrderResponse.ReferralPopupContent referralPopupContent = null;
+            FuguChannelData fuguChannelData = new FuguChannelData();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1251,6 +1273,7 @@ public class JSONParser implements Constants {
                     Data.userData.setFreshEnabled(jObject1.optInt("fresh_enabled", Data.userData.getFreshEnabled()));
                     Data.userData.setMealsEnabled(jObject1.optInt("meals_enabled", Data.userData.getMealsEnabled()));
                     Data.userData.setDeliveryEnabled(jObject1.optInt("delivery_enabled", Data.userData.getDeliveryEnabled()));
+                    parseFuguChannelDetails(jObject1, fuguChannelData);
 
                     if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
 
@@ -1329,6 +1352,7 @@ public class JSONParser implements Constants {
 
                             vehicleType = jObject.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
                             iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+
 
                             try{
                                 cancelRideThrashHoldTime = jObject.optString("cancel_ride_threshold_time", "");
@@ -1415,6 +1439,10 @@ public class JSONParser implements Constants {
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);
+
+                Data.autoData.setFuguChannelId(fuguChannelData.getFuguChannelId());
+                Data.autoData.setFuguChannelName(fuguChannelData.getFuguChannelName());
+                Data.autoData.setFuguTags(fuguChannelData.getFuguTags());
 
                 Log.e("Data.autoData.getAssignedDriverInfo() on login", "=" + Data.autoData.getAssignedDriverInfo().latLng);
 
@@ -2006,6 +2034,35 @@ public class JSONParser implements Constants {
 
     private void resetIsVegToggle(Context context){
         Prefs.with(context).save(KEY_SP_IS_VEG_TOGGLE, 0);
+    }
+
+    public static class FuguChannelData{
+        private String fuguChannelId, fuguChannelName;
+        private ArrayList<String> fuguTags;
+
+        public String getFuguChannelId() {
+            return fuguChannelId;
+        }
+
+        public void setFuguChannelId(String fuguChannelId) {
+            this.fuguChannelId = fuguChannelId;
+        }
+
+        public String getFuguChannelName() {
+            return fuguChannelName;
+        }
+
+        public void setFuguChannelName(String fuguChannelName) {
+            this.fuguChannelName = fuguChannelName;
+        }
+
+        public ArrayList<String> getFuguTags() {
+            return fuguTags;
+        }
+
+        public void setFuguTags(ArrayList<String> fuguTags) {
+            this.fuguTags = fuguTags;
+        }
     }
 
 }

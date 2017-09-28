@@ -3402,7 +3402,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-//                                    TODO clear cart for previous selected activity.getCart().getDeliveryStoreCart(activity.getOpenedVendorId()).getSubItemHashMap().clear();
                                 }
                             }, true, false);
                 }
