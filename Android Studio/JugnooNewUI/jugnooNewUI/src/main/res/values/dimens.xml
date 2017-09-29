@@ -414,12 +414,6 @@
     <dimen name="px_4">
         4px
     </dimen>
-    <dimen name="px_94">
-        94px
-    </dimen>
-    <dimen name="px_38">
-        38px
-    </dimen>
     <dimen name="px_18">
         18px
     </dimen>
@@ -462,15 +456,6 @@
     </dimen>
     <dimen name="px_346">
         346px
-    </dimen>
-    <dimen name="px_380">
-        380px
-    </dimen>
-    <dimen name="px_14">
-        14px
-    </dimen>
-    <dimen name="text_size_16">
-        16px
     </dimen>
     <dimen name="px_90">
         90px
@@ -700,9 +685,6 @@
     <dimen name="dp_162">
         162dp
     </dimen>
-    <dimen name="dp_176">
-        176dp
-    </dimen>
     <dimen name="dp_186">
         186dp
     </dimen>
@@ -742,9 +724,6 @@
     </dimen>
     <dimen name="dp_120">
         120dp
-    </dimen>
-    <dimen name="dp_170">
-        170dp
     </dimen>
     <dimen name="dp_58">
         58dp
@@ -834,9 +813,6 @@
     <dimen name="dp_44">
         44dp
     </dimen>
-    <dimen name="dp_97">
-        97dp
-    </dimen>
     <dimen name="dp_68">
         68dp
     </dimen>
@@ -849,17 +825,11 @@
     <dimen name="dp_63">
         63dp
     </dimen>
-    <dimen name="dp_26">
-        26dp
-    </dimen>
     <dimen name="sp_30">
         30sp
     </dimen>
     <dimen name="text_size_45">
         45px
-    </dimen>
-    <dimen name="px_33">
-        33px
     </dimen>
     <dimen name="dp_182">
         182dp
@@ -879,17 +849,6 @@
     <dimen name="dp_153">
         153dp
     </dimen>
-    <dimen name="dp_180">
-        180dp
-    </dimen>
-    <dimen name="dp_190">
-        190dp
-    </dimen>
-    <dimen
-        name="text_margin">
-        16dp
-    </dimen>
-
 
 
     <dimen name="height_choose_category">60dp</dimen>
@@ -897,8 +856,5 @@
 
     <!--Breakdown = height_choose_cateogry +  height_divider_choose_category-->
     <dimen name="height_category_bar">68dp</dimen>
-    <dimen name="dp_75">
-        75dp
-    </dimen>
     <!--Breakdown = height_choose_cateogry + 2 * height_divider_choose_category-->
 </resources>
