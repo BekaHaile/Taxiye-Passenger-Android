@@ -6053,9 +6053,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                             JSONArray jsonArray = jObj.getJSONArray("locations");
                                             LatLng lastLatLng = null;
                                             List<LatLng> latLngsList = new ArrayList<LatLng>();
-                                            LatLng driverLatLng = driverMarkerInRide != null ? driverMarkerInRide.getPosition() : Data.autoData.getAssignedDriverInfo().latLng;
-                                            latLngsList.add(driverLatLng);
-                                            double distFromDriverLl = Double.MAX_VALUE;
                                             int firstPos = -1;
                                             for (int i = 0; i < jsonArray.length(); i++) {
                                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -6067,12 +6064,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                         jsonObject.getDouble("destination_longitude"));
 
                                                 ridePathsList.add(currentRidePath);
-
-                                                double dist = MapUtils.distance(driverLatLng, currentRidePath.getSourceLatLng());
-                                                if(dist < distFromDriverLl){
-                                                    distFromDriverLl = dist;
-                                                    firstPos = i;
-                                                }
+                                                firstPos = 0;
                                             }
                                             // sorting logic
                                             if(firstPos > -1) {
