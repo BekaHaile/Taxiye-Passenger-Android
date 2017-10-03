@@ -43,7 +43,7 @@ public class MarkerAnimation {
     private static final double FAST_ANIMATION_TIME = 2000;
     private static final double MIN_DISTANCE = 80;
     private static final double MAX_DISTANCE = 4000;
-    private static final double MAX_DISTANCE_FACTOR_GAPI = 2;
+    private static final double MAX_DISTANCE_FACTOR_GAPI = 1.5;
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {

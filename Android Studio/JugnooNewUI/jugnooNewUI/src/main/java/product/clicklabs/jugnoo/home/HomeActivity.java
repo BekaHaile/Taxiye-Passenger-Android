@@ -1082,7 +1082,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 								public void run() {
 									rideNowClicked = false;
 								}
-							}, 1000);
+							}, 300);
 						}
 					}
                 } catch (Exception e) {
@@ -2517,6 +2517,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             Data.autoData.setcSessionId("");
             Data.autoData.setcEngagementId("");
             dropLocationSearchText = "";
+
+            if(myLocation == null){
+                myLocation = new Location(LocationManager.GPS_PROVIDER);
+                myLocation.setLatitude(Data.latitude);
+                myLocation.setLongitude(Data.longitude);
+            }
 
             double distance = MapUtils.distance(Data.autoData.getPickupLatLng(), new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
             if (distance > MAP_PAN_DISTANCE_CHECK) {
@@ -6086,7 +6092,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 													ridePathsList.clear();
 													ridePathsList.addAll(ridePathsSorted);
 
+                                                    boolean sourceAdded = false;
 													for (RidePath ridePathI : ridePathsList) {
+                                                        if(!sourceAdded){
+                                                            latLngsList.add(ridePathI.getSourceLatLng());
+                                                            sourceAdded = true;
+                                                        }
 														lastLatLng = ridePathI.getDestinationLatLng();
 														latLngsList.add(lastLatLng);
 													}
