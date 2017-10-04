@@ -1810,8 +1810,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if (type == AppConstant.ApplicationType.MENUS || type == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
             showDeliverySlot = false;
         } else {
-            deliverySlot = DateOperations.convertDayTimeAPViaFormat(slot.getStartTime())
-                    + " - " + DateOperations.convertDayTimeAPViaFormat(slot.getEndTime());
+            deliverySlot = DateOperations.convertDayTimeAPViaFormat(slot.getStartTime(), false)
+                    + " - " + DateOperations.convertDayTimeAPViaFormat(slot.getEndTime(), false);
             deliveryDay = slot.getDayName();
         }
 

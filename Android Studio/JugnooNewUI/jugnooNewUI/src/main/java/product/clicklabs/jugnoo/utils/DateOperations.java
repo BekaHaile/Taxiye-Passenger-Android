@@ -571,9 +571,9 @@ public class DateOperations {
 		}
 	}
 
-	public static String convertDayTimeAPViaFormat(String dateTime) {
+	public static String convertDayTimeAPViaFormat(String dateTime, boolean showFullHours) {
 		SimpleDateFormat sdfFrom = new SimpleDateFormat("HH:mm:ss");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("hh:mm a");
+		SimpleDateFormat sdfTo = new SimpleDateFormat((showFullHours?"h":"") + "h:mm a");
 		try {
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);
