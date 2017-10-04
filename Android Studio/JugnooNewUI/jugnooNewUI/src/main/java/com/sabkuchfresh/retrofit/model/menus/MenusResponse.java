@@ -735,9 +735,9 @@ public class MenusResponse {
 			StringBuilder sb = new StringBuilder();
 			if(restaurantTimings != null){
 				for(RestaurantTiming timing : restaurantTimings){
-					sb.append(DateOperations.convertDayTimeAPViaFormat(timing.getStartTime()))
+					sb.append(DateOperations.convertDayTimeAPViaFormat(timing.getStartTime(), true))
 							.append(" - ")
-							.append(DateOperations.convertDayTimeAPViaFormat(timing.getEndTime()))
+							.append(DateOperations.convertDayTimeAPViaFormat(timing.getEndTime(), true))
 							.append("\n");
 				}
 			}

@@ -4349,7 +4349,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 prefix = getString(R.string.opens_at);
 
 
-                sb = new SpannableStringBuilder(String.valueOf(DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt() + " ")));
+                sb = new SpannableStringBuilder(String.valueOf(DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt() + " ", false)));
             }
             sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             textView.setText(prefix);

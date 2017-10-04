@@ -655,7 +655,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(vendor.getOrderMode() == 0){
             if(!TextUtils.isEmpty(vendor.getOpensAt()) && !TextUtils.isEmpty(vendor.getCloseIn())
                     && !"00:00:00".equals(vendor.getOpensAt()) && !"00:00:00".equals(vendor.getCloseIn())) {
-                return DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt()) + "-" + DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn());
+                return DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt(), false) + "-" + DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn(), false);
             } else {
                 return "";
             }
@@ -1536,7 +1536,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         String currentSystemTime = getDateFormatHHMMA().format(new Date());
         long timeDiff1 = 2*Constants.HOUR_MILLIS;
         if(!TextUtils.isEmpty(vendor.getCloseIn())){
-            timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()), currentSystemTime);
+            timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn(), false), currentSystemTime);
         }
         long minutes = ((timeDiff1 / (1000L* 60L)));
         if (minutes <= 0) {

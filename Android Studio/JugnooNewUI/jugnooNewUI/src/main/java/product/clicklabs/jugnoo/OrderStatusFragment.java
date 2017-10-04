@@ -688,7 +688,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             } else {
                 if (datum1.getStartTime() != null && datum1.getEndTime() != null) {
                     tvDeliveryTimeVal.setText(datum1.getExpectedDeliveryDate() + " " +
-                            DateOperations.convertDayTimeAPViaFormat(datum1.getStartTime()).replace("AM", "").replace("PM", "") + " - " + DateOperations.convertDayTimeAPViaFormat(datum1.getEndTime()));
+                            DateOperations.convertDayTimeAPViaFormat(datum1.getStartTime(), false).replace("AM", "").replace("PM", "") + " - " + DateOperations.convertDayTimeAPViaFormat(datum1.getEndTime(), false));
                 } else {
                     tvDeliveryTimeVal.setText(datum1.getExpectedDeliveryDate());
                 }

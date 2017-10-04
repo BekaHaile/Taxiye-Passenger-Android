@@ -158,7 +158,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                         || orderHistory.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
                     holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(orderHistory.getOrderTime())));
                 } else {
-                    holder.textViewDetailsValue.setText(orderHistory.getExpectedDeliveryDate() + ", " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime()) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime()));
+                    holder.textViewDetailsValue.setText(orderHistory.getExpectedDeliveryDate() + ", " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime(), false) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime(), false));
                 }
 
                 holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(orderHistory.getDiscountedAmount())));

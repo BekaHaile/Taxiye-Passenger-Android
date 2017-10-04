@@ -287,7 +287,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
                     mHolder.cartLayout.setVisibility(View.VISIBLE);
                     mHolder.deliveryTime.setVisibility(View.VISIBLE);
-                    mHolder.deliveryTime.setText(subItem.getDeliveryTimeText()+"\n"+ DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart()));
+                    mHolder.deliveryTime.setText(subItem.getDeliveryTimeText()+"\n"+ DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart(), false));
                 } else {
                     if(subItem.getStock() == 0) {
                         mHolder.imageClosed.setVisibility(View.VISIBLE);
@@ -297,8 +297,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         mHolder.cartLayout.setVisibility(View.VISIBLE);
                     }
 
-                    mHolder.deliveryTime.setText(subItem.getDeliveryTimeText()+"\n"+ DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart()) + " to "
-                            + DateOperations.convertDayTimeAPViaFormat(subItem.getOrderEnd()));
+                    mHolder.deliveryTime.setText(subItem.getDeliveryTimeText()+"\n"+ DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart(), false) + " to "
+                            + DateOperations.convertDayTimeAPViaFormat(subItem.getOrderEnd(), false));
                     mHolder.deliveryTime.setVisibility(View.GONE);
                 }
 
