@@ -236,7 +236,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		bMyLocation.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				zoomToDriverAndDrop();
+				zoomToDriverAndDrop(null, 0);
 			}
 		});
 
@@ -262,23 +262,25 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 				e.printStackTrace();
 				googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(deliveryLatLng, 15));
 			}
-			zoomToDriverAndDrop();
+			zoomToDriverAndDrop(null, 0);
 		}
 	}
 
-	private void zoomToDriverAndDrop(){
+	private void zoomToDriverAndDrop(LatLng latLngDriverAnim, int zoomDuration){
 		try {
 			if (googleMap != null) {
 				LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
 				llbBuilder.include(deliveryLatLng);
 				if(markerDriver != null) {
-					llbBuilder.include(markerDriver.getPosition());
+					if(latLngDriverAnim == null) {
+						llbBuilder.include(markerDriver.getPosition());
+					}
 				} else {
 					llbBuilder.include(pickupLatLng);
 				}
 
-				for(LatLng latLng : latLngsDriverAnim){
-					llbBuilder.include(latLng);
+				if(latLngDriverAnim != null) {
+					llbBuilder.include(latLngDriverAnim);
 				}
 
 				if(polylinePath2 != null) {
@@ -287,7 +289,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 					}
 				}
 
-				int duration = !zoomedFirstTime?1000:2000;
+				int duration = zoomDuration > 0 ? zoomDuration : (!zoomedFirstTime?1000:2000);
 				googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), duration, null);
 			} else {
 				Utils.showToast(activity, getString(R.string.waiting_for_location));
@@ -416,7 +418,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 														markerDriver.setRotation(Prefs.with(activity).getFloat(Constants.SP_TRACKING_LAST_BEARING, (float) bearing));
 													}
 													if (!zoomedFirstTime) {
-														zoomToDriverAndDrop();
+														zoomToDriverAndDrop(null, 0);
 													}
 
 													if (!TextUtils.isEmpty(trackingInfo)) {
@@ -524,9 +526,6 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 //												polylinePath1 = googleMap.addPolyline(polylineOptions1);
 												polylinePath2 = googleMap.addPolyline(polylineOptions2);
 											}
-											if (zoomedFirstTime && expanded) {
-												zoomToDriverAndDrop();
-											}
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
@@ -571,6 +570,14 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		@Override
 		public void onPathFound(List<LatLng> latLngs) {
 
+		}
+
+		@Override
+		public void onTranslate(LatLng latLng, double duration) {
+
+			if (zoomedFirstTime && expanded) {
+				zoomToDriverAndDrop(latLng, (int)(0.7d*duration));
+			}
 		}
 
 		@Override
@@ -671,7 +678,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 			expanded = true;
 			googleMap.setPadding(0, 0, 0, 0);
 			tiltState = false;
-			zoomToDriverAndDrop();
+			zoomToDriverAndDrop(null, 0);
 			setEtaText(lastEta);
 		}
 	}
@@ -681,7 +688,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 			expanded = false;
 			googleMap.setPadding(0, 0, 0, rootHeight - initialHeight);
 			tiltState = true;
-			zoomToDriverAndDrop();
+			zoomToDriverAndDrop(null, 0);
 			tvETA.setVisibility(View.GONE);
 		}
 	}

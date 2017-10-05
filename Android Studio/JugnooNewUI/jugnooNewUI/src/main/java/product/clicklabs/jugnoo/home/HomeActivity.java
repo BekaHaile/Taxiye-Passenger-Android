@@ -418,7 +418,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     private static final int MAP_ANIMATE_DURATION = 500;
 
     public static final double FIX_ZOOM_DIAGONAL = 358;
-    private final float MAP_PADDING = 100f;
+    private final float MAP_PADDING = 130f;
 
     public static final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
 
@@ -2730,7 +2730,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 && Data.autoData != null
                 && Data.autoData.getAssignedDriverInfo() != null
                 && Data.autoData.getAssignedDriverInfo().latLng != null){
-            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null);
+            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
         }else {
             myLocationButtonClicked = true;
             if(fromButton) {
@@ -3212,7 +3212,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                             stopDropLocationSearchUI(true);
                         }
                         setDropLocationEngagedUI();
-                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null);
+                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
                         buttonAddMoneyToWallet.setVisibility(View.GONE);
@@ -3290,7 +3290,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         setDropLocationEngagedUI();
 
                         setAssignedDriverData(mode);
-                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null);
+                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
 
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
@@ -3357,7 +3357,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         setDropLocationEngagedUI();
 
                         setAssignedDriverData(mode);
-                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null);
+                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
 
                         buttonCancelRide.setVisibility(View.GONE);
                         buttonAddMoneyToWallet.setVisibility(View.GONE);
@@ -5244,7 +5244,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         }
     }
 
-    private void zoomtoPickupAndDriverLatLngBounds(final LatLng driverLatLng, List<LatLng> latLngsToInclude){
+    private void zoomtoPickupAndDriverLatLngBounds(final LatLng driverLatLng, List<LatLng> latLngsToInclude, int duration){
         try{
             if((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
@@ -5271,6 +5271,10 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     }
                     final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(boundsBuilder, FIX_ZOOM_DIAGONAL);
                     final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                    if(duration == 0){
+                        duration = getMapAnimateDuration();
+                    }
+                    final int finalDuration = duration;
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -5279,7 +5283,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                         || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                                         || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
                                         && bounds != null) {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), getMapAnimateDuration(), null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), finalDuration, null);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -5894,8 +5898,15 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                                                 driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), new MarkerAnimation.CallbackAnim() {
                                                                                     @Override
                                                                                     public void onPathFound(List<LatLng> latLngs) {
-                                                                                        if(latLngs != null){
-                                                                                            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngs);
+//                                                                                        if(latLngs != null){
+//                                                                                            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngs);
+//                                                                                        }
+                                                                                    }
+
+                                                                                    @Override
+                                                                                    public void onTranslate(LatLng latLng, double duration) {
+                                                                                        if(latLng != null) {
+                                                                                            zoomtoPickupAndDriverLatLngBounds(latLng, null, (int) (0.7d*duration));
                                                                                         }
                                                                                     }
 
@@ -6314,7 +6325,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                             }
                                             latLngsToInclude.addAll(finalListPath1);
                                         }
-										zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngsToInclude);
+										zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngsToInclude, 0);
 									}
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -8722,7 +8733,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 					|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
 					|| PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
 				saveLastDestinations(searchResult);
-				zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null);
+				zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null, 0);
 
 				sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
 						getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true, searchResult.getAddress());
@@ -9743,7 +9754,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
-            return 1500;
+            return 1000;
         }
         return MAP_ANIMATE_DURATION;
     }
