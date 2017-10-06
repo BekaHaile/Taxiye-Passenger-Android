@@ -234,8 +234,16 @@ public class MarkerAnimation {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                straightLineCase();
             }
             return null;
+        }
+
+        private void straightLineCase() {
+            list = new ArrayList<>();
+            list.add(source);
+            list.add(destination);
+            totalDistance = MapUtils.distance(source, destination);
         }
 
         @Override
@@ -248,18 +256,12 @@ public class MarkerAnimation {
                             JSONObject jObj = new JSONObject(result);
                             totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
                             if(totalDistance > MapUtils.distance(source, destination) * MAX_DISTANCE_FACTOR_GAPI){
-                                list = new ArrayList<>();
-                                list.add(source);
-                                list.add(destination);
-                                totalDistance = MapUtils.distance(source, destination);
+                                straightLineCase();
                             } else {
                                 list = MapUtils.getLatLngListFromPath(result);
                             }
                         } else if(list == null && TextUtils.isEmpty(result)){
-							list = new ArrayList<>();
-							list.add(source);
-							list.add(destination);
-							totalDistance = MapUtils.distance(source, destination);
+                            straightLineCase();
 						}
 
                         ArrayList<Double> duration = new ArrayList<>();

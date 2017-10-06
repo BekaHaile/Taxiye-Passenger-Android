@@ -417,8 +417,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     public static final float MAX_ZOOM = 16;
     private static final int MAP_ANIMATE_DURATION = 500;
 
-    public static final double FIX_ZOOM_DIAGONAL = 358;
-    private final float MAP_PADDING = 130f;
+    public static final double FIX_ZOOM_DIAGONAL = 100;
+    private final float MAP_PADDING = 100f;
 
     public static final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
 
