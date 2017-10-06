@@ -120,7 +120,6 @@ import java.util.TimerTask;
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
-import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -133,6 +132,7 @@ import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.RazorpayBaseActivity;
 import product.clicklabs.jugnoo.RideCancellationActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
@@ -229,7 +229,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class HomeActivity extends BaseAppCompatActivity implements AppInterruptHandler,
+public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
         GACategory, GAAction{
@@ -3814,7 +3814,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 title = getResources().getString(R.string.receipt);
             } else if(RideEndFragmentMode.ONLINE_PAYMENT == rideEndFragmentMode) {
                 fragToCheck = getStarSubscriptionCheckoutFragment();
-                fragToAdd = StarSubscriptionCheckoutFragment.newInstance(Data.autoData.getEndRideData().engagementId,
+                fragToAdd = StarSubscriptionCheckoutFragment.newInstance(Integer.parseInt(Data.autoData.getEndRideData().engagementId),
                         Data.autoData.getEndRideData().toPay);
                 tag = StarSubscriptionCheckoutFragment.class.getName();
                 title = getResources().getString(R.string.pay_online);

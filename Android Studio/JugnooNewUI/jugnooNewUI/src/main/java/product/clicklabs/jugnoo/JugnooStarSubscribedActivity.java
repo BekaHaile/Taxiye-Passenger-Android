@@ -290,6 +290,7 @@ public class JugnooStarSubscribedActivity extends RazorpayBaseActivity implement
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
                 setScreenTitle(getString(R.string.jugnoo_star));
                 //rlFragment.setVisibility(View.GONE);
+                btnUpgradeNow.setVisibility(View.VISIBLE);
             }
             super.onBackPressed();
 
@@ -655,6 +656,7 @@ public class JugnooStarSubscribedActivity extends RazorpayBaseActivity implement
         Fragment benefitsFragment  = activity.getSupportFragmentManager().findFragmentByTag(ViewJugnooStarBenefitsFragment.class.getName());
         if(benefitsFragment!=null) {fragmentTransaction.hide(benefitsFragment);}
         fragmentTransaction.commitAllowingStateLoss();
+        btnUpgradeNow.setVisibility(View.GONE);
     }
 
 
