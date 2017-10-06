@@ -646,7 +646,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	private Handler handler = new Handler();
 
 	private LatLngBounds getMapLatLngBounds(LatLngBounds.Builder builder){
-		return MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, 200);
+		return MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, 100);
 	}
 
 
