@@ -1381,6 +1381,7 @@
     <string name="chat_support">Chat Support</string>
     <string name="from_wo">From</string>
     <string name="to_wo">To</string>
+    <string name="pay_online">Pay Online</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

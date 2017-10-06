@@ -4699,7 +4699,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(this);
             Intent intent = new Intent(this, RazorpayCallbackService.class);
-            intent.putExtra(Constants.KEY_APP_TYPE, getAppType());
             intent.putExtra(Constants.KEY_ACCESS_TOKEN, pair.first);
             intent.putExtra(Constants.KEY_RAZORPAY_PAYMENT_ID, paymentId);
             intent.putExtra(Constants.KEY_RAZORPAY_SIGNATURE, signature);

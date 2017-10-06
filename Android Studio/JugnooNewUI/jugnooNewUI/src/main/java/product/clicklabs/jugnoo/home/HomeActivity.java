@@ -170,6 +170,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.emergency.EmergencyDisableDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
+import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
@@ -351,7 +352,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     private AnimationDrawable jugnooAnimation;
     private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp, ivEndRideType,
             imageViewPaymentModeConfirm, imageViewRideEndWithImage;
-    private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
+    private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends, bPayOnline;
 
 
 
@@ -808,6 +809,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         imageViewThumbsUp = (ImageView) findViewById(R.id.imageViewThumbsUp);
         textViewThumbsDown = (TextView) findViewById(R.id.textViewThumbsDown); textViewThumbsDown.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         textViewThumbsUp = (TextView) findViewById(R.id.textViewThumbsUp); textViewThumbsUp.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        bPayOnline = (Button) findViewById(R.id.bPayOnline);
 
         rlChatDriver = (RelativeLayout) findViewById(R.id.rlChatDriver);
         bChatDriver = (Button) findViewById(R.id.bChatDriver); bChatDriver.setOnClickListener(this);
@@ -1568,7 +1570,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 try {
                     if(Data.autoData.getEndRideData() != null) {
 						linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.INVOICE);
-						Bundle bundle = new Bundle();
 						GAUtils.event(RIDES, FEEDBACK, VIEW_INVOICE+CLICKED);
 					}
                 } catch (Exception e) {
@@ -1652,6 +1653,19 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             }
         });
 
+        bPayOnline.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if(Data.autoData.getEndRideData() != null) {
+						linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.ONLINE_PAYMENT);
+						GAUtils.event(RIDES, RIDE+END, ONLINE_PAYMENT);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         View.OnClickListener onClickListenerPokeOnOff = new OnClickListener() {
             @Override
@@ -3798,6 +3812,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 fragToAdd = RideSummaryFragment.newInstance(-1, null, false, EngagementStatus.ENDED.getOrdinal());
                 tag = RideSummaryFragment.class.getName();
                 title = getResources().getString(R.string.receipt);
+            } else if(RideEndFragmentMode.ONLINE_PAYMENT == rideEndFragmentMode) {
+                fragToCheck = getStarSubscriptionCheckoutFragment();
+                fragToAdd = StarSubscriptionCheckoutFragment.newInstance(Data.autoData.getEndRideData().engagementId,
+                        Data.autoData.getEndRideData().toPay);
+                tag = StarSubscriptionCheckoutFragment.class.getName();
+                title = getResources().getString(R.string.pay_online);
             }
             if ((fragToCheck == null || fragToCheck.isRemoving())
                     && fragToAdd != null) {
@@ -3825,6 +3845,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         Fragment frag = getSupportFragmentManager()
                 .findFragmentByTag(RideSummaryFragment.class.getName());
         return (RideSummaryFragment) frag;
+    }
+
+    private StarSubscriptionCheckoutFragment getStarSubscriptionCheckoutFragment(){
+        Fragment frag = getSupportFragmentManager()
+                .findFragmentByTag(StarSubscriptionCheckoutFragment.class.getName());
+        return (StarSubscriptionCheckoutFragment) frag;
     }
 
     private void updateInRideAddMoneyToWalletButtonText(){

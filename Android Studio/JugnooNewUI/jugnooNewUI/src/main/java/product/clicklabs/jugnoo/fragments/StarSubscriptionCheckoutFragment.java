@@ -4,18 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
@@ -32,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -41,7 +38,7 @@ import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.StarBaseActivity;
+import product.clicklabs.jugnoo.RazorpayBaseActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -70,8 +67,6 @@ import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
-import android.os.Handler;
-import android.widget.Toast;
 
 
 /**
@@ -81,7 +76,8 @@ import android.widget.Toast;
 public class StarSubscriptionCheckoutFragment extends Fragment implements PromoCouponsAdapter.Callback, GAAction, GACategory {
 
     private View rootView;
-    private StarBaseActivity activity;
+    private RazorpayBaseActivity activity;
+    private CardView cvStarPlans;
     private TextView tvPaymentPlan, tvPlanAmount, tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2,
             tvDuration1, tvDuration2;
     private Button bPlaceOrder;
@@ -104,12 +100,25 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private PaySlider paySlider;
     private ArrayList<SubscriptionData.Subscription> subscriptionsActivityList;
 
+    private static final String FOR_STAR_SUBSCRIPTION = "for_star_subscription";
+
 
     public static StarSubscriptionCheckoutFragment newInstance(String subscription, int type){
         StarSubscriptionCheckoutFragment fragment = new StarSubscriptionCheckoutFragment();
         Bundle bundle = new Bundle();
+        bundle.putBoolean(FOR_STAR_SUBSCRIPTION, true);
         bundle.putString("plan", subscription);
         bundle.putInt("type", type);
+        fragment.setArguments(bundle);
+        return  fragment;
+    }
+
+    public static StarSubscriptionCheckoutFragment newInstance(String engagementId, double fare){
+        StarSubscriptionCheckoutFragment fragment = new StarSubscriptionCheckoutFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(FOR_STAR_SUBSCRIPTION, false);
+        bundle.putString(Constants.KEY_ENGAGEMENT_ID, engagementId);
+        bundle.putDouble(Constants.KEY_FARE_TO_PAY, fare);
         fragment.setArguments(bundle);
         return  fragment;
     }
@@ -143,6 +152,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
             llStarPurchase = (LinearLayout) rootView.findViewById(R.id.llStarPurchase);
             rlStarUpgrade = (RelativeLayout) rootView.findViewById(R.id.rlStarUpgrade);
+            cvStarPlans = (CardView) rootView.findViewById(R.id.cvStarPlans);
             tvPaymentPlan = (TextView) rootView.findViewById(R.id.tvPaymentPlan); tvPaymentPlan.setTypeface(Fonts.mavenMedium(activity));
             tvPlanAmount = (TextView) rootView.findViewById(R.id.tvPlanAmount); tvPlanAmount.setTypeface(Fonts.mavenMedium(activity));
             bPlaceOrder = (Button) rootView.findViewById(R.id.bPlaceOrder); bPlaceOrder.setTypeface(Fonts.mavenMedium(activity)); bPlaceOrder.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -441,7 +451,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         }
 
         try {
-            final int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
             boolean goAhead = true;
             if (getPaymentOption() == PaymentOption.PAYTM) {
                 if (Data.userData.getPaytmBalance() < subscription.getAmount()) {
@@ -481,38 +490,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             }
 
             if (goAhead) {
-                bPlaceOrder.setEnabled(false);
-//                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
-//                        activity.getResources().getString(R.string.place_order_confirmation),
-//                        activity.getResources().getString(R.string.ok),
-//                        activity.getResources().getString(R.string.cancel),
-//                        new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                if (getPaymentOption().getOrdinal() == 1) {
-//                                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
-//                                } else {
-//                                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
-//                                }
-//
-//                                apiPurchaseSubscription();
-//                            }
-//                        },
-//                        new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                bPlaceOrder.setEnabled(true);
-//                            }
-//                        }, false, false);
-
-
-                if(purchaseType == StarPurchaseType.RENEW.getOrdinal()) {
-                    apiRenewSubscription();
-                } else if(purchaseType == StarPurchaseType.UPGRADE.getOrdinal()){
-                    apiUpgradeSubscription();
-                } else{
-                    apiPurchaseSubscription();
-                }
+                jugnooStarApi();
             }else{
                 paySlider.setSlideInitial();
             }
@@ -836,7 +814,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                             if(jObj.has(Constants.KEY_RAZORPAY_PAYMENT_OBJECT)){
                                 // razor pay case send data to RazorPay Checkout page
-                                activity.setPurchaseSubscriptionResponse(purchaseSubscriptionResponse);
+                                activity.setPurchaseSubscriptionResponse(purchaseSubscriptionResponse.getOrderId(),
+                                        purchaseSubscriptionResponse.getRazorPaymentObject().getAuthOrderId());
                                 activity.startRazorPayPayment(jObj.getJSONObject(Constants.KEY_RAZORPAY_PAYMENT_OBJECT), isRazorUPI);
                             } else {
                                 DialogPopup.alertPopupWithListener(activity, "", message, getResources().getString(R.string.ok), new View.OnClickListener() {
@@ -887,13 +866,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        if(purchaseType == StarPurchaseType.RENEW.getOrdinal()) {
-                            apiRenewSubscription();
-                        } else if(purchaseType == StarPurchaseType.UPGRADE.getOrdinal()){
-                            apiUpgradeSubscription();
-                        } else{
-                            apiPurchaseSubscription();
-                        }
+                        jugnooStarApi();
                     }
 
                     @Override
@@ -906,6 +879,16 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
                     }
                 });
+    }
+
+    private void jugnooStarApi() {
+        if(purchaseType == StarPurchaseType.RENEW.getOrdinal()) {
+			apiRenewSubscription();
+		} else if(purchaseType == StarPurchaseType.UPGRADE.getOrdinal()){
+			apiUpgradeSubscription();
+		} else{
+			apiPurchaseSubscription();
+		}
     }
 
     private void apiUpgradeSubscription() {

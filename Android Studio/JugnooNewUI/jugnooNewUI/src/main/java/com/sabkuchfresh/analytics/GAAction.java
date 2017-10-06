@@ -240,4 +240,6 @@ public interface GAAction {
 	String BULK_ORDER_CTA = "Bulk Order CTA ";
 
 	String V2 = "V2 ";
+	String END = "End ";
+	String ONLINE_PAYMENT = "Online Payment ";
 }

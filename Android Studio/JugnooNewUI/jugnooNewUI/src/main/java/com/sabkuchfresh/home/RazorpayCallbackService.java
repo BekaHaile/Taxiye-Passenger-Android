@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.sabkuchfresh.utils.AppConstant;
-
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -36,8 +34,6 @@ public class RazorpayCallbackService extends IntentService {
 	protected void onHandleIntent(@Nullable Intent intent) {
 
 		try {
-			int appType = intent.getIntExtra(Constants.KEY_APP_TYPE, AppConstant.ApplicationType.FRESH);
-
 			HashMap<String, String> map = new HashMap<>();
 			map.put(Constants.KEY_ACCESS_TOKEN, intent.getStringExtra(Constants.KEY_ACCESS_TOKEN));
 			map.put(Constants.KEY_RAZORPAY_PAYMENT_ID, intent.getStringExtra(Constants.KEY_RAZORPAY_PAYMENT_ID));
@@ -48,19 +44,16 @@ public class RazorpayCallbackService extends IntentService {
 
 			Response response = null;
 			new HomeUtil().putDefaultParams(map);
-			if(appType == AppConstant.ApplicationType.MENUS || appType == AppConstant.ApplicationType.DELIVERY_CUSTOMER){
-				map.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(this));
+			String clientId = Config.getLastOpenedClientId(this);
+			map.put(Constants.KEY_CLIENT_ID, clientId);
+			if(clientId.equalsIgnoreCase(Config.getMenusClientId())
+					|| clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId())){
 				response = RestClient.getMenusApiService().razorpayPlaceOrderCallback(map);
-
-			} else if(appType == AppConstant.ApplicationType.MEALS){
-				map.put(Constants.KEY_CLIENT_ID, Config.getMealsClientId());
+			} else if (clientId.equalsIgnoreCase(Config.getFreshClientId())
+					|| clientId.equalsIgnoreCase(Config.getMealsClientId())){
 				response = RestClient.getFreshApiService().razorpayPlaceOrderCallback(map);
-
-			}
-			else if (appType == AppConstant.ApplicationType.FRESH){
-				map.put(Constants.KEY_CLIENT_ID, Config.getFreshClientId());
-				response = RestClient.getFreshApiService().razorpayPlaceOrderCallback(map);
-
+			} else if (clientId.equalsIgnoreCase(Config.getAutosClientId())){
+				response = RestClient.getApiService().razorpayPlaceOrderCallback(map);
 			}
 
 			if(response != null) {

@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@color/white"
     android:id="@+id/endRideReviewRl"
@@ -361,6 +362,17 @@
                 android:visibility="gone"
                 android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/button_small_text_size"/>
+
+            <Button
+                android:id="@+id/bPayOnline"
+                style="@style/ButtonTheme"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10px"
+                android:visibility="visible"
+                android:layout_marginTop="20px"
+                android:text="@string/pay_online"
+                app:font="@string/maven"
+                />
 
             <TextView
                 android:id="@+id/textViewRSScroll"

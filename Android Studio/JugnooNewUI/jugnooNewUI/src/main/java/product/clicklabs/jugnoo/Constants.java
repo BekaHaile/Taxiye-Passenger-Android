@@ -807,4 +807,6 @@ public interface Constants {
     String KEY_IS_IMMEDIATE = "is_immediate";
     String KEY_TIME = "time";
     String KEY_DELIVERY_TIME = "delivery_time";
+    String SP_RZP_ORDER_ID = "sp_rzp_order_id";
+    String SP_RZP_AUTH_ORDER_ID = "sp_rzp_auth_order_id";
 }
