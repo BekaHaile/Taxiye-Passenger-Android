@@ -253,12 +253,22 @@ public class MarkerAnimation {
                 try {
                         clearPolylines();
                         if (list == null && !TextUtils.isEmpty(result)) {
-                            JSONObject jObj = new JSONObject(result);
-                            totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
-                            if(totalDistance > MapUtils.distance(source, destination) * MAX_DISTANCE_FACTOR_GAPI){
+                            try {
+                                JSONObject jObj = new JSONObject(result);
+                                String status = jObj.getString("status");
+                                if (status.equalsIgnoreCase("OK")) {
+									totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
+									if(totalDistance > MapUtils.distance(source, destination) * MAX_DISTANCE_FACTOR_GAPI){
+										straightLineCase();
+									} else {
+										list = MapUtils.getLatLngListFromPath(result);
+									}
+								} else {
+									throw new Exception();
+								}
+                            } catch (Exception e) {
+                                e.printStackTrace();
                                 straightLineCase();
-                            } else {
-                                list = MapUtils.getLatLngListFromPath(result);
                             }
                         } else if(list == null && TextUtils.isEmpty(result)){
                             straightLineCase();

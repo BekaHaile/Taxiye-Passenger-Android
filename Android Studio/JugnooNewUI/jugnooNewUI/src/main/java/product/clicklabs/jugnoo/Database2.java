@@ -330,6 +330,30 @@ public class Database2 {                                                        
         return ridePaths;
     }
 
+    public RidePath getLastRidePath(){
+        RidePath ridePath = null;
+        try {
+            String[] columns = new String[]{POSITION_ID, SOURCE_LATITUDE,SOURCE_LONGITUDE,
+                    DESTINATION_LATITUDE, DESTINATION_LONGITUDE};
+            Cursor cursor = database.query(TABLE_RIDE_INFO, columns, null, null, null, null, POSITION_ID+" desc limit 1");
+            if(cursor.moveToFirst()){
+                int iId = cursor.getColumnIndex(POSITION_ID);
+                int iSrcLat = cursor.getColumnIndex(SOURCE_LATITUDE);
+                int iSrcLong = cursor.getColumnIndex(SOURCE_LONGITUDE);
+                int iDestLat = cursor.getColumnIndex(DESTINATION_LATITUDE);
+                int iDestLong = cursor.getColumnIndex(DESTINATION_LONGITUDE);
+                ridePath = new RidePath(cursor.getInt(iId),
+                        cursor.getDouble(iSrcLat),
+                        cursor.getDouble(iSrcLong),
+                        cursor.getDouble(iDestLat),
+                        cursor.getDouble(iDestLong));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ridePath;
+    }
+
     public void deleteRidePathTable(){
         try {
             database.delete(TABLE_RIDE_INFO, null, null);
