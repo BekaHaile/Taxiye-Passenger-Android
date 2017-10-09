@@ -14,7 +14,9 @@ import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
  * Created by gurmail on 18/08/16.
  */
 public class AutoData {
-
+    private String fuguChannelId;
+    private String fuguChannelName;
+    private ArrayList<String> fuguTags;
     private String destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, inRideSendInviteTextBold,
             inRideSendInviteTextNormal, confirmScreenFareEstimateEnable, poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3,
             rideEndGoodFeedbackText, baseFarePoolText, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2;
@@ -482,5 +484,29 @@ public class AutoData {
 
     public void setDropAddressId(int dropAddressId) {
         this.dropAddressId = dropAddressId;
+    }
+
+    public String getFuguChannelId() {
+        return fuguChannelId;
+    }
+
+    public void setFuguChannelId(String fuguChannelId) {
+        this.fuguChannelId = fuguChannelId;
+    }
+
+    public String getFuguChannelName() {
+        return fuguChannelName;
+    }
+
+    public void setFuguChannelName(String fuguChannelName) {
+        this.fuguChannelName = fuguChannelName;
+    }
+
+    public ArrayList<String> getFuguTags() {
+        return fuguTags;
+    }
+
+    public void setFuguTags(ArrayList<String> fuguTags) {
+        this.fuguTags = fuguTags;
     }
 }

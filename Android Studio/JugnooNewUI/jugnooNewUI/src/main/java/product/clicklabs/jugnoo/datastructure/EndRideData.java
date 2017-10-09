@@ -8,6 +8,9 @@ import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 
 public class EndRideData {
 
+	private String fuguChannelId;
+	private String fuguChannelName;
+	private ArrayList<String> fuguTags;
 	public String engagementId;
 	public String driverName;
 	public String driverCarNumber, driverImage,
@@ -27,12 +30,13 @@ public class EndRideData {
 	
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
 					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
-			double fare, double luggageCharge, double convenienceCharge, double discount, double paidUsingWallet,
+					   double fare, double luggageCharge, double convenienceCharge, double discount, double paidUsingWallet,
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
 					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled,
 					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, double paidUsingFreeCharge,
-					   int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs){
+					   int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
+					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -90,6 +94,10 @@ public class EndRideData {
 
 		this.supportNumber = supportNumber;
 		this.invoiceAdditionalTextCabs = invoiceAdditionalTextCabs;
+
+		this.fuguChannelId = fuguChannelId;
+		this.fuguChannelName = fuguChannelName;
+		this.fuguTags = fuguTags;
 	}
 
 
@@ -184,5 +192,17 @@ public class EndRideData {
 
 	public void setInvoiceAdditionalTextCabs(String invoiceAdditionalTextCabs) {
 		this.invoiceAdditionalTextCabs = invoiceAdditionalTextCabs;
+	}
+
+	public String getFuguChannelId() {
+		return fuguChannelId;
+	}
+
+	public String getFuguChannelName() {
+		return fuguChannelName;
+	}
+
+	public ArrayList<String> getFuguTags() {
+		return fuguTags;
 	}
 }

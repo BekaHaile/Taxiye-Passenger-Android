@@ -384,8 +384,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             topBar.etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    getMenusFragment().searchRestaurant(topBar.etSearch.getText().toString().trim());
-                    Utils.hideSoftKeyboard(FreshActivity.this,topBar.etSearch);
+                    try {
+                        getMenusFragment().searchRestaurant(topBar.etSearch.getText().toString().trim());
+                        Utils.hideSoftKeyboard(FreshActivity.this,topBar.etSearch);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     return false;
                 }
             });
@@ -2528,8 +2532,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         if (cartChangedAtCheckout && getFreshCheckoutMergedFragment() != null) {
             updateItemListFromDBFMG(null);
         }
-        if(isMenusOrDeliveryOpen()){
-            getMenusCart().clearEmptyRestaurantCarts();
+        try {
+            if(isMenusOrDeliveryOpen()){
+				getMenusCart().clearEmptyRestaurantCarts();
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         saveItemListToSPDB();
@@ -3402,7 +3410,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-//                                    TODO clear cart for previous selected activity.getCart().getDeliveryStoreCart(activity.getOpenedVendorId()).getSubItemHashMap().clear();
                                 }
                             }, true, false);
                 }
@@ -5012,6 +5019,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private MenusCart menusCart;
     private MenusCart deliveryCustomerCart;
     public MenusCart getMenusCart(){
+        MenusCart menusCart1 = getAppType()== AppConstant.ApplicationType.MENUS?menusCart:deliveryCustomerCart;
+        if(menusCart1 == null){
+            createAppCart(Config.getLastOpenedClientId(this));
+        }
         return getAppType()== AppConstant.ApplicationType.MENUS?menusCart:deliveryCustomerCart;
     }
 

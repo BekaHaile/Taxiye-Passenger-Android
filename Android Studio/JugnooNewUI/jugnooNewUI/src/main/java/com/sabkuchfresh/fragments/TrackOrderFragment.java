@@ -95,9 +95,6 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 	private Marker markerDriver;
 	private Polyline polylinePath1, polylinePath2;
-	private final int MAP_ANIMATE_DURATION = 1000;
-	private boolean mapTouchedOnce, zoomSetManually;
-	private float zoomInitial;
 	private int initialHeight, rootHeight;
 
 	private View rootView;
@@ -142,10 +139,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		assl = new ASSL(activity, 1134, 720, false);
 
 
-
-		mapTouchedOnce = false;
-		zoomSetManually = false;
-		zoomInitial = -1;
+		rootHeight = -1;
 
 		accessToken = getArguments().getString(Constants.KEY_ACCESS_TOKEN, "");
 		orderId = getArguments().getInt(Constants.KEY_ORDER_ID, 0);
@@ -202,7 +196,6 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 						@Override
 						public void onMapTouched() {
-							mapTouchedOnce = true;
 						}
 
 						@Override
@@ -222,12 +215,6 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 						@Override
 						public void onCameraPositionChanged(CameraPosition cameraPosition) {
-							// for detecting if zoom is manually changed by user, a boolean zoomSetManually
-							// will be set to stop google directions path zoom
-							if(zoomInitial == -1 && cameraPosition != null) zoomInitial = cameraPosition.zoom;
-							if(mapTouchedOnce && cameraPosition != null && cameraPosition.zoom != zoomInitial){
-								zoomSetManually = true;
-							}
 						}
 					};
 
@@ -269,11 +256,11 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 					llbBuilder.include(pickupLatLng).include(deliveryLatLng);
 					googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (120f * ASSL.minRatio())));
 				} else {
-					googleMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLatLng));
+					googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(deliveryLatLng, 15));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				googleMap.moveCamera(CameraUpdateFactory.newLatLng(pickupLatLng));
+				googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(deliveryLatLng, 15));
 			}
 			zoomToDriverAndDrop();
 		}
@@ -283,57 +270,25 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		try {
 			if (googleMap != null) {
 				LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
-				if (!zoomedFirstTime) {
-					llbBuilder.include(pickupLatLng);
-					handler.postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							if (googleMap != null) {
-								zoomInitial = googleMap.getCameraPosition().zoom;
-							}
-						}
-					}, MAP_ANIMATE_DURATION + 50);
-				}
 				llbBuilder.include(deliveryLatLng);
-				int points = 0;
 				if(markerDriver != null) {
 					llbBuilder.include(markerDriver.getPosition());
-					points++;
+				} else {
+					llbBuilder.include(pickupLatLng);
 				}
 
 				for(LatLng latLng : latLngsDriverAnim){
 					llbBuilder.include(latLng);
-					points++;
 				}
 
 				if(polylinePath2 != null) {
 					for (LatLng latLng : polylinePath2.getPoints()) {
 						llbBuilder.include(latLng);
-						points++;
 					}
 				}
 
-				if(points > 0) {
-					if(tiltState) {
-						googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
-//						handler.postDelayed(new Runnable() {
-//							@Override
-//							public void run() {
-//								CameraPosition cameraPosition = new CameraPosition.Builder()
-//										.target(MapLatLngBoundsCreator.move(googleMap.getCameraPosition().target, zoomedFirstTime?0:-1500, 0))
-//										.zoom(googleMap.getCameraPosition().zoom)
-//										.tilt(40)
-//										.build();
-//
-//								googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), MAP_ANIMATE_DURATION, null);
-//							}
-//						}, MAP_ANIMATE_DURATION);
-					} else {
-						googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
-					}
-				} else {
-					googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), MAP_ANIMATE_DURATION, null);
-				}
+				int duration = !zoomedFirstTime?1000:2000;
+				googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), duration, null);
 			} else {
 				Utils.showToast(activity, getString(R.string.waiting_for_location));
 			}
@@ -440,17 +395,12 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 							}
 
 							ArrayList<LatLng> latLngsWayPoints = new ArrayList<>();
-							latLngsWayPoints.add(pickupLatLng);
 							latLngsWayPoints.add(latLngCurr);
 							latLngsWayPoints.add(latLngDriver);
 							latLngsWayPoints.add(deliveryLatLng);
 							Pair<List<LatLng>, String> pair = apiGoogleDirectionWaypoints.setData(latLngsWayPoints, false).syncHit();
 							final List<LatLng> list = pair.first;
 							final String result = pair.second;
-//							response = RestClient.getGoogleApiService().getDirections(latitude + "," + longitude,
-//									deliveryLatLng.latitude + "," + deliveryLatLng.longitude, false, "driving", false);
-//							final String result = new String(((TypedByteArray) response.getBody()).getBytes());
-//							final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
 							activity.runOnUiThread(new Runnable() {
 
 								@Override
@@ -544,16 +494,25 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 												int pathColor = ContextCompat.getColor(activity, R.color.theme_color);
 												int untrackedPathColor = ContextCompat.getColor(activity, R.color.text_color_30alpha);
+												float pathWidth = ASSL.Xscale() * 7f;
 												if (showDeliveryRoute != 1) {
 													pathColor = Color.TRANSPARENT;
 													untrackedPathColor = Color.TRANSPARENT;
 												}
+												boolean animateRoute = false;
+												if(!animateRoute) {
+													PolylineOptions polylineOptionsUntracked = new PolylineOptions().color(untrackedPathColor).width(pathWidth).geodesic(true);
+													for (LatLng latLng : latLngsAnimateDriver) {
+														polylineOptionsUntracked.add(latLng);
+													}
+													polylineUntracked = googleMap.addPolyline(polylineOptionsUntracked);
+												}
 
 												MarkerAnimation.animateMarkerOnList(markerDriver, latLngsAnimateDriver,
-														new LatLngInterpolator.LinearFixed(), googleMap,
+														new LatLngInterpolator.LinearFixed(), animateRoute, googleMap,
 														pathColor,
 														untrackedPathColor,
-														ASSL.Xscale() * 7f);
+														pathWidth, callbackAnim);
 												latLngsDriverAnim.clear();
 												latLngsDriverAnim.addAll(latLngsAnimateDriver);
 											} else {
@@ -562,7 +521,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 
 											if (showDeliveryRoute == 1 && list.size() > 0) {
-												polylinePath1 = googleMap.addPolyline(polylineOptions1);
+//												polylinePath1 = googleMap.addPolyline(polylineOptions1);
 												polylinePath2 = googleMap.addPolyline(polylineOptions2);
 											}
 											if (zoomedFirstTime && expanded) {
@@ -606,6 +565,28 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		};
 		return timerTask;
 	}
+
+	private Polyline polylineUntracked;
+	private MarkerAnimation.CallbackAnim callbackAnim = new MarkerAnimation.CallbackAnim() {
+		@Override
+		public void onPathFound(List<LatLng> latLngs) {
+
+		}
+
+		@Override
+		public void onAnimComplete() {
+			if(polylineUntracked != null){
+				polylineUntracked.remove();
+			}
+		}
+
+		@Override
+		public void onAnimNotDone() {
+			if(polylineUntracked != null){
+				polylineUntracked.remove();
+			}
+		}
+	};
 
 	private MarkerOptions getMarkerOptionsForResource(LatLng latLng, int resId, float width, float height,
 													  float xAnchor, float yAnchor, int zIndex) {
@@ -658,7 +639,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	private Handler handler = new Handler();
 
 	private LatLngBounds getMapLatLngBounds(LatLngBounds.Builder builder){
-		return MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, 140);
+		return MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, 200);
 	}
 
 

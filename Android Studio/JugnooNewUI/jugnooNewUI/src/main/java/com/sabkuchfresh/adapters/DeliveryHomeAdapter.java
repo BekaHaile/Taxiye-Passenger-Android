@@ -36,6 +36,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -222,7 +224,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
         // notify logic
-       if(isPagination){
+        if(isPagination){
             final int sizeListAfterAddding = dataToDisplay.size();
             final int diff = sizeListAfterAddding-sizeListBeforeAdding;
            if(sizeListAfterAddding<sizeListBeforeAdding){
@@ -245,7 +247,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         }else{
            notifyDataSetChanged();
-
        }
 
     }
@@ -1523,10 +1524,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
-    public static int setRestaurantOpenStatus(TextView textView, MenusResponse.Vendor vendor, boolean setVisibility){
-        int visibilityCloseTime = View.VISIBLE;
-        DateFormat dateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-        String currentSystemTime = dateFormat.format(new Date());
+
+    private static DateFormat dateFormat;
+    private static DateFormat getDateFormatHHMMA(){
+        if(dateFormat == null){
+            dateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        }
+        return dateFormat;
+    }
+    private static long updateVendorClosedState(MenusResponse.Vendor vendor){
+        String currentSystemTime = getDateFormatHHMMA().format(new Date());
         long timeDiff1 = 2*Constants.HOUR_MILLIS;
         if(!TextUtils.isEmpty(vendor.getCloseIn())){
             timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn()), currentSystemTime);
@@ -1535,6 +1542,12 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (minutes <= 0) {
             vendor.setIsClosed(1);
         }
+        return minutes;
+    }
+
+    public static int setRestaurantOpenStatus(TextView textView, MenusResponse.Vendor vendor, boolean setVisibility){
+        int visibilityCloseTime = View.VISIBLE;
+        long minutes = updateVendorClosedState(vendor);
         if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
             textView.setText("Closed ");
         } else {
@@ -1550,5 +1563,58 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textView.setVisibility(visibilityCloseTime);
         }
         return visibilityCloseTime;
+    }
+
+    private void sortVendorsAccClosedState(){
+        if(dataToDisplay != null && dataToDisplay.size() > 0){
+            Collections.sort(dataToDisplay, new Comparator<Object>() {
+                @Override
+                public int compare(Object lhsO, Object rhsO) {
+                    int point = 0;
+                    if(lhsO instanceof MenusResponse.Vendor && rhsO instanceof MenusResponse.Vendor) {
+                        MenusResponse.Vendor lhs = (MenusResponse.Vendor) lhsO;
+                        MenusResponse.Vendor rhs = (MenusResponse.Vendor) rhsO;
+                        if (lhs.getIsClosed() == 0 && rhs.getIsClosed() != 0) {
+                            point = -(rhs.getIsClosed() - lhs.getIsClosed());
+                        } else if (lhs.getIsClosed() != 0 && rhs.getIsClosed() == 0) {
+                            point = -(rhs.getIsClosed() - lhs.getIsClosed());
+                        } else if (lhs.getIsAvailable() == 0 && rhs.getIsAvailable() != 0) {
+                            point = rhs.getIsAvailable() - lhs.getIsAvailable();
+                        } else if (lhs.getIsAvailable() != 0 && rhs.getIsAvailable() == 0) {
+                            point = rhs.getIsAvailable() - lhs.getIsAvailable();
+                        }
+                    }
+                    return point;
+                }
+            });
+            Log.i(TAG, "Doing sorting");
+        }
+    }
+
+    private boolean updateAllVendors(){
+        boolean sortingNeeded = false, foundAClosed = false;
+        if(dataToDisplay != null && dataToDisplay.size() > 0){
+            for(Object obj : dataToDisplay){
+                if(obj instanceof MenusResponse.Vendor){
+                    MenusResponse.Vendor vendor = (MenusResponse.Vendor) obj;
+                    boolean isClosed = vendor.isClosed();
+                    if(!isClosed){
+                        updateVendorClosedState(vendor);
+                    }
+                    if(vendor.isClosed()){
+                        foundAClosed = true;
+                    }
+                    if(!isClosed && vendor.isClosed()){
+                        sortingNeeded = true;
+                    } else if(foundAClosed && !vendor.isClosed()){
+                        sortingNeeded = true;
+                    }
+                }
+            }
+        }
+        if(sortingNeeded){
+            sortVendorsAccClosedState();
+        }
+        return sortingNeeded;
     }
 }

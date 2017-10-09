@@ -86,6 +86,12 @@ public class HistoryResponse {
 
     public class Datum {
 
+        @SerializedName("fugu_channel_name")
+        private String fuguChannelName;
+        @SerializedName("fugu_channel_id")
+        private String fuguChannelId;
+        @SerializedName("fugu_tags")
+        private ArrayList<String> fuguTags;
         @SerializedName("pickup_address")
         @Expose
         private String pickupAddress;
@@ -270,7 +276,17 @@ public class HistoryResponse {
         @Expose
         private ProsOrderStatusResponse.Fields fields;
 
+        public String getFuguChannelName() {
+            return fuguChannelName;
+        }
 
+        public String getFuguChannelId() {
+            return fuguChannelId;
+        }
+
+        public ArrayList<String> getFuguTags() {
+            return fuguTags;
+        }
 
         /**
          * @return The pickupAddress

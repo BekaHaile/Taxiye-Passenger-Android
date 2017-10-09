@@ -127,7 +127,6 @@
     <string name="upload_contact_yes">Yes</string>
     <string name="upload_contact_no_thanks">No, Thanks</string>
     <string name="upload_contact_less_contacts">You need to have at least 10 contacts to avail this offer</string>
-    <string name="thanks_for_riding_with_jugnoo">Thanks for riding with Jugnoo</string>
     <string name="thanks_for_ordering_with_us">Thanks for ordering with us</string>
 
 
@@ -152,7 +151,6 @@
     <string name="total_fare_colon">TOTAL FARE: </string>
     <string name="Cash_to_be_paid">CASH TO BE PAID</string>
     <string name="view_invoice">View Invoice</string>
-    <string name="rate_your_ride">How was your ride ?</string>
     <string name="submit_feedback_caps">SUBMIT FEEDBACK</string>
     <string name="skip">Skip</string>
     <string name="star_required">* Required</string>
@@ -223,7 +221,6 @@
     <string name="nl_login_facebook">Facebook</string>
     <string name="nl_login_google">Google</string>
     <string name="nl_login_phone_empty_error">Please enter phone number</string>
-    <string name="nl_login_empty_password_error">Please enter password</string>
     <string name="invalid_phone_error">Please enter valid phone number</string>
     <string name="invalid_email_error">Please enter valid email</string>
 
@@ -238,8 +235,6 @@
     <!-- NL OTP-->
     <string name="nl_otp_verification">Verification</string>
     <string name="nl_otp_enter_otp">Enter OTP</string>
-    <string name="nl_otp_verify">Verify Me</string>
-    <string name="nl_otp_give_missed_call">Give a missed call</string>
 
     <!-- NL Change Phone Number-->
     <string name="nl_change_phone_number">Change Phone Number</string>
@@ -529,7 +524,6 @@
 
     <string name="give_missed_call_dialog_text">No OTP? Don\'t worry. Just give us a missed call and we will verify your identity.</string>
     <string name="call_us">Call Us</string>
-    <string name="receive_otp_via_call">Get OTP Via Call</string>
     <string name="no_driver_nearby_try_again">No drivers nearby.\nPlease try after some time</string>
     <string name="couldnt_find_drivers_nearby">Cannot find drivers nearby</string>
 
@@ -707,7 +701,6 @@
     <string name="leaderboard">Leaderboard</string>
     <string name="activity">Activity</string>
     <string name="enter_promo_code">Enter Promocode</string>
-    <string name="no_offers_currently">No offers currently</string>
     <string name="valid_until_format">Valid until %s</string>
     <string name="email">Email</string>
     <string name="save">Save</string>
@@ -717,7 +710,6 @@
     <string name="username_empty_error">Username can\'t be empty</string>
     <string name="email_empty_error">Email can\'t be empty</string>
     <string name="phone_empty_error">Phone number can\'t be empty</string>
-    <string name="nothing_changed">Nothing changed</string>
     <string name="old_password_empty_error">Please enter old password</string>
     <string name="new_password_empty_error">Please enter new password</string>
     <string name="retype_password_empty_error">Please retype new password</string>
@@ -790,8 +782,6 @@
 
     <string name="OR">OR</string>
     <string name="id_colon">ID:</string>
-    <string name="order_id_format">Order ID: %s</string>
-    <string name="order_hash_format">Order #%s</string>
     <string name="from_colon">From:</string>
     <string name="to_colon">To:</string>
     <string name="details_colon">Details:</string>
@@ -873,7 +863,6 @@
     <string name="recent_location">Recent location</string>
     <string name="saved_locations">Saved locations</string>
     <string name="saved_location">Saved location</string>
-    <string name="trying_to_verify">Trying to verify through\nmissed call...</string>
     <string name="we_could_not_verify">Sorry, we could not verify through\nmissed call. Please try again.</string>
     <string name="selecting_a_pickup_spot">Selecting a pickup spot will save you time and make it easier to find your driver.</string>
     <string name="no_available_offers">No Available Offers</string>
@@ -895,31 +884,19 @@
     <string name="oh_snap">OH SNAP!</string>
     <string name="nothing_found_near_you">Nothing found near you\ntry to search with a different location.</string>
     <string name="sort_by">Sort by</string>
-    <string name="popularity">Popularity</string>
-    <string name="price">Price</string>
-    <string name="cuisines">Cuisines</string>
     <string name="tags">Tags</string>
     <string name="minimum_order">Minimum order amount</string>
-    <string name="less_than_150"><![CDATA[<Rs. 150]]></string>
-    <string name="less_than_250"><![CDATA[<Rs. 250]]></string>
-    <string name="less_than_500"><![CDATA[<Rs. 500]]></string>
-    <string name="delivery_time_wo_colon">Delivery time</string>
-    <string name="min_30">30 Min</string>
-    <string name="min_45">45 Min</string>
-    <string name="min_60">60 Min</string>
     <string name="filters">Filters</string>
     <string name="reset">Reset</string>
     <string name="bullet">\u2022</string>
     <string name="bullet_spaces"> \u2022 &#032;</string>
     <string name="select_cuisines">Select Cuisines</string>
-    <string name="search_a_cuisine">Search a cuisine</string>
     <string name="search_3dot">Search...</string>
     <string name="more_info">More info</string>
     <string name="previous_vendor_cart_message_format">You have added some items in cart from %s.\nAre you sure you want to clear the cart?</string>
     <string name="minimum_order_amount_is_format">Minimum order amount is \u20B9%s</string>
     <string name="request_a_ride">Request a ride</string>
     <string name="move_to_your_location">Move to your location</string>
-    <string name="no_cuisine_found">No cuisine found</string>
     <string name="no_menus_available">No menus available</string>
 
     <string name="pay">Pay</string>
@@ -1068,8 +1045,6 @@
     <string name="no_delivery_available_your_location">Sorry, delivery isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
     <string name="oops_no_results_found">Oops, No results found</string>
     <string name="quick_filters">Quick Filters</string>
-    <string name="offers_discount">Offers Discount</string>
-    <string name="pure_veg">Pure Vegetarian</string>
     <string name="free_delivery">Free Delivery</string>
 
     <string name="delivers_in">Delivers in</string>
@@ -1165,10 +1140,7 @@
     <string name="welcome_to_jugnoo">Welcome to Jugnoo</string>
     <string name="or_signup_with">Or signup with</string>
     <string name="enter_otp_recieved_on">Enter OTP received on:</string>
-    <string name="did_not_receive_otp">Didn\'t receive OTP?</string>
-    <string name="try_one_of_the_following">Try one of the following:</string>
     <string name="autodetecting_otp_sent_to">Autodetecting OTP sent to</string>
-    <string name="use_password_to_login">Use Password to Login</string>
 
     <string name="permissions_get_accounts_message">
         Grant permission to read your email address from your device to pre-fill.
@@ -1278,7 +1250,6 @@
     <string name="view_benefits"><u>View Benefits</u></string>
     <string name="benefits">BENEFITS</string>
     <string name="ask_a_question">Ask a question</string>
-    <string name="email_was_incorrect">Email ID was incorrect</string>
     <string name="item_not_available">Selected item currently not available!</string>
     <string name="total_savings">Total Savings</string>
     <string name="title_my_profile">MY PROFILE</string>
@@ -1287,14 +1258,11 @@
     <string name="error_get_handle_suggestions">Network Error! Could not fetch suggestions.</string>
     <string name="feed_claim_handle_description">Pick a nickname</string>
     <string name="error_enter_handle">Please enter a handle name.</string>
-    <string name="please_give_some_rating">Please give some rating</string>
     <string name="write_a_review">Write a review</string>
     <string name="feed">Feed</string>
     <string name="label_confirm_delivery_address">Click and confirm delivery address!</string>
     <string name="veg_only">Veg Only</string>
     <string name="back_button">Back button</string>
-    <string name="start_typing_a_cuisine">Start typing a cuisine…</string>
-    <string name="minimum_order_amount">Minimum order amount</string>
     <string name="star_checkout_wallet_not_selected">Please select a wallet.</string>
     <string name="back">Back</string>
     <string name="change">Change</string>
@@ -1307,7 +1275,6 @@
     <string name="report_issue">Report Issue</string>
     <string name="chat_with_us">Chat with us</string>
     <string name="call_restaurant">Call Restaurant</string>
-    <string name="accepts_online_payment">Accepts Online Payment</string>
     <string name="reviews">Reviews</string>
     <string name="reviews_and_ratings">Reviews &amp; Ratings</string>
     <string name="order_is_late">Order is late</string>
@@ -1355,7 +1322,6 @@
     <string name="order_status_colon">Order Status:</string>
     <string name="order_id_colon">Order Id:</string>
     <string name="visiting_charges_may_apply">*Service rate will be determined after inspection. Minimum  visiting charges may apply.</string>
-    <string name="service_id_colon">Service ID:</string>
     <string name="select_offerings">Select Offerings</string>
     <string name="thanks_for_riding_with_us">Thanks for riding with us</string>
     <string name="label_searched_items">SEARCHED ITEMS</string>
@@ -1383,36 +1349,23 @@
     <string name="how_was_your_experience">How was your Experience?</string>
     <string name="to_use_this_coupon">To use this coupon, select it at the time of checkout.</string>
     <string name="are_you_sure_want_to_disable_emergency">Are you sure you want to disable Emergency mode?</string>
-    <string name="chat_now">Chat Now</string>
     <string name="call">Call</string>
-    <string name="add_review">Add Review</string>
     <string name="order_online">"Order Online "</string>
-    <string name="additional_info">Additional Information</string>
     <string name="see_all">See All</string>
-    <string name="open_now_colon">Open Now :</string>
     <string name="no_reviews_yet_be_first">No reviews yet!\nBe the first one to add...</string>
     <string name="label_select_category">Select Category</string>
     <string name="label_category_all">All</string>
-    <string name="accepts_online_order">Accepts Online Order</string>
-    <string name="chat_enabled">Chat Enabled</string>
-    <string name="top_rated">Top Rated (3.5+)</string>
     <string name="label_see_all">See All</string>
     <string name="ongoing_orders">Ongoing Orders</string>
-    <string name="select_format">Select %s</string>
-    <string name="order_online_not_available">Online ordering not available for this merchant</string>
-    <string name="order_online_closed">Online ordering is closed for this merchant</string>
 
     <string name="you_have_already_reviewed_format">You have already reviewed %s</string>
 
     <string name="chat_is_not_enabled_format">Chat is not available for %s</string>
     <string name="select_tags">Select Tags</string>
-    <string name="open_now">Open Now</string>
-    <string name="start_typing_tags">Start typing tags</string>
     <string name="rate_the_restaurant">Rate the Restaurant</string>
     <string name="rate_format">Rate %s</string>
     <string name="submit_your_rating">Submit Your Rating</string>
     <string name="submit_your_review">Submit Your Review</string>
-    <string name="say_something">Say something</string>
     <string name="locate">Locate</string>
 
     <plurals name="like_suffix">

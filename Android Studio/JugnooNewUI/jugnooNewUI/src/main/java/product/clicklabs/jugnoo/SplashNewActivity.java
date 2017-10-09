@@ -3065,27 +3065,37 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
 									}
 									MyApplication.getInstance().getDatabase().insertEmail(emailId);
-									missedCallDialog.dismiss();
+									if (missedCallDialog != null) {
+										missedCallDialog.dismiss();
+									}
 								}
 							} else {
 								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 							}
-							missedCallDialog.dismiss();
+							if (missedCallDialog != null) {
+								missedCallDialog.dismiss();
+							}
 						} else {
-							missedCallDialog.dismiss();
+							if (missedCallDialog != null) {
+								missedCallDialog.dismiss();
+							}
 						}
 
 					} catch (Exception exception) {
 						exception.printStackTrace();
 						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
-						missedCallDialog.dismiss();
+						if (missedCallDialog != null) {
+							missedCallDialog.dismiss();
+						}
 					}
 				}
 
 				@Override
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "change phone number with fb error=" + error.toString());
-					missedCallDialog.dismiss();
+					if (missedCallDialog != null) {
+						missedCallDialog.dismiss();
+					}
 					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
 				}
 			});

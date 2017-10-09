@@ -415,7 +415,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 5; // in meters
 
     public static final float MAX_ZOOM = 16;
-    private static final int MAP_ANIMATE_DURATION = 300;
+    private static final int MAP_ANIMATE_DURATION = 500;
 
     public static final double FIX_ZOOM_DIAGONAL = 358;
     private final float MAP_PADDING = 100f;
@@ -863,7 +863,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 Data.autoData.setPickupLatLng(specialPicupLatLng);
                 getApiFindADriver().setRefreshLatLng(specialPicupLatLng);
                 specialPickupSelected = true;
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), getMapAnimateDuration(), null);
                 selectedSpecialPickup  = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText()+", ";
                 textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress());
                 GAUtils.event(RIDES, HOME, SPECIAL_PICKUP_CHOOSED);
@@ -1627,12 +1627,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
 							rating, "", "");
                     if (Data.isFuguChatEnabled()) {
-                        try {
-                            FuguConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
-                        }
+                        fuguCustomerHelpRides(false);
                     } else {
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
                         intent.putExtra(INTENT_KEY_FROM_BAD, 1);
@@ -2742,7 +2737,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 try {
                     setCentrePinAccToGoogleMapPadding();
                     zoomAfterFindADriver = true;
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), getMapAnimateDuration(), null);
                     mapTouched = true;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -3129,7 +3124,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                         //poolPathZoomAtConfirm();
                                     } else {
                                         if (map != null && Data.autoData.getPickupLatLng() != null) {
-                                            map.animateCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()), MAP_ANIMATE_DURATION, null);
+                                            map.animateCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()), getMapAnimateDuration(), null);
                                         }
                                     }
                                 }
@@ -5287,7 +5282,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                         || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                                         || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
                                         && bounds != null) {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), MAP_ANIMATE_DURATION, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), getMapAnimateDuration(), null);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -5324,7 +5319,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 public void run() {
                     try {
                         if ("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) && !isSpecialPickupScreenOpened() && !isPoolRideAtConfirmation()) {
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), getMapAnimateDuration(), null);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -5358,9 +5353,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         public void run() {
                             try {
                                 if(finalFixedZoom){
-                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), getMapAnimateDuration(), null);
                                 } else {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), MAP_ANIMATE_DURATION, null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), getMapAnimateDuration(), null);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -6058,9 +6053,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                             JSONArray jsonArray = jObj.getJSONArray("locations");
                                             LatLng lastLatLng = null;
                                             List<LatLng> latLngsList = new ArrayList<LatLng>();
-                                            LatLng driverLatLng = driverMarkerInRide != null ? driverMarkerInRide.getPosition() : Data.autoData.getAssignedDriverInfo().latLng;
-                                            latLngsList.add(driverLatLng);
-                                            double distFromDriverLl = Double.MAX_VALUE;
                                             int firstPos = -1;
                                             for (int i = 0; i < jsonArray.length(); i++) {
                                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -6072,12 +6064,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                         jsonObject.getDouble("destination_longitude"));
 
                                                 ridePathsList.add(currentRidePath);
-
-                                                double dist = MapUtils.distance(driverLatLng, currentRidePath.getSourceLatLng());
-                                                if(dist < distFromDriverLl){
-                                                    distFromDriverLl = dist;
-                                                    firstPos = i;
-                                                }
+                                                firstPos = 0;
                                             }
                                             // sorting logic
                                             if(firstPos > -1) {
@@ -6304,9 +6291,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                     if(driverMarkerInRide != null && latLngsListForDriverAnimation != null && latLngsListForDriverAnimation.size() > 1) {
 										int untrackedPathColor = Data.autoData.getDropLatLng() != null ? getResources().getColor(R.color.google_path_polyline_color) : Color.TRANSPARENT;
 										MarkerAnimation.animateMarkerOnList(driverMarkerInRide, latLngsListForDriverAnimation,
-												new LatLngInterpolator.LinearFixed(), map,
+												new LatLngInterpolator.LinearFixed(), true, map,
 												RIDE_ELAPSED_PATH_COLOR,
-												untrackedPathColor, ASSL.Xscale() * 7f);
+												untrackedPathColor, ASSL.Xscale() * 7f, null);
 									} else {
                                         MarkerAnimation.clearPolylines();
                                     }
@@ -6790,6 +6777,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled));
 
+            JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
+            JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);
+            Data.autoData.setFuguChannelId(fuguChannelData.getFuguChannelId());
+            Data.autoData.setFuguChannelName(fuguChannelData.getFuguChannelName());
+            Data.autoData.setFuguTags(fuguChannelData.getFuguTags());
+
             MyApplication.getInstance().getDatabase2().insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), new LatLng(latitude, longitude));
 
             if(ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag){
@@ -7039,7 +7032,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     LatLng lastMapCentre = map.getCameraPosition().target;
                     LatLng currentLoc = new LatLng(location.getLatitude(), location.getLongitude());
                     if(MapUtils.distance(lastMapCentre, currentLoc) > MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
-                        map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), MAP_ANIMATE_DURATION, null);
+                        map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), getMapAnimateDuration(), null);
                     }
                 } else {
                     destroyHighSpeedAccuracyFusedLocationFetcher();
@@ -7591,7 +7584,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
             try {
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), getMapAnimateDuration(), null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -7767,15 +7760,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 @Override
                 public void onInAppCustomerSupportClick(View view) {
                     if (Data.isFuguChatEnabled()) {
-                        try {
-                            FuguConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
-                        }
+                        fuguCustomerHelpRides(true);
                     } else {
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
-//                    intent.putExtra(INTENT_KEY_FROM_BAD, 1);
                         intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
                         startActivity(intent);
                         overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -7793,6 +7780,25 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 }
             }).show(Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0));
         }
+    }
+
+    private final String FUGU_TAG_SOS = "SOS";
+    public void fuguCustomerHelpRides(boolean fromSos) {
+        try {
+			if(!TextUtils.isEmpty(Data.autoData.getFuguChannelId())){
+                Data.autoData.getFuguTags().remove(FUGU_TAG_SOS);
+                if(fromSos){
+                    Data.autoData.getFuguTags().add(FUGU_TAG_SOS);
+                }
+				FuguConfig.getInstance().openChatByTransactionId(Data.autoData.getFuguChannelId(),String.valueOf(Data.getFuguUserData().getUserId()),
+						Data.autoData.getFuguChannelName(), Data.autoData.getFuguTags());
+			}else {
+				FuguConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
+		}
     }
 
     private void dismissSOSDialog(){
@@ -8292,7 +8298,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                         map.animateCamera(CameraUpdateFactory.newLatLngBounds(MapLatLngBoundsCreator.createBoundsWithMinDiagonal(latLngBoundsBuilderPool, FIX_ZOOM_DIAGONAL),
                                 (int) (minRatio * MAP_PADDING)),
-                                MAP_ANIMATE_DURATION, null);
+                                getMapAnimateDuration(), null);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -8624,7 +8630,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 //                    .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
             if(searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())){
                 textViewInitialSearch.setText(searchResult.getNameForText());
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, new GoogleMap.CancelableCallback() {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), getMapAnimateDuration(), new GoogleMap.CancelableCallback() {
                     @Override
                     public void onFinish() {
                         setPickupAddressZoomedOnce = true;
@@ -9729,5 +9735,14 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             handler = new Handler();
         }
         return handler;
+    }
+
+    private int getMapAnimateDuration(){
+        if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+            return 1500;
+        }
+        return MAP_ANIMATE_DURATION;
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -278,7 +279,12 @@ public class RideSummaryFragment extends Fragment implements Constants {
 					if (activity instanceof RideTransactionsActivity) {
                         if (Data.isFuguChatEnabled()) {
                             try {
-                                FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
+                                if(!TextUtils.isEmpty(endRideData.getFuguChannelId())){
+                                    FuguConfig.getInstance().openChatByTransactionId(endRideData.getFuguChannelId(),String.valueOf(Data.getFuguUserData().getUserId()),
+                                            endRideData.getFuguChannelName(), endRideData.getFuguTags());
+                                }else {
+                                    FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
