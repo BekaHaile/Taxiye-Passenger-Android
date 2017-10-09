@@ -91,6 +91,7 @@ import com.sabkuchfresh.feed.ui.fragments.FeedReserveSpotFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
 import com.sabkuchfresh.feed.ui.views.TypeWriterTextView.Typewriter;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
+import com.sabkuchfresh.fragments.AnywhereHomeFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.DeliveryStoresFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
@@ -523,7 +524,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
 
-                    if(Data.getFeedData().getFeedActive()) {
+              /*      if(Data.getFeedData().getFeedActive()) {
                         if(Data.getFeedData().getHasHandle()){
 
 
@@ -537,7 +538,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                     } else {
                         addFeedReserveSpotFragment();
-                    }
+                    }*/
+                    addAnywhereHomeFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
                     lastClientId = Config.getFeedClientId();
 
@@ -1541,7 +1543,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 llSearchCartVis = View.GONE;
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment ||
+            }else if(fragment instanceof AnywhereHomeFragment){
+                topBar.getLlSearchCart().setLayoutTransition(null);
+                topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                topBar.imageViewBack.setVisibility(View.GONE);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(Data.getFeedName(this));
+
+                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                }
+
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                visMinOrder = setMinOrderAmountText(fragment);
+            }
+
+            else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment ||
                     fragment instanceof FeedClaimHandleFragment) {
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -2145,6 +2162,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 .add(relativeLayoutContainer.getId(), new FeedHomeFragment(),
                         FeedHomeFragment.class.getName())
                 .addToBackStack(FeedHomeFragment.class.getName())
+                .commitAllowingStateLoss();
+    }
+
+    public void addAnywhereHomeFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .add(relativeLayoutContainer.getId(), new AnywhereHomeFragment(),
+                        AnywhereHomeFragment.class.getName())
+                .addToBackStack(AnywhereHomeFragment.class.getName())
                 .commitAllowingStateLoss();
     }
 
