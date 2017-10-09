@@ -1119,6 +1119,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return (FreshCheckoutMergedFragment) getSupportFragmentManager().findFragmentByTag(FreshCheckoutMergedFragment.class.getName());
     }
 
+    public AnywhereHomeFragment getAnywhereHomeFragment() {
+        return (AnywhereHomeFragment) getSupportFragmentManager().findFragmentByTag(AnywhereHomeFragment.class.getName());
+    }
+
 
     public RestaurantImageFragment getRestaurantImageFragment() {
         return (RestaurantImageFragment) getSupportFragmentManager().findFragmentByTag(RestaurantImageFragment.class.getName());
@@ -1557,7 +1561,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
             }
-
             else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment ||
                     fragment instanceof FeedClaimHandleFragment) {
                 topBar.getLlSearchCart().setLayoutTransition(null);
@@ -3646,6 +3649,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     @Subscribe
     public void onAddressUpdated(AddressAdded event) {
         try {
+
             if (event.flag) {
                 if (getFreshCheckoutMergedFragment() != null) {
                     setRefreshCart(true);
