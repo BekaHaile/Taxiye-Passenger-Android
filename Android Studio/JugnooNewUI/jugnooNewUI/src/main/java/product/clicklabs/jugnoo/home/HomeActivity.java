@@ -486,7 +486,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     private ArrayList<Marker> markersSpecialPickup = new ArrayList<>();
     private ArrayList<MarkerOptions> markerOptionsSpecialPickup = new ArrayList<>();
     private float mapPaddingSpecialPickup = 268f, mapPaddingConfirm = 238f;
-    public static boolean homeSwitcher;
     private boolean setPickupAddressZoomedOnce = false;
     private GoogleApiClient mGoogleApiClient;
     private float previousZoomLevel = -1.0f;
@@ -4327,24 +4326,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
         try {
 
-            if(!homeSwitcher) {
-                homeSwitcher = true;
-                MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this,
-                        Prefs.with(HomeActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-                        getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude), false);
-            }
-
-            if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getFreshClientId())){
-                MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId(), null,
-                        getCurrentPlaceLatLng(), bundle);
-            } else if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getMealsClientId())){
-                MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getMealsClientId(), null,
-                        getCurrentPlaceLatLng(), bundle);
-            } else if(Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getGroceryClientId())){
-                MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getGroceryClientId(), null,
-                        getCurrentPlaceLatLng(), bundle);
-            }
-            Prefs.with(this).save("home_switcher_client_id", "");
+            switchAppOfClientId(this, getCurrentPlaceLatLng());
 
             Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
             if (!checkIfUserDataNull(HomeActivity.this)) {
@@ -4475,6 +4457,15 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             e.printStackTrace();
         }
 
+    }
+
+    public static void switchAppOfClientId(Activity activity, LatLng latLng) {
+        String clientIdFromHomeSwitcher = Prefs.with(activity).getString("home_switcher_client_id", "");
+        if(!TextUtils.isEmpty(clientIdFromHomeSwitcher)){
+			MyApplication.getInstance().getAppSwitcher().switchApp(activity, clientIdFromHomeSwitcher, null,
+					latLng, null);
+		}
+        Prefs.with(activity).save("home_switcher_client_id", "");
     }
 
 

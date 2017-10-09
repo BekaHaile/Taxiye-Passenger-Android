@@ -34,7 +34,7 @@ public class AppSwitcher {
 	public AppSwitcher(){}
 
 	/**
-	 * From menu
+	 * From fab, menu and notification deep linking
 	 * @param activity
 	 * @param clientId client id for the app
 	 * @param latLng
@@ -119,7 +119,7 @@ public class AppSwitcher {
 					intent.putExtra(Constants.KEY_LONGITUDE, latLng.longitude);
 					activity.startActivity(intent);
 					activity.overridePendingTransition(getInAnim(slowTransition), getOutAnim(slowTransition));
-					//activity.finish();
+					ActivityCompat.finishAffinity(activity);
 				} else {
 
 					ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
