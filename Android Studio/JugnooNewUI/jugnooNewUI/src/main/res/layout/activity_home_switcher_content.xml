@@ -1,126 +1,60 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relative"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/menu_item_selector_color">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/relative"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/menu_item_selector_color">
 
     <RelativeLayout
         android:id="@+id/topBar"
-        android:layout_width="@dimen/screen_width"
-        android:layout_height="@dimen/top_bar_height"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
         android:background="@color/white">
         <ImageView
             android:id="@+id/imageViewMenu"
-            android:layout_width="70px"
-            android:layout_height="70px"
+            android:layout_width="@dimen/dp_35"
+            android:layout_height="@dimen/dp_35"
+            android:layout_marginLeft="@dimen/dp_5"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
             android:src="@drawable/ic_menu_selector"
-            android:tag="mwar"/>
+            />
+
         <TextView
-            android:id="@+id/textViewTitle"
-            style="@style/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:font="@string/maven"
             android:text="@string/app_name"
-            android:textColor="@color/theme_color"/>
+            android:layout_centerInParent="true"
+            android:textSize="@dimen/sp_16"
+            android:textColor="@color/text_color"
+            android:textAllCaps="true"
+            />
 
     </RelativeLayout>
 
-    <ScrollView
-        android:id="@+id/scrollViewRideSummary"
+    <TextView
+        android:id="@+id/tvHeading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_user_what_you_like_to_do_format"
+        android:textColor="@color/text_color"
+        android:paddingLeft="@dimen/dp_15"
+        android:paddingTop="@dimen/dp_5"
+        android:paddingRight="@dimen/dp_15"
+        android:textSize="@dimen/sp_20"
+        android:paddingBottom="@dimen/dp_10"
+        app:font="@string/maven"
+        android:layout_below="@+id/topBar"
+        android:background="@color/white"
+        />
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvOfferings"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/topBar">
+        android:layout_below="@+id/tvHeading"
+        />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/menu_item_selector_color"
-            android:splitMotionEvents="false"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textViewHi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/px_40"
-                android:text="@string/hi_username_format"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/px_40" />
-
-
-            <TextView
-                android:id="@+id/textViewWeHave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/px_10"
-                android:gravity="center"
-                android:text="@string/we_have_these_offerings"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_28" />
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:minHeight="@dimen/dp_363"
-                >
-                <product.clicklabs.jugnoo.utils.NonScrollGridView
-                    android:id="@+id/gridView"
-                    android:layout_width="@dimen/px_550"
-                    android:layout_height="wrap_content"
-                    android:numColumns="2"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/px_15"
-                    android:layout_marginBottom="@dimen/px_20"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:horizontalSpacing="@dimen/px_10"
-                    android:gravity="center" />
-            </RelativeLayout>
-            <TextView
-                android:id="@+id/textViewWeHave2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/px_60"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/px_30"
-                android:text="@string/you_can_always_navigate"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_28" />
-
-            <product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu xmlns:fab="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/fabMenuIns"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:paddingBottom="23dp"
-                android:paddingLeft="20dp"
-                android:tag="DontTouchMe"
-                android:visibility="gone"
-                fab:fab_colorRipple="@color/grey_light_alpha"
-                fab:menu_animationDelayPerItem="25"
-                fab:menu_backgroundColor="#EBeeeeee"
-                fab:menu_icon="@drawable/ic_fab_jeanie"
-                fab:menu_labels_colorNormal="@color/white"
-                fab:menu_labels_colorPressed="@color/grey_light"
-                fab:menu_labels_ellipsize="end"
-                fab:menu_labels_position="right"
-                fab:menu_labels_singleLine="true"
-                fab:menu_shadowColor="@color/view_account_text_color">
-
-            </product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu>
-
-        </LinearLayout>
-
-    </ScrollView>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/px_6"
-        android:layout_below="@+id/topBar"
-        android:background="@drawable/shadow_down" />
 
 </RelativeLayout>

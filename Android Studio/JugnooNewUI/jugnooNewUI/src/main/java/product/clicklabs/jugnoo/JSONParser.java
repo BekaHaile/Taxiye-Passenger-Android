@@ -265,6 +265,9 @@ public class JSONParser implements Constants {
         Data.userData.setExpandJeanie(loginUserData.getExpandJeanie());
         Data.userData.setExpandedGenieText(loginUserData.getExpandedGenieText());
 
+        // TODO: 09/10/17 open home screen boolean
+        SplashNewActivity.openHomeSwitcher = true;
+
         MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData.optJSONObject(KEY_WALLET_BALANCE));
         MyApplication.getInstance().getWalletCore().parsePaymentGatewayModeConfigs(loginUserData.getPaymentGatewayModeConfigData());
 

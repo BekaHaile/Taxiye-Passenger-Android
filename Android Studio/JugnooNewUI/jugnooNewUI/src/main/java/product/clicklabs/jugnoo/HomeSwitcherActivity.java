@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -29,7 +28,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 
 
-public class HomeSwitcherActivity extends Activity {
+public class HomeSwitcherActivity extends BaseAppCompatActivity {
 
     RelativeLayout relative,relativeLayoutHomeData;
 
@@ -60,7 +59,6 @@ public class HomeSwitcherActivity extends Activity {
 
         relative = (RelativeLayout) findViewById(R.id.relative);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        new ASSL(this, drawerLayout, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.avenirNext(this));

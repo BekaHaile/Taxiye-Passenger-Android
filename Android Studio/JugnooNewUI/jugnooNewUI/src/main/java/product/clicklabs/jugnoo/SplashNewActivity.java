@@ -216,7 +216,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	String name = "", referralCode = "", emailId = "", phoneNo = "", password = "", signUpBy = "";
 	public static RegisterationType registerationType = RegisterationType.EMAIL;
 	public static JSONObject multipleCaseJSON;
-	private boolean openHomeSwitcher = true;
 
 	private String phoneFetchedName = "", phoneFetchedEmail = "";
 	private static final int FRAMEWORK_REQUEST_CODE = 1;
@@ -226,6 +225,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	private FBAccountKit fbAccountKit;
 	private EditText editTextPhoneNumber;
 	private TextView textViewPhoneNumberRequired;
+
+	public static boolean openHomeSwitcher = false;
 
 	@Override
 	protected void onStop() {
@@ -358,6 +359,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 			Fabric.with(this, new Crashlytics());
 			Data.setFuguChatBundle(getIntent().getExtras());
+
+			openHomeSwitcher = false;
 
 			try {
 				if (getIntent().hasExtra("deep_link_class")) {
@@ -2507,7 +2510,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 						MyApplication.getInstance().getAppSwitcher().switchApp(SplashNewActivity.this,
 								Prefs.with(SplashNewActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-								getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude), false);
+								getIntent().getData(), new LatLng(Data.loginLatitude, Data.loginLongitude), openHomeSwitcher);
 //						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
 //						intent.setData(getIntent().getData());
 //						startActivity(intent);
@@ -2525,7 +2528,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 						MyApplication.getInstance().getAppSwitcher().switchApp(SplashNewActivity.this,
 								Prefs.with(SplashNewActivity.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-								Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude), false);
+								Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude), openHomeSwitcher);
 //						Intent intent = new Intent(SplashNewActivity.this, HomeActivity.class);
 //						intent.setData(Data.splashIntentUri);
 //						startActivity(intent);
