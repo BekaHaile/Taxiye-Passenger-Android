@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -125,6 +126,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 	private int jobId, orderId, productType;
 	private int supportCategory;
 	private String date;
+	private HistoryResponse.Datum datum;
 
 
 	public static ProsOrderStatusFragment newInstance(int jobId, int productType) {
@@ -209,17 +211,26 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 	public void onViewClicked(View view) {
 		switch (view.getId()) {
 			case R.id.bNeedHelp:
-				View container = null;
-				if (activity instanceof FreshActivity) {
-					container = ((FreshActivity) activity).getRelativeLayoutContainer();
-				} else if (activity instanceof RideTransactionsActivity) {
-					container = ((RideTransactionsActivity) activity).getContainer();
-				} else if (activity instanceof SupportActivity) {
-					container = ((SupportActivity) activity).getContainer();
-				}
-				if (container != null) {
-					homeUtil.openFuguOrSupport((FragmentActivity) activity, container,
-							productType == ProductType.PROS.getOrdinal() ? jobId : orderId, supportCategory, date, productType);
+				if(productType == ProductType.PROS.getOrdinal()) {
+					View container = null;
+					if (activity instanceof FreshActivity) {
+						container = ((FreshActivity) activity).getRelativeLayoutContainer();
+					} else if (activity instanceof RideTransactionsActivity) {
+						container = ((RideTransactionsActivity) activity).getContainer();
+					} else if (activity instanceof SupportActivity) {
+						container = ((SupportActivity) activity).getContainer();
+					}
+					if (container != null) {
+						homeUtil.openFuguOrSupport((FragmentActivity) activity, container,
+								productType == ProductType.PROS.getOrdinal() ? jobId : orderId, supportCategory, date, productType);
+					}
+				} else if(productType == ProductType.FEED.getOrdinal()){
+					if (datum != null && !TextUtils.isEmpty(datum.getFuguChannelId())) {
+						FuguConfig.getInstance().openChatByTransactionId(datum.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
+								datum.getFuguChannelName(), datum.getFuguTags());
+					} else {
+						FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
+					}
 				}
 				break;
 
@@ -453,7 +464,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 								int flag = jObj.getInt("flag");
 								String message = JSONParser.getServerMessage(jObj);
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-									HistoryResponse.Datum datum = historyResponse.getData().get(0);
+									datum = historyResponse.getData().get(0);
 									setFeedOrderData(datum, activity);
 								} else {
 									retryDialogCancelOrderOrOrderStatus(message, DialogErrorType.SERVER_ERROR);

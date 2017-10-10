@@ -1372,7 +1372,6 @@
     <string name="please_select_a_pickup_address">Please select a pickup address</string>
     <string name="label_anywhere">Anywhere</string>
     <string name="add_delivery_address">Select Delivery Address</string>
-    <string name="add_delivery_address">Add Delivery Address</string>
     <string name="avenir">avenir</string>
     <string name="avenir_book">avenir_book</string>
     <string name="created_at_colon">Created at:</string>
