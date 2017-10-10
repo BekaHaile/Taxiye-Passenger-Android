@@ -175,6 +175,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 			tvTaskDetails.setVisibility(View.GONE);
 			llAmount.setVisibility(View.VISIBLE);
 			llPaidVia.setVisibility(View.VISIBLE);
+			bNeedHelp.setText(R.string.need_help);
 
 			getApiProsOrderStatus().getOrderData(activity, jobId);
 		} else if(productType == ProductType.FEED.getOrdinal()) {
@@ -186,6 +187,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 			tvTaskDetails.setVisibility(View.VISIBLE);
 			llAmount.setVisibility(View.GONE);
 			llPaidVia.setVisibility(View.GONE);
+			bNeedHelp.setText(R.string.chat_support);
 
 			getOrderData(activity);
 		}

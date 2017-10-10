@@ -1378,6 +1378,7 @@
     <string name="order_time_colon">Order Time:</string>
     <string name="delivery_time_colon">Delivery Time:</string>
     <string name="label_rb_schedule_time">Schedule Time</string>
+    <string name="chat_support">Chat Support</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

@@ -53,15 +53,15 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity {
 
 		ArrayList<OfferingListAdapter.Offering> offerings = new ArrayList<>();
         try {
-			offerings.add(new OfferingListAdapter.Offering(Config.getAutosClientId(), "Rides", "Affordable auto rickshaws online", R.drawable.ic_rides_switcher));
-            if ((Data.userData.getFreshEnabled() == 1)) {
-				offerings.add(new OfferingListAdapter.Offering(Config.getFreshClientId(), "Fresh", "Order fruits, vegetables & groceries online", R.drawable.ic_fresh_switcher));
-            }
-            if ((Data.userData.getMealsEnabled() == 1)) {
-				offerings.add(new OfferingListAdapter.Offering(Config.getMealsClientId(), "Meals", "Home styled breakfast, lunch, snacks & dinner", R.drawable.ic_meals_switcher));
+			offerings.add(new OfferingListAdapter.Offering(Config.getAutosClientId(), getString(R.string.rides), "Affordable auto rickshaws online", R.drawable.ic_rides_switcher));
+			if ((Data.userData.getMealsEnabled() == 1)) {
+				offerings.add(new OfferingListAdapter.Offering(Config.getMealsClientId(), getString(R.string.meals), "Home styled breakfast, lunch, snacks & dinner", R.drawable.ic_meals_switcher));
+			}
+			if ((Data.userData.getFreshEnabled() == 1)) {
+				offerings.add(new OfferingListAdapter.Offering(Config.getFreshClientId(), getString(R.string.fatafat), "Order fruits, vegetables & groceries online", R.drawable.ic_fresh_switcher));
             }
             if ((Data.userData.getMenusEnabled() == 1)) {
-				offerings.add(new OfferingListAdapter.Offering(Config.getMenusClientId(), "Menus", "Online food delivering from restaurants", R.drawable.ic_menus_switcher));
+				offerings.add(new OfferingListAdapter.Offering(Config.getMenusClientId(), getString(R.string.menus), "Online food delivering from restaurants", R.drawable.ic_menus_switcher));
             }
             if ((Data.userData.getFeedEnabled() == 1)) {
 				offerings.add(new OfferingListAdapter.Offering(Config.getFeedClientId(), Data.getFeedName(this), "Get anything delivered from anywhere", R.drawable.ic_anywhere_switcher));

@@ -236,7 +236,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewDetails.setText(R.string.created_at_colon);
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(orderHistory.getCreatedAt())));
                 holder.textViewAmount.setText("");
-                holder.imageViewProductType.setImageResource(R.drawable.ic_ask);
+                holder.imageViewProductType.setImageResource(R.drawable.ic_anywhere_fab);
                 holder.imageViewProductType.setBackgroundResource(R.drawable.circle_feed_grey_fab);
 
                 holder.relativeLayoutTo.setVisibility(View.VISIBLE);

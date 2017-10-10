@@ -47,6 +47,7 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 	RelativeLayout rlDeliveryCustomer;
 	RelativeLayout rlPros, rlFeed;
 	public RelativeLayout rlFilter;
+	TextView tvFeed;
 	ImageView ivRidesRadio, ivMealsRadio, ivFreshRadio, ivMenusRadio, ivDeliveryCustomerRadio, ivProsRadio, ivFeedRadio, ivFilterApplied;
 
 	ArrayList<Integer> productTypedFiltered = new ArrayList<>();
@@ -108,6 +109,8 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 		ivDeliveryCustomerRadio = (ImageView) findViewById(R.id.ivDeliveryCustomerRadio);
 		ivProsRadio = (ImageView) findViewById(R.id.ivProsRadio);
 		ivFeedRadio = (ImageView) findViewById(R.id.ivFeedRadio);
+		tvFeed = (TextView) findViewById(R.id.tvFeed);
+		tvFeed.setText(Data.getFeedName(this));
 
 		rlFilter = (RelativeLayout) findViewById(R.id.rlFilter);
 		ivFilterApplied = (ImageView) findViewById(R.id.ivFilterApplied);
