@@ -191,6 +191,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 break;
             case ANYWHERE_PLACE_ORDER:
                 RestClient.getFreshApiService().anywherePlaceOrder(params, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

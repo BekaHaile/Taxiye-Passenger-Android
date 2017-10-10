@@ -340,13 +340,15 @@ public class AnywhereHomeFragment extends Fragment {
 
     public void placeOrderApi(String taskDetails) {
         HashMap<String, String> params = new HashMap<>();
-        params.put("task_details", taskDetails);
+        params.put("details", taskDetails);
         if(pickUpAddress != null) {
             params.put("from_address", pickUpAddress.getAddress());
             params.put("from_latitude", String.valueOf(pickUpAddress.getLatitude()));
             params.put("from_longitude", String.valueOf(pickUpAddress.getLongitude()));
         } else {
-            params.put("from_is_anywhere", "1");
+            params.put("from_address", "Anywhere");
+            params.put("from_latitude", "0");
+            params.put("from_longitude", "0");
         }
         params.put("to_address", deliveryAddress.getAddress());
         params.put("to_latitude", String.valueOf(deliveryAddress.getLatitude()));

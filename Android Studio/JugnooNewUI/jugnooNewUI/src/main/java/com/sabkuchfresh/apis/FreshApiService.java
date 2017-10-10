@@ -105,7 +105,7 @@ public interface FreshApiService {
 					   Callback<SettleUserDebt> callback);
 
 	@FormUrlEncoded
-	@POST("/anywhere_place_order")
+	@POST("/custom_orders/place_order")
 	void anywherePlaceOrder(@FieldMap Map<String, String> params,
 						 Callback<FeedCommonResponse> callback);
 
