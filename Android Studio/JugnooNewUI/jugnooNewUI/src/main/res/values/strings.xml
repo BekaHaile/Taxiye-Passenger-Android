@@ -657,7 +657,7 @@
     <string name="delivery_date">Delivery Date</string>
     <string name="delivery_slot">Delivery Slot</string>
     <string name="place_order_confirmation">Are you sure you want to place your order?</string>
-    <string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Fatafat!</string>
+    <string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Grocery!</string>
     <string name="thank_you_for_placing_order_meals">Thank you for placing your order\nwith Jugnoo Meals!</string>
     <string name="thank_you_for_placing_order_grocery">Thank you for placing your order\nwith Jugnoo Grocery!</string>
     <string name="thank_you_for_placing_order_menus_format">Order placed with %s.\nWe will send you the confirmation once your order is accepted.</string>
@@ -1218,7 +1218,7 @@
     <string name="delete_post_alert_message">Do you want to delete this post? If you delete once it will no longer be available.</string>
     <string name="enter_your_name">Enter your Name</string>
     <string name="enter_email_id">Enter Email ID</string>
-    <string name="fatafat">Fatafat</string>
+    <string name="fatafat">Grocery</string>
     <string name="unable_to_fetch_address">Unable to fetch current address at the moment</string>
     <string name="plus_add_new_address">+ Add New Address</string>
     <string name="address_details">Address Details</string>
