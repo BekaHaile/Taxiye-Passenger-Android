@@ -993,6 +993,9 @@ public class LoginResponse {
 		@Expose
 		private String expandedGenieText;
 
+		@SerializedName("show_home")
+		@Expose
+		private int showHome;
 
 
 		@SerializedName("show_jstar_in_account")
@@ -1200,6 +1203,14 @@ public class LoginResponse {
 
 		public void setProsEnabled(Integer prosEnabled) {
 			this.prosEnabled = prosEnabled;
+		}
+
+		public int getShowHome() {
+			return showHome;
+		}
+
+		public void setShowHome(int showHome) {
+			this.showHome = showHome;
 		}
 	}
 
