@@ -7,11 +7,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -57,6 +63,13 @@ import retrofit.RetrofitError;
 
 public class AnywhereHomeFragment extends Fragment {
 
+    public static final RelativeSizeSpan RELATIVE_SIZE_SPAN = new RelativeSizeSpan(1.15f);
+    @Bind(R.id.ivPickUpAddressType)
+    ImageView ivPickUpAddressType;
+    @Bind(R.id.ivDelAddressType)
+    ImageView ivDelAddressType;
+    private ForegroundColorSpan textHintColorSpan;
+    private ForegroundColorSpan textColorSpan;
     @Bind(R.id.edt_task_description)
     EditText edtTaskDescription;
     @Bind(R.id.tv_pickup_address)
@@ -108,6 +121,8 @@ public class AnywhereHomeFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_anywhere_home, container, false);
         activity.fragmentUISetup(this);
         ButterKnife.bind(this, rootView);
+        textColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color));
+        textHintColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color_light));
         ASSL.DoMagic(llPayViewContainer);
         paySlider = new PaySlider(llPayViewContainer) {
             @Override
@@ -148,6 +163,69 @@ public class AnywhereHomeFragment extends Fragment {
     }
 
 
+    private void setAddress(boolean isDeliveryAddress,SearchResult searchResult) {
+
+        TextView textViewToSet;
+        ImageView imageViewToSet;
+        if (isDeliveryAddress) {
+            textViewToSet = tvDeliveryAddress;
+            imageViewToSet = ivDelAddressType;
+            deliveryAddress = searchResult;
+
+        } else {
+            textViewToSet = tvPickupAddress;
+            imageViewToSet = ivPickUpAddressType;
+            pickUpAddress = searchResult;
+
+        }
+
+        if(searchResult==null){
+            return;
+        }
+
+        textViewToSet.setVisibility(View.GONE);
+        if (!TextUtils.isEmpty(searchResult.getName())) {
+            textViewToSet.setVisibility(View.VISIBLE);
+//          tvNoAddressAlert.setVisibility(View.GONE);
+            String addressType;
+            if (searchResult.getName().equalsIgnoreCase(activity.getString(R.string.home))) {
+                imageViewToSet.setImageResource(R.drawable.ic_home);
+                addressType = activity.getString(R.string.home);
+            } else if (searchResult.getName().equalsIgnoreCase(activity.getString(R.string.work))) {
+                imageViewToSet.setImageResource(R.drawable.ic_work);
+                addressType = activity.getString(R.string.work);
+            } else {
+                imageViewToSet.setImageResource(R.drawable.ic_loc_other);
+                addressType = searchResult.getName();
+            }
+
+            SpannableString spannableString = new SpannableString(addressType + "\n" + searchResult.getAddress());
+            spannableString.setSpan(textHintColorSpan, 0, addressType.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            spannableString.setSpan(RELATIVE_SIZE_SPAN, 0, addressType.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            spannableString.setSpan(textColorSpan, spannableString.length() - searchResult.getAddress().length(), spannableString.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+            textViewToSet.setText(spannableString);
+
+        } else {
+            imageViewToSet.setImageResource(R.drawable.ic_loc_other);
+            if(isDeliveryAddress){
+                deliveryAddress= null;
+                textViewToSet.setText(activity.getResources().getString(R.string.add_delivery_address));
+
+            }else{
+                pickUpAddress = null;
+                textViewToSet.setText(activity.getResources().getString(R.string.label_anywhere));
+
+            }
+
+
+
+
+        }
+
+
+    }
+
+
     @OnClick({R.id.cv_pickup_address, R.id.tv_delivery_address, R.id.rb_asap, R.id.rb_st})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -163,7 +241,7 @@ public class AnywhereHomeFragment extends Fragment {
                 isAsapSelected = true;
                 break;
             case R.id.rb_st:
-                if(selectedDate==null||selectedTime==null){
+                if (selectedDate == null || selectedTime == null) {
                     rgTimeSlot.check(R.id.rb_asap);
 
                 }
@@ -182,13 +260,7 @@ public class AnywhereHomeFragment extends Fragment {
 
     public void setRequestedAddress(SearchResult searchResult) {
         if (searchResult != null) {
-            if (isPickUpAddressRequested) {
-                pickUpAddress = searchResult;
-                tvPickupAddress.setText(searchResult.getName());
-            } else {
-                deliveryAddress = searchResult;
-                tvDeliveryAddress.setText(searchResult.getName());
-            }
+            setAddress(!isPickUpAddressRequested,searchResult);
         }
     }
 
@@ -231,20 +303,18 @@ public class AnywhereHomeFragment extends Fragment {
     private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            if(setTimeToVars(hourOfDay + ":" + minute + ":00", hourOfDay + ":" + minute + ":00")){
 
-            }
+            setTimeToVars(hourOfDay + ":" + minute + ":00");
         }
     };
 
-    private boolean setTimeToVars(String time, String display) {
+    private boolean setTimeToVars(String time) {
         if (validateDateTime(selectedDate, time)) {
             selectedTime = time;
-            /*tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
-            tvSelectTimeSlot.setText(display);*/
+            String display = DateOperations.convertDayTimeAPViaFormat(time);
             rgTimeSlot.check(R.id.rb_st);
             isAsapSelected = false;
-            rbSt.setText("Schedule Time " + "( " + DateOperations.getDateFormatted(selectedDate) + " : " + display + " )");
+            rbSt.setText("Schedule Time " + DateOperations.getDateFormatted(selectedDate) + " " + display );
             return true;
         } else {
             Utils.showToast(activity, activity.getString(R.string.please_select_appropriate_time));
@@ -253,75 +323,14 @@ public class AnywhereHomeFragment extends Fragment {
     }
 
     private boolean validateDateTime(String date, String time) {
-        String currentTimePlus24Hrs = DateOperations.getDaysAheadTime(DateOperations.getCurrentTime(), 2);
+        String currentTimePlus24Hrs = DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(),Calendar.MINUTE,30);
         return DateOperations.getTimeDifference(getFormattedDateTime(date, time, true), currentTimePlus24Hrs) > 0
                 &&
                 DateOperations.getTimeDifference(getFormattedDateTime(date, time, false),
                         DateOperations.addCalendarFieldValueToDateTime(currentTimePlus24Hrs, 31, Calendar.DAY_OF_MONTH)) < 0;
     }
 
-    private Dialog timeSelectorDialog;
 
-    private Dialog getTimeSelectorDialog() {
-        if (timeSelectorDialog == null) {
-            timeSelectorDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-            timeSelectorDialog.setContentView(R.layout.dialog_pros_time_selector);
-            timeSelectorDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-            WindowManager.LayoutParams layoutParams = timeSelectorDialog.getWindow().getAttributes();
-            layoutParams.dimAmount = 0.6f;
-            timeSelectorDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-            timeSelectorDialog.setCancelable(true);
-            timeSelectorDialog.setCanceledOnTouchOutside(true);
-
-            RecyclerView rvTime = (RecyclerView) timeSelectorDialog.findViewById(R.id.rvTime);
-            rvTime.setLayoutManager(new LinearLayoutManager(activity));
-            rvTime.setItemAnimator(new DefaultItemAnimator());
-            ProsTimeSelectorAdapter prosTimeSelectorAdapter = new ProsTimeSelectorAdapter(getTimeDisplayArray(), rvTime,
-                    new ProsTimeSelectorAdapter.Callback() {
-                        @Override
-                        public boolean onTimeDisplaySelected(TimeDisplay timeDisplay) {
-                            if (setTimeToVars(timeDisplay.getValue(), timeDisplay.getDisplay())) {
-                                if (timeSelectorDialog != null) {
-                                    timeSelectorDialog.dismiss();
-                                }
-                                return true;
-                            }
-                            return false;
-                        }
-                    });
-            rvTime.setAdapter(prosTimeSelectorAdapter);
-
-            timeSelectorDialog.findViewById(R.id.rl).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (timeSelectorDialog != null) {
-                        timeSelectorDialog.dismiss();
-                    }
-                }
-            });
-
-            timeSelectorDialog.findViewById(R.id.llInner).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
-
-
-        }
-        return timeSelectorDialog;
-    }
-
-    private ArrayList<TimeDisplay> getTimeDisplayArray() {
-        ArrayList<TimeDisplay> timeDisplays = new ArrayList<>();
-        for (int i = 8; i < 21; i++) {
-            int j = i + 1;
-            TimeDisplay timeDisplay = new TimeDisplay((i > 12 ? (i - 12) : i) + " " + (i > 11 ? "PM" : "AM")
-                    + " - " + (j > 12 ? (j - 12) : j) + " " + (j > 11 ? "PM" : "AM"),
-                    i + ":00:00");
-            timeDisplays.add(timeDisplay);
-        }
-        return timeDisplays;
-    }
 
     private String getFormattedDateTime(String selectedDate, String selectedTime, boolean addHours) {
         if (TextUtils.isEmpty(selectedDate) || TextUtils.isEmpty(selectedTime)) {
@@ -363,12 +372,15 @@ public class AnywhereHomeFragment extends Fragment {
                 new APICommonCallback<FeedCommonResponse>() {
                     @Override
                     public boolean onNotConnected() {
+                        paySlider.setSlideInitial();
                         return true;
                     }
 
                     @Override
                     public boolean onException(Exception e) {
+                        paySlider.setSlideInitial();
                         return true;
+
                     }
 
                     @Override
@@ -378,16 +390,19 @@ public class AnywhereHomeFragment extends Fragment {
 
                     @Override
                     public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        paySlider.setSlideInitial();
                         return true;
                     }
 
                     @Override
                     public boolean onFailure(RetrofitError error) {
+                        paySlider.setSlideInitial();
                         return true;
                     }
 
                     @Override
                     public void onNegativeClick() {
+                        paySlider.setSlideInitial();
 
                     }
                 });
