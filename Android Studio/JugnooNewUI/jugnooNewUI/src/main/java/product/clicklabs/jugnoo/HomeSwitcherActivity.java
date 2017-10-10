@@ -1,11 +1,15 @@
 package product.clicklabs.jugnoo;
 
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,11 +36,15 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 		new ASSL(this, drawerLayout, 1134, 720, false);
 		ImageView ivMenu = (ImageView) findViewById(R.id.ivMenu);
+		TextView tvTitle = (TextView) findViewById(R.id.tvTitle); tvTitle.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
 		TextView tvHeading = (TextView) findViewById(R.id.tvHeading);
 		RecyclerView rvOfferings = (RecyclerView) findViewById(R.id.rvOfferings);
 		rvOfferings.setLayoutManager(new LinearLayoutManager(this));
 
-		tvHeading.setText(getString(R.string.hello_user_what_you_like_to_do_format, Data.userData.userName));
+		tvHeading.setText("Hello, "+Data.userData.userName+"!\n");
+		SpannableStringBuilder ssb = new SpannableStringBuilder("What would you like to\nget done today?");
+		ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tvHeading.append(ssb);
 
 		MenuBar menuBar = new MenuBar(this, drawerLayout);
         //menuBar.setUserData();

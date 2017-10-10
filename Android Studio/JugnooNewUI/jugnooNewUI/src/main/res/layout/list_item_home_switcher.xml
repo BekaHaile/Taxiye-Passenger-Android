@@ -13,8 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_15"
         android:layout_marginRight="@dimen/dp_15"
-        android:layout_marginTop="@dimen/dp_15"
-        android:background="@drawable/bg_white_round_less_shadow"
+        android:layout_marginTop="@dimen/dp_2"
+        android:layout_marginBottom="@dimen/dp_2"
+        android:background="@drawable/bg_white_round_less_shadow_selector"
         android:orientation="vertical"
         android:tag="mwar">
 
@@ -22,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
-            android:minHeight="@dimen/dp_70"
+            android:minHeight="@dimen/dp_65"
             >
 
             <ImageView
@@ -36,24 +37,27 @@
 
             <TextView
                 android:id="@+id/tvOfferingName"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_15"
                 android:layout_marginTop="@dimen/dp_10"
                 android:layout_toRightOf="@+id/ivOffering"
                 android:text="@string/rides"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/sp_17"
+                android:textSize="@dimen/sp_15"
+                android:textAllCaps="true"
                 app:font="@string/maven"/>
 
             <TextView
                 android:id="@+id/tvOfferingDesc"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvOfferingName"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/dp_10"
+                android:layout_marginRight="@dimen/dp_15"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginTop="@dimen/dp_3"
                 android:layout_toRightOf="@+id/ivOffering"

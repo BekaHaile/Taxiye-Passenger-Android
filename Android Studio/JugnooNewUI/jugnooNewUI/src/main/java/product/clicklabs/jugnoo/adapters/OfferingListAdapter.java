@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,6 +33,7 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 	private ArrayList<Offering> offerings;
 	private RecyclerView recyclerView;
 	private Callback callback;
+	private int dp15, dp2;
 
 	public OfferingListAdapter(Context context, ArrayList<Offering> offerings, Callback callback, RecyclerView recyclerView) {
 		this.context = context;
@@ -38,6 +41,8 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 		this.offerings = offerings;
 		this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.callback = callback;
+		dp15 = context.getResources().getDimensionPixelSize(R.dimen.dp_15);
+		dp2 = context.getResources().getDimensionPixelSize(R.dimen.dp_2);
 	}
 
 	@Override
@@ -58,6 +63,15 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 		holder.ivOffering.setImageResource(offering.getIconRes());
 		holder.tvOfferingName.setText(offering.getName());
 		holder.tvOfferingDesc.setText(offering.getDesc());
+		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.rlRoot.getLayoutParams();
+		if(position == 0){
+			params.setMargins(params.leftMargin, dp15, params.rightMargin, dp2);
+		} else if(position == getItemCount()-1){
+			params.setMargins(params.leftMargin, dp2, params.rightMargin, dp15);
+		} else {
+			params.setMargins(params.leftMargin, dp2, params.rightMargin, dp2);
+		}
+		holder.rlRoot.setLayoutParams(params);
 	}
 
 	@Override
@@ -86,7 +100,7 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 			super(itemView);
 			rlRoot = (RelativeLayout) itemView.findViewById(R.id.rlRoot);
 			ivOffering = (ImageView) itemView.findViewById(R.id.ivOffering);
-			tvOfferingName = (TextView) itemView.findViewById(R.id.tvOfferingName);
+			tvOfferingName = (TextView) itemView.findViewById(R.id.tvOfferingName); tvOfferingName.setTypeface(tvOfferingName.getTypeface(), Typeface.BOLD);
 			tvOfferingDesc = (TextView) itemView.findViewById(R.id.tvOfferingDesc);
 			rlRoot.setOnClickListener(new View.OnClickListener() {
 				@Override

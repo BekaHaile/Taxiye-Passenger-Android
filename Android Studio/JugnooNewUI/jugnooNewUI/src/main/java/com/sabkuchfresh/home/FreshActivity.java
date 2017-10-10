@@ -2975,8 +2975,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     try {
                         int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
                         if (!addressDeleted) {
-                            setSelectedAddressId(searchResult.getId());
-                            saveOfferingLastAddress(appType);
+                            if(getAnywhereHomeFragment() == null){
+                                setSelectedAddressId(searchResult.getId());
+                                saveOfferingLastAddress(appType);
+                            }
                         } else {
                             setSelectedAddress("");
                             setSelectedLatLng(null);

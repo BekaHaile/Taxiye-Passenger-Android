@@ -26,6 +26,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.pros.models.TimeDisplay;
 import com.sabkuchfresh.pros.ui.adapters.ProsTimeSelectorAdapter;
@@ -35,6 +39,7 @@ import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -44,6 +49,7 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
+import retrofit.RetrofitError;
 
 /**
  * Created by Parminder Saini on 09/10/17.
@@ -106,8 +112,32 @@ public class AnywhereHomeFragment extends Fragment {
         paySlider = new PaySlider(llPayViewContainer) {
             @Override
             public void onPayClick() {
+                try {
+                    String taskDetails = edtTaskDescription.getText().toString().trim();
+                    if(taskDetails.length() == 0){
+						Utils.showToast(activity, activity.getString(R.string.please_enter_some_desc));
+						throw new Exception();
+					}
+                    if(deliveryAddress == null){
+                        Utils.showToast(activity, activity.getString(R.string.please_select_a_delivery_address));
+                        throw new Exception();
+                    }
+                    if(!isAsapSelected){
+                        if(TextUtils.isEmpty(selectedDate)){
+                            Utils.showToast(activity, activity.getString(R.string.please_select_date));
+                            throw new Exception();
+                        } else if(TextUtils.isEmpty(selectedTime)){
+                            Utils.showToast(activity, activity.getString(R.string.please_select_time));
+                            throw new Exception();
+                        }
+                    }
+                    placeOrderApi(taskDetails);
+                } catch (Exception e) {
+                    paySlider.setSlideInitial();
+                }
             }
         };
+
         return rootView;
     }
 
@@ -154,10 +184,10 @@ public class AnywhereHomeFragment extends Fragment {
         if (searchResult != null) {
             if (isPickUpAddressRequested) {
                 pickUpAddress = searchResult;
-                tvPickupAddress.setText(searchResult.getAddress());
+                tvPickupAddress.setText(searchResult.getName());
             } else {
                 deliveryAddress = searchResult;
-                tvDeliveryAddress.setText(searchResult.getAddress());
+                tvDeliveryAddress.setText(searchResult.getName());
             }
         }
     }
@@ -180,7 +210,7 @@ public class AnywhereHomeFragment extends Fragment {
             if (validateDateTime(date, selectedTime)) {
                 selectedDate = date;
 //                tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
-                getTimeSelectorDialog().show();
+                getTimePickerFragment().show(getChildFragmentManager(), "timePicker", onTimeSetListener);
 
             } else {
                 Utils.showToast(activity, activity.getString(R.string.please_select_appropriate_time));
@@ -201,7 +231,9 @@ public class AnywhereHomeFragment extends Fragment {
     private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            setTimeToVars(hourOfDay + ":" + minute + ":00", hourOfDay + ":" + minute + ":00");
+            if(setTimeToVars(hourOfDay + ":" + minute + ":00", hourOfDay + ":" + minute + ":00")){
+
+            }
         }
     };
 
@@ -304,6 +336,61 @@ public class AnywhereHomeFragment extends Fragment {
         }
         return DateOperations.addCalendarFieldValueToDateTime(selectedDate + " " + selectedTime, 0, Calendar.HOUR);
     }
+
+
+    public void placeOrderApi(String taskDetails) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("task_details", taskDetails);
+        if(pickUpAddress != null) {
+            params.put("from_address", pickUpAddress.getAddress());
+            params.put("from_latitude", String.valueOf(pickUpAddress.getLatitude()));
+            params.put("from_longitude", String.valueOf(pickUpAddress.getLongitude()));
+        } else {
+            params.put("from_is_anywhere", "1");
+        }
+        params.put("to_address", deliveryAddress.getAddress());
+        params.put("to_latitude", String.valueOf(deliveryAddress.getLatitude()));
+        params.put("to_longitude", String.valueOf(deliveryAddress.getLongitude()));
+        params.put("is_immediate", isAsapSelected ? "1" : "0");
+        if(isAsapSelected){
+            String finalDateTime = getFormattedDateTime(selectedDate, selectedTime, true);
+            params.put("time", finalDateTime);
+        }
+
+        new ApiCommon<>(activity).showLoader(false).execute(params, ApiName.ANYWHERE_PLACE_ORDER,
+                new APICommonCallback<FeedCommonResponse>() {
+                    @Override
+                    public boolean onNotConnected() {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onException(Exception e) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
+
+                    }
+
+                    @Override
+                    public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onFailure(RetrofitError error) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onNegativeClick() {
+
+                    }
+                });
+    }
+
 
 
 }

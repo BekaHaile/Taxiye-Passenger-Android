@@ -23,13 +23,14 @@
             />
 
         <TextView
+            android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/app_name"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/sp_16"
+            android:textSize="@dimen/sp_17"
             app:font="@string/maven"
             />
 
@@ -42,13 +43,13 @@
         android:layout_below="@+id/topBar"
         android:background="@color/white"
         android:paddingBottom="@dimen/dp_10"
-        android:paddingLeft="@dimen/dp_15"
-        android:paddingRight="@dimen/dp_15"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
         android:paddingTop="@dimen/dp_5"
-        android:text="@string/hello_user_what_you_like_to_do_format"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/sp_20"
-        app:font="@string/maven"
+        android:textSize="@dimen/sp_22"
+        android:lineSpacingExtra="@dimen/dp_3"
+        app:font="@string/maven_r"
         />
 
 

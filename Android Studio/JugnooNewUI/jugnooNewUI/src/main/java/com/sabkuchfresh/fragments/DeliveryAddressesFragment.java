@@ -757,7 +757,6 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             if(((FreshActivity) activity).getAnywhereHomeFragment()!=null){
                 ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(searchResult);
             }else{
-
                 ((FreshActivity)activity).setSelectedAddress(address);
                 ((FreshActivity)activity).setSelectedLatLng(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)));
                 ((FreshActivity)activity).setSelectedAddressId(addressId);
