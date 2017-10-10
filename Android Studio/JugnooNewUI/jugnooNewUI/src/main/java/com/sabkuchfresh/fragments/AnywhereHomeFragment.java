@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.text.SpannableString;
@@ -16,6 +17,7 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -27,13 +29,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.fugu.FuguConfig;
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.FreshActivity;
+
+import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+
 import com.sabkuchfresh.pros.utils.DatePickerFragment;
 import com.sabkuchfresh.pros.utils.TimePickerFragment;
+import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
+import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.Calendar;
@@ -43,8 +51,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
@@ -96,6 +106,11 @@ public class AnywhereHomeFragment extends Fragment {
     private PaySlider paySlider;
     private FreshActivity activity;
     private boolean isPickUpAddressRequested;
+
+    public boolean isPickUpAddressRequested() {
+        return isPickUpAddressRequested;
+    }
+
     private SearchResult pickUpAddress;
     private SearchResult deliveryAddress;
     private boolean isAsapSelected;
@@ -116,7 +131,10 @@ public class AnywhereHomeFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         textColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color));
         textHintColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color_light));
+        rgTimeSlot.check(R.id.rb_asap);
+        isAsapSelected = true;
         ASSL.DoMagic(llPayViewContainer);
+        setCurrentAddressToDelivery();
         paySlider = new PaySlider(llPayViewContainer) {
             @Override
             public void onPayClick() {
@@ -146,7 +164,14 @@ public class AnywhereHomeFragment extends Fragment {
             }
         };
 
+
         return rootView;
+    }
+
+    private void setCurrentAddressToDelivery() {
+        SearchResult searchResult =   HomeUtil.getNearBySavedAddress(activity,new LatLng(Data.latitude,Data.longitude), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION,false);
+        setAddress(true,searchResult);
+
     }
 
     @Override
@@ -172,12 +197,9 @@ public class AnywhereHomeFragment extends Fragment {
 
         }
 
-        if(searchResult==null){
-            return;
-        }
 
-        textViewToSet.setVisibility(View.GONE);
-        if (!TextUtils.isEmpty(searchResult.getName())) {
+
+        if (searchResult!=null && !TextUtils.isEmpty(searchResult.getName())) {
             textViewToSet.setVisibility(View.VISIBLE);
 //          tvNoAddressAlert.setVisibility(View.GONE);
             String addressType;
@@ -219,14 +241,14 @@ public class AnywhereHomeFragment extends Fragment {
     }
 
 
-    @OnClick({R.id.cv_pickup_address, R.id.tv_delivery_address, R.id.rb_asap, R.id.rb_st})
+    @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.cv_pickup_address:
                 isPickUpAddressRequested = true;
                 activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
                 break;
-            case R.id.tv_delivery_address:
+            case R.id.cv_delivery_address:
                 isPickUpAddressRequested = false;
                 activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
                 break;
@@ -252,9 +274,8 @@ public class AnywhereHomeFragment extends Fragment {
     }
 
     public void setRequestedAddress(SearchResult searchResult) {
-        if (searchResult != null) {
             setAddress(!isPickUpAddressRequested,searchResult);
-        }
+
     }
 
     private DatePickerFragment datePickerFragment;
@@ -292,6 +313,9 @@ public class AnywhereHomeFragment extends Fragment {
     private TimePickerFragment getTimePickerFragment() {
         if (timePickerFragment == null) {
             timePickerFragment = new TimePickerFragment();
+            Bundle bundle = new Bundle();
+            bundle.putInt(TimePickerFragment.ADDITIONAL_TIME_MINUTES,35);
+            timePickerFragment.setArguments(bundle);
         }
         return timePickerFragment;
     }
@@ -344,7 +368,11 @@ public class AnywhereHomeFragment extends Fragment {
 
 
     public void placeOrderApi(String taskDetails) {
-        HashMap<String, String> params = new HashMap<>();
+
+        if(paySlider.isSliderInIntialStage())
+            paySlider.fullAnimate();
+
+        final HashMap<String, String> params = new HashMap<>();
         params.put("details", taskDetails);
         if(pickUpAddress != null) {
             params.put(Constants.KEY_FROM_ADDRESS, pickUpAddress.getAddress());
@@ -364,36 +392,54 @@ public class AnywhereHomeFragment extends Fragment {
             params.put(Constants.KEY_DELIVERY_TIME, finalDateTime);
         }
 
-        new ApiCommon<>(activity).showLoader(false).execute(params, ApiName.ANYWHERE_PLACE_ORDER,
-                new APICommonCallback<FeedCommonResponse>() {
+        new ApiCommon<OrderAnywhereResponse>(activity).showLoader(true).execute(params, ApiName.ANYWHERE_PLACE_ORDER,
+                new APICommonCallback<OrderAnywhereResponse>() {
                     @Override
                     public boolean onNotConnected() {
                         paySlider.setSlideInitial();
-                        return true;
+                        return false;
                     }
 
                     @Override
                     public boolean onException(Exception e) {
                         paySlider.setSlideInitial();
-                        return true;
+                        return false;
 
                     }
 
                     @Override
-                    public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
-
+                    public void onSuccess(final OrderAnywhereResponse orderAnywhereResponse, String message, int flag) {
+                        new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
+                            @Override
+                            public void onDismiss() {
+                                resetUI();
+                                try {
+                                    if (orderAnywhereResponse != null && !TextUtils.isEmpty(orderAnywhereResponse.getFuguChannelId())) {
+                                        FuguConfig.getInstance().openChatByTransactionId(orderAnywhereResponse.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
+                                                orderAnywhereResponse.getFuguChannelName(), orderAnywhereResponse.getFuguTags());
+                                    } else {
+                                        FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).show(String.valueOf(orderAnywhereResponse.getOrderId()),
+                                isAsapSelected?"Asap":selectedTime,
+                                isAsapSelected?"":selectedDate, false, "",
+                                null, AppConstant.ApplicationType.FEED, orderAnywhereResponse.getMessage());
                     }
 
                     @Override
-                    public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                    public boolean onError(OrderAnywhereResponse feedCommonResponse, String message, int flag) {
                         paySlider.setSlideInitial();
-                        return true;
+                        return false;
                     }
 
                     @Override
                     public boolean onFailure(RetrofitError error) {
                         paySlider.setSlideInitial();
-                        return true;
+                        return false;
                     }
 
                     @Override
@@ -404,6 +450,19 @@ public class AnywhereHomeFragment extends Fragment {
                 });
     }
 
+    private void resetUI() {
+        paySlider.setSlideInitial();
+        selectedTime=null;
+        selectedDate=null;
+        edtTaskDescription.setText(null);
+        rgTimeSlot.check(R.id.rb_asap);
+        isAsapSelected= true;
+        rbSt.setText(R.string.label_rb_schedule_time);
+        setCurrentAddressToDelivery();
+        setAddress(false,null);
+        timePickerFragment=null;
+
+    }
 
 
 }

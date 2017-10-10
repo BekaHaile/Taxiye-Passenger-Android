@@ -112,6 +112,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     RelativeLayout rlMain;
     @Bind(R.id.llLocationsContainer)
     LinearLayout llLocationsContainer;
+    @Bind(R.id.llSetAnywhere)
+    LinearLayout llSetAnywhere;
 
 
     public double current_latitude = 0.0;
@@ -221,6 +223,19 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     }
                 }, true, true, false);
                 listViewSavedLocations.setAdapter(savedPlacesAdapter);
+
+                if(activity instanceof FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment() != null && ((FreshActivity)activity).getAnywhereHomeFragment().isPickUpAddressRequested()){
+                    llSetAnywhere.setVisibility(View.VISIBLE);
+                    llSetAnywhere.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(null);
+                            ((FreshActivity)activity).performBackPressed(false);
+                        }
+                    });
+                } else {
+                    llSetAnywhere.setVisibility(View.GONE);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

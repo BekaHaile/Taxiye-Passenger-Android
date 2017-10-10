@@ -99,7 +99,7 @@ public class HomeUtil {
 		}
 	}
 
-	public SearchResult getNearBySavedAddress(Context context, LatLng latLng, double compareDistance, boolean includeRecent){
+	public static SearchResult getNearBySavedAddress(Context context, LatLng latLng, double compareDistance, boolean includeRecent){
 		try {
 			ArrayList<SearchResult> searchResults = new ArrayList<>();
 			if (!Prefs.with(context).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {

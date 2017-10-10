@@ -10,6 +10,7 @@ import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
+import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
 
 import java.util.Map;
 
@@ -107,7 +108,7 @@ public interface FreshApiService {
 	@FormUrlEncoded
 	@POST("/custom_orders/place_order")
 	void anywherePlaceOrder(@FieldMap Map<String, String> params,
-						 Callback<FeedCommonResponse> callback);
+						 Callback<OrderAnywhereResponse> callback);
 
 	@FormUrlEncoded
 	@POST("/custom_orders/get_custom_order_history")
