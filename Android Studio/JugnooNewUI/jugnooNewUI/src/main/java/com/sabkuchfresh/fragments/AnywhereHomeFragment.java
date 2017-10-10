@@ -409,25 +409,28 @@ public class AnywhereHomeFragment extends Fragment {
 
                     @Override
                     public void onSuccess(final OrderAnywhereResponse orderAnywhereResponse, String message, int flag) {
-                        new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
+                    /*    new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
                             @Override
                             public void onDismiss() {
-                                resetUI();
-                                try {
-                                    if (orderAnywhereResponse != null && !TextUtils.isEmpty(orderAnywhereResponse.getFuguChannelId())) {
-                                        FuguConfig.getInstance().openChatByTransactionId(orderAnywhereResponse.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-                                                orderAnywhereResponse.getFuguChannelName(), orderAnywhereResponse.getFuguTags());
-                                    } else {
-                                        FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+
                             }
                         }).show(String.valueOf(orderAnywhereResponse.getOrderId()),
                                 isAsapSelected?"Asap":selectedTime,
                                 isAsapSelected?"":selectedDate, false, "",
-                                null, AppConstant.ApplicationType.FEED, orderAnywhereResponse.getMessage());
+                                null, AppConstant.ApplicationType.FEED, orderAnywhereResponse.getMessage());*/
+
+
+                        try {
+                            resetUI();
+                            if (orderAnywhereResponse != null && !TextUtils.isEmpty(orderAnywhereResponse.getFuguChannelId())) {
+                                FuguConfig.getInstance().openChatByTransactionId(orderAnywhereResponse.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
+                                        orderAnywhereResponse.getFuguChannelName(), orderAnywhereResponse.getFuguTags());
+                            } else {
+                                FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
                     @Override
