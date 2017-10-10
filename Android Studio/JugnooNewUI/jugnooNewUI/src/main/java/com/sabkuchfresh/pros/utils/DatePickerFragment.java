@@ -19,13 +19,21 @@ public class DatePickerFragment extends DialogFragment
 
 	private DatePickerDialog.OnDateSetListener onDateSetListener;
 
+
+	public static final String ADD_DAYS = "add_days";
+
 	@NonNull
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
+
 		// Use the current date as the default date in the picker
 		final Calendar c = Calendar.getInstance();
 //		if(c.get(Calendar.HOUR_OF_DAY) > 20){
-			c.add(Calendar.DAY_OF_MONTH, 2);
+
+		if(!getArguments().containsKey(ADD_DAYS) || getArguments().getBoolean(ADD_DAYS))
+				c.add(Calendar.DAY_OF_MONTH, 2);
+
+
 //		}
 
 		int year = c.get(Calendar.YEAR);

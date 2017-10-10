@@ -268,7 +268,10 @@ public class AnywhereHomeFragment extends Fragment {
 
     private DatePickerFragment getDatePickerFragment() {
         if (datePickerFragment == null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(DatePickerFragment.ADD_DAYS,false);
             datePickerFragment = new DatePickerFragment();
+            datePickerFragment.setArguments(bundle);
         }
         return datePickerFragment;
     }
@@ -279,7 +282,7 @@ public class AnywhereHomeFragment extends Fragment {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             String date = year + "-" + (month + 1) + "-" + dayOfMonth;
-            if (validateDateTime(date, selectedTime)) {
+            if (validateDateTime(date, null)) {
                 selectedDate = date;
 //                tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
                 getTimePickerFragment().show(getChildFragmentManager(), "timePicker", onTimeSetListener);
@@ -323,7 +326,7 @@ public class AnywhereHomeFragment extends Fragment {
     }
 
     private boolean validateDateTime(String date, String time) {
-        String currentTimePlus24Hrs = DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(),Calendar.MINUTE,30);
+        String currentTimePlus24Hrs = DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(),30,Calendar.MINUTE);
         return DateOperations.getTimeDifference(getFormattedDateTime(date, time, true), currentTimePlus24Hrs) > 0
                 &&
                 DateOperations.getTimeDifference(getFormattedDateTime(date, time, false),

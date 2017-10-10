@@ -60,6 +60,7 @@
                     android:minHeight="50dp"
                     android:padding="7dp"
                     android:textColor="@color/text_color"
+                    android:maxLength="800"
                     android:textColorHint="@color/text_color_hint"
                     android:textSize="14sp"
                     app:font="@string/maven" />
