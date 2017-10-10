@@ -1315,6 +1315,7 @@
     <string name="booking_cancelled_successfully">Your booking is cancelled successfully.</string>
     <string name="cancel_booking">Cancel Booking</string>
     <string name="service_hash_format">Service #%s</string>
+    <string name="order_hash_format">Order #%s</string>
     <string name="service_status_colon">Service Status:</string>
     <string name="to_be_confirmed">To be confirmed</string>
     <string name="label_confirm_service_address">Click and confirm service address!</string>
@@ -1371,6 +1372,12 @@
     <string name="please_select_a_pickup_address">Please select a pickup address</string>
     <string name="label_anywhere">Anywhere</string>
     <string name="add_delivery_address">Select Delivery Address</string>
+    <string name="add_delivery_address">Add Delivery Address</string>
+    <string name="avenir">avenir</string>
+    <string name="avenir_book">avenir_book</string>
+    <string name="created_at_colon">Created at:</string>
+    <string name="order_time_colon">Order Time:</string>
+    <string name="delivery_time_colon">Delivery Time:</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

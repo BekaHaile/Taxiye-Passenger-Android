@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.ImageView;
@@ -44,6 +45,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity {
 		tvHeading.setText("Hello, "+Data.userData.userName+"!\n");
 		SpannableStringBuilder ssb = new SpannableStringBuilder("What would you like to\nget done today?");
 		ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssb.setSpan(new RelativeSizeSpan(1.2f), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvHeading.append(ssb);
 
 		MenuBar menuBar = new MenuBar(this, drawerLayout);
@@ -51,18 +53,18 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity {
 
 		ArrayList<OfferingListAdapter.Offering> offerings = new ArrayList<>();
         try {
-			offerings.add(new OfferingListAdapter.Offering(Config.getAutosClientId(), "Rides", "Affordable auto rickshaws online", R.drawable.ic_auto_grey));
+			offerings.add(new OfferingListAdapter.Offering(Config.getAutosClientId(), "Rides", "Affordable auto rickshaws online", R.drawable.ic_rides_switcher));
             if ((Data.userData.getFreshEnabled() == 1)) {
-				offerings.add(new OfferingListAdapter.Offering(Config.getFreshClientId(), "Fresh", "Order fruits, vegetables & groceries online", R.drawable.ic_fresh_grey));
+				offerings.add(new OfferingListAdapter.Offering(Config.getFreshClientId(), "Fresh", "Order fruits, vegetables & groceries online", R.drawable.ic_fresh_switcher));
             }
             if ((Data.userData.getMealsEnabled() == 1)) {
-				offerings.add(new OfferingListAdapter.Offering(Config.getMealsClientId(), "Meals", "Home styled breakfast, lunch, snacks & dinner", R.drawable.ic_meals_grey));
+				offerings.add(new OfferingListAdapter.Offering(Config.getMealsClientId(), "Meals", "Home styled breakfast, lunch, snacks & dinner", R.drawable.ic_meals_switcher));
             }
             if ((Data.userData.getMenusEnabled() == 1)) {
-				offerings.add(new OfferingListAdapter.Offering(Config.getMenusClientId(), "Menus", "Online food delivering from restaurants", R.drawable.ic_menus_grey));
+				offerings.add(new OfferingListAdapter.Offering(Config.getMenusClientId(), "Menus", "Online food delivering from restaurants", R.drawable.ic_menus_switcher));
             }
             if ((Data.userData.getFeedEnabled() == 1)) {
-				offerings.add(new OfferingListAdapter.Offering(Config.getFeedClientId(), "Fatafat", "Get anything delivered from anywhere", R.drawable.ic_fatafat_menu));
+				offerings.add(new OfferingListAdapter.Offering(Config.getFeedClientId(), Data.getFeedName(this), "Get anything delivered from anywhere", R.drawable.ic_anywhere_switcher));
             }
         } catch (Exception e) {
             e.printStackTrace();

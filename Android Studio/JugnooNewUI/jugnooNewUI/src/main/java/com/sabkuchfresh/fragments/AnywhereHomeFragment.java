@@ -1,7 +1,6 @@
 package com.sabkuchfresh.fragments;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -9,9 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -20,7 +16,6 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -37,19 +32,17 @@ import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.pros.models.TimeDisplay;
-import com.sabkuchfresh.pros.ui.adapters.ProsTimeSelectorAdapter;
 import com.sabkuchfresh.pros.utils.DatePickerFragment;
 import com.sabkuchfresh.pros.utils.TimePickerFragment;
 import com.sabkuchfresh.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -354,21 +347,21 @@ public class AnywhereHomeFragment extends Fragment {
         HashMap<String, String> params = new HashMap<>();
         params.put("details", taskDetails);
         if(pickUpAddress != null) {
-            params.put("from_address", pickUpAddress.getAddress());
-            params.put("from_latitude", String.valueOf(pickUpAddress.getLatitude()));
-            params.put("from_longitude", String.valueOf(pickUpAddress.getLongitude()));
+            params.put(Constants.KEY_FROM_ADDRESS, pickUpAddress.getAddress());
+            params.put(Constants.KEY_FROM_LATITUDE, String.valueOf(pickUpAddress.getLatitude()));
+            params.put(Constants.KEY_FROM_LONGITUDE, String.valueOf(pickUpAddress.getLongitude()));
         } else {
-            params.put("from_address", "Anywhere");
-            params.put("from_latitude", "0");
-            params.put("from_longitude", "0");
+            params.put(Constants.KEY_FROM_ADDRESS, "Anywhere");
+            params.put(Constants.KEY_FROM_LATITUDE, "0");
+            params.put(Constants.KEY_FROM_LONGITUDE, "0");
         }
-        params.put("to_address", deliveryAddress.getAddress());
-        params.put("to_latitude", String.valueOf(deliveryAddress.getLatitude()));
-        params.put("to_longitude", String.valueOf(deliveryAddress.getLongitude()));
-        params.put("is_immediate", isAsapSelected ? "1" : "0");
-        if(isAsapSelected){
+        params.put(Constants.KEY_TO_ADDRESS, deliveryAddress.getAddress());
+        params.put(Constants.KEY_TO_LATITUDE, String.valueOf(deliveryAddress.getLatitude()));
+        params.put(Constants.KEY_TO_LONGITUDE, String.valueOf(deliveryAddress.getLongitude()));
+        params.put(Constants.KEY_IS_IMMEDIATE, isAsapSelected ? "1" : "0");
+        if(!isAsapSelected){
             String finalDateTime = getFormattedDateTime(selectedDate, selectedTime, true);
-            params.put("time", finalDateTime);
+            params.put(Constants.KEY_DELIVERY_TIME, finalDateTime);
         }
 
         new ApiCommon<>(activity).showLoader(false).execute(params, ApiName.ANYWHERE_PLACE_ORDER,

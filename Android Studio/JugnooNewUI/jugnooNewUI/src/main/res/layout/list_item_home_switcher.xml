@@ -64,7 +64,7 @@
                 android:text="@string/rides"
                 android:textColor="@color/text_color_light"
                 android:textSize="@dimen/sp_14"
-                app:font="@string/maven_r"/>
+                app:font="@string/avenir_book"/>
 
         </RelativeLayout>
 

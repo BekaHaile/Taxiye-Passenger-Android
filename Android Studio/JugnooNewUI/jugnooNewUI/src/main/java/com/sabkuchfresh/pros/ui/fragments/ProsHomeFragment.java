@@ -128,7 +128,7 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 
 			@Override
 			public void onViewDetailsClick(ProsCatalogueData.CurrentOrder recentOrder) {
-				activity.getTransactionUtils().addProsOrderStatusFragment(activity, activity.getRelativeLayoutContainer(), recentOrder.getJobId());
+				activity.getTransactionUtils().addProsOrderStatusFragment(activity, activity.getRelativeLayoutContainer(), recentOrder.getJobId(), ProductType.PROS.getOrdinal());
 			}
 		}, rvProsMain);
 

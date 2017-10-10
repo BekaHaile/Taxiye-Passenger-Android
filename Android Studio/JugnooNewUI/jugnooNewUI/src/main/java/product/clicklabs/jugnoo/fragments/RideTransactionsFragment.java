@@ -137,7 +137,8 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 											-1, historyData.getOrderId(), null, null, 0, false, 0,
 											historyData, -1, -1, "");
 								}
-							} else if(historyData.getProductType() == ProductType.PROS.getOrdinal()){
+							} else if(historyData.getProductType() == ProductType.PROS.getOrdinal()
+									|| historyData.getProductType() == ProductType.FEED.getOrdinal()){
 								View container = null;
 								if (activity instanceof RideTransactionsActivity) {
 									container = ((RideTransactionsActivity) activity).getContainer();
@@ -145,7 +146,9 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 									container = ((SupportActivity) activity).getContainer();
 								}
 								if(container != null) {
-									new com.sabkuchfresh.home.TransactionUtils().addProsOrderStatusFragment(activity, container, historyData.getJobId());
+									new com.sabkuchfresh.home.TransactionUtils().addProsOrderStatusFragment(activity, container,
+											historyData.getProductType() == ProductType.PROS.getOrdinal() ? historyData.getJobId()
+													: historyData.getOrderId(), historyData.getProductType());
 								}
 							}
 

@@ -31,7 +31,7 @@
             android:textAllCaps="true"
             android:textColor="@color/text_color"
             android:textSize="@dimen/sp_17"
-            app:font="@string/maven"
+            app:font="@string/avenir"
             />
 
     </RelativeLayout>
@@ -47,9 +47,8 @@
         android:paddingRight="@dimen/dp_20"
         android:paddingTop="@dimen/dp_5"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/sp_22"
-        android:lineSpacingExtra="@dimen/dp_3"
-        app:font="@string/maven_r"
+        android:textSize="@dimen/sp_20"
+        app:font="@string/avenir_book"
         />
 
 
@@ -58,6 +57,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tvHeading"
+        android:overScrollMode="never"
+        android:splitMotionEvents="false"
         />
 
 

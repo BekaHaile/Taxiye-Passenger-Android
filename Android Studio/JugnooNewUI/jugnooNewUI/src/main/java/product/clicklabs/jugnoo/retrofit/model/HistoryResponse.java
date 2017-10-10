@@ -24,7 +24,7 @@ public class HistoryResponse {
     @SerializedName("flag")
     @Expose
     private Integer flag;
-    @SerializedName("data")
+    @SerializedName(value = "data", alternate = "order_history")
     @Expose
     private List<Datum> data = new ArrayList<>();
     @SerializedName("history_size")
@@ -275,6 +275,35 @@ public class HistoryResponse {
         @SerializedName("fields")
         @Expose
         private ProsOrderStatusResponse.Fields fields;
+
+        @SerializedName("from_address")
+        @Expose
+        private String fromAddress;
+        @SerializedName("from_latitude")
+        @Expose
+        private double fromLatitude;
+        @SerializedName("from_longitude")
+        @Expose
+        private double fromLongitude;
+        @SerializedName("to_address")
+        @Expose
+        private String toAddress;
+        @SerializedName("to_latitude")
+        @Expose
+        private double toLatitude;
+        @SerializedName("to_longitude")
+        @Expose
+        private double toLongitude;
+        @SerializedName("details")
+        @Expose
+        private String details;
+        @SerializedName("created_at")
+        @Expose
+        private String createdAt;
+        @SerializedName("delivery_time")
+        @Expose
+        private String deliveryTime;
+
 
         public String getFuguChannelName() {
             return fuguChannelName;
@@ -980,6 +1009,78 @@ public class HistoryResponse {
 
         public void setFields(ProsOrderStatusResponse.Fields fields) {
             this.fields = fields;
+        }
+
+        public String getFromAddress() {
+            return fromAddress;
+        }
+
+        public void setFromAddress(String fromAddress) {
+            this.fromAddress = fromAddress;
+        }
+
+        public double getFromLatitude() {
+            return fromLatitude;
+        }
+
+        public void setFromLatitude(double fromLatitude) {
+            this.fromLatitude = fromLatitude;
+        }
+
+        public double getFromLongitude() {
+            return fromLongitude;
+        }
+
+        public void setFromLongitude(double fromLongitude) {
+            this.fromLongitude = fromLongitude;
+        }
+
+        public String getToAddress() {
+            return toAddress;
+        }
+
+        public void setToAddress(String toAddress) {
+            this.toAddress = toAddress;
+        }
+
+        public double getToLatitude() {
+            return toLatitude;
+        }
+
+        public void setToLatitude(double toLatitude) {
+            this.toLatitude = toLatitude;
+        }
+
+        public double getToLongitude() {
+            return toLongitude;
+        }
+
+        public void setToLongitude(double toLongitude) {
+            this.toLongitude = toLongitude;
+        }
+
+        public String getDetails() {
+            return details;
+        }
+
+        public void setDetails(String details) {
+            this.details = details;
+        }
+
+        public String getCreatedAt() {
+            return createdAt;
+        }
+
+        public void setCreatedAt(String createdAt) {
+            this.createdAt = createdAt;
+        }
+
+        public String getDeliveryTime() {
+            return deliveryTime;
+        }
+
+        public void setDeliveryTime(String deliveryTime) {
+            this.deliveryTime = deliveryTime;
         }
     }
 

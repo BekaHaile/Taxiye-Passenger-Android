@@ -109,4 +109,9 @@ public interface FreshApiService {
 	void anywherePlaceOrder(@FieldMap Map<String, String> params,
 						 Callback<FeedCommonResponse> callback);
 
+	@FormUrlEncoded
+	@POST("/custom_orders/get_custom_order_history")
+	void getCustomOrderHistory(@FieldMap Map<String, String> params,
+					  Callback<HistoryResponse> callback);
+
 }

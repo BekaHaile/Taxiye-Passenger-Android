@@ -458,7 +458,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             public void onClick(View v) {
 //                getOrderData();
                 if(productType == ProductType.PROS){
-                    activity.getTransactionUtils().addProsOrderStatusFragment(activity, activity.getRelativeLayoutContainer(), jobId);
+                    activity.getTransactionUtils().addProsOrderStatusFragment(activity, activity.getRelativeLayoutContainer(), jobId, productType.getOrdinal());
                 } else {
                     new TransactionUtils().openOrderStatusFragment(activity,
                             activity.getRelativeLayoutContainer(), Integer.parseInt(orderId), productType.getOrdinal(), 0);

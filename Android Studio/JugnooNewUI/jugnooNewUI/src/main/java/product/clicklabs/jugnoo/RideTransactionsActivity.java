@@ -45,9 +45,9 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 	RelativeLayout rlFresh;
 	RelativeLayout rlMenus;
 	RelativeLayout rlDeliveryCustomer;
-	RelativeLayout rlPros;
+	RelativeLayout rlPros, rlFeed;
 	public RelativeLayout rlFilter;
-	ImageView ivRidesRadio, ivMealsRadio, ivFreshRadio, ivMenusRadio, ivDeliveryCustomerRadio, ivProsRadio, ivFilterApplied;
+	ImageView ivRidesRadio, ivMealsRadio, ivFreshRadio, ivMenusRadio, ivDeliveryCustomerRadio, ivProsRadio, ivFeedRadio, ivFilterApplied;
 
 	ArrayList<Integer> productTypedFiltered = new ArrayList<>();
 	boolean filtersChanged;
@@ -100,12 +100,14 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 		rlMenus = (RelativeLayout) findViewById(R.id.rlMenus);
 		rlDeliveryCustomer = (RelativeLayout) findViewById(R.id.rlDeliveryCustomer);
 		rlPros = (RelativeLayout) findViewById(R.id.rlPros);
+		rlFeed = (RelativeLayout) findViewById(R.id.rlFeed);
 		ivRidesRadio = (ImageView) findViewById(R.id.ivRidesRadio);
 		ivMealsRadio = (ImageView) findViewById(R.id.ivMealsRadio);
 		ivFreshRadio = (ImageView) findViewById(R.id.ivFreshRadio);
 		ivMenusRadio = (ImageView) findViewById(R.id.ivMenusRadio);
 		ivDeliveryCustomerRadio = (ImageView) findViewById(R.id.ivDeliveryCustomerRadio);
 		ivProsRadio = (ImageView) findViewById(R.id.ivProsRadio);
+		ivFeedRadio = (ImageView) findViewById(R.id.ivFeedRadio);
 
 		rlFilter = (RelativeLayout) findViewById(R.id.rlFilter);
 		ivFilterApplied = (ImageView) findViewById(R.id.ivFilterApplied);
@@ -139,6 +141,7 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 		rlMenus.setOnClickListener(offeringFilterClickListener);
 		rlDeliveryCustomer.setOnClickListener(offeringFilterClickListener);
 		rlPros.setOnClickListener(offeringFilterClickListener);
+		rlFeed.setOnClickListener(offeringFilterClickListener);
 
 		if(Data.userData != null){
 			rlMeals.setVisibility(Data.userData.getMealsEnabled() == 1 ? View.VISIBLE : View.GONE);
@@ -146,6 +149,7 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 			rlMenus.setVisibility(Data.userData.getMenusEnabled() == 1 ? View.VISIBLE : View.GONE);
 			rlDeliveryCustomer.setVisibility(Data.userData.getDeliveryCustomerEnabled() == 1 ? View.VISIBLE : View.GONE);
 			rlPros.setVisibility(Data.userData.getProsEnabled() == 1 ? View.VISIBLE : View.GONE);
+			rlFeed.setVisibility(Data.userData.getFeedEnabled() == 1 ? View.VISIBLE : View.GONE);
 		} else {
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
 		}
@@ -280,6 +284,9 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 				case R.id.rlPros:
 					productType = ProductType.PROS.getOrdinal();
 					break;
+				case R.id.rlFeed:
+					productType = ProductType.FEED.getOrdinal();
+					break;
 			}
 
 			if(productTypedFiltered.contains(productType)){
@@ -299,6 +306,7 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 		ivMenusRadio.setImageResource(productTypedFiltered.contains(ProductType.MENUS.getOrdinal()) ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
 		ivDeliveryCustomerRadio.setImageResource(productTypedFiltered.contains(ProductType.DELIVERY_CUSTOMER.getOrdinal()) ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
 		ivProsRadio.setImageResource(productTypedFiltered.contains(ProductType.PROS.getOrdinal()) ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
+		ivFeedRadio.setImageResource(productTypedFiltered.contains(ProductType.FEED.getOrdinal()) ? R.drawable.ic_checkbox_orange_checked : R.drawable.check_box_unchecked);
 		filtersChanged = true;
 		ivFilterApplied.setVisibility(productTypedFiltered.size() > 0 ? View.VISIBLE : View.GONE);
 	}

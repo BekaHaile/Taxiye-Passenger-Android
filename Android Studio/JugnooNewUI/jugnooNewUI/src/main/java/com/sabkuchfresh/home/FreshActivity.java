@@ -950,6 +950,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             (getGroceryFragment() != null && !getGroceryFragment().isHidden())
                             || (getMenusFragment() != null && !getMenusFragment().isHidden())
                             || (getFeedHomeFragment() != null && !getFeedHomeFragment().isHidden())
+                            || (getAnywhereHomeFragment() != null && !getAnywhereHomeFragment().isHidden())
                             || (getFeedReserveSpotFragment() != null && !getFeedReserveSpotFragment().isHidden())
                             || (getFeedSpotReservedSharingFragment() != null && !getFeedSpotReservedSharingFragment().isHidden())
 							|| (getFeedClaimHandleFragment() != null && !getFeedClaimHandleFragment().isHidden())

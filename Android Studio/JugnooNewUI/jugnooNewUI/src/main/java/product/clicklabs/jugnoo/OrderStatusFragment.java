@@ -195,7 +195,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
         llMain = (LinearLayout) rootView.findViewById(R.id.llMain);
         llMain.setVisibility(View.GONE);
-        tvOrderStatus = (TextView) rootView.findViewById(R.id.tvOrderStatus);
+        tvOrderStatus = (TextView) rootView.findViewById(R.id.tv1r);
         tvOrderStatus.setTypeface(Fonts.mavenMedium(activity));
         tvOrderStatusVal = (TextView) rootView.findViewById(R.id.tvOrderStatusVal);
         tvOrderStatusVal.setTypeface(Fonts.mavenMedium(activity));

@@ -216,15 +216,30 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.imageViewProductType.setImageResource(R.drawable.ic_pros_grey);
                 holder.imageViewProductType.setImageResource(R.drawable.ic_pros);
                 holder.imageViewProductType.setBackgroundResource(R.drawable.circle_pink_pros_fab);
-/*
-                if(orderHistory.getJobStatus()==ProsOrderStatus.CANCEL.getOrdinal()||
-                    orderHistory.getJobStatus()==ProsOrderStatus.DECLINE.getOrdinal()||
-                    orderHistory.getJobStatus()==ProsOrderStatus.FAILED.getOrdinal()||
-                   orderHistory.getJobStatus()==ProsOrderStatus.DELETED.getOrdinal()||
-                   orderHistory.getJobStatus()==ProsOrderStatus.DELETED.getOrdinal())*/
-
 
                 holder.relativeLayoutTo.setVisibility(View.GONE);
+            }
+            else if(orderHistory.getProductType() == ProductType.FEED.getOrdinal()){
+                holder.textViewStatus.setText(R.string.status_colon);
+                holder.textViewStatusValue.setText(orderHistory.getOrderStatus());
+                try{
+                    holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
+                } catch (Exception e){
+                    holder.textViewStatusValue.setTextColor(ContextCompat.getColor(activity, R.color.green_status));
+                }
+                holder.textViewId.setText(R.string.id_colon);
+                holder.textViewIdValue.setText(String.valueOf(orderHistory.getOrderId()));
+                holder.textViewFrom.setText(R.string.from_colon);
+                holder.textViewFromValue.setText(orderHistory.getFromAddress());
+                holder.textViewTo.setText(R.string.to_colon);
+                holder.textViewToValue.setText(orderHistory.getToAddress());
+                holder.textViewDetails.setText(R.string.created_at_colon);
+                holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(orderHistory.getCreatedAt())));
+                holder.textViewAmount.setText("");
+                holder.imageViewProductType.setImageResource(R.drawable.ic_ask);
+                holder.imageViewProductType.setBackgroundResource(R.drawable.circle_feed_grey_fab);
+
+                holder.relativeLayoutTo.setVisibility(View.VISIBLE);
             }
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
