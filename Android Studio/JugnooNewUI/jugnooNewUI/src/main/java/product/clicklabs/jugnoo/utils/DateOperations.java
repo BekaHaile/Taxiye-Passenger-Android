@@ -71,6 +71,22 @@ public class DateOperations {
 		}
 	}
 
+	@SuppressLint("SimpleDateFormat")
+	public static String localToUTC(String localTime) {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+		try {
+			Date myDate = simpleDateFormat.parse(localTime);
+			String localDate = sdf.format(myDate);
+			return localDate;
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return localTime;
+		}
+	}
+
 	//2015-05-08T10:29:52.000Z
 	public static String utcToLocalTZ(String utcTime) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

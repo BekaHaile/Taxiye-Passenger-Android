@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.text.SpannableString;
@@ -17,7 +16,6 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -35,13 +33,9 @@ import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.FreshActivity;
-
-import com.sabkuchfresh.home.FreshOrderCompleteDialog;
-
 import com.sabkuchfresh.pros.utils.DatePickerFragment;
 import com.sabkuchfresh.pros.utils.TimePickerFragment;
 import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
-import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.Calendar;
@@ -57,6 +51,8 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.RetrofitError;
 
@@ -67,6 +63,8 @@ import retrofit.RetrofitError;
 public class AnywhereHomeFragment extends Fragment {
 
     public static final RelativeSizeSpan RELATIVE_SIZE_SPAN = new RelativeSizeSpan(1.15f);
+    @Bind(R.id.llRoot)
+    LinearLayout llRoot;
     @Bind(R.id.ivPickUpAddressType)
     ImageView ivPickUpAddressType;
     @Bind(R.id.ivDelAddressType)
@@ -164,6 +162,26 @@ public class AnywhereHomeFragment extends Fragment {
             }
         };
 
+        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(llRoot,
+                null, new KeyboardLayoutListener.KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+                if (activity.getTopFragment() instanceof AnywhereHomeFragment) {
+                    activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void keyBoardClosed() {
+                if (activity.getTopFragment() instanceof AnywhereHomeFragment) {
+                    if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                        activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
+        keyboardLayoutListener.setResizeTextView(false);
+        llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
         return rootView;
     }
@@ -389,7 +407,7 @@ public class AnywhereHomeFragment extends Fragment {
         params.put(Constants.KEY_IS_IMMEDIATE, isAsapSelected ? "1" : "0");
         if(!isAsapSelected){
             String finalDateTime = getFormattedDateTime(selectedDate, selectedTime, true);
-            params.put(Constants.KEY_DELIVERY_TIME, finalDateTime);
+            params.put(Constants.KEY_DELIVERY_TIME, DateOperations.localToUTC(finalDateTime));
         }
 
         new ApiCommon<OrderAnywhereResponse>(activity).showLoader(true).execute(params, ApiName.ANYWHERE_PLACE_ORDER,

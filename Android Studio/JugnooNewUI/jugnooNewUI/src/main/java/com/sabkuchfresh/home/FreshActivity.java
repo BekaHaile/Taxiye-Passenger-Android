@@ -410,6 +410,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     if (drawerView.equals(llRightDrawer)) {
                         filtersChanged = false;
                     }
+                    Utils.hideKeyboard(FreshActivity.this);
                 }
 
                 @Override
