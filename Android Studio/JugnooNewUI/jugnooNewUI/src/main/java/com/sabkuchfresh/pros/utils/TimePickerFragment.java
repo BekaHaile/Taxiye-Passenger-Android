@@ -45,6 +45,17 @@ public class TimePickerFragment extends DialogFragment
 
 	public void show(FragmentManager manager, String tag, TimePickerDialog.OnTimeSetListener onTimeSetListener) {
 		this.onTimeSetListener = onTimeSetListener;
+		try {
+			final Calendar c = Calendar.getInstance();
+			if(getArguments().containsKey(ADDITIONAL_TIME_MINUTES)){
+                c.add(Calendar.MINUTE,getArguments().getInt(ADDITIONAL_TIME_MINUTES));
+            }
+			int hour = c.get(Calendar.HOUR_OF_DAY);
+			int minute = c.get(Calendar.MINUTE);
+			((TimePickerDialog)getDialog()).updateTime(hour, minute);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		super.show(manager, tag);
 	}
 }

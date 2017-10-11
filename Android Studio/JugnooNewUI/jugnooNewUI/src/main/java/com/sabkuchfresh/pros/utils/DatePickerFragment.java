@@ -8,6 +8,8 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.widget.DatePicker;
 
+import com.sabkuchfresh.fragments.AnywhereHomeFragment;
+
 import java.util.Calendar;
 
 /**
@@ -32,6 +34,8 @@ public class DatePickerFragment extends DialogFragment
 
 		if(!getArguments().containsKey(ADD_DAYS) || getArguments().getBoolean(ADD_DAYS))
 				c.add(Calendar.DAY_OF_MONTH, 2);
+		else
+			c.add(Calendar.MINUTE, AnywhereHomeFragment.MIN_BUFFER_TIME_MINS+5);
 
 
 //		}
@@ -43,6 +47,7 @@ public class DatePickerFragment extends DialogFragment
 
 		// Create a new instance of DatePickerDialog and return it
 		DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, year, month, day);
+
 		dialog.getDatePicker().setMinDate(c.getTimeInMillis());
 
 		c.add(Calendar.DAY_OF_MONTH, 30);
@@ -59,6 +64,22 @@ public class DatePickerFragment extends DialogFragment
 
 	public void show(FragmentManager manager, String tag, DatePickerDialog.OnDateSetListener onDateSetListener) {
 		this.onDateSetListener = onDateSetListener;
+		try {
+			final Calendar c = Calendar.getInstance();
+			if(!getArguments().containsKey(ADD_DAYS) || getArguments().getBoolean(ADD_DAYS))
+                c.add(Calendar.DAY_OF_MONTH, 2);
+            else
+                c.add(Calendar.MINUTE, AnywhereHomeFragment.MIN_BUFFER_TIME_MINS+5);
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			int day = c.get(Calendar.DAY_OF_MONTH);
+			((DatePickerDialog)(getDialog())).updateDate(year, month, day);
+			((DatePickerDialog)(getDialog())).getDatePicker().setMinDate(c.getTimeInMillis());
+			c.add(Calendar.DAY_OF_MONTH, 30);
+			((DatePickerDialog)(getDialog())).getDatePicker().setMaxDate(c.getTimeInMillis());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		super.show(manager, tag);
 	}
 }

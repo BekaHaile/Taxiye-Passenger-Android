@@ -63,6 +63,7 @@ import retrofit.RetrofitError;
 public class AnywhereHomeFragment extends Fragment {
 
     public static final RelativeSizeSpan RELATIVE_SIZE_SPAN = new RelativeSizeSpan(1.15f);
+    public static final int MIN_BUFFER_TIME_MINS = 30;
     @Bind(R.id.llRoot)
     LinearLayout llRoot;
     @Bind(R.id.ivPickUpAddressType)
@@ -332,7 +333,7 @@ public class AnywhereHomeFragment extends Fragment {
         if (timePickerFragment == null) {
             timePickerFragment = new TimePickerFragment();
             Bundle bundle = new Bundle();
-            bundle.putInt(TimePickerFragment.ADDITIONAL_TIME_MINUTES,35);
+            bundle.putInt(TimePickerFragment.ADDITIONAL_TIME_MINUTES,MIN_BUFFER_TIME_MINS);
             timePickerFragment.setArguments(bundle);
         }
         return timePickerFragment;
@@ -361,7 +362,7 @@ public class AnywhereHomeFragment extends Fragment {
     }
 
     private boolean validateDateTime(String date, String time) {
-        String currentTimePlus24Hrs = DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(),30,Calendar.MINUTE);
+        String currentTimePlus24Hrs = DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), MIN_BUFFER_TIME_MINS,Calendar.MINUTE);
         return DateOperations.getTimeDifference(getFormattedDateTime(date, time, true), currentTimePlus24Hrs) > 0
                 &&
                 DateOperations.getTimeDifference(getFormattedDateTime(date, time, false),
@@ -374,7 +375,7 @@ public class AnywhereHomeFragment extends Fragment {
         if (TextUtils.isEmpty(selectedDate) || TextUtils.isEmpty(selectedTime)) {
             Calendar calendar = Calendar.getInstance();
             if (TextUtils.isEmpty(selectedTime)) {
-                calendar.add(Calendar.HOUR_OF_DAY, addHours ? 2 : -1);
+                calendar.add(Calendar.MINUTE, addHours ? MIN_BUFFER_TIME_MINS+5 : 0);
                 selectedTime = calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":00";
             }
             if (TextUtils.isEmpty(selectedDate)) {
