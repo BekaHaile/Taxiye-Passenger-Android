@@ -385,7 +385,7 @@ public class AnywhereHomeFragment extends Fragment {
     }
 
 
-    public void placeOrderApi(String taskDetails) {
+    public void placeOrderApi(final String taskDetails) {
 
         if(paySlider.isSliderInIntialStage())
             paySlider.fullAnimate();
@@ -405,11 +405,14 @@ public class AnywhereHomeFragment extends Fragment {
         params.put(Constants.KEY_TO_LATITUDE, String.valueOf(deliveryAddress.getLatitude()));
         params.put(Constants.KEY_TO_LONGITUDE, String.valueOf(deliveryAddress.getLongitude()));
         params.put(Constants.KEY_IS_IMMEDIATE, isAsapSelected ? "1" : "0");
+
+        String finalDateTime = null;
         if(!isAsapSelected){
-            String finalDateTime = getFormattedDateTime(selectedDate, selectedTime, true);
+            finalDateTime = getFormattedDateTime(selectedDate, selectedTime, true);
             params.put(Constants.KEY_DELIVERY_TIME, DateOperations.localToUTC(finalDateTime));
         }
 
+        final String finalDateTime1 = finalDateTime;
         new ApiCommon<OrderAnywhereResponse>(activity).showLoader(true).execute(params, ApiName.ANYWHERE_PLACE_ORDER,
                 new APICommonCallback<OrderAnywhereResponse>() {
                     @Override
@@ -440,9 +443,23 @@ public class AnywhereHomeFragment extends Fragment {
 
                         try {
                             resetUI();
+                            String deliveryTime = finalDateTime1 == null ? "ASAP" : DateOperations.convertDateViaFormat(finalDateTime1);
+                            String pickupAddress = pickUpAddress != null ? pickUpAddress.getAddress() : "Anywhere";
+                            String fuguMessage = "I need\n" +
+                                    taskDetails+"\n" +
+                                    "\n" +
+                                    "From:\n" +
+                                    pickupAddress+"\n" +
+                                    "\n" +
+                                    "To:\n" +
+                                    deliveryAddress.getAddress()+"\n" +
+                                    "\n" +
+                                    "When?\n" +
+                                    deliveryTime;
+
                             if (orderAnywhereResponse != null && !TextUtils.isEmpty(orderAnywhereResponse.getFuguChannelId())) {
                                 FuguConfig.getInstance().openChatByTransactionId(orderAnywhereResponse.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-                                        orderAnywhereResponse.getFuguChannelName(), orderAnywhereResponse.getFuguTags());
+                                        orderAnywhereResponse.getFuguChannelName(), orderAnywhereResponse.getFuguTags(), fuguMessage);
                             } else {
                                 FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
                             }
