@@ -58,7 +58,7 @@
                     android:minHeight="50dp"
                     android:maxLength="800"
                     android:gravity="top"
-                    android:hint="Do you need something for lunch? Don't feel like going to the grocery store?\nTell us what you need and we'll deliver it for you."
+                    android:hint="Tell us what you need and we'll get it for you.\nAmazon or Flipkart product link works well."
                     android:padding="10dp"
                     android:textColor="@color/text_color"
                     android:inputType="textMultiLine|textCapSentences"
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="10dp"
-                android:text="Pickup Address"
+                android:text="@string/from_wo"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
                 app:font="@string/maven_r" />
@@ -139,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="10dp"
-                android:text="Delivery Address"
+                android:text="@string/to_wo"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
                 app:font="@string/maven_r" />

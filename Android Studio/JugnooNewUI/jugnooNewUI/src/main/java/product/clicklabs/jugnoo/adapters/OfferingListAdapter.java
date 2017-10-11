@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.HomeSwitcherActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
 
 /**
  * Created by socomo on 12/7/16.
@@ -33,7 +34,7 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 	private ArrayList<Offering> offerings;
 	private RecyclerView recyclerView;
 	private Callback callback;
-	private int dp15, dp2;
+	private int dp15, dp2, dp35, dp45, dp10;
 
 	public OfferingListAdapter(Context context, ArrayList<Offering> offerings, Callback callback, RecyclerView recyclerView) {
 		this.context = context;
@@ -43,6 +44,9 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 		this.callback = callback;
 		dp15 = context.getResources().getDimensionPixelSize(R.dimen.dp_15);
 		dp2 = context.getResources().getDimensionPixelSize(R.dimen.dp_2);
+		dp35 = context.getResources().getDimensionPixelSize(R.dimen.dp_35);
+		dp45 = context.getResources().getDimensionPixelSize(R.dimen.dp_45);
+		dp10 = context.getResources().getDimensionPixelSize(R.dimen.dp_10);
 	}
 
 	@Override
@@ -72,6 +76,18 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 			params.setMargins(params.leftMargin, dp2, params.rightMargin, dp2);
 		}
 		holder.rlRoot.setLayoutParams(params);
+
+		RelativeLayout.LayoutParams paramsIV = (RelativeLayout.LayoutParams) holder.ivOffering.getLayoutParams();
+		if(offering.getClientId().equalsIgnoreCase(Config.getAutosClientId())){
+			paramsIV.width = dp45;
+			paramsIV.height = dp45;
+			paramsIV.setMargins(dp10, paramsIV.topMargin, dp10, paramsIV.bottomMargin);
+		} else {
+			paramsIV.width = dp35;
+			paramsIV.height = dp35;
+			paramsIV.setMargins(dp15, paramsIV.topMargin, dp15, paramsIV.bottomMargin);
+		}
+		holder.ivOffering.setLayoutParams(paramsIV);
 	}
 
 	@Override
