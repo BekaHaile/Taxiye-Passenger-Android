@@ -261,6 +261,7 @@ public class AnywhereHomeFragment extends Fragment {
     }
 
 
+
     @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -276,16 +277,28 @@ public class AnywhereHomeFragment extends Fragment {
                 isAsapSelected = true;
                 break;
             case R.id.rb_st:
+                rbSt.setEnabled(false);
                 if (selectedDate == null || selectedTime == null) {
                     rgTimeSlot.check(R.id.rb_asap);
 
                 }
 
-//                if(datePickerFragment==null || !datePickerFragment.getDialog().isShowing())
-                   getDatePickerFragment().show(getChildFragmentManager(), "datePicker", onDateSetListener);
+                activity.getHandler().postDelayed(enableStRbRunnable,300);
+                try {
+                    getDatePickerFragment().show(getChildFragmentManager(), "datePicker", onDateSetListener);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
+
+    private Runnable enableStRbRunnable = new Runnable() {
+        @Override
+        public void run() {
+                rbSt.setEnabled(true);
+        }
+    };
 
     @Override
     public void onHiddenChanged(boolean hidden) {
