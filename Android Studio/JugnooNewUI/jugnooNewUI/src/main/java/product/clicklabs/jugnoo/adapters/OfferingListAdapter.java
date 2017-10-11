@@ -84,7 +84,7 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 				Bundle bundle = ((HomeSwitcherActivity) context).getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE);
 				MyApplication.getInstance().getAppSwitcher().switchApp(((HomeSwitcherActivity) context), offerings.get(pos).getClientId(),
 						((HomeSwitcherActivity) context).getIntent().getData(),
-						new LatLng(latitude, longitude), bundle, false, false, true);
+						new LatLng(latitude, longitude), bundle, false, false, false);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -2,6 +2,7 @@ package com.sabkuchfresh.pros.utils;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -23,6 +24,7 @@ public class DatePickerFragment extends DialogFragment
 
 
 	public static final String ADD_DAYS = "add_days";
+	private DatePickerDialog datePickerDialog;
 
 	@NonNull
 	@Override
@@ -35,7 +37,7 @@ public class DatePickerFragment extends DialogFragment
 		if(!getArguments().containsKey(ADD_DAYS) || getArguments().getBoolean(ADD_DAYS))
 				c.add(Calendar.DAY_OF_MONTH, 2);
 		else
-			c.add(Calendar.MINUTE, AnywhereHomeFragment.MIN_BUFFER_TIME_MINS+5);
+			c.add(Calendar.MINUTE, AnywhereHomeFragment.MIN_BUFFER_TIME_MINS+AnywhereHomeFragment.BUFFER_TIME_TO_SELECT_MINS);
 
 
 //		}
@@ -52,6 +54,7 @@ public class DatePickerFragment extends DialogFragment
 
 		c.add(Calendar.DAY_OF_MONTH, 30);
 		dialog.getDatePicker().setMaxDate(c.getTimeInMillis());
+		datePickerDialog = dialog;
 		return dialog;
 	}
 
@@ -64,22 +67,24 @@ public class DatePickerFragment extends DialogFragment
 
 	public void show(FragmentManager manager, String tag, DatePickerDialog.OnDateSetListener onDateSetListener) {
 		this.onDateSetListener = onDateSetListener;
-		try {
+		/*try {
 			final Calendar c = Calendar.getInstance();
 			if(!getArguments().containsKey(ADD_DAYS) || getArguments().getBoolean(ADD_DAYS))
                 c.add(Calendar.DAY_OF_MONTH, 2);
             else
-                c.add(Calendar.MINUTE, AnywhereHomeFragment.MIN_BUFFER_TIME_MINS+5);
+                c.add(Calendar.MINUTE, AnywhereHomeFragment.MIN_BUFFER_TIME_MINS+AnywhereHomeFragment.BUFFER_TIME_TO_SELECT_MINS);
 			int year = c.get(Calendar.YEAR);
 			int month = c.get(Calendar.MONTH);
 			int day = c.get(Calendar.DAY_OF_MONTH);
-			((DatePickerDialog)(getDialog())).updateDate(year, month, day);
-			((DatePickerDialog)(getDialog())).getDatePicker().setMinDate(c.getTimeInMillis());
-			c.add(Calendar.DAY_OF_MONTH, 30);
-			((DatePickerDialog)(getDialog())).getDatePicker().setMaxDate(c.getTimeInMillis());
+			datePickerDialog.updateDate(year, month, day);
+			datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
+			c.add(Calendar.DAY_OF_MONTH, 90);
+			datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		super.show(manager, tag);
 	}
 }

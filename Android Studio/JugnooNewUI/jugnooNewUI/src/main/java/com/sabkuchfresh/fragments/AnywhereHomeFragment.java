@@ -64,6 +64,7 @@ public class AnywhereHomeFragment extends Fragment {
 
     public static final RelativeSizeSpan RELATIVE_SIZE_SPAN = new RelativeSizeSpan(1.15f);
     public static final int MIN_BUFFER_TIME_MINS = 30;
+    public static final int BUFFER_TIME_TO_SELECT_MINS = 5;
     @Bind(R.id.llRoot)
     LinearLayout llRoot;
     @Bind(R.id.ivPickUpAddressType)
@@ -279,7 +280,9 @@ public class AnywhereHomeFragment extends Fragment {
                     rgTimeSlot.check(R.id.rb_asap);
 
                 }
-                getDatePickerFragment().show(getChildFragmentManager(), "datePicker", onDateSetListener);
+
+//                if(datePickerFragment==null || !datePickerFragment.getDialog().isShowing())
+                   getDatePickerFragment().show(getChildFragmentManager(), "datePicker", onDateSetListener);
                 break;
         }
     }
@@ -333,7 +336,7 @@ public class AnywhereHomeFragment extends Fragment {
         if (timePickerFragment == null) {
             timePickerFragment = new TimePickerFragment();
             Bundle bundle = new Bundle();
-            bundle.putInt(TimePickerFragment.ADDITIONAL_TIME_MINUTES,MIN_BUFFER_TIME_MINS);
+            bundle.putInt(TimePickerFragment.ADDITIONAL_TIME_MINUTES,MIN_BUFFER_TIME_MINS+ BUFFER_TIME_TO_SELECT_MINS);
             timePickerFragment.setArguments(bundle);
         }
         return timePickerFragment;
@@ -375,7 +378,7 @@ public class AnywhereHomeFragment extends Fragment {
         if (TextUtils.isEmpty(selectedDate) || TextUtils.isEmpty(selectedTime)) {
             Calendar calendar = Calendar.getInstance();
             if (TextUtils.isEmpty(selectedTime)) {
-                calendar.add(Calendar.MINUTE, addHours ? MIN_BUFFER_TIME_MINS+5 : 0);
+                calendar.add(Calendar.MINUTE, addHours ? MIN_BUFFER_TIME_MINS+ BUFFER_TIME_TO_SELECT_MINS : 0);
                 selectedTime = calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":00";
             }
             if (TextUtils.isEmpty(selectedDate)) {
@@ -446,7 +449,7 @@ public class AnywhereHomeFragment extends Fragment {
                             resetUI();
                             String deliveryTime = finalDateTime1 == null ? "ASAP" : DateOperations.convertDateViaFormat(finalDateTime1);
                             String pickupAddress = pickUpAddress != null ? pickUpAddress.getAddress() : "Anywhere";
-                            String fuguMessage = "I need\n" +
+                            String fuguMessage = "I need:\n" +
                                     taskDetails+"\n" +
                                     "\n" +
                                     "From:\n" +
@@ -455,7 +458,7 @@ public class AnywhereHomeFragment extends Fragment {
                                     "To:\n" +
                                     deliveryAddress.getAddress()+"\n" +
                                     "\n" +
-                                    "When?\n" +
+                                    "When:\n" +
                                     deliveryTime;
 
                             if (orderAnywhereResponse != null && !TextUtils.isEmpty(orderAnywhereResponse.getFuguChannelId())) {
