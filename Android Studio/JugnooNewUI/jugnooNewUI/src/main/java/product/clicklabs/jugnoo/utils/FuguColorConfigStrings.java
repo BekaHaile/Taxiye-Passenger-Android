@@ -18,7 +18,7 @@ public interface FuguColorConfigStrings {
 
     String FUGU_TEXT_COLOR_PRIMARY = "#595968";
     String FUGU_CHANNEL_DATE_TEXT = "#AAAAAA";
-    String FUGU_CHAT_BG = "#F2F2F2";
+    String FUGU_CHAT_BG = "#FFFFFF";
     String FUGU_BORDER_COLOR = "#DEDEDE";
     String FUGU_CHAT_DATE_TEXT = "#51445C";
     String FUGU_THEME_COLOR_PRIMARY = "#FF7D49";
