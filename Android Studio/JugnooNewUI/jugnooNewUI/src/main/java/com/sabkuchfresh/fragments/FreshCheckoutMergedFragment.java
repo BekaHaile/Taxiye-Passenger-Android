@@ -1972,7 +1972,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private void orderPaymentModes() {
         try {
-            ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas(Data.userData);
+            ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
             if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
                 linearLayoutWalletContainer.removeAllViews();
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {

@@ -23,7 +23,6 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
-import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.dialogs.WalletSelectionErrorDialog;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -315,6 +314,8 @@ public class WalletCore {
 			return R.drawable.ic_mobikwik_small;
 		} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()){
             return R.drawable.ic_freecharge_small;
+        } else if(paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()){
+            return R.drawable.ic_feed_claim_handle_vector;
         } else {
 			return R.drawable.ic_cash_small;
 		}
@@ -343,6 +344,12 @@ public class WalletCore {
 			} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()){
                 return String.format(context.getResources().getString(R.string.rupees_value_format_without_space),
                         Data.userData.getFreeChargeBalanceStr());
+            } else if(paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()){
+				for(PaymentModeConfigData configData : getPaymentModeConfigDatas()){
+					if(configData.getPaymentOption() == paymentOption){
+						return configData.getDisplayName();
+					}
+				}
             } else {
 				return context.getResources().getString(R.string.cash);
 			}
@@ -360,6 +367,8 @@ public class WalletCore {
 				return context.getResources().getString(R.string.mobikwik);
 			} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()){
                 return context.getResources().getString(R.string.freecharge);
+            } else if(paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()){
+                return getPaymentOptionBalanceText(paymentOption);
             } else {
 				return context.getResources().getString(R.string.cash);
 			}
@@ -507,7 +516,7 @@ public class WalletCore {
 		}
 	}
 
-	public ArrayList<PaymentModeConfigData> getPaymentModeConfigDatas(UserData userData) {
+	public ArrayList<PaymentModeConfigData> getPaymentModeConfigDatas() {
 
 //		for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
 //			paymentModeConfigData.setPriority(0);
@@ -640,7 +649,7 @@ public class WalletCore {
 		PaymentOption paymentOption = PaymentOption.CASH;
 		try {
 			PaymentModeConfigData paymentModeConfigDataDefault = null;
-			for (PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas(Data.userData)) {
+			for (PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas()) {
 				if (paymentModeConfigData.getEnabled() == 1) {
 					if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
 							&& Data.userData.getPaytmEnabled() == 1
@@ -691,10 +700,11 @@ public class WalletCore {
 		if (paymentOptionInt != PaymentOption.CASH.getOrdinal()
 				&& paymentOptionInt != PaymentOption.PAYTM.getOrdinal()
 				&& paymentOptionInt != PaymentOption.MOBIKWIK.getOrdinal()
-				&& paymentOptionInt != PaymentOption.FREECHARGE.getOrdinal()) {
+				&& paymentOptionInt != PaymentOption.FREECHARGE.getOrdinal()
+				&& paymentOptionInt != PaymentOption.RAZOR_PAY.getOrdinal()) {
 			try {
 				PaymentModeConfigData paymentModeConfigDataDefault = null;
-				for (PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas(Data.userData)) {
+				for (PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas()) {
 					if (paymentModeConfigData.getEnabled() == 1) {
 						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
 								&& Data.userData.getPaytmEnabled() == 1
@@ -908,10 +918,8 @@ public class WalletCore {
                 }
 
             }
-			else if(paymentOption == PaymentOption.CASH){
-				if(Data.autoData.getPickupPaymentOption() == PaymentOption.PAYTM.getOrdinal()){
-				}
-				Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
+			else {
+				Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
 				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
 			}
 		} catch (Exception e) {

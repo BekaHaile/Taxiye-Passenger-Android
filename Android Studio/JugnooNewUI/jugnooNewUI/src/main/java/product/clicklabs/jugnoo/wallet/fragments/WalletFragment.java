@@ -346,7 +346,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 
 	private void orderPaymentModes(){
 		try{
-			ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas(Data.userData);
+			ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
 			if(paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0){
 				linearLayoutWalletContainer.removeAllViews();
 				linearLayoutWalletContainer.addView(relativeLayoutJugnooCash);
