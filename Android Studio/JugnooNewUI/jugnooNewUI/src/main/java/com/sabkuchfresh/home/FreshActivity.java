@@ -3858,6 +3858,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             deliveryAddressView.llLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    textViewMinOrder.setVisibility(View.GONE);
                     getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
                     GAUtils.event(getGaCategory(), HOME, DELIVERY_ADDRESS+CLICKED);
                 }

@@ -268,7 +268,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }
         }
 
-
     }
 
 

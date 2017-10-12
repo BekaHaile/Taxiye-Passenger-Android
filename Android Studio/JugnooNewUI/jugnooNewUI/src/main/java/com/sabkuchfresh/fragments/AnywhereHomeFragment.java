@@ -366,7 +366,7 @@ public class AnywhereHomeFragment extends Fragment {
     private boolean setTimeToVars(String time) {
         if (validateDateTime(selectedDate, time)) {
             selectedTime = time;
-            String display = DateOperations.convertDayTimeAPViaFormat(time);
+            String display = DateOperations.convertDayTimeAPViaFormat(time, true);
             rgTimeSlot.check(R.id.rb_st);
             isAsapSelected = false;
             rbSt.setText("Schedule Time " + DateOperations.getDateFormatted(selectedDate) + " " + display );
