@@ -1,6 +1,7 @@
 package com.sabkuchfresh.apis;
 
 import com.jugnoo.pay.models.SendMoneyCallbackResponse;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.retrofit.model.FreshSearchResponse;
 import com.sabkuchfresh.retrofit.model.OrderCancelReasonsResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
@@ -9,6 +10,7 @@ import com.sabkuchfresh.retrofit.model.ProductsResponse;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
+import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
 
 import java.util.Map;
 
@@ -102,5 +104,15 @@ public interface FreshApiService {
 	@POST("/update_like_count")
 	void markMealAsFavourite(@FieldMap Map<String, String> params,
 					   Callback<SettleUserDebt> callback);
+
+	@FormUrlEncoded
+	@POST("/custom_orders/place_order")
+	void anywherePlaceOrder(@FieldMap Map<String, String> params,
+						 Callback<OrderAnywhereResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/custom_orders/get_custom_order_history")
+	void getCustomOrderHistory(@FieldMap Map<String, String> params,
+					  Callback<HistoryResponse> callback);
 
 }

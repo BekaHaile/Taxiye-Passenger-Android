@@ -590,6 +590,7 @@ public class Data {
                 .fuguTypeMessageHint(FuguColorConfigStrings.FUGU_TYPE_MESSAGE_HINT)
                 .fuguTypeMessageText(FuguColorConfigStrings.FUGU_TYPE_MESSAGE_TEXT)
                 .fuguChannelBg(FuguColorConfigStrings.FUGU_CHANNEL_BG)
+                .fuguChannelItemBg(FuguColorConfigStrings.FUGU_CHANNEL_BG)
                 .build();
 
         FuguConfig.getInstance().setColorConfig(fuguColorConfig);

@@ -91,6 +91,7 @@ import com.sabkuchfresh.feed.ui.fragments.FeedReserveSpotFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedSpotReservedSharingFragment;
 import com.sabkuchfresh.feed.ui.views.TypeWriterTextView.Typewriter;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
+import com.sabkuchfresh.fragments.AnywhereHomeFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.fragments.DeliveryStoresFragment;
 import com.sabkuchfresh.fragments.FeedbackFragment;
@@ -409,6 +410,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     if (drawerView.equals(llRightDrawer)) {
                         filtersChanged = false;
                     }
+                    Utils.hideKeyboard(FreshActivity.this);
                 }
 
                 @Override
@@ -523,7 +525,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 } else if (lastClientId.equalsIgnoreCase(Config.getFeedClientId())) {
 
-                    if(Data.getFeedData().getFeedActive()) {
+              /*      if(Data.getFeedData().getFeedActive()) {
                         if(Data.getFeedData().getHasHandle()){
 
 
@@ -537,7 +539,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                     } else {
                         addFeedReserveSpotFragment();
-                    }
+                    }*/
+                    addAnywhereHomeFragment();
                     Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
                     lastClientId = Config.getFeedClientId();
 
@@ -916,22 +919,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             isLocationChangeCheckedAfterResume = false;
             isTimeAutomatic();
-
-            if (Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getAutosClientId())) {
-                HomeActivity.homeSwitcher = true;
-                MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getAutosClientId(), null,
-                        getCurrentPlaceLatLng(), null);
-            } else if (Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getMealsClientId())) {
-                MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getMealsClientId(), null,
-                        getCurrentPlaceLatLng(), null);
-            } else if (Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getGroceryClientId())) {
-                MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getGroceryClientId(), null,
-                        getCurrentPlaceLatLng(), null);
-            } else if (Prefs.with(this).getString("home_switcher_client_id", "").equalsIgnoreCase(Config.getFreshClientId())) {
-                MyApplication.getInstance().getAppSwitcher().switchApp(FreshActivity.this, Config.getFreshClientId(), null,
-                        getCurrentPlaceLatLng(), null);
-            }
-            Prefs.with(this).save("home_switcher_client_id", "");
+            HomeActivity.switchAppOfClientId(this, getCurrentPlaceLatLng());
 
 
             if (!HomeActivity.checkIfUserDataNull(this)) {
@@ -963,6 +951,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             (getGroceryFragment() != null && !getGroceryFragment().isHidden())
                             || (getMenusFragment() != null && !getMenusFragment().isHidden())
                             || (getFeedHomeFragment() != null && !getFeedHomeFragment().isHidden())
+                            || (getAnywhereHomeFragment() != null && !getAnywhereHomeFragment().isHidden())
                             || (getFeedReserveSpotFragment() != null && !getFeedReserveSpotFragment().isHidden())
                             || (getFeedSpotReservedSharingFragment() != null && !getFeedSpotReservedSharingFragment().isHidden())
 							|| (getFeedClaimHandleFragment() != null && !getFeedClaimHandleFragment().isHidden())
@@ -1115,6 +1104,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private FreshCheckoutMergedFragment getFreshCheckoutMergedFragment() {
         return (FreshCheckoutMergedFragment) getSupportFragmentManager().findFragmentByTag(FreshCheckoutMergedFragment.class.getName());
+    }
+
+    public AnywhereHomeFragment getAnywhereHomeFragment() {
+        return (AnywhereHomeFragment) getSupportFragmentManager().findFragmentByTag(AnywhereHomeFragment.class.getName());
     }
 
 
@@ -1541,7 +1534,21 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 llSearchCartVis = View.GONE;
 
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            } else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment ||
+            }else if(fragment instanceof AnywhereHomeFragment){
+                topBar.getLlSearchCart().setLayoutTransition(null);
+                topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                topBar.imageViewBack.setVisibility(View.GONE);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(Data.getFeedName(this));
+
+                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                }
+
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                visMinOrder = setMinOrderAmountText(fragment);
+            }
+            else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment ||
                     fragment instanceof FeedClaimHandleFragment) {
                 topBar.getLlSearchCart().setLayoutTransition(null);
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
@@ -2145,6 +2152,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 .add(relativeLayoutContainer.getId(), new FeedHomeFragment(),
                         FeedHomeFragment.class.getName())
                 .addToBackStack(FeedHomeFragment.class.getName())
+                .commitAllowingStateLoss();
+    }
+
+    public void addAnywhereHomeFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .add(relativeLayoutContainer.getId(), new AnywhereHomeFragment(),
+                        AnywhereHomeFragment.class.getName())
+                .addToBackStack(AnywhereHomeFragment.class.getName())
                 .commitAllowingStateLoss();
     }
 
@@ -2962,8 +2977,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     try {
                         int appType = Prefs.with(FreshActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
                         if (!addressDeleted) {
-                            setSelectedAddressId(searchResult.getId());
-                            saveOfferingLastAddress(appType);
+                            if(getAnywhereHomeFragment() == null){
+                                setSelectedAddressId(searchResult.getId());
+                                saveOfferingLastAddress(appType);
+                            }
                         } else {
                             setSelectedAddress("");
                             setSelectedLatLng(null);
@@ -3621,6 +3638,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     @Subscribe
     public void onAddressUpdated(AddressAdded event) {
         try {
+
             if (event.flag) {
                 if (getFreshCheckoutMergedFragment() != null) {
                     setRefreshCart(true);

@@ -597,27 +597,32 @@ public class AddToAddressBookFragment extends Fragment {
                 label = editTextLabel.getText().toString().trim();
             }
 
-            if(activity instanceof FreshActivity){
-                FreshActivity freshActivity = (FreshActivity) activity;
-                freshActivity.setSelectedAddressId(searchResultId);
-                freshActivity.setSelectedAddressType(label);
-
-                if(freshActivity.getDeliveryAddressToEdit() != null){
-                    if(label.length() > 0){
-                        freshActivity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses().remove(freshActivity.getDeliveryAddressToEdit());
-                    } else {
-                        freshActivity.getDeliveryAddressToEdit().setLastAddress(localAddress);
-                        freshActivity.getDeliveryAddressToEdit().setDeliveryLatitude(String.valueOf(current_latitude));
-                        freshActivity.getDeliveryAddressToEdit().setDeliveryLongitude(String.valueOf(current_longitude));
-                    }
-                }
-
-                mBus.post(new AddressAdded(true));
-
-            }
-
             SearchResult searchResult = new SearchResult(label, localAddress, placeId, current_latitude, current_longitude);
             searchResult.setId(searchResultId);
+
+            if(activity instanceof FreshActivity){
+                FreshActivity freshActivity = (FreshActivity) activity;
+                if(freshActivity.getAnywhereHomeFragment() != null){
+                    freshActivity.getAnywhereHomeFragment().setRequestedAddress(searchResult);
+                }else{
+                    freshActivity.setSelectedAddressId(searchResultId);
+                    freshActivity.setSelectedAddressType(label);
+
+                    if(freshActivity.getDeliveryAddressToEdit() != null){
+                        if(label.length() > 0){
+                            freshActivity.getUserCheckoutResponse().getCheckoutData().getDeliveryAddresses().remove(freshActivity.getDeliveryAddressToEdit());
+                        } else {
+                            freshActivity.getDeliveryAddressToEdit().setLastAddress(localAddress);
+                            freshActivity.getDeliveryAddressToEdit().setDeliveryLatitude(String.valueOf(current_latitude));
+                            freshActivity.getDeliveryAddressToEdit().setDeliveryLongitude(String.valueOf(current_longitude));
+                        }
+                    }
+
+                    mBus.post(new AddressAdded(true));
+                }
+            }
+
+
             if(activity instanceof AddPlaceActivity) {
                 ((AddPlaceActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
             } else if(activity instanceof FreshActivity) {

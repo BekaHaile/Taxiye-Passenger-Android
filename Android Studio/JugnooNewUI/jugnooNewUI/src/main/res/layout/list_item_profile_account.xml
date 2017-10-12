@@ -299,8 +299,9 @@
                 android:layout_width="56px"
                 android:layout_height="56px"
                 android:layout_marginLeft="30px"
+                android:padding="5px"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_menu_category_feed_selector"
+                android:src="@drawable/ic_menu_category_anywhere_selector"
                 android:tag="mwar"/>
 
             <TextView

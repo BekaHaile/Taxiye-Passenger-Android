@@ -48,7 +48,7 @@
             android:id="@+id/fabFeedTest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_ask"
+            android:src="@drawable/ic_anywhere_fab"
             android:tag="DontTouchMe"
             fab:fab_colorNormal="@color/grey_feed_fab"
             fab:fab_colorPressed="@color/grey_feed_fab_pressed"

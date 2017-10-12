@@ -99,6 +99,12 @@ public class FreshOrderCompleteDialog extends OrderCompletDialog {
 				} else {
 					textView.setText(Utils.trimHTML(Utils.fromHtml(prosTaskCreatedMessage)));
 				}
+			}else if(appType==AppConstant.ApplicationType.FEED){
+				if(TextUtils.isEmpty(prosTaskCreatedMessage)) {
+					textView.setText(activity.getResources().getString(R.string.your_service_request_confirm_message));
+				} else {
+					textView.setText(Utils.trimHTML(Utils.fromHtml(prosTaskCreatedMessage)));
+				}
 			}
 
 			TextView textViewOrderId = (TextView) dialog.findViewById(R.id.textViewOrderId);

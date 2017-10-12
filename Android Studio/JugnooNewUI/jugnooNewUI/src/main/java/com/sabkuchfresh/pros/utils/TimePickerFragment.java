@@ -17,13 +17,18 @@ import java.util.Calendar;
 public class TimePickerFragment extends DialogFragment
 		implements TimePickerDialog.OnTimeSetListener {
 
+	public static final String ADDITIONAL_TIME_MINUTES = "additonal_time_minutes";
 	private TimePickerDialog.OnTimeSetListener onTimeSetListener;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// Use the current time as the default values for the picker
 		final Calendar c = Calendar.getInstance();
-		int hour = c.get(Calendar.HOUR_OF_DAY);
+
+        if(getArguments().containsKey(ADDITIONAL_TIME_MINUTES)){
+            c.add(Calendar.MINUTE,getArguments().getInt(ADDITIONAL_TIME_MINUTES));
+        }
+        int hour = c.get(Calendar.HOUR_OF_DAY);
 		int minute = c.get(Calendar.MINUTE);
 
 		// Create a new instance of TimePickerDialog and return it
@@ -40,6 +45,17 @@ public class TimePickerFragment extends DialogFragment
 
 	public void show(FragmentManager manager, String tag, TimePickerDialog.OnTimeSetListener onTimeSetListener) {
 		this.onTimeSetListener = onTimeSetListener;
+		/*try {
+			final Calendar c = Calendar.getInstance();
+			if(getArguments().containsKey(ADDITIONAL_TIME_MINUTES)){
+                c.add(Calendar.MINUTE,getArguments().getInt(ADDITIONAL_TIME_MINUTES));
+            }
+			int hour = c.get(Calendar.HOUR_OF_DAY);
+			int minute = c.get(Calendar.MINUTE);
+			((TimePickerDialog)getDialog()).updateTime(hour, minute);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
 		super.show(manager, tag);
 	}
 }

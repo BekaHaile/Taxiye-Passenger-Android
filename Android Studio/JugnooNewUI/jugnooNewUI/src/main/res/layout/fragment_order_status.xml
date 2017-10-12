@@ -230,7 +230,7 @@
                     android:visibility="visible">
 
                     <TextView
-                        android:id="@+id/tvOrderStatus"
+                        android:id="@+id/tv1r"
                         android:layout_width="200px"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -244,7 +244,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/tvOrderStatus"
+                        android:layout_toRightOf="@+id/tv1r"
                         android:text=""
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"

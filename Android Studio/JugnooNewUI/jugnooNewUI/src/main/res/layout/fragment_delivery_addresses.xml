@@ -93,6 +93,41 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <LinearLayout
+                    android:id="@+id/llSetAnywhere"
+                    android:paddingTop="15px"
+                    android:paddingBottom="15px"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="50px"
+                        android:layout_height="50px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="30px"
+                        android:src="@drawable/ic_loc_other"
+                        android:tag="mwar"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:background="@android:color/white"
+                        android:layout_width="match_parent"
+                        app:font="@string/maven"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20px"
+                        android:gravity="center|left"
+                        android:textSize="32px"
+                        android:textColor="@color/text_color"
+                        android:text="@string/label_anywhere"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <View
+                    android:background="@color/grey_light_choose_destination"
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"/>
+
                 <TextView
                     android:id="@+id/textViewSavedPlaces"
                     android:layout_width="wrap_content"

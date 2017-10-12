@@ -856,5 +856,11 @@
 
     <!--Breakdown = height_choose_cateogry +  height_divider_choose_category-->
     <dimen name="height_category_bar">68dp</dimen>
+    <dimen name="sp_22">
+        22sp
+    </dimen>
+    <dimen name="dp_65">
+        65dp
+    </dimen>
     <!--Breakdown = height_choose_cateogry + 2 * height_divider_choose_category-->
 </resources>

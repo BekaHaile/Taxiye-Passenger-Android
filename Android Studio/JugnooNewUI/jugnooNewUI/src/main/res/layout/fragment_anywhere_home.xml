@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/menu_item_selector_color_F7"
+    android:fillViewport="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+
+
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/llPayViewContainer"
+        android:background="@color/menu_item_selector_color_F7">
+
+
+        <LinearLayout
+            android:id="@+id/llRoot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="75dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:text="Describe your Task"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color"
+                app:font="@string/maven_r" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="2dp">
+
+
+                <EditText
+                    android:id="@+id/edt_task_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:minHeight="50dp"
+                    android:maxLength="800"
+                    android:gravity="top"
+                    android:hint="Tell us what you need and we'll get it for you.\nAmazon or Flipkart product link works well."
+                    android:padding="10dp"
+                    android:textColor="@color/text_color"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textSize="14sp"
+                    app:font="@string/maven" />
+
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/from_wo"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color"
+                app:font="@string/maven_r" />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cv_pickup_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="2dp">
+
+
+
+                <RelativeLayout
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="10dp"
+                    android:minHeight="50dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_transparent_menu_item_selector"
+                    >
+
+
+                    <ImageView
+                        android:id="@+id/ivPickUpAddressType"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_loc_other"
+                        android:tag="mwar" />
+
+                    <TextView
+                        android:layout_toRightOf="@id/ivPickUpAddressType"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/tv_pickup_address"
+                        android:drawableRight="@drawable/ic_arrow_grey"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:gravity="top"
+                        android:text="Anywhere"
+                        android:textColor="@color/text_color"
+                        android:textSize="13sp"
+                        app:font="@string/maven" />
+
+                </RelativeLayout>
+
+
+
+
+
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/to_wo"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color"
+                app:font="@string/maven_r" />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cv_delivery_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="2dp">
+
+                <RelativeLayout
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="10dp"
+                    android:minHeight="50dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_transparent_menu_item_selector">
+
+
+                    <ImageView
+                        android:id="@+id/ivDelAddressType"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_loc_other"
+                        android:tag="mwar" />
+
+                    <TextView
+                        android:layout_toRightOf="@id/ivDelAddressType"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/tv_delivery_address"
+                        android:drawableRight="@drawable/ic_arrow_grey"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:gravity="top"
+                        android:text="@string/add_delivery_address"
+                        android:textColor="@color/text_color"
+                        android:textSize="13sp"
+                        app:font="@string/maven" />
+
+                </RelativeLayout>
+
+
+
+
+
+            </android.support.v7.widget.CardView>
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="Delivery Time"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color"
+                app:font="@string/maven_r" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:paddingBottom="10dp"
+                android:layout_marginBottom="@dimen/dp_10"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="2dp">
+
+
+                <RadioGroup
+                    android:id="@+id/rg_time_slot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <RadioButton
+                        android:id="@+id/rb_asap"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:gravity="top"
+                        android:padding="10dp"
+                        android:text="As soon as possible"
+                        android:textColor="@color/text_color"
+                        android:textSize="14sp"
+                        app:font="@string/maven" />
+
+                    <RadioButton
+                        android:id="@+id/rb_st"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:gravity="top"
+                        android:padding="10dp"
+                        android:text="Scheduled Time"
+                        android:textColor="@color/text_color"
+                        android:textSize="14sp"
+                        app:font="@string/maven" />
+
+                </RadioGroup>
+
+
+            </android.support.v7.widget.CardView>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new" />
+    <include
+        layout="@layout/layout_fresh_pay_action_container" />
+</RelativeLayout>
+
+

@@ -112,6 +112,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     RelativeLayout rlMain;
     @Bind(R.id.llLocationsContainer)
     LinearLayout llLocationsContainer;
+    @Bind(R.id.llSetAnywhere)
+    LinearLayout llSetAnywhere;
 
 
     public double current_latitude = 0.0;
@@ -221,6 +223,19 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     }
                 }, true, true, false);
                 listViewSavedLocations.setAdapter(savedPlacesAdapter);
+
+                if(activity instanceof FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment() != null && ((FreshActivity)activity).getAnywhereHomeFragment().isPickUpAddressRequested()){
+                    llSetAnywhere.setVisibility(View.VISIBLE);
+                    llSetAnywhere.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(null);
+                            ((FreshActivity)activity).performBackPressed(false);
+                        }
+                    });
+                } else {
+                    llSetAnywhere.setVisibility(View.GONE);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -233,7 +248,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 					public void onItemClick(SearchResult searchResult) {
 						if(searchResult.getIsConfirmed() == 1){
 							onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-									searchResult.getAddress(), searchResult.getId(), searchResult.getName());
+									searchResult.getAddress(), searchResult.getId(), searchResult.getName(),searchResult);
                             if(activity instanceof FreshActivity) {
                                 GAUtils.event(((FreshActivity) activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES + SELECTED);
                             }
@@ -752,14 +767,19 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     }
 
 
-    private void onAddressSelected(String latitude, String longitude, String address, int addressId, String type){
+    private void onAddressSelected(String latitude, String longitude, String address, int addressId, String type,SearchResult searchResult){
         if(activity instanceof FreshActivity) {
-            ((FreshActivity)activity).setSelectedAddress(address);
-            ((FreshActivity)activity).setSelectedLatLng(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)));
-            ((FreshActivity)activity).setSelectedAddressId(addressId);
-            ((FreshActivity)activity).setSelectedAddressType(type);
-            mBus.post(new AddressAdded(true));
+            if(((FreshActivity) activity).getAnywhereHomeFragment()!=null){
+                ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(searchResult);
+            }else{
+                ((FreshActivity)activity).setSelectedAddress(address);
+                ((FreshActivity)activity).setSelectedLatLng(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)));
+                ((FreshActivity)activity).setSelectedAddressId(addressId);
+                ((FreshActivity)activity).setSelectedAddressType(type);
+                mBus.post(new AddressAdded(true));
+            }
             ((FreshActivity)activity).performBackPressed(false);
+
         }
     }
 
@@ -932,7 +952,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     private void savedAddressSelected(SearchResult searchResult){
         if(searchResult.getIsConfirmed() == 1){
             onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                    searchResult.getAddress(), searchResult.getId(), searchResult.getName());
+                    searchResult.getAddress(), searchResult.getId(), searchResult.getName(),searchResult);
             if(activity instanceof FreshActivity) {
                 GAUtils.event(((FreshActivity)activity).getGaCategory(), DELIVERY_ADDRESS, SAVED_PLACES+SELECTED);
             }

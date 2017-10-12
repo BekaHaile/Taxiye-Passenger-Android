@@ -82,7 +82,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 	private RelativeLayout rlOTPContainer;
 	private boolean runAfterDelay;
-	private boolean onlyDigits, openHomeSwitcher = false;
+	private boolean onlyDigits;
 	public static boolean phoneNoLogin = false;
 	int duration = 500, otpLength = 4;
 	private ProgressDialog missedCallDialog;
@@ -104,7 +104,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		setContentView(R.layout.activity_otp_confrim);
 
 		loginDataFetched = false;
-		openHomeSwitcher = false;
 
 		try {
 			if(getIntent().hasExtra(LINKED_WALLET)){
@@ -957,7 +956,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 			MyApplication.getInstance().getAppSwitcher().switchApp(OTPConfirmScreen.this,
 					Prefs.with(OTPConfirmScreen.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
-					Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude), false);
+					Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude), SplashNewActivity.openHomeSwitcher);
 //			Intent intent = new Intent(OTPConfirmScreen.this, HomeActivity.class);
 //			intent.setData(Data.splashIntentUri);
 //			startActivity(intent);

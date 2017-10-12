@@ -798,4 +798,13 @@ public interface Constants {
     String KEY_FUGU_CHANNEL_ID = "fugu_channel_id";
     String KEY_FUGU_CHANNEL_NAME = "fugu_channel_name";
     String KEY_FUGU_TAGS = "fugu_tags";
+    String KEY_FROM_ADDRESS = "from_address";
+    String KEY_FROM_LATITUDE = "from_latitude";
+    String KEY_FROM_LONGITUDE = "from_longitude";
+    String KEY_TO_ADDRESS = "to_address";
+    String KEY_TO_LATITUDE = "to_latitude";
+    String KEY_TO_LONGITUDE = "to_longitude";
+    String KEY_IS_IMMEDIATE = "is_immediate";
+    String KEY_TIME = "time";
+    String KEY_DELIVERY_TIME = "delivery_time";
 }
