@@ -2,7 +2,6 @@ package com.sabkuchfresh.pros.utils;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -48,9 +47,10 @@ public class DatePickerFragment extends DialogFragment
 
 
 		// Create a new instance of DatePickerDialog and return it
-		DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, year, month, day);
+		DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, year, month, day+1);
 
 		dialog.getDatePicker().setMinDate(c.getTimeInMillis());
+		dialog.getDatePicker().updateDate(year, month, day);
 
 		c.add(Calendar.DAY_OF_MONTH, 30);
 		dialog.getDatePicker().setMaxDate(c.getTimeInMillis());
