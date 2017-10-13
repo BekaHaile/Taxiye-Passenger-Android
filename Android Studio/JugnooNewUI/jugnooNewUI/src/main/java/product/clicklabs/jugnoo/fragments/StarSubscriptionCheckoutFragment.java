@@ -24,6 +24,9 @@ import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
 import com.sabkuchfresh.retrofit.model.PurchaseSubscriptionResponse;
@@ -58,6 +61,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -109,6 +113,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private EditText edtIciciVpa;
     private TextView tvLabelIciciUpi, tvUPICashback;
     private ImageView imageViewIcici;
+
+    private LinearLayout llRideInfo;
+    private TextView tvCashPaidValue;
 
     private boolean fromStar;
     private int engagementId;
@@ -218,6 +225,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             tvLabelIciciUpi = (TextView) rootView.findViewById(R.id.tv_label_below_edt_icici);
             imageViewIcici = (ImageView) rootView.findViewById(R.id.ivRadioIciciUpi);
 
+            llRideInfo = (LinearLayout) rootView.findViewById(R.id.llRideInfo); llRideInfo.setVisibility(View.GONE);
+            tvCashPaidValue = (TextView) rootView.findViewById(R.id.tvCashPaidValue);
+
 
             relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
             relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -300,9 +310,11 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 }
             } else if(activity instanceof HomeActivity){
                 cvStarPlans.setVisibility(View.GONE);
-                paySlider.tvSlide.setText("PAY " + activity.getString(R.string.rupees_value_format,
-                        Utils.getDoubleTwoDigits((double) Math.round(fareToPay))));
-
+                String fareRs = activity.getString(R.string.rupees_value_format,
+                        Utils.getDoubleTwoDigits((double) Math.round(fareToPay)));
+                paySlider.tvSlide.setText("PAY " + fareRs);
+                llRideInfo.setVisibility(View.VISIBLE);
+                tvCashPaidValue.setText(fareRs);
             }
 
             linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
@@ -526,11 +538,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     paySlider.setSlideInitial();
                     return;
                 }
-                if(fromStar) {
-                    jugnooStarApi();
-                } else {
-
-                }
+                hitAPI();
             }else{
                 paySlider.setSlideInitial();
             }
@@ -826,8 +834,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     private void apiPurchaseSubscription() {
         if (MyApplication.getInstance().isOnline()) {
-            if(paySlider.isSliderInIntialStage())
-                paySlider.fullAnimate();
             DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -910,7 +916,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        jugnooStarApi();
+                        hitAPI();
                     }
 
                     @Override
@@ -925,20 +931,24 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 });
     }
 
-    private void jugnooStarApi() {
-        if(purchaseType == StarPurchaseType.RENEW.getOrdinal()) {
-			apiRenewSubscription();
-		} else if(purchaseType == StarPurchaseType.UPGRADE.getOrdinal()){
-			apiUpgradeSubscription();
-		} else{
-			apiPurchaseSubscription();
-		}
+    private void hitAPI() {
+        if(paySlider.isSliderInIntialStage())
+            paySlider.fullAnimate();
+        if(fromStar) {
+            if(purchaseType == StarPurchaseType.RENEW.getOrdinal()) {
+                apiRenewSubscription();
+            } else if(purchaseType == StarPurchaseType.UPGRADE.getOrdinal()){
+                apiUpgradeSubscription();
+            } else{
+                apiPurchaseSubscription();
+            }
+        } else {
+            initiateRideEndPaymentAPI();
+        }
     }
 
     private void apiUpgradeSubscription() {
         if (MyApplication.getInstance().isOnline()) {
-            if(paySlider.isSliderInIntialStage())
-                paySlider.fullAnimate();
             DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -1011,8 +1021,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     private void apiRenewSubscription() {
         if (MyApplication.getInstance().isOnline()) {
-            if(paySlider.isSliderInIntialStage())
-                paySlider.fullAnimate();
             DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -1109,6 +1117,56 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.ICICI_UPI);
         }
     };
+
+    public void initiateRideEndPaymentAPI() {
+
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ENGAGEMENT_ID, String.valueOf(engagementId));
+        params.put(Constants.KEY_PREFERRED_PAYMENT_MODE, String.valueOf(getPaymentOption().getOrdinal()));
+
+        new ApiCommon<SettleUserDebt>(activity).showLoader(true).execute(params, ApiName.INITIATE_RIDE_END_PAYMENT,
+                new APICommonCallback<SettleUserDebt>() {
+                    @Override
+                    public boolean onNotConnected() {
+                        paySlider.setSlideInitial();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onException(Exception e) {
+                        paySlider.setSlideInitial();
+                        return false;
+
+                    }
+
+                    @Override
+                    public void onSuccess(final SettleUserDebt orderAnywhereResponse, String message, int flag) {
+                        try {
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public boolean onError(SettleUserDebt feedCommonResponse, String message, int flag) {
+                        paySlider.setSlideInitial();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onFailure(RetrofitError error) {
+                        paySlider.setSlideInitial();
+                        return false;
+                    }
+
+                    @Override
+                    public void onNegativeClick() {
+                        paySlider.setSlideInitial();
+
+                    }
+                });
+    }
 
 
 }

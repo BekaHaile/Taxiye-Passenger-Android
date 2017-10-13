@@ -33,6 +33,7 @@ import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.HomeSwitcherActivity;
 import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
@@ -573,10 +574,10 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     currLatLng = ((HomeActivity) activity).getCurrentPlaceLatLng();
                 } else if(activity instanceof FreshActivity){
                     currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
-                }
-                else if(activity instanceof MainActivity)
-                {
+                } else if(activity instanceof MainActivity) {
                     currLatLng = ((MainActivity)activity).getCurrentPlaceLatLng();
+                } else if(activity instanceof HomeSwitcherActivity) {
+                    currLatLng = ((HomeSwitcherActivity)activity).getCurrentPlaceLatLng();
                 }
 
 

@@ -810,4 +810,5 @@ public interface Constants {
     String SP_RZP_ORDER_ID = "sp_rzp_order_id";
     String SP_RZP_AUTH_ORDER_ID = "sp_rzp_auth_order_id";
     String KEY_PREFERRED_PAYMENT_MODE = "preferred_payment_mode";
+    String KEY_SHOW_PAYMENT_OPTIONS = "show_payment_options";
 }

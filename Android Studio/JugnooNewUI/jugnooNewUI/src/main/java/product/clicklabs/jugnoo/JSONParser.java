@@ -1155,6 +1155,7 @@ public class JSONParser implements Constants {
 
         FuguChannelData fuguChannelData = new FuguChannelData();
         parseFuguChannelDetails(jLastRideData, fuguChannelData);
+        int showPaymentOptions = jLastRideData.optInt(Constants.KEY_SHOW_PAYMENT_OPTIONS, 0);
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -1171,7 +1172,8 @@ public class JSONParser implements Constants {
                 rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
                 sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge, totalRide, status, supportNumber
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
-                fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags());
+                fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
+                showPaymentOptions);
 	}
 
 

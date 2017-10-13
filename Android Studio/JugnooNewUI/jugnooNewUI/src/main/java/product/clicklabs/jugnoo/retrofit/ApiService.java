@@ -580,4 +580,10 @@ public interface ApiService {
     @POST("/razorpay_place_order_callback")
     Response razorpayPlaceOrderCallback(@FieldMap Map<String, String> params);
 
+    @FormUrlEncoded
+    @POST("/initiate_ride_end_payment")
+    void initiateRideEndPayment(@FieldMap Map<String, String> params,
+                               Callback<SettleUserDebt> callback);
+
+
 }

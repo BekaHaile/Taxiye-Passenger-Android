@@ -23,6 +23,42 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:id="@+id/llRideInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40px"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"
+                android:background="@drawable/background_white_rounded_bordered"
+                android:orientation="vertical"
+                android:paddingTop="40px"
+                android:paddingBottom="40px"
+                android:gravity="center"
+                android:visibility="gone"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Cash_to_be_paid"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/end_ride_fare_title_text_size"
+                    app:font="@string/maven_r"
+                    />
+
+                <TextView
+                    android:id="@+id/tvCashPaidValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10px"
+                    android:text="0"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/end_ride_fare_value_text_size"
+                    app:font="@string/maven"
+                    />
+            </LinearLayout>
+
             <android.support.v7.widget.CardView
                 android:id="@+id/cvStarPlans"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"

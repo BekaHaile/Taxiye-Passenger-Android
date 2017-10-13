@@ -2,21 +2,12 @@ package product.clicklabs.jugnoo.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 
 /**
  * Created by shankar on 1/5/16.
  */
-public class SettleUserDebt {
-
-	@SerializedName("flag")
-	@Expose
-	private Integer flag;
-	@SerializedName("message")
-	@Expose
-	private String message;
-	@SerializedName("error")
-	@Expose
-	private String error;
+public class SettleUserDebt extends FeedCommonResponse {
 
 	@SerializedName("toast_message")
 	@Expose String toastMessage;
@@ -30,7 +21,7 @@ public class SettleUserDebt {
 		return toastMessage;
 	}
 
-	public Integer getFlag() {
+	public int getFlag() {
 		return flag;
 	}
 

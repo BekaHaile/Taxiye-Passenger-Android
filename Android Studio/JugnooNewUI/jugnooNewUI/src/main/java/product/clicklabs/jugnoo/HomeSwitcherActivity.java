@@ -15,6 +15,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.adapters.OfferingListAdapter;
@@ -111,4 +113,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity {
     };
 
 
+	public LatLng getCurrentPlaceLatLng() {
+		return new LatLng(location.getLatitude(), location.getLongitude());
+	}
 }

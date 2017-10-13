@@ -2885,6 +2885,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
                         //fabViewTest.setRelativeLayoutFABVisibility(mode);
                         Log.d("RidePath DB", "Deleted");
+                        bPayOnline.setVisibility(Data.autoData.getEndRideData().getShowPaymentOptions() == 1 ? View.VISIBLE : View.GONE);
 
                     } else {
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
