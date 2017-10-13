@@ -177,14 +177,16 @@ public class PaymentActivity extends BaseFragmentActivity{
 
 	private ApiFetchWalletBalance apiFetchWalletBalance = null;
 	private String fragName = "Refresh";
-	public void getBalance(String fragName,final int paymentOption) {
+	private int paymentOption = PaymentOption.CASH.getOrdinal();
+	public void getBalance(String fragName,int paymentOption) {
 		try {
 			this.fragName = fragName;
+			this.paymentOption = paymentOption;
 			if(apiFetchWalletBalance == null){
 				apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
 					@Override
 					public void onSuccess() {
-						performGetBalanceSuccess(PaymentActivity.this.fragName,paymentOption);
+						performGetBalanceSuccess(PaymentActivity.this.fragName,PaymentActivity.this.paymentOption);
 					}
 
 					@Override
@@ -199,7 +201,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 
 					@Override
 					public void onRetry(View view) {
-						getBalance(PaymentActivity.this.fragName, paymentOption);
+						getBalance(PaymentActivity.this.fragName, PaymentActivity.this.paymentOption);
 					}
 
 					@Override
