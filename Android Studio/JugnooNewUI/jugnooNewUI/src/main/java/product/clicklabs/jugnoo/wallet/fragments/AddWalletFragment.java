@@ -402,7 +402,7 @@ public class AddWalletFragment extends Fragment {
 									Data.userData.setPaytmBalance(balance);
 									Data.userData.setPaytmEnabled(1);
 									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, PaymentOption.PAYTM.getOrdinal());
-									paymentActivity.getBalance(AddWalletFragment.class.getName());
+									paymentActivity.getBalance(AddWalletFragment.class.getName(), PaymentOption.PAYTM.getOrdinal());
 								}
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								if (Data.userData != null && openWalletType == PaymentOption.MOBIKWIK.getOrdinal()) {
@@ -410,14 +410,14 @@ public class AddWalletFragment extends Fragment {
 									Data.userData.setMobikwikBalance(balance);
 									Data.userData.setMobikwikEnabled(1);
 									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, PaymentOption.MOBIKWIK.getOrdinal());
-									paymentActivity.getBalance(AddWalletFragment.class.getName());
+									paymentActivity.getBalance(AddWalletFragment.class.getName(), PaymentOption.MOBIKWIK.getOrdinal());
 								}
 								else if(Data.userData != null && openWalletType == PaymentOption.FREECHARGE.getOrdinal()) {
 									double balance = jObj.optDouble(Constants.KEY_BALANCE, -1);
 									Data.userData.setFreeChargeBalance(balance);
 									Data.userData.setFreeChargeEnabled(1);
 									Prefs.with(paymentActivity).save(Constants.SP_LAST_ADDED_WALLET, PaymentOption.FREECHARGE.getOrdinal());
-									paymentActivity.getBalance(AddWalletFragment.class.getName());
+									paymentActivity.getBalance(AddWalletFragment.class.getName(), PaymentOption.FREECHARGE.getOrdinal());
                                 }
 							} else {
 								DialogPopup.alertPopup(paymentActivity, "", message);

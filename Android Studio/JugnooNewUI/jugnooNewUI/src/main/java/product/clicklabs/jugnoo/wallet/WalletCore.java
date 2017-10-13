@@ -278,6 +278,7 @@ public class WalletCore {
 					}else{
 						homeActivity.slidingBottomPanel.getViewPager().setCurrentItem(0);
 					}
+
 				}else{
 					requestRideOptionsFragment.getPaymentOptionDialog().show();
 				}
@@ -666,9 +667,9 @@ public class WalletCore {
 		}
 	}
 
-	public void setDefaultPaymentOption(){
+	public void setDefaultPaymentOption(Integer paymentOption){
 		try{
-			Data.autoData.setPickupPaymentOption(getDefaultPaymentOption().getOrdinal());
+			Data.autoData.setPickupPaymentOption(paymentOption==null?getDefaultPaymentOption().getOrdinal():paymentOption);
 			Log.e("pickupPaymentOption", ">"+Data.autoData.getPickupPaymentOption());
 		} catch (Exception e){
 			e.printStackTrace();

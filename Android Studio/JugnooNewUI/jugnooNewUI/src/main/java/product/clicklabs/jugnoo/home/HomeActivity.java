@@ -4786,7 +4786,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     initialMyLocationBtn.performClick();
                 }
                 else{
-                    MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+                    MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
                     finishWithToast();
                 }
             }
@@ -7405,7 +7405,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 																		new UserDebtDialog.Callback() {
 																			@Override
 																			public void successFullyDeducted(double userDebt) {
-																				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+																				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
 																				setUserData();
 																			}
 																		}).showUserDebtDialog(userDebt, message);
@@ -7578,7 +7578,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             confirmedScreenOpened = false;
             specialPickupScreenOpened = false;
 
-            MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+            MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
             setUserData();
 
             resetPickupDropFeilds();
@@ -8320,7 +8320,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
                     @Override
                     public void onSuccess() {
-                        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+                        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
                         setUserData();
                     }
 

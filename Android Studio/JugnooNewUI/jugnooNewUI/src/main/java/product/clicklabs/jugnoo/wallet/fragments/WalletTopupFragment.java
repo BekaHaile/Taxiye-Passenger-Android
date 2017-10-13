@@ -27,6 +27,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -197,7 +198,7 @@ public class WalletTopupFragment extends Fragment {
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								DialogPopup.dialogBanner(activity, message);
 								performBackPressed();
-								activity.getBalance("");
+								activity.getBalance("", PaymentOption.CASH.getOrdinal());
 							} else {
 								DialogPopup.alertPopup(activity, "", message);
 							}
