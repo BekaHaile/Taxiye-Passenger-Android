@@ -27,6 +27,8 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.dialogs.WalletSelectionErrorDialog;
+import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
@@ -264,7 +266,23 @@ public class WalletCore {
 	private void openSlidePanelOfHomeActivity(Activity activity) {
 		try {
 			if(activity instanceof HomeActivity){
-                ((HomeActivity)activity).slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+				HomeActivity homeActivity = (HomeActivity) activity;
+
+
+				RequestRideOptionsFragment requestRideOptionsFragment = homeActivity.slidingBottomPanel.getRequestRideOptionsFragment();
+				if(requestRideOptionsFragment.getRegionSelected().getRideType()!= RideTypeValue.POOL.getOrdinal()){
+					homeActivity.slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+
+					if(Data.autoData.getRegions().size()>1){
+						requestRideOptionsFragment.getPaymentOptionDialog().show();
+					}else{
+						homeActivity.slidingBottomPanel.getViewPager().setCurrentItem(0);
+					}
+				}else{
+					requestRideOptionsFragment.getPaymentOptionDialog().show();
+				}
+
+
 
             }
 		} catch (Exception e) {

@@ -4522,6 +4522,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     }
 
 
+
+
     private class UpdateNotificationsAsync extends AsyncTask<String, String, String>{
 
         private Handler updateNotifsHandler;
