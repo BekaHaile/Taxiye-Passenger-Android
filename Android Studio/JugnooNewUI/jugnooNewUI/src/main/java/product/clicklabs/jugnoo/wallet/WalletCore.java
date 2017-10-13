@@ -9,6 +9,7 @@ import android.view.View;
 import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -166,6 +167,7 @@ public class WalletCore {
 
 							@Override
 							public void onNegativeClick() {
+								openSlidePanelOfHomeActivity(activity);
 							}
 						}).show(activity.getResources().getString(R.string.paytm_error_case_select_cash), true);
 					} else{
@@ -177,6 +179,7 @@ public class WalletCore {
 
 							@Override
 							public void onNegativeClick() {
+								openSlidePanelOfHomeActivity(activity);
 							}
 						}).show(activity.getResources().getString(R.string.paytm_no_cash), false);
 					}
@@ -198,6 +201,7 @@ public class WalletCore {
 
 							@Override
 							public void onNegativeClick() {
+								openSlidePanelOfHomeActivity(activity);
 							}
 						}).show(activity.getResources().getString(R.string.mobikwik_error_select_cash), true);
 					} else{
@@ -209,6 +213,8 @@ public class WalletCore {
 
 							@Override
 							public void onNegativeClick() {
+								openSlidePanelOfHomeActivity(activity);
+
 							}
 						}).show(activity.getResources().getString(R.string.mobikwik_no_cash), false);
 					}
@@ -229,6 +235,9 @@ public class WalletCore {
 
 							@Override
 							public void onNegativeClick() {
+								openSlidePanelOfHomeActivity(activity);
+
+
 							}
 						}).show(activity.getResources().getString(R.string.freecharge_error_case_select_cash), true);
 					} else{
@@ -240,6 +249,7 @@ public class WalletCore {
 
 							@Override
 							public void onNegativeClick() {
+								openSlidePanelOfHomeActivity(activity);
 							}
 						}).show(activity.getResources().getString(R.string.freecharge_no_cash), false);
 					}
@@ -250,6 +260,18 @@ public class WalletCore {
 		}
 		return callRequestRide;
 	}
+
+	private void openSlidePanelOfHomeActivity(Activity activity) {
+		try {
+			if(activity instanceof HomeActivity){
+                ((HomeActivity)activity).slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	public void requestRideWalletSelectedFlurryEvent(int paymentOption, String tag){
 	}

@@ -444,7 +444,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     CallbackManager callbackManager;
     public final int FARE_ESTIMATE = 4;
     private String dropLocationSearchText = "";
-    private SlidingBottomPanelV4 slidingBottomPanel;
+    public SlidingBottomPanelV4 slidingBottomPanel;
 
     private T20Ops t20Ops = new T20Ops();
     private PlaceSearchListFragment.PlaceSearchMode placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
