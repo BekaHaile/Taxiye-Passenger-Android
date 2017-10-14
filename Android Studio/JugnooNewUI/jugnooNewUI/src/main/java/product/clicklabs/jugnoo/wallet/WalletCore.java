@@ -712,6 +712,9 @@ public class WalletCore {
 					}else if (paymentModeConfigData.getPaymentOption() == PaymentOption.ICICI_UPI.getOrdinal()) {
 						paymentModeConfigDataDefault = paymentModeConfigData;
 						break;
+					}else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
+						paymentModeConfigDataDefault = paymentModeConfigData;
+						break;
 					}
 				}
 			}
