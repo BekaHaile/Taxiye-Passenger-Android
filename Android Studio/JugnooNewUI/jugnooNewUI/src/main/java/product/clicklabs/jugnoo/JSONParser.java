@@ -786,7 +786,7 @@ public class JSONParser implements Constants {
         parseFeedData(context, jFeedObject, loginResponse.getFeed());
         parseProsData(context, loginResponse.getPros());
 
-        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
 
 
         parseFindDriverResp(loginResponse.getAutos());

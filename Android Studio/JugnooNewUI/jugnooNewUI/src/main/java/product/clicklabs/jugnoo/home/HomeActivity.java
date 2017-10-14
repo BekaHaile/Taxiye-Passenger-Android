@@ -444,7 +444,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     CallbackManager callbackManager;
     public final int FARE_ESTIMATE = 4;
     private String dropLocationSearchText = "";
-    private SlidingBottomPanelV4 slidingBottomPanel;
+    public SlidingBottomPanelV4 slidingBottomPanel;
 
     private T20Ops t20Ops = new T20Ops();
     private PlaceSearchListFragment.PlaceSearchMode placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
@@ -4513,6 +4513,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     }
 
 
+
+
     private class UpdateNotificationsAsync extends AsyncTask<String, String, String>{
 
         private Handler updateNotifsHandler;
@@ -4775,7 +4777,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     initialMyLocationBtn.performClick();
                 }
                 else{
-                    MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+                    MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
                     finishWithToast();
                 }
             }
@@ -7394,7 +7396,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 																		new UserDebtDialog.Callback() {
 																			@Override
 																			public void successFullyDeducted(double userDebt) {
-																				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+																				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
 																				setUserData();
 																			}
 																		}).showUserDebtDialog(userDebt, message);
@@ -7567,7 +7569,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             confirmedScreenOpened = false;
             specialPickupScreenOpened = false;
 
-            MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+            MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
             setUserData();
 
             resetPickupDropFeilds();
@@ -8309,7 +8311,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
                     @Override
                     public void onSuccess() {
-                        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+                        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
                         setUserData();
                     }
 
