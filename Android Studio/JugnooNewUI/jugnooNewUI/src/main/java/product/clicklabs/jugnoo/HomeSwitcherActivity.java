@@ -15,6 +15,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.adapters.OfferingListAdapter;
@@ -24,7 +28,7 @@ import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.utils.ASSL;
 
 
-public class HomeSwitcherActivity extends BaseAppCompatActivity {
+public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACategory, GAAction{
 
     DrawerLayout drawerLayout;
 
@@ -85,6 +89,29 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity {
             }
         });
 
+		drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+			@Override
+			public void onDrawerSlide(View drawerView, float slideOffset) {
+
+			}
+
+			@Override
+			public void onDrawerOpened(View drawerView) {
+				GAUtils.event(JUGNOO, HOME + PAGE , SIDE_MENU+CLICKED);
+			}
+
+			@Override
+			public void onDrawerClosed(View drawerView) {
+
+			}
+
+			@Override
+			public void onDrawerStateChanged(int newState) {
+
+			}
+		});
+
+		GAUtils.trackScreenView(JUGNOO + HOME + PAGE);
     }
 
 	@Override

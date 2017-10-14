@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.ItemListener;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import java.util.ArrayList;
 
@@ -28,7 +31,7 @@ import product.clicklabs.jugnoo.config.Config;
  * Created by socomo on 12/7/16.
  */
 
-public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapter.ViewHolder> implements ItemListener {
+public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapter.ViewHolder> implements ItemListener, GAAction, GACategory {
 	private Context context;
 	private LayoutInflater layoutInflater;
 	private ArrayList<Offering> offerings;
@@ -101,6 +104,7 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 				MyApplication.getInstance().getAppSwitcher().switchApp(((HomeSwitcherActivity) context), offerings.get(pos).getClientId(),
 						((HomeSwitcherActivity) context).getIntent().getData(),
 						new LatLng(latitude, longitude), bundle, false, false, false);
+				GAUtils.event(JUGNOO, HOME + PAGE, offerings.get(pos).getName()+" "+CLICKED);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
