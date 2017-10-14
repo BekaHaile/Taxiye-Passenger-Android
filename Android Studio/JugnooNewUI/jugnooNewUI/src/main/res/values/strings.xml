@@ -1383,6 +1383,10 @@
     <string name="from_wo">From</string>
     <string name="to_wo">To</string>
     <string name="pay_online">Pay Online</string>
+    <string name="want_to_pay_online">Want to pay online instead?</string>
+    <string name="to_be_paid">To be paid</string>
+    <string name="choose_payment_method">Choose payment method</string>
+    <string name="swipe_right_to_pay"><![CDATA[Swipe right to pay >>]]></string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

@@ -61,7 +61,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -115,11 +115,11 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private ImageView imageViewIcici;
 
     private LinearLayout llRideInfo;
-    private TextView tvCashPaidValue;
+    private TextView tvTotalFareValue, tvCashPaidValue, textViewPaymentVia;
 
     private boolean fromStar;
     private int engagementId;
-    private double fareToPay;
+    private double totalFare, fareToPay;
     private String jugnooVpaHandle;
 
 
@@ -136,11 +136,12 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         return  fragment;
     }
 
-    public static StarSubscriptionCheckoutFragment newInstance(int engagementId, double fare){
+    public static StarSubscriptionCheckoutFragment newInstance(int engagementId, double totalFare, double fare){
         StarSubscriptionCheckoutFragment fragment = new StarSubscriptionCheckoutFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean(FOR_STAR_SUBSCRIPTION, false);
         bundle.putInt(Constants.KEY_ENGAGEMENT_ID, engagementId);
+        bundle.putDouble(Constants.KEY_TOTAL_FARE, totalFare);
         bundle.putDouble(Constants.KEY_FARE_TO_PAY, fare);
         fragment.setArguments(bundle);
         return  fragment;
@@ -155,6 +156,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             subscription = new Gson().fromJson(plan, SubscriptionData.Subscription.class);
         } else {
             engagementId = bundle.getInt(Constants.KEY_ENGAGEMENT_ID);
+            totalFare = bundle.getDouble(Constants.KEY_TOTAL_FARE);
             fareToPay = bundle.getDouble(Constants.KEY_FARE_TO_PAY);
         }
     }
@@ -226,7 +228,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             imageViewIcici = (ImageView) rootView.findViewById(R.id.ivRadioIciciUpi);
 
             llRideInfo = (LinearLayout) rootView.findViewById(R.id.llRideInfo); llRideInfo.setVisibility(View.GONE);
-            tvCashPaidValue = (TextView) rootView.findViewById(R.id.tvCashPaidValue);
+            tvTotalFareValue = (TextView) rootView.findViewById(R.id.tvTotalFareValue); tvTotalFareValue.setTypeface(tvTotalFareValue.getTypeface(), Typeface.BOLD);
+            tvCashPaidValue = (TextView) rootView.findViewById(R.id.tvCashPaidValue); tvCashPaidValue.setTypeface(tvCashPaidValue.getTypeface(), Typeface.BOLD);
+            textViewPaymentVia = (TextView) rootView.findViewById(R.id.textViewPaymentVia);
 
 
             relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -260,7 +264,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     subscription=subscriptionsActivityList.get(0);
                     purchaseType =subscriptionsActivityList.get(0).getStarPurchaseType().getOrdinal();
                     tvPaymentPlan.setText(subscription.getDescription());
-                    tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscription.getAmount())));
+                    tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(getAmount())));
 
                 } else{
 
@@ -275,7 +279,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             rlPlan1.setVisibility(View.VISIBLE);
                             if(subscriptionsActivityList.get(i).getAmountText()!=null)
                                 tvAmount1.setText(subscriptionsActivityList.get(i).getAmountText());
-                            else if(subscription.getAmount()!=null){
+                            else if(getAmount()!=null){
                                 tvAmount1.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscriptionsActivityList.get(i).getAmount())));
 
                             }
@@ -289,7 +293,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             rlPlan2.setVisibility(View.VISIBLE);
                             if(subscriptionsActivityList.get(i).getAmountText()!=null)
                                 tvAmount2.setText(subscriptionsActivityList.get(i).getAmountText());
-                            else if(subscription.getAmount()!=null){
+                            else if(getAmount()!=null){
                                 tvAmount2.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscriptionsActivityList.get(i).getAmount())));
 
                             }
@@ -313,8 +317,12 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 String fareRs = activity.getString(R.string.rupees_value_format,
                         Utils.getDoubleTwoDigits((double) Math.round(fareToPay)));
                 paySlider.tvSlide.setText("PAY " + fareRs);
+                paySlider.sliderText.setText(R.string.swipe_right_to_pay);
                 llRideInfo.setVisibility(View.VISIBLE);
                 tvCashPaidValue.setText(fareRs);
+                tvTotalFareValue.setText(activity.getString(R.string.rupees_value_format,
+                        Utils.getDoubleTwoDigits((double) Math.round(totalFare))));
+                textViewPaymentVia.setText(R.string.choose_payment_method);
             }
 
             linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
@@ -496,7 +504,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         try {
             boolean goAhead = true;
             if (getPaymentOption() == PaymentOption.PAYTM) {
-                if (Data.userData.getPaytmBalance() < subscription.getAmount()) {
+                if (Data.userData.getPaytmBalance() < getAmount()) {
                     if(Data.userData.getPaytmEnabled() == 0){
                         relativeLayoutPaytm.performClick();
                     } else if (Data.userData.getPaytmBalance() < 0) {
@@ -508,7 +516,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 }
             }
             else if (getPaymentOption() == PaymentOption.MOBIKWIK) {
-                if (Data.userData.getMobikwikBalance() < subscription.getAmount()) {
+                if (Data.userData.getMobikwikBalance() < getAmount()) {
                     if(Data.userData.getMobikwikEnabled() == 0){
                         relativeLayoutMobikwik.performClick();
                     } else if (Data.userData.getMobikwikBalance() < 0) {
@@ -520,7 +528,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 }
             }
             else if (getPaymentOption() == PaymentOption.FREECHARGE) {
-                if (Data.userData.getFreeChargeBalance() < subscription.getAmount()) {
+                if (Data.userData.getFreeChargeBalance() < getAmount()) {
                     if(Data.userData.getFreeChargeEnabled() == 0){
                         relativeLayoutFreeCharge.performClick();
                     } else if (Data.userData.getFreeChargeBalance() < 0) {
@@ -561,15 +569,15 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 }
             };
             if (paymentOption == PaymentOption.PAYTM && Data.userData.getPaytmEnabled() == 1) {
-                String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getPaytmBalance() - Math.ceil(subscription.getAmount())));
+                String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getPaytmBalance() - Math.ceil(getAmount())));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_paytm_balance, amount, R.drawable.ic_paytm_big);
             }
             else if (paymentOption == PaymentOption.MOBIKWIK && Data.userData.getMobikwikEnabled() == 1) {
-                String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getMobikwikBalance() - Math.ceil(subscription.getAmount())));
+                String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getMobikwikBalance() - Math.ceil(getAmount())));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, R.drawable.ic_mobikwik_big);
             }
             else if (paymentOption == PaymentOption.FREECHARGE && Data.userData.getFreeChargeEnabled() == 1) {
-                String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getFreeChargeBalance() - Math.ceil(subscription.getAmount())));
+                String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getFreeChargeBalance() - Math.ceil(getAmount())));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_freecharge_balance, amount, R.drawable.ic_freecharge_big);
             }
             else {
@@ -590,7 +598,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         (Data.userData.getPaytmEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-                        df.format(Math.ceil(subscription.getAmount()
+                        df.format(Math.ceil(getAmount()
                                 - Data.userData.getPaytmBalance())));
             }
             else if (paymentOption == PaymentOption.MOBIKWIK) {
@@ -598,7 +606,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         (Data.userData.getMobikwikEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-                        df.format(Math.ceil(subscription.getAmount()
+                        df.format(Math.ceil(getAmount()
                                 - Data.userData.getMobikwikBalance())));
             }
             else if (paymentOption == PaymentOption.FREECHARGE) {
@@ -606,7 +614,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         (Data.userData.getFreeChargeEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-                        df.format(Math.ceil(subscription.getAmount()
+                        df.format(Math.ceil(getAmount()
                                 - Data.userData.getFreeChargeBalance())));
             }
             else {
@@ -670,7 +678,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
                 });
             }
-            apiFetchWalletBalance.getBalance(true);
+            apiFetchWalletBalance.getBalance(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1124,8 +1132,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         params.put(Constants.KEY_ENGAGEMENT_ID, String.valueOf(engagementId));
         params.put(Constants.KEY_PREFERRED_PAYMENT_MODE, String.valueOf(getPaymentOption().getOrdinal()));
 
-        new ApiCommon<SettleUserDebt>(activity).showLoader(true).execute(params, ApiName.INITIATE_RIDE_END_PAYMENT,
-                new APICommonCallback<SettleUserDebt>() {
+        new ApiCommon<PaymentResponse>(activity).showLoader(true).execute(params, ApiName.INITIATE_RIDE_END_PAYMENT,
+                new APICommonCallback<PaymentResponse>() {
                     @Override
                     public boolean onNotConnected() {
                         paySlider.setSlideInitial();
@@ -1140,8 +1148,25 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
 
                     @Override
-                    public void onSuccess(final SettleUserDebt orderAnywhereResponse, String message, int flag) {
+                    public void onSuccess(final PaymentResponse response, String message, int flag) {
                         try {
+                            if(getPaymentOption() == PaymentOption.RAZOR_PAY){
+                                // razor pay case send data to RazorPay Checkout page
+                                JSONObject jObj = new JSONObject();
+                                activity.setPurchaseSubscriptionResponse(response.getData().getEngagementId(),
+                                        response.getData().getEngagementId());
+                                activity.startRazorPayPayment(jObj.getJSONObject(Constants.KEY_RAZORPAY_PAYMENT_OBJECT), isRazorUPI);
+                            } else {
+                                if(Data.autoData != null && Data.autoData.getEndRideData() != null){
+                                    Data.autoData.getEndRideData().setShowPaymentOptions(0);
+                                }
+                                DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        activity.onBackPressed();
+                                    }
+                                });
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -1149,7 +1174,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
 
                     @Override
-                    public boolean onError(SettleUserDebt feedCommonResponse, String message, int flag) {
+                    public boolean onError(PaymentResponse feedCommonResponse, String message, int flag) {
                         paySlider.setSlideInitial();
                         return false;
                     }
@@ -1166,6 +1191,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
                     }
                 });
+    }
+    
+    private Integer getAmount(){
+        if(fromStar){
+            return subscription.getAmount();
+        } else {
+            return (int)fareToPay;
+        }
     }
 
 

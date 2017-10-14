@@ -16,6 +16,7 @@ import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
+import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -583,7 +584,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/initiate_ride_end_payment")
     void initiateRideEndPayment(@FieldMap Map<String, String> params,
-                               Callback<SettleUserDebt> callback);
+                               Callback<PaymentResponse> callback);
 
 
 }

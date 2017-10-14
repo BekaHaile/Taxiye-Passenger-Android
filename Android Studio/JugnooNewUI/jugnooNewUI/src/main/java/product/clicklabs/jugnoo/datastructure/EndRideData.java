@@ -27,7 +27,7 @@ public class EndRideData {
 	private int totalRide;
 	private int status;
 	private String supportNumber;
-	private int showPaymentOptions;
+	private int showPaymentOptions, paymentOption;
 	
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
 					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
@@ -37,7 +37,7 @@ public class EndRideData {
 					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled,
 					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, double paidUsingFreeCharge,
 					   int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
-					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags, int showPaymentOptions){
+					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags, int showPaymentOptions, int paymentOption){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -61,6 +61,7 @@ public class EndRideData {
 		this.waitTime = waitTime;
 		this.baseFare = baseFare;
         this.fareFactor = fareFactor;
+		this.paymentOption = paymentOption;
 		this.discountTypes = new ArrayList<>();
 		this.discountTypes.addAll(discountTypes);
 		discountTypes.clear();
@@ -214,5 +215,13 @@ public class EndRideData {
 
 	public void setShowPaymentOptions(int showPaymentOptions) {
 		this.showPaymentOptions = showPaymentOptions;
+	}
+
+	public int getPaymentOption() {
+		return paymentOption;
+	}
+
+	public void setPaymentOption(int paymentOption) {
+		this.paymentOption = paymentOption;
 	}
 }

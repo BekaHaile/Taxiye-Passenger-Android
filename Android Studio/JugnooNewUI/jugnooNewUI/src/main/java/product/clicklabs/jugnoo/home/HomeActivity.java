@@ -352,7 +352,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private AnimationDrawable jugnooAnimation;
     private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp, ivEndRideType,
             imageViewPaymentModeConfirm, imageViewRideEndWithImage;
-    private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends, bPayOnline;
+    private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
+    private LinearLayout llPayOnline;
+    private TextView tvPayOnline;
 
 
 
@@ -809,7 +811,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         imageViewThumbsUp = (ImageView) findViewById(R.id.imageViewThumbsUp);
         textViewThumbsDown = (TextView) findViewById(R.id.textViewThumbsDown); textViewThumbsDown.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         textViewThumbsUp = (TextView) findViewById(R.id.textViewThumbsUp); textViewThumbsUp.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
-        bPayOnline = (Button) findViewById(R.id.bPayOnline);
+        llPayOnline = (LinearLayout) findViewById(R.id.llPayOnline);
+        tvPayOnline = (TextView) findViewById(R.id.tvPayOnline); tvPayOnline.setTypeface(tvPayOnline.getTypeface(), Typeface.BOLD);
 
         rlChatDriver = (RelativeLayout) findViewById(R.id.rlChatDriver);
         bChatDriver = (Button) findViewById(R.id.bChatDriver); bChatDriver.setOnClickListener(this);
@@ -1653,7 +1656,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
 
-        bPayOnline.setOnClickListener(new OnClickListener() {
+        llPayOnline.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -2885,7 +2888,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
                         //fabViewTest.setRelativeLayoutFABVisibility(mode);
                         Log.d("RidePath DB", "Deleted");
-                        bPayOnline.setVisibility(Data.autoData.getEndRideData().getShowPaymentOptions() == 1 ? View.VISIBLE : View.GONE);
+                        int onlinePaymentVisibility = Data.autoData.getEndRideData().getShowPaymentOptions() == 1 ? View.VISIBLE : View.GONE;
+                        llPayOnline.setVisibility(onlinePaymentVisibility);
+                        tvPayOnline.setVisibility(onlinePaymentVisibility);
+                        if(Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()){
+                            llPayOnline.performClick();
+                        } else {
+                        }
 
                     } else {
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -3817,6 +3826,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else if(RideEndFragmentMode.ONLINE_PAYMENT == rideEndFragmentMode) {
                 fragToCheck = getStarSubscriptionCheckoutFragment();
                 fragToAdd = StarSubscriptionCheckoutFragment.newInstance(Integer.parseInt(Data.autoData.getEndRideData().engagementId),
+                        Data.autoData.getEndRideData().finalFare,
                         Data.autoData.getEndRideData().toPay);
                 tag = StarSubscriptionCheckoutFragment.class.getName();
                 title = getResources().getString(R.string.pay_online);

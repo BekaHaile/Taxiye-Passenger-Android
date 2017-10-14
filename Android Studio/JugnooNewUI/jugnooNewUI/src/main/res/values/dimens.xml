@@ -862,5 +862,11 @@
     <dimen name="dp_65">
         65dp
     </dimen>
+    <dimen name="dp_270">
+        270dp
+    </dimen>
+    <dimen name="dp_230">
+        230dp
+    </dimen>
     <!--Breakdown = height_choose_cateogry + 2 * height_divider_choose_category-->
 </resources>

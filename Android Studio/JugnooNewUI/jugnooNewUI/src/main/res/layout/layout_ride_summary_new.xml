@@ -9,7 +9,6 @@
     android:id="@+id/endRideReviewRl"
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
-    android:animateLayoutChanges="true"
     android:visibility="visible">
 
     <LinearLayout
@@ -26,7 +25,6 @@
         android:id="@+id/scrollViewRideSummary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/menu_item_selector_color"
         android:layout_below="@+id/linearLayoutRideSummaryContainer"
         >
 
@@ -75,7 +73,7 @@
                 android:layout_marginTop="40px"
                 android:layout_marginLeft="30px"
                 android:layout_marginRight="30px"
-                android:background="@drawable/background_white_rounded_bordered"
+                android:background="@drawable/bg_menu_item_selector_color_rb"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -145,9 +143,8 @@
                 android:id="@+id/linearLayoutRSViewInvoice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginRight="50px"
-                android:layout_marginTop="40px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20px"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -167,14 +164,59 @@
                     android:text="@string/view_invoice"
                     android:textColor="@color/text_color_theme_selector"
                     android:textSize="@dimen/text_size_30"
+                    android:layout_marginTop="5px"
+                    android:layout_marginBottom="5px"
                     />
 
             </LinearLayout>
 
+
+            <TextView
+                android:id="@+id/tvPayOnline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/sp_17"
+                android:textColor="@color/text_color"
+                android:gravity="center_horizontal"
+                android:text="@string/want_to_pay_online"
+                android:layout_gravity="center_horizontal"
+                app:font="@string/maven"
+                android:layout_marginTop="@dimen/dp_30"
+                android:tag="@string/dont_touch_me"
+                />
+            <LinearLayout
+                android:id="@+id/llPayOnline"
+                android:layout_width="@dimen/dp_250"
+                android:layout_height="@dimen/dp_50"
+                android:tag="@string/dont_touch_me"
+                android:background="@drawable/capsule_theme_color_selector"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_10"
+                android:gravity="center"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_16"
+                    android:textAllCaps="true"
+                    android:text="@string/pay_online"
+                    app:font="@string/maven"
+                    android:drawableLeft="@drawable/ic_cards"
+                    android:gravity="center_vertical"
+                    android:drawablePadding="@dimen/dp_5"
+                    />
+
+            </LinearLayout>
+
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50px">
+                android:layout_marginTop="70px">
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -222,7 +264,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="50px"
+                android:layout_marginTop="10px"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -362,17 +404,6 @@
                 android:visibility="gone"
                 android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/button_small_text_size"/>
-
-            <Button
-                android:id="@+id/bPayOnline"
-                style="@style/ButtonTheme"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10px"
-                android:visibility="visible"
-                android:layout_marginTop="20px"
-                android:text="@string/pay_online"
-                app:font="@string/maven"
-                />
 
             <TextView
                 android:id="@+id/textViewRSScroll"
