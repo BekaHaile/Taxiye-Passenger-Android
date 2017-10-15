@@ -190,7 +190,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 RestClient.getMenusApiService().userClickEvents(params, callback);
                 break;
             case ANYWHERE_PLACE_ORDER:
-                RestClient.getFreshApiService().anywherePlaceOrder(params, callback);
+                RestClient.getFatafatApiService().anywherePlaceOrder(params, callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");

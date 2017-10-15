@@ -108,6 +108,8 @@ public class TopBar implements GAAction, GACategory {
                 if (Data.AppType == com.sabkuchfresh.utils.AppConstant.ApplicationType.MENUS
                         || Data.AppType == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
                     Utils.showToast(activity, Config.getMenusServerUrlName());
+                } else if (Data.AppType == AppConstant.ApplicationType.FEED) {
+                    Utils.showToast(activity, Config.getFatafatServerUrlName());
                 } else {
                     Utils.showToast(activity, Config.getFreshServerUrlName());
                 }

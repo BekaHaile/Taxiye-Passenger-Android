@@ -487,7 +487,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 					}
 				};
 				new HomeUtil().putDefaultParams(params);
-				RestClient.getFreshApiService().getCustomOrderHistory(params, callback);
+				RestClient.getFatafatApiService().getCustomOrderHistory(params, callback);
 			} else {
 				retryDialogCancelOrderOrOrderStatus("", DialogErrorType.NO_NET);
 			}

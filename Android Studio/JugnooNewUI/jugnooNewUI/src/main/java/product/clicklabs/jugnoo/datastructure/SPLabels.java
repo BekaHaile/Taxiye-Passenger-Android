@@ -13,6 +13,7 @@ public class SPLabels {
         SERVER_SELECTED = "serverSelected",
                 FRESH_SERVER_SELECTED = "freshServerSelected",
                 MENUS_SERVER_SELECTED = "menusServerSelected",
+                FATAFAT_SERVER_SELECTED = "fatafatServerSelected",
                 PAY_SERVER_SELECTED = "payServerSelected",
 
         REFERRAL_OPEN_DATE_MILLIS = "referralOpenDateMillis",
