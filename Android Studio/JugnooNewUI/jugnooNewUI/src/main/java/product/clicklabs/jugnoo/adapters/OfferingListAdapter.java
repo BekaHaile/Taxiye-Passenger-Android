@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -98,8 +97,8 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 		int pos = recyclerView.getChildAdapterPosition(parentView);
 		if (pos != RecyclerView.NO_POSITION) {
 			try {
-				double latitude = (((HomeSwitcherActivity) context).getIntent().getDoubleExtra(Constants.KEY_LATITUDE, callback.getLocation().getLatitude()));
-				double longitude = (((HomeSwitcherActivity) context).getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, callback.getLocation().getLongitude()));
+				double latitude = (((HomeSwitcherActivity) context).getIntent().getDoubleExtra(Constants.KEY_LATITUDE, callback.getLatLng().latitude));
+				double longitude = (((HomeSwitcherActivity) context).getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, callback.getLatLng().longitude));
 				Bundle bundle = ((HomeSwitcherActivity) context).getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE);
 				MyApplication.getInstance().getAppSwitcher().switchApp(((HomeSwitcherActivity) context), offerings.get(pos).getClientId(),
 						((HomeSwitcherActivity) context).getIntent().getData(),
@@ -132,7 +131,7 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 	}
 
 	public interface Callback {
-		Location getLocation();
+		LatLng getLatLng();
 	}
 
 	public static class Offering {

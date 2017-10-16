@@ -1792,9 +1792,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             try {
                 if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
 						|| (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
-					map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.971723, 78.754263), 5));
+					map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.getIndiaCentre(), 5));
 					forceFarAwayCity();
-					Data.autoData.setLastRefreshLatLng(new LatLng(22.971723, 78.754263));
+					Data.autoData.setLastRefreshLatLng(Data.getIndiaCentre());
 				} else {
 					map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), MAX_ZOOM));
                     if(Data.autoData.getLastRefreshLatLng() == null) {

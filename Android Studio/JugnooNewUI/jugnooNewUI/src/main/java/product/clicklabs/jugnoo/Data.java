@@ -684,4 +684,12 @@ public class Data {
         Data.prosData = prosData;
     }
 
+    private static LatLng indiaCentre = null;
+    public static LatLng getIndiaCentre(){
+        if(indiaCentre == null){
+            indiaCentre = new LatLng(22.971723, 78.754263);
+        }
+        return indiaCentre;
+    }
+
 }

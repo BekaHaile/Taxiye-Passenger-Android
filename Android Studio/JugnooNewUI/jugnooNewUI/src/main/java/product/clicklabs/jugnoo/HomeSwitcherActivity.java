@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -31,7 +32,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACategory, GAAction{
 
     DrawerLayout drawerLayout;
-
+	LatLng latLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 
 		MenuBar menuBar = new MenuBar(this, drawerLayout);
         //menuBar.setUserData();
+		latLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.loginLatitude), getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.loginLongitude));
 
 		ArrayList<OfferingListAdapter.Offering> offerings = new ArrayList<>();
         try {
@@ -76,8 +78,8 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 
         OfferingListAdapter offeringListAdapter = new OfferingListAdapter(this, offerings, new OfferingListAdapter.Callback() {
             @Override
-            public Location getLocation() {
-                return location;
+            public LatLng getLatLng() {
+                return latLng == null ? Data.getIndiaCentre() : latLng;
             }
         }, rvOfferings);
         rvOfferings.setAdapter(offeringListAdapter);
@@ -128,12 +130,10 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
     }
 
 
-    private Location location;
-
     private LocationUpdate locationUpdate = new LocationUpdate() {
         @Override
         public void onLocationChanged(Location location) {
-            HomeSwitcherActivity.this.location = location;
+			latLng = new LatLng(location.getLatitude(), location.getLongitude());
         }
     };
 
