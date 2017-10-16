@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -155,7 +154,7 @@ public class TopBar implements  GACategory, GAAction {
 
 
 
-    public void setTopBarState(Context context, boolean defaultState, String title) {
+    public void setTopBarState(boolean defaultState, String title) {
         imageViewMenu.setVisibility(View.VISIBLE);
         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_INITIAL
                 || HomeActivity.passengerScreenMode == PassengerScreenMode.P_SEARCH

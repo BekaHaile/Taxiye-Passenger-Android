@@ -37,6 +37,9 @@ public class PaymentResponse extends FeedCommonResponse{
 		@SerializedName("payment_data")
 		@Expose
 		private PaymentData paymentData;
+		@SerializedName("razorpay_payment_object")
+		@Expose
+		private RazorpayData razorpayData;
 
 		public Integer getEngagementId() {
 			return engagementId;
@@ -70,110 +73,117 @@ public class PaymentResponse extends FeedCommonResponse{
 			this.paymentData = paymentData;
 		}
 
+		public RazorpayData getRazorpayData() {
+			return razorpayData;
+		}
+
+		public void setRazorpayData(RazorpayData razorpayData) {
+			this.razorpayData = razorpayData;
+		}
 	}
 
 	public class PaymentData {
 
 		@SerializedName("flag")
 		@Expose
-		private Integer flag;
+		private int flag;
 		@SerializedName("jugnoo_balance")
 		@Expose
-		private Integer jugnooBalance;
+		private double jugnooBalance;
 		@SerializedName("remaining")
 		@Expose
-		private Integer remaining;
+		private double remaining;
 		@SerializedName("jugnoo_deducted")
 		@Expose
-		private Integer jugnooDeducted;
+		private double jugnooDeducted;
 		@SerializedName("paytm_deducted")
 		@Expose
-		private Integer paytmDeducted;
+		private double paytmDeducted;
 		@SerializedName("mobikwik_deducted")
 		@Expose
-		private Integer mobikwikDeducted;
+		private double mobikwikDeducted;
 		@SerializedName("freecharge_deducted")
 		@Expose
-		private Integer freechargeDeducted;
+		private double freechargeDeducted;
 		@SerializedName("debt_added")
 		@Expose
-		private Integer debtAdded;
+		private double debtAdded;
 		@SerializedName("real_money_ratio")
 		@Expose
-		private Integer realMoneyRatio;
+		private double realMoneyRatio;
 		@SerializedName("message")
 		@Expose
 		private String message;
 
-		public Integer getFlag() {
+		public int getFlag() {
 			return flag;
 		}
 
-		public void setFlag(Integer flag) {
+		public void setFlag(int flag) {
 			this.flag = flag;
 		}
 
-		public Integer getJugnooBalance() {
+		public double getJugnooBalance() {
 			return jugnooBalance;
 		}
 
-		public void setJugnooBalance(Integer jugnooBalance) {
+		public void setJugnooBalance(double jugnooBalance) {
 			this.jugnooBalance = jugnooBalance;
 		}
 
-		public Integer getRemaining() {
+		public double getRemaining() {
 			return remaining;
 		}
 
-		public void setRemaining(Integer remaining) {
+		public void setRemaining(double remaining) {
 			this.remaining = remaining;
 		}
 
-		public Integer getJugnooDeducted() {
+		public double getJugnooDeducted() {
 			return jugnooDeducted;
 		}
 
-		public void setJugnooDeducted(Integer jugnooDeducted) {
+		public void setJugnooDeducted(double jugnooDeducted) {
 			this.jugnooDeducted = jugnooDeducted;
 		}
 
-		public Integer getPaytmDeducted() {
+		public double getPaytmDeducted() {
 			return paytmDeducted;
 		}
 
-		public void setPaytmDeducted(Integer paytmDeducted) {
+		public void setPaytmDeducted(double paytmDeducted) {
 			this.paytmDeducted = paytmDeducted;
 		}
 
-		public Integer getMobikwikDeducted() {
+		public double getMobikwikDeducted() {
 			return mobikwikDeducted;
 		}
 
-		public void setMobikwikDeducted(Integer mobikwikDeducted) {
+		public void setMobikwikDeducted(double mobikwikDeducted) {
 			this.mobikwikDeducted = mobikwikDeducted;
 		}
 
-		public Integer getFreechargeDeducted() {
+		public double getFreechargeDeducted() {
 			return freechargeDeducted;
 		}
 
-		public void setFreechargeDeducted(Integer freechargeDeducted) {
+		public void setFreechargeDeducted(double freechargeDeducted) {
 			this.freechargeDeducted = freechargeDeducted;
 		}
 
-		public Integer getDebtAdded() {
+		public double getDebtAdded() {
 			return debtAdded;
 		}
 
-		public void setDebtAdded(Integer debtAdded) {
+		public void setDebtAdded(double debtAdded) {
 			this.debtAdded = debtAdded;
 		}
 
-		public Integer getRealMoneyRatio() {
+		public double getRealMoneyRatio() {
 			return realMoneyRatio;
 		}
 
-		public void setRealMoneyRatio(Integer realMoneyRatio) {
+		public void setRealMoneyRatio(double realMoneyRatio) {
 			this.realMoneyRatio = realMoneyRatio;
 		}
 
@@ -183,6 +193,99 @@ public class PaymentResponse extends FeedCommonResponse{
 
 		public void setMessage(String message) {
 			this.message = message;
+		}
+
+	}
+
+	public class RazorpayData {
+
+		@SerializedName("order_id")
+		@Expose
+		private String orderId;
+		@SerializedName("phone_no")
+		@Expose
+		private String phoneNo;
+		@SerializedName("user_email")
+		@Expose
+		private String userEmail;
+		@SerializedName("description")
+		@Expose
+		private String description;
+		@SerializedName("auth_order_id")
+		@Expose
+		private Integer authOrderId;
+		@SerializedName("amount")
+		@Expose
+		private double amount;
+		@SerializedName("currency")
+		@Expose
+		private String currency;
+		@SerializedName("name")
+		@Expose
+		private String name;
+
+		public String getOrderId() {
+			return orderId;
+		}
+
+		public void setOrderId(String orderId) {
+			this.orderId = orderId;
+		}
+
+		public String getPhoneNo() {
+			return phoneNo;
+		}
+
+		public void setPhoneNo(String phoneNo) {
+			this.phoneNo = phoneNo;
+		}
+
+		public String getUserEmail() {
+			return userEmail;
+		}
+
+		public void setUserEmail(String userEmail) {
+			this.userEmail = userEmail;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public Integer getAuthOrderId() {
+			return authOrderId;
+		}
+
+		public void setAuthOrderId(Integer authOrderId) {
+			this.authOrderId = authOrderId;
+		}
+
+		public double getAmount() {
+			return amount;
+		}
+
+		public void setAmount(double amount) {
+			this.amount = amount;
+		}
+
+		public String getCurrency() {
+			return currency;
+		}
+
+		public void setCurrency(String currency) {
+			this.currency = currency;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
 		}
 
 	}

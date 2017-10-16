@@ -578,7 +578,7 @@ public interface ApiService {
     Response menusLiveTracking(@FieldMap Map<String, String> params);
 
     @FormUrlEncoded
-    @POST("/razorpay_place_order_callback")
+    @POST("/razor_pay_callback")
     Response razorpayPlaceOrderCallback(@FieldMap Map<String, String> params);
 
     @FormUrlEncoded

@@ -1,10 +1,14 @@
 package product.clicklabs.jugnoo.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -338,7 +342,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             e.printStackTrace();
         }
 
-
+        LocalBroadcastManager.getInstance(activity).registerReceiver(receiver, new IntentFilter(Constants.INTENT_ACTION_RAZOR_PAY_CALLBACK));
 
 
         return rootView;
@@ -1150,26 +1154,26 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     @Override
                     public void onSuccess(final PaymentResponse response, String message, int flag) {
                         try {
-                            if(getPaymentOption() == PaymentOption.RAZOR_PAY){
-                                // razor pay case send data to RazorPay Checkout page
-                                JSONObject jObj = new JSONObject();
-                                activity.setPurchaseSubscriptionResponse(response.getData().getEngagementId(),
-                                        response.getData().getEngagementId());
-                                activity.startRazorPayPayment(jObj.getJSONObject(Constants.KEY_RAZORPAY_PAYMENT_OBJECT), isRazorUPI);
-                            } else {
-                                if(Data.autoData != null && Data.autoData.getEndRideData() != null){
-                                    Data.autoData.getEndRideData().setShowPaymentOptions(0);
+                            if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                                if (getPaymentOption() == PaymentOption.RAZOR_PAY) {
+                                    // razor pay case send data to RazorPay Checkout page
+                                    Gson gson = new Gson();
+                                    JSONObject jObj = new JSONObject(gson.toJson(response.getData().getRazorpayData(), PaymentResponse.RazorpayData.class));
+                                    activity.setPurchaseSubscriptionResponse(engagementId,
+                                            response.getData().getRazorpayData().getAuthOrderId());
+                                    activity.startRazorPayPayment(jObj, isRazorUPI);
+                                } else {
+                                    rideEndPaymentSuccess(response.getData().getPaymentData().getRemaining(), message);
                                 }
-                                DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        activity.onBackPressed();
-                                    }
-                                });
+                            } else {
+                                DialogPopup.alertPopup(activity, "", message);
+                                paySlider.setSlideInitial();
                             }
 
                         } catch (Exception e) {
                             e.printStackTrace();
+                            DialogPopup.alertPopup(activity, "", message);
+                            paySlider.setSlideInitial();
                         }
                     }
 
@@ -1192,7 +1196,24 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
                 });
     }
-    
+
+    private void rideEndPaymentSuccess(double remaining, String message) {
+        if (Data.autoData != null && Data.autoData.getEndRideData() != null) {
+			Data.autoData.getEndRideData().setShowPaymentOptions(0);
+			Data.autoData.getEndRideData().toPay = remaining;
+		}
+        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				activity.onBackPressed();
+                if(activity instanceof HomeActivity){
+                    ((HomeActivity)activity).updateRideEndPayment();
+                }
+				paySlider.setSlideInitial();
+			}
+		});
+    }
+
     private Integer getAmount(){
         if(fromStar){
             return subscription.getAmount();
@@ -1201,5 +1222,50 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         }
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(activity).unregisterReceiver(receiver);
+    }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, final Intent intent) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        DialogPopup.dismissLoadingDialog();
+                        String response = intent.getStringExtra(Constants.KEY_RESPONSE);
+                        if (!TextUtils.isEmpty(response)) {
+                            razorpayServiceCallback(new JSONObject(response));
+                        } else {
+                            razorpayServiceCallback(null);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
+
+    public void razorpayServiceCallback(JSONObject jsonObject) {
+        try {
+            int flag = jsonObject.getInt(Constants.KEY_FLAG);
+            String message = JSONParser.getServerMessage(jsonObject);
+            if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                rideEndPaymentSuccess(0, message);
+            } else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
+                DialogPopup.alertPopup(activity, "", message);
+                paySlider.setSlideInitial();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+            paySlider.setSlideInitial();
+        }
+    }
 
 }

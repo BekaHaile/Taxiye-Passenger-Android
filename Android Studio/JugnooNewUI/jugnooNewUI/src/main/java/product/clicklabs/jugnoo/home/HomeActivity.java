@@ -2872,9 +2872,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                         feedbackReasonsAdapter.notifyDataSetChanged();
                         textViewRSTotalFareValue.setText(String.format(getString(R.string.rupees_value_format_without_space),"" + Utils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().finalFare)));
-                        textViewRSCashPaidValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
-                                "" + Utils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().toPay)));
-
                         /*imageViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_up));
                         imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
                         textViewThumbsUp.setVisibility(View.INVISIBLE);
@@ -2887,13 +2884,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         // delete the RidePath Table from Phone Database :)
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
                         //fabViewTest.setRelativeLayoutFABVisibility(mode);
-                        Log.d("RidePath DB", "Deleted");
-                        int onlinePaymentVisibility = Data.autoData.getEndRideData().getShowPaymentOptions() == 1 ? View.VISIBLE : View.GONE;
-                        llPayOnline.setVisibility(onlinePaymentVisibility);
-                        tvPayOnline.setVisibility(onlinePaymentVisibility);
-                        if(Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()){
-                            llPayOnline.performClick();
-                        } else {
+
+                        int onlinePaymentVisibility = updateRideEndPayment();
+                        if(onlinePaymentVisibility == View.VISIBLE && Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()){
+                            llPayOnline.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    llPayOnline.performClick();
+                                }
+                            });
                         }
 
                     } else {
@@ -3502,6 +3501,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
+    public int updateRideEndPayment() {
+        try {
+            textViewRSCashPaidValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
+					"" + Utils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().toPay)));
+            int onlinePaymentVisibility = Data.autoData.getEndRideData().getShowPaymentOptions() == 1 ? View.VISIBLE : View.GONE;
+            llPayOnline.setVisibility(onlinePaymentVisibility);
+            tvPayOnline.setVisibility(onlinePaymentVisibility);
+            return onlinePaymentVisibility;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return View.GONE;
+    }
+
     private void showChatButton() {
         try {
             if(passengerScreenMode != PassengerScreenMode.P_IN_RIDE && Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
@@ -3839,7 +3852,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 tag)
                         .addToBackStack(tag)
                         .commitAllowingStateLoss();
-                topBar.setTopBarState(this, false, title);
+                topBar.setTopBarState(false, title);
             }
         } else {
             linearLayoutRideSummaryContainer.setVisibility(View.GONE);
@@ -3849,7 +3862,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         .commit();
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
-            topBar.setTopBarState(this, true, "");
+            topBar.setTopBarState(true, "");
         }
     }
 
@@ -7885,17 +7898,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         EmergencyDisableDialog emergencyDisableDialog = new EmergencyDisableDialog(HomeActivity.this);
                         emergencyDisableDialog.show();
                     }
-                    topBar.textViewTitle.setText(getResources().getString(R.string.rides));
+                    if(getStarSubscriptionCheckoutFragment() != null){
+                        topBar.textViewTitle.setText(getResources().getString(R.string.pay_online));
+                    } else {
+                        topBar.textViewTitle.setText(getResources().getString(R.string.rides));
+                    }
                 }
                 localModeEnabled = modeEnabled;
             } else{
                 Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
-                topBar.textViewTitle.setText(getResources().getString(R.string.rides));
                 if(confirmedScreenOpened){
                     topBar.textViewTitle.setText(getResources().getString(R.string.confirmation));
-                }
-                if(specialPickupScreenOpened){
+                } else if(specialPickupScreenOpened){
                     topBar.textViewTitle.setText(getResources().getString(R.string.choose_pickup));
+                } else if(getStarSubscriptionCheckoutFragment() != null){
+                    topBar.textViewTitle.setText(getResources().getString(R.string.pay_online));
+                } else {
+                    topBar.textViewTitle.setText(getResources().getString(R.string.rides));
                 }
 
                 localModeEnabled = 0;
