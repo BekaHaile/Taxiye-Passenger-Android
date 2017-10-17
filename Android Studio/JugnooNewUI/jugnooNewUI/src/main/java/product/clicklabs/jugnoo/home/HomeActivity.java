@@ -447,7 +447,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     CallbackManager callbackManager;
     public final int FARE_ESTIMATE = 4;
     private String dropLocationSearchText = "";
-    private SlidingBottomPanelV4 slidingBottomPanel;
+    public SlidingBottomPanelV4 slidingBottomPanel;
 
     private T20Ops t20Ops = new T20Ops();
     private PlaceSearchListFragment.PlaceSearchMode placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
@@ -1809,9 +1809,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             try {
                 if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
 						|| (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
-					map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(22.971723, 78.754263), 5));
+					map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.getIndiaCentre(), 5));
 					forceFarAwayCity();
-					Data.autoData.setLastRefreshLatLng(new LatLng(22.971723, 78.754263));
+					Data.autoData.setLastRefreshLatLng(Data.getIndiaCentre());
 				} else {
 					map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), MAX_ZOOM));
                     if(Data.autoData.getLastRefreshLatLng() == null) {
@@ -4577,6 +4577,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
+
+
     private class UpdateNotificationsAsync extends AsyncTask<String, String, String>{
 
         private Handler updateNotifsHandler;
@@ -4840,7 +4842,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     initialMyLocationBtn.performClick();
                 }
                 else{
-                    MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+                    MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
                     finishWithToast();
                 }
             }
@@ -7470,7 +7472,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 																		new UserDebtDialog.Callback() {
 																			@Override
 																			public void successFullyDeducted(double userDebt) {
-																				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+																				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
 																				setUserData();
 																			}
 																		}).showUserDebtDialog(userDebt, message);
@@ -7643,7 +7645,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             confirmedScreenOpened = false;
             specialPickupScreenOpened = false;
 
-            MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+            MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
             setUserData();
 
             resetPickupDropFeilds();
@@ -8391,7 +8393,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
                     @Override
                     public void onSuccess() {
-                        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+                        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
                         setUserData();
                     }
 

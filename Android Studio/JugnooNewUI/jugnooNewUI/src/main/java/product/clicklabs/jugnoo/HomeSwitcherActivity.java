@@ -16,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import java.util.ArrayList;
 
@@ -26,10 +29,10 @@ import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.utils.ASSL;
 
 
-public class HomeSwitcherActivity extends BaseAppCompatActivity {
+public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACategory, GAAction{
 
     DrawerLayout drawerLayout;
-
+	LatLng latLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity {
 
 		MenuBar menuBar = new MenuBar(this, drawerLayout);
         //menuBar.setUserData();
+		latLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.loginLatitude), getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.loginLongitude));
 
 		ArrayList<OfferingListAdapter.Offering> offerings = new ArrayList<>();
         try {
@@ -74,8 +78,8 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity {
 
         OfferingListAdapter offeringListAdapter = new OfferingListAdapter(this, offerings, new OfferingListAdapter.Callback() {
             @Override
-            public Location getLocation() {
-                return location;
+            public LatLng getLatLng() {
+                return getCurrentPlaceLatLng();
             }
         }, rvOfferings);
         rvOfferings.setAdapter(offeringListAdapter);
@@ -87,6 +91,29 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity {
             }
         });
 
+		drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+			@Override
+			public void onDrawerSlide(View drawerView, float slideOffset) {
+
+			}
+
+			@Override
+			public void onDrawerOpened(View drawerView) {
+				GAUtils.event(JUGNOO, HOME + PAGE , SIDE_MENU+CLICKED);
+			}
+
+			@Override
+			public void onDrawerClosed(View drawerView) {
+
+			}
+
+			@Override
+			public void onDrawerStateChanged(int newState) {
+
+			}
+		});
+
+		GAUtils.trackScreenView(JUGNOO + HOME + PAGE);
     }
 
 	@Override
@@ -103,17 +130,15 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity {
     }
 
 
-    private Location location;
-
     private LocationUpdate locationUpdate = new LocationUpdate() {
         @Override
         public void onLocationChanged(Location location) {
-            HomeSwitcherActivity.this.location = location;
+			latLng = new LatLng(location.getLatitude(), location.getLongitude());
         }
     };
 
 
 	public LatLng getCurrentPlaceLatLng() {
-		return new LatLng(location.getLatitude(), location.getLongitude());
+		return latLng == null ? Data.getIndiaCentre() : latLng;
 	}
 }

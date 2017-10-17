@@ -4498,10 +4498,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 gaCategory = GACategory.MEALS;
             } else if(type == AppConstant.ApplicationType.MENUS){
                 gaCategory = GACategory.MENUS;
-            }else if(type == AppConstant.ApplicationType.DELIVERY_CUSTOMER){
+            } else if(type == AppConstant.ApplicationType.DELIVERY_CUSTOMER){
                 gaCategory = GACategory.DELIVERY_CUSTOMER;
             } else if(type == AppConstant.ApplicationType.PROS){
                 gaCategory = GACategory.PROS;
+            } else if(type == AppConstant.ApplicationType.FEED){
+                gaCategory = Data.getFeedName(this)+" ";
             } else {
                 gaCategory = GACategory.FRESH;
             }

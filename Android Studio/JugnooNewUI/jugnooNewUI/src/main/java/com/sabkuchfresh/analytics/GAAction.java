@@ -242,4 +242,7 @@ public interface GAAction {
 	String V2 = "V2 ";
 	String END = "End ";
 	String ONLINE_PAYMENT = "Online Payment ";
+	String PAGE = "Page ";
+	String ASAP = "ASAP ";
+	String SCHEDULE = "Schedule ";
 }

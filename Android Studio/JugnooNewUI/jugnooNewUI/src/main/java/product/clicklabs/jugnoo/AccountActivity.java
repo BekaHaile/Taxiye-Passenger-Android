@@ -1575,7 +1575,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
                     @Override
                     public void onSuccess() {
-                        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+                        MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
                         updateMenuList();
                     }
 

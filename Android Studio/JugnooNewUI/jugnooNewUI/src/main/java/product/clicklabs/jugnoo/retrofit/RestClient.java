@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.retrofit;
 
 import com.jakewharton.retrofit.Ok3Client;
 import com.jugnoo.pay.retrofit.PayApiService;
+import com.sabkuchfresh.apis.FatafatApiService;
 import com.sabkuchfresh.apis.FeedApiService;
 import com.sabkuchfresh.apis.FreshApiService;
 import com.sabkuchfresh.apis.MenusApiService;
@@ -27,6 +28,7 @@ public class RestClient {
     private static FreshApiService FRESH_API_SERVICE = null;
     private static ChatApiService CHAT_API_SERVICE = null;
     private static MenusApiService MENUS_API_SERVICE = null;
+    private static FatafatApiService FATAFAT_API_SERVICE = null;
     private static PayApiService PAY_API_SERVICE = null;
     private static FeedApiService FEED_API_SERVICE = null;
     private static ProsApi PROS_API = null;
@@ -37,6 +39,7 @@ public class RestClient {
         setupFreshApiRestClient();
         setupChatApiRestClient();
         setupMenusApiRestClient();
+        setupFatafatApiRestClient();
         setupPayApiRestClient();
         setupFeedApiRestClient();
         setupProsApiRestClient();
@@ -96,6 +99,7 @@ public class RestClient {
         FRESH_API_SERVICE = null;
         CHAT_API_SERVICE = null;
         MENUS_API_SERVICE = null;
+        FATAFAT_API_SERVICE = null;
         PAY_API_SERVICE = null;
         FEED_API_SERVICE = null;
         PROS_API = null;
@@ -106,6 +110,7 @@ public class RestClient {
         setupFreshApiRestClient();
         setupChatApiRestClient();
         setupMenusApiRestClient();
+        setupFatafatApiRestClient();
         setupPayApiRestClient();
         setupFeedApiRestClient();
         setupProsApiRestClient();
@@ -204,6 +209,25 @@ public class RestClient {
 
     public static MenusApiService getMenusApiService() {
         return MENUS_API_SERVICE;
+    }
+
+
+
+    public static void setupFatafatApiRestClient() {
+        if(FATAFAT_API_SERVICE == null) {
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getFatafatServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient(false)))
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
+            setLogger(builder);
+
+            RestAdapter restAdapter = builder.build();
+            FATAFAT_API_SERVICE = restAdapter.create(FatafatApiService.class);
+        }
+    }
+
+    public static FatafatApiService getFatafatApiService() {
+        return FATAFAT_API_SERVICE;
     }
 
 

@@ -29,6 +29,9 @@ import android.widget.TimePicker;
 
 import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
@@ -60,7 +63,7 @@ import retrofit.RetrofitError;
  * Created by Parminder Saini on 09/10/17.
  */
 
-public class AnywhereHomeFragment extends Fragment {
+public class AnywhereHomeFragment extends Fragment implements GACategory, GAAction {
 
     public static final RelativeSizeSpan RELATIVE_SIZE_SPAN = new RelativeSizeSpan(1.15f);
     public static final int MIN_BUFFER_TIME_MINS = 30;
@@ -158,6 +161,7 @@ public class AnywhereHomeFragment extends Fragment {
                         }
                     }
                     placeOrderApi(taskDetails);
+                    GAUtils.event(activity.getGaCategory(), HOME , ORDER_PLACED);
                 } catch (Exception e) {
                     paySlider.setSlideInitial();
                 }
@@ -185,6 +189,7 @@ public class AnywhereHomeFragment extends Fragment {
         keyboardLayoutListener.setResizeTextView(false);
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
+        GAUtils.trackScreenView(activity.getGaCategory()+ HOME);
         return rootView;
     }
 
@@ -275,6 +280,7 @@ public class AnywhereHomeFragment extends Fragment {
                 break;
             case R.id.rb_asap:
                 isAsapSelected = true;
+                GAUtils.event(activity.getGaCategory(), HOME , ASAP+CLICKED);
                 break;
             case R.id.rb_st:
                 rbSt.setEnabled(false);
@@ -286,6 +292,7 @@ public class AnywhereHomeFragment extends Fragment {
                 activity.getHandler().postDelayed(enableStRbRunnable,300);
                 try {
                     getDatePickerFragment().show(getChildFragmentManager(), "datePicker", onDateSetListener);
+                    GAUtils.event(activity.getGaCategory(), HOME , SCHEDULE+CLICKED);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

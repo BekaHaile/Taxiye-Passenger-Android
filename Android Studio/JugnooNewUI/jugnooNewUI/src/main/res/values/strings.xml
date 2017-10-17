@@ -1346,7 +1346,7 @@
     <string name="error_no_rating">Please select a rating</string>
     <string name="all">All</string>
     <string name="can_be_used_format">Can be used %s times</string>
-    <string name="applied_on_all_offerings">Applied on all offerings</string>
+    <string name="applied_on_all_offerings">Applicable on all offerings</string>
     <string name="no_coupons_available">No Coupons Available</string>
     <string name="how_was_your_experience">How was your Experience?</string>
     <string name="to_use_this_coupon">To use this coupon, select it at the time of checkout.</string>

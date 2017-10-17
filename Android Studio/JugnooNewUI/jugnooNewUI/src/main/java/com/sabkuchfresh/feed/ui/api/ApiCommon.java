@@ -190,7 +190,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 RestClient.getMenusApiService().userClickEvents(params, callback);
                 break;
             case ANYWHERE_PLACE_ORDER:
-                RestClient.getFreshApiService().anywherePlaceOrder(params, callback);
+                RestClient.getFatafatApiService().anywherePlaceOrder(params, callback);
                 break;
             case INITIATE_RIDE_END_PAYMENT:
                 RestClient.getApiService().initiateRideEndPayment(params, callback);

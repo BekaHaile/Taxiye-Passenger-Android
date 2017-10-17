@@ -423,21 +423,25 @@ public class MyApplication extends Application {
 		}
 		String freshServerUrlToSet = Prefs.with(context).getString(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshDefaultServerUrl());
 		String menusServerUrlToSet = Prefs.with(context).getString(SPLabels.MENUS_SERVER_SELECTED, Config.getMenusDefaultServerUrl());
+		String fatafatServerUrlToSet = Prefs.with(context).getString(SPLabels.FATAFAT_SERVER_SELECTED, Config.getFatafatDefaultServerUrl());
 		String payServerUrlToSet = Prefs.with(context).getString(SPLabels.PAY_SERVER_SELECTED, Config.getPayDefaultServerUrl());
 
 		if(configModeToSet != Config.getConfigMode()
 				|| !Config.getFreshServerUrl().equalsIgnoreCase(freshServerUrlToSet)
 				|| !Config.getMenusServerUrl().equalsIgnoreCase(menusServerUrlToSet)
+				|| !Config.getFatafatServerUrl().equalsIgnoreCase(fatafatServerUrlToSet)
 				|| !Config.getPayServerUrl().equalsIgnoreCase(payServerUrlToSet)){
 			RestClient.clearRestClients();
 		}
 		Config.setConfigMode(configModeToSet);
 		Config.FRESH_SERVER_URL = freshServerUrlToSet;
 		Config.MENUS_SERVER_URL = menusServerUrlToSet;
+		Config.FATAFAT_SERVER_URL = fatafatServerUrlToSet;
 
 		Prefs.with(context).save(SPLabels.SERVER_SELECTED, Config.getServerUrl());
 		Prefs.with(context).save(SPLabels.FRESH_SERVER_SELECTED, Config.getFreshServerUrl());
 		Prefs.with(context).save(SPLabels.MENUS_SERVER_SELECTED, Config.getMenusServerUrl());
+		Prefs.with(context).save(SPLabels.FATAFAT_SERVER_SELECTED, Config.getFatafatServerUrl());
 
 		RestClient.setupAllClients();
 	}

@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +14,9 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.ItemListener;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 
 import java.util.ArrayList;
 
@@ -28,7 +30,7 @@ import product.clicklabs.jugnoo.config.Config;
  * Created by socomo on 12/7/16.
  */
 
-public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapter.ViewHolder> implements ItemListener {
+public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapter.ViewHolder> implements ItemListener, GAAction, GACategory {
 	private Context context;
 	private LayoutInflater layoutInflater;
 	private ArrayList<Offering> offerings;
@@ -95,12 +97,13 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 		int pos = recyclerView.getChildAdapterPosition(parentView);
 		if (pos != RecyclerView.NO_POSITION) {
 			try {
-				double latitude = (((HomeSwitcherActivity) context).getIntent().getDoubleExtra(Constants.KEY_LATITUDE, callback.getLocation().getLatitude()));
-				double longitude = (((HomeSwitcherActivity) context).getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, callback.getLocation().getLongitude()));
+				double latitude = (((HomeSwitcherActivity) context).getIntent().getDoubleExtra(Constants.KEY_LATITUDE, callback.getLatLng().latitude));
+				double longitude = (((HomeSwitcherActivity) context).getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, callback.getLatLng().longitude));
 				Bundle bundle = ((HomeSwitcherActivity) context).getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE);
 				MyApplication.getInstance().getAppSwitcher().switchApp(((HomeSwitcherActivity) context), offerings.get(pos).getClientId(),
 						((HomeSwitcherActivity) context).getIntent().getData(),
 						new LatLng(latitude, longitude), bundle, false, false, false);
+				GAUtils.event(JUGNOO, HOME + PAGE, offerings.get(pos).getName()+" "+CLICKED);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -128,7 +131,7 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 	}
 
 	public interface Callback {
-		Location getLocation();
+		LatLng getLatLng();
 	}
 
 	public static class Offering {

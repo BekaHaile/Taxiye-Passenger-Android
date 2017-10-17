@@ -118,7 +118,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
 		if(!newIntentReceived && getWalletAddMoneyState() != WalletAddMoneyState.SUCCESS) {
-			getBalance("Refresh");
+			getBalance("Refresh", PaymentOption.CASH.getOrdinal());
 		} else{
 			setWalletAddMoneyState(WalletAddMoneyState.INIT);
 		}
@@ -177,14 +177,16 @@ public class PaymentActivity extends BaseFragmentActivity{
 
 	private ApiFetchWalletBalance apiFetchWalletBalance = null;
 	private String fragName = "Refresh";
-	public void getBalance(String fragName) {
+	private int paymentOption = PaymentOption.CASH.getOrdinal();
+	public void getBalance(String fragName,int paymentOption) {
 		try {
 			this.fragName = fragName;
+			this.paymentOption = paymentOption;
 			if(apiFetchWalletBalance == null){
 				apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
 					@Override
 					public void onSuccess() {
-						performGetBalanceSuccess(PaymentActivity.this.fragName);
+						performGetBalanceSuccess(PaymentActivity.this.fragName,PaymentActivity.this.paymentOption);
 					}
 
 					@Override
@@ -199,7 +201,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 
 					@Override
 					public void onRetry(View view) {
-						getBalance(PaymentActivity.this.fragName);
+						getBalance(PaymentActivity.this.fragName, PaymentActivity.this.paymentOption);
 					}
 
 					@Override
@@ -214,13 +216,13 @@ public class PaymentActivity extends BaseFragmentActivity{
 		}
 	}
 
-	public void performGetBalanceSuccess(String fragName){
+	public void performGetBalanceSuccess(String fragName,int paymentOption){
 		Intent intent = new Intent(Constants.INTENT_ACTION_WALLET_UPDATE);
 		LocalBroadcastManager.getInstance(PaymentActivity.this).sendBroadcast(intent);
 		try {
 			Fragment currFrag = null;
 			if(fragName.equalsIgnoreCase(WalletRechargeFragment.class.getName())) {
-				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(paymentOption);
 				currFrag = getSupportFragmentManager().findFragmentByTag(WalletRechargeFragment.class.getName());
 				if(currFrag != null){
 					((WalletRechargeFragment) currFrag).onResume();
@@ -228,7 +230,7 @@ public class PaymentActivity extends BaseFragmentActivity{
 				}
 			}
 			else if(fragName.equalsIgnoreCase(AddWalletFragment.class.getName())){
-				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption();
+				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(paymentOption);
 				goBack();
 			}
 			currFrag = getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName());

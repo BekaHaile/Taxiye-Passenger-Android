@@ -64,14 +64,14 @@ public class LocationFetcher implements GoogleApiClient.ConnectionCallbacks, Goo
 
 	public double getSavedLatFromSP(){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
-		String latitude = preferences.getString(LOCATION_LAT, "" + 0);
+		String latitude = preferences.getString(LOCATION_LAT, "" + Data.getIndiaCentre().latitude);
 //		Log.d("saved last lat", "==" + latitude);
 		return Double.parseDouble(latitude);
 	}
 
 	public double getSavedLngFromSP(){
 		SharedPreferences preferences = context.getSharedPreferences(LOCATION_SP, 0);
-		String longitude = preferences.getString(LOCATION_LNG, "" + 0);
+		String longitude = preferences.getString(LOCATION_LNG, "" + Data.getIndiaCentre().longitude);
 		return Double.parseDouble(longitude);
 	}
 

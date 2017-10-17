@@ -478,6 +478,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     activity.setMenusResponse(menusResponse);
                                     deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
                                 }
+
+                                //Set a category
+                                if(activity.getCategoryIdOpened()==-1 && menusResponse.getCategories().size()<1 && activity.getAppType()== AppConstant.ApplicationType.MENUS){
+                                    activity.setCategoryIdOpened(1);
+                                }
+
                                 if(activity.getMenusResponse() == null){
                                     activity.setMenusResponse(menusResponse);
                                 }

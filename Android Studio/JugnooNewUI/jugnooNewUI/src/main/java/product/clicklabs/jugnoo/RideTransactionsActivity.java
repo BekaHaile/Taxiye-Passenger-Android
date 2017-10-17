@@ -26,7 +26,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class RideTransactionsActivity extends BaseAppCompatActivity implements GAAction {
+public class  RideTransactionsActivity extends BaseAppCompatActivity implements GAAction {
 
     private final String TAG = RideTransactionsActivity.class.getSimpleName();
 
@@ -237,13 +237,15 @@ public class RideTransactionsActivity extends BaseAppCompatActivity implements G
 	
 	@Override
 	protected void onDestroy() {
+
 		try {
+			super.onDestroy();
 			Data.isOrderCancelled = false;
 			ASSL.closeActivity(drawerLayout);
 			System.gc();
 		} catch (Exception e) {
 		}
-		super.onDestroy();
+
 	}
 
 
