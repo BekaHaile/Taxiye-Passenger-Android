@@ -1163,6 +1163,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                             response.getData().getRazorpayData().getAuthOrderId());
                                     activity.startRazorPayPayment(jObj, isRazorUPI);
                                 } else {
+                                    Data.userData.setJugnooBalance(response.getData().getPaymentData().getJugnooBalance());
+                                    if(getPaymentOption() == PaymentOption.PAYTM){
+                                        Data.userData.setPaytmBalance(Data.userData.getPaytmBalance() - response.getData().getPaymentData().getPaytmDeducted());
+                                    } else if(getPaymentOption() == PaymentOption.MOBIKWIK){
+                                        Data.userData.setMobikwikBalance(Data.userData.getMobikwikBalance() - response.getData().getPaymentData().getMobikwikDeducted());
+                                    } else if(getPaymentOption() == PaymentOption.FREECHARGE){
+                                        Data.userData.setFreeChargeBalance(Data.userData.getFreeChargeBalance() - response.getData().getPaymentData().getFreechargeDeducted());
+                                    }
                                     rideEndPaymentSuccess(response.getData().getPaymentData().getRemaining(), message);
                                 }
                             } else {
@@ -1208,6 +1216,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 				activity.onBackPressed();
                 if(activity instanceof HomeActivity){
                     ((HomeActivity)activity).updateRideEndPayment();
+                    ((HomeActivity)activity).setUserData();
                 }
 				paySlider.setSlideInitial();
 			}

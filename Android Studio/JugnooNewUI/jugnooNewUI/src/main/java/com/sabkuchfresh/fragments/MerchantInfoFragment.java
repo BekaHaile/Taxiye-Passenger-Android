@@ -432,7 +432,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     }
 
     @OnClick({R.id.llChatNow, R.id.llCall, R.id.bOrderOnline, R.id.llSeeAll, R.id.llLocate,
-            R.id.tvSubmitReview, R.id.llOffer})
+            R.id.tvSubmitReview, R.id.llOffer, R.id.tvReviewCount})
     public void onViewClicked(View view) {
         try {
             switch (view.getId()) {
@@ -486,6 +486,10 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                                 activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoTC(), true, true, true, true,
                                 R.color.theme_color, 16, 13, Fonts.mavenMedium(activity));
                     }
+                    break;
+
+                case R.id.tvReviewCount:
+                    activity.openRestaurantReviewsListFragment();
                     break;
             }
         } catch (Exception e) {

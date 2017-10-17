@@ -356,7 +356,7 @@ public class WalletCore {
 		} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()){
             return R.drawable.ic_freecharge_small;
         } else if(paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()){
-            return R.drawable.ic_feed_claim_handle_vector;
+            return R.drawable.ic_cards_grey;
         } else {
 			return R.drawable.ic_cash_small;
 		}

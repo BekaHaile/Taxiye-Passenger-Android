@@ -3505,7 +3505,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             textViewRSCashPaidValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
 					"" + Utils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().toPay)));
-            int onlinePaymentVisibility = Data.autoData.getEndRideData().getShowPaymentOptions() == 1 ? View.VISIBLE : View.GONE;
+            int onlinePaymentVisibility = (Data.autoData.getEndRideData().toPay > 0 &&
+                    (Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.CASH.getOrdinal()
+                    || Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal())
+                    && Data.autoData.getEndRideData().getShowPaymentOptions() == 1) ? View.VISIBLE : View.GONE;
             llPayOnline.setVisibility(onlinePaymentVisibility);
             tvPayOnline.setVisibility(onlinePaymentVisibility);
             return onlinePaymentVisibility;

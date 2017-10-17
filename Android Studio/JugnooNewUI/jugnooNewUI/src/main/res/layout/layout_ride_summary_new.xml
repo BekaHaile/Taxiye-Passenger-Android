@@ -183,6 +183,7 @@
                 app:font="@string/maven"
                 android:layout_marginTop="@dimen/dp_30"
                 android:tag="@string/dont_touch_me"
+                android:visibility="gone"
                 />
             <LinearLayout
                 android:id="@+id/llPayOnline"
@@ -195,6 +196,7 @@
                 android:layout_marginBottom="@dimen/dp_5"
                 android:layout_marginTop="@dimen/dp_10"
                 android:gravity="center"
+                android:visibility="gone"
                 >
 
                 <TextView

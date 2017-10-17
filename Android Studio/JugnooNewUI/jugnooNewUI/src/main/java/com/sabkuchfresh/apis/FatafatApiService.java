@@ -16,12 +16,12 @@ import retrofit.http.POST;
 public interface FatafatApiService {
 
 	@FormUrlEncoded
-	@POST("/custom_orders/place_order")
+	@POST("/place_order")
 	void anywherePlaceOrder(@FieldMap Map<String, String> params,
 							Callback<OrderAnywhereResponse> callback);
 
 	@FormUrlEncoded
-	@POST("/custom_orders/get_custom_order_history")
+	@POST("/order_history")
 	void getCustomOrderHistory(@FieldMap Map<String, String> params,
 							   Callback<HistoryResponse> callback);
 
