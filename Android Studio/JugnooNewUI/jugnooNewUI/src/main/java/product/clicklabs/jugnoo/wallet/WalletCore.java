@@ -386,11 +386,7 @@ public class WalletCore {
                 return String.format(context.getResources().getString(R.string.rupees_value_format_without_space),
                         Data.userData.getFreeChargeBalanceStr());
             } else if(paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()){
-				for(PaymentModeConfigData configData : getPaymentModeConfigDatas()){
-					if(configData.getPaymentOption() == paymentOption){
-						return configData.getDisplayName();
-					}
-				}
+				return getRazorpayName();
             } else {
 				return context.getResources().getString(R.string.cash);
 			}
@@ -398,6 +394,17 @@ public class WalletCore {
 			e.printStackTrace();
 		}
 		return context.getResources().getString(R.string.cash);
+	}
+
+	public String getRazorpayName() {
+		String name = "Card";
+		for(PaymentModeConfigData configData : getPaymentModeConfigDatas()){
+			if(configData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()){
+				name = configData.getDisplayName();
+				break;
+			}
+		}
+		return name;
 	}
 
 	public String getPaymentOptionName(int paymentOption){

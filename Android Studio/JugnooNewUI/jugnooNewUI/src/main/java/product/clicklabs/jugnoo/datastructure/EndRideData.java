@@ -18,7 +18,7 @@ public class EndRideData {
 		pickupTime, dropTime;
 	public double fare, luggageCharge, convenienceCharge, discount, paidUsingWallet, toPay,
 		distance, rideTime, waitTime, baseFare, fareFactor, finalFare, sumAdditionalCharges;
-	public double paidUsingPaytm, paidUsingMobikwik, paidUsingFreeCharge;
+	public double paidUsingPaytm, paidUsingMobikwik, paidUsingFreeCharge, paidUsingRazorpay;
 	public int waitingChargesApplicable;
 	public ArrayList<DiscountType> discountTypes;
 	private String rideDate, phoneNumber, tripTotal, engagementDate, invoiceAdditionalTextCabs;
@@ -35,7 +35,7 @@ public class EndRideData {
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
 					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled,
-					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, double paidUsingFreeCharge,
+					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, double paidUsingFreeCharge, double paidUsingRazorpay,
 					   int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
 					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags, int showPaymentOptions, int paymentOption){
 		this.totalRide = totalRide;
@@ -90,6 +90,7 @@ public class EndRideData {
 
 		this.paidUsingMobikwik = paidUsingMobikwik;
 		this.paidUsingFreeCharge = paidUsingFreeCharge;
+		this.paidUsingRazorpay = paidUsingRazorpay;
 
 		this.engagementDate = engagementDate;
 		this.status = status;

@@ -1157,21 +1157,26 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 if (getPaymentOption() == PaymentOption.RAZOR_PAY) {
                                     // razor pay case send data to RazorPay Checkout page
-                                    Gson gson = new Gson();
-                                    JSONObject jObj = new JSONObject(gson.toJson(response.getData().getRazorpayData(), PaymentResponse.RazorpayData.class));
                                     activity.setPurchaseSubscriptionResponse(engagementId,
                                             response.getData().getRazorpayData().getAuthOrderId());
-                                    activity.startRazorPayPayment(jObj, isRazorUPI);
+                                    activity.startRazorPayPayment(response.getData().getRazorpayData(), isRazorUPI);
                                 } else {
-                                    Data.userData.setJugnooBalance(response.getData().getPaymentData().getJugnooBalance());
-                                    if(getPaymentOption() == PaymentOption.PAYTM){
-                                        Data.userData.setPaytmBalance(Data.userData.getPaytmBalance() - response.getData().getPaymentData().getPaytmDeducted());
-                                    } else if(getPaymentOption() == PaymentOption.MOBIKWIK){
-                                        Data.userData.setMobikwikBalance(Data.userData.getMobikwikBalance() - response.getData().getPaymentData().getMobikwikDeducted());
-                                    } else if(getPaymentOption() == PaymentOption.FREECHARGE){
-                                        Data.userData.setFreeChargeBalance(Data.userData.getFreeChargeBalance() - response.getData().getPaymentData().getFreechargeDeducted());
+                                    PaymentResponse.PaymentData paymentData = response.getData().getPaymentData();
+                                    if(Data.userData != null && Data.autoData != null && Data.autoData.getEndRideData() != null) {
+                                        Data.userData.setJugnooBalance(paymentData.getJugnooBalance());
+                                        Data.autoData.getEndRideData().paidUsingWallet = paymentData.getJugnooDeducted();
+                                        if (getPaymentOption() == PaymentOption.PAYTM) {
+                                            Data.userData.setPaytmBalance(Data.userData.getPaytmBalance() - paymentData.getPaytmDeducted());
+                                            Data.autoData.getEndRideData().paidUsingPaytm = paymentData.getPaytmDeducted();
+                                        } else if (getPaymentOption() == PaymentOption.MOBIKWIK) {
+                                            Data.userData.setMobikwikBalance(Data.userData.getMobikwikBalance() - paymentData.getMobikwikDeducted());
+                                            Data.autoData.getEndRideData().paidUsingMobikwik = paymentData.getMobikwikDeducted();
+                                        } else if (getPaymentOption() == PaymentOption.FREECHARGE) {
+                                            Data.userData.setFreeChargeBalance(Data.userData.getFreeChargeBalance() - paymentData.getFreechargeDeducted());
+                                            Data.autoData.getEndRideData().paidUsingFreeCharge = paymentData.getFreechargeDeducted();
+                                        }
                                     }
-                                    rideEndPaymentSuccess(response.getData().getPaymentData().getRemaining(), message);
+                                    rideEndPaymentSuccess(paymentData.getRemaining(), message);
                                 }
                             } else {
                                 DialogPopup.alertPopup(activity, "", message);
@@ -1265,7 +1270,16 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             int flag = jsonObject.getInt(Constants.KEY_FLAG);
             String message = JSONParser.getServerMessage(jsonObject);
             if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                rideEndPaymentSuccess(0, message);
+                double remaining = 0;
+                try {
+                    remaining = jsonObject.getJSONObject(Constants.KEY_DATA).getJSONObject(Constants.KEY_PAYMENT_DATA).optDouble(Constants.KEY_REMAINING, 0);
+                    if(Data.autoData != null && Data.autoData.getEndRideData() != null) {
+                        Data.autoData.getEndRideData().paidUsingRazorpay = jsonObject.getJSONObject(Constants.KEY_DATA).getJSONObject(Constants.KEY_PAYMENT_DATA).optDouble(Constants.KEY_RAZOR_PAY_DEDUCTED, 0);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rideEndPaymentSuccess(remaining, message);
             } else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
                 DialogPopup.alertPopup(activity, "", message);
                 paySlider.setSlideInitial();

@@ -811,4 +811,10 @@ public interface Constants {
     String SP_RZP_AUTH_ORDER_ID = "sp_rzp_auth_order_id";
     String KEY_PREFERRED_PAYMENT_MODE = "preferred_payment_mode";
     String KEY_SHOW_PAYMENT_OPTIONS = "show_payment_options";
+    String KEY_PAYMENT_DATA = "payment_data";
+    String KEY_REMAINING = "remaining";
+    String KEY_RAZOR_PAY_DEDUCTED = "razor_pay_deducted";
+    String KEY_PAID_USING_RAZORPAY = "paid_using_razorpay";
+    String KEY_DESCRIPTION = "description";
+    String KEY_CURRENCY = "currency";
 }

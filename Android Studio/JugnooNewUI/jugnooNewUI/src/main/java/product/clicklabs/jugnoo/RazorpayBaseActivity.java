@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo;
 import android.content.Intent;
 import android.util.Pair;
 
+import com.google.gson.Gson;
 import com.razorpay.Checkout;
 import com.razorpay.PaymentData;
 import com.razorpay.PaymentResultWithDataListener;
@@ -10,6 +11,7 @@ import com.sabkuchfresh.home.RazorpayCallbackService;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -31,6 +33,31 @@ public class RazorpayBaseActivity extends BaseAppCompatActivity implements Payme
     @Override
     public void onPaymentError(int i, String s, PaymentData paymentData) {
         razorpayCallbackIntentService("-1", "-1");
+    }
+
+    public void startRazorPayPayment(PaymentResponse.RazorpayData options, boolean isUPI) {
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(Constants.KEY_ORDER_ID, options.getOrderId());
+            jsonObject.put(Constants.KEY_PHONE_NO, options.getPhoneNo());
+            jsonObject.put(Constants.KEY_USER_EMAIL, options.getUserEmail());
+            jsonObject.put(Constants.KEY_DESCRIPTION, options.getDescription());
+            jsonObject.put(Constants.KEY_AUTH_ORDER_ID, options.getAuthOrderId());
+            jsonObject.put(Constants.KEY_AMOUNT, options.getAmount());
+            jsonObject.put(Constants.KEY_CURRENCY, options.getCurrency());
+            jsonObject.put(Constants.KEY_NAME, options.getName());
+            startRazorPayPayment(jsonObject, isUPI);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Gson gson = new Gson();
+            JSONObject jObj = new JSONObject();
+            try {
+                jObj = new JSONObject(gson.toJson(options, PaymentResponse.RazorpayData.class));
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            startRazorPayPayment(jObj, isUPI);
+        }
     }
 
     public void startRazorPayPayment(JSONObject options, boolean isUPI) {
@@ -55,6 +82,7 @@ public class RazorpayBaseActivity extends BaseAppCompatActivity implements Payme
 
             checkout.open(this, options);
         } catch(Exception e) {
+            e.printStackTrace();
             Log.e("TAG", "Error in starting Razorpay Checkout");
         }
     }

@@ -1387,6 +1387,7 @@
     <string name="to_be_paid">To be paid</string>
     <string name="choose_payment_method">Choose payment method</string>
     <string name="swipe_right_to_pay"><![CDATA[Swipe right to pay >>]]></string>
+    <string name="card">Card</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>
