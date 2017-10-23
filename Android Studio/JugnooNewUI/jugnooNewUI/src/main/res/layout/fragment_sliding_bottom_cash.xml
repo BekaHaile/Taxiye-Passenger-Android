@@ -246,8 +246,8 @@
                 android:layout_marginLeft="@dimen/dp_15"
                 android:text="@string/cash"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/sp_17"
-                app:font="@string/maven_l"
+                android:textSize="@dimen/sp_15"
+                app:font="@string/maven"
                 />
 
         </LinearLayout>

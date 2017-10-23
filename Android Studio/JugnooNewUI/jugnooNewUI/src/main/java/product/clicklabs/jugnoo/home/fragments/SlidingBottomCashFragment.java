@@ -219,7 +219,8 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                             linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
                             linearLayoutWalletContainer.addView(linearLayoutCash);
-                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()) {
+                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()
+                                && Data.autoData != null && Data.autoData.isRazorpayEnabled()) {
                             linearLayoutWalletContainer.addView(llOtherModesToPay);
                             tvOtherModesToPay.setText(paymentModeConfigData.getDisplayName());
                         }

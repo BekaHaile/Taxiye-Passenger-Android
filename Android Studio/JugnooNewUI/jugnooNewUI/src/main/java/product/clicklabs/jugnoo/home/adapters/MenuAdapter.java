@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
@@ -644,39 +645,49 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
             }
             else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
-                drawerLayout.closeDrawer(GravityCompat.START);
-                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFreshClientId(), getLatLng(), false);
+                openOffering(Config.getFreshClientId());
             }
             else if(MenuInfoTags.MEALS.getTag().equalsIgnoreCase(tag)){
-                drawerLayout.closeDrawer(GravityCompat.START);
-                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMealsClientId(), getLatLng(), false);
+                openOffering(Config.getMealsClientId());
             }
             else if(MenuInfoTags.GROCERY.getTag().equalsIgnoreCase(tag)){
-                drawerLayout.closeDrawer(GravityCompat.START);
-                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getGroceryClientId(), getLatLng(), false);
+                openOffering(Config.getGroceryClientId());
             }
             else if(MenuInfoTags.MENUS.getTag().equalsIgnoreCase(tag)){
-                drawerLayout.closeDrawer(GravityCompat.START);
-                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getMenusClientId(), getLatLng(), false);
-            }else if(MenuInfoTags.DELIVERY_CUSTOMER.getTag().equalsIgnoreCase(tag)){
-                drawerLayout.closeDrawer(GravityCompat.START);
-                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getDeliveryCustomerClientId(), getLatLng(), false);
+                openOffering(Config.getMenusClientId());
+            }
+            else if(MenuInfoTags.DELIVERY_CUSTOMER.getTag().equalsIgnoreCase(tag)){
+                openOffering(Config.getDeliveryCustomerClientId());
             }
             else if(MenuInfoTags.PAY.getTag().equalsIgnoreCase(tag)){
-                drawerLayout.closeDrawer(GravityCompat.START);
-                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getPayClientId(), getLatLng(), false);
+                openOffering(Config.getPayClientId());
             }
             else if(MenuInfoTags.FEED.getTag().equalsIgnoreCase(tag)){
-                drawerLayout.closeDrawer(GravityCompat.START);
-                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getFeedClientId(), getLatLng(), false);
+                openOffering(Config.getFeedClientId());
             }
             else if(MenuInfoTags.PROS.getTag().equalsIgnoreCase(tag)){
-                drawerLayout.closeDrawer(GravityCompat.START);
-                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getProsClientId(), getLatLng(), false);
+                openOffering(Config.getProsClientId());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private Handler handler;
+    private Handler getHandler(){
+        if(handler == null){
+            handler = new Handler();
+        }
+        return handler;
+    }
+    private void openOffering(final String clientId){
+        drawerLayout.closeDrawer(GravityCompat.START);
+        getHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, clientId, getLatLng(), false);
+            }
+        }, 200);
     }
 
     public void accountClick(){

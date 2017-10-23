@@ -32,7 +32,6 @@
             android:id="@+id/linearLayoutRideSummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
             android:orientation="vertical"
             >
 
@@ -372,7 +371,7 @@
                 android:layout_height="32px"
                 android:layout_marginLeft="60px"
                 android:layout_marginTop="10px"
-                android:animateLayoutChanges="true">
+                >
 
                 <TextView
                     android:id="@+id/textViewRSOtherError"

@@ -33,6 +33,7 @@ public class AutoData {
     private FareStructure fareStructure;
     private ArrayList<Region> regions;
     private String farAwayCity = "";
+    private int isRazorpayEnabled;
     private String cEngagementId = "", cDriverId = "", cSessionId = "";
     private DriverInfo assignedDriverInfo;
     private EndRideData endRideData;
@@ -60,7 +61,7 @@ public class AutoData {
                     int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText, int referAllStatus, String referAllText,
                     String referAllTitle, int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin,
                     NearbyPickupRegions nearbyPickupRegionses, String inRideSendInviteTextBoldV2, String inRideSendInviteTextNormalV2,
-                    int rideStartInviteTextDeepIndexV2) {
+                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled) {
         this.destinationHelpText = destinationHelpText;
         this.rideSummaryBadText = rideSummaryBadText;
         this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
@@ -84,6 +85,7 @@ public class AutoData {
         this.inRideSendInviteTextBoldV2 = inRideSendInviteTextBoldV2;
         this.inRideSendInviteTextNormalV2 = inRideSendInviteTextNormalV2;
         this.rideStartInviteTextDeepIndexV2 = rideStartInviteTextDeepIndexV2;
+        this.isRazorpayEnabled = isRazorpayEnabled;
     }
 
     public String getDestinationHelpText() {
@@ -508,5 +510,13 @@ public class AutoData {
 
     public void setFuguTags(ArrayList<String> fuguTags) {
         this.fuguTags = fuguTags;
+    }
+
+    public boolean isRazorpayEnabled() {
+        return isRazorpayEnabled == 1;
+    }
+
+    public void setIsRazorpayEnabled(int isRazorpayEnabled) {
+        this.isRazorpayEnabled = isRazorpayEnabled;
     }
 }

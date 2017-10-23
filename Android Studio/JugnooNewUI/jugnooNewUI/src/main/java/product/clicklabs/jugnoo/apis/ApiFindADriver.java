@@ -172,6 +172,7 @@ public class ApiFindADriver {
 			} else {
 				Data.autoData.setFarAwayCity(findADriverResponse.getFarAwayCity());
 			}
+			Data.autoData.setIsRazorpayEnabled(findADriverResponse.getIsRazorpayEnabled());
 
 			Data.autoData.setCampaigns(findADriverResponse.getCampaigns());
 

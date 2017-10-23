@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.home;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,9 +15,11 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.adapters.SlidingBottomFragmentAdapter;
 import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
+import product.clicklabs.jugnoo.home.fragments.SlidingBottomCashFragment;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -307,6 +310,28 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
 
     public ImageView getImageViewExtraForSliding(){
         return imageViewExtraForSliding;
+    }
+
+    public void updatePaymentOptions(){
+        try {
+            if(Data.autoData != null
+					&& Data.autoData.getPickupPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()
+					&& !Data.autoData.isRazorpayEnabled()){
+				Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
+			}
+            if(requestRideOptionsFragment != null) {
+				requestRideOptionsFragment.updatePaymentOption();
+			}
+
+            if(viewPager != null) {
+				Fragment page = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
+				if (page != null) {
+					((SlidingBottomCashFragment) page).onResume();
+				}
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

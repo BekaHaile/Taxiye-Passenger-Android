@@ -2800,7 +2800,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             setPaymentOptionInRide();
             textViewRideEndWithImage.setText(Data.autoData.getRideEndGoodFeedbackText());
 
-            slidingBottomPanel.getRequestRideOptionsFragment().updatePaymentOption();
+            slidingBottomPanel.updatePaymentOptions();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4999,6 +4999,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             progressBarInitialSearch.setVisibility(View.GONE);
                             imageViewRideNow.setEnabled(true);
                             buttonConfirmRequest.setEnabled(true);
+                            slidingBottomPanel.updatePaymentOptions();
                         }
                     });
         }

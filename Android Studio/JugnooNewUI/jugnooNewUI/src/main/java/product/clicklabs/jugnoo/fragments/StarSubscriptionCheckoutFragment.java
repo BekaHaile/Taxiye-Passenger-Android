@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -1140,13 +1141,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 new APICommonCallback<PaymentResponse>() {
                     @Override
                     public boolean onNotConnected() {
-                        paySlider.setSlideInitial();
+                        slideInitialDelay();
                         return false;
                     }
 
                     @Override
                     public boolean onException(Exception e) {
-                        paySlider.setSlideInitial();
+                        slideInitialDelay();
                         return false;
 
                     }
@@ -1180,34 +1181,58 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                 }
                             } else {
                                 DialogPopup.alertPopup(activity, "", message);
-                                paySlider.setSlideInitial();
+                                slideInitialDelay();
                             }
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", message);
-                            paySlider.setSlideInitial();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            slideInitialDelay();
                         }
                     }
 
                     @Override
                     public boolean onError(PaymentResponse feedCommonResponse, String message, int flag) {
-                        paySlider.setSlideInitial();
+                        slideInitialDelay();
                         return false;
                     }
 
                     @Override
                     public boolean onFailure(RetrofitError error) {
-                        paySlider.setSlideInitial();
+                        slideInitialDelay();
                         return false;
                     }
 
                     @Override
                     public void onNegativeClick() {
-                        paySlider.setSlideInitial();
+                        slideInitialDelay();
 
                     }
                 });
+    }
+
+    private Handler handler;
+    private Handler getHandler(){
+        if(handler == null){
+            handler = new Handler();
+        }
+        return handler;
+    }
+    private Runnable runnable;
+    private Runnable getRunnable(){
+        if(runnable == null){
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    paySlider.setSlideInitial();
+                }
+            };
+        }
+        return runnable;
+    }
+    private void slideInitialDelay(){
+        getHandler().postDelayed(getRunnable(), 200);
+
     }
 
     private void rideEndPaymentSuccess(double remaining, String message) {

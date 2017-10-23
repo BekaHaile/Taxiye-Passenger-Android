@@ -817,4 +817,5 @@ public interface Constants {
     String KEY_PAID_USING_RAZORPAY = "paid_using_razorpay";
     String KEY_DESCRIPTION = "description";
     String KEY_CURRENCY = "currency";
+    String KEY_IS_RAZORPAY_ENABLED = "is_razorpay_enabled";
 }
