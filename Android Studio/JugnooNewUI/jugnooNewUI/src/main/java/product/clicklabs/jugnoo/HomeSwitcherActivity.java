@@ -80,7 +80,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
         OfferingListAdapter offeringListAdapter = new OfferingListAdapter(this, offerings, new OfferingListAdapter.Callback() {
             @Override
             public LatLng getLatLng() {
-                return latLng == null ? Data.getIndiaCentre() : latLng;
+				return getCurrentPlaceLatLng();
             }
         }, rvOfferings);
         rvOfferings.setAdapter(offeringListAdapter);
@@ -178,6 +178,10 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public LatLng getCurrentPlaceLatLng(){
+		return latLng == null ? Data.getIndiaCentre() : latLng;
 	}
 
 }
