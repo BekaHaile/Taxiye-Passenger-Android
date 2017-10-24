@@ -16,14 +16,12 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -52,7 +50,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -86,24 +83,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     RadioButton rbAsap;
     @Bind(R.id.rb_st)
     RadioButton rbSt;
-    @Bind(R.id.llPayViewContainer)
-    LinearLayout llPayViewContainer;
+
     @Bind(R.id.cv_pickup_address)
     CardView cvPickupAddress;
     @Bind(R.id.cv_delivery_address)
     CardView cvDeliveryAddress;
-    @Bind(R.id.viewAlpha)
-    View viewAlpha;
-    @Bind(R.id.tvSlide)
-    TextView tvSlide;
-    @Bind(R.id.relativeLayoutSlider)
-    RelativeLayout relativeLayoutSlider;
-    @Bind(R.id.sliderText)
-    TextView sliderText;
-    @Bind(R.id.rlSliderContainer)
-    RelativeLayout rlSliderContainer;
-    @Bind(R.id.buttonPlaceOrder)
-    Button buttonPlaceOrder;
+
     @Bind(R.id.rg_time_slot)
     RadioGroup rgTimeSlot;
     private PaySlider paySlider;
@@ -136,9 +121,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         textHintColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color_light));
         rgTimeSlot.check(R.id.rb_asap);
         isAsapSelected = true;
-        ASSL.DoMagic(llPayViewContainer);
         setCurrentAddressToDelivery();
-        paySlider = new PaySlider(llPayViewContainer) {
+        paySlider = new PaySlider(activity.llPayViewContainer) {
             @Override
             public void onPayClick() {
                 try {

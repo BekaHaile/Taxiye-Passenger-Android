@@ -3,7 +3,7 @@
     android:id="@+id/llPayViewContainer"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="108px"
+    android:layout_height="54dp"
     android:layout_alignParentBottom="true"
     android:orientation="vertical"
     android:visibility="visible"
@@ -27,21 +27,21 @@
         <RelativeLayout
             android:id="@+id/relativeLayoutSlider"
             android:layout_width="match_parent"
-            android:layout_height="72px"
+            android:layout_height="36dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="40px"
-            android:layout_marginRight="40px"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:background="@drawable/capsule_slider_color_bg">
 
             <TextView
                 android:id="@+id/tvSlide"
-                android:layout_width="186px"
-                android:layout_height="72px"
+                android:layout_width="93dp"
+                android:layout_height="36dp"
                 android:background="@drawable/capsule_white_color"
                 android:gravity="center"
                 android:text="Pay 300"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_24"
+                android:textSize="@dimen/sp_12"
                 app:font="maven"
                 />
 
@@ -53,10 +53,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="100px"
+            android:layout_marginRight="50dp"
             android:text="Swipe to confirm >>"
             android:textColor="#fff"
-            android:textSize="@dimen/text_size_24"
+            android:textSize="@dimen/sp_12"
             app:font="maven"/>
 
     </RelativeLayout>
@@ -71,7 +71,7 @@
         android:text="@string/place_order"
         android:textAllCaps="true"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_34"
+        android:textSize="@dimen/sp_17"
         android:visibility="gone"
         app:font="@string/maven_r"
         />

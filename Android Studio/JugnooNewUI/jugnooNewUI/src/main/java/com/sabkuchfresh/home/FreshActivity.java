@@ -558,8 +558,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 int dpAsPixels = (int) (marginBottom * scale + 0.5f);
 
                 // Set Jeanie Padding Bottom if Offering strip shown so that they do not overlap.
-                if(getAppType()== AppConstant.ApplicationType.MEALS &&  Data.getMealsData()!=null
-                        && Data.getMealsData().getOfferStripMeals()!=null && !TextUtils.isEmpty(Data.getMealsData().getOfferStripMeals().getTextToDisplay())) {
+                if ((getAppType() == AppConstant.ApplicationType.MEALS
+                        && Data.getMealsData() != null
+                        && Data.getMealsData().getOfferStripMeals() != null
+                        && !TextUtils.isEmpty(Data.getMealsData().getOfferStripMeals().getTextToDisplay()))
+                        ||
+                        (getAppType() == AppConstant.ApplicationType.FEED
+                        && Data.getFeedData() != null
+                        && Data.getFeedData().getBottomStrip() != null
+                        && !TextUtils.isEmpty(Data.getFeedData().getBottomStrip().getTextToDisplay()))
+                        ) {
                     marginBottom += 35f;
                 }
 
@@ -1544,7 +1552,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
-
+                llSearchCartVis = View.GONE;
+                llPayViewContainerVis = View.VISIBLE;
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
             }
@@ -1894,19 +1903,19 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     }
                     textViewMinOrderSetVisibility(textViewMinOrderVis);
                     return 1;
-                }
-            }else if(fragment instanceof AnywhereHomeFragment){
+                }else if(fragment instanceof AnywhereHomeFragment){
 
-                int textViewMinOrderVis;
-                if( Data.getFeedData().getBottomStrip()!=null && !TextUtils.isEmpty(Data.getFeedData().getBottomStrip().getTextToDisplay())){
-                    textViewMinOrderVis = View.VISIBLE;
-                    textViewMinOrder.setText(Utils.trimHTML(Utils.fromHtml(Data.getFeedData().getBottomStrip().getTextToDisplay())));
-                } else{
-                    textViewMinOrderVis = View.GONE;
+                    int textViewMinOrderVis;
+                    if( Data.getFeedData().getBottomStrip()!=null && !TextUtils.isEmpty(Data.getFeedData().getBottomStrip().getTextToDisplay())){
+                        textViewMinOrderVis = View.VISIBLE;
+                        textViewMinOrder.setText(Utils.trimHTML(Utils.fromHtml(Data.getFeedData().getBottomStrip().getTextToDisplay())));
+                    } else{
+                        textViewMinOrderVis = View.GONE;
+                    }
+                    textViewMinOrderSetVisibility(textViewMinOrderVis);
+                    return 1;
                 }
-                textViewMinOrderSetVisibility(textViewMinOrderVis);
-                return 1;
-            } else {
+            }else {
                 textViewMinOrderSetVisibility(View.GONE);
                 return 1;
             }

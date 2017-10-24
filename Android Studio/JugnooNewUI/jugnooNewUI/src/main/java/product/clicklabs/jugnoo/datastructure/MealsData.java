@@ -113,7 +113,7 @@ public class MealsData {
 		return offerStripMeals;
 	}
 
-	public  class OfferStripMeals {
+	public static class OfferStripMeals {
 
 		@SerializedName("message")
 		private String textToDisplay;

@@ -101,6 +101,8 @@
 
             <include layout="@layout/layout_fresh_checkout_bar"/>
 
+            <include layout="@layout/layout_fresh_pay_action_container"/>
+
             <include layout="@layout/layout_menus_customize_add_to_cart"/>
             <include
                 android:id="@+id/vMenusCartSaved"
@@ -120,7 +122,6 @@
             
         </LinearLayout>
 
-        <include layout="@layout/layout_fresh_pay_action_container"/>
 
 
         <include layout="@layout/layout_home_activity_fab_test" />
