@@ -366,6 +366,32 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
             textViewMinOrder = (TextView) findViewById(R.id.textViewMinOrder);
+            textViewMinOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(getAppType() == AppConstant.ApplicationType.MEALS
+                            && Data.getMealsData() != null
+                            && Data.getMealsData().getOfferStripMeals() != null
+                            && !TextUtils.isEmpty(Data.getMealsData().getOfferStripMeals().getTextToDisplay())){
+
+                        try {
+                            Data.deepLinkIndex = Integer.parseInt(Data.getMealsData().getOfferStripMeals().getDeepIndex());
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (getAppType() == AppConstant.ApplicationType.FEED
+                            && Data.getFeedData() != null
+                            && Data.getFeedData().getBottomStrip() != null
+                            && !TextUtils.isEmpty(Data.getFeedData().getBottomStrip().getTextToDisplay())){
+                        try {
+                            Data.deepLinkIndex = Integer.parseInt(Data.getFeedData().getBottomStrip().getDeepIndex());
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    openDeepIndex();
+                }
+            });
 
             topView = findViewById(R.id.topBarMain);
 
