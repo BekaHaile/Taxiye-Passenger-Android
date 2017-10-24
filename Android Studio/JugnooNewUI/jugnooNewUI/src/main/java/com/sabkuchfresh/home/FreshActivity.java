@@ -1895,6 +1895,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     textViewMinOrderSetVisibility(textViewMinOrderVis);
                     return 1;
                 }
+            }else if(fragment instanceof AnywhereHomeFragment){
+
+                int textViewMinOrderVis;
+                if( Data.getFeedData().getBottomStrip()!=null && !TextUtils.isEmpty(Data.getFeedData().getBottomStrip().getTextToDisplay())){
+                    textViewMinOrderVis = View.VISIBLE;
+                    textViewMinOrder.setText(Utils.trimHTML(Utils.fromHtml(Data.getFeedData().getBottomStrip().getTextToDisplay())));
+                } else{
+                    textViewMinOrderVis = View.GONE;
+                }
+                textViewMinOrderSetVisibility(textViewMinOrderVis);
+                return 1;
             } else {
                 textViewMinOrderSetVisibility(View.GONE);
                 return 1;

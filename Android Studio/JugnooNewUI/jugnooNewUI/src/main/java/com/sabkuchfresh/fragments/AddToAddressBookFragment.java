@@ -389,12 +389,18 @@ public class AddToAddressBookFragment extends Fragment {
     }
 
     private boolean fieldsAreFilled() {
+
         if(editTextLabel.getText().toString().trim().length() == 0){
+            if(activity instanceof FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment() != null && ((FreshActivity)activity).getAnywhereHomeFragment().isPickUpAddressRequested()){
+                return true;
+            }
+
             editTextLabel.requestFocus();
             if(editTextLabel.getVisibility() == View.GONE){
                 editTextLabel.setVisibility(View.VISIBLE);
             }
             editTextLabel.setError("Required field");
+
             return false;
         }
         if(editTextFlatNumber.getText().toString().trim().length() == 0){

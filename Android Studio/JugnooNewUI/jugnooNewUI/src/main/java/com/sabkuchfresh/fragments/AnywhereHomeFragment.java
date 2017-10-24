@@ -224,7 +224,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
 
 
-        if (searchResult!=null && !TextUtils.isEmpty(searchResult.getName())) {
+        if (searchResult!=null && searchResult.getName()!=null) {
             textViewToSet.setVisibility(View.VISIBLE);
 //          tvNoAddressAlert.setVisibility(View.GONE);
             String addressType;
@@ -239,7 +239,9 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 addressType = searchResult.getName();
             }
 
-            SpannableString spannableString = new SpannableString(addressType + "\n" + searchResult.getAddress());
+
+            addressType = addressType.length()==0?addressType:addressType+"\n";
+            SpannableString spannableString = new SpannableString(addressType  + searchResult.getAddress());
             spannableString.setSpan(textHintColorSpan, 0, addressType.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             spannableString.setSpan(RELATIVE_SIZE_SPAN, 0, addressType.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             spannableString.setSpan(textColorSpan, spannableString.length() - searchResult.getAddress().length(), spannableString.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -454,16 +456,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                     @Override
                     public void onSuccess(final OrderAnywhereResponse orderAnywhereResponse, String message, int flag) {
-                    /*    new FreshOrderCompleteDialog(activity, new FreshOrderCompleteDialog.Callback() {
-                            @Override
-                            public void onDismiss() {
-
-                            }
-                        }).show(String.valueOf(orderAnywhereResponse.getOrderId()),
-                                isAsapSelected?"Asap":selectedTime,
-                                isAsapSelected?"":selectedDate, false, "",
-                                null, AppConstant.ApplicationType.FEED, orderAnywhereResponse.getMessage());*/
-
 
                         try {
                             String deliveryTime = finalDateTime1 == null ? "ASAP" : DateOperations.convertDateViaFormat(finalDateTime1);

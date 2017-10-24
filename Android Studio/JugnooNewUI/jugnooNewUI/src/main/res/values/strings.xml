@@ -1175,7 +1175,6 @@
     <string name="offer_removed_alert">Your Offer has been removed. You need to apply again</string>
     <string name="offer_applied">Offer Applied</string>
     <string name="dummy_text_2">Matthew Young reviewed Pizza Hut</string>
-    <string name="ask_local">AskLocal</string>
     <string name="review">Review</string>
     <string name="ask">Ask</string>
     <string name="review_at">Review</string>
@@ -1219,6 +1218,7 @@
     <string name="enter_your_name">Enter your Name</string>
     <string name="enter_email_id">Enter Email ID</string>
     <string name="fatafat">Grocery</string>
+    <string name="fatafat_offering_name">Fatafat</string>
     <string name="unable_to_fetch_address">Unable to fetch current address at the moment</string>
     <string name="plus_add_new_address">+ Add New Address</string>
     <string name="address_details">Address Details</string>

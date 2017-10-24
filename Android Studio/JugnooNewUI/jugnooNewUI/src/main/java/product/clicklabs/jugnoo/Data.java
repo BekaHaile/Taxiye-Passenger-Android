@@ -539,7 +539,7 @@ public class Data {
         if (Data.getFeedData() != null && !TextUtils.isEmpty(Data.getFeedData().getFeedName())) {
             return Data.getFeedData().getFeedName();
         } else {
-            return context.getString(R.string.ask_local);
+            return context.getString(R.string.fatafat_offering_name);
         }
     }
 
