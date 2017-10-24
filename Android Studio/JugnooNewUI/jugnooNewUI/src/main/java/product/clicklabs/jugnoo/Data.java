@@ -255,6 +255,10 @@ public class Data {
 
             Prefs.with(context).remove(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
             Prefs.with(context).remove(SPLabels.USERNAME_UPDATED);
+            Prefs.with(context).remove(Constants.SP_PAYTM_LAST_BALANCE);
+            Prefs.with(context).remove(Constants.SP_MOBIKWIK_LAST_BALANCE);
+            Prefs.with(context).remove(Constants.SP_FREECHARGE_LAST_BALANCE);
+
 
 
             Prefs.with(context).remove(context.getResources().getString(R.string.pref_address_selected));

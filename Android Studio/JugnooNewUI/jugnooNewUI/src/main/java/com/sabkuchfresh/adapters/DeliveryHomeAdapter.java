@@ -41,7 +41,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -1528,7 +1527,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static DateFormat dateFormat;
     private static DateFormat getDateFormatHHMMA(){
         if(dateFormat == null){
-            dateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+            dateFormat = new SimpleDateFormat("hh:mm a");
         }
         return dateFormat;
     }
