@@ -23,6 +23,7 @@ import com.sabkuchfresh.analytics.GAUtils;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.adapters.OfferingListAdapter;
+import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.MenuBar;
@@ -33,6 +34,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 
     DrawerLayout drawerLayout;
 	LatLng latLng;
+	MenuBar menuBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +55,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 		ssb.setSpan(new RelativeSizeSpan(1.2f), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvHeading.append(ssb);
 
-		MenuBar menuBar = new MenuBar(this, drawerLayout);
-        //menuBar.setUserData();
+		menuBar = new MenuBar(this, drawerLayout);
 		latLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.loginLatitude), getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.loginLongitude));
 
 		ArrayList<OfferingListAdapter.Offering> offerings = new ArrayList<>();
@@ -79,7 +80,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
         OfferingListAdapter offeringListAdapter = new OfferingListAdapter(this, offerings, new OfferingListAdapter.Callback() {
             @Override
             public LatLng getLatLng() {
-                return getCurrentPlaceLatLng();
+				return getCurrentPlaceLatLng();
             }
         }, rvOfferings);
         rvOfferings.setAdapter(offeringListAdapter);
@@ -114,6 +115,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 		});
 
 		GAUtils.trackScreenView(JUGNOO + HOME + PAGE);
+		fetchWalletBalance();
     }
 
 	@Override
@@ -121,6 +123,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
 		MyApplication.getInstance().getLocationFetcher().connect(locationUpdate, 10000);
+		menuBar.setUserData();
 	}
 
     @Override
@@ -138,7 +141,47 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
     };
 
 
-	public LatLng getCurrentPlaceLatLng() {
+	private ApiFetchWalletBalance apiFetchWalletBalance = null;
+	private void fetchWalletBalance() {
+		try {
+			if(apiFetchWalletBalance == null){
+				apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
+					@Override
+					public void onSuccess() {
+						MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
+						menuBar.setUserData();
+					}
+
+					@Override
+					public void onFailure() {
+						try {
+							menuBar.setUserData();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+
+					@Override
+					public void onFinish() {
+					}
+
+					@Override
+					public void onRetry(View view) {
+					}
+
+					@Override
+					public void onNoRetry(View view) {
+					}
+				});
+			}
+			apiFetchWalletBalance.getBalance(false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public LatLng getCurrentPlaceLatLng(){
 		return latLng == null ? Data.getIndiaCentre() : latLng;
 	}
+
 }

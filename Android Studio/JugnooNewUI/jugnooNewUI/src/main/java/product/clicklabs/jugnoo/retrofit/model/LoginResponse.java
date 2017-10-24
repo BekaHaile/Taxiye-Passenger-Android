@@ -440,6 +440,7 @@ public class LoginResponse {
 		private String feedName;
 
 
+
         @SerializedName("has_handle")
         private int hasHandle;
 
@@ -447,8 +448,12 @@ public class LoginResponse {
 		@Expose
 		private Integer countNotificationPollingInterval;
 
+		@SerializedName("bottom_strip")
+		private MealsData.OfferStripMeals bottomStrip;
 
-
+		public MealsData.OfferStripMeals getBottomStrip() {
+			return bottomStrip;
+		}
 
 		public String getFeedIntroString() {
 			return feedIntroString;

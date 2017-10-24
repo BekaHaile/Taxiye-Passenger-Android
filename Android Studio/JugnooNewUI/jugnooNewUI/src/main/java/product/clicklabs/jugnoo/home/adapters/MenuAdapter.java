@@ -436,6 +436,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             latLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
         } else if(activity instanceof MainActivity){
             latLng = ((MainActivity)activity).getCurrentPlaceLatLng();
+        } else if(activity instanceof HomeSwitcherActivity){
+            latLng = ((HomeSwitcherActivity)activity).getCurrentPlaceLatLng();
         }
         return latLng;
     }
@@ -570,17 +572,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
             }else if(MenuInfoTags.OFFERS.getTag().equalsIgnoreCase(tag)) {
-                LatLng currLatLng = null;
-                if (activity instanceof HomeActivity) {
-                    currLatLng = ((HomeActivity) activity).getCurrentPlaceLatLng();
-                } else if(activity instanceof FreshActivity){
-                    currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
-                } else if(activity instanceof MainActivity) {
-                    currLatLng = ((MainActivity)activity).getCurrentPlaceLatLng();
-                } else if(activity instanceof HomeSwitcherActivity) {
-                    currLatLng = ((HomeSwitcherActivity)activity).getCurrentPlaceLatLng();
-                }
-
+                LatLng currLatLng = getLatLng();
 
                 if (currLatLng != null) {
                     Data.latitude = currLatLng.latitude;
