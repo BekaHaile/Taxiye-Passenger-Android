@@ -89,6 +89,7 @@ public class AppSwitcher {
 				}
 
 
+				boolean noOfferingEnabledForHomeScreen = false;
 				// to check id Data.userData's key of <offering>_enabled is 1 for the client_id to open
 				if(Data.userData != null){
 					if((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.userData.getFreshEnabled() != 1)
@@ -102,6 +103,13 @@ public class AppSwitcher {
 							){
 						clientId = Config.getAutosClientId();
 					}
+
+					if (Data.userData.getMealsEnabled() == 0
+							&& Data.userData.getFreshEnabled() == 0
+							&& Data.userData.getMenusEnabled() == 0
+							&& Data.userData.getFeedEnabled() == 0) {
+						noOfferingEnabledForHomeScreen = true;
+					}
 				}
 
 
@@ -113,7 +121,7 @@ public class AppSwitcher {
 					intent.setData(data);
 				}
 				final String finalClientId = clientId;
-				if(openHomeSwitcher){
+				if(openHomeSwitcher && !noOfferingEnabledForHomeScreen){
 					intent.setClass(activity, HomeSwitcherActivity.class);
 					intent.putExtra(Constants.KEY_LATITUDE, latLng.latitude);
 					intent.putExtra(Constants.KEY_LONGITUDE, latLng.longitude);

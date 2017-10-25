@@ -1706,7 +1706,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 setTitleAlignment(true);
             } else if (fragment instanceof MenusFragment
                     || fragment instanceof FreshHomeFragment
-                    || fragment instanceof MealFragment){
+                    || fragment instanceof MealFragment
+                    || fragment instanceof AnywhereHomeFragment){
                 setTitleAlignment(false);
             }
 
