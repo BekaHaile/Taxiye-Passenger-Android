@@ -101,6 +101,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 			@Override
 			public void onDrawerOpened(View drawerView) {
 				GAUtils.event(JUGNOO, HOME + PAGE , SIDE_MENU+CLICKED);
+				GAUtils.trackScreenView(HOME + PAGE + SIDE_MENU);
 			}
 
 			@Override
