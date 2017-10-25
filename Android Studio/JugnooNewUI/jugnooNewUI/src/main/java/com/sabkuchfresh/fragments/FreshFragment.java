@@ -164,7 +164,7 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
 		ivShadowBelowTab = (ImageView) rootView.findViewById(R.id.ivShadowBelowTab);
 		ivShadowAboveTab = (ImageView) rootView.findViewById(R.id.ivShadowAboveTab);
         rlSelectedStore = (RelativeLayout) rootView.findViewById(R.id.rlSelectedStore);
-		rlSelectedStore.setVisibility(View.VISIBLE);
+		rlSelectedStore.setVisibility(View.GONE);
         tvStoreName = (TextView) rootView.findViewById(R.id.tvStoreName);
         ivEditStore = (ImageView) rootView.findViewById(R.id.ivEditStore);
 
@@ -468,6 +468,9 @@ public class FreshFragment extends Fragment implements PagerSlidingTabStrip.MyTa
                                                 }
                                             }).show(message);
                                         }
+
+										rlSelectedStore.setVisibility(activity.getProductsResponse().getDeliveryStores() != null
+												&& activity.getProductsResponse().getDeliveryStores().size() > 1 ? View.VISIBLE : View.GONE);
                                     }
 									activity.updateSortSelectedFromAPI(FreshFragment.this, jObj);
                                 }

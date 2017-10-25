@@ -210,7 +210,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             textViewEndRideMobikwikValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideFreeChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideFreeChargeValue);
             textViewEndRideFreeChargeValue.setTypeface(Fonts.mavenRegular(activity));
-            tvEndRideRazorpay = (TextView) rootView.findViewById(R.id.tvEndRideRazorpay); tvEndRideRazorpay.setTypeface(Fonts.mavenRegular(activity));
+            tvEndRideRazorpay = (TextView) rootView.findViewById(R.id.tvEndRideRazorpay); tvEndRideRazorpay.setTypeface(Fonts.mavenLight(activity));
             tvEndRideRazorpayValue = (TextView) rootView.findViewById(R.id.tvEndRideRazorpayValue); tvEndRideRazorpayValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideToBePaidValue = (TextView) rootView.findViewById(R.id.textViewEndRideToBePaidValue);
             textViewEndRideToBePaidValue.setTypeface(Fonts.mavenRegular(activity));

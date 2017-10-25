@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -113,11 +112,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private boolean isRazorUPI;
     private PaySlider paySlider;
     private ArrayList<SubscriptionData.Subscription> subscriptionsActivityList;
-
-    private RelativeLayout relativeLayoutIcici;
-    private EditText edtIciciVpa;
-    private TextView tvLabelIciciUpi, tvUPICashback;
-    private ImageView imageViewIcici;
 
     private LinearLayout llRideInfo;
     private TextView tvTotalFareValue, tvCashPaidValue, textViewPaymentVia;
@@ -225,12 +219,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             rlUPI = (RelativeLayout) rootView.findViewById(R.id.rlUPI);
             ivUPI = (ImageView) rootView.findViewById(R.id.ivUPI);
             tvUPI = (TextView) rootView.findViewById(R.id.tvUPI);
-            relativeLayoutIcici = (RelativeLayout) rootView.findViewById(R.id.rlIciciUpi);
-            edtIciciVpa = (EditText) rootView.findViewById(R.id.edtIciciVpa);
-            tvUPICashback = (TextView) rootView.findViewById(R.id.tvUPICashback);
-            tvUPICashback.setTypeface(tvUPICashback.getTypeface(), Typeface.ITALIC);
-            tvLabelIciciUpi = (TextView) rootView.findViewById(R.id.tv_label_below_edt_icici);
-            imageViewIcici = (ImageView) rootView.findViewById(R.id.ivRadioIciciUpi);
 
             llRideInfo = (LinearLayout) rootView.findViewById(R.id.llRideInfo); llRideInfo.setVisibility(View.GONE);
             tvTotalFareValue = (TextView) rootView.findViewById(R.id.tvTotalFareValue); tvTotalFareValue.setTypeface(tvTotalFareValue.getTypeface(), Typeface.BOLD);
@@ -243,7 +231,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
             rlUPI.setOnClickListener(onClickListenerPaymentOptionSelector);
             rlOtherModesToPay.setOnClickListener(onClickListenerPaymentOptionSelector);
-            relativeLayoutIcici.setOnClickListener(onClickListenerPaymentOptionSelector);
 
             paySlider = new PaySlider(rootView.findViewById(R.id.llPayViewContainer)) {
                 @Override
@@ -487,9 +474,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         isRazorUPI = false;
                         callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.RAZOR_PAY);
                         break;
-                    case R.id.rlIciciUpi:
-                        callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.ICICI_UPI);
-                        break;
                 }
 
             } catch (Exception e) {
@@ -546,11 +530,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             }
 
             if (goAhead) {
-                if (getPaymentOption() == PaymentOption.ICICI_UPI && TextUtils.isEmpty(edtIciciVpa.getText().toString().trim())) {
-                    Utils.showToast(activity, activity.getString(R.string.error_enter_virtual_payment_address));
-                    paySlider.setSlideInitial();
-                    return;
-                }
                 hitAPI();
             }else{
                 paySlider.setSlideInitial();
@@ -711,18 +690,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.UPI_RAZOR_PAY.getOrdinal()) {
                                 linearLayoutWalletContainer.addView(rlUPI);
                                 tvUPI.setText(paymentModeConfigData.getDisplayName());
-                            } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.ICICI_UPI.getOrdinal()) {
-                                linearLayoutWalletContainer.addView(relativeLayoutIcici);
-                                edtIciciVpa.removeTextChangedListener(selectIciciPaymentTextWatcher);
-                                edtIciciVpa.setText(paymentModeConfigData.getUpiHandle());
-                                if (paymentModeConfigData.getUpiHandle() != null && paymentModeConfigData.getUpiHandle().length() > 0) {
-                                    edtIciciVpa.setSelection(paymentModeConfigData.getUpiHandle().length() - 1);
-
-                                }
-                                edtIciciVpa.addTextChangedListener(selectIciciPaymentTextWatcher);
-                                jugnooVpaHandle = paymentModeConfigData.getJugnooVpaHandle();
-                                tvLabelIciciUpi.setText(activity.getString(R.string.label_below_icici_payment_edt, jugnooVpaHandle));
-                                tvUPICashback.setText(!TextUtils.isEmpty(paymentModeConfigData.getUpiCashbackValue()) ? paymentModeConfigData.getUpiCashbackValue() : "");
                             }
                         }
                     }
@@ -793,7 +760,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
             ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_normal);
             ivUPI.setImageResource(R.drawable.ic_radio_button_normal);
-            imageViewIcici.setImageResource(R.drawable.ic_radio_button_normal);
 
             if (getPaymentOption() == PaymentOption.PAYTM) {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_selected);
@@ -807,11 +773,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 } else {
                     ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_selected);
                 }
-            } else if (getPaymentOption() == PaymentOption.ICICI_UPI) {
-                imageViewIcici.setImageResource(R.drawable.ic_radio_button_selected);
             }
-            edtIciciVpa.setVisibility(getPaymentOption() == PaymentOption.ICICI_UPI?View.VISIBLE:View.GONE);
-            tvLabelIciciUpi.setVisibility(getPaymentOption() == PaymentOption.ICICI_UPI?View.VISIBLE:View.GONE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1165,7 +1127,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                     PaymentResponse.PaymentData paymentData = response.getData().getPaymentData();
                                     if(Data.userData != null && Data.autoData != null && Data.autoData.getEndRideData() != null) {
                                         Data.userData.setJugnooBalance(paymentData.getJugnooBalance());
-                                        Data.autoData.getEndRideData().paidUsingWallet = paymentData.getJugnooDeducted();
+//                                        Data.autoData.getEndRideData().paidUsingWallet = paymentData.getJugnooDeducted();
                                         if (getPaymentOption() == PaymentOption.PAYTM) {
                                             Data.userData.setPaytmBalance(Data.userData.getPaytmBalance() - paymentData.getPaytmDeducted());
                                             Data.autoData.getEndRideData().paidUsingPaytm = paymentData.getPaytmDeducted();

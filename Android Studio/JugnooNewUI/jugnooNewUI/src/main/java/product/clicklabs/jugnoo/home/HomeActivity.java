@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.home;
 
-import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -2858,11 +2857,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             }
                         }
 
-                        linearLayoutRideSummary.setLayoutTransition(null);
                         scrollViewRideSummary.scrollTo(0, 0);
                         ratingBarRSFeedback.setRating(0f);
                         setZeroRatingView();
-                        linearLayoutRideSummary.setLayoutTransition(new LayoutTransition());
                         relativeLayoutRideEndWithImage.setVisibility(View.GONE);
                         relativeLayoutGreat.setVisibility(View.GONE);
 
