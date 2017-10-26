@@ -16,6 +16,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.config.ConfigMode;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -377,6 +379,7 @@ public class DebugOptionsActivity extends BaseActivity {
             public void onClick(View v) {
                 selectedServer = Config.getLiveServerUrl();
                 setServerUI(selectedServer);
+                setAllServersToSame(ProductType.AUTO, ConfigMode.LIVE);
             }
         });
 
@@ -385,6 +388,7 @@ public class DebugOptionsActivity extends BaseActivity {
             public void onClick(View v) {
                 selectedServer = Config.getDevServerUrl();
                 setServerUI(selectedServer);
+                setAllServersToSame(ProductType.AUTO, ConfigMode.DEV);
             }
         });
 
@@ -420,6 +424,7 @@ public class DebugOptionsActivity extends BaseActivity {
             public void onClick(View v) {
                 selectedServerFresh = Config.getFreshLiveServerUrl();
                 setFreshServerUI(selectedServerFresh);
+                setAllServersToSame(ProductType.FRESH, ConfigMode.LIVE);
             }
         });
 
@@ -428,6 +433,7 @@ public class DebugOptionsActivity extends BaseActivity {
             public void onClick(View v) {
                 selectedServerFresh = Config.getFreshDevServerUrl();
                 setFreshServerUI(selectedServerFresh);
+                setAllServersToSame(ProductType.FRESH, ConfigMode.DEV);
             }
         });
 
@@ -462,6 +468,7 @@ public class DebugOptionsActivity extends BaseActivity {
             public void onClick(View v) {
                 selectedServerMenus = Config.getMenusLiveServerUrl();
                 setMenusServerUI(selectedServerMenus);
+                setAllServersToSame(ProductType.MENUS, ConfigMode.LIVE);
             }
         });
 
@@ -470,6 +477,7 @@ public class DebugOptionsActivity extends BaseActivity {
             public void onClick(View v) {
                 selectedServerMenus = Config.getMenusDevServerUrl();
                 setMenusServerUI(selectedServerMenus);
+                setAllServersToSame(ProductType.MENUS, ConfigMode.DEV);
             }
         });
 
@@ -503,6 +511,7 @@ public class DebugOptionsActivity extends BaseActivity {
             public void onClick(View v) {
                 selectedServerFatafat = Config.getFatafatLiveServerUrl();
                 setFatafatServerUI(selectedServerFatafat);
+                setAllServersToSame(ProductType.FEED, ConfigMode.LIVE);
             }
         });
 
@@ -511,6 +520,7 @@ public class DebugOptionsActivity extends BaseActivity {
             public void onClick(View v) {
                 selectedServerFatafat = Config.getFatafatDevServerUrl();
                 setFatafatServerUI(selectedServerFatafat);
+                setAllServersToSame(ProductType.FEED, ConfigMode.DEV);
             }
         });
 
@@ -607,6 +617,44 @@ public class DebugOptionsActivity extends BaseActivity {
 
     }
 
+
+    public void setAllServersToSame(ProductType productType, ConfigMode configMode){
+        if(configMode == ConfigMode.LIVE){
+            if(productType != ProductType.AUTO){
+                selectedServer = Config.getLiveServerUrl();
+                setServerUI(selectedServer);
+            }
+            if(productType != ProductType.FRESH){
+                selectedServerFresh = Config.getFreshLiveServerUrl();
+                setFreshServerUI(selectedServerFresh);
+            }
+            if(productType != ProductType.MENUS){
+                selectedServerMenus = Config.getMenusLiveServerUrl();
+                setMenusServerUI(selectedServerMenus);
+            }
+            if(productType != ProductType.FEED){
+                selectedServerFatafat = Config.getFatafatLiveServerUrl();
+                setFatafatServerUI(selectedServerFatafat);
+            }
+        } else if(configMode == ConfigMode.DEV){
+            if(productType != ProductType.AUTO){
+                selectedServer = Config.getDevServerUrl();
+                setServerUI(selectedServer);
+            }
+            if(productType != ProductType.FRESH){
+                selectedServerFresh = Config.getFreshDevServerUrl();
+                setFreshServerUI(selectedServerFresh);
+            }
+            if(productType != ProductType.MENUS){
+                selectedServerMenus = Config.getMenusDevServerUrl();
+                setMenusServerUI(selectedServerMenus);
+            }
+            if(productType != ProductType.FEED){
+                selectedServerFatafat = Config.getFatafatDevServerUrl();
+                setFatafatServerUI(selectedServerFatafat);
+            }
+        }
+    }
 
     public void setServerUI(String selectedServer) {
         relativeLayoutLive4012.setBackgroundColor(Color.TRANSPARENT);

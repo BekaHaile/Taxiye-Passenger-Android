@@ -83,7 +83,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     RadioButton rbAsap;
     @Bind(R.id.rb_st)
     RadioButton rbSt;
-
     @Bind(R.id.cv_pickup_address)
     CardView cvPickupAddress;
     @Bind(R.id.cv_delivery_address)
