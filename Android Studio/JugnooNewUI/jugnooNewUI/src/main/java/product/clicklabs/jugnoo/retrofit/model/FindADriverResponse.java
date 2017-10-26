@@ -32,6 +32,9 @@ public class FindADriverResponse {
     @SerializedName("priority_tip_category")
     @Expose
     private Integer priorityTipCategory;
+    @SerializedName("is_razorpay_enabled")
+    @Expose
+    private int isRazorpayEnabled;
     @SerializedName("far_away_city")
     @Expose
     private String farAwayCity;
@@ -569,5 +572,13 @@ public class FindADriverResponse {
 
     public void setProsEnabled(Integer prosEnabled) {
         this.prosEnabled = prosEnabled;
+    }
+
+    public int getIsRazorpayEnabled() {
+        return isRazorpayEnabled;
+    }
+
+    public void setIsRazorpayEnabled(int isRazorpayEnabled) {
+        this.isRazorpayEnabled = isRazorpayEnabled;
     }
 }

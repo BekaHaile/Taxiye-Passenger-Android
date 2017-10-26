@@ -622,7 +622,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                                     }
                                 } else if (rating == 0) {
                                     // for bad rating
-                                    backPressed(true);
+                                    backPressed(false);
                                 }
                             }
                         } catch (Exception e) {
@@ -795,7 +795,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
                             } else {
                                 // for bad rating
-                                backPressed(true);
+                                backPressed(false);
                             }
 
                         }
@@ -901,7 +901,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                                         }
                                     } else {
                                         // for bad rating
-                                        backPressed(true);
+                                        backPressed(false);
                                     }
                                 } else {
                                     retryDialogProsFeedback(rating, comments, settleUserDebt.getMessage(), DialogErrorType.SERVER_ERROR);

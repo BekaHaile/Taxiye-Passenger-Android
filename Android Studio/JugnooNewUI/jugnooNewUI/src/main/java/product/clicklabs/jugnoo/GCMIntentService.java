@@ -622,12 +622,10 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
 							// if push content has post_id and deepindex 22(FEED) only then hit this broadcast
 							if(deepindex == AppLinkIndex.FEED_PAGE.getOrdinal() && postId != -1){
-								broadcastIntent.putExtra(Constants.KEY_DEEPINDEX, deepindex);
 								broadcastIntent.putExtra(Constants.KEY_POST_ID, postId);
 								broadcastIntent.putExtra(Constants.KEY_POST_NOTIFICATION_ID, postNotificationId);
 							}
 							else if(deepindex == AppLinkIndex.MENUS_PAGE.getOrdinal() && restaurantId > 0 && feedbackId > 0){
-								broadcastIntent.putExtra(Constants.KEY_DEEPINDEX, deepindex);
 								broadcastIntent.putExtra(Constants.KEY_RESTAURANT_ID, restaurantId);
 								broadcastIntent.putExtra(Constants.KEY_FEEDBACK_ID, feedbackId);
 							}
@@ -636,7 +634,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 									Prefs.with(this).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, jobId);
 								}
 
-								broadcastIntent.putExtra(Constants.KEY_DEEPINDEX, deepindex);
 								broadcastIntent.putExtra(Constants.KEY_JOB_ID, jobId);
 								broadcastIntent.putExtra(Constants.KEY_IS_FEEDBACK_PENDING, isFeedbackPending);
 							}
@@ -645,6 +642,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 								broadcastIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
 								broadcastIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
 							}
+							broadcastIntent.putExtra(Constants.KEY_DEEPINDEX, deepindex);
 							broadcastIntent.putExtra(Constants.KEY_FLAG, flag);
 							LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
 

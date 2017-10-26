@@ -138,7 +138,7 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutInRideInfo"
                 android:layout_width="match_parent"
-                android:layout_height="83px"
+                android:layout_height="65px"
                 android:background="@color/white"
                 android:visibility="visible">
 
@@ -177,16 +177,15 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="207px"
+                android:layout_height="187px"
                 android:background="@color/white">
 
                 <ImageView
                     android:id="@+id/imageViewInRideDriver"
                     android:layout_width="130px"
                     android:layout_height="130px"
-                    android:layout_centerVertical="true"
                     android:layout_marginLeft="30px"
-                    android:layout_marginTop="5px"
+                    android:layout_marginTop="20px"
                     android:tag="mwar"
                     android:src="@drawable/ic_driver_placeholder"
                     />
@@ -303,7 +302,6 @@
                     <ImageView
                         android:id="@+id/imageViewIRPaymentOption"
                         style="@style/payment_option_icon_small"
-                        android:layout_marginTop="10px"
                         android:src="@drawable/ic_paytm_small"
                         />
 
@@ -356,7 +354,7 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutPoolSharing"
                 android:layout_width="match_parent"
-                android:layout_height="100px"
+                android:layout_height="80px"
                 android:visibility="gone"
                 android:background="@color/white">
 
@@ -393,7 +391,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="89px"
+                android:layout_height="80px"
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:splitMotionEvents="false">
@@ -408,7 +406,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_theme_color_selector"
-                    android:singleLine="true"
                     android:textColor="@android:color/white"
                     android:text="Cancel Ride"
                     android:textAllCaps="true"
@@ -422,7 +419,6 @@
                     android:layout_width="359px"
                     android:layout_height="match_parent"
                     android:background="@color/menu_item_selector_color"
-                    android:singleLine="true"
                     android:text="Add Paytm Cash"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light_selector"

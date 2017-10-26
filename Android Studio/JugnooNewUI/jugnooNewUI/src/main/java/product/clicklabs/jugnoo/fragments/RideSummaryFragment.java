@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
@@ -67,7 +68,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
     RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
             relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm,
-            relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge;
+            relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay;
     LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
     RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare, relativeLayoutFinalFare;
     NonScrollListView listViewEndRideDiscounts;
@@ -77,7 +78,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             textViewEndRideMobikwikValue, textViewEndRideFreeChargeValue,
             textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
             textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue,
-            tvIncludeToll;
+            tvIncludeToll, tvEndRideRazorpay, tvEndRideRazorpayValue;
     TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
     Button buttonEndRideOk;
     EndRideDiscountsAdapter endRideDiscountsAdapter;
@@ -209,6 +210,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
             textViewEndRideMobikwikValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideFreeChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideFreeChargeValue);
             textViewEndRideFreeChargeValue.setTypeface(Fonts.mavenRegular(activity));
+            tvEndRideRazorpay = (TextView) rootView.findViewById(R.id.tvEndRideRazorpay); tvEndRideRazorpay.setTypeface(Fonts.mavenLight(activity));
+            tvEndRideRazorpayValue = (TextView) rootView.findViewById(R.id.tvEndRideRazorpayValue); tvEndRideRazorpayValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideToBePaidValue = (TextView) rootView.findViewById(R.id.textViewEndRideToBePaidValue);
             textViewEndRideToBePaidValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideBaseFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideBaseFareValue);
@@ -232,6 +235,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             relativeLayoutPaidUsingPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingPaytm);
             relativeLayoutPaidUsingMobikwik = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingMobikwik);
             relativeLayoutPaidUsingFreeCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingFreeCharge);
+            rlPaidUsingRazorpay = (RelativeLayout) rootView.findViewById(R.id.rlPaidUsingRazorpay);
             linearLayoutEndRideTime = (LinearLayout) rootView.findViewById(R.id.linearLayoutEndRideTime);
             relativeLayoutEndRideWaitTime = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideWaitTime);
             imageViewEndRideDriverIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideDriverIcon);
@@ -493,6 +497,15 @@ public class RideSummaryFragment extends Fragment implements Constants {
                             Utils.getMoneyDecimalFormat().format(endRideData.paidUsingFreeCharge)));
                 } else{
                     relativeLayoutPaidUsingFreeCharge.setVisibility(View.GONE);
+                }
+                if(Utils.compareDouble(endRideData.paidUsingRazorpay, 0) > 0){
+                    rlPaidUsingRazorpay.setVisibility(View.VISIBLE);
+                    tvEndRideRazorpay.setText(MyApplication.getInstance().getWalletCore().getRazorpayName());
+                    tvEndRideRazorpayValue.setText(String.format(getResources()
+                                    .getString(R.string.rupees_value_format_without_space),
+                            Utils.getMoneyDecimalFormat().format(endRideData.paidUsingRazorpay)));
+                } else{
+                    rlPaidUsingRazorpay.setVisibility(View.GONE);
                 }
 
                 textViewEndRideToBePaidValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.toPay)));

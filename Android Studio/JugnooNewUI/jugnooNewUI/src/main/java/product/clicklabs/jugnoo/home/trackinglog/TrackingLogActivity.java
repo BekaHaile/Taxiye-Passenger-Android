@@ -420,6 +420,11 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                         }
 
                         @Override
+                        public void onTranslate(LatLng latLng, double duration) {
+
+                        }
+
+                        @Override
                         public void onAnimComplete() {
                             if(state == ScreenState.MAP && trackingLogItems.size() > 0) {
                                 animateMarkerICSRecursive(marker, trackingLogItems);

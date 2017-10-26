@@ -333,6 +333,7 @@ public class JSONParser implements Constants {
             int referAllStatusLogin = autoData.optInt(KEY_REFER_ALL_STATUS_LOGIN, 1);
             String referAllTextLogin = autoData.optString(KEY_REFER_ALL_TEXT_LOGIN, "");
             String referAllTitleLogin = autoData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
+            int isRazorpayEnabled = autoData.optInt(KEY_IS_RAZORPAY_ENABLED, 0);
 
             NearbyPickupRegions nearbyPickupRegionses = autosData.getNearbyPickupRegions();
 
@@ -340,7 +341,7 @@ public class JSONParser implements Constants {
 					, cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
 					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
-                    , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2);
+                    , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2, isRazorpayEnabled);
 
             Data.autoData.setUseRecentLocAtRequest(autosData.getUseRecentLocAtRequest());
             Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());
@@ -1147,6 +1148,7 @@ public class JSONParser implements Constants {
 
         double paidUsingMobikwik = jLastRideData.optDouble(KEY_PAID_USING_MOBIKWIK, 0);
         double paidUsingFreeCharge = jLastRideData.optDouble(KEY_PAID_USING_FREECHARGE, 0);
+        double paidUsingRazorpay = jLastRideData.optDouble(KEY_PAID_USING_RAZORPAY, 0);
 
         int totalRide = jLastRideData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 0);
         int status = jLastRideData.optInt(Constants.KEY_STATUS, EngagementStatus.ENDED.getOrdinal());
@@ -1155,6 +1157,8 @@ public class JSONParser implements Constants {
 
         FuguChannelData fuguChannelData = new FuguChannelData();
         parseFuguChannelDetails(jLastRideData, fuguChannelData);
+        int showPaymentOptions = jLastRideData.optInt(Constants.KEY_SHOW_PAYMENT_OPTIONS, 0);
+        int paymentOption = jLastRideData.optInt(Constants.KEY_PREFERRED_PAYMENT_MODE, PaymentOption.CASH.getOrdinal());
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -1169,9 +1173,10 @@ public class JSONParser implements Constants {
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
                 rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
-                sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge, totalRide, status, supportNumber
+                sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge,paidUsingRazorpay, totalRide, status, supportNumber
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
-                fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags());
+                fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
+                showPaymentOptions, paymentOption);
 	}
 
 

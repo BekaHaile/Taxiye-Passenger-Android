@@ -258,7 +258,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                             builder.include(list.get(z));
                         }
 
-                        final LatLngBounds latLngBounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, 408);
+                        final LatLngBounds latLngBounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, 100);
 
                         if (mapLite != null) {
                             mapLite.clear();

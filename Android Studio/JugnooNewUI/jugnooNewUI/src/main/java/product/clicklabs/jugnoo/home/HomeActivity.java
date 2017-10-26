@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.home;
 
-import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -120,7 +119,6 @@ import java.util.TimerTask;
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
-import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -133,6 +131,7 @@ import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.RazorpayBaseActivity;
 import product.clicklabs.jugnoo.RideCancellationActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
@@ -170,6 +169,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.emergency.EmergencyDisableDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
+import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
@@ -228,7 +228,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class HomeActivity extends BaseAppCompatActivity implements AppInterruptHandler,
+public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
         GACategory, GAAction{
@@ -352,6 +352,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp, ivEndRideType,
             imageViewPaymentModeConfirm, imageViewRideEndWithImage;
     private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
+    private LinearLayout llPayOnline;
+    private TextView tvPayOnline;
 
 
 
@@ -417,7 +419,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
     public static final float MAX_ZOOM = 16;
     private static final int MAP_ANIMATE_DURATION = 500;
 
-    public static final double FIX_ZOOM_DIAGONAL = 358;
+    public static final double FIX_ZOOM_DIAGONAL = 100;
     private final float MAP_PADDING = 100f;
 
     public static final long FETCH_WALLET_BALANCE_REFRESH_TIME = 5 * 60 * 1000;
@@ -808,6 +810,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         imageViewThumbsUp = (ImageView) findViewById(R.id.imageViewThumbsUp);
         textViewThumbsDown = (TextView) findViewById(R.id.textViewThumbsDown); textViewThumbsDown.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         textViewThumbsUp = (TextView) findViewById(R.id.textViewThumbsUp); textViewThumbsUp.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        llPayOnline = (LinearLayout) findViewById(R.id.llPayOnline);
+        tvPayOnline = (TextView) findViewById(R.id.tvPayOnline); tvPayOnline.setTypeface(tvPayOnline.getTypeface(), Typeface.BOLD);
 
         rlChatDriver = (RelativeLayout) findViewById(R.id.rlChatDriver);
         bChatDriver = (Button) findViewById(R.id.bChatDriver); bChatDriver.setOnClickListener(this);
@@ -1082,7 +1086,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 								public void run() {
 									rideNowClicked = false;
 								}
-							}, 1000);
+							}, 300);
 						}
 					}
                 } catch (Exception e) {
@@ -1568,7 +1572,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 try {
                     if(Data.autoData.getEndRideData() != null) {
 						linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.INVOICE);
-						Bundle bundle = new Bundle();
 						GAUtils.event(RIDES, FEEDBACK, VIEW_INVOICE+CLICKED);
 					}
                 } catch (Exception e) {
@@ -1652,6 +1655,19 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             }
         });
 
+        llPayOnline.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if(Data.autoData.getEndRideData() != null) {
+						linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.ONLINE_PAYMENT);
+						GAUtils.event(RIDES, RIDE+END, ONLINE_PAYMENT);
+					}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         View.OnClickListener onClickListenerPokeOnOff = new OnClickListener() {
             @Override
@@ -1904,6 +1920,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     // Map released
                     try {
                         myLocationButtonClicked = false;
+                        customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
                         if(PassengerScreenMode.P_INITIAL == passengerScreenMode && zoomedForSearch
                                 && !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()){
                             if(lastSearchLatLng != null){
@@ -2518,6 +2535,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             Data.autoData.setcEngagementId("");
             dropLocationSearchText = "";
 
+            if(myLocation == null){
+                myLocation = new Location(LocationManager.GPS_PROVIDER);
+                myLocation.setLatitude(Data.latitude);
+                myLocation.setLongitude(Data.longitude);
+            }
+
             double distance = MapUtils.distance(Data.autoData.getPickupLatLng(), new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
             if (distance > MAP_PAN_DISTANCE_CHECK) {
                 switchRequestRideUI();
@@ -2724,7 +2747,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 && Data.autoData != null
                 && Data.autoData.getAssignedDriverInfo() != null
                 && Data.autoData.getAssignedDriverInfo().latLng != null){
-            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null);
+            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
         }else {
             myLocationButtonClicked = true;
             if(fromButton) {
@@ -2776,7 +2799,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             setPaymentOptionInRide();
             textViewRideEndWithImage.setText(Data.autoData.getRideEndGoodFeedbackText());
 
-            slidingBottomPanel.getRequestRideOptionsFragment().updatePaymentOption();
+            slidingBottomPanel.updatePaymentOptions();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2834,11 +2857,9 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                             }
                         }
 
-                        linearLayoutRideSummary.setLayoutTransition(null);
                         scrollViewRideSummary.scrollTo(0, 0);
                         ratingBarRSFeedback.setRating(0f);
                         setZeroRatingView();
-                        linearLayoutRideSummary.setLayoutTransition(new LayoutTransition());
                         relativeLayoutRideEndWithImage.setVisibility(View.GONE);
                         relativeLayoutGreat.setVisibility(View.GONE);
 
@@ -2848,9 +2869,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         }
                         feedbackReasonsAdapter.notifyDataSetChanged();
                         textViewRSTotalFareValue.setText(String.format(getString(R.string.rupees_value_format_without_space),"" + Utils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().finalFare)));
-                        textViewRSCashPaidValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
-                                "" + Utils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().toPay)));
-
                         /*imageViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_up));
                         imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
                         textViewThumbsUp.setVisibility(View.INVISIBLE);
@@ -2863,7 +2881,16 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         // delete the RidePath Table from Phone Database :)
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
                         //fabViewTest.setRelativeLayoutFABVisibility(mode);
-                        Log.d("RidePath DB", "Deleted");
+
+                        int onlinePaymentVisibility = updateRideEndPayment();
+                        if(onlinePaymentVisibility == View.VISIBLE && Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()){
+                            llPayOnline.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    llPayOnline.performClick();
+                                }
+                            });
+                        }
 
                     } else {
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -3206,7 +3233,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                             stopDropLocationSearchUI(true);
                         }
                         setDropLocationEngagedUI();
-                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null);
+                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
                         buttonAddMoneyToWallet.setVisibility(View.GONE);
@@ -3284,7 +3311,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         setDropLocationEngagedUI();
 
                         setAssignedDriverData(mode);
-                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null);
+                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
 
 
                         buttonCancelRide.setVisibility(View.VISIBLE);
@@ -3351,7 +3378,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         setDropLocationEngagedUI();
 
                         setAssignedDriverData(mode);
-                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null);
+                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
 
                         buttonCancelRide.setVisibility(View.GONE);
                         buttonAddMoneyToWallet.setVisibility(View.GONE);
@@ -3469,6 +3496,23 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public int updateRideEndPayment() {
+        try {
+            textViewRSCashPaidValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
+					"" + Utils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().toPay)));
+            int onlinePaymentVisibility = (Data.autoData.getEndRideData().toPay > 0 &&
+                    (Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.CASH.getOrdinal()
+                    || Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal())
+                    && Data.autoData.getEndRideData().getShowPaymentOptions() == 1) ? View.VISIBLE : View.GONE;
+            llPayOnline.setVisibility(onlinePaymentVisibility);
+            tvPayOnline.setVisibility(onlinePaymentVisibility);
+            return onlinePaymentVisibility;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return View.GONE;
     }
 
     private void showChatButton() {
@@ -3764,7 +3808,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                 PlaceSearchListFragment.class.getSimpleName() + PassengerScreenMode.P_REQUEST_FINAL)
                         .commitAllowingStateLoss();
             }
-            checkForMyLocationButtonVisibility();
+            customerInRideMyLocationBtn.setVisibility(View.GONE);
         } else{
             //fabViewTest.setRelativeLayoutFABVisibility(passengerScreenMode);
             relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
@@ -3776,7 +3820,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
             setJeanieVisibility();
-            checkForMyLocationButtonVisibility();
+            customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
         }
     }
 
@@ -3792,6 +3836,13 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 fragToAdd = RideSummaryFragment.newInstance(-1, null, false, EngagementStatus.ENDED.getOrdinal());
                 tag = RideSummaryFragment.class.getName();
                 title = getResources().getString(R.string.receipt);
+            } else if(RideEndFragmentMode.ONLINE_PAYMENT == rideEndFragmentMode) {
+                fragToCheck = getStarSubscriptionCheckoutFragment();
+                fragToAdd = StarSubscriptionCheckoutFragment.newInstance(Integer.parseInt(Data.autoData.getEndRideData().engagementId),
+                        Data.autoData.getEndRideData().finalFare,
+                        Data.autoData.getEndRideData().toPay);
+                tag = StarSubscriptionCheckoutFragment.class.getName();
+                title = getResources().getString(R.string.pay_online);
             }
             if ((fragToCheck == null || fragToCheck.isRemoving())
                     && fragToAdd != null) {
@@ -3801,7 +3852,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                 tag)
                         .addToBackStack(tag)
                         .commitAllowingStateLoss();
-                topBar.setTopBarState(this, false, title);
+                topBar.setTopBarState(false, title);
             }
         } else {
             linearLayoutRideSummaryContainer.setVisibility(View.GONE);
@@ -3811,7 +3862,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         .commit();
                 getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
-            topBar.setTopBarState(this, true, "");
+            topBar.setTopBarState(true, "");
         }
     }
 
@@ -3819,6 +3870,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         Fragment frag = getSupportFragmentManager()
                 .findFragmentByTag(RideSummaryFragment.class.getName());
         return (RideSummaryFragment) frag;
+    }
+
+    private StarSubscriptionCheckoutFragment getStarSubscriptionCheckoutFragment(){
+        Fragment frag = getSupportFragmentManager()
+                .findFragmentByTag(StarSubscriptionCheckoutFragment.class.getName());
+        return (StarSubscriptionCheckoutFragment) frag;
     }
 
     private void updateInRideAddMoneyToWalletButtonText(){
@@ -4036,8 +4093,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
             textViewIRPaymentOptionValue.setTextColor(MyApplication.getInstance().getWalletCore()
                     .getWalletBalanceColor(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
             if(PaymentOption.CASH.getOrdinal() == Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()){
-                textViewIRPaymentOptionValue.setText(MyApplication.getInstance().getWalletCore()
-                        .getPaymentOptionName(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
+                textViewIRPaymentOptionValue.setText(getString(R.string.cash));
             } else {
                 textViewIRPaymentOptionValue.setText(MyApplication.getInstance().getWalletCore()
                         .getPaymentOptionBalanceText(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
@@ -4334,14 +4390,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
                 try {
                     if (activityResumed) {
-                        if((passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
-                                || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED)
-                                && driverLocationMarker != null){
-                            Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, driverLocationMarker.getRotation());
-                        } else if(passengerScreenMode == PassengerScreenMode.P_IN_RIDE
-                                && driverMarkerInRide != null){
-                            Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, driverMarkerInRide.getRotation());
-                        }
+                        saveDriverBearing();
                         if (!intentFired) {
                             if (userMode == UserMode.PASSENGER &&
                                     (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
@@ -4461,11 +4510,26 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 
     public static void switchAppOfClientId(Activity activity, LatLng latLng) {
         String clientIdFromHomeSwitcher = Prefs.with(activity).getString("home_switcher_client_id", "");
-        if(!TextUtils.isEmpty(clientIdFromHomeSwitcher)){
-			MyApplication.getInstance().getAppSwitcher().switchApp(activity, clientIdFromHomeSwitcher, null,
-					latLng, null);
-		}
+        if (!TextUtils.isEmpty(clientIdFromHomeSwitcher)) {
+            MyApplication.getInstance().getAppSwitcher().switchApp(activity, clientIdFromHomeSwitcher, null,
+                    latLng, null);
+        }
         Prefs.with(activity).save("home_switcher_client_id", "");
+    }
+
+    private void saveDriverBearing() {
+        try {
+            if((passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
+					|| passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED)
+					&& driverLocationMarker != null){
+				Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, driverLocationMarker.getRotation());
+			} else if(passengerScreenMode == PassengerScreenMode.P_IN_RIDE
+					&& driverMarkerInRide != null){
+				Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, driverMarkerInRide.getRotation());
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -4684,6 +4748,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         try {
             if (userMode == UserMode.PASSENGER) {
                 pauseAllTimers();
+                saveDriverBearing();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -4931,6 +4996,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                             progressBarInitialSearch.setVisibility(View.GONE);
                             imageViewRideNow.setEnabled(true);
                             buttonConfirmRequest.setEnabled(true);
+                            slidingBottomPanel.updatePaymentOptions();
                         }
                     });
         }
@@ -5106,7 +5172,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);
-                //imageViewFabFake.setVisibility(View.VISIBLE);
             }
 //            setFabMarginInitial(false);
             setJeanieVisibility();
@@ -5240,7 +5305,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         }
     }
 
-    private void zoomtoPickupAndDriverLatLngBounds(final LatLng driverLatLng, List<LatLng> latLngsToInclude){
+    private void zoomtoPickupAndDriverLatLngBounds(final LatLng driverLatLng, List<LatLng> latLngsToInclude, int duration){
         try{
             if((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
@@ -5267,6 +5332,10 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     }
                     final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(boundsBuilder, FIX_ZOOM_DIAGONAL);
                     final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                    if(duration == 0){
+                        duration = getMapAnimateDuration();
+                    }
+                    final int finalDuration = duration;
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -5275,7 +5344,8 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                         || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                                         || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
                                         && bounds != null) {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), getMapAnimateDuration(), null);
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), finalDuration, null);
+                                    customerInRideMyLocationBtn.setVisibility(View.GONE);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -5851,10 +5921,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                             Response response = RestClient.getApiService().getDriverCurrentLocation(nameValuePairs);
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
 
-//                            HttpRequester simpleJSONParser = new HttpRequester();
-//                            String result = simpleJSONParser.getJSONFromUrlParams(Config.getServerUrl() + "/get_driver_current_location", nameValuePairs);
-
-                            Log.e(TAG, "getDriverCurrentLocation result=" + result);
                             try {
                                 JSONObject jObj = new JSONObject(result);
 
@@ -5864,7 +5930,6 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                         HomeActivity.logoutUser(HomeActivity.this);
                                     }
                                 } else {
-//										{"flag":117,"latitude":30.718956,"longitude":76.810267,"eta":0}
                                     int flag = jObj.getInt("flag");
                                     if (ApiResponseFlags.DRIVER_LOCATION.getOrdinal() == flag) {
                                         final LatLng driverCurrentLatLng = new LatLng(jObj.getDouble("latitude"), jObj.getDouble("longitude"));
@@ -5890,8 +5955,15 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                                                                 driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), new MarkerAnimation.CallbackAnim() {
                                                                                     @Override
                                                                                     public void onPathFound(List<LatLng> latLngs) {
-                                                                                        if(latLngs != null){
-                                                                                            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngs);
+//                                                                                        if(latLngs != null){
+//                                                                                            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngs);
+//                                                                                        }
+                                                                                    }
+
+                                                                                    @Override
+                                                                                    public void onTranslate(LatLng latLng, double duration) {
+                                                                                        if(latLng != null) {
+                                                                                            zoomtoPickupAndDriverLatLngBounds(latLng, null, (int) (0.7d*duration));
                                                                                         }
                                                                                     }
 
@@ -6088,7 +6160,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 													ridePathsList.clear();
 													ridePathsList.addAll(ridePathsSorted);
 
+                                                    boolean sourceAdded = false;
 													for (RidePath ridePathI : ridePathsList) {
+                                                        if(!sourceAdded){
+                                                            latLngsList.add(ridePathI.getSourceLatLng());
+                                                            sourceAdded = true;
+                                                        }
 														lastLatLng = ridePathI.getDestinationLatLng();
 														latLngsList.add(lastLatLng);
 													}
@@ -6237,7 +6314,12 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     try {
                         List<LatLng> listPath = null;
                         if (MyApplication.getInstance().isOnline() && Data.autoData.getDropLatLng() != null && pickupLatLng != null && toShowPathToDrop()) {
-                            Response response = RestClient.getGoogleApiService().getDirections(pickupLatLng.latitude + "," + pickupLatLng.longitude,
+                            LatLng source = pickupLatLng;
+                            if(latLngsListForDriverAnimation == null){
+                                RidePath ridePath = MyApplication.getInstance().getDatabase2().getLastRidePath();
+                                source = ridePath != null ? ridePath.getDestinationLatLng() : pickupLatLng;
+                            }
+                            Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
                                     Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false);
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
                             if (result != null) {
@@ -6305,7 +6387,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                             }
                                             latLngsToInclude.addAll(finalListPath1);
                                         }
-										zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngsToInclude);
+										zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngsToInclude, 0);
 									}
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -6976,28 +7058,23 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                     if (MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
                             map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK) {
                         initialMyLocationBtn.setVisibility(View.VISIBLE);
-                        customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
                         destroyHighSpeedAccuracyFusedLocationFetcher();
                     } else {
                         initialMyLocationBtn.setVisibility(View.GONE);
-                        customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
                         initializeHighSpeedAccuracyFusedLocationFetcher();
                     }
                 } else {
                     initialMyLocationBtn.setVisibility(View.VISIBLE);
-                    customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
                     destroyHighSpeedAccuracyFusedLocationFetcher();
                 }
             } catch (Exception e) {
                 if ("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) || changeLocalityLayout.getVisibility() == View.GONE) {
                     initialMyLocationBtn.setVisibility(View.VISIBLE);
-                    customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
                     destroyHighSpeedAccuracyFusedLocationFetcher();
                 }
             }
         } else {
             initialMyLocationBtn.setVisibility(View.GONE);
-            customerInRideMyLocationBtn.setVisibility(View.GONE);
         }
     }
 
@@ -7227,7 +7304,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                                     }
                                 }
 
-                                nameValuePairs.put("preferred_payment_mode", "" + Data.autoData.getPickupPaymentOption());
+                                nameValuePairs.put(Constants.KEY_PREFERRED_PAYMENT_MODE, "" + Data.autoData.getPickupPaymentOption());
                                 nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(slidingBottomPanel
                                         .getRequestRideOptionsFragment().getRegionSelected().getVehicleType()));
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
@@ -7824,17 +7901,23 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
                         EmergencyDisableDialog emergencyDisableDialog = new EmergencyDisableDialog(HomeActivity.this);
                         emergencyDisableDialog.show();
                     }
-                    topBar.textViewTitle.setText(getResources().getString(R.string.rides));
+                    if(getStarSubscriptionCheckoutFragment() != null){
+                        topBar.textViewTitle.setText(getResources().getString(R.string.pay_online));
+                    } else {
+                        topBar.textViewTitle.setText(getResources().getString(R.string.rides));
+                    }
                 }
                 localModeEnabled = modeEnabled;
             } else{
                 Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
-                topBar.textViewTitle.setText(getResources().getString(R.string.rides));
                 if(confirmedScreenOpened){
                     topBar.textViewTitle.setText(getResources().getString(R.string.confirmation));
-                }
-                if(specialPickupScreenOpened){
+                } else if(specialPickupScreenOpened){
                     topBar.textViewTitle.setText(getResources().getString(R.string.choose_pickup));
+                } else if(getStarSubscriptionCheckoutFragment() != null){
+                    topBar.textViewTitle.setText(getResources().getString(R.string.pay_online));
+                } else {
+                    topBar.textViewTitle.setText(getResources().getString(R.string.rides));
                 }
 
                 localModeEnabled = 0;
@@ -8713,7 +8796,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
 					|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
 					|| PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
 				saveLastDestinations(searchResult);
-				zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null);
+				zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null, 0);
 
 				sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
 						getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true, searchResult.getAddress());
@@ -9734,7 +9817,7 @@ public class HomeActivity extends BaseAppCompatActivity implements AppInterruptH
         if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
-            return 1500;
+            return 1000;
         }
         return MAP_ANIMATE_DURATION;
     }

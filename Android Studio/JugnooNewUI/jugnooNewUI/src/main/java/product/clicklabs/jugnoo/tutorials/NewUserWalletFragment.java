@@ -120,7 +120,7 @@ public class NewUserWalletFragment extends Fragment {
 
     private void setWalletStatus(){
         try{
-            ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas(Data.userData);
+            ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
             if(paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0){
                 llWalletContainer.removeAllViews();
                 for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){

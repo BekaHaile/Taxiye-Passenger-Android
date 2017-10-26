@@ -1810,8 +1810,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if (type == AppConstant.ApplicationType.MENUS || type == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
             showDeliverySlot = false;
         } else {
-            deliverySlot = DateOperations.convertDayTimeAPViaFormat(slot.getStartTime())
-                    + " - " + DateOperations.convertDayTimeAPViaFormat(slot.getEndTime());
+            deliverySlot = DateOperations.convertDayTimeAPViaFormat(slot.getStartTime(), false)
+                    + " - " + DateOperations.convertDayTimeAPViaFormat(slot.getEndTime(), false);
             deliveryDay = slot.getDayName();
         }
 
@@ -1972,7 +1972,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private void orderPaymentModes() {
         try {
-            ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas(Data.userData);
+            ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
             if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
                 linearLayoutWalletContainer.removeAllViews();
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
@@ -2003,8 +2003,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             jugnooVpaHandle =  paymentModeConfigData.getJugnooVpaHandle();
                             tvLabelIciciUpi.setText(activity.getString(R.string.label_below_icici_payment_edt, jugnooVpaHandle));
                             tvUPICashback.setText(!TextUtils.isEmpty(paymentModeConfigData.getUpiCashbackValue())?paymentModeConfigData.getUpiCashbackValue():"");
-
-
                         }
 
                     }

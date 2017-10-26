@@ -192,6 +192,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case ANYWHERE_PLACE_ORDER:
                 RestClient.getFatafatApiService().anywherePlaceOrder(params, callback);
                 break;
+            case INITIATE_RIDE_END_PAYMENT:
+                RestClient.getApiService().initiateRideEndPayment(params, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/linearLayoutRoot"
+<LinearLayout
+    android:id="@+id/linearLayoutRoot"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/menu_item_selector_color"
+    android:clickable="true"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:soundEffectsEnabled="false"
+    >
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -19,7 +23,86 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:id="@+id/llRideInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30px"
+                android:layout_marginRight="30px"
+                android:layout_marginTop="40px"
+                android:background="@drawable/background_white_rounded_bordered"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="40px"
+                android:paddingTop="40px"
+                android:visibility="visible"
+                >
+
+                <LinearLayout
+                    android:layout_width="330px"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/total_fare"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/end_ride_fare_title_text_size"
+                        app:font="@string/maven_r"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvTotalFareValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10px"
+                        android:text="0"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/end_ride_fare_value_text_size"
+                        app:font="@string/avenir"
+                        />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="2px"
+                    android:layout_height="match_parent"
+                    android:src="@color/grey_dark_less"
+                    />
+
+                <LinearLayout
+                    android:layout_width="330px"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/to_be_paid"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/end_ride_fare_title_text_size"
+                        app:font="@string/maven_r"
+                        android:textAllCaps="true"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvCashPaidValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10px"
+                        android:text="0"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/end_ride_fare_value_text_size"
+                        app:font="@string/avenir"
+                        />
+
+                </LinearLayout>
+            </LinearLayout>
+
             <android.support.v7.widget.CardView
+                android:id="@+id/cvStarPlans"
                 xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,31 +117,31 @@
                     android:id="@+id/llStarPurchase"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <RelativeLayout
                         android:id="@+id/rlPlan1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/px_20"
+                        android:background="@color/transparent"
                         android:paddingBottom="@dimen/px_20"
-                        android:background="@color/transparent">
+                        android:paddingTop="@dimen/px_20">
 
                         <ImageView
                             android:id="@+id/ivRadio1"
+                            style="@style/ic_radio_button_style"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/px_50"
-                            android:src="@drawable/ic_radio_button_normal"
-                            style="@style/ic_radio_button_style" />
+                            android:src="@drawable/ic_radio_button_normal"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/px_24"
-                            android:layout_toRightOf="@+id/ivRadio1"
                             android:layout_toLeftOf="@+id/tvAmount1"
+                            android:layout_toRightOf="@+id/ivRadio1"
                             android:orientation="vertical">
 
 
@@ -70,7 +153,7 @@
                                 android:maxLines="1"
                                 android:text="Monthly"
                                 android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_30" />
+                                android:textSize="@dimen/text_size_30"/>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -87,8 +170,7 @@
                                     android:text="2388"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_24"
-                                    android:visibility="gone" />
-
+                                    android:visibility="gone"/>
 
 
                             </LinearLayout>
@@ -98,24 +180,24 @@
                             android:id="@+id/tvAmount1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="0px"
                             android:layout_centerVertical="true"
+                            android:layout_marginTop="0px"
                             android:layout_toLeftOf="@+id/tvDuration1"
                             android:ellipsize="end"
                             android:maxLines="1"
                             android:text=""
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_30" />
+                            android:textSize="@dimen/text_size_30"/>
 
                         <TextView
                             android:id="@+id/tvDuration1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="0px"
-                            android:ellipsize="end"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="@dimen/px_50"
+                            android:layout_marginTop="0px"
+                            android:ellipsize="end"
                             android:maxLines="1"
                             android:text=""
                             android:textColor="@color/text_color"
@@ -128,24 +210,24 @@
                         android:id="@+id/rlPlan2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="@dimen/px_20"
+                        android:background="@color/transparent"
                         android:paddingBottom="@dimen/px_20"
-                        android:background="@color/transparent">
+                        android:paddingTop="@dimen/px_20">
 
                         <ImageView
                             android:id="@+id/ivRadio2"
+                            style="@style/ic_radio_button_style"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/px_50"
-                            android:src="@drawable/ic_radio_button_normal"
-                            style="@style/ic_radio_button_style" />
+                            android:src="@drawable/ic_radio_button_normal"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="@dimen/px_24"
-                            android:layout_toRightOf="@+id/ivRadio2"
                             android:layout_toLeftOf="@+id/tvAmount2"
+                            android:layout_toRightOf="@+id/ivRadio2"
                             android:orientation="vertical">
 
 
@@ -157,7 +239,7 @@
                                 android:maxLines="1"
                                 android:text="Annual"
                                 android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_30" />
+                                android:textSize="@dimen/text_size_30"/>
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -170,12 +252,11 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="-10px"
                                     android:ellipsize="end"
-                                    android:visibility="gone"
                                     android:maxLines="1"
                                     android:text="2388"
                                     android:textColor="@color/text_color"
-                                    android:textSize="@dimen/text_size_24" />
-
+                                    android:textSize="@dimen/text_size_24"
+                                    android:visibility="gone"/>
 
 
                             </LinearLayout>
@@ -185,24 +266,24 @@
                             android:id="@+id/tvAmount2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="0px"
-                            android:ellipsize="end"
                             android:layout_centerVertical="true"
+                            android:layout_marginTop="0px"
                             android:layout_toLeftOf="@+id/tvDuration2"
+                            android:ellipsize="end"
                             android:maxLines="1"
                             android:text=""
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_30" />
+                            android:textSize="@dimen/text_size_30"/>
 
                         <TextView
                             android:id="@+id/tvDuration2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="0px"
-                            android:ellipsize="end"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="@dimen/px_50"
+                            android:layout_marginTop="0px"
+                            android:ellipsize="end"
                             android:maxLines="1"
                             android:text=""
                             android:textColor="@color/text_color"
@@ -218,37 +299,37 @@
                     android:id="@+id/rlStarUpgrade"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    android:padding="@dimen/text_size_30">
+                    android:padding="@dimen/text_size_30"
+                    android:visibility="visible">
 
                     <ImageView
                         android:id="@+id/ivStar"
                         android:layout_width="@dimen/px_75"
                         android:layout_height="@dimen/px_75"
-                        android:tag="mwar"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/star"/>
+                        android:src="@drawable/star"
+                        android:tag="mwar"/>
 
                     <TextView
                         android:id="@+id/tvPaymentPlan"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Jugnoo Star"
-                        android:layout_toRightOf="@+id/ivStar"
-                        android:layout_marginLeft="@dimen/px_10"
                         android:layout_centerVertical="true"
-                        android:textSize="@dimen/text_size_32"
-                        android:textColor="@color/text_color"/>
+                        android:layout_marginLeft="@dimen/px_10"
+                        android:layout_toRightOf="@+id/ivStar"
+                        android:text="Jugnoo Star"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_32"/>
 
                     <TextView
                         android:id="@+id/tvPlanAmount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="199"
                         android:layout_centerVertical="true"
-                        android:textSize="@dimen/text_size_44"
-                        android:textColor="@color/green"/>
+                        android:text="199"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/text_size_44"/>
 
 
                 </RelativeLayout>
@@ -273,6 +354,7 @@
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_26"
                     android:visibility="visible"
+                    app:font="@string/maven"
                     />
 
 
@@ -475,7 +557,7 @@
                                 <ImageView
                                     android:id="@+id/ivUPI"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="30px" />
+                                    android:layout_marginLeft="30px"/>
 
 
                                 <TextView
@@ -486,7 +568,7 @@
                                     android:text="@string/other_modes_to_pay"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_34"
-                                    app:font="maven" />
+                                    app:font="maven"/>
 
                             </LinearLayout>
 
@@ -508,7 +590,7 @@
                                 <ImageView
                                     android:id="@+id/ivOtherModesToPay"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="30px" />
+                                    android:layout_marginLeft="30px"/>
 
 
                                 <TextView
@@ -519,12 +601,11 @@
                                     android:text="@string/other_modes_to_pay"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_34"
-                                    app:font="maven" />
+                                    app:font="maven"/>
 
                             </LinearLayout>
 
                         </RelativeLayout>
-
                     </LinearLayout>
 
                 </android.support.v7.widget.CardView>
@@ -582,8 +663,6 @@
             </LinearLayout>
 
 
-
-
             <TextView
                 android:id="@+id/textViewScroll"
                 android:layout_width="20px"
@@ -598,16 +677,17 @@
 
     <include
         layout="@layout/layout_fresh_pay_action_container"/>
+
     <Button
         android:id="@+id/bPlaceOrder"
         style="@style/ButtonTheme"
         android:layout_height="@dimen/payment_option_cash_rl_height"
-        android:visibility="gone"
-        android:background="@drawable/capsule_green_selector"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="70px"
         android:layout_marginTop="32px"
+        android:background="@drawable/capsule_green_selector"
         android:text="@string/pay_now"
         android:textSize="@dimen/text_size_34"
+        android:visibility="gone"
         />
 </LinearLayout>

@@ -3905,6 +3905,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             deliveryAddressView.llLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    textViewMinOrder.setVisibility(View.GONE);
                     getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
                     GAUtils.event(getGaCategory(), HOME, DELIVERY_ADDRESS+CLICKED);
                 }
@@ -4396,7 +4397,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 prefix = getString(R.string.opens_at);
 
 
-                sb = new SpannableStringBuilder(String.valueOf(DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt() + " ")));
+                sb = new SpannableStringBuilder(String.valueOf(DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt() + " ", false)));
             }
             sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             textView.setText(prefix);
@@ -4748,7 +4749,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(this);
             Intent intent = new Intent(this, RazorpayCallbackService.class);
-            intent.putExtra(Constants.KEY_APP_TYPE, getAppType());
             intent.putExtra(Constants.KEY_ACCESS_TOKEN, pair.first);
             intent.putExtra(Constants.KEY_RAZORPAY_PAYMENT_ID, paymentId);
             intent.putExtra(Constants.KEY_RAZORPAY_SIGNATURE, signature);

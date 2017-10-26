@@ -1,26 +1,36 @@
 package product.clicklabs.jugnoo.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.CardView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
 import com.sabkuchfresh.retrofit.model.PurchaseSubscriptionResponse;
@@ -32,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -41,7 +50,7 @@ import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.StarBaseActivity;
+import product.clicklabs.jugnoo.RazorpayBaseActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -52,10 +61,11 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.StarPurchaseType;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
+import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -70,8 +80,6 @@ import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
-import android.os.Handler;
-import android.widget.Toast;
 
 
 /**
@@ -81,7 +89,8 @@ import android.widget.Toast;
 public class StarSubscriptionCheckoutFragment extends Fragment implements PromoCouponsAdapter.Callback, GAAction, GACategory {
 
     private View rootView;
-    private StarBaseActivity activity;
+    private RazorpayBaseActivity activity;
+    private CardView cvStarPlans;
     private TextView tvPaymentPlan, tvPlanAmount, tvActualAmount1, tvActualAmount2, tvAmount1, tvAmount2, tvPeriod1, tvPeriod2,
             tvDuration1, tvDuration2;
     private Button bPlaceOrder;
@@ -104,14 +113,51 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private PaySlider paySlider;
     private ArrayList<SubscriptionData.Subscription> subscriptionsActivityList;
 
+    private LinearLayout llRideInfo;
+    private TextView tvTotalFareValue, tvCashPaidValue, textViewPaymentVia;
+
+    private boolean fromStar;
+    private int engagementId;
+    private double totalFare, fareToPay;
+    private String jugnooVpaHandle;
+
+
+    private static final String FOR_STAR_SUBSCRIPTION = "for_star_subscription";
+
 
     public static StarSubscriptionCheckoutFragment newInstance(String subscription, int type){
         StarSubscriptionCheckoutFragment fragment = new StarSubscriptionCheckoutFragment();
         Bundle bundle = new Bundle();
+        bundle.putBoolean(FOR_STAR_SUBSCRIPTION, true);
         bundle.putString("plan", subscription);
         bundle.putInt("type", type);
         fragment.setArguments(bundle);
         return  fragment;
+    }
+
+    public static StarSubscriptionCheckoutFragment newInstance(int engagementId, double totalFare, double fare){
+        StarSubscriptionCheckoutFragment fragment = new StarSubscriptionCheckoutFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(FOR_STAR_SUBSCRIPTION, false);
+        bundle.putInt(Constants.KEY_ENGAGEMENT_ID, engagementId);
+        bundle.putDouble(Constants.KEY_TOTAL_FARE, totalFare);
+        bundle.putDouble(Constants.KEY_FARE_TO_PAY, fare);
+        fragment.setArguments(bundle);
+        return  fragment;
+    }
+
+    private void parseArguments() {
+        Bundle bundle = getArguments();
+        fromStar = bundle.getBoolean(FOR_STAR_SUBSCRIPTION);
+        if(fromStar) {
+            purchaseType = bundle.getInt("type", StarPurchaseType.PURCHARE.getOrdinal());
+            String plan = bundle.getString("plan", "");
+            subscription = new Gson().fromJson(plan, SubscriptionData.Subscription.class);
+        } else {
+            engagementId = bundle.getInt(Constants.KEY_ENGAGEMENT_ID);
+            totalFare = bundle.getDouble(Constants.KEY_TOTAL_FARE);
+            fareToPay = bundle.getDouble(Constants.KEY_FARE_TO_PAY);
+        }
     }
 
     @Nullable
@@ -119,11 +165,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_star_subscription_checkout, container, false);
         ButterKnife.bind(this,rootView);
-        if(getActivity() instanceof JugnooStarActivity) {
-            activity = (JugnooStarActivity) getActivity();
-        } else if(getActivity() instanceof JugnooStarSubscribedActivity){
-            activity = (JugnooStarSubscribedActivity) getActivity();
-        }
+        activity = (RazorpayBaseActivity) getActivity();
 
         GAUtils.trackScreenView(JUGNOO+STAR+CHECKOUT);
 
@@ -136,13 +178,11 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             e.printStackTrace();
         }
         try {
-            Bundle bundle = getArguments();
-            purchaseType = bundle.getInt("type", StarPurchaseType.PURCHARE.getOrdinal());
-            String plan = bundle.getString("plan", "");
-            subscription = new Gson().fromJson(plan, SubscriptionData.Subscription.class);
+            parseArguments();
 
             llStarPurchase = (LinearLayout) rootView.findViewById(R.id.llStarPurchase);
             rlStarUpgrade = (RelativeLayout) rootView.findViewById(R.id.rlStarUpgrade);
+            cvStarPlans = (CardView) rootView.findViewById(R.id.cvStarPlans);
             tvPaymentPlan = (TextView) rootView.findViewById(R.id.tvPaymentPlan); tvPaymentPlan.setTypeface(Fonts.mavenMedium(activity));
             tvPlanAmount = (TextView) rootView.findViewById(R.id.tvPlanAmount); tvPlanAmount.setTypeface(Fonts.mavenMedium(activity));
             bPlaceOrder = (Button) rootView.findViewById(R.id.bPlaceOrder); bPlaceOrder.setTypeface(Fonts.mavenMedium(activity)); bPlaceOrder.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -180,21 +220,34 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             ivUPI = (ImageView) rootView.findViewById(R.id.ivUPI);
             tvUPI = (TextView) rootView.findViewById(R.id.tvUPI);
 
+            llRideInfo = (LinearLayout) rootView.findViewById(R.id.llRideInfo); llRideInfo.setVisibility(View.GONE);
+            tvTotalFareValue = (TextView) rootView.findViewById(R.id.tvTotalFareValue); tvTotalFareValue.setTypeface(tvTotalFareValue.getTypeface(), Typeface.BOLD);
+            tvCashPaidValue = (TextView) rootView.findViewById(R.id.tvCashPaidValue); tvCashPaidValue.setTypeface(tvCashPaidValue.getTypeface(), Typeface.BOLD);
+            textViewPaymentVia = (TextView) rootView.findViewById(R.id.textViewPaymentVia);
+
+
             relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
             relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
             relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
             rlUPI.setOnClickListener(onClickListenerPaymentOptionSelector);
             rlOtherModesToPay.setOnClickListener(onClickListenerPaymentOptionSelector);
 
-            if(getActivity() instanceof JugnooStarActivity) {
+            paySlider = new PaySlider(rootView.findViewById(R.id.llPayViewContainer)) {
+                @Override
+                public void onPayClick() {
+                    bPlaceOrder.performClick();
+                }
+            };
+
+
+            cvStarPlans.setVisibility(View.VISIBLE);
+            if(activity instanceof JugnooStarActivity) {
                 llStarPurchase.setVisibility(View.VISIBLE);
                 rlStarUpgrade.setVisibility(View.GONE);
                 setPlan();
-            } else if(getActivity() instanceof JugnooStarSubscribedActivity){
+            } else if(activity instanceof JugnooStarSubscribedActivity){
 
-                FetchSubscriptionSavingsResponse subscriptionSavingsResponse = ((JugnooStarSubscribedActivity)getActivity()).getStarSubData();
-
-                subscriptionsActivityList = ((JugnooStarSubscribedActivity)getActivity()).getListToShowInCheckout();
+                subscriptionsActivityList = ((JugnooStarSubscribedActivity)activity).getListToShowInCheckout();
                 boolean isUprgradeAndRenewList = false ;
 
                 if(subscriptionsActivityList.size()==1){
@@ -203,7 +256,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     subscription=subscriptionsActivityList.get(0);
                     purchaseType =subscriptionsActivityList.get(0).getStarPurchaseType().getOrdinal();
                     tvPaymentPlan.setText(subscription.getDescription());
-                    tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscription.getAmount())));
+                    tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(getAmount())));
 
                 } else{
 
@@ -218,7 +271,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             rlPlan1.setVisibility(View.VISIBLE);
                             if(subscriptionsActivityList.get(i).getAmountText()!=null)
                                 tvAmount1.setText(subscriptionsActivityList.get(i).getAmountText());
-                            else if(subscription.getAmount()!=null){
+                            else if(getAmount()!=null){
                                 tvAmount1.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscriptionsActivityList.get(i).getAmount())));
 
                             }
@@ -232,7 +285,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             rlPlan2.setVisibility(View.VISIBLE);
                             if(subscriptionsActivityList.get(i).getAmountText()!=null)
                                 tvAmount2.setText(subscriptionsActivityList.get(i).getAmountText());
-                            else if(subscription.getAmount()!=null){
+                            else if(getAmount()!=null){
                                 tvAmount2.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscriptionsActivityList.get(i).getAmount())));
 
                             }
@@ -251,11 +304,17 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
                     }
                 }
-
-
-
-
-
+            } else if(activity instanceof HomeActivity){
+                cvStarPlans.setVisibility(View.GONE);
+                String fareRs = activity.getString(R.string.rupees_value_format,
+                        Utils.getDoubleTwoDigits((double) Math.round(fareToPay)));
+                paySlider.tvSlide.setText("PAY " + fareRs);
+                paySlider.sliderText.setText(R.string.swipe_right_to_pay);
+                llRideInfo.setVisibility(View.VISIBLE);
+                tvCashPaidValue.setText(fareRs);
+                tvTotalFareValue.setText(activity.getString(R.string.rupees_value_format,
+                        Utils.getDoubleTwoDigits((double) Math.round(totalFare))));
+                textViewPaymentVia.setText(R.string.choose_payment_method);
             }
 
             linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
@@ -264,8 +323,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             listViewOffers.setAdapter(promoCouponsAdapter);
 
 
-//            setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
-
             fetchWalletBalance();
             updateCouponsDataView();
 
@@ -273,13 +330,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             e.printStackTrace();
         }
 
-
-        paySlider = new PaySlider(rootView.findViewById(R.id.llPayViewContainer)) {
-               @Override
-               public void onPayClick() {
-                  bPlaceOrder.performClick();
-               }
-           };
+        LocalBroadcastManager.getInstance(activity).registerReceiver(receiver, new IntentFilter(Constants.INTENT_ACTION_RAZOR_PAY_CALLBACK));
 
 
         return rootView;
@@ -337,14 +388,18 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     private void updateCouponsDataView(){
         try {
-            promoCoupons = Data.userData.getPromoCoupons();
-            if(promoCoupons != null) {
-                if(promoCoupons.size() > 0){
-                    linearLayoutOffers.setVisibility(View.VISIBLE);
-                } else {
-                    linearLayoutOffers.setVisibility(View.GONE);
+            if(fromStar) {
+                promoCoupons = Data.userData.getPromoCoupons();
+                if (promoCoupons != null) {
+                    if (promoCoupons.size() > 0) {
+                        linearLayoutOffers.setVisibility(View.VISIBLE);
+                    } else {
+                        linearLayoutOffers.setVisibility(View.GONE);
+                    }
+                    promoCouponsAdapter.setList(promoCoupons);
                 }
-                promoCouponsAdapter.setList(promoCoupons);
+            } else {
+                linearLayoutOffers.setVisibility(View.GONE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -394,34 +449,29 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         break;
 
                     case R.id.rlPlan1:
-
-                        if(getActivity() instanceof JugnooStarActivity){
+                        if(activity instanceof JugnooStarActivity){
                             selectedPlan(rlPlan1, ivRadio1, 0);
                             try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
-                        }
-                        else{
+                        } else{
                             selectedPlanUpgradeRenew(rlPlan1, ivRadio1, 0);
                         }
                         break;
 
                     case R.id.rlPlan2:
-                        if(getActivity() instanceof JugnooStarActivity){
+                        if(activity instanceof JugnooStarActivity){
                             selectedPlan(rlPlan2, ivRadio2, 1);
                             try{GAUtils.event(SIDE_MENU, JUGNOO+STAR+PLAN+CLICKED, subscription.getPlanString());}catch(Exception e){}
-
-
-                        }
-                        else{
+                        } else{
                             selectedPlanUpgradeRenew(rlPlan1, ivRadio2, 1);
-
                         }
                         break;
 
                     case R.id.rlUPI:
                         isRazorUPI = true;
                         callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.RAZOR_PAY);
-                break;
+                        break;
                     case R.id.rlOtherModesToPay:
+                        isRazorUPI = false;
                         callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.RAZOR_PAY);
                         break;
                 }
@@ -441,10 +491,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         }
 
         try {
-            final int appType = Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType);
             boolean goAhead = true;
             if (getPaymentOption() == PaymentOption.PAYTM) {
-                if (Data.userData.getPaytmBalance() < subscription.getAmount()) {
+                if (Data.userData.getPaytmBalance() < getAmount()) {
                     if(Data.userData.getPaytmEnabled() == 0){
                         relativeLayoutPaytm.performClick();
                     } else if (Data.userData.getPaytmBalance() < 0) {
@@ -456,7 +505,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 }
             }
             else if (getPaymentOption() == PaymentOption.MOBIKWIK) {
-                if (Data.userData.getMobikwikBalance() < subscription.getAmount()) {
+                if (Data.userData.getMobikwikBalance() < getAmount()) {
                     if(Data.userData.getMobikwikEnabled() == 0){
                         relativeLayoutMobikwik.performClick();
                     } else if (Data.userData.getMobikwikBalance() < 0) {
@@ -468,7 +517,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 }
             }
             else if (getPaymentOption() == PaymentOption.FREECHARGE) {
-                if (Data.userData.getFreeChargeBalance() < subscription.getAmount()) {
+                if (Data.userData.getFreeChargeBalance() < getAmount()) {
                     if(Data.userData.getFreeChargeEnabled() == 0){
                         relativeLayoutFreeCharge.performClick();
                     } else if (Data.userData.getFreeChargeBalance() < 0) {
@@ -481,38 +530,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             }
 
             if (goAhead) {
-                bPlaceOrder.setEnabled(false);
-//                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
-//                        activity.getResources().getString(R.string.place_order_confirmation),
-//                        activity.getResources().getString(R.string.ok),
-//                        activity.getResources().getString(R.string.cancel),
-//                        new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                if (getPaymentOption().getOrdinal() == 1) {
-//                                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, CASH);
-//                                } else {
-//                                    FlurryEventLogger.event(PAYMENT_SCREEN, PAYMENT_METHOD, PAYTM);
-//                                }
-//
-//                                apiPurchaseSubscription();
-//                            }
-//                        },
-//                        new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View v) {
-//                                bPlaceOrder.setEnabled(true);
-//                            }
-//                        }, false, false);
-
-
-                if(purchaseType == StarPurchaseType.RENEW.getOrdinal()) {
-                    apiRenewSubscription();
-                } else if(purchaseType == StarPurchaseType.UPGRADE.getOrdinal()){
-                    apiUpgradeSubscription();
-                } else{
-                    apiPurchaseSubscription();
-                }
+                hitAPI();
             }else{
                 paySlider.setSlideInitial();
             }
@@ -535,15 +553,15 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 }
             };
             if (paymentOption == PaymentOption.PAYTM && Data.userData.getPaytmEnabled() == 1) {
-                String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getPaytmBalance() - Math.ceil(subscription.getAmount())));
+                String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getPaytmBalance() - Math.ceil(getAmount())));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_paytm_balance, amount, R.drawable.ic_paytm_big);
             }
             else if (paymentOption == PaymentOption.MOBIKWIK && Data.userData.getMobikwikEnabled() == 1) {
-                String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getMobikwikBalance() - Math.ceil(subscription.getAmount())));
+                String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getMobikwikBalance() - Math.ceil(getAmount())));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, R.drawable.ic_mobikwik_big);
             }
             else if (paymentOption == PaymentOption.FREECHARGE && Data.userData.getFreeChargeEnabled() == 1) {
-                String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getFreeChargeBalance() - Math.ceil(subscription.getAmount())));
+                String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getFreeChargeBalance() - Math.ceil(getAmount())));
                 new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_freecharge_balance, amount, R.drawable.ic_freecharge_big);
             }
             else {
@@ -564,7 +582,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         (Data.userData.getPaytmEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-                        df.format(Math.ceil(subscription.getAmount()
+                        df.format(Math.ceil(getAmount()
                                 - Data.userData.getPaytmBalance())));
             }
             else if (paymentOption == PaymentOption.MOBIKWIK) {
@@ -572,7 +590,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         (Data.userData.getMobikwikEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-                        df.format(Math.ceil(subscription.getAmount()
+                        df.format(Math.ceil(getAmount()
                                 - Data.userData.getMobikwikBalance())));
             }
             else if (paymentOption == PaymentOption.FREECHARGE) {
@@ -580,7 +598,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         (Data.userData.getFreeChargeEnabled() == 1)? PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal()
                                 : PaymentActivityPath.ADD_WALLET.getOrdinal());
                 intent.putExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE,
-                        df.format(Math.ceil(subscription.getAmount()
+                        df.format(Math.ceil(getAmount()
                                 - Data.userData.getFreeChargeBalance())));
             }
             else {
@@ -615,7 +633,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 //                            setPaymentOption(getPaymentOption());
                             orderPaymentModes();
                             setPaymentOptionUI();
-                            //activity.updateMenu();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -627,7 +644,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 //                            setPaymentOption(getPaymentOption());
                             orderPaymentModes();
                             setPaymentOptionUI();
-                            //activity.updateMenu();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -646,7 +662,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
                 });
             }
-            apiFetchWalletBalance.getBalance(true);
+            apiFetchWalletBalance.getBalance(false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -655,7 +671,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     private void orderPaymentModes(){
         try{
-            ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas(Data.userData);
+            ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
             if(paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0){
                 linearLayoutWalletContainer.removeAllViews();
                 for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
@@ -667,30 +683,19 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
                         }
+                        else if(!fromStar){
+                            if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()) {
+                                linearLayoutWalletContainer.addView(rlOtherModesToPay);
+                                tvOtherModesToPay.setText(paymentModeConfigData.getDisplayName());
+                            } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.UPI_RAZOR_PAY.getOrdinal()) {
+                                linearLayoutWalletContainer.addView(rlUPI);
+                                tvUPI.setText(paymentModeConfigData.getDisplayName());
+                            }
+                        }
                     }
                 }
             }
 
-            // for razorPay layout adding
-            /*ArrayList<PaymentGatewayModeConfig> paymentGatewayModeConfigs = MyApplication.getInstance().getWalletCore().getPaymentGatewayModeConfigs();
-            if(paymentGatewayModeConfigs != null && paymentGatewayModeConfigs.size() > 0){
-                for(PaymentGatewayModeConfig modeConfig : paymentGatewayModeConfigs){
-                    if(modeConfig.getEnabled()!= null && modeConfig.getEnabled() == 1){
-                        if(!TextUtils.isEmpty(modeConfig.getName())
-                                && modeConfig.getName().equalsIgnoreCase("upi_razorpay")){
-                            linearLayoutWalletContainer.addView(rlUPI);
-                            if(!TextUtils.isEmpty(modeConfig.getDisplayNameUpi())) {
-                                tvUPI.setText(modeConfig.getDisplayNameUpi());
-                            }
-                        } else{
-                        linearLayoutWalletContainer.addView(rlOtherModesToPay);
-                        if(!TextUtils.isEmpty(modeConfig.getDisplayName())) {
-                            tvOtherModesToPay.setText(modeConfig.getDisplayName());
-                        }
-                        }
-                    }
-                }
-            }*/
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -755,6 +760,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
             ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_normal);
             ivUPI.setImageResource(R.drawable.ic_radio_button_normal);
+
             if (getPaymentOption() == PaymentOption.PAYTM) {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_selected);
             } else if (getPaymentOption() == PaymentOption.MOBIKWIK) {
@@ -768,7 +774,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_selected);
                 }
             }
-            //updateCartDataView();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -804,8 +809,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     private void apiPurchaseSubscription() {
         if (MyApplication.getInstance().isOnline()) {
-            if(paySlider.isSliderInIntialStage())
-                paySlider.fullAnimate();
             DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -836,7 +839,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                             if(jObj.has(Constants.KEY_RAZORPAY_PAYMENT_OBJECT)){
                                 // razor pay case send data to RazorPay Checkout page
-                                activity.setPurchaseSubscriptionResponse(purchaseSubscriptionResponse);
+                                activity.setPurchaseSubscriptionResponse(purchaseSubscriptionResponse.getOrderId(),
+                                        purchaseSubscriptionResponse.getRazorPaymentObject().getAuthOrderId());
                                 activity.startRazorPayPayment(jObj.getJSONObject(Constants.KEY_RAZORPAY_PAYMENT_OBJECT), isRazorUPI);
                             } else {
                                 DialogPopup.alertPopupWithListener(activity, "", message, getResources().getString(R.string.ok), new View.OnClickListener() {
@@ -887,13 +891,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        if(purchaseType == StarPurchaseType.RENEW.getOrdinal()) {
-                            apiRenewSubscription();
-                        } else if(purchaseType == StarPurchaseType.UPGRADE.getOrdinal()){
-                            apiUpgradeSubscription();
-                        } else{
-                            apiPurchaseSubscription();
-                        }
+                        hitAPI();
                     }
 
                     @Override
@@ -908,10 +906,24 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 });
     }
 
+    private void hitAPI() {
+        if(paySlider.isSliderInIntialStage())
+            paySlider.fullAnimate();
+        if(fromStar) {
+            if(purchaseType == StarPurchaseType.RENEW.getOrdinal()) {
+                apiRenewSubscription();
+            } else if(purchaseType == StarPurchaseType.UPGRADE.getOrdinal()){
+                apiUpgradeSubscription();
+            } else{
+                apiPurchaseSubscription();
+            }
+        } else {
+            initiateRideEndPaymentAPI();
+        }
+    }
+
     private void apiUpgradeSubscription() {
         if (MyApplication.getInstance().isOnline()) {
-            if(paySlider.isSliderInIntialStage())
-                paySlider.fullAnimate();
             DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -984,8 +996,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     private void apiRenewSubscription() {
         if (MyApplication.getInstance().isOnline()) {
-            if(paySlider.isSliderInIntialStage())
-                paySlider.fullAnimate();
             DialogPopup.showLoadingDialog(activity, getResources().getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -1065,6 +1075,207 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         this.selectedPromoCoupon = selectedPromoCoupon;
     }
 
+    TextWatcher selectIciciPaymentTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if(getPaymentOption()==null || getPaymentOption()!= PaymentOption.ICICI_UPI)
+                callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.ICICI_UPI);
+        }
+    };
+
+    public void initiateRideEndPaymentAPI() {
+
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ENGAGEMENT_ID, String.valueOf(engagementId));
+        params.put(Constants.KEY_PREFERRED_PAYMENT_MODE, String.valueOf(getPaymentOption().getOrdinal()));
+
+        new ApiCommon<PaymentResponse>(activity).showLoader(true).execute(params, ApiName.INITIATE_RIDE_END_PAYMENT,
+                new APICommonCallback<PaymentResponse>() {
+                    @Override
+                    public boolean onNotConnected() {
+                        slideInitialDelay();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onException(Exception e) {
+                        slideInitialDelay();
+                        return false;
+
+                    }
+
+                    @Override
+                    public void onSuccess(final PaymentResponse response, String message, int flag) {
+                        try {
+                            if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                                if (getPaymentOption() == PaymentOption.RAZOR_PAY) {
+                                    // razor pay case send data to RazorPay Checkout page
+                                    activity.setPurchaseSubscriptionResponse(engagementId,
+                                            response.getData().getRazorpayData().getAuthOrderId());
+                                    activity.startRazorPayPayment(response.getData().getRazorpayData(), isRazorUPI);
+                                } else {
+                                    PaymentResponse.PaymentData paymentData = response.getData().getPaymentData();
+                                    if(Data.userData != null && Data.autoData != null && Data.autoData.getEndRideData() != null) {
+                                        Data.userData.setJugnooBalance(paymentData.getJugnooBalance());
+//                                        Data.autoData.getEndRideData().paidUsingWallet = paymentData.getJugnooDeducted();
+                                        if (getPaymentOption() == PaymentOption.PAYTM) {
+                                            Data.userData.setPaytmBalance(Data.userData.getPaytmBalance() - paymentData.getPaytmDeducted());
+                                            Data.autoData.getEndRideData().paidUsingPaytm = paymentData.getPaytmDeducted();
+                                        } else if (getPaymentOption() == PaymentOption.MOBIKWIK) {
+                                            Data.userData.setMobikwikBalance(Data.userData.getMobikwikBalance() - paymentData.getMobikwikDeducted());
+                                            Data.autoData.getEndRideData().paidUsingMobikwik = paymentData.getMobikwikDeducted();
+                                        } else if (getPaymentOption() == PaymentOption.FREECHARGE) {
+                                            Data.userData.setFreeChargeBalance(Data.userData.getFreeChargeBalance() - paymentData.getFreechargeDeducted());
+                                            Data.autoData.getEndRideData().paidUsingFreeCharge = paymentData.getFreechargeDeducted();
+                                        }
+                                    }
+                                    rideEndPaymentSuccess(paymentData.getRemaining(), message);
+                                }
+                            } else {
+                                DialogPopup.alertPopup(activity, "", message);
+                                slideInitialDelay();
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            slideInitialDelay();
+                        }
+                    }
+
+                    @Override
+                    public boolean onError(PaymentResponse feedCommonResponse, String message, int flag) {
+                        slideInitialDelay();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onFailure(RetrofitError error) {
+                        slideInitialDelay();
+                        return false;
+                    }
+
+                    @Override
+                    public void onNegativeClick() {
+                        slideInitialDelay();
+
+                    }
+                });
+    }
+
+    private Handler handler;
+    private Handler getHandler(){
+        if(handler == null){
+            handler = new Handler();
+        }
+        return handler;
+    }
+    private Runnable runnable;
+    private Runnable getRunnable(){
+        if(runnable == null){
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    paySlider.setSlideInitial();
+                }
+            };
+        }
+        return runnable;
+    }
+    private void slideInitialDelay(){
+        getHandler().postDelayed(getRunnable(), 200);
+
+    }
+
+    private void rideEndPaymentSuccess(double remaining, String message) {
+        if (Data.autoData != null && Data.autoData.getEndRideData() != null) {
+			Data.autoData.getEndRideData().setShowPaymentOptions(0);
+			Data.autoData.getEndRideData().toPay = remaining;
+		}
+        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				activity.onBackPressed();
+                if(activity instanceof HomeActivity){
+                    ((HomeActivity)activity).updateRideEndPayment();
+                    ((HomeActivity)activity).setUserData();
+                }
+				paySlider.setSlideInitial();
+			}
+		});
+    }
+
+    private Integer getAmount(){
+        if(fromStar){
+            return subscription.getAmount();
+        } else {
+            return (int)fareToPay;
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LocalBroadcastManager.getInstance(activity).unregisterReceiver(receiver);
+    }
+
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, final Intent intent) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        DialogPopup.dismissLoadingDialog();
+                        String response = intent.getStringExtra(Constants.KEY_RESPONSE);
+                        if (!TextUtils.isEmpty(response)) {
+                            razorpayServiceCallback(new JSONObject(response));
+                        } else {
+                            razorpayServiceCallback(null);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
+
+    public void razorpayServiceCallback(JSONObject jsonObject) {
+        try {
+            int flag = jsonObject.getInt(Constants.KEY_FLAG);
+            String message = JSONParser.getServerMessage(jsonObject);
+            if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                double remaining = 0;
+                try {
+                    remaining = jsonObject.getJSONObject(Constants.KEY_DATA).getJSONObject(Constants.KEY_PAYMENT_DATA).optDouble(Constants.KEY_REMAINING, 0);
+                    if(Data.autoData != null && Data.autoData.getEndRideData() != null) {
+                        Data.autoData.getEndRideData().paidUsingRazorpay = jsonObject.getJSONObject(Constants.KEY_DATA).getJSONObject(Constants.KEY_PAYMENT_DATA).optDouble(Constants.KEY_RAZOR_PAY_DEDUCTED, 0);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                rideEndPaymentSuccess(remaining, message);
+            } else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
+                DialogPopup.alertPopup(activity, "", message);
+                paySlider.setSlideInitial();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+            paySlider.setSlideInitial();
+        }
+    }
 
 }

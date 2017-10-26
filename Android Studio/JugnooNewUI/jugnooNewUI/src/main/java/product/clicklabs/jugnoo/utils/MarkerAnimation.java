@@ -42,8 +42,8 @@ public class MarkerAnimation {
     private static final double ANIMATION_TIME = 9000;
     private static final double FAST_ANIMATION_TIME = 2000;
     private static final double MIN_DISTANCE = 80;
-    private static final double MAX_DISTANCE = 4000;
-    private static final double MAX_DISTANCE_FACTOR_GAPI = 2;
+    private static final double MAX_DISTANCE = 1000;
+    private static final double MAX_DISTANCE_FACTOR_GAPI = 1.8;
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
@@ -234,8 +234,16 @@ public class MarkerAnimation {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                straightLineCase();
             }
             return null;
+        }
+
+        private void straightLineCase() {
+            list = new ArrayList<>();
+            list.add(source);
+            list.add(destination);
+            totalDistance = MapUtils.distance(source, destination);
         }
 
         @Override
@@ -245,21 +253,25 @@ public class MarkerAnimation {
                 try {
                         clearPolylines();
                         if (list == null && !TextUtils.isEmpty(result)) {
-                            JSONObject jObj = new JSONObject(result);
-                            totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
-                            if(totalDistance > MapUtils.distance(source, destination) * MAX_DISTANCE_FACTOR_GAPI){
-                                list = new ArrayList<>();
-                                list.add(source);
-                                list.add(destination);
-                                totalDistance = MapUtils.distance(source, destination);
-                            } else {
-                                list = MapUtils.getLatLngListFromPath(result);
+                            try {
+                                JSONObject jObj = new JSONObject(result);
+                                String status = jObj.getString("status");
+                                if (status.equalsIgnoreCase("OK")) {
+									totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
+									if(totalDistance > MapUtils.distance(source, destination) * MAX_DISTANCE_FACTOR_GAPI){
+										straightLineCase();
+									} else {
+										list = MapUtils.getLatLngListFromPath(result);
+									}
+								} else {
+									throw new Exception();
+								}
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                straightLineCase();
                             }
                         } else if(list == null && TextUtils.isEmpty(result)){
-							list = new ArrayList<>();
-							list.add(source);
-							list.add(destination);
-							totalDistance = MapUtils.distance(source, destination);
+                            straightLineCase();
 						}
 
                         ArrayList<Double> duration = new ArrayList<>();
@@ -363,6 +375,9 @@ public class MarkerAnimation {
                         marker.getPosition(), (long) finalDuration);
             }
 
+            if(callbackAnim != null){
+                callbackAnim.onTranslate(finalPosition, finalDuration);
+            }
             animator.start();
             objectAnimator = animator;
         }
@@ -420,6 +435,7 @@ public class MarkerAnimation {
                 latLngs.add(marker.getPosition());
                 latLngs.add(latLng);
                 callbackAnim.onPathFound(latLngs);
+                callbackAnim.onTranslate(latLng, duration);
             }
         } else {
             if(callbackAnim != null){
@@ -431,6 +447,7 @@ public class MarkerAnimation {
 
     public interface CallbackAnim {
 		void onPathFound(List<LatLng> latLngs);
+        void onTranslate(LatLng latLng, double duration);
         void onAnimComplete();
         void onAnimNotDone();
 	}

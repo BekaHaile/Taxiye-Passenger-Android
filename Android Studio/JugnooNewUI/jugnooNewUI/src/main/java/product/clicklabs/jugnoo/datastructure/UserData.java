@@ -229,7 +229,7 @@ public class UserData {
 
 	public double getTotalWalletBalance() {
 		double walletTotal = 0;
-		for(PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas(this)){
+		for(PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas()){
 			if(paymentModeConfigData.getEnabled() == 1) {
 				if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
 						&& paytmEnabled == 1 && paytmBalance > -1) {
