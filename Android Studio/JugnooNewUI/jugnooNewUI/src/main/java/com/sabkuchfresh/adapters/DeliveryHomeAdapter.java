@@ -36,8 +36,6 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1538,7 +1536,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn(), false), currentSystemTime);
         }
         long minutes = ((timeDiff1 / (1000L* 60L)));
-        if (minutes <= 0) {
+        if (DateOperations.getTimeDifferenceInHHmmss(vendor.getCloseIn(), vendor.getOpensAt()) >= 0
+                && minutes <= 0) {
             vendor.setIsClosed(1);
         }
         return minutes;
@@ -1562,58 +1561,5 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textView.setVisibility(visibilityCloseTime);
         }
         return visibilityCloseTime;
-    }
-
-    private void sortVendorsAccClosedState(){
-        if(dataToDisplay != null && dataToDisplay.size() > 0){
-            Collections.sort(dataToDisplay, new Comparator<Object>() {
-                @Override
-                public int compare(Object lhsO, Object rhsO) {
-                    int point = 0;
-                    if(lhsO instanceof MenusResponse.Vendor && rhsO instanceof MenusResponse.Vendor) {
-                        MenusResponse.Vendor lhs = (MenusResponse.Vendor) lhsO;
-                        MenusResponse.Vendor rhs = (MenusResponse.Vendor) rhsO;
-                        if (lhs.getIsClosed() == 0 && rhs.getIsClosed() != 0) {
-                            point = -(rhs.getIsClosed() - lhs.getIsClosed());
-                        } else if (lhs.getIsClosed() != 0 && rhs.getIsClosed() == 0) {
-                            point = -(rhs.getIsClosed() - lhs.getIsClosed());
-                        } else if (lhs.getIsAvailable() == 0 && rhs.getIsAvailable() != 0) {
-                            point = rhs.getIsAvailable() - lhs.getIsAvailable();
-                        } else if (lhs.getIsAvailable() != 0 && rhs.getIsAvailable() == 0) {
-                            point = rhs.getIsAvailable() - lhs.getIsAvailable();
-                        }
-                    }
-                    return point;
-                }
-            });
-            Log.i(TAG, "Doing sorting");
-        }
-    }
-
-    private boolean updateAllVendors(){
-        boolean sortingNeeded = false, foundAClosed = false;
-        if(dataToDisplay != null && dataToDisplay.size() > 0){
-            for(Object obj : dataToDisplay){
-                if(obj instanceof MenusResponse.Vendor){
-                    MenusResponse.Vendor vendor = (MenusResponse.Vendor) obj;
-                    boolean isClosed = vendor.isClosed();
-                    if(!isClosed){
-                        updateVendorClosedState(vendor);
-                    }
-                    if(vendor.isClosed()){
-                        foundAClosed = true;
-                    }
-                    if(!isClosed && vendor.isClosed()){
-                        sortingNeeded = true;
-                    } else if(foundAClosed && !vendor.isClosed()){
-                        sortingNeeded = true;
-                    }
-                }
-            }
-        }
-        if(sortingNeeded){
-            sortVendorsAccClosedState();
-        }
-        return sortingNeeded;
     }
 }
