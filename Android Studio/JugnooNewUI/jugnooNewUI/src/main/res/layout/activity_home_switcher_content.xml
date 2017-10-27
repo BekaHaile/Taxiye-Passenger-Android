@@ -51,15 +51,24 @@
         app:font="@string/avenir_book"
         />
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvOfferings"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <ScrollView
         android:layout_below="@+id/tvHeading"
-        android:overScrollMode="never"
-        android:splitMotionEvents="false"
-        />
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvOfferings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="15dp"
+            android:overScrollMode="never"
+            android:splitMotionEvents="false"
+            />
+
+    </ScrollView>
+
 
 
 </RelativeLayout>

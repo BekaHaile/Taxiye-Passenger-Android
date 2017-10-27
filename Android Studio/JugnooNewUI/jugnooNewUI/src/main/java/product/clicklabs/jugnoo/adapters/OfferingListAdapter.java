@@ -3,13 +3,14 @@ package product.clicklabs.jugnoo.adapters;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -36,7 +37,8 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 	private ArrayList<Offering> offerings;
 	private RecyclerView recyclerView;
 	private Callback callback;
-	private int dp15, dp2, dp35, dp45, dp10;
+	private int minHeightOfEachCell;
+	private int maxHeightGraphLayout;
 
 	public OfferingListAdapter(Context context, ArrayList<Offering> offerings, Callback callback, RecyclerView recyclerView) {
 		this.context = context;
@@ -44,11 +46,8 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 		this.offerings = offerings;
 		this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.callback = callback;
-		dp15 = context.getResources().getDimensionPixelSize(R.dimen.dp_15);
-		dp2 = context.getResources().getDimensionPixelSize(R.dimen.dp_2);
-		dp35 = context.getResources().getDimensionPixelSize(R.dimen.dp_35);
-		dp45 = context.getResources().getDimensionPixelSize(R.dimen.dp_45);
-		dp10 = context.getResources().getDimensionPixelSize(R.dimen.dp_10);
+		minHeightOfEachCell = context.getResources().getDimensionPixelSize(R.dimen.dp_100);
+		maxHeightGraphLayout = context.getResources().getDimensionPixelSize(R.dimen.dp_150);
 	}
 
 	@Override
@@ -59,6 +58,13 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View convertView = layoutInflater.inflate(R.layout.list_item_home_switcher, parent, false);
+		RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) convertView.getLayoutParams();
+		int height = parent.getMeasuredHeight() / offerings.size();
+		if(height< minHeightOfEachCell){
+			height = minHeightOfEachCell;
+		}
+		layoutParams.height = height;
+		convertView.setLayoutParams(layoutParams);
 		return new ViewHolder(convertView, this);
 	}
 
@@ -69,27 +75,17 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 		holder.ivOffering.setImageResource(offering.getIconRes());
 		holder.tvOfferingName.setText(offering.getName());
 		holder.tvOfferingDesc.setText(offering.getDesc());
-		LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.rlRoot.getLayoutParams();
-		if(position == 0){
-			params.setMargins(params.leftMargin, dp15, params.rightMargin, dp2);
-		} else if(position == getItemCount()-1){
-			params.setMargins(params.leftMargin, dp2, params.rightMargin, dp15);
-		} else {
-			params.setMargins(params.leftMargin, dp2, params.rightMargin, dp2);
+		holder.ivGraphImage.setImageResource(offering.getGraphIcon());
+		holder.bgLayout.setBackgroundDrawable(ContextCompat.getDrawable(context,offering.getItemBackground()));
+		if(offering.getClientId().equals(Config.getFeedClientId())){
+			holder.viewGraphMargin.setVisibility(View.GONE);
+		}else
+		{
+			holder.viewGraphMargin.setVisibility(View.VISIBLE);
 		}
-		holder.rlRoot.setLayoutParams(params);
 
-		RelativeLayout.LayoutParams paramsIV = (RelativeLayout.LayoutParams) holder.ivOffering.getLayoutParams();
-		if(offering.getClientId().equalsIgnoreCase(Config.getAutosClientId())){
-			paramsIV.width = dp45;
-			paramsIV.height = dp45;
-			paramsIV.setMargins(dp10, paramsIV.topMargin, dp10, paramsIV.bottomMargin);
-		} else {
-			paramsIV.width = dp35;
-			paramsIV.height = dp35;
-			paramsIV.setMargins(dp15, paramsIV.topMargin, dp15, paramsIV.bottomMargin);
-		}
-		holder.ivOffering.setLayoutParams(paramsIV);
+
+
 	}
 
 	@Override
@@ -110,23 +106,39 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 		}
 	}
 
-	static class ViewHolder extends RecyclerView.ViewHolder {
-		public RelativeLayout rlRoot;
-		public ImageView ivOffering;
+	 class ViewHolder extends RecyclerView.ViewHolder {
+		public CardView rlRoot;
+		public ImageView ivOffering,ivGraphImage;
 		public TextView tvOfferingName, tvOfferingDesc;
-
+		private LinearLayout layoutGraph;
+		private View viewGraphMargin;
+		 private LinearLayout bgLayout;
 		public ViewHolder(final View itemView, final ItemListener itemListener) {
 			super(itemView);
-			rlRoot = (RelativeLayout) itemView.findViewById(R.id.rlRoot);
+			rlRoot = (CardView) itemView.findViewById(R.id.rlRoot);
+			bgLayout = (LinearLayout) itemView.findViewById(R.id.bgHomeSwitcher);
 			ivOffering = (ImageView) itemView.findViewById(R.id.ivOffering);
+			ivGraphImage = (ImageView) itemView.findViewById(R.id.iv_graph_image);
 			tvOfferingName = (TextView) itemView.findViewById(R.id.tvOfferingName); tvOfferingName.setTypeface(tvOfferingName.getTypeface(), Typeface.BOLD);
 			tvOfferingDesc = (TextView) itemView.findViewById(R.id.tvOfferingDesc);
+			layoutGraph = (LinearLayout) itemView.findViewById(R.id.layout_graph);
+			viewGraphMargin =  itemView.findViewById(R.id.iv_graph_margin);
 			rlRoot.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					itemListener.onClickItem(rlRoot, itemView);
 				}
 			});
+			RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) itemView.getLayoutParams();
+			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layoutGraph.getLayoutParams();
+
+			if(layoutParams.height>maxHeightGraphLayout){
+				params.height = maxHeightGraphLayout;
+			}else{
+				params.height = LinearLayout.LayoutParams.MATCH_PARENT;
+			}
+			layoutGraph.setLayoutParams(params);
+
 		}
 	}
 
@@ -136,13 +148,19 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 
 	public static class Offering {
 		private String clientId, name, desc;
-		private int iconRes;
+		private int iconRes, graphIcon,itemBackground;
 
-		public Offering(String clientId, String name, String desc, int iconRes) {
+		public Offering(String clientId, String name, String desc, int iconRes, int graphIcon, int itemBackground) {
 			this.clientId = clientId;
 			this.name = name;
 			this.desc = desc;
 			this.iconRes = iconRes;
+			this.graphIcon= graphIcon;
+			this.itemBackground= itemBackground;
+		}
+
+		public int getItemBackground() {
+			return itemBackground;
 		}
 
 		public String getClientId() {
@@ -160,5 +178,11 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 		public String getDesc() {
 			return desc;
 		}
+
+		public int getGraphIcon() {
+			return graphIcon;
+		}
 	}
+
+
 }

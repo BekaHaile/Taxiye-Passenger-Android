@@ -38,6 +38,7 @@
 
     <color name="white_less_dark">#F1F1F1</color>
     <color name="white_dark1">#EFEFEF</color>
+    <color name="white_80">#D9ffffff</color>
 
 
     <color name="black">#000000</color>
@@ -292,6 +293,19 @@
 
     <color name="text_color_link">#4990e2</color>
     <color name="star_color_yellow">#fbd95c</color>
+
+    <color name="home_switcher_feed">#59cacc</color>
+    <color name="home_switcher_feed_pressed">#D959cacc</color>
+    <color name="home_switcher_autos">#454552</color>
+    <color name="home_switcher_autos_pressed">#D9454552</color>
+    <color name="home_switcher_grocery">#9cc450</color>
+    <color name="home_switcher_grocery_pressed">#D99cc450</color>
+    <color name="home_switcher_menus">#f67754</color>
+    <color name="home_switcher_menus_pressed">#D9f67754</color>
+    <color name="home_switcher_delivery">#6a89c6</color>
+    <color name="home_switcher_delivery_pressed">#D96a89c6</color>
+    <color name="home_switcher_meals">#ff9b4d</color>
+    <color name="home_switcher_meals_pressed">#D9ff9b4d</color>
 
 
 </resources>
