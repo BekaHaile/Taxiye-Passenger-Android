@@ -52,6 +52,7 @@
         />
 
     <ScrollView
+        android:id="@+id/content_scroll"
         android:layout_below="@+id/tvHeading"
         android:layout_width="match_parent"
         android:fillViewport="true"
@@ -62,13 +63,20 @@
             android:layout_height="match_parent"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:paddingTop="15dp"
+            android:paddingTop="@dimen/top_padding_scroll_content_home_switcher"
             android:overScrollMode="never"
             android:splitMotionEvents="false"
             />
 
     </ScrollView>
 
+    <View
+        android:id="@+id/view_measure_height"
+        android:layout_below="@+id/tvHeading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </View>
 
 
 </RelativeLayout>

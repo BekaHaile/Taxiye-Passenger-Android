@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +40,9 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 	private Callback callback;
 	private int minHeightOfEachCell;
 	private int maxHeightGraphLayout;
+	private int nonScrollHeightAvailable;
 
-	public OfferingListAdapter(Context context, ArrayList<Offering> offerings, Callback callback, RecyclerView recyclerView) {
+	public OfferingListAdapter(Context context, ArrayList<Offering> offerings, Callback callback, RecyclerView recyclerView, int measuredHeight) {
 		this.context = context;
 		this.recyclerView = recyclerView;
 		this.offerings = offerings;
@@ -48,7 +50,14 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 		this.callback = callback;
 		minHeightOfEachCell = context.getResources().getDimensionPixelSize(R.dimen.dp_100);
 		maxHeightGraphLayout = context.getResources().getDimensionPixelSize(R.dimen.dp_150);
+		int marginHeight = 0;
+		if(offerings!=null){
+			 marginHeight = offerings.size() * context.getResources().getDimensionPixelSize(R.dimen.dp_10);
+		}
+		this.nonScrollHeightAvailable= measuredHeight-marginHeight;
 	}
+
+
 
 	@Override
 	public int getItemCount() {
@@ -59,7 +68,7 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View convertView = layoutInflater.inflate(R.layout.list_item_home_switcher, parent, false);
 		RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) convertView.getLayoutParams();
-		int height = parent.getMeasuredHeight() / offerings.size();
+		int height = nonScrollHeightAvailable / offerings.size();
 		if(height< minHeightOfEachCell){
 			height = minHeightOfEachCell;
 		}
@@ -70,19 +79,20 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 
 
 	@Override
-	public void onBindViewHolder(ViewHolder holder, int position) {
-		Offering offering = offerings.get(position);
+	public void onBindViewHolder(final ViewHolder holder, int position) {
+		final Offering offering = offerings.get(position);
 		holder.ivOffering.setImageResource(offering.getIconRes());
 		holder.tvOfferingName.setText(offering.getName());
 		holder.tvOfferingDesc.setText(offering.getDesc());
-		holder.ivGraphImage.setImageResource(offering.getGraphIcon());
-		holder.bgLayout.setBackgroundDrawable(ContextCompat.getDrawable(context,offering.getItemBackground()));
 		if(offering.getClientId().equals(Config.getFeedClientId())){
 			holder.viewGraphMargin.setVisibility(View.GONE);
 		}else
 		{
 			holder.viewGraphMargin.setVisibility(View.VISIBLE);
 		}
+		holder.ivGraphImage.setImageResource(offering.getGraphIcon());
+		holder.bgLayout.setBackgroundDrawable(ContextCompat.getDrawable(context,offering.getItemBackground()));
+
 
 
 
@@ -121,7 +131,7 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 			ivGraphImage = (ImageView) itemView.findViewById(R.id.iv_graph_image);
 			tvOfferingName = (TextView) itemView.findViewById(R.id.tvOfferingName); tvOfferingName.setTypeface(tvOfferingName.getTypeface(), Typeface.BOLD);
 			tvOfferingDesc = (TextView) itemView.findViewById(R.id.tvOfferingDesc);
-			layoutGraph = (LinearLayout) itemView.findViewById(R.id.layout_graph);
+			layoutGraph = (LinearLayout) itemView.findViewById(R.id.iv_graph_layout);
 			viewGraphMargin =  itemView.findViewById(R.id.iv_graph_margin);
 			rlRoot.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -138,6 +148,11 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 				params.height = LinearLayout.LayoutParams.MATCH_PARENT;
 			}
 			layoutGraph.setLayoutParams(params);
+
+
+
+
+
 
 		}
 	}

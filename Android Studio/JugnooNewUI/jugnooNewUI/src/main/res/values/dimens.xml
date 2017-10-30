@@ -787,7 +787,7 @@
         100dp
     </dimen>
     <dimen name="dp_150">
-        100dp
+        150dp
     </dimen>
     <dimen name="dp_60">
         60dp
@@ -871,5 +871,6 @@
     <dimen name="dp_230">
         230dp
     </dimen>
+    <dimen name="top_padding_scroll_content_home_switcher">15dp</dimen>
     <!--Breakdown = height_choose_cateogry + 2 * height_divider_choose_category-->
 </resources>

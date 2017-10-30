@@ -11,8 +11,10 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -35,18 +37,20 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
     DrawerLayout drawerLayout;
 	LatLng latLng;
 	MenuBar menuBar;
-
+	private View viewMeasureHeight;
+	private ScrollView scroll;
+	private int scrollPaddingTop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_switcher);
-
+		scrollPaddingTop = getResources().getDimensionPixelSize(R.dimen.top_padding_scroll_content_home_switcher);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 		new ASSL(this, drawerLayout, 1134, 720, false);
 		ImageView ivMenu = (ImageView) findViewById(R.id.ivMenu);
 		TextView tvTitle = (TextView) findViewById(R.id.tvTitle); tvTitle.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
 		TextView tvHeading = (TextView) findViewById(R.id.tvHeading);
-		RecyclerView rvOfferings = (RecyclerView) findViewById(R.id.rvOfferings);
+		final RecyclerView rvOfferings = (RecyclerView) findViewById(R.id.rvOfferings);
 		rvOfferings.setNestedScrollingEnabled(false);
 		rvOfferings.setLayoutManager(new LinearLayoutManager(this));
 
@@ -55,35 +59,19 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 		ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		ssb.setSpan(new RelativeSizeSpan(1.2f), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvHeading.append(ssb);
+		scroll = (ScrollView) findViewById(R.id.content_scroll);
+		viewMeasureHeight = findViewById(R.id.view_measure_height);
+		Log.i(TAG, "onCreate:Scroll "+ scroll.getMeasuredHeight() + "b: "  + scroll.getLayoutParams().height + "c: " );
+		scroll.post(new Runnable() {
+			@Override
+			public void run() {
+				setAdapter(rvOfferings,scroll.getMeasuredHeight()-(scrollPaddingTop));
 
+			}
+		});
 		menuBar = new MenuBar(this, drawerLayout);
 		latLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.loginLatitude), getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.loginLongitude));
-		ArrayList<OfferingListAdapter.Offering> offerings = new ArrayList<>();
-        try {
-			offerings.add(new OfferingListAdapter.Offering(Config.getAutosClientId(), getString(R.string.rides), "Affordable auto rickshaws online", R.drawable.ic_rides_switcher,R.drawable.ic_graph_autos,R.drawable.bg_home_switcher_autos));
-			if ((Data.userData.getMealsEnabled() == 1)) {
-				offerings.add(new OfferingListAdapter.Offering(Config.getMealsClientId(), getString(R.string.meals), "Home styled breakfast, lunch, snacks & dinner", R.drawable.ic_meals_switcher,R.drawable.ic_graph_meals,R.drawable.bg_home_switcher_meals));
-			}
-			if ((Data.userData.getFreshEnabled() == 1)) {
-				offerings.add(new OfferingListAdapter.Offering(Config.getFreshClientId(), getString(R.string.fatafat), "Order fruits, vegetables & groceries online", R.drawable.ic_fresh_switcher,R.drawable.ic_grocery_graph,R.drawable.bg_home_switcher_grocery));
-            }
-            if ((Data.userData.getMenusEnabled() == 1)) {
-				offerings.add(new OfferingListAdapter.Offering(Config.getMenusClientId(), getString(R.string.menus), "Online food delivering from restaurants", R.drawable.ic_menus_switcher,R.drawable.ic_graph_menus,R.drawable.bg_home_switcher_menus));
-            }
-            if ((Data.userData.getFeedEnabled() == 1)) {
-				offerings.add(new OfferingListAdapter.Offering(Config.getFeedClientId(), Data.getFeedName(this), "Get anything delivered from anywhere", R.drawable.ic_anywhere_switcher,R.drawable.ic_graph_anywhere,R.drawable.bg_home_switcher_feed));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        OfferingListAdapter offeringListAdapter = new OfferingListAdapter(this, offerings, new OfferingListAdapter.Callback() {
-            @Override
-            public LatLng getLatLng() {
-				return getCurrentPlaceLatLng();
-            }
-        }, rvOfferings);
-        rvOfferings.setAdapter(offeringListAdapter);
 
         ivMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +105,38 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 
 		GAUtils.trackScreenView(JUGNOO + HOME + PAGE);
 		fetchWalletBalance();
-    }
+
+
+	}
+
+	private void setAdapter(RecyclerView rvOfferings, int measuredHeight) {
+		ArrayList<OfferingListAdapter.Offering> offerings = new ArrayList<>();
+		try {
+            offerings.add(new OfferingListAdapter.Offering(Config.getAutosClientId(), getString(R.string.rides), "Affordable auto rickshaws online", R.drawable.ic_rides_switcher,R.drawable.ic_graph_autos,R.drawable.bg_home_switcher_autos));
+            if ((Data.userData.getMealsEnabled() == 1)) {
+                offerings.add(new OfferingListAdapter.Offering(Config.getMealsClientId(), getString(R.string.meals), "Home styled breakfast, lunch, snacks & dinner", R.drawable.ic_meals_switcher,R.drawable.ic_graph_meals,R.drawable.bg_home_switcher_meals));
+            }
+            if ((Data.userData.getFreshEnabled() == 1)) {
+                offerings.add(new OfferingListAdapter.Offering(Config.getFreshClientId(), getString(R.string.fatafat), "Order fruits, vegetables & groceries online", R.drawable.ic_fresh_switcher,R.drawable.ic_grocery_graph,R.drawable.bg_home_switcher_grocery));
+            }
+            if ((Data.userData.getMenusEnabled() == 1)) {
+                offerings.add(new OfferingListAdapter.Offering(Config.getMenusClientId(), getString(R.string.menus), "Online food delivering from restaurants", R.drawable.ic_menus_switcher,R.drawable.ic_graph_menus,R.drawable.bg_home_switcher_menus));
+            }
+            if ((Data.userData.getFeedEnabled() == 1)) {
+                offerings.add(new OfferingListAdapter.Offering(Config.getFeedClientId(), Data.getFeedName(this), "Get anything delivered from anywhere", R.drawable.ic_anywhere_switcher,R.drawable.ic_graph_anywhere,R.drawable.bg_home_switcher_feed));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+		OfferingListAdapter offeringListAdapter = new OfferingListAdapter(this, offerings, new OfferingListAdapter.Callback() {
+            @Override
+            public LatLng getLatLng() {
+                return getCurrentPlaceLatLng();
+            }
+        }, rvOfferings,measuredHeight);
+		rvOfferings.setAdapter(offeringListAdapter);
+	}
 
 	@Override
 	protected void onResume() {
