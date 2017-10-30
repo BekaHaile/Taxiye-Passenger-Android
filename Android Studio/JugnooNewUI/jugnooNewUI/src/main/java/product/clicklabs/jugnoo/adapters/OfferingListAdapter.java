@@ -52,7 +52,7 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 		maxHeightGraphLayout = context.getResources().getDimensionPixelSize(R.dimen.dp_150);
 		int marginHeight = 0;
 		if(offerings!=null){
-			 marginHeight = offerings.size() * context.getResources().getDimensionPixelSize(R.dimen.dp_10);
+			 marginHeight = offerings.size() * context.getResources().getDimensionPixelSize(R.dimen.margin_bottom_home_switcher_item);
 		}
 		this.nonScrollHeightAvailable= measuredHeight-marginHeight;
 	}

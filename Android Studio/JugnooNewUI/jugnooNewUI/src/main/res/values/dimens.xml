@@ -872,5 +872,6 @@
         230dp
     </dimen>
     <dimen name="top_padding_scroll_content_home_switcher">15dp</dimen>
+    <dimen name="margin_bottom_home_switcher_item">10dp</dimen>
     <!--Breakdown = height_choose_cateogry + 2 * height_divider_choose_category-->
 </resources>
