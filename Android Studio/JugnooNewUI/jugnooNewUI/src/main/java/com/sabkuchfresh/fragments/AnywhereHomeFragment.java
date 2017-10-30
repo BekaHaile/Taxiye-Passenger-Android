@@ -441,7 +441,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     public void onSuccess(final OrderAnywhereResponse orderAnywhereResponse, String message, int flag) {
 
                         try {
-                            resetUI();
+
                             String deliveryTime = finalDateTime1 == null ? "ASAP" : DateOperations.convertDateViaFormat(finalDateTime1);
                             String pickupAddress = pickUpAddress != null ? pickUpAddress.getAddress() : "Anywhere";
                             String fuguMessage = "I need:\n" +
@@ -455,7 +455,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                     "\n" +
                                     "When:\n" +
                                     deliveryTime;
-
+                            resetUI();
                             if (orderAnywhereResponse != null && !TextUtils.isEmpty(orderAnywhereResponse.getFuguChannelId())) {
                                 FuguConfig.getInstance().openChatByTransactionId(orderAnywhereResponse.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
                                         orderAnywhereResponse.getFuguChannelName(), orderAnywhereResponse.getFuguTags(), fuguMessage);

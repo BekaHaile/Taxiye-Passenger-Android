@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,8 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 	private int minHeightOfEachCell;
 	private int maxHeightGraphLayout;
 	private int nonScrollHeightAvailable;
+	private static final float FONT_UPPER_LIMIT = 16.0f;
+	private static  final float FONT_LOWER_LIMIT = 14.0f;
 
 	public OfferingListAdapter(Context context, ArrayList<Offering> offerings, Callback callback, RecyclerView recyclerView, int measuredHeight) {
 		this.context = context;
@@ -141,12 +144,17 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 			});
 			RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) itemView.getLayoutParams();
 			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layoutGraph.getLayoutParams();
-
+			float fontSize;
 			if(layoutParams.height>maxHeightGraphLayout){
 				params.height = maxHeightGraphLayout;
+				fontSize= FONT_UPPER_LIMIT;
 			}else{
 				params.height = LinearLayout.LayoutParams.MATCH_PARENT;
+				fontSize=FONT_UPPER_LIMIT * (layoutParams.height * 1.0f)/maxHeightGraphLayout;
+				if(fontSize<FONT_LOWER_LIMIT)fontSize =FONT_LOWER_LIMIT;
 			}
+			tvOfferingName.setTextSize(TypedValue.COMPLEX_UNIT_SP,fontSize);
+			tvOfferingDesc.setTextSize(TypedValue.COMPLEX_UNIT_SP,fontSize-0.5f);
 			layoutGraph.setLayoutParams(params);
 
 
