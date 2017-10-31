@@ -47,7 +47,8 @@
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/sp_15"
-                app:font="@string/maven" />
+                app:font="@string/avenir_book"
+                />
 
             <TextView
                 android:id="@+id/tvOfferingDesc"
@@ -56,7 +57,8 @@
                 android:text="Rides"
                 android:textColor="@color/white_80"
                 android:textSize="@dimen/sp_14"
-                app:font="@string/avenir_book" />
+                app:font="@string/maven"
+                 />
         </LinearLayout>
 
 

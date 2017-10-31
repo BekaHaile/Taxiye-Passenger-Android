@@ -49,6 +49,7 @@
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_20"
         app:font="@string/avenir_book"
+        android:lineSpacingExtra="-1.5dp"
         />
 
     <ScrollView

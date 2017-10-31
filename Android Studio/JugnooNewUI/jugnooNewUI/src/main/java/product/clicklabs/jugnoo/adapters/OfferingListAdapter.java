@@ -71,7 +71,12 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View convertView = layoutInflater.inflate(R.layout.list_item_home_switcher, parent, false);
 		RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) convertView.getLayoutParams();
-		int height = nonScrollHeightAvailable / offerings.size();
+		int divideRatio = offerings.size();
+		if(offerings.size()<3){
+			divideRatio = 3;
+		}
+
+		int height = nonScrollHeightAvailable / divideRatio;
 		if(height< minHeightOfEachCell){
 			height = minHeightOfEachCell;
 		}
@@ -154,7 +159,7 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 				if(fontSize<FONT_LOWER_LIMIT)fontSize =FONT_LOWER_LIMIT;
 			}
 			tvOfferingName.setTextSize(TypedValue.COMPLEX_UNIT_SP,fontSize);
-			tvOfferingDesc.setTextSize(TypedValue.COMPLEX_UNIT_SP,fontSize-0.5f);
+			tvOfferingDesc.setTextSize(TypedValue.COMPLEX_UNIT_SP,fontSize);
 			layoutGraph.setLayoutParams(params);
 
 

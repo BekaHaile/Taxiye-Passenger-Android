@@ -107,7 +107,7 @@ public class AppSwitcher {
 					if (Data.userData.getMealsEnabled() == 0
 							&& Data.userData.getFreshEnabled() == 0
 							&& Data.userData.getMenusEnabled() == 0
-							&& Data.userData.getFeedEnabled() == 0) {
+							&& Data.userData.getFeedEnabled() == 0 && Data.userData.getDeliveryCustomerEnabled()==0) {
 						noOfferingEnabledForHomeScreen = true;
 					}
 				}
