@@ -40,6 +40,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 	private View viewMeasureHeight;
 	private ScrollView scroll;
 	private int scrollPaddingTop;
+	private TextView tvGreeting;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +51,14 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 		ImageView ivMenu = (ImageView) findViewById(R.id.ivMenu);
 		TextView tvTitle = (TextView) findViewById(R.id.tvTitle); tvTitle.setTypeface(tvTitle.getTypeface(), Typeface.BOLD);
 		TextView tvHeading = (TextView) findViewById(R.id.tvHeading);
+		TextView tvGreeting = (TextView) findViewById(R.id.tvGreeting);
 		final RecyclerView rvOfferings = (RecyclerView) findViewById(R.id.rvOfferings);
 		rvOfferings.setNestedScrollingEnabled(false);
 		rvOfferings.setLayoutManager(new LinearLayoutManager(this));
-
-		tvHeading.setText("Hello, "+Data.userData.userName+"!\n");
+		tvGreeting.setText("Hello, "+Data.userData.userName+"!");
 		SpannableStringBuilder ssb = new SpannableStringBuilder("What would you like to\nget done today?");
-		ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		ssb.setSpan(new RelativeSizeSpan(1.2f), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-		tvHeading.append(ssb);
+//		ssb.setSpan(new StyleSpan(Typeface.BOLD), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tvHeading.setText(ssb);
 		scroll = (ScrollView) findViewById(R.id.content_scroll);
 		viewMeasureHeight = findViewById(R.id.view_measure_height);
 		Log.i(TAG, "onCreate:Scroll "+ scroll.getMeasuredHeight() + "b: "  + scroll.getLayoutParams().height + "c: " );

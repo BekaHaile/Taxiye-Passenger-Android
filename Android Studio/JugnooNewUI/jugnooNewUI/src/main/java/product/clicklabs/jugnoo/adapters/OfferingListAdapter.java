@@ -137,7 +137,7 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 			bgLayout = (LinearLayout) itemView.findViewById(R.id.bgHomeSwitcher);
 			ivOffering = (ImageView) itemView.findViewById(R.id.ivOffering);
 			ivGraphImage = (ImageView) itemView.findViewById(R.id.iv_graph_image);
-			tvOfferingName = (TextView) itemView.findViewById(R.id.tvOfferingName); tvOfferingName.setTypeface(tvOfferingName.getTypeface(), Typeface.BOLD);
+			tvOfferingName = (TextView) itemView.findViewById(R.id.tvOfferingName);
 			tvOfferingDesc = (TextView) itemView.findViewById(R.id.tvOfferingDesc);
 			layoutGraph = (LinearLayout) itemView.findViewById(R.id.iv_graph_layout);
 			viewGraphMargin =  itemView.findViewById(R.id.iv_graph_margin);

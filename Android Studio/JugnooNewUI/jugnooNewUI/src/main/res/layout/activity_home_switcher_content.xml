@@ -36,20 +36,35 @@
 
     </RelativeLayout>
 
+
     <TextView
-        android:id="@+id/tvHeading"
+        android:id="@+id/tvGreeting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/topBar"
         android:background="@color/white"
-        android:paddingBottom="@dimen/dp_10"
+        android:paddingBottom="1.5dp"
         android:paddingLeft="@dimen/dp_20"
         android:paddingRight="@dimen/dp_20"
         android:paddingTop="@dimen/dp_5"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_20"
         app:font="@string/avenir_book"
-        android:lineSpacingExtra="-1.5dp"
+        />
+
+    <TextView
+        android:id="@+id/tvHeading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvGreeting"
+        android:background="@color/white"
+        android:paddingBottom="@dimen/dp_10"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/sp_24"
+        app:font="@string/montserrat_m"
+        android:lineSpacingExtra="-7sp"
         />
 
     <ScrollView
