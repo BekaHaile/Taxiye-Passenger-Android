@@ -51,7 +51,7 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 		this.offerings = offerings;
 		this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.callback = callback;
-		minHeightOfEachCell = context.getResources().getDimensionPixelSize(R.dimen.dp_100);
+		minHeightOfEachCell = context.getResources().getDimensionPixelSize(R.dimen.dp_80);
 		maxHeightGraphLayout = context.getResources().getDimensionPixelSize(R.dimen.dp_150);
 		int marginHeight = 0;
 		if(offerings!=null){
