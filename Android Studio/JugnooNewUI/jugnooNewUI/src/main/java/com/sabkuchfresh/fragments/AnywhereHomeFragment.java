@@ -458,7 +458,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                             resetUI();
                             if (orderAnywhereResponse != null && !TextUtils.isEmpty(orderAnywhereResponse.getFuguChannelId())) {
                                 FuguConfig.getInstance().openChatByTransactionId(orderAnywhereResponse.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-                                        orderAnywhereResponse.getFuguChannelName(), orderAnywhereResponse.getFuguTags(), fuguMessage);
+                                        orderAnywhereResponse.getFuguChannelName(), orderAnywhereResponse.getFuguTags(), new String[]{fuguMessage});
                             } else {
                                 FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
                             }
