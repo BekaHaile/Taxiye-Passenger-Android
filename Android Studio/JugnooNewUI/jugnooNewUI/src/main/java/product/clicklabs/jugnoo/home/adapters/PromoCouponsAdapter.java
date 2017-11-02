@@ -19,6 +19,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -134,7 +135,9 @@ public class PromoCouponsAdapter extends BaseAdapter {
 					PromoCoupon promoCoupon = offerList.get(position);
 					if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)){
 						callback.setSelectedCoupon(-1);
+
 					} else {
+
 						callback.setSelectedCoupon(position);
 						callback.onCouponSelected();
 					}

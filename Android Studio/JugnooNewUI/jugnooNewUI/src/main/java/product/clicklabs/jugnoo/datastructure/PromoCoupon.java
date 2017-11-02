@@ -52,4 +52,6 @@ public abstract class PromoCoupon implements Serializable {
 	public void setRepeatedCount(int repeatedCount) {
 		this.repeatedCount = repeatedCount;
 	}
+
+
 }

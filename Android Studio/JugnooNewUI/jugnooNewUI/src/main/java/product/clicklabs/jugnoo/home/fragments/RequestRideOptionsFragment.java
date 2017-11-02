@@ -547,7 +547,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         }
     }
 
-    private void updateCouponsFragSingle(){
+    public void updateCouponsFragSingle(){
         try {
             Fragment frag = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + activity.getSlidingBottomPanel().getViewPager().getId() + ":" + 2);
             if (frag != null && frag instanceof SlidingBottomOffersFragment) {

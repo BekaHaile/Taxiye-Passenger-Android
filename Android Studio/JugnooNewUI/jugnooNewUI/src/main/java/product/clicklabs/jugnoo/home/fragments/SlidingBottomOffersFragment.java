@@ -175,10 +175,11 @@ public class SlidingBottomOffersFragment extends Fragment implements GACategory,
                     try {
                         int position = (int) v.getTag();
                         PromoCoupon promoCoupon = offerList.get(position);
-                        if (activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().getId() == promoCoupon.getId()) {
-							activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+                        RequestRideOptionsFragment requestRideOptionsFragment=  activity.getSlidingBottomPanel().getRequestRideOptionsFragment();
+                        if (requestRideOptionsFragment.getSelectedCoupon().getId() == promoCoupon.getId()) {
+                            requestRideOptionsFragment.setSelectedCoupon(-1);
 						} else {
-							activity.getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);
+                            requestRideOptionsFragment.setSelectedCoupon(position);
 						}
                         notifyDataSetChanged();
                     } catch (Exception e) {

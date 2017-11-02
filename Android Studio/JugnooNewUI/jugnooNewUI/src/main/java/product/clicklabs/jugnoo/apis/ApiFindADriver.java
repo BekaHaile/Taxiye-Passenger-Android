@@ -226,10 +226,13 @@ public class ApiFindADriver {
 			// for Auto promo and coupons
 			try {
 				if(Data.autoData != null && Data.autoData.getPromoCoupons() == null){
-                    Data.autoData.setPromoCoupons(new ArrayList<PromoCoupon>());
+
+					Data.autoData.setPromoCoupons(new ArrayList<PromoCoupon>());
                 } else{
                     Data.autoData.getPromoCoupons().clear();
                 }
+
+
 				if(findADriverResponse.getAutosPromotions() != null) {
                     Data.autoData.getPromoCoupons().addAll(findADriverResponse.getAutosPromotions());
                 }

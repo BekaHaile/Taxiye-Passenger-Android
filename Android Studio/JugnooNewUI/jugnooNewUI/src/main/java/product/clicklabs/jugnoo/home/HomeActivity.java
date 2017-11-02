@@ -5014,6 +5014,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         //fabViewTest.setFABButtons();
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
             try {
+                defaultCouponSelection();
                 slidingBottomPanel.update();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -5045,11 +5046,44 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                        showPoolIntroDialog();
                     }
                     updateSpecialPickupScreen();
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void defaultCouponSelection(){
+
+        PromoCoupon lasSelectedCustomCoupon = getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
+        boolean lastSelectedCouponExits = false ;
+        PromoCoupon serverSelectedDefaultCoupon =null;
+        if(lasSelectedCustomCoupon!=null){
+            for(PromoCoupon promoCoupon : Data.autoData.getPromoCoupons()){
+                if(promoCoupon.getId() == lasSelectedCustomCoupon.getId()){
+                    lastSelectedCouponExits = true;
+                }
+
+            }
+        }
+
+        if(!lastSelectedCouponExits){
+
+            for(PromoCoupon promoCoupon : Data.autoData.getPromoCoupons()){
+                if(promoCoupon.getIsSelected()==1){
+                    serverSelectedDefaultCoupon = promoCoupon;
+                    break;
+                }
+
+
+            }
+           getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(serverSelectedDefaultCoupon);
+
+        }
+
+
+
     }
 
     private boolean updateSpecialPickupScreen(){
@@ -9131,53 +9165,48 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             float mapBottomPadding = 0f;
             String textToShow = "";
+
+
             if(!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")){
                 textToShow = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1();
             } else if(!TextUtils.isEmpty(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2())){
                 textToShow = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2();
             }
+            boolean isCustomCouponText = false;
+            PromoCoupon promoCoupon = getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon() ;
+            if(promoCoupon!=null && promoCoupon.getId()>0){
+                textToShow = promoCoupon.getTitle();
+                isCustomCouponText = true;
+                // TODO: 02/11/17 TICK IN UI
+            }
             if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
-                    (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
+                    (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) && !isCustomCouponText){
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
                 setFabMarginInitial(false);
-                textViewPoolInfo1.setText(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1());
+                textViewPoolInfo1.setText(textToShow);
                 relativeLayoutPoolInfoBar.setBackgroundResource(R.drawable.background_pool_info);
                 textViewPoolInfo1.setTextColor(getResources().getColor(R.color.text_color));
                 mapBottomPadding = 60f;
                 //setGoogleMapPadding(70);
             } else if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
-                    (!TextUtils.isEmpty(textToShow)) &&
-                    (Data.autoData.getRegions().size() > 1)){
-                viewPoolInfoBarAnim.setVisibility(View.GONE);
-                setFabMarginInitial(false);
+                    (!TextUtils.isEmpty(textToShow))){
 
-                textViewPoolInfo1.setText(textToShow+" - ");
+
+                viewPoolInfoBarAnim.setVisibility(View.GONE);
+                setFabMarginInitial((Data.autoData.getRegions().size() == 1));
+
+                textViewPoolInfo1.setText(textToShow);
                 relativeLayoutPoolInfoBar.setBackgroundColor(getResources().getColor(R.color.text_color));
                 textViewPoolInfo1.setTextColor(getResources().getColor(R.color.white));
 
-                final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-                final SpannableStringBuilder sb = new SpannableStringBuilder("Click to see.");
-                sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                textViewPoolInfo1.append(sb);
-                mapBottomPadding = 60f;
-                //setGoogleMapPadding(70);
-            } else if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) &&
-                    (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
-                    (!TextUtils.isEmpty(textToShow)) &&
-                    (Data.autoData.getRegions().size() == 1)){
-                viewPoolInfoBarAnim.setVisibility(View.GONE);
-                setFabMarginInitial(true);
-
-                textViewPoolInfo1.setText(textToShow+" - ");
-                relativeLayoutPoolInfoBar.setBackgroundColor(getResources().getColor(R.color.text_color));
-                textViewPoolInfo1.setTextColor(getResources().getColor(R.color.white));
-
-                final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-                final SpannableStringBuilder sb = new SpannableStringBuilder("Click to see.");
-                sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                textViewPoolInfo1.append(sb);
+                if (!isCustomCouponText) {
+                    final StyleSpan bss = new StyleSpan(Typeface.BOLD);
+                    final SpannableStringBuilder sb = new SpannableStringBuilder(" - Click to see.");
+                    sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    textViewPoolInfo1.append(sb);
+                }
                 mapBottomPadding = 60f;
                 //setGoogleMapPadding(70);
             } else{
