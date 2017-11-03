@@ -9174,21 +9174,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else if(!TextUtils.isEmpty(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2())){
                 textToShow = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2();
             }
+            textToShow = textToShow.trim();
             boolean isCustomCouponText = false;
             PromoCoupon promoCoupon = getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon() ;
-            RelativeLayout.LayoutParams textToShowParams = (RelativeLayout.LayoutParams) textViewPoolInfo1.getLayoutParams();
 
             if(promoCoupon!=null && promoCoupon.getId()>0){
                 textToShow = promoCoupon.getTitle();
                 isCustomCouponText = true;
                 textViewCouponApplied.setVisibility(View.VISIBLE);
-                textToShowParams.addRule(RelativeLayout.CENTER_HORIZONTAL,-1);
             }else{
-                textToShowParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
                 textViewCouponApplied.setVisibility(View.GONE);
 
             }
-            textViewPoolInfo1.setLayoutParams(textToShowParams);
             if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
                     (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) && !isCustomCouponText){
@@ -9197,7 +9194,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewPoolInfo1.setText(textToShow);
                 relativeLayoutPoolInfoBar.setBackgroundResource(R.drawable.background_pool_info);
                 textViewPoolInfo1.setTextColor(getResources().getColor(R.color.text_color));
-                mapBottomPadding = 60f;
+                mapBottomPadding = relativeLayoutPoolInfoBar.getMeasuredHeight();
                 //setGoogleMapPadding(70);
             } else if((getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
                     (!TextUtils.isEmpty(textToShow))){
@@ -9216,7 +9213,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     textViewPoolInfo1.append(sb);
                 }
-                mapBottomPadding = 60f;
+                mapBottomPadding = relativeLayoutPoolInfoBar.getMeasuredHeight();
                 //setGoogleMapPadding(70);
             } else{
                 viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
