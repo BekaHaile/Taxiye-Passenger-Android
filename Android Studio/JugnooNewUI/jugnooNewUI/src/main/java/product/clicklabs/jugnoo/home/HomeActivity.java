@@ -981,7 +981,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
 
-        textViewPoolInfo1.setOnClickListener(new OnClickListener() {
+        relativeLayoutPoolInfoBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {

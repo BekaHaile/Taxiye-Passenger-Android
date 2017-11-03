@@ -82,7 +82,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     private VehiclesTabAdapter vehiclesTabAdapter;
 
     private Region regionSelected = null;
-    private PromoCoupon selectedCoupon = null;
+    private static PromoCoupon selectedCoupon = null;
     private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 
 

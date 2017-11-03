@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.view.View;
@@ -49,7 +50,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 	private TextView textViewNoCurrentOffers, tvAvailableOffers;
 	private ImageView imageViewOffers, ivNoOffer;
 	private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
-
+	private PromoCoupon couponSelectedWhenDialogShown;
 	public PromoCouponsDialog(Activity activity, Callback callback) {
 		this.activity = activity;
 		this.callback = callback;
@@ -57,11 +58,26 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 
 	public PromoCouponsDialog show(ProductType productType, final ArrayList<PromoCoupon> promoCoupons) {
 		try {
+			couponSelectedWhenDialogShown =((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
 			dialog.setContentView(R.layout.dialog_promo_coupons);
+			dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					if(activity instanceof HomeActivity) {
+						if(couponSelectedWhenDialogShown==null){
+							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
 
-			RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);
+						}else{
+							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(couponSelectedWhenDialogShown);
+						}
+						callback.onSkipped();
+					}
+				}
+			});
+			RelativeLayout relative =
+					(RelativeLayout) dialog.findViewById(R.id.relative);
 			new ASSL(activity, relative, 1134, 720, false);
 
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
@@ -180,7 +196,12 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 				@Override
 				public void onClick(View v) {
 					if(activity instanceof HomeActivity) {
-						((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+						if(couponSelectedWhenDialogShown==null){
+							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+
+						}else{
+							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(couponSelectedWhenDialogShown);
+						}
 						dialog.dismiss();
 						callback.onSkipped();
 					}
@@ -191,7 +212,12 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 				@Override
 				public void onClick(View v) {
 					if(activity instanceof HomeActivity) {
-						((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+						if(couponSelectedWhenDialogShown==null){
+							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+
+						}else{
+							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(couponSelectedWhenDialogShown);
+						}
 						dialog.dismiss();
 						callback.onSkipped();
 					}

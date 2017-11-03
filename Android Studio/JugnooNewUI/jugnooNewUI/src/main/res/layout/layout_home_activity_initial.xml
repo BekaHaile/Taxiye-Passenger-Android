@@ -274,6 +274,8 @@
                 android:orientation="horizontal"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
@@ -285,9 +287,8 @@
                     android:layout_gravity="bottom"
                     android:drawableLeft="@drawable/ic_tick_coupon"
                     android:tag="@string/dont_touch_me"
-                    android:layout_marginLeft="20dp"
                     android:layout_width="wrap_content"
-                    android:textSize="@dimen/sp_10"
+                    android:textSize="@dimen/sp_11"
                     android:visibility="visible"
                     android:textColor="@color/white_dark1"
                     android:layout_height="wrap_content" />
@@ -304,7 +305,7 @@
                     android:ellipsize="end"
                     android:text="Share the ride\nSplit the fare"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/sp_13" />
+                    android:textSize="@dimen/sp_14" />
 
             </LinearLayout>
 
