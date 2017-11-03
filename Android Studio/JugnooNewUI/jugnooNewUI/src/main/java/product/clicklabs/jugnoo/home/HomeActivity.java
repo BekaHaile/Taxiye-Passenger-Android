@@ -9199,8 +9199,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewPoolInfo1.setTextColor(getResources().getColor(R.color.text_color));
                 mapBottomPadding = 60f;
                 //setGoogleMapPadding(70);
-            } else if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) &&
-                    (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
+            } else if((getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
                     (!TextUtils.isEmpty(textToShow))){
 
 

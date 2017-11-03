@@ -144,6 +144,7 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 					if(plus){
 						if (item.getTotalQuantity() < 50) {
 							itemSelected.setQuantity(itemSelected.getQuantity() + 1);
+							return new Pair<>(i, item.getTotalQuantity());
 						} else {
 							Utils.showToast(context, context.getString(R.string.order_quantity_limited));
 						}
@@ -153,9 +154,10 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 							if(itemSelected.getQuantity() == 0){
 								item.getItemSelectedList().remove(j);
 							}
+							return new Pair<>(i, item.getTotalQuantity());
 						}
 					}
-					return new Pair<>(i, item.getTotalQuantity());
+					return null;
 				}
 				count++;
 			}
@@ -318,8 +320,9 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 			Pair<Integer, Integer> pair = doItemPlusMinus(pos, false);
 			if (pair != null) {
 				callback.onMinusClicked(pair.first, pair.second);
+				notifyDataSetChanged();
+
 			}
-			notifyDataSetChanged();
 		}
 	}
 
@@ -330,8 +333,9 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 			Pair<Integer, Integer> pair = doItemPlusMinus(pos, true);
 			if (pair != null) {
 				callback.onPlusClicked(pair.first, pair.second);
+				notifyDataSetChanged();
 			}
-			notifyDataSetChanged();
+
 		}
 	}
 

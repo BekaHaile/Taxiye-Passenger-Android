@@ -297,13 +297,14 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 		} else {
 			if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
 				subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
+				callback.onPlusClicked(pos, subItems.get(pos));
+				notifyDataSetChanged();
 			} else {
 				Utils.showToast(context, context.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
 			}
 		}
 
-		callback.onPlusClicked(pos, subItems.get(pos));
-		notifyDataSetChanged();
+
 	}
 
 	static class MainViewHolder extends RecyclerView.ViewHolder {
