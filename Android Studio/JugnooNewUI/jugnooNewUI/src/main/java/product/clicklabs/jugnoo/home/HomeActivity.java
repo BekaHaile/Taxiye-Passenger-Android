@@ -3005,7 +3005,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
 
                         checkForFareAvailablity();
-                        findADriverFinishing(false);
+                        findADriverFinishing(false, !switchUICalledFromStateRestore);
 
                         linearLayoutRequestMain.setVisibility(View.VISIBLE);
                         relativeLayoutInitialSearchBar.setEnabled(true);
@@ -4945,7 +4945,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         @Override
                         public void onCompleteFindADriver() {
-                            findADriverFinishing(true);
+                            findADriverFinishing(true, false);
                             try {
                                 if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                                     pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
@@ -5012,11 +5012,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 confirmedScreenOpened, savedAddressUsed);
     }
 
-    private void findADriverFinishing(boolean showPoolIntro){
+    private void
+    findADriverFinishing(boolean showPoolIntro, boolean useServerDefaultCoupon){
         //fabViewTest.setFABButtons();
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
             try {
-                defaultCouponSelection();
+                if(slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0 || useServerDefaultCoupon) {
+                    defaultCouponSelection();
+                }
                 slidingBottomPanel.update();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -8000,7 +8003,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-
+    private boolean switchUICalledFromStateRestore;
     public void callAndHandleStateRestoreAPI(final boolean showDialogs) {
         new Thread(new Runnable() {
             @Override
@@ -8054,7 +8057,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                 && Data.autoData.getDropLatLng() != null) {
                                             // havan karo yahan pe
                                         }
+                                        switchUICalledFromStateRestore = true;
                                         startUIAfterGettingUserStatus();
+                                        switchUICalledFromStateRestore = false;
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();

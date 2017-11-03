@@ -227,6 +227,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 			buttonContinue.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					couponSelectedWhenDialogShown =((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
 					dialog.dismiss();
 					callback.onCouponApplied();
 				}

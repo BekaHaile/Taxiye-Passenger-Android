@@ -181,6 +181,7 @@ public class SlidingBottomOffersFragment extends Fragment implements GACategory,
 						} else {
                             requestRideOptionsFragment.setSelectedCoupon(position);
 						}
+
                         notifyDataSetChanged();
                     } catch (Exception e) {
                         e.printStackTrace();
