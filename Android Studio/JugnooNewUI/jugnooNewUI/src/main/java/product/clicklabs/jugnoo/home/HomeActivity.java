@@ -343,7 +343,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
     TextView textViewRSScroll, textViewChangeLocality;
     private TextView textViewSendInvites, textViewSendInvites2, textViewThumbsDown, textViewThumbsUp, textViewCancellation,
-            textViewPaymentModeValueConfirm, textViewOffersConfirm, textVieGetFareEstimateConfirm, textViewPoolInfo1,
+            textViewPaymentModeValueConfirm, textViewOffersConfirm, textVieGetFareEstimateConfirm, textViewPoolInfo1,textViewCouponApplied,
             textViewRideEndWithImage;
     private RelativeLayout changeLocalityLayout, relativeLayoutPoolInfoBar, relativeLayoutRideEndWithImage;
     private LinearLayout linearlayoutChangeLocalityInner;
@@ -685,7 +685,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         viewPoolInfoBarAnim = findViewById(R.id.viewPoolInfoBarAnim);
         viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
         textViewPoolInfo1 = (TextView) findViewById(R.id.textViewPoolInfo1);
+        textViewCouponApplied = (TextView) findViewById(R.id.tv_coupon_applied);
         textViewPoolInfo1.setTypeface(Fonts.mavenMedium(this));
+        textViewCouponApplied.setTypeface(Fonts.mavenMedium(this),Typeface.BOLD);
 
 
         //Location error layout
@@ -9174,11 +9176,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             boolean isCustomCouponText = false;
             PromoCoupon promoCoupon = getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon() ;
+            RelativeLayout.LayoutParams textToShowParams = (RelativeLayout.LayoutParams) textViewPoolInfo1.getLayoutParams();
+
             if(promoCoupon!=null && promoCoupon.getId()>0){
                 textToShow = promoCoupon.getTitle();
                 isCustomCouponText = true;
-                // TODO: 02/11/17 TICK IN UI
+                textViewCouponApplied.setVisibility(View.VISIBLE);
+                textToShowParams.addRule(RelativeLayout.CENTER_HORIZONTAL,-1);
+            }else{
+                textToShowParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                textViewCouponApplied.setVisibility(View.GONE);
+
             }
+            textViewPoolInfo1.setLayoutParams(textToShowParams);
             if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
                     (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) && !isCustomCouponText){
@@ -9435,6 +9445,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else{
                 imageViewOfferConfirm.setVisibility(View.GONE);
             }
+            showPoolInforBar();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
