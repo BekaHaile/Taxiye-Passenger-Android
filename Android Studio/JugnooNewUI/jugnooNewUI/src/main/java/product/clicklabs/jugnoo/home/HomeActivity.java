@@ -5018,7 +5018,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         //fabViewTest.setFABButtons();
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
             try {
-                if(slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0 || useServerDefaultCoupon || promoSelectionLastOperation) {
+                if(slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0 || promoSelectionLastOperation) {
                     defaultCouponSelection();
                 }
                 slidingBottomPanel.update();
