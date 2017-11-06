@@ -178,8 +178,10 @@ public class SlidingBottomOffersFragment extends Fragment implements GACategory,
                         RequestRideOptionsFragment requestRideOptionsFragment=  activity.getSlidingBottomPanel().getRequestRideOptionsFragment();
                         if (requestRideOptionsFragment.getSelectedCoupon().getId() == promoCoupon.getId()) {
                             requestRideOptionsFragment.setSelectedCoupon(-1);
+                            activity.promoSelectionLastOperation = false;
 						} else {
                             requestRideOptionsFragment.setSelectedCoupon(position);
+                            activity.promoSelectionLastOperation = true;
 						}
 
                         notifyDataSetChanged();

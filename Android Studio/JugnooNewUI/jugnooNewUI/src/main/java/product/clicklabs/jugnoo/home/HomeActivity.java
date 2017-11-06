@@ -387,6 +387,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     ArrayList<PolylineOptions> polylineOptionsInRideDriverPath = new ArrayList<>();
 
     public static AppInterruptHandler appInterruptHandler;
+    public boolean promoSelectionLastOperation = true;
     boolean loggedOut = false,
             zoomedToMyLocation = false,
             mapTouchedOnce = false;
@@ -5017,7 +5018,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         //fabViewTest.setFABButtons();
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
             try {
-                if(slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0 || useServerDefaultCoupon) {
+                if(slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0 || useServerDefaultCoupon || promoSelectionLastOperation) {
                     defaultCouponSelection();
                 }
                 slidingBottomPanel.update();
@@ -9179,7 +9180,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else if(!TextUtils.isEmpty(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2())){
                 textToShow = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2();
             }
-            textToShow = textToShow.trim();
             boolean isCustomCouponText = false;
             PromoCoupon promoCoupon = getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon() ;
 
@@ -9191,6 +9191,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewCouponApplied.setVisibility(View.GONE);
 
             }
+            textToShow = textToShow.trim();
             if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
                     (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) && !isCustomCouponText){

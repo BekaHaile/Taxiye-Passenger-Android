@@ -51,6 +51,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 	private ImageView imageViewOffers, ivNoOffer;
 	private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
 	private PromoCoupon couponSelectedWhenDialogShown;
+	private boolean onDialogOpenPromoSelectOperation;
 	public PromoCouponsDialog(Activity activity, Callback callback) {
 		this.activity = activity;
 		this.callback = callback;
@@ -58,6 +59,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 
 	public PromoCouponsDialog show(ProductType productType, final ArrayList<PromoCoupon> promoCoupons) {
 		try {
+			onDialogOpenPromoSelectOperation = ((HomeActivity)activity).promoSelectionLastOperation;
 			couponSelectedWhenDialogShown =((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
@@ -109,6 +111,12 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 				@Override
 				public boolean setSelectedCoupon(int position) {
 					if(activity instanceof HomeActivity) {
+						if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
+							onDialogOpenPromoSelectOperation = true;
+						} else {
+							onDialogOpenPromoSelectOperation = false;
+						}
+
 						return ((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);
 					} else if(activity instanceof FreshActivity) {
 						PromoCoupon promoCoupon;
@@ -227,7 +235,11 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 			buttonContinue.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					couponSelectedWhenDialogShown =((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
+					if(activity instanceof  HomeActivity){
+						((HomeActivity)activity).promoSelectionLastOperation = onDialogOpenPromoSelectOperation;
+						couponSelectedWhenDialogShown =((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
+
+					}
 					dialog.dismiss();
 					callback.onCouponApplied();
 				}
