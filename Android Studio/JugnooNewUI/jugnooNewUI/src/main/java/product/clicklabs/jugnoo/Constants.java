@@ -793,6 +793,7 @@ public interface Constants {
     String KEY_CALL_MODE = "call_mode";
     String KEY_CHAT_MODE = "chat_mode";
     String KEY_ORDER_MODE = "order_mode";
+    String KEY_LOCATE_MODE = "locate_mode";
     String KEY_MERCHANT_CATEGORY_ID = "merchant_category_id";
     String KEY_NOT_SEND_MENU = "not_send_menu";
     String KEY_FUGU_CHANNEL_ID = "fugu_channel_id";

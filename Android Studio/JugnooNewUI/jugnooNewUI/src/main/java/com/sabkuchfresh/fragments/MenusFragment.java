@@ -340,6 +340,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 case Config.MEALS_CLIENT_ID:
                 case Config.FRESH_CLIENT_ID:
                 case Config.MENUS_CLIENT_ID:
+                    activity.setCategoryIdOpened(null);
                     activity.switchOffering(category.getClientId(),new LatLng(Data.latitude,Data.longitude));
                     break;
                 default:

@@ -461,6 +461,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     activity.openRestaurantReviewsListFragment();
                     break;
                 case R.id.llLocate:
+                    sendUserClickEvent(Constants.KEY_LOCATE_MODE);
                     Utils.openMapsDirections(activity, new LatLng(Data.latitude, Data.longitude), activity.getVendorOpened().getLatLng());
                     break;
                 case R.id.tvSubmitReview:
