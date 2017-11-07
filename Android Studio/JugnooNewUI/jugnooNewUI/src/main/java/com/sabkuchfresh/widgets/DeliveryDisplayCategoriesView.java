@@ -27,7 +27,7 @@ import product.clicklabs.jugnoo.R;
  * Created by Parminder Saini on 02/09/17.
  */
 
-public class DeliveryDisplayCategoriesView {
+public class DeliveryDisplayCategoriesView extends RecyclerView.ViewHolder {
 
     private Activity activity;
     public View rootView;
@@ -39,8 +39,8 @@ public class DeliveryDisplayCategoriesView {
     TextView tvCategoryName;
     @Bind(R.id.label_select_category)
     TextView tvSelectCategory;
-    @Bind(R.id. view_bottom_blank)
-    View viewBottomblank;
+   /* @Bind(R.id. view_bottom_blank)
+    View viewBottomblank;*/
     @Bind(R.id.layout_choose_category)
     RelativeLayout layoutChooseCategory;
     private Callback callback;
@@ -54,12 +54,12 @@ public class DeliveryDisplayCategoriesView {
             layoutChooseCategory.setEnabled(true);
             if(rvCategories.getVisibility()==View.VISIBLE){
                 rvCategories.setVisibility(View.GONE);
-                viewBottomblank.setVisibility(View.GONE);
+//                viewBottomblank.setVisibility(View.GONE);
                 ivArrow.setRotation(0);
                 ivArrow.setRotation(90);
             }else{
                 rvCategories.setVisibility(View.VISIBLE);
-                viewBottomblank.setVisibility(View.VISIBLE);
+//                viewBottomblank.setVisibility(View.VISIBLE);
                 ivArrow.setRotation(0);
                 ivArrow.setRotation(-90);
             }
@@ -67,19 +67,17 @@ public class DeliveryDisplayCategoriesView {
     };;
     private boolean canExpand;
 
-    @SuppressWarnings("Unused")
-    private DeliveryDisplayCategoriesView() {
 
-    }
 
     public DeliveryDisplayCategoriesView(Activity activity, View rootView, Callback callback) {
+        super(rootView);
         this.activity = activity;
         this.rootView = rootView;
         this.callback = callback;
         ButterKnife.bind(this, rootView);
-        categoryHideAnim = AnimationUtils.loadAnimation(activity, R.anim.rating_review_close_anim);
+        /*categoryHideAnim = AnimationUtils.loadAnimation(activity, R.anim.rating_review_close_anim);
         categoryShowAnim = AnimationUtils.loadAnimation(activity, R.anim.rating_review_open_anim);
-
+*/
 
     }
 
@@ -93,7 +91,7 @@ public class DeliveryDisplayCategoriesView {
             deliveryDisplayCategoriesAdpater = new DeliveryDisplayCategoriesAdpater(activity, new DeliveryDisplayCategoriesAdpater.Callback() {
                 @Override
                 public void onItemClick(MenusResponse.Category category) {
-                    OnCategoryClick(layoutChooseCategory);
+//                    OnCategoryClick(layoutChooseCategory);
                     if(callback != null){
                         callback.onCategoryClick(category);
                     }
@@ -102,14 +100,15 @@ public class DeliveryDisplayCategoriesView {
             rvCategories.setAdapter(deliveryDisplayCategoriesAdpater);
         }
         List<MenusResponse.Category> categoryList = new ArrayList<>();
-        if(deliveryCategoryModel != null) {
+        categoryList.addAll(deliveryCategoryModel);
+       /* if(deliveryCategoryModel != null) {
             categoryList.add(0, new MenusResponse.Category(-1));
             categoryList.addAll(deliveryCategoryModel);
-        }
+        }*/
         deliveryDisplayCategoriesAdpater.setList(categoryList);
     }
 
-    @OnClick({R.id.layout_choose_category, R.id.view_bottom_blank})
+  /*  @OnClick({R.id.layout_choose_category, R.id.view_bottom_blank})
     public void OnCategoryClick(View view) {
         switch (view.getId()) {
             case R.id.layout_choose_category:
@@ -120,16 +119,16 @@ public class DeliveryDisplayCategoriesView {
                         callback.onDropDownToggle(rvCategories.getVisibility() == View.VISIBLE);
                     }
                     if (rvCategories.getVisibility() == View.VISIBLE) {
-                        viewBottomblank.setVisibility(View.GONE);
+//                        viewBottomblank.setVisibility(View.GONE);
                         rvCategories.startAnimation(categoryHideAnim);
                         handler.postDelayed(hideViewsRunnable, activity.getResources().getInteger(R.integer.time_category_anim_close));
                     } else {
-                        viewBottomblank.setAlpha(0);
+                       *//* viewBottomblank.setAlpha(0);
                         viewBottomblank.setVisibility(View.VISIBLE);
-                        viewBottomblank.animate().alpha(1).setDuration(activity.getResources().getInteger(R.integer.time_category_anim_open)).start();
+                        viewBottomblank.animate().alpha(1).setDuration(activity.getResources().getInteger(R.integer.time_category_anim_open)).start();*//*
                         rvCategories.startAnimation(categoryShowAnim);
                         handler.postDelayed(hideViewsRunnable, activity.getResources().getInteger(R.integer.time_category_anim_open));
-                        Utils.hideSoftKeyboard(activity, viewBottomblank);
+//                        Utils.hideSoftKeyboard(activity, viewBottomblank);
                     }
                 }
                 break;
@@ -139,13 +138,13 @@ public class DeliveryDisplayCategoriesView {
                 break;
         }
 
-    }
+    }*/
 
     public boolean isDropDownVisible() {
         return rvCategories!=null && rvCategories.getVisibility()==View.VISIBLE;
     }
 
-    public void toggleDropDown() {
+   /* public void toggleDropDown() {
 
         try {
             OnCategoryClick(layoutChooseCategory);
@@ -154,7 +153,7 @@ public class DeliveryDisplayCategoriesView {
         }
 
 
-    }
+    }*/
 
     public interface Callback{
         void onCategoryClick(MenusResponse.Category category);

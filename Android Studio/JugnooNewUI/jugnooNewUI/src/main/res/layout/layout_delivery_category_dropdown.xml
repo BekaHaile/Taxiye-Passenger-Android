@@ -8,7 +8,7 @@
     android:background="@android:color/transparent"
     android:orientation="vertical"
     android:tag="@string/dont_touch_me"
-    android:visibility="gone"
+    android:visibility="visible"
     >
 
 
@@ -16,9 +16,9 @@
         android:id="@+id/view_gradient_bottom"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_divider_choose_category"
-        android:layout_below="@+id/layout_choose_category"
+        android:layout_below="@+id/recycler_categories"
         android:background="@drawable/shadow_gradient_seperator"
-        android:visibility="gone"
+        android:visibility="visible"
         />
 
 
@@ -26,7 +26,7 @@
         android:id="@+id/view_bottom_blank"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layout_choose_category"
+        android:layout_below="@id/recycler_categories"
         android:layout_marginTop="1dp"
         android:background="@color/black_60"
         android:clickable="true"
@@ -36,29 +36,28 @@
         android:id="@+id/recycler_categories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layout_choose_category"
         android:background="@android:color/white"
         android:paddingBottom="3dp"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:paddingTop="5dp"
-        android:visibility="invisible">
+        android:visibility="visible">
 
     </android.support.v7.widget.RecyclerView>
 
 
-    <View
-        android:id="@+id/view_gradient"
+  <!--  <View
+        android:id="@id/view_gradient"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_divider_choose_category"
-        android:background="@drawable/shadow_gradient_seperator"/>
+        android:background="@drawable/shadow_gradient_seperator"/>-->
 
 
     <RelativeLayout
-        android:id="@id/layout_choose_category"
+        android:id="@+id/layout_choose_category"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_choose_category"
-        android:layout_below="@id/view_gradient"
+        android:visibility="gone"
         android:background="@android:color/white">
 
 

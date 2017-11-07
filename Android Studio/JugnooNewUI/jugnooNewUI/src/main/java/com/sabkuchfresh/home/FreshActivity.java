@@ -646,6 +646,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             fabViewTest.setRlGenieHelpBottomMargin(200f);
             lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
+            Data.AppType = getAppType();
         } catch (Exception e) {
             e.printStackTrace();
             addFreshHomeFragment();
@@ -2342,7 +2343,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         } else if (getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()) {
             getMenusFragment().toggleSearch(true);
         } else if ((getTopFragment() instanceof MenusFragment || getTopFragment() instanceof MealFragment || getTopFragment() instanceof FreshHomeFragment)
-                && (getCategoryIdOpened() > 0 || getMenusFragment().isCategoryDropDownVisible())
+                && (getCategoryIdOpened() > 0)
                 && getMenusResponse().getCategories() != null  // if only more than one category coming from server for the place
                 && getMenusResponse().getCategories().size() > 1) {
 
@@ -3708,7 +3709,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
                 int appType = getAppType();
                 if(!event.dontRefresh) {
-                    setCategoryIdOpened(-1);
+                    setCategoryIdOpened(null);
                     setAddressAndFetchOfferingData(appType);
                 }
                 saveOfferingLastAddress(appType);
@@ -4266,6 +4267,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     }
     public void switchOffering(String lastClientId,LatLng latLng){
+
         new ApiUpdateClientId().updateClientId(lastClientId, latLng);
         Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
         setOfferingData(lastClientId);
@@ -5157,14 +5159,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         this.searchedRestaurantIds = searchedRestaurantIds;
     }
 
-    private int categoryIdOpened;
 
+    private MenusResponse.Category category;
     public int getCategoryIdOpened() {
-        return categoryIdOpened;
+        return category==null?-1:category.getId();
+    }
+    public MenusResponse.Category getCategoryOpened(){
+        return category;
     }
 
-    public void setCategoryIdOpened(int categoryIdOpened) {
-        this.categoryIdOpened = categoryIdOpened;
+    public void setCategoryIdOpened(MenusResponse.Category category) {
+        this.category = category;
     }
 
     public boolean isMenusOrDeliveryOpen(){

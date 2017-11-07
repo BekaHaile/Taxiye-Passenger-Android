@@ -31,7 +31,6 @@ import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
 import com.sabkuchfresh.utils.Utils;
 import com.sabkuchfresh.utils.WrapContentLinearLayoutManager;
-import com.sabkuchfresh.widgets.DeliveryDisplayCategoriesView;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -66,8 +65,7 @@ import retrofit.mime.TypedByteArray;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GAAction,
-        DeliveryDisplayCategoriesView.Callback {
+public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GAAction{
     private final String TAG = MenusFragment.class.getSimpleName();
 
     private RelativeLayout llRoot;
@@ -76,7 +74,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerViewRestaurant;
     private TextView textViewNothingFound;
-    private DeliveryDisplayCategoriesView deliveryDisplayCategoriesView;
+//    private DeliveryDisplayCategoriesView deliveryDisplayCategoriesView;
     private RelativeLayout rlMainContainer;
     private View vDividerLocation;
 
@@ -104,13 +102,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_menus, container, false);
         activity = (FreshActivity) getActivity();
-        activity.fragmentUISetup(this);
+        activity.fragmentUISetup(this);setUpUIforCategoriesOpened(activity.getCategoryOpened());
         activity.setDeliveryAddressView(rootView);
-        activity.setCategoryIdOpened(-1);
+        activity.setCategoryIdOpened(null);
         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE); //only for first time
 
-        deliveryDisplayCategoriesView = new DeliveryDisplayCategoriesView(activity,
-                rootView.findViewById(R.id.rLCategoryDropDown), this);
+      /*  deliveryDisplayCategoriesView = new DeliveryDisplayCategoriesView(activity,
+                rootView.findViewById(R.id.rLCategoryDropDown), this);*/
 
         Data.AppType = Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()) 
                 ? AppConstant.ApplicationType.DELIVERY_CUSTOMER : AppConstant.ApplicationType.MENUS;
@@ -254,9 +252,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 if (activity.getTopFragment() instanceof MenusFragment) {
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
 
-                    if(deliveryDisplayCategoriesView.isDropDownVisible()){
+                 /*   if(deliveryDisplayCategoriesView.isDropDownVisible()){
                         deliveryDisplayCategoriesView.toggleDropDown();
-                    }
+                    }*/
                     activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
                 }
             }
@@ -328,14 +326,14 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public void switchCategory(MenusResponse.Category category, boolean isBackPressed) {
 
-        if(deliveryDisplayCategoriesView==null || category==null)
+        if(category==null)
             return;
 
-        if(isBackPressed && deliveryDisplayCategoriesView.isDropDownVisible()){
+       /* if(isBackPressed && deliveryDisplayCategoriesView.isDropDownVisible()){
             deliveryDisplayCategoriesView.toggleDropDown();
             return;
-        }
-        activity.setCategoryIdOpened(category.getId());
+        }*/
+        activity.setCategoryIdOpened(category);
         if(!TextUtils.isEmpty(category.getClientId()))
         {
             switch (category.getClientId()){
@@ -349,10 +347,33 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
 
         }else{
+
+            setUpUIforCategoriesOpened(category);
             getAllMenus(true, activity.getSelectedLatLng(), true);
-            deliveryDisplayCategoriesView.setCategoryLabelIcon(category.getId());
+            // TODO: 07/11/17 setSelectedCategoryIcon in adpater
+//            deliveryDisplayCategoriesView.setCategoryLabelIcon(category.getId());
         }
 
+    }
+
+    private void setUpUIforCategoriesOpened(MenusResponse.Category category) {
+        if (activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
+            if(activity.getCategoryIdOpened()<0){
+                activity.getTopBar().imageViewMenu.setVisibility(View.VISIBLE);
+                activity.getTopBar().imageViewBack.setVisibility(View.GONE);
+                activity.getTopBar().ivFilterApplied.setVisibility(View.GONE);
+                activity.getTopBar().title.setText(R.string.delivery);
+                activity.setMenusFilterVisibility(View.GONE);
+                activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+            }else{
+                activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
+                activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
+                activity.getTopBar().title.setText(category.getCategoryName());
+                activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                activity.setMenusFilterVisibility(View.VISIBLE);
+
+            }
+        }
     }
 
     private long lastTimeRefreshed = System.currentTimeMillis();
@@ -381,6 +402,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     return;
                 }
                 activity.fragmentUISetup(this);
+                setUpUIforCategoriesOpened(activity.getCategoryOpened());
                 if (!activity.isOrderJustCompleted()) {
                     activity.setAddressTextToLocationPlaceHolder();
                 } else {
@@ -410,9 +432,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
             } else {
                 activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
-                if(isCategoryDropDownVisible()){
+               /* if(isCategoryDropDownVisible()){
                     deliveryDisplayCategoriesView.toggleDropDown();
-                }
+                }*/
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -488,15 +510,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 //no category opened, no filters applied and no search ongoing
                                 if (activity.getCategoryIdOpened() < 0 && !activity.isFilterApplied() && !isSearchingCase(searchTextCurr)) {
                                     if (menusResponse.getCategories().size() == 1) {
-                                        activity.setCategoryIdOpened(menusResponse.getCategories().get(0).getId());
+                                        activity.setCategoryIdOpened(menusResponse.getCategories().get(0));
                                     }
                                     activity.setMenusResponse(menusResponse);
-                                    deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
+//                                    deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
                                 }
 
                                 //Set a category
                                 if(activity.getCategoryIdOpened()==-1 && menusResponse.getCategories().size()<1 && activity.getAppType()== AppConstant.ApplicationType.MENUS){
-                                    activity.setCategoryIdOpened(1);
+                                    activity.setCategoryIdOpened(null);
                                 }
 
                                 if(activity.getMenusResponse() == null){
@@ -506,8 +528,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 if (activity.getMenusFilterFragment() != null && !isSearchingCase(searchTextCurr)) {
                                     activity.getMenusFilterFragment().updateDataLists(menusResponse);
                                 }
-                                deliveryDisplayCategoriesView.setCategoryLabelIcon(activity.getCategoryIdOpened());
-                                showCategoriesDropDown(true, activity.getMenusResponse().getCategories().size());
+                                // TODO: 07/11/17 Set Label Icon
+//                                deliveryDisplayCategoriesView.setCategoryLabelIcon(activity.getCategoryIdOpened());
+//                                showCategoriesDropDown(true, activity.getMenusResponse().getCategories().size());
                                 deliveryHomeAdapter.setList(menusResponse, false, hasMorePages);
 
 
@@ -587,7 +610,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
             activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
             recyclerViewRestaurant.setVisibility(View.GONE);
-            showCategoriesDropDown(false, 0);
+//            showCategoriesDropDown(false, 0);
             activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
         } else {
             activity.getTopBar().getLlSearchCart().setVisibility(serviceUnavailable ? View.GONE : View.VISIBLE);
@@ -865,6 +888,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 
+/*
     @Override
     public void onCategoryClick(MenusResponse.Category category) {
         if(activity.getCategoryIdOpened() != category.getId()) {
@@ -883,16 +907,17 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             e.printStackTrace();
         }
     }
+*/
 
     public String getSearchText() {
         return searchText;
     }
 
-    public boolean isCategoryDropDownVisible() {
+   /* public boolean isCategoryDropDownVisible() {
         return deliveryDisplayCategoriesView!=null && deliveryDisplayCategoriesView.isDropDownVisible();
-    }
+    }*/
 
-    private void showCategoriesDropDown(boolean show, int categoriesCount){
+/*    private void showCategoriesDropDown(boolean show, int categoriesCount){
         RelativeLayout.LayoutParams paramsMain = (RelativeLayout.LayoutParams) rlMainContainer.getLayoutParams();
         if(activity.getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER && show && categoriesCount > 0){
             deliveryDisplayCategoriesView.setRootVisibility(View.VISIBLE);
@@ -903,7 +928,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             paramsMain.setMargins(0, 0, 0, 0);
         }
         rlMainContainer.setLayoutParams(paramsMain);
-    }
+    }*/
 
     private void hitApiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone) {
         try {

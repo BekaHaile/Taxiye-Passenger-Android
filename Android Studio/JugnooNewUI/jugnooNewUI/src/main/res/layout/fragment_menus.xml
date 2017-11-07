@@ -10,14 +10,20 @@
     <include
         layout="@layout/layout_delivery_address_bar"/>
 
+    <View
+        android:id="@+id/vDividerLocation"
+        android:layout_below="@+id/llLocation"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/stroke_light_grey_alpha"
+        android:visibility="gone"
+        android:tag="@string/dont_touch_me" />
     <RelativeLayout
         android:id="@+id/rlMainContainer"
-        android:layout_marginTop="@dimen/height_category_bar"
         android:layout_width="match_parent"
-        android:layout_below="@+id/llLocation"
+        android:layout_below="@+id/vDividerLocation"
         android:layout_height="match_parent"
-        android:tag="@string/dont_touch_me"
-        >
+        android:tag="@string/dont_touch_me">
 
         <include layout="@layout/layout_offering_not_available" />
 
@@ -41,24 +47,5 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
-
-
-    <include
-        android:layout_below="@+id/llLocation"
-        layout="@layout/layout_delivery_category_dropdown"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <View
-        android:id="@+id/vDividerLocation"
-        android:layout_below="@+id/llLocation"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/stroke_light_grey_alpha"
-        android:visibility="gone"
-        android:tag="@string/dont_touch_me"
-        />
-
 
 </RelativeLayout>

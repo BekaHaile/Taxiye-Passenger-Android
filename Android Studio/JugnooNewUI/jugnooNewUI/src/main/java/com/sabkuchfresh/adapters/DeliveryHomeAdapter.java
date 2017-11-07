@@ -29,6 +29,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.widgets.DeliveryDisplayCategoriesView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundBorderTransform;
 
@@ -67,7 +68,7 @@ import retrofit.client.Response;
  * Created by shankar on 1/20/17.
  */
 
-public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
+public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener, DeliveryDisplayCategoriesView.Callback {
 
     private static final String TAG = DeliveryHomeAdapter.class.getName();
     private FreshActivity activity;
@@ -90,6 +91,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int NO_VENDORS_ITEM = 9;
     private static final int FORM_ITEM = 10;
     private static final int BLANK_LAYOUT = 11;
+    private static final int ITEM_TOTAL_CATEGORIES = 12;
 
 
     private static final int RECENT_ORDERS_TO_SHOW = 1;
@@ -150,10 +152,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
         final int sizeListBeforeAdding = dataToDisplay.size();
+
         if(isPagination){
             showPaginationProgressBar(false,false);
         }else{
             dataToDisplay.add(new DeliveryDivider());
+           if(activity.getCategoryIdOpened()<0 && menusResponse.getCategories()!=null && menusResponse.getCategories().size()>0 &&  activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER){
+
+               dataToDisplay.add(new CategoriesData(menusResponse.getCategories()));
+           }
         }
 
         // recent orders
@@ -176,10 +183,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dataToDisplay.add(new DeliveryDivider());
         }
 
-        // vendors
+        // vendors calculation
         int vendorsCount = 0;
         if(menusResponse.getVendors() != null){
-            dataToDisplay.addAll(menusResponse.getVendors());
             vendorsCount = menusResponse.getVendors().size();
         }
 
@@ -188,11 +194,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(!isPagination && vendorsCount > 0){
             if(menusResponse.getShowBanner()){
                 if(menusResponse.getBannerInfos() != null && menusResponse.getBannerInfos().size() > 0){
-                    dataToDisplay.add(1, new BannerInfosModel(menusResponse.getBannerInfos()));
+                    dataToDisplay.add(new BannerInfosModel(menusResponse.getBannerInfos()));
                 }
             } else if(menusResponse.getStripInfo() != null && !TextUtils.isEmpty(menusResponse.getStripInfo().getText())){
-                dataToDisplay.add(1, menusResponse.getStripInfo());
+                dataToDisplay.add(menusResponse.getStripInfo());
             }
+        }
+
+        //vendors Assignmend
+        if(menusResponse.getVendors() != null){
+            dataToDisplay.addAll(menusResponse.getVendors());
         }
 
         // service unavailable case
@@ -311,6 +322,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case VIEW_TITLE_CATEGORY:
                 View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_delivery_title, parent, false);
                 return new ViewTitleCategory(v, this);
+
+            case ITEM_TOTAL_CATEGORIES:
+                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_delivery_category_dropdown, parent, false);
+                return  new DeliveryDisplayCategoriesView(activity, v, this);
             case VIEW_ORDER_ITEM:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_order_status, parent, false);
                 return new ViewOrderStatus(v, this);
@@ -352,7 +367,13 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder mholder, int position) {
-        if(mholder instanceof ViewHolderVendor){
+        if(mholder instanceof DeliveryDisplayCategoriesView){
+
+            DeliveryDisplayCategoriesView deliveryDisplayCategoriesView = (DeliveryDisplayCategoriesView) mholder;
+            CategoriesData categoriesData = (CategoriesData)dataToDisplay.get(position);
+            deliveryDisplayCategoriesView.setCategories(categoriesData.getCategories());
+
+        }else if(mholder instanceof ViewHolderVendor){
             DeliveryHomeAdapter.ViewHolderVendor mHolder = ((DeliveryHomeAdapter.ViewHolderVendor) mholder);
             MenusResponse.Vendor vendor = (MenusResponse.Vendor) dataToDisplay.get(position);
             mHolder.textViewRestaurantName.setText(vendor.getName());
@@ -678,6 +699,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemViewType(int position) {
         Object object  = dataToDisplay.get(position);
 
+        if(object instanceof CategoriesData)
+            return ITEM_TOTAL_CATEGORIES;
+
         if(object instanceof MenusResponse.Category)
             return VIEW_TITLE_CATEGORY;
 
@@ -814,6 +838,18 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 getFormItemModel().clearStrings();
                 notifyItemChanged(dataToDisplay.size()-1);
             }
+    }
+
+    @Override
+    public void onCategoryClick(MenusResponse.Category category) {
+        if(activity.getCategoryIdOpened() != category.getId()) {
+            callback.openCategory(category);
+        }
+    }
+
+    @Override
+    public void onDropDownToggle(boolean shown) {
+
     }
 
     private  class ProgressBarDisplayRunnable implements Runnable {
@@ -988,6 +1024,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
         }
     }
+
+
     private static class ViewDivider extends RecyclerView.ViewHolder {
 
         ViewDivider(View view) {
@@ -1288,6 +1326,17 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public String getMessage() {
             return message;
+        }
+    }
+
+    private static class CategoriesData{
+        private List<MenusResponse.Category> categories;
+        private CategoriesData(List<MenusResponse.Category> categories){
+            this.categories = categories;
+        }
+
+        public List<MenusResponse.Category> getCategories() {
+            return categories;
         }
     }
 

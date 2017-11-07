@@ -9215,7 +9215,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 if (!isCustomCouponText) {
                     final StyleSpan bss = new StyleSpan(Typeface.BOLD);
-                    final SpannableStringBuilder sb = new SpannableStringBuilder(" - Click to see.");
+                    final SpannableStringBuilder sb = new SpannableStringBuilder(" - View all offers.");
                     sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     textViewPoolInfo1.append(sb);
                 }
