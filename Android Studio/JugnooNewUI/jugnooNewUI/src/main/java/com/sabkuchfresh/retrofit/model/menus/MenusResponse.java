@@ -844,7 +844,13 @@ public class MenusResponse {
 		@SerializedName("sorting")
 		@Expose
 		private List<KeyValuePair> sorting;
+		@SerializedName("client_id")
+		@Expose
+		private String clientId;
 
+		public String getClientId() {
+			return clientId;
+		}
 
 		private boolean isTypeOrder;
 

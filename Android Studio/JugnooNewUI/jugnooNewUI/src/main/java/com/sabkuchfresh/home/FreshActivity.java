@@ -461,25 +461,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             });
 
 
-           /* appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                @Override
-                public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                    if (verticalOffset == 0) {
-                        if (fabViewTest.getMenuLabelsRightTest().getVisibility() == View.GONE) {
-                            fabViewTest.getMenuLabelsRightTest().setVisibility(View.VISIBLE);
-                            fabViewTest.getMenuLabelsRightTest().startAnimation(AnimationUtils.loadAnimation(FreshActivity.this, R.anim.fade_in_slow_fab));
-                        }
-                    } else {
-                        if (verticalOffset < -100) {
-                            if (fabViewTest.getMenuLabelsRightTest().getVisibility() == View.VISIBLE) {
-                                fabViewTest.getMenuLabelsRightTest().setVisibility(View.GONE);
-                                fabViewTest.getMenuLabelsRightTest().startAnimation(AnimationUtils.loadAnimation(FreshActivity.this, R.anim.fade_out_slow_fab));
-                            }
-                        }
-                    }
-                }
-            });*/
-
 
             View.OnClickListener checkoutOnClickListener = new View.OnClickListener() {
                 @Override
@@ -657,6 +638,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             fuguNotificationConfig.handleFuguPushNotification(FreshActivity.this, Data.getFuguChatBundle());
             Data.setFuguChatBundle(null);
         }
+
+    }
+
+    private  void setOfferingData(){
 
     }
 
@@ -1365,17 +1350,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
                 llCartContainerVis = View.VISIBLE;
                 ivSearchVis = View.VISIBLE;
-                topBar.imageViewMenu.setVisibility(View.VISIBLE);
-                topBar.imageViewBack.setVisibility(View.GONE);
-
-                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                }
-
-
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.fatafat));
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
 
             } else if (fragment instanceof FreshFragment) {
@@ -1401,27 +1380,19 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             } else if (fragment instanceof MealFragment) {
                 llCartContainerVis = View.VISIBLE;
-                topBar.imageViewMenu.setVisibility(View.VISIBLE);
-                topBar.imageViewBack.setVisibility(View.GONE);
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
 
                 if (Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
                     llSearchCartVis = View.GONE;
                 }
-
-                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                }
-
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.meals));
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
             } else if (fragment instanceof GroceryFragment) {
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
-
-                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                }
+                fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.grocery));
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
@@ -1433,21 +1404,28 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 						&& getMenusFragment() != null && getMenusFragment().isServiceUnavailable()){
 					llSearchCartVis = View.GONE;
 				}
-                topBar.imageViewMenu.setVisibility(View.VISIBLE);
-                topBar.imageViewBack.setVisibility(View.GONE);
-                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                }
                 rlFilterVis = View.VISIBLE;
 
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER ? R.string.delivery : R.string.menus);
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                if(getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER ){
+                    topBar.title.setText(R.string.delivery );
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                    topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                    topBar.imageViewBack.setVisibility(View.GONE);
+                    if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                        fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                    }
+                }else{
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                    topBar.title.setText(R.string.menus);
+                    topBar.imageViewMenu.setVisibility(View.GONE);
+                    topBar.imageViewBack.setVisibility(View.VISIBLE);
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
+                }
+
                 topBar.getLlSearchCart().setLayoutTransition(null);
 
-                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                }
+
                 visMinOrder = setMinOrderAmountText(fragment);
 
             } else if (fragment instanceof VendorMenuFragment
@@ -2338,11 +2316,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         } else if (getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()) {
             getMenusFragment().toggleSearch(true);
-        } else if (getTopFragment() instanceof MenusFragment
+        } else if ((getTopFragment() instanceof MenusFragment || getTopFragment() instanceof MealFragment || getTopFragment() instanceof FreshHomeFragment)
                 && (getCategoryIdOpened() > 0 || getMenusFragment().isCategoryDropDownVisible())
                 && getMenusResponse().getCategories() != null  // if only more than one category coming from server for the place
                 && getMenusResponse().getCategories().size() > 1) {
-            getMenusFragment().switchCategory(-1, true);
+
+
+            getMenusFragment().switchCategory(new MenusResponse.Category(-1), true);
             return;
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finishWithToast();

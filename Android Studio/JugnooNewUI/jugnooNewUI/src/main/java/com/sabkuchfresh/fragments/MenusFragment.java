@@ -169,8 +169,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
 
             @Override
-            public void openCategory(int categoryId) {
-                switchCategory(categoryId, false);
+            public void openCategory(MenusResponse.Category category) {
+                switchCategory(category, false);
             }
 
             @Override
@@ -326,18 +326,33 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     }
 
-    public void switchCategory(int categoryId, boolean isBackPressed) {
+    public void switchCategory(MenusResponse.Category category, boolean isBackPressed) {
 
-        if(deliveryDisplayCategoriesView==null)
+        if(deliveryDisplayCategoriesView==null || category==null)
             return;
 
         if(isBackPressed && deliveryDisplayCategoriesView.isDropDownVisible()){
             deliveryDisplayCategoriesView.toggleDropDown();
             return;
         }
-        activity.setCategoryIdOpened(categoryId);
-        getAllMenus(true, activity.getSelectedLatLng(), true);
-        deliveryDisplayCategoriesView.setCategoryLabelIcon(categoryId);
+        activity.setCategoryIdOpened(category.getId());
+        if(!TextUtils.isEmpty(category.getClientId()))
+        {
+            switch (category.getClientId()){
+                case Config.MEALS_CLIENT_ID:
+                case Config.FRESH_CLIENT_ID:
+                case Config.MENUS_CLIENT_ID:
+                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, category.getClientId(), activity.getSelectedLatLng(), false);
+                    break;
+                default:
+                    break;
+            }
+
+        }else{
+            getAllMenus(true, activity.getSelectedLatLng(), true);
+            deliveryDisplayCategoriesView.setCategoryLabelIcon(category.getId());
+        }
+
     }
 
     private long lastTimeRefreshed = System.currentTimeMillis();
@@ -853,7 +868,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onCategoryClick(MenusResponse.Category category) {
         if(activity.getCategoryIdOpened() != category.getId()) {
-            switchCategory(category.getId(), false);
+            switchCategory(category, false);
         }
     }
 

@@ -169,7 +169,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(sizeRecentOrders > RECENT_ORDERS_TO_SHOW){
                 cacheRemainingRecentOrders(menusResponse.getRecentOrders());
                 if(deliverySeeAllModel == null){
-                    deliverySeeAllModel = new DeliverySeeAll(-1);
+                    deliverySeeAllModel = new DeliverySeeAll(new MenusResponse.Category(-1));
                 }
                 dataToDisplay.add(deliverySeeAllModel);
             }
@@ -741,8 +741,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     break;
                 case R.id.ll_see_all:
                     if(dataToDisplay.get(pos) instanceof DeliverySeeAll){
-                        if(((DeliverySeeAll)dataToDisplay.get(pos)).getCategoryId() > 0){
-							callback.openCategory(((DeliverySeeAll)dataToDisplay.get(pos)).getCategoryId());
+                        int categoryId = ((DeliverySeeAll)dataToDisplay.get(pos)).getCategory().getId();
+                        if(categoryId > 0){
+							callback.openCategory(((DeliverySeeAll)dataToDisplay.get(pos)).getCategory());
                         } else {
                             toggleRemainingOrdersVisibility(pos, true);
 						}
@@ -1162,15 +1163,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private static class DeliverySeeAll{
-        private int categoryId;
+        private MenusResponse.Category category;
 
 
-        private DeliverySeeAll(int categoryId) {
-            this.categoryId = categoryId;
+        private DeliverySeeAll(MenusResponse.Category  category) {
+            this.category = category;
         }
 
-        private int getCategoryId() {
-            return categoryId;
+
+        private MenusResponse.Category getCategory() {
+            return category;
         }
 
     }
@@ -1301,7 +1303,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public interface Callback {
         void onRestaurantSelected(int vendorId);
         void onBannerInfoDeepIndexClick(int deepIndex);
-        void openCategory(int categoryId);
+        void openCategory(MenusResponse.Category categoryId);
 
         void apiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone);
     }
