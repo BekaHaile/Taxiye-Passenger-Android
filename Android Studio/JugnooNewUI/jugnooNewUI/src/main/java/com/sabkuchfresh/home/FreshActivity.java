@@ -287,6 +287,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public int currentOffsetFeedHomeAppBar;
     public boolean filtersChanged = false;
     private boolean showingEarlyBirdDiscount;
+    private boolean appTypeDeliveryInBackground;
 
 
     public View getFeedHomeAddPostView() {
@@ -497,7 +498,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             llCheckoutBar.setOnClickListener(checkoutOnClickListener);
 
 
-            setOfferingData(lastClientId);
+            setOfferingData(lastClientId,true);
 
 
             LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, getIntentFiler());
@@ -552,14 +553,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     }
 
-    private void setOfferingData(String lastClientId) {
+    private void setOfferingData(String lastClientId,boolean fromOncreate) {
         try {
             float marginBottom = 60f;
 
             createAppCart(lastClientId);
 
             if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
-                addMealFragment();
+                addMealFragment(fromOncreate);
 //                    addProsHomeFragment();
                 Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
             } else if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
@@ -574,11 +575,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 fetchFiltersFromSP(appType);
                 openCart();
                 if(appType== AppConstant.ApplicationType.DELIVERY_CUSTOMER){
+                    appTypeDeliveryInBackground = true;
+
                     addCustomerDeliveryFragment();
                 }
-                    else{
-                    addMenusFragment();
+                else{
+                    if(fromOncreate){
+                        addCustomerDeliveryFragment();
+                    }else{
+                        addMenusFragment();
 
+                    }
                 }
 
                 Prefs.with(this).save(Constants.APP_TYPE, appType);
@@ -619,7 +626,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.PROS);
             } else {
                 openCart();
-                addFreshHomeFragment();
+                addFreshHomeFragment(fromOncreate);
                 Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
                 lastClientId = Config.getFreshClientId();
             }
@@ -649,7 +656,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             Data.AppType = getAppType();
         } catch (Exception e) {
             e.printStackTrace();
-            addFreshHomeFragment();
+            addFreshHomeFragment(fromOncreate);
         }
     }
 
@@ -1360,11 +1367,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
                 llCartContainerVis = View.VISIBLE;
                 ivSearchVis = View.VISIBLE;
-                topBar.imageViewMenu.setVisibility(View.GONE);
-                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                topBar.imageViewMenu.setVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);
+                topBar.imageViewBack.setVisibility(isDeliveryOpenInBackground()?View.VISIBLE:View.GONE);
+                drawerLayout.setDrawerLockMode(isDeliveryOpenInBackground()?DrawerLayout.LOCK_MODE_LOCKED_CLOSED:DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.fatafat));
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
 
             } else if (fragment instanceof FreshFragment) {
@@ -1390,9 +1397,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             } else if (fragment instanceof MealFragment) {
                 llCartContainerVis = View.VISIBLE;
-                topBar.imageViewMenu.setVisibility(View.GONE);
-                topBar.imageViewBack.setVisibility(View.VISIBLE);
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                topBar.imageViewMenu.setVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);
+                topBar.imageViewBack.setVisibility(isDeliveryOpenInBackground()?View.VISIBLE:View.GONE);
+                drawerLayout.setDrawerLockMode(isDeliveryOpenInBackground()?DrawerLayout.LOCK_MODE_LOCKED_CLOSED:DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 
                 if (Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
                     llSearchCartVis = View.GONE;
@@ -2149,25 +2156,46 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         relativeLayoutSlider.updateViewLayout(tvSlide, paramsF);
     }
 
-    private void addFreshHomeFragment() {
+    private void addFreshHomeFragment(boolean addNew) {
 
-        getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new FreshHomeFragment(),
-                        FreshHomeFragment.class.getName())
-                .addToBackStack(FreshHomeFragment.class.getName())
-                .commitAllowingStateLoss();
+        if(addNew){
+            getSupportFragmentManager().beginTransaction()
+                    .add(relativeLayoutContainer.getId(), new FreshHomeFragment(),
+                            FreshHomeFragment.class.getName())
+                    .addToBackStack(FreshHomeFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }else{
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                    .add(relativeLayoutContainer.getId(),  new FreshHomeFragment(),
+                            FreshHomeFragment.class.getName())
+                    .addToBackStack(FreshHomeFragment.class.getName())
+                    .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+                            .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+
     }
 
 
-    private void addMealFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                .add(relativeLayoutContainer.getId(),  new MealFragment(),
-                        MealFragment.class.getName())
-                .addToBackStack(MealFragment.class.getName())
-                .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                .commitAllowingStateLoss();
+    private void addMealFragment(boolean addNew) {
+        if(addNew){
+            getSupportFragmentManager().beginTransaction()
+                    .add(relativeLayoutContainer.getId(), new MealFragment(),
+                            MealFragment.class.getName())
+                    .addToBackStack(MealFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }else{
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                    .add(relativeLayoutContainer.getId(),  new MealFragment(),
+                            MealFragment.class.getName())
+                    .addToBackStack(MealFragment.class.getName())
+                    .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+                            .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+
 
     }
 
@@ -2262,6 +2290,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void performBackPressed(boolean isBackPressed) {
 
+
+        if(isDeliveryOpenInBackground()  &&  (getTopFragment() instanceof MealFragment|| getTopFragment() instanceof FreshHomeFragment)){
+            Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryCustomerClientId());
+            Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.DELIVERY_CUSTOMER);
+            super.onBackPressed();
+            return;
+        }
         if (isBackPressed) {
             if (getTopFragment() instanceof MealAddonItemsFragment) {
                 GAUtils.event(getGaCategory(), ADD_ONS, BACK + BUTTON + CLICKED);
@@ -2342,23 +2377,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         } else if (getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()) {
             getMenusFragment().toggleSearch(true);
-        } else if ((getTopFragment() instanceof MenusFragment || getTopFragment() instanceof MealFragment || getTopFragment() instanceof FreshHomeFragment)
-                && (getCategoryIdOpened() > 0)
+        } else if (getTopFragment() instanceof MenusFragment
+                && (getCategoryIdOpened() > 0 )
                 && getMenusResponse().getCategories() != null  // if only more than one category coming from server for the place
                 && getMenusResponse().getCategories().size() > 1) {
-
-            if(getAppType()!= AppConstant.ApplicationType.DELIVERY_CUSTOMER){
-//                new ApiUpdateClientId().updateClientId(lastClientId, latLng);
-                Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryCustomerClientId());
-                Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.DELIVERY_CUSTOMER);
-                super.onBackPressed();
-            }else{
-
-                getMenusFragment().switchCategory(new MenusResponse.Category(-1), true);
-
-            }
-
-
+            getMenusFragment().switchCategory(null, true);
             return;
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
             finishWithToast();
@@ -2378,9 +2401,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             if(getTopFragment() instanceof RestaurantAddReviewFragment && getRestaurantAddReviewFragment().isKeyboardOpen()){
                 try {
                     Utils.hideSoftKeyboard(FreshActivity.this,getRestaurantAddReviewFragment().getFocusEditText());
-                } catch (Exception e) {
+                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                 }
                 handler.postDelayed(onBackPressRunnable,250);
 
 
@@ -4268,9 +4291,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
     public void switchOffering(String lastClientId,LatLng latLng){
 
-        new ApiUpdateClientId().updateClientId(lastClientId, latLng);
+//        new ApiUpdateClientId().updateClientId(lastClientId, latLng);
         Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
-        setOfferingData(lastClientId);
+        setOfferingData(lastClientId,false);
 
 
     }
@@ -5186,5 +5209,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return Config.getLastOpenedClientId(this).equals(Config.getDeliveryCustomerClientId())
                 || (getMenusResponse() != null && getMenusResponse().isOpenMerchantInfo());
     }
-
+   public boolean isDeliveryOpenInBackground(){
+       return appTypeDeliveryInBackground;
+   }
 }

@@ -40,6 +40,7 @@ import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 public class FABViewTest implements GACategory, GAAction {
     Activity activity;
     public RelativeLayout relativeLayoutFABTest;
+    private boolean fabtoggleModeOn;
 
     public FloatingActionMenu getMenuLabelsRightTest(FloatingActionMenu menuLabelsRightTest) {
        return menuLabelsRightTest;
@@ -75,8 +76,24 @@ public class FABViewTest implements GACategory, GAAction {
 
     private void initComponent(){
         try {
+
+            try {
+                if((Data.userData.getDeliveryCustomerEnabled() == 1) && (Data.userData.getMealsEnabled() == 0)
+                        && (Data.userData.getGroceryEnabled() == 0)
+                        && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
+                        && (Data.userData.getFeedEnabled() == 0)
+                        && Data.userData.getProsEnabled() == 0
+                        && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
+                    fabtoggleModeOn = true;
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             relativeLayoutFABTest = (RelativeLayout) view;
             menuLabelsRightTest = (FloatingActionMenu) view.findViewById(R.id.menu_labels_right_Test);
+            menuLabelsRightTest.setFABToggleModeOn(fabtoggleModeOn);
             fabMealsTest = (FloatingActionButton) view.findViewById(R.id.fabMealsTest);
             fabFreshTest = (FloatingActionButton) view.findViewById(R.id.fabFreshTest);
             fabAutosTest = (FloatingActionButton) view.findViewById(R.id.fabAutosTest);
@@ -107,8 +124,6 @@ public class FABViewTest implements GACategory, GAAction {
             menuLabelsRightTest.setMenuButtonColorNormal(activity.getResources().getColor(R.color.white));
             menuLabelsRightTest.setMenuButtonColorPressed(activity.getResources().getColor(R.color.grey_light));
             menuLabelsRightTest.setMenuButtonColorRipple(activity.getResources().getColor(R.color.grey_light_alpha));
-
-
             rlGenieHelp = (RelativeLayout) view.findViewById(R.id.rlGenieHelp);
             tvGenieHelp = (TextView) view.findViewById(R.id.tvGenieHelp);
             ivJeanieHelp = (ImageView) view.findViewById(R.id.ivJeanieHelp);
@@ -126,6 +141,42 @@ public class FABViewTest implements GACategory, GAAction {
             @Override
             public void onMenuToggle(boolean opened) {
                 try {
+                    if(fabtoggleModeOn){
+
+                        try {
+                            if(Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0){
+                                Data.latitude = Data.autoData.getLastRefreshLatLng().latitude;
+                                Data.longitude = Data.autoData.getLastRefreshLatLng().longitude;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    LatLng latLng = new LatLng(Data.latitude, Data.longitude);
+                    if(activity instanceof HomeActivity){
+                        latLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
+                    } else if(activity instanceof FreshActivity){
+                        latLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
+                    } else if(activity instanceof MainActivity){
+                        latLng = ((MainActivity)activity).getCurrentPlaceLatLng();
+                    }
+                    final LatLng finalLatLng = latLng;
+                        String selectedOffering;
+                            if(activity instanceof HomeActivity){
+                                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getDeliveryCustomerClientId(), finalLatLng, false);
+
+                                selectedOffering = GACategory.DELIVERY_CUSTOMER;
+                            }else{
+                                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), finalLatLng, false);
+
+                                selectedOffering = RIDES;
+                            }
+
+                        GAUtils.event(JUGNOO, GENIE+OPEN, selectedOffering+SELECTED);
+
+                        return;
+                    }
+
+
                     if (opened) {
                         setButtonsVisibilityOnOpen();
                         isOpened = true;
@@ -170,9 +221,30 @@ public class FABViewTest implements GACategory, GAAction {
             }
         });
 
-        createCustomAnimation();
+
+        setUIInital();
 
 
+    }
+
+    private void setUIInital() {
+        if(fabtoggleModeOn){
+            if(activity instanceof HomeActivity){
+                menuLabelsRightTest.setMenuIcon(ContextCompat.getDrawable(activity, R.drawable.ic_delivery_customer));
+                menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity,R.color.green_delivery_customer_fab));
+                menuLabelsRightTest.setMenuButtonColorPressed(ContextCompat.getColor(activity,R.color.green_delivery_customer_fab_pressed));
+                menuLabelsRightTest.setMenuButtonColorRipple(ContextCompat.getColor(activity,R.color.green_delivery_customer_fab_pressed));
+            }else{
+
+                menuLabelsRightTest.setMenuIcon(ContextCompat.getDrawable(activity,R.drawable.ic_rides));
+                menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity,R.color.theme_color));
+                menuLabelsRightTest.setMenuButtonColorPressed(ContextCompat.getColor(activity,R.color.orange_rides_fab_pressed));
+                menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity,R.color.orange_rides_fab_pressed));
+            }
+        }else{
+            createCustomAnimation();
+
+        }
     }
 
 
@@ -195,8 +267,7 @@ public class FABViewTest implements GACategory, GAAction {
             @Override
             public void onAnimationStart(Animator animation) {
                 if(Data.userData == null || Data.userData.getExpandJeanie() == 0) {
-                    menuLabelsRightTest.getMenuIconView().setImageResource(menuLabelsRightTest.isOpened()
-                            ? R.drawable.ic_fab_jeanie : R.drawable.ic_fab_cross);
+                    menuLabelsRightTest.getMenuIconView().setImageResource(menuLabelsRightTest.isOpened() ? R.drawable.ic_fab_jeanie : R.drawable.ic_fab_cross);
                     menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity, R.color.white));
                 } else if(Data.userData != null) {
                     Data.userData.setExpandJeanie(0);
@@ -231,9 +302,23 @@ public class FABViewTest implements GACategory, GAAction {
                     && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
                     && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
                     && (Data.userData.getFeedEnabled() == 0)
-                    && Data.userData.getProsEnabled() == 0 && Data.userData.getDeliveryCustomerEnabled() == 0
+                    && Data.userData.getProsEnabled() == 0 && Data.userData.getDeliveryCustomerEnabled()==0
                     && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                 relativeLayoutFABTest.setVisibility(View.GONE);
+            }else if((Data.userData.getDeliveryCustomerEnabled() == 1) && (Data.userData.getMealsEnabled() == 0)
+                    && (Data.userData.getGroceryEnabled() == 0)
+                    && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
+                    && (Data.userData.getFeedEnabled() == 0)
+                    && Data.userData.getProsEnabled() == 0
+                    && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
+                if(!fabtoggleModeOn){
+                    fabtoggleModeOn = true;
+                    setUIInital();
+                }
+
+                relativeLayoutFABTest.setVisibility(View.VISIBLE);
+
+
             } else {
                 relativeLayoutFABTest.setVisibility(View.VISIBLE);
                 if (Data.userData.getFreshEnabled() != 1) {

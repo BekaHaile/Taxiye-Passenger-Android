@@ -108,6 +108,11 @@ public class FloatingActionMenu extends ViewGroup {
     private Context mLabelsContext;
     private String mMenuLabelText;
     private boolean mUsingMenuLabel;
+    private boolean isFABToggleModeOn;
+
+    public void setFABToggleModeOn(boolean FABToggleModeOn) {
+        isFABToggleModeOn = FABToggleModeOn;
+    }
 
     public interface OnMenuToggleListener {
         void onMenuToggle(boolean opened);
@@ -272,6 +277,9 @@ public class FloatingActionMenu extends ViewGroup {
         createDefaultIconAnimation();
     }
 
+    public void setMenuIcon(Drawable drawable){
+        mImageToggle.setImageDrawable(drawable);
+    }
     private void createDefaultIconAnimation() {
         float collapseAngle;
         float expandAngle;
@@ -469,7 +477,14 @@ public class FloatingActionMenu extends ViewGroup {
                 mMenuButton.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        toggle(mIsAnimated);
+                        if(!isFABToggleModeOn){
+                            toggle(mIsAnimated);
+
+                        }else{
+                            if (mToggleListener != null) {
+                                mToggleListener.onMenuToggle(true);
+                            }
+                        }
                     }
                 });
             }

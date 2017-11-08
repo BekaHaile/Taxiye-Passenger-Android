@@ -326,15 +326,14 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public void switchCategory(MenusResponse.Category category, boolean isBackPressed) {
 
-        if(category==null)
-            return;
+
 
        /* if(isBackPressed && deliveryDisplayCategoriesView.isDropDownVisible()){
             deliveryDisplayCategoriesView.toggleDropDown();
             return;
         }*/
         activity.setCategoryIdOpened(category);
-        if(!TextUtils.isEmpty(category.getClientId()))
+        if(category!=null && !TextUtils.isEmpty(category.getClientId()))
         {
             switch (category.getClientId()){
                 case Config.MEALS_CLIENT_ID:
