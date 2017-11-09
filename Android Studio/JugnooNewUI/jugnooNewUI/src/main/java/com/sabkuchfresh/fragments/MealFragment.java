@@ -252,6 +252,8 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                 activity.llCheckoutBarSetVisibilityDirect(View.GONE);
             }
+        }else{
+            activity.setRefreshCart(true);
         }
 
     }

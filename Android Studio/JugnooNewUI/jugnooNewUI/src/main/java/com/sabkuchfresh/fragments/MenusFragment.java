@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -56,7 +57,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -95,6 +95,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private int pastVisiblesItems;
     private boolean isPagingApiInProgress;
     private boolean hasMorePages;
+    private int noOfCategories;
+    private MenusResponse.Category requestedCategory;
 
     public MenusResponse.StripInfo getCurrentStripInfo() {
         return currentStripInfo;
@@ -257,23 +259,27 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 (TextView) rootView.findViewById(R.id.tvScroll), new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                if (activity.getTopFragment() instanceof MenusFragment) {
+                if (activity.getAppType()== AppConstant.ApplicationType.MENUS || ( activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER &&
+                        activity.getTopFragment() instanceof MenusFragment && (activity.getCategoryIdOpened()<0 || noOfCategories==1))) {
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
 
                  /*   if(deliveryDisplayCategoriesView.isDropDownVisible()){
                         deliveryDisplayCategoriesView.toggleDropDown();
                     }*/
                     activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
+                    activity.rlfabViewFatafat.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void keyBoardClosed() {
-                if (activity.getTopFragment() instanceof MenusFragment) {
+                if (activity.getAppType()== AppConstant.ApplicationType.MENUS || ( activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER &&
+                        activity.getTopFragment() instanceof MenusFragment && (activity.getCategoryIdOpened()<0 || noOfCategories==1))){
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
                     activity.getMenusCartSelectedLayout().checkForVisibility();
+                    activity.rlfabViewFatafat.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -340,7 +346,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             deliveryDisplayCategoriesView.toggleDropDown();
             return;
         }*/
-        activity.setCategoryIdOpened(category);
+
         if(category!=null && !TextUtils.isEmpty(category.getClientId()))
         {
             switch (category.getClientId()){
@@ -356,32 +362,40 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         }else{
 
-            setUpUIforCategoriesOpened(category);
-            getAllMenus(true, activity.getSelectedLatLng(), true);
-            // TODO: 07/11/17 setSelectedCategoryIcon in adpater
-//            deliveryDisplayCategoriesView.setCategoryLabelIcon(category.getId());
+            requestedCategory = category;
+            getAllMenus(true, activity.getSelectedLatLng(), true,category==null?-1:category.getId());
+
+
         }
 
     }
 
     private void setUpUIforCategoriesOpened(MenusResponse.Category category) {
         if (activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
-            if(activity.getCategoryIdOpened()<0){
+            if(activity.getCategoryIdOpened()<0 || noOfCategories==1){
                 activity.getTopBar().imageViewMenu.setVisibility(View.VISIBLE);
                 activity.getTopBar().imageViewBack.setVisibility(View.GONE);
                 activity.getTopBar().ivFilterApplied.setVisibility(View.GONE);
-                activity.getTopBar().title.setText(R.string.delivery_new_name);
-                activity.setMenusFilterVisibility(View.GONE);
+                activity.getTopBar().title.setText(noOfCategories==1&&category!=null?category.getCategoryName():activity.getString(R.string.delivery_new_name));
+                activity.setMenusFilterVisibility(noOfCategories==1&&category!=null?View.VISIBLE:View.GONE);
                 activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                }
+                if(Data.userData.getFeedEnabled()==0){
+                    activity.rlfabViewFatafat.setVisibility(View.VISIBLE);
+                }
             }else{
                 activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
                 activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
                 activity.getTopBar().title.setText(category.getCategoryName());
                 activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 activity.setMenusFilterVisibility(View.VISIBLE);
-
+                activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
+                activity.rlfabViewFatafat.setVisibility(View.GONE);
             }
         }
+
     }
 
     private long lastTimeRefreshed = System.currentTimeMillis();
@@ -433,14 +447,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 }
 
 
-                final boolean refreshCartFinal = activity.isRefreshCart() ||MapUtils.distance(activity.getSelectedLatLng(),currentMenusLatLngData)>10 ;
+                final boolean refreshCartFinal = activity.isRefreshCart()  ;
 
                     activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if (refreshCartFinal) {
                             activity.setLocalityAddressFirstTime(activity.getAppType());
-                            activity.setAddressTextToLocationPlaceHolder();
                         }
                         activity.setRefreshCart(false);
                     }
@@ -483,19 +496,19 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onRefresh() {
 //        activity.setCategoryIdOpened(-1);
-        getAllMenus(false, activity.getSelectedLatLng(), true);
+        getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryIdOpened());
     }
 
     private int currentPageCount = 1;
     private LatLng currentMenusLatLngData;
-    public void getAllMenus(final boolean loader, final LatLng latLng, final boolean scrollToTop) {
+    public void getAllMenus(final boolean loader, final LatLng latLng, final boolean scrollToTop, final int categoryId) {
         final String searchTextCurr = searchText;
         try {
             if (searchOpened && isMenusApiInProgress)
                 return;
 
             if (!MyApplication.getInstance().isOnline()) {
-                retryDialog(DialogErrorType.NO_NET, latLng, loader, false, scrollToTop);
+                retryDialog(DialogErrorType.NO_NET, latLng, loader, false, scrollToTop,categoryId);
                 swipeRefreshLayout.setRefreshing(false);
                 return;
             }
@@ -504,12 +517,21 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             if (loader)
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
-            HashMap<String, String> params = getMenusApiHashMap(latLng);
+            HashMap<String, String> params = getMenusApiHashMap(latLng,categoryId);
             Callback<MenusResponse> callback = new Callback<MenusResponse>() {
                 @Override
                 public void success(final MenusResponse menusResponse, Response response) {
+                    if(menusResponse.getCategories()!=null){
+                        noOfCategories = menusResponse.getCategories().size();
+                    }else{
+                        noOfCategories = 0;
+                    }
                     lastTimeRefreshed = System.currentTimeMillis();
+                    activity.setCategoryIdOpened(categoryId>0?requestedCategory:null);
+                    setUpUIforCategoriesOpened(activity.getCategoryOpened());
+
                     DialogPopup.dismissLoadingDialog();
+
                     swipeRefreshLayout.setRefreshing(false);
                     activity.getTopBar().setPBSearchVisibility(View.GONE);
                     isMenusApiInProgress = false;
@@ -522,6 +544,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         String message = menusResponse.getMessage();
                         if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                             if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
+
+
 
                                 currentPageCount = 1;
                                 hasMorePages =  menusResponse.isPageLengthComplete();
@@ -579,7 +603,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        retryDialog(DialogErrorType.SERVER_ERROR, latLng, loader, false, scrollToTop);
+                        retryDialog(DialogErrorType.SERVER_ERROR, latLng, loader, false, scrollToTop,categoryId);
                     }
                 }
 
@@ -592,7 +616,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     swipeRefreshLayout.setRefreshing(false);
                     activity.getTopBar().setPBSearchVisibility(View.GONE);
                     isMenusApiInProgress = false;
-                    retryDialog(DialogErrorType.CONNECTION_LOST, latLng, loader, false, scrollToTop);
+                    retryDialog(DialogErrorType.CONNECTION_LOST, latLng, loader, false, scrollToTop,categoryId);
 
                 }
             };
@@ -649,7 +673,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     @NonNull
-    private HashMap<String, String> getMenusApiHashMap(LatLng latLng) {
+    private HashMap<String, String> getMenusApiHashMap(LatLng latLng, int categoryId) {
         HashMap<String, String> params = new HashMap<>();
 
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -659,8 +683,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         params.put(Constants.INTERATED, "1");
         params.put(Constants.PAGE_NO, String.valueOf(0));
 
-        if(activity.getCategoryIdOpened() > 0){
-            params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(activity.getCategoryIdOpened()));
+        if(categoryId > 0){
+            params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(categoryId));
         }
         //Sort Keys
         if (activity.getSortBySelected() != null) {
@@ -699,12 +723,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 //        }
 
         if (!MyApplication.getInstance().isOnline()) {
-            retryDialog(DialogErrorType.NO_NET, activity.getMenuRefreshLatLng(), false, true, false);
+            retryDialog(DialogErrorType.NO_NET, activity.getMenuRefreshLatLng(), false, true, false,activity.getCategoryIdOpened());
             swipeRefreshLayout.setRefreshing(false);
             return;
         }
 
-        HashMap<String, String> params = getMenusApiHashMap(activity.getMenuRefreshLatLng());
+        HashMap<String, String> params = getMenusApiHashMap(activity.getMenuRefreshLatLng(), activity.getCategoryIdOpened());
         params.put(Constants.PAGE_NO, String.valueOf(currentPageCount));
         deliveryHomeAdapter.showPaginationProgressBar(true, true);
         isPagingApiInProgress = true;
@@ -752,7 +776,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 isMenusApiInProgress = false;
                 activity.getTopBar().setPBSearchVisibility(View.GONE);
                 deliveryHomeAdapter.showPaginationProgressBar(false, true);
-                retryDialog(DialogErrorType.CONNECTION_LOST, activity.getMenuRefreshLatLng(), false, true, false);
+                retryDialog(DialogErrorType.CONNECTION_LOST, activity.getMenuRefreshLatLng(), false, true, false,activity.getCategoryIdOpened());
 
             }
         };
@@ -767,7 +791,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     }
 
-    private void retryDialog(DialogErrorType dialogErrorType, final LatLng latLng, final boolean loader, final boolean isPagination, final boolean scrollToTop) {
+    private void retryDialog(DialogErrorType dialogErrorType, final LatLng latLng, final boolean loader, final boolean isPagination, final boolean scrollToTop, final int categoryId) {
         DialogPopup.dialogNoInternet(activity,
                 dialogErrorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
@@ -776,7 +800,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         if (isPagination) {
                             fetchNextPage();
                         } else {
-                            getAllMenus(loader, latLng, scrollToTop);
+                            getAllMenus(loader, latLng, scrollToTop, categoryId);
 
                         }
                     }
@@ -832,12 +856,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     deliveryHomeAdapter.setList(previousVendors);
                 }
             } else {
-                getAllMenus(false, activity.getSelectedLatLng(), true);
+                getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryIdOpened());
             }
 
 
             if (keyboardLayoutListener.getKeyBoardState() == 1) {
                 activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
+                activity.rlfabViewFatafat.setVisibility(View.GONE);
             }
             if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
                 activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
@@ -875,7 +900,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public void applyFilter(boolean scrollToTop) {
         if (scrollToTop) {
-            getAllMenus(true, activity.getMenuRefreshLatLng(), true);
+            getAllMenus(true, activity.getMenuRefreshLatLng(), true,activity.getCategoryIdOpened());
         }
     }
 
@@ -901,10 +926,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             int oldLength = searchText.length();
             searchText = s;
             if (searchText.length() > 2) {
-                getAllMenus(false, activity.getSelectedLatLng(), true);
+                getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryIdOpened());
             } else {
                 if (oldLength > s.length() && oldLength >= 1 && s.length() == 0) {
-                    getAllMenus(false, activity.getSelectedLatLng(), true);
+                    getAllMenus(false, activity.getSelectedLatLng(), true,activity.getCategoryIdOpened());
                 }
             }
         }
@@ -912,7 +937,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private void recallSearch(String previousSearchText) {
         if (searchOpened && !searchText.trim().equalsIgnoreCase(previousSearchText)) {
-            getAllMenus(false, activity.getSelectedLatLng(), true);
+            getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryIdOpened());
         }
     }
 

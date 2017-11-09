@@ -116,6 +116,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         View rootView = inflater.inflate(R.layout.fragment_anywhere_home, container, false);
         activity.fragmentUISetup(this);
         ButterKnife.bind(this, rootView);
+
         textColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color));
         textHintColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color_light));
         rgTimeSlot.check(R.id.rb_asap);
@@ -155,14 +156,14 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 null, new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                if (activity.getTopFragment() instanceof AnywhereHomeFragment) {
+                if (activity.getTopFragment() instanceof AnywhereHomeFragment && !activity.isDeliveryOpenInBackground()) {
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
                 }
             }
 
             @Override
             public void keyBoardClosed() {
-                if (activity.getTopFragment() instanceof AnywhereHomeFragment) {
+                if (activity.getTopFragment() instanceof AnywhereHomeFragment && !activity.isDeliveryOpenInBackground()) {
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
@@ -173,6 +174,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
         GAUtils.trackScreenView(activity.getGaCategory()+ HOME);
+        if(activity.getOrderViaChat()!=null){
+            FreshActivity.OrderViaChatData orderViaChatData = activity.getOrderViaChat();
+            setAddress(false,new SearchResult("Other",orderViaChatData.getDestinationAddress(),"",orderViaChatData.getDestinationlatLng().latitude,orderViaChatData.getDestinationlatLng().longitude));
+            activity.setOrderViaChatData(null);
+            activity.getTopBar().title.setText(orderViaChatData.getRestaurantName());
+        }
         return rootView;
     }
 

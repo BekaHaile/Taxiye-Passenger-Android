@@ -290,7 +290,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public boolean filtersChanged = false;
     private boolean showingEarlyBirdDiscount;
     private boolean appTypeDeliveryInBackground;
-    private RelativeLayout rlfabViewFatafat;
+    public RelativeLayout rlfabViewFatafat;
 
 
     public View getFeedHomeAddPostView() {
@@ -305,7 +305,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             setContentView(R.layout.activity_fresh);
 			ButterKnife.bind(this);
             fabViewFatafat = (FloatingActionMenu) findViewById(R.id.menuLabelFatafat);
-            fabViewFatafat.setVisibility(View.GONE);
             fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.ic_fab_fatafat_chat));
             fabViewFatafat.setMenuButtonColorNormal(ContextCompat.getColor(this,R.color.fatafat_fab));
             fabViewFatafat.setMenuButtonColorPressed(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
@@ -323,6 +322,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             });
 //            fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.ic_));
             rlfabViewFatafat = (RelativeLayout)findViewById(R.id.rlMenuLabelfatat);
+            rlfabViewFatafat.setVisibility(View.GONE);
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             toolbar.setTitle("");
@@ -944,7 +944,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                         }
                                         if (fragment != null && FreshActivity.this.hasWindowFocus()) {
                                             if(Config.getLastOpenedClientId(FreshActivity.this).equals(intent.getStringExtra(Constants.KEY_CLIENT_ID))) {
-                                                ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false);
+                                                ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false, -1);
                                             }
                                         } else {
                                             Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
@@ -1473,7 +1473,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     topBar.imageViewMenu.setVisibility(View.VISIBLE);
                     topBar.imageViewBack.setVisibility(View.GONE);
                     if(getCategoryIdOpened()<0){
-                        fabFatafatVisibility =  View.VISIBLE;
+                        if(Data.userData.getFeedEnabled()==0){
+                            fabFatafatVisibility =  View.VISIBLE;
+
+                        }
                         if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                             fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                         }
@@ -1716,7 +1719,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
 
-            fabViewFatafat.setVisibility(fabFatafatVisibility);
+
+            rlfabViewFatafat.setVisibility(fabFatafatVisibility);
             topBar.imageViewBack.setPadding(padding, padding, padding, padding);
 
             if(visMinOrder != 1) {
@@ -2352,7 +2356,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void performBackPressed(boolean isBackPressed) {
 
 
-        if(isDeliveryOpenInBackground()  &&  (getTopFragment() instanceof MealFragment|| getTopFragment() instanceof FreshHomeFragment || getTopFragment() instanceof AnywhereHomeFragment)){
+        if(isDeliveryOpenInBackground()  &&  (getTopFragment() instanceof MealFragment|| getTopFragment() instanceof FreshHomeFragment || getTopFragment() instanceof AnywhereHomeFragment||getTopFragment() instanceof MerchantInfoFragment)){
             saveAppCart();
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryCustomerClientId());
             Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.DELIVERY_CUSTOMER);
@@ -2444,6 +2448,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 && (getCategoryIdOpened() > 0 )
                 && getMenusResponse().getCategories() != null  // if only more than one category coming from server for the place
                 && getMenusResponse().getCategories().size() > 1) {
+
             getMenusFragment().switchCategory(null, true);
             return;
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
@@ -3714,7 +3719,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     getGroceryFragment().getAllProducts(true, getSelectedLatLng());
                 } else if ((appType == AppConstant.ApplicationType.MENUS || appType == AppConstant.ApplicationType.DELIVERY_CUSTOMER)
                         && getMenusFragment() != null) {
-                    getMenusFragment().getAllMenus(true, getSelectedLatLng(), false);
+                    getMenusFragment().getAllMenus(true, getSelectedLatLng(), false, -1);
                 } else if (appType == AppConstant.ApplicationType.FEED && getFeedHomeFragment() != null) {
                     getFeedHomeFragment().fetchFeedsApi(true, true, true);
                 } else if (appType == AppConstant.ApplicationType.PROS && getProsHomeFragment() != null) {
@@ -4091,6 +4096,49 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     }
 
+    public static class OrderViaChatData{
+        private LatLng destinationlatLng;
+        private String destinationAddress;
+        private String restaurantName;
+
+        public OrderViaChatData(LatLng destinationlatLng, String destinationAddress, String restaurantName) {
+            this.destinationlatLng = destinationlatLng;
+            this.destinationAddress = destinationAddress;
+            this.restaurantName = restaurantName;
+        }
+
+
+        public LatLng getDestinationlatLng() {
+            return destinationlatLng;
+        }
+
+        public String getDestinationAddress() {
+            return destinationAddress;
+        }
+
+        public void setDestinationlatLng(LatLng destinationlatLng) {
+            this.destinationlatLng = destinationlatLng;
+        }
+
+        public void setDestinationAddress(String destinationAddress) {
+            this.destinationAddress = destinationAddress;
+        }
+
+        public String getRestaurantName() {
+            return restaurantName;
+        }
+    }
+    private OrderViaChatData orderViaChat ;
+    public OrderViaChatData getOrderViaChat() {
+        return orderViaChat;
+    }
+
+
+    public void setOrderViaChatData(OrderViaChatData orderViaChat) {
+        this.orderViaChat = orderViaChat;
+
+    }
+
 
     public interface CityChangeCallback {
         void onYesClick();
@@ -4396,6 +4444,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 @Override
                 public void success(String clientId) {
+                    setRefreshCart(true);
                     saveAppCart();
                     Prefs.with(FreshActivity.this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
                     setOfferingData(lastClientId,false);
@@ -4421,6 +4470,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
         }else{
+            setRefreshCart(true);
+
             saveAppCart();
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             setOfferingData(lastClientId,false);

@@ -1389,6 +1389,7 @@
     <string name="swipe_right_to_pay"><![CDATA[Swipe right to pay >>]]></string>
     <string name="card">Card</string>
     <string name="montserrat_m">Montserrat Medium</string>
+    <string name="order_via_chat">Order Via Chat</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

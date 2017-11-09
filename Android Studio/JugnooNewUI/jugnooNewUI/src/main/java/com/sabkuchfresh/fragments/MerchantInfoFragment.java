@@ -338,7 +338,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 setOpenCloseStateText(true);
                 activity.getHandler().postDelayed(timerRunnable, 6000);
 
-                if (activity.getVendorOpened().getOrderMode() == 0) {
+                if (activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE) {
                     layoutOrderDetails.setVisibility(View.GONE);
                     bOrderOnline.setVisibility(View.GONE);
                 } else {
@@ -378,7 +378,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
                 bOrderOnline.setBackgroundResource((activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0) ?
                         R.drawable.capsule_grey_dark_bg : R.drawable.capsule_theme_color_selector);
-                bOrderOnline.setVisibility(activity.getVendorOpened().getOrderMode() == 0 ? View.GONE : View.VISIBLE);
+                bOrderOnline.setVisibility(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE ? View.GONE : View.VISIBLE);
+                bOrderOnline.setText(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_CHAT ?  R.string.order_via_chat:R.string.order_online );
             }
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -449,6 +450,17 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     sendUserClickEvent(Constants.KEY_CALL_MODE);
                     break;
                 case R.id.bOrderOnline:
+                    if(activity.getVendorOpened().getOrderMode()==Constants.ORDER_MODE_CHAT){
+                        if(!activity.isDeliveryOpenInBackground()){
+                            return;
+                        }
+
+                        activity.switchOffering(Config.getFeedClientId(),null);
+                        activity.setOrderViaChatData(new FreshActivity.OrderViaChatData(activity.getVendorOpened().getLatLng(),activity.getVendorOpened().getAddress(),activity.getVendorOpened().getName()));
+                        return;
+                    }
+
+
                     if (activity.getMenuProductsResponse().getCategories() != null
                             && activity.getVendorOpened().getRestaurantId().equals(activity.getMenuProductsResponse().getVendor().getRestaurantId())) {
                         activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());

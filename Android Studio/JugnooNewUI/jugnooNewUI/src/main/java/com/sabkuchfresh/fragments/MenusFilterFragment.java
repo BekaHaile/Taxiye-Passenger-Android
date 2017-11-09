@@ -399,15 +399,27 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 	public void updateDataLists(MenusResponse menusResponse) {
 		ArrayList<MenusResponse.KeyValuePair> filters = new ArrayList<>();
 		ArrayList<MenusResponse.KeyValuePair> sorting = new ArrayList<>();
-		filters.addAll(menusResponse.getFilters());
-		sorting.addAll(menusResponse.getSorting());
+		if(menusResponse.getFilters()!=null){
+			filters.addAll(menusResponse.getFilters());
+
+		}
+		if(menusResponse.getSorting()!=null){
+			sorting.addAll(menusResponse.getSorting());
+
+		}
 
 		if(activity.getCategoryIdOpened() > 0
 				&& menusResponse.getCategories() != null && menusResponse.getCategories().size() > 0){
 			MenusResponse.Category category = menusResponse.getCategories().get(menusResponse.getCategories()
 					.indexOf(new MenusResponse.Category(activity.getCategoryIdOpened())));
-			filters.addAll(category.getFilters());
-			sorting.addAll(category.getSorting());
+			if(category.getFilters()!=null){
+				filters.addAll(category.getFilters());
+
+			}
+			if(category.getSorting()!=null){
+				sorting.addAll(category.getSorting());
+
+			}
 		}
 		if(lastCategoryIdForCuisines != activity.getCategoryIdOpened()) {
 			activity.setCuisinesAll(null);
