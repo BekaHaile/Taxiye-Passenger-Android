@@ -78,8 +78,9 @@ public class RecentOrder implements Serializable{
     @SerializedName("support_category")
     @Expose
     private int supportCategory;
-
-
+    @SerializedName("product_type")
+    @Expose
+    private int productType;
 
 
     /**
@@ -287,5 +288,9 @@ public class RecentOrder implements Serializable{
 
     public int getSupportCategory() {
         return supportCategory;
+    }
+
+    public int getProductType() {
+        return productType;
     }
 }

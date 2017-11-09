@@ -33,6 +33,9 @@ public class MenusResponse {
 	@SerializedName("recent_orders_possible_status")
 	@Expose
 	private List<String> recentOrdersPossibleStatus = new ArrayList<String>();
+	@SerializedName("recent_orders_possible_meals_status")
+	@Expose
+	private List<String> recentOrdersPossibleMealsStatus = new ArrayList<String>();
 	@SerializedName("banner_info")
 	@Expose
 	private List<BannerInfo> bannerInfos;
@@ -117,6 +120,10 @@ public class MenusResponse {
 
 	public void setRecentOrders(List<RecentOrder> recentOrders) {
 		this.recentOrders = recentOrders;
+	}
+
+	public List<String> getRecentOrdersPossibleMealsStatus() {
+		return recentOrdersPossibleMealsStatus;
 	}
 
 	public List<String> getRecentOrdersPossibleStatus() {

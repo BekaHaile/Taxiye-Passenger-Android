@@ -84,6 +84,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
     private ArrayList<String> status = new ArrayList<>();
+    private ArrayList<String> statusMeals = new ArrayList<>();
 
     PushDialog pushDialog;
     private boolean resumed = false, searchOpened = false;
@@ -94,6 +95,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private int pastVisiblesItems;
     private boolean isPagingApiInProgress;
     private boolean hasMorePages;
+
+    public MenusResponse.StripInfo getCurrentStripInfo() {
+        return currentStripInfo;
+    }
+
+    private MenusResponse.StripInfo currentStripInfo;
 
     public MenusFragment() {
     }
@@ -180,7 +187,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
             }
-        }, recyclerViewRestaurant, status);
+        }, recyclerViewRestaurant, status,statusMeals);
 
         recyclerViewRestaurant.setAdapter(deliveryHomeAdapter);
         activity.setLocalityAddressFirstTime(activity.getAppType());
@@ -393,11 +400,19 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         resumed = true;
     }
 
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         try {
             if (!hidden) {
+                if(activity.isDeliveryOpenInBackground() && (activity.getAppType()!= AppConstant.ApplicationType.DELIVERY_CUSTOMER || !Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()))){
+                    Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryCustomerClientId());
+                    Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.DELIVERY_CUSTOMER);
+                    Data.AppType = activity.getAppType();
+                }
+
+
                 if (activity.openVendorMenuFragmentOnBack) {
                     activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
                     activity.openVendorMenuFragmentOnBack = false;
@@ -405,6 +420,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 }
                 activity.fragmentUISetup(this);
                 setUpUIforCategoriesOpened(activity.getCategoryOpened());
+                activity.setCurrentDeliveryStripToMinOrder();
                 if (!activity.isOrderJustCompleted()) {
                     activity.setAddressTextToLocationPlaceHolder();
                 } else {
@@ -511,7 +527,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 hasMorePages =  menusResponse.isPageLengthComplete();
                                 status.clear();
                                 status.addAll(menusResponse.getRecentOrdersPossibleStatus());
+                                statusMeals.clear();
+                                statusMeals.addAll(menusResponse.getRecentOrdersPossibleMealsStatus());
 
+                                currentStripInfo = menusResponse.getStripInfo();
+                                if(currentStripInfo==null || TextUtils.isEmpty(currentStripInfo.getText())){
+                                    activity.setCurrentDeliveryStripToMinOrder();
+                                }
                                 //no category opened, no filters applied and no search ongoing
                                 if (activity.getCategoryIdOpened() < 0 && !activity.isFilterApplied() && !isSearchingCase(searchTextCurr)) {
                                     if (menusResponse.getCategories().size() == 1) {

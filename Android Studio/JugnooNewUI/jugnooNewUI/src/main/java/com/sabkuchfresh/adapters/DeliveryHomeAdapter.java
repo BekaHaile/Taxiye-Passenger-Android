@@ -75,6 +75,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<Object> dataToDisplay;
     private List<RecentOrder> remainingRecentOrders;
     private ArrayList<String> possibleStatus;
+    private ArrayList<String> possibleMealsStatus;
     private Callback callback;
     private boolean ordersExpanded;
     private DeliverySeeAll deliverySeeAllModel;
@@ -107,11 +108,12 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
-    public DeliveryHomeAdapter(FreshActivity activity, Callback callback, RecyclerView recyclerView, ArrayList<String> possibleStatus) {
+    public DeliveryHomeAdapter(FreshActivity activity, Callback callback, RecyclerView recyclerView, ArrayList<String> possibleStatus, ArrayList<String> possibleMealsStatus) {
         this.activity = activity;
         this.callback = callback;
         this.recyclerView = recyclerView;
         this.possibleStatus = possibleStatus;
+        this.possibleMealsStatus = possibleMealsStatus;
         timerHandler = activity.getHandler();
         timerHandler.postDelayed(timerRunnable, 1000);
     }
@@ -197,7 +199,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     dataToDisplay.add(new BannerInfosModel(menusResponse.getBannerInfos()));
                 }
             } else if(menusResponse.getStripInfo() != null && !TextUtils.isEmpty(menusResponse.getStripInfo().getText())){
-                dataToDisplay.add(menusResponse.getStripInfo());
+                activity.setCurrentDeliveryStripToMinOrder();
+//                dataToDisplay.add(menusResponse.getStripInfo());
             }
         }
 
@@ -513,11 +516,20 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         statusHolder.relativeStatusBar.getChildAt(i).setVisibility(View.GONE);
                     }
                 }
-                showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
+                showPossibleStatus(recentOrder.getProductType()==ProductType.MEALS.getOrdinal()?possibleMealsStatus:possibleStatus, recentOrder.getStatus(), statusHolder);
                 statusHolder.tvOrderIdValue.setText(Utils.fromHtml("Order: #<b>"+recentOrder.getOrderId().toString()+"</b>"));
                 statusHolder.tvOrderIdValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-                statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
-                statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+
+                if(recentOrder.getProductType() == ProductType.MEALS.getOrdinal()) {
+                    if ((recentOrder.getOrderStatusText() != null) && (!recentOrder.getOrderStatusText().equalsIgnoreCase(""))) {
+                        statusHolder.tvDeliveryTime.setText(recentOrder.getOrderStatusText());
+                    } else {
+                        statusHolder.tvDeliveryTime.setText(activity.getResources().getString(R.string.delivery_before_colon) + " " + recentOrder.getEndTime());
+                    }
+                } else {
+                    statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
+                    statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+                }
 
 
 
@@ -528,7 +540,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
 
                 // track or view order buttons
-                statusHolder.rlTrackViewOrder.setVisibility(View.VISIBLE);
+                statusHolder.tvTrackOrder.setVisibility(recentOrder.getProductType()==ProductType.MEALS.getOrdinal()?View.GONE:View.VISIBLE);
+                statusHolder.vMidSep.setVisibility(recentOrder.getProductType()==ProductType.MEALS.getOrdinal()?View.GONE:View.VISIBLE);
                 if(recentOrder.getShowLiveTracking() == 1 && recentOrder.getDeliveryId() > 0){
                     statusHolder.tvTrackOrder.setTextColor(ContextCompat.getColorStateList(activity, R.color.purple_text_color_selector));
                 } else {
@@ -931,6 +944,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         View lineStatus1, lineStatus2, lineStatus3;
         RelativeLayout rlRestaurantInfo, rlTrackViewOrder;
         TextView tvRestaurantName, tvOrderAmount, tvTrackOrder, tvViewOrder;
+        View vMidSep;
 
         RelativeLayout rlOrderNotDelivered;
         TextView tvOrderDeliveredDigIn, tvOrderNotDelivered, tvOrderDeliveredYes, tvOrderDeliveredNo;
@@ -968,6 +982,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tvRestaurantName = (TextView) itemView.findViewById(R.id.tvRestaurantName);
             tvOrderAmount = (TextView) itemView.findViewById(R.id.tvOrderAmount);
             tvTrackOrder = (TextView) itemView.findViewById(R.id.tvTrackOrder);
+            vMidSep = (View) itemView.findViewById(R.id.vMidSep);
             tvTrackOrder.setTypeface(tvTrackOrder.getTypeface(), Typeface.BOLD);
             tvViewOrder = (TextView) itemView.findViewById(R.id.tvViewOrder);
             tvViewOrder.setTypeface(tvViewOrder.getTypeface(), Typeface.BOLD);
@@ -1439,7 +1454,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         try {
             Intent intent = new Intent(activity, RideTransactionsActivity.class);
             intent.putExtra(Constants.KEY_ORDER_ID, ((RecentOrder)dataToDisplay.get(pos)).getOrderId());
-            intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MENUS.getOrdinal());
+            intent.putExtra(Constants.KEY_PRODUCT_TYPE,((RecentOrder)dataToDisplay.get(pos)).getProductType());
             activity.startActivity(intent);
             activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
         } catch (Exception e) {

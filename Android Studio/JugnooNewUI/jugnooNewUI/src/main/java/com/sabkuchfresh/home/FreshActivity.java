@@ -178,6 +178,7 @@ import product.clicklabs.jugnoo.PaperDBKeys;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -407,6 +408,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
+                    } if((getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER) && getMenusFragment()!=null
+                            && getMenusFragment().getCurrentStripInfo() != null
+                            && !TextUtils.isEmpty(getMenusFragment().getCurrentStripInfo().getText())){
+
+                        try {
+                            Data.deepLinkIndex = getMenusFragment().getCurrentStripInfo().getDeepIndex();
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
+                        }
                     } else if (getAppType() == AppConstant.ApplicationType.FEED
                             && Data.getFeedData() != null
                             && Data.getFeedData().getBottomStrip() != null
@@ -416,7 +426,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         } catch (NumberFormatException e) {
                             e.printStackTrace();
                         }
-                    }
+                    }else
                     openDeepIndex();
                 }
             });
@@ -1472,9 +1482,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }else{
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                     topBar.title.setText(R.string.menus);
-                    topBar.imageViewMenu.setVisibility(View.GONE);
-                    topBar.imageViewBack.setVisibility(View.VISIBLE);
-                    fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
+                    topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                    topBar.imageViewBack.setVisibility(View.GONE);
+                    if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                        fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                    }
                 }
 
                 topBar.getLlSearchCart().setLayoutTransition(null);
@@ -4063,7 +4075,21 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         this.showingEarlyBirdDiscount = showingEarlyBirdDiscount;
     }
 
-
+    public void setCurrentDeliveryStripToMinOrder() {
+        try {
+            if(getMenusFragment()!=null && getTopFragment() instanceof MenusFragment &&  getMenusFragment().getCurrentStripInfo()!=null && !TextUtils.isEmpty(getMenusFragment().getCurrentStripInfo().getText())){
+                textViewMinOrder.setText(getMenusFragment().getCurrentStripInfo().getText().trim());
+                textViewMinOrderSetVisibility(View.VISIBLE);
+                fabViewFatafat.setMenuLabelsRightTestPadding(60f+35f,this,fabViewFatafat);
+                fabViewTest.setMenuLabelsRightTestPadding(60f+35f);
+            }else{
+                textViewMinOrderSetVisibility(View.GONE);
+                fabViewTest.setMenuLabelsRightTestPadding(60f);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public interface CityChangeCallback {
@@ -4340,12 +4366,65 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         tvCollapRestaurantName.setOnClickListener(reviewCLickListener);
 
     }
-    public void switchOffering(String lastClientId,LatLng latLng){
+    public void switchOffering(final String lastClientId, final LatLng latLng){
 
-//        new ApiUpdateClientId().updateClientId(lastClientId, latLng);
-        saveAppCart();
-        Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
-        setOfferingData(lastClientId,false);
+
+
+
+        boolean getOfferingData = false;
+        switch (lastClientId){
+            case Config.MEALS_CLIENT_ID:
+               getOfferingData=Data.getMealsData()==null;
+                break;
+            case Config.FRESH_CLIENT_ID:
+                getOfferingData=Data.getFreshData()==null;
+
+                break;
+            case Config.FEED_CLIENT_ID:
+                getOfferingData=Data.getFeedData()==null;
+
+                break;
+            default:
+                return;
+        }
+        if(getOfferingData){
+            ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
+                @Override
+                public void noNet() {
+                    DialogPopup.alertPopup(FreshActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
+                }
+
+                @Override
+                public void success(String clientId) {
+                    saveAppCart();
+                    Prefs.with(FreshActivity.this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
+                    setOfferingData(lastClientId,false);
+                }
+
+                @Override
+                public void failure() {
+
+                }
+
+                @Override
+                public void onRetry(View view) {
+                    switchOffering(lastClientId, latLng);
+                }
+
+                @Override
+                public void onNoRetry(View view) {
+
+                }
+            };
+            new ApiLoginUsingAccessToken(FreshActivity.this).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, lastClientId,
+                    true, callback);
+
+
+        }else{
+            saveAppCart();
+            Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
+            setOfferingData(lastClientId,false);
+        }
 
 
     }

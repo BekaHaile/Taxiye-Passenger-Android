@@ -121,9 +121,6 @@ public class FABViewTest implements GACategory, GAAction {
             fabFeedTest.setOnClickListener(clickListener);
             fabProsTest.setOnClickListener(clickListener);
             relativeLayoutFABTest.setVisibility(View.GONE);
-            menuLabelsRightTest.setMenuButtonColorNormal(activity.getResources().getColor(R.color.white));
-            menuLabelsRightTest.setMenuButtonColorPressed(activity.getResources().getColor(R.color.grey_light));
-            menuLabelsRightTest.setMenuButtonColorRipple(activity.getResources().getColor(R.color.grey_light_alpha));
             rlGenieHelp = (RelativeLayout) view.findViewById(R.id.rlGenieHelp);
             tvGenieHelp = (TextView) view.findViewById(R.id.tvGenieHelp);
             ivJeanieHelp = (ImageView) view.findViewById(R.id.ivJeanieHelp);
@@ -242,6 +239,9 @@ public class FABViewTest implements GACategory, GAAction {
                 menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity,R.color.orange_rides_fab_pressed));
             }
         }else{
+            menuLabelsRightTest.setMenuButtonColorNormal(activity.getResources().getColor(R.color.white));
+            menuLabelsRightTest.setMenuButtonColorPressed(activity.getResources().getColor(R.color.grey_light));
+            menuLabelsRightTest.setMenuButtonColorRipple(activity.getResources().getColor(R.color.grey_light_alpha));
             createCustomAnimation();
 
         }

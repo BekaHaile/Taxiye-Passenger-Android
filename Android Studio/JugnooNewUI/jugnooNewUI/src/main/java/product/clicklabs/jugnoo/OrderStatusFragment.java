@@ -405,7 +405,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_ORDER_ID, "" + orderId);
                 params.put(Constants.KEY_PRODUCT_TYPE, "" + productType);
-                params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+                params.put(Constants.KEY_CLIENT_ID,getClientIdByProductType(productType));
                 params.put(Constants.INTERATED, "1");
 
                 Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
@@ -902,7 +902,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                             activity.getSupportFragmentManager().beginTransaction()
                                     .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                                     .add(containerId, OrderCancelReasonsFragment.newInstance(datum1.getOrderId(),
-                                            productType, storeId, datum1.getClientId()),
+                                            productType, storeId, getClientIdByProductType(productType)),
                                             OrderCancelReasonsFragment.class.getName())
                                     .addToBackStack(OrderCancelReasonsFragment.class.getName())
                                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
@@ -1091,7 +1091,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             });
         }
         int storeId = datum1.getStoreId() == null ? 0 : datum1.getStoreId();
-        apiCancelOrder.hit(datum1.getOrderId(), datum1.getClientId(),
+        apiCancelOrder.hit(datum1.getOrderId(), getClientIdByProductType(productType),
                 storeId,
                 productType);
     }
@@ -1178,5 +1178,26 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         }
     }
 
+    public String getClientIdByProductType(int productTypeOrdinal){
 
+
+        if(productTypeOrdinal==ProductType.AUTO.getOrdinal()){
+            return Config.getAutosClientId();
+        }else if(productTypeOrdinal==ProductType.DELIVERY_CUSTOMER.getOrdinal()){
+            return Config.getDeliveryCustomerClientId();
+        }else if(productType == ProductType.MENUS.getOrdinal()){
+            return Config.getMenusClientId();
+        }else if(productType==ProductType.FRESH.getOrdinal()){
+            return Config.getFreshClientId();
+        }else if(productType==ProductType.FEED.getOrdinal()){
+            return Config.getFeedClientId();
+        }else if(productType==ProductType.MEALS.getOrdinal()){
+            return Config.getMealsClientId();
+        }else if(productType==ProductType.PAY.getOrdinal()){
+            return Config.getPayClientId();
+        }else  if(productType==ProductType.GROCERY.getOrdinal()){
+            return Config.getGroceryClientId();
+        }
+       return Config.getAutosClientId();
+    }
 }
