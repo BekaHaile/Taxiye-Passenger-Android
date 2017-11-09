@@ -56,6 +56,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -362,7 +363,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 activity.getTopBar().imageViewMenu.setVisibility(View.VISIBLE);
                 activity.getTopBar().imageViewBack.setVisibility(View.GONE);
                 activity.getTopBar().ivFilterApplied.setVisibility(View.GONE);
-                activity.getTopBar().title.setText(R.string.delivery);
+                activity.getTopBar().title.setText(R.string.delivery_new_name);
                 activity.setMenusFilterVisibility(View.GONE);
                 activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
             }else{
@@ -377,6 +378,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     private long lastTimeRefreshed = System.currentTimeMillis();
+
     private static final long MAX_REFRESH_INTERVAL = 60*1000;
     @Override
     public void onResume() {
@@ -414,12 +416,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     toggleSearch(false);
                 }
 
-                final boolean refreshCartFinal = activity.isRefreshCart();
-                activity.getHandler().postDelayed(new Runnable() {
+
+                final boolean refreshCartFinal = activity.isRefreshCart() ||MapUtils.distance(activity.getSelectedLatLng(),currentMenusLatLngData)>10 ;
+
+                    activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if (refreshCartFinal) {
                             activity.setLocalityAddressFirstTime(activity.getAppType());
+                            activity.setAddressTextToLocationPlaceHolder();
                         }
                         activity.setRefreshCart(false);
                     }
@@ -466,7 +471,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     private int currentPageCount = 1;
-
+    private LatLng currentMenusLatLngData;
     public void getAllMenus(final boolean loader, final LatLng latLng, final boolean scrollToTop) {
         final String searchTextCurr = searchText;
         try {
@@ -536,6 +541,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
                                 activity.setMenuRefreshLatLng(latLng);
+                                currentMenusLatLngData = latLng;
                                 setUpServiceUnavailability(menusResponse);
 
                                 checkIciciPaymentStatusApi(activity);

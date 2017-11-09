@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.widgets.FAB;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
@@ -24,11 +25,13 @@ import android.view.animation.AnticipateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Utils;
 
 public class FloatingActionMenu extends ViewGroup {
@@ -112,6 +115,15 @@ public class FloatingActionMenu extends ViewGroup {
 
     public void setFABToggleModeOn(boolean FABToggleModeOn) {
         isFABToggleModeOn = FABToggleModeOn;
+    }
+
+    public void setMenuLabelsRightTestPadding(float paddingBottom, Activity activity,FloatingActionMenu floatingActionMenu){
+        float scale = activity.getResources().getDisplayMetrics().density;
+        int dpAsPixels = (int) (paddingBottom * scale + 0.5f);
+        setMenuLabelsRightTestPadding(dpAsPixels,floatingActionMenu);
+    }
+    public void setMenuLabelsRightTestPadding(int paddingBottom,FloatingActionMenu floatingActionMenu){
+        floatingActionMenu.setPadding(0, 0, (int) (40f * ASSL.Yscale()), paddingBottom);
     }
 
     public interface OnMenuToggleListener {

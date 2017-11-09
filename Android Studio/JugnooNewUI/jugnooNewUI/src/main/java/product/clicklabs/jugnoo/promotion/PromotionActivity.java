@@ -625,7 +625,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                     R.drawable.ic_menus_grey, pcMenus));
         }
         if(pcDeliveryCustomer.size() > 0) {
-            offeringPromotions.add(new OfferingPromotion(getString(R.string.delivery), Config.getDeliveryCustomerClientId(),
+            offeringPromotions.add(new OfferingPromotion(getString(R.string.delivery_new_name), Config.getDeliveryCustomerClientId(),
                     R.drawable.ic_menus_grey, pcDeliveryCustomer));
         }
     }
@@ -707,7 +707,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         if(pcDeliveryCustomer.size() > 0) {
             pcDeliveryCustomer = countAndRemoveDuplicatePromoCoupons(pcDeliveryCustomer);
             for(PromoCoupon pc : pcDeliveryCustomer){
-                promosList.add(new Promo(getString(R.string.delivery), Config.getDeliveryCustomerClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab));
+                promosList.add(new Promo(getString(R.string.delivery_new_name), Config.getDeliveryCustomerClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab));
             }
         }
 

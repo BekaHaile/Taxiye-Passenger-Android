@@ -147,12 +147,13 @@ public class  RideTransactionsActivity extends BaseAppCompatActivity implements 
 		rlFeed.setOnClickListener(offeringFilterClickListener);
 
 		if(Data.userData != null){
-			rlMeals.setVisibility(Data.userData.getMealsEnabled() == 1 ? View.VISIBLE : View.GONE);
-			rlFresh.setVisibility(Data.userData.getFreshEnabled() == 1 ? View.VISIBLE : View.GONE);
-			rlMenus.setVisibility(Data.userData.getMenusEnabled() == 1 ? View.VISIBLE : View.GONE);
+
+			rlMeals.setVisibility(Data.userData.getMealsEnabled() == 1 || Data.userData.getDeliveryCustomerEnabled()==1? View.VISIBLE : View.GONE);
+			rlFresh.setVisibility(Data.userData.getFreshEnabled() == 1 || Data.userData.getDeliveryCustomerEnabled()==1? View.VISIBLE : View.GONE);
+			rlMenus.setVisibility(Data.userData.getMenusEnabled() == 1|| Data.userData.getDeliveryCustomerEnabled()==1 ? View.VISIBLE : View.GONE);
 			rlDeliveryCustomer.setVisibility(Data.userData.getDeliveryCustomerEnabled() == 1 ? View.VISIBLE : View.GONE);
 			rlPros.setVisibility(Data.userData.getProsEnabled() == 1 ? View.VISIBLE : View.GONE);
-			rlFeed.setVisibility(Data.userData.getFeedEnabled() == 1 ? View.VISIBLE : View.GONE);
+			rlFeed.setVisibility(Data.userData.getFeedEnabled() == 1 || Data.userData.getDeliveryCustomerEnabled()==1 ? View.VISIBLE : View.GONE);
 		} else {
 			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
 		}

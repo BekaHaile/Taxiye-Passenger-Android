@@ -797,7 +797,7 @@
     <string name="easy_and_affordable_commute">Easy and affordable commute</string>
     <string name="variety_of_quality_readymade_meals">Variety of quality readymade meals</string>
     <string name="affordable_high_quality_fruits_veggies">Affordable &amp; high Quality fruits &amp; veggies</string>
-    <string name="delivery">Delivery</string>
+    <string name="delivery_new_name">Fatafat</string>
     <string name="please_swipe_down_to_reload">Please swipe down to reload</string>
 
 
@@ -1219,7 +1219,7 @@
     <string name="enter_your_name">Enter your Name</string>
     <string name="enter_email_id">Enter Email ID</string>
     <string name="fatafat">Grocery</string>
-    <string name="fatafat_offering_name">Fatafat</string>
+    <string name="fatafat_offering_name">Chat</string>
     <string name="unable_to_fetch_address">Unable to fetch current address at the moment</string>
     <string name="plus_add_new_address">+ Add New Address</string>
     <string name="address_details">Address Details</string>

@@ -178,7 +178,6 @@ import product.clicklabs.jugnoo.PaperDBKeys;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
-import product.clicklabs.jugnoo.apis.ApiUpdateClientId;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -209,6 +208,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -230,6 +230,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private MenuBar menuBar;
     private TopBar topBar;
     private FABViewTest fabViewTest;
+    private FloatingActionMenu fabViewFatafat;
     private TransactionUtils transactionUtils;
 
     private ProductsResponse productsResponse;
@@ -288,6 +289,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public boolean filtersChanged = false;
     private boolean showingEarlyBirdDiscount;
     private boolean appTypeDeliveryInBackground;
+    private RelativeLayout rlfabViewFatafat;
 
 
     public View getFeedHomeAddPostView() {
@@ -301,6 +303,25 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             setContentView(R.layout.activity_fresh);
 			ButterKnife.bind(this);
+            fabViewFatafat = (FloatingActionMenu) findViewById(R.id.menuLabelFatafat);
+            fabViewFatafat.setVisibility(View.GONE);
+            fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.ic_fab_fatafat_chat));
+            fabViewFatafat.setMenuButtonColorNormal(ContextCompat.getColor(this,R.color.fatafat_fab));
+            fabViewFatafat.setMenuButtonColorPressed(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
+            fabViewFatafat.setMenuButtonColorRipple(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
+            fabViewFatafat.setOnMenuToggleListener(null);
+            fabViewFatafat.setOnMenuButtonLongClickListener(null);
+            fabViewFatafat.setOnMenuButtonClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(isDeliveryOpenInBackground()){
+                        switchOffering(Config.getFeedClientId(),null);
+                    }
+
+                }
+            });
+//            fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.ic_));
+            rlfabViewFatafat = (RelativeLayout)findViewById(R.id.rlMenuLabelfatat);
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             toolbar.setTitle("");
@@ -339,7 +360,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             String lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
 
-            if (getIntent().hasExtra(Constants.KEY_LATITUDE) && getIntent().hasExtra(Constants.KEY_LONGITUDE)) {
+           /* if (getIntent().hasExtra(Constants.KEY_LATITUDE) && getIntent().hasExtra(Constants.KEY_LONGITUDE)) {
                 if (lastClientId != null && lastClientId.equalsIgnoreCase(Config.getFeedClientId())){
                     SearchResult searchResult = getGson().fromJson(Prefs.with(this).getString(Constants.SP_ASKLOCAL_LAST_ADDRESS_OBJ,
                             Constants.EMPTY_JSON_OBJECT), SearchResult.class);
@@ -365,8 +386,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
                     setSelectedLatLng(latLng);
                 }
-            }
+            }*/
+            LatLng  latLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude),
+            getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude));
+            Prefs.with(this).save(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
 
+
+            setSelectedLatLng(latLng);
             textViewMinOrder = (TextView) findViewById(R.id.textViewMinOrder);
             textViewMinOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -400,6 +426,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             menuBar = new MenuBar(this, drawerLayout);
             topBar = new TopBar(this, drawerLayout);
             fabViewTest = new FABViewTest(this, findViewById(R.id.relativeLayoutFABTest));
+
             getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -617,7 +644,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else {
                     addFeedReserveSpotFragment();
                 }*/
-                addAnywhereHomeFragment();
+                addAnywhereHomeFragment(fromOncreate);
                 Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FEED);
                 lastClientId = Config.getFeedClientId();
 
@@ -640,7 +667,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     && Data.getMealsData().getOfferStripMeals() != null
                     && !TextUtils.isEmpty(Data.getMealsData().getOfferStripMeals().getTextToDisplay()))
                     ||
-                    (getAppType() == AppConstant.ApplicationType.FEED
+                    (!isDeliveryOpenInBackground() && getAppType() == AppConstant.ApplicationType.FEED
                     && Data.getFeedData() != null
                     && Data.getFeedData().getBottomStrip() != null
                     && !TextUtils.isEmpty(Data.getFeedData().getBottomStrip().getTextToDisplay()))
@@ -649,8 +676,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
             fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
-
             fabViewTest.setRlGenieHelpBottomMargin(200f);
+            fabViewFatafat.setMenuLabelsRightTestPadding(marginBottom,this,fabViewFatafat);
             lastClientId = getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID);
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             Data.AppType = getAppType();
@@ -1362,6 +1389,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             int llPayViewContainerVis = View.GONE;
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
             bRequestBooking.setVisibility(View.GONE);
+            int fabFatafatVisibility = View.GONE;
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
@@ -1370,6 +1398,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.imageViewMenu.setVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);
                 topBar.imageViewBack.setVisibility(isDeliveryOpenInBackground()?View.VISIBLE:View.GONE);
                 drawerLayout.setDrawerLockMode(isDeliveryOpenInBackground()?DrawerLayout.LOCK_MODE_LOCKED_CLOSED:DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    fabViewTest.setRelativeLayoutFABTestVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);
+                }
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getResources().getString(R.string.fatafat));
                 visMinOrder = setMinOrderAmountText(fragment);
@@ -1400,7 +1431,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.imageViewMenu.setVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);
                 topBar.imageViewBack.setVisibility(isDeliveryOpenInBackground()?View.VISIBLE:View.GONE);
                 drawerLayout.setDrawerLockMode(isDeliveryOpenInBackground()?DrawerLayout.LOCK_MODE_LOCKED_CLOSED:DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-
+                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    fabViewTest.setRelativeLayoutFABTestVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);
+                }
                 if (Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
                     llSearchCartVis = View.GONE;
                 }
@@ -1425,12 +1458,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 topBar.title.setVisibility(View.VISIBLE);
                 if(getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER ){
-                    topBar.title.setText(R.string.delivery );
+                    topBar.title.setText(R.string.delivery_new_name);
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                     topBar.imageViewMenu.setVisibility(View.VISIBLE);
                     topBar.imageViewBack.setVisibility(View.GONE);
-                    if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                        fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                    if(getCategoryIdOpened()<0){
+                        fabFatafatVisibility =  View.VISIBLE;
+                        if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                            fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                        }
+
                     }
                 }else{
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
@@ -1565,17 +1602,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }else if(fragment instanceof AnywhereHomeFragment){
                 topBar.getLlSearchCart().setLayoutTransition(null);
-                topBar.imageViewMenu.setVisibility(View.VISIBLE);
-                topBar.imageViewBack.setVisibility(View.GONE);
+                topBar.imageViewMenu.setVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);
+                topBar.imageViewBack.setVisibility(isDeliveryOpenInBackground()?View.VISIBLE:View.GONE);
+                drawerLayout.setDrawerLockMode(isDeliveryOpenInBackground()?DrawerLayout.LOCK_MODE_LOCKED_CLOSED:DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(Data.getFeedName(this));
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                    fabViewTest.setRelativeLayoutFABTestVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);
                 }
                 llSearchCartVis = View.GONE;
                 llPayViewContainerVis = View.VISIBLE;
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 visMinOrder = setMinOrderAmountText(fragment);
             }
             else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment ||
@@ -1667,7 +1704,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
 
-
+            fabViewFatafat.setVisibility(fabFatafatVisibility);
             topBar.imageViewBack.setPadding(padding, padding, padding, padding);
 
             if(visMinOrder != 1) {
@@ -2234,12 +2271,24 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 .commitAllowingStateLoss();
     }
 
-    public void addAnywhereHomeFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new AnywhereHomeFragment(),
-                        AnywhereHomeFragment.class.getName())
-                .addToBackStack(AnywhereHomeFragment.class.getName())
-                .commitAllowingStateLoss();
+    public void addAnywhereHomeFragment(boolean fromOnCreate) {
+        if(fromOnCreate){
+            getSupportFragmentManager().beginTransaction()
+                    .add(relativeLayoutContainer.getId(), new AnywhereHomeFragment(),
+                            AnywhereHomeFragment.class.getName())
+                    .addToBackStack(AnywhereHomeFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }else{
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                    .add(relativeLayoutContainer.getId(),  new AnywhereHomeFragment(),
+                            AnywhereHomeFragment.class.getName())
+                    .addToBackStack(AnywhereHomeFragment.class.getName())
+                    .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+                            .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+
     }
 
     private void addClaimHandleFragment() {
@@ -2291,9 +2340,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void performBackPressed(boolean isBackPressed) {
 
 
-        if(isDeliveryOpenInBackground()  &&  (getTopFragment() instanceof MealFragment|| getTopFragment() instanceof FreshHomeFragment)){
+        if(isDeliveryOpenInBackground()  &&  (getTopFragment() instanceof MealFragment|| getTopFragment() instanceof FreshHomeFragment || getTopFragment() instanceof AnywhereHomeFragment)){
+            saveAppCart();
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryCustomerClientId());
             Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.DELIVERY_CUSTOMER);
+            Data.AppType = getAppType();
             super.onBackPressed();
             return;
         }
@@ -2642,7 +2693,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
 
         saveItemListToSPDB();
-        saveAppCart(getIntent().getStringExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID));
+        saveAppCart();
 
         if (isMenusOrDeliveryOpen()) {
             saveFilters();
@@ -4292,6 +4343,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void switchOffering(String lastClientId,LatLng latLng){
 
 //        new ApiUpdateClientId().updateClientId(lastClientId, latLng);
+        saveAppCart();
         Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
         setOfferingData(lastClientId,false);
 
@@ -4650,15 +4702,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     private AppCart appCart;
+    private AppCart appCartMeals;
     public AppCart getCart(){
-        return appCart;
+        return getAppType()== AppConstant.ApplicationType.MEALS?appCartMeals:appCart;
     }
     private void createAppCart(String clientId){
         if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
             appCart = Paper.book().read(DB_FRESH_CART, new AppCart());
         }
         else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
-            appCart = Paper.book().read(DB_MEALS_CART, new AppCart());
+            appCartMeals = Paper.book().read(DB_MEALS_CART, new AppCart());
         }
         else if(clientId.equalsIgnoreCase(Config.getMenusClientId())){
             menusCart = Paper.book().read(DB_MENUS_CART, new MenusCart());
@@ -4666,28 +4719,28 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             deliveryCustomerCart = Paper.book().read(DB_DELIVERY_CUSTOMER_CART, new MenusCart());
         }
     }
-    private void saveAppCart(String clientId){
-        if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
+    private void saveAppCart(){
+        if(getAppType()== AppConstant.ApplicationType.FRESH){
             if(appCart != null) {
                 Paper.book().write(DB_FRESH_CART, appCart);
             } else {
                 Paper.book().delete(DB_FRESH_CART);
             }
         }
-        else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
-            if(appCart != null) {
-                Paper.book().write(DB_MEALS_CART, appCart);
+        else if(getAppType()== AppConstant.ApplicationType.MEALS){
+            if(appCartMeals != null) {
+                Paper.book().write(DB_MEALS_CART, appCartMeals);
             } else {
                 Paper.book().delete(DB_MEALS_CART);
             }
         }
-        else if(clientId.equalsIgnoreCase(Config.getMenusClientId())){
+        else if(getAppType()== AppConstant.ApplicationType.MENUS){
             if(menusCart != null) {
                 Paper.book().write(DB_MENUS_CART, menusCart);
             } else {
                 Paper.book().delete(DB_MENUS_CART);
             }
-        } else if(clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId())){
+        } else if(getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER){
             if(deliveryCustomerCart != null) {
                 Paper.book().write(DB_DELIVERY_CUSTOMER_CART, deliveryCustomerCart);
             } else {

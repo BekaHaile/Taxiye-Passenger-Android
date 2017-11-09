@@ -1,5 +1,6 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -125,6 +126,34 @@
 
 
         <include layout="@layout/layout_home_activity_fab_test" />
+
+        <RelativeLayout
+            android:id="@+id/rlMenuLabelfatat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu
+                android:id="@+id/menuLabelFatafat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:contentDescription="@string/fatafat"
+                android:paddingBottom="@dimen/padding_bottom_menu_labels"
+                android:paddingLeft="@dimen/padding_left_menu_labels"
+                android:tag="DontTouchMe"
+                fab:fab_colorRipple="@color/grey_light_alpha"
+                fab:menu_animationDelayPerItem="25"
+                fab:menu_backgroundColor="@color/black_70"
+                fab:menu_icon="@drawable/ic_fab_jeanie"
+                fab:menu_labels_colorNormal="@color/white"
+                fab:menu_labels_colorPressed="@color/grey_light"
+                fab:menu_labels_ellipsize="end"
+                fab:menu_labels_position="right"
+                fab:menu_labels_singleLine="true"
+                fab:menu_shadowColor="@color/black_50"/>
+
+        </RelativeLayout>
+
+
 
 
     </android.support.design.widget.CoordinatorLayout>

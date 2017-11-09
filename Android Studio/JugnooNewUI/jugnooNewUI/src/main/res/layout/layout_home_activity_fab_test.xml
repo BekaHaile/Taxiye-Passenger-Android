@@ -88,7 +88,8 @@
             fab:fab_size="mini"
             app:fab_colorNormal="@color/green_delivery_customer_fab"
             app:fab_colorPressed="@color/green_delivery_customer_fab_pressed"
-            app:fab_colorRipple="@color/green_delivery_customer_fab_pressed" />
+            app:fab_colorRipple="@color/green_delivery_customer_fab_pressed"
+            app:fab_label="@string/delivery_new_name" />
         <product.clicklabs.jugnoo.widgets.FAB.FloatingActionButton
             android:id="@+id/fabMenusTest"
             android:layout_width="wrap_content"
