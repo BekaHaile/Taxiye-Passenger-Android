@@ -1,15 +1,22 @@
 package com.sabkuchfresh.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundedCornersTransformation;
+
+import org.w3c.dom.Text;
+
+import java.util.List;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -22,16 +29,22 @@ public class RestaurantReviewImagesAdapter extends RecyclerView.Adapter<Restaura
 
     private FreshActivity activity;
     private FetchFeedbackResponse.Review review;
+    private List<FetchFeedbackResponse.ReviewImage> reviewImages;
     private Callback callback;
+    private boolean showingMerchantInfoFragment;
 
-    public RestaurantReviewImagesAdapter(FreshActivity activity, FetchFeedbackResponse.Review review, Callback callback) {
+    public
+    RestaurantReviewImagesAdapter(FreshActivity activity, FetchFeedbackResponse.Review review, List<FetchFeedbackResponse.ReviewImage> reviewImages,Boolean showingMerchantInfoFragment, Callback callback) {
         this.activity = activity;
         this.review = review;
+        this.reviewImages = reviewImages;
         this.callback = callback;
+        this.showingMerchantInfoFragment = showingMerchantInfoFragment;
     }
 
-    public void setList(FetchFeedbackResponse.Review review){
+    public void setList(FetchFeedbackResponse.Review review, List<FetchFeedbackResponse.ReviewImage> reviewImages){
         this.review = review;
+        this.reviewImages = reviewImages;
         notifyDataSetChanged();
     }
 
@@ -47,13 +60,23 @@ public class RestaurantReviewImagesAdapter extends RecyclerView.Adapter<Restaura
     @Override
     public void onBindViewHolder(RestaurantReviewImagesAdapter.ViewHolderReviewImage holder, int position) {
         try {
-            FetchFeedbackResponse.ReviewImage reviewImage = review.getImages().get(position);
-            Picasso.with(activity).load(reviewImage.getThumbnail())
-                    .resize((int) (ASSL.minRatio() * 300f), (int) (ASSL.minRatio() * 300f))
-                    .centerCrop()
-                    .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
-                    .placeholder(R.drawable.ic_fresh_item_placeholder)
-                    .into(holder.ivImage);
+            FetchFeedbackResponse.ReviewImage reviewImage = reviewImages.get(position);
+            if(showingMerchantInfoFragment){
+                Picasso.with(activity).load(TextUtils.isEmpty(reviewImage.getThumbnail())?reviewImage.getUrl():reviewImage.getThumbnail())
+                        .resize((int) (ASSL.minRatio() * 110f), (int) (ASSL.minRatio() * 110f))
+                        .centerCrop()
+                        .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*5), 0))
+                        .placeholder(R.drawable.ic_fresh_item_placeholder)
+                        .into(holder.ivImage);
+            }else{
+                Picasso.with(activity).load(TextUtils.isEmpty(reviewImage.getThumbnail())?reviewImage.getUrl():reviewImage.getThumbnail())
+                        .resize((int) (ASSL.minRatio() * 300f), (int) (ASSL.minRatio() * 300f))
+                        .centerCrop()
+                        .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
+                        .placeholder(R.drawable.ic_fresh_item_placeholder)
+                        .into(holder.ivImage);
+            }
+
             holder.ivImage.setTag(position);
             holder.ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -75,7 +98,7 @@ public class RestaurantReviewImagesAdapter extends RecyclerView.Adapter<Restaura
 
     @Override
     public int getItemCount() {
-        return review.getImages() == null ? 0 : review.getImages().size();
+        return reviewImages == null ? 0 : reviewImages.size();
     }
 
     class ViewHolderReviewImage extends RecyclerView.ViewHolder {
@@ -83,6 +106,12 @@ public class RestaurantReviewImagesAdapter extends RecyclerView.Adapter<Restaura
         public ViewHolderReviewImage(View itemView) {
             super(itemView);
             ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
+            if(showingMerchantInfoFragment){
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) ivImage.getLayoutParams();
+                layoutParams.height = (int) (ASSL.minRatio() * 110f);
+                layoutParams.width= (int) (ASSL.minRatio() * 110f);
+                ivImage.setLayoutParams(layoutParams);
+            }
         }
     }
 

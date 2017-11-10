@@ -521,11 +521,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             Callback<MenusResponse> callback = new Callback<MenusResponse>() {
                 @Override
                 public void success(final MenusResponse menusResponse, Response response) {
-                    if(menusResponse.getCategories()!=null){
-                        noOfCategories = menusResponse.getCategories().size();
-                    }else{
-                        noOfCategories = 0;
-                    }
                     lastTimeRefreshed = System.currentTimeMillis();
                     activity.setCategoryIdOpened(categoryId>0?requestedCategory:null);
                     setUpUIforCategoriesOpened(activity.getCategoryOpened());
@@ -563,6 +558,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     if (menusResponse.getCategories().size() == 1) {
                                         activity.setCategoryIdOpened(menusResponse.getCategories().get(0));
                                     }
+                                    noOfCategories = menusResponse.getCategories().size();
                                     activity.setMenusResponse(menusResponse);
 //                                    deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
                                 }

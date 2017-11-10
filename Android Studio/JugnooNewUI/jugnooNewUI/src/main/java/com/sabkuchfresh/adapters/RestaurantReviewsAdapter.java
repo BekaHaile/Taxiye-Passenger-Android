@@ -115,7 +115,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 					holder.ivFeedImageSingle.setVisibility(View.GONE);
 					paramsRL.addRule(RelativeLayout.BELOW, holder.rvFeedImages.getId());
 					if (holder.imagesAdapter == null) {
-						holder.imagesAdapter = new RestaurantReviewImagesAdapter(activity, review,
+						holder.imagesAdapter = new RestaurantReviewImagesAdapter(activity, review,review.getImages(),false,
 								new RestaurantReviewImagesAdapter.Callback() {
 									@Override
 									public void onImageClick(int positionImageClicked, FetchFeedbackResponse.Review review) {
@@ -130,7 +130,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 								});
 						holder.rvFeedImages.setAdapter(holder.imagesAdapter);
 					} else {
-						holder.imagesAdapter.setList(review);
+						holder.imagesAdapter.setList(review,review.getImages());
 						holder.rvFeedImages.setAdapter(holder.imagesAdapter);
 					}
 				} else {

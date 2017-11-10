@@ -3,6 +3,7 @@ package com.sabkuchfresh.retrofit.model.menus;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,7 +48,17 @@ public class VendorMenuResponse {
     @Expose
     private int restuarantOutOfRadius;
 
+    @SerializedName("images_list")
+    @Expose
+    private ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages;
 
+    public void setReviewImages(ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages) {
+        this.reviewImages = reviewImages;
+    }
+
+    public ArrayList<FetchFeedbackResponse.ReviewImage> getReviewImages() {
+        return reviewImages;
+    }
 
     public boolean getRestuarantOutOfRadius() {
         return restuarantOutOfRadius == 1;

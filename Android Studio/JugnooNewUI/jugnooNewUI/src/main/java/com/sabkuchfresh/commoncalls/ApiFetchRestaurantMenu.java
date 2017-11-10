@@ -238,6 +238,7 @@ public class ApiFetchRestaurantMenu {
     }
 
     private void setVendorDataToFreshActivity(VendorMenuResponse productsResponse) {
+
         activity.setVendorOpened(productsResponse.getVendor());
         if (activity.getAppType() == AppConstant.ApplicationType.FEED) {
             Data.AppType = AppConstant.ApplicationType.MENUS;

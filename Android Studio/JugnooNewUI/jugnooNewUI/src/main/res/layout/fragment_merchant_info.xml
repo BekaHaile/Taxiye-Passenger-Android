@@ -403,8 +403,48 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_7"
-                android:background="@drawable/shadow_gradient_seperator"
-                />
+                android:background="@drawable/shadow_gradient_seperator" />
+
+            <LinearLayout
+                android:id="@+id/layout_photos"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                
+                <TextView
+                    android:text="Photos"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="8dp"
+                    android:id="@+id/photos_count"
+                    app:font="@string/maven"
+                    android:textColor="@color/text_color"
+                    android:textSize="13sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                
+                <View
+                    android:background="@color/bar_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"/>
+                
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_photos"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_7"
+                    android:background="@drawable/shadow_gradient_seperator" />
+            </LinearLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -439,6 +479,7 @@
 
                 </product.clicklabs.jugnoo.utils.ProgressWheel>
             </RelativeLayout>
+
 
             <View
                 android:layout_width="match_parent"
