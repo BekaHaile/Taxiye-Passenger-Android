@@ -1050,8 +1050,14 @@ public class UserData {
 		this.deliveryCustomerEnabled = deliveryCustomerEnabled;
 	}
 
-	//	"meals_enabled": 1,
-//			"fresh_enabled": 1,
-//			"delivery_enabled": 1,
-//			"default_client_id": "FHkmrtv6zn0KuGcW",
+	public boolean isOnlyFatafatNewEnabled(){
+		return getDeliveryCustomerEnabled() == 1
+				&& getMealsEnabled() == 0
+				&& getFreshEnabled() == 0
+				&& getGroceryEnabled() == 0
+				&& getMenusEnabled() == 0
+				&& getPayEnabled() == 0
+				&& getFeedEnabled() == 0
+				&& getProsEnabled() == 0;
+	}
 }

@@ -11,7 +11,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -57,6 +56,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -79,7 +79,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private RelativeLayout rlMainContainer;
     private View vDividerLocation;
 
-    private View rootView;
+    public View rootView;
     private FreshActivity activity;
 
 
@@ -447,7 +447,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 }
 
 
-                final boolean refreshCartFinal = activity.isRefreshCart()  ;
+                final boolean refreshCartFinal = activity.isRefreshCart()
+                        || MapUtils.distance(currentMenusLatLngData, activity.getSelectedLatLng()) > 10 ;
 
                     activity.getHandler().postDelayed(new Runnable() {
                     @Override

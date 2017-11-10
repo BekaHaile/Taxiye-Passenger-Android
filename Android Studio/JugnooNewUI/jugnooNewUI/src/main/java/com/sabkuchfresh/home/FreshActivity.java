@@ -2361,6 +2361,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryCustomerClientId());
             Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.DELIVERY_CUSTOMER);
             Data.AppType = getAppType();
+            if(getMenusFragment() != null && getMenusFragment().getView() != null) {
+                setDeliveryAddressView(getMenusFragment().rootView);
+            }
             super.onBackPressed();
             return;
         }
