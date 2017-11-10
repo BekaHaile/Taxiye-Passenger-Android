@@ -233,9 +233,9 @@
                 android:layout_height="match_parent"
                 android:src="@drawable/background_white_theme_selector"/>
             <ImageView
-                android:layout_width="56px"
-                android:layout_height="56px"
-                android:layout_marginLeft="30px"
+                android:layout_width="44px"
+                android:layout_height="50px"
+                android:layout_marginLeft="34px"
                 android:src="@drawable/ic_menu_category_delivery_customer_selector"
                 android:tag="mwar"/>
 

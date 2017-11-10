@@ -1030,11 +1030,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 							|| (getFeedClaimHandleFragment() != null && !getFeedClaimHandleFragment().isHidden())
                             || (getProsHomeFragment() != null && !getProsHomeFragment().isHidden())
                             ) {
-                        fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                        fabViewTest.setFABButtons();
+                        if(!fabViewTest.isFabtoggleModeOn()){
+                            fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                            fabViewTest.setFABButtons();
+                        }
+
                     }
                 } else {
-                    fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
+                    if(!fabViewTest.isFabtoggleModeOn()){
+                        fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
+
+                    }
                 }
 
 
@@ -4088,16 +4094,35 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             if(getMenusFragment()!=null && getTopFragment() instanceof MenusFragment &&  getMenusFragment().getCurrentStripInfo()!=null && !TextUtils.isEmpty(getMenusFragment().getCurrentStripInfo().getText())){
                 textViewMinOrder.setText(getMenusFragment().getCurrentStripInfo().getText().trim());
                 textViewMinOrderSetVisibility(View.VISIBLE);
-                fabViewFatafat.setMenuLabelsRightTestPadding(60f+35f,this,fabViewFatafat);
-                fabViewTest.setMenuLabelsRightTestPadding(60f+35f);
+
             }else{
                 textViewMinOrderSetVisibility(View.GONE);
-                fabViewTest.setMenuLabelsRightTestPadding(60f);
+
             }
+            adjustFabMarginsForDeliveryOffering();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    public void adjustFabMarginsForDeliveryOffering() {
+        try {
+            boolean isMenusCartVisible =  menusCartSelectedLayout!=null && menusCartSelectedLayout.getRlMenusCartSelected().getVisibility()==View.VISIBLE;
+            boolean isMenusStripVisible = textViewMinOrder.getVisibility()==View.VISIBLE;
+
+            float padding = 10f;
+            if(isMenusCartVisible){
+                padding+=60f;
+            }
+            if(isMenusStripVisible){
+                padding+=25f;
+            }
+            fabViewTest.setMenuLabelsRightTestPadding(padding);
+            fabViewFatafat.setMenuLabelsRightTestPadding(padding,this,fabViewFatafat);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static class OrderViaChatData{
         private LatLng destinationlatLng;
@@ -4447,7 +4472,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 @Override
                 public void success(String clientId) {
-                    setRefreshCart(true);
                     saveAppCart();
                     Prefs.with(FreshActivity.this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
                     setOfferingData(lastClientId,false);
@@ -4473,8 +4497,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
         }else{
-            setRefreshCart(true);
-
+            rlfabViewFatafat.setVisibility(View.GONE);
+            fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
             saveAppCart();
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             setOfferingData(lastClientId,false);
@@ -5313,6 +5337,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private MenusCartSelectedLayout menusCartSelectedLayout;
     public MenusCartSelectedLayout getMenusCartSelectedLayout(){
         return menusCartSelectedLayout;
+    }
+
+    public void hideMenusCartSelectedLayout(){
+        menusCartSelectedLayout.setVisibility(View.GONE);
+        adjustFabMarginsForDeliveryOffering();
     }
 
 

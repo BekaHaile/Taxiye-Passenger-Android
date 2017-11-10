@@ -24,6 +24,10 @@ public class MenusCartSelectedLayout {
 	private int vendorId;
 	private boolean isViewDisabled;
 
+	public RelativeLayout getRlMenusCartSelected() {
+		return rlMenusCartSelected;
+	}
+
 	public RelativeLayout getRlMenusCartSelectedInner() {
 		return rlMenusCartSelectedInner;
 	}
@@ -35,7 +39,6 @@ public class MenusCartSelectedLayout {
 
 	private void init(View root){
 		rlMenusCartSelected = (RelativeLayout) root;
-		rlMenusCartSelected.setVisibility(View.GONE);
 		rlMenusCartSelectedInner = (RelativeLayout) root.findViewById(R.id.rlMenusCartSelectedInner);
 		tvRestName = (TextView) root.findViewById(R.id.tvRestName);
 		llDeleteCart = (LinearLayout) root.findViewById(R.id.llDeleteCart);
@@ -76,7 +79,12 @@ public class MenusCartSelectedLayout {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		activity.adjustFabMarginsForDeliveryOffering();
+
+
 	}
+
+
 
 	public void setVisibility(int visibility){
 		if(visibility == View.VISIBLE && activity.getTopFragment() instanceof MenusFragment){

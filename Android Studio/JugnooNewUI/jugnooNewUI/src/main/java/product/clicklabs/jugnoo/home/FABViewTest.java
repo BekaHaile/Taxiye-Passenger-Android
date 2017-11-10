@@ -42,6 +42,10 @@ public class FABViewTest implements GACategory, GAAction {
     public RelativeLayout relativeLayoutFABTest;
     private boolean fabtoggleModeOn;
 
+    public boolean isFabtoggleModeOn() {
+        return fabtoggleModeOn;
+    }
+
     public FloatingActionMenu getMenuLabelsRightTest(FloatingActionMenu menuLabelsRightTest) {
        return menuLabelsRightTest;
     }
@@ -596,8 +600,14 @@ public class FABViewTest implements GACategory, GAAction {
      * @param paddingBottom in pixels with scale or absolute
      */
     public void setMenuLabelsRightTestPadding(int paddingBottom){
-        menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, paddingBottom);
-        setRlGenieHelpBottomMargin(paddingBottom + (int)(ASSL.Yscale() * 100f));
+        if(activity instanceof FreshActivity){
+            menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0,paddingBottom);
+            setRlGenieHelpBottomMargin(paddingBottom + (int)(ASSL.Yscale() * 100f));
+        }else{
+            menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, paddingBottom);
+            setRlGenieHelpBottomMargin(paddingBottom + (int)(ASSL.Yscale() * 100f));
+        }
+
     }
 
     public void showTutorial(){

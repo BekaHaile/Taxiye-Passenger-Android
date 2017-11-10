@@ -386,8 +386,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     ivChatNow.getDrawable().setColorFilter(null);
                 }
 
-                bOrderOnline.setBackgroundResource((activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0) ?
-                        R.drawable.capsule_grey_dark_bg : R.drawable.capsule_theme_color_selector);
+                bOrderOnline.setEnabled(!(activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0));
                 bOrderOnline.setVisibility(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE ? View.GONE : View.VISIBLE);
                 bOrderOnline.setText(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_CHAT ? R.string.order_via_chat : R.string.order_online);
             }

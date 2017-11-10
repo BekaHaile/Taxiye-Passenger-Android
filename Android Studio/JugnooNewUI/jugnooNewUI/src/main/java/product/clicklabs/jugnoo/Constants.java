@@ -819,6 +819,6 @@ public interface Constants {
     String KEY_DESCRIPTION = "description";
     String KEY_CURRENCY = "currency";
     String KEY_IS_RAZORPAY_ENABLED = "is_razorpay_enabled";
-    int ORDER_MODE_UNAVAILABLE = 4;
+    int ORDER_MODE_UNAVAILABLE = 3;
     int ORDER_MODE_CHAT= 0;
 }

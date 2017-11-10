@@ -266,7 +266,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                  /*   if(deliveryDisplayCategoriesView.isDropDownVisible()){
                         deliveryDisplayCategoriesView.toggleDropDown();
                     }*/
-                    activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
+                    activity.hideMenusCartSelectedLayout();
                     activity.rlfabViewFatafat.setVisibility(View.GONE);
                 }
             }
@@ -466,10 +466,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
             } else {
-                activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
-               /* if(isCategoryDropDownVisible()){
-                    deliveryDisplayCategoriesView.toggleDropDown();
-                }*/
+                activity.hideMenusCartSelectedLayout();
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -549,11 +547,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 status.addAll(menusResponse.getRecentOrdersPossibleStatus());
                                 statusMeals.clear();
                                 statusMeals.addAll(menusResponse.getRecentOrdersPossibleMealsStatus());
-
+                                currentStripInfo=null;
                                 currentStripInfo = menusResponse.getStripInfo();
-                                if(currentStripInfo==null || TextUtils.isEmpty(currentStripInfo.getText())){
-                                    activity.setCurrentDeliveryStripToMinOrder();
-                                }
+                                activity.setCurrentDeliveryStripToMinOrder();
+
                                 //no category opened, no filters applied and no search ongoing
                                 if (activity.getCategoryIdOpened() < 0 && !activity.isFilterApplied() && !isSearchingCase(searchTextCurr)) {
                                     if (menusResponse.getCategories().size() == 1) {
@@ -660,7 +657,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
             recyclerViewRestaurant.setVisibility(View.GONE);
 //            showCategoriesDropDown(false, 0);
-            activity.getMenusCartSelectedLayout().setVisibility(View.GONE);
+            activity.hideMenusCartSelectedLayout();
         } else {
             activity.getTopBar().getLlSearchCart().setVisibility(serviceUnavailable ? View.GONE : View.VISIBLE);
             recyclerViewRestaurant.setVisibility(View.VISIBLE);
