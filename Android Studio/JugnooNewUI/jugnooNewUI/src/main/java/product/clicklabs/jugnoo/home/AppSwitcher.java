@@ -107,6 +107,17 @@ public class AppSwitcher {
 						clientId = Config.getAutosClientId();
 					}
 
+					//if only delivery customer enabled and client id to open is another than that
+					if(isOnlyFatafatNewEnabled
+							&& (clientId.equalsIgnoreCase(Config.getFreshClientId())
+									|| clientId.equalsIgnoreCase(Config.getMealsClientId())
+									|| clientId.equalsIgnoreCase(Config.getMenusClientId())
+									|| clientId.equalsIgnoreCase(Config.getFeedClientId())
+									|| clientId.equalsIgnoreCase(Config.getProsClientId()))){
+						Prefs.with(activity).save(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, clientId);
+						clientId = Config.getDeliveryCustomerClientId();
+					}
+
 					if (Data.userData.getMealsEnabled() == 0
 							&& Data.userData.getFreshEnabled() == 0
 							&& Data.userData.getMenusEnabled() == 0

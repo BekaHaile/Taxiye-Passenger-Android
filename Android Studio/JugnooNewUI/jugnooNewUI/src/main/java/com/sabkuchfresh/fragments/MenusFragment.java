@@ -222,6 +222,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             } finally {
                 Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
             }
+
+            // for other client ids deeplink on delivery customer only case
+            String clientIdForDeepLink = Prefs.with(activity).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "");
+            if(!clientIdForDeepLink.equalsIgnoreCase("")){
+                activity.switchOfferingViaClientId(clientIdForDeepLink);
+            }
+            Prefs.with(activity).save(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "");
         }
 
         // dialogs at login
