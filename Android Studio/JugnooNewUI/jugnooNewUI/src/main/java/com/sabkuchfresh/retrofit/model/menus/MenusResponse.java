@@ -869,6 +869,11 @@ public class MenusResponse {
 			this.id = id;
 		}
 
+		public Category(int id, String categoryName) {
+			this.id = id;
+			this.categoryName = categoryName;
+		}
+
 		public Category(String image, String categoryName) {
 			this.image = image;
 			this.categoryName = categoryName;

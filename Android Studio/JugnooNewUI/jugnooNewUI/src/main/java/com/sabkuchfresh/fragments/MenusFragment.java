@@ -573,9 +573,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 if (activity.getMenusFilterFragment() != null && !isSearchingCase(searchTextCurr)) {
                                     activity.getMenusFilterFragment().updateDataLists(menusResponse);
                                 }
-                                // TODO: 07/11/17 Set Label Icon
-//                                deliveryDisplayCategoriesView.setCategoryLabelIcon(activity.getCategoryIdOpened());
-//                                showCategoriesDropDown(true, activity.getMenusResponse().getCategories().size());
                                 deliveryHomeAdapter.setList(menusResponse, false, hasMorePages);
 
 

@@ -956,6 +956,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                         }
                                     } else if (Constants.OPEN_DEEP_INDEX == flag) {
                                         deepLinkAction.openDeepLink(menuBar);
+                                    } else if (Constants.OPEN_APP_CLIENT_ID == flag && intent.hasExtra(Constants.KEY_CLIENT_ID)) {
+                                        final String clientId = intent.getStringExtra(Constants.KEY_CLIENT_ID);
+                                        if(!Config.getLastOpenedClientId(FreshActivity.this).equalsIgnoreCase(clientId)){
+                                            clearFragmentStackTillLast();
+                                            handler.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if(clientId.equalsIgnoreCase(Config.getMenusClientId())
+                                                            && getMenusFragment() != null){
+                                                        getMenusFragment().switchCategory(new MenusResponse.Category(Constants.CATEGORY_ID_RESTAURANTS, Constants.CATEGORY_RESTAURANTS_NAME), false);
+                                                    } else {
+                                                        switchOffering(clientId, getSelectedLatLng());
+                                                    }
+                                                }
+                                            },10);
+                                        }
                                     }
                                 }
                                 break;
@@ -2182,10 +2198,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         checkForBackToFeed(false);
 
-        FragmentManager fm = getSupportFragmentManager();
-        for (int i = 0; i < fm.getBackStackEntryCount() - 1; i++) {
-            fm.popBackStack();
-        }
+        clearFragmentStackTillLast();
 
         updateCartValuesGetTotalPrice();
 
@@ -2197,6 +2210,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         }, 300);
         clearEtFocus();
+    }
+
+    private void clearFragmentStackTillLast() {
+        FragmentManager fm = getSupportFragmentManager();
+        for (int i = 0; i < fm.getBackStackEntryCount() - 1; i++) {
+            fm.popBackStack();
+        }
     }
 
     private boolean orderJustCompleted;

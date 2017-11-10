@@ -46,17 +46,17 @@ public class DeepLinkAction {
 				menuBar.menuAdapter.onClickAction(MenuInfoTags.GAME.getTag());
 			}
 			else if(AppLinkIndex.FRESH_PAGE.getOrdinal() == Data.deepLinkIndex){
-				if(Data.userData.getFreshEnabled() == 1) {
+				if(Data.userData.getFreshEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.FRESH.getTag());
 				}
 			}
 			else if(AppLinkIndex.MEAL_PAGE.getOrdinal() == Data.deepLinkIndex){
-				if(Data.userData.getMealsEnabled() == 1) {
+				if(Data.userData.getMealsEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.MEALS.getTag());
 				}
 			}
 			else if(AppLinkIndex.DELIVERY_PAGE.getOrdinal() == Data.deepLinkIndex){
-				if(Data.userData.getDeliveryEnabled() == 1) {
+				if(Data.userData.getDeliveryEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.DELIVERY.getTag());
 				}
 			}
@@ -64,7 +64,7 @@ public class DeepLinkAction {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.GET_A_RIDE.getTag());
 			}
 			else if(AppLinkIndex.GROCERY_PAGE.getOrdinal() == Data.deepLinkIndex){
-				if(Data.userData.getGroceryEnabled() == 1) {
+				if(Data.userData.getGroceryEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.GROCERY.getTag());
 				}
 			}
@@ -74,12 +74,12 @@ public class DeepLinkAction {
 				}
 			}
 			else if(AppLinkIndex.MENUS_PAGE.getOrdinal() == Data.deepLinkIndex){
-				if(Data.userData.getMenusEnabled() == 1) {
+				if(Data.userData.getMenusEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.MENUS.getTag());
 				}
 			}
 			else if(AppLinkIndex.DELIVERY_CUSTOMER_PAGE.getOrdinal() == Data.deepLinkIndex){
-				if(Data.userData.getDeliveryCustomerEnabled() == 1) {
+				if(Data.userData.getDeliveryCustomerEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.DELIVERY_CUSTOMER.getTag());
 				}
 			}
@@ -104,12 +104,12 @@ public class DeepLinkAction {
 				menuBar.getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 			else if(AppLinkIndex.FEED_PAGE.getOrdinal() == Data.deepLinkIndex){
-				if(Data.userData.getFeedEnabled() == 1) {
+				if(Data.userData.getFeedEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.FEED.getTag());
 				}
 			}
 			else if(AppLinkIndex.PROS_PAGE.getOrdinal() == Data.deepLinkIndex){
-				if(Data.userData.getProsEnabled() == 1) {
+				if(Data.userData.getProsEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
 					menuBar.menuAdapter.onClickAction(MenuInfoTags.PROS.getTag());
 				}
 			}
