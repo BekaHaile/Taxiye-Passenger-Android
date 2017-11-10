@@ -231,7 +231,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Stores"));
 
                 }else{
-                    dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(), "Store"));
+                    dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getAppType()==AppConstant.ApplicationType.MENUS?"Restaurant":"Store"));
 
                 }
 

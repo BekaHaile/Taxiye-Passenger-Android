@@ -228,6 +228,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             if(!clientIdForDeepLink.equalsIgnoreCase("")){
                 activity.switchOfferingViaClientId(clientIdForDeepLink);
             }
+
+            Prefs.with(activity).save(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "");
         }
 
         // dialogs at login
@@ -527,8 +529,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 @Override
                 public void success(final MenusResponse menusResponse, Response response) {
                     lastTimeRefreshed = System.currentTimeMillis();
-                    activity.setCategoryIdOpened(categoryId>0?requestedCategory:null);
                     if(!isSearchingCase(searchTextCurr)){
+                        activity.setCategoryIdOpened(categoryId>0?requestedCategory:null);
                         setUpUIforCategoriesOpened(activity.getCategoryOpened());
 
                     }

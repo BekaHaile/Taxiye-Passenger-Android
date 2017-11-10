@@ -176,7 +176,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         GAUtils.trackScreenView(activity.getGaCategory()+ HOME);
         if(activity.getOrderViaChat()!=null){
             FreshActivity.OrderViaChatData orderViaChatData = activity.getOrderViaChat();
-            setAddress(false,new SearchResult("Other",orderViaChatData.getRestaurantName()+orderViaChatData.getDestinationAddress(),"",orderViaChatData.getDestinationlatLng().latitude,orderViaChatData.getDestinationlatLng().longitude));
+            setAddress(false,new SearchResult("",orderViaChatData.getRestaurantName()+", "+ orderViaChatData.getDestinationAddress(),"",orderViaChatData.getDestinationlatLng().latitude,orderViaChatData.getDestinationlatLng().longitude));
             activity.setOrderViaChatData(null);
             cvPickupAddress.setEnabled(false);
             edtTaskDescription.setHint(R.string.anywhere_hint_order_via_chat);
