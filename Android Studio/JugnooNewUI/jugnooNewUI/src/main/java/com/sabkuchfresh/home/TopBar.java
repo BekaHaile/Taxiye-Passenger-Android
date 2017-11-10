@@ -149,17 +149,27 @@ public class TopBar implements GAAction, GACategory {
                         if (activity instanceof FreshActivity
                                 && ((FreshActivity) activity).getTopFragment() != null
                                 && ((FreshActivity) activity).getTopFragment() instanceof MenusFragment) {
-                            imageViewBack.setVisibility(View.GONE);
-                            imageViewBack.invalidate();
                             title.setAlpha(0.0f);
                             ivSearch.setAlpha(0.0f);
                             title.setVisibility(View.VISIBLE);
                             ivSearch.setVisibility(View.VISIBLE);
-                            imageViewMenu.setVisibility(View.VISIBLE);
+
+                            if(activity instanceof FreshActivity && ((FreshActivity) activity).getMenusFragment().iSChildCategoryOpen()){
+                                imageViewBack.setVisibility(View.VISIBLE);
+                                imageViewBack.invalidate();
+                                imageViewMenu.setVisibility(View.GONE);
+                                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                            }else{
+                                imageViewBack.setVisibility(View.GONE);
+                                imageViewBack.invalidate();
+                                imageViewMenu.setVisibility(View.VISIBLE);
+                                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                            }
+
+
                             title.animate().alpha(1.0f).setDuration(200);
                             ivSearch.animate().alpha(1.0f).setDuration(200);
                             imageViewMenu.animate().alpha(1.0f).setDuration(200);
-                            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                         }
                     }
 

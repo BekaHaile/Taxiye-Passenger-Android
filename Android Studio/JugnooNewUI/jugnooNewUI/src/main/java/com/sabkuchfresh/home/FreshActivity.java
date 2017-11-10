@@ -305,7 +305,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             setContentView(R.layout.activity_fresh);
 			ButterKnife.bind(this);
             fabViewFatafat = (FloatingActionMenu) findViewById(R.id.menuLabelFatafat);
-            fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.ic_fab_fatafat_chat));
+            fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.custom_copy));
             fabViewFatafat.setMenuButtonColorNormal(ContextCompat.getColor(this,R.color.fatafat_fab));
             fabViewFatafat.setMenuButtonColorPressed(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
             fabViewFatafat.setMenuButtonColorRipple(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
@@ -4109,9 +4109,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             boolean isMenusCartVisible =  menusCartSelectedLayout!=null && menusCartSelectedLayout.getRlMenusCartSelected().getVisibility()==View.VISIBLE;
             boolean isMenusStripVisible = textViewMinOrder.getVisibility()==View.VISIBLE;
 
-            float padding = 10f;
+            float padding = 20f;
             if(isMenusCartVisible){
-                padding+=60f;
+                padding+=50f;
             }
             if(isMenusStripVisible){
                 padding+=25f;

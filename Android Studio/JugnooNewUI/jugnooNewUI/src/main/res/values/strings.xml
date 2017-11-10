@@ -1390,6 +1390,12 @@
     <string name="card">Card</string>
     <string name="montserrat_m">Montserrat Medium</string>
     <string name="order_via_chat">Order Via Chat</string>
+    <string name="anywhere_hint">Tell us what you need to get done. e.g. \n- Food from your favorite restaurants
+\n- Get medicine from a chemist shop
+\n- Send cakes or flowers to loved ones
+\n- Grocery/daily needs items
+\n- Pick &amp; drop documents/keys/other items</string>
+    <string name="anywhere_hint_order_via_chat">Please enter item details</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

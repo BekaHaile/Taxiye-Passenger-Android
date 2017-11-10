@@ -61,7 +61,7 @@
                     android:padding="10dp"
                     android:textColor="@color/text_color"
                     android:inputType="textMultiLine|textCapSentences"
-                    android:textColorHint="@color/text_color_hint"
+                    android:textColorHint="@color/text_color_hint_anywhere"
                     android:textSize="14sp"
                     app:font="@string/maven" />
 

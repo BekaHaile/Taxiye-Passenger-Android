@@ -118,7 +118,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         ButterKnife.bind(this, rootView);
 
         textColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color));
-        textHintColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color_light));
+        textHintColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color_hint));
         rgTimeSlot.check(R.id.rb_asap);
         isAsapSelected = true;
         setCurrentAddressToDelivery();
@@ -179,6 +179,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             setAddress(false,new SearchResult("Other",orderViaChatData.getRestaurantName()+orderViaChatData.getDestinationAddress(),"",orderViaChatData.getDestinationlatLng().latitude,orderViaChatData.getDestinationlatLng().longitude));
             activity.setOrderViaChatData(null);
             cvPickupAddress.setEnabled(false);
+            edtTaskDescription.setHint(R.string.anywhere_hint_order_via_chat);
+        }else{
+            edtTaskDescription.setHint(R.string.anywhere_hint);
+
         }
         return rootView;
     }

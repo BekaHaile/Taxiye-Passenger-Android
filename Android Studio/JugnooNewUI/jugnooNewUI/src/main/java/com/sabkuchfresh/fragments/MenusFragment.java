@@ -523,7 +523,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     lastTimeRefreshed = System.currentTimeMillis();
                     activity.setCategoryIdOpened(categoryId>0?requestedCategory:null);
                     setUpUIforCategoriesOpened(activity.getCategoryOpened());
+                    if(activity.getCategoryOpened()!=null && activity.getCategoryIdOpened()>0){
+                        activity.getTopBar().etSearch.setHint("Search in " + activity.getCategoryOpened().getCategoryName());
 
+                    }else{
+                        activity.getTopBar().etSearch.setHint("Search..");
+
+                    }
                     DialogPopup.dismissLoadingDialog();
 
                     swipeRefreshLayout.setRefreshing(false);
@@ -592,7 +598,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 }
 
                             } else {
-                                DialogPopup.alertPopup(activity, "", message);
+                                if(!searchOpened){
+                                    DialogPopup.alertPopup(activity, "", message);
+
+                                }
                             }
                         }
                     } catch (Exception exception) {
@@ -1043,4 +1052,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 	public boolean isServiceUnavailable() {
 		return serviceUnavailable;
 	}
+
+	public boolean iSChildCategoryOpen(){
+        return activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER && noOfCategories>0&& activity.getCategoryIdOpened()>0;
+    }
 }

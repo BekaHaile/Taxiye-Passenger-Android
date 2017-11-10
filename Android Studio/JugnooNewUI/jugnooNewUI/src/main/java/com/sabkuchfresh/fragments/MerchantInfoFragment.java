@@ -160,6 +160,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         makeBold(tvMinOrderAmt, tvDeliversIn, tvMerchantName, tvReviewCount, tvReviewsHeader);
         activity.fragmentUISetup(this);
         activity.appBarLayout.setExpanded(true);
+        activity.fragmentUISetup(this);
         rvTopReviews.setLayoutManager(new LinearLayoutManager(activity));
         reviewsAdapter = new RestaurantReviewsAdapter(activity, new RestaurantReviewsAdapter.Callback() {
             @Override
@@ -386,7 +387,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     ivChatNow.getDrawable().setColorFilter(null);
                 }
 
-                bOrderOnline.setEnabled(!(activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0));
+                bOrderOnline.setBackgroundResource((activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0) ?
+                        R.drawable.capsule_grey_dark_bg : R.drawable.capsule_theme_color_selector);
                 bOrderOnline.setVisibility(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE ? View.GONE : View.VISIBLE);
                 bOrderOnline.setText(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_CHAT ? R.string.order_via_chat : R.string.order_online);
             }
@@ -463,6 +465,10 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         if (!activity.isDeliveryOpenInBackground()) {
                             return;
                         }
+                        if((activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0)){
+                            return;
+                        }
+
 
                         activity.switchOffering(Config.getFeedClientId(), null);
                         activity.setOrderViaChatData(new FreshActivity.OrderViaChatData(activity.getVendorOpened().getLatLng(), activity.getVendorOpened().getAddress(), activity.getVendorOpened().getName()));
