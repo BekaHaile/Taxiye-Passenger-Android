@@ -303,8 +303,8 @@
     <color name="home_switcher_grocery_pressed">#D99cc450</color>
     <color name="home_switcher_menus">#f67754</color>
     <color name="home_switcher_menus_pressed">#D9f67754</color>
-    <color name="home_switcher_delivery">#6a89c6</color>
-    <color name="home_switcher_delivery_pressed">#D96a89c6</color>
+    <color name="home_switcher_delivery">#8cc521</color>
+    <color name="home_switcher_delivery_pressed">#D98cc521</color>
     <color name="home_switcher_meals">#ff9b4d</color>
     <color name="home_switcher_meals_pressed">#D9ff9b4d</color>
     <color name="fatafat_fab">#353542</color>

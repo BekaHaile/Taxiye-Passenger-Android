@@ -522,7 +522,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 public void success(final MenusResponse menusResponse, Response response) {
                     lastTimeRefreshed = System.currentTimeMillis();
                     activity.setCategoryIdOpened(categoryId>0?requestedCategory:null);
-                    setUpUIforCategoriesOpened(activity.getCategoryOpened());
+                    if(!isSearchingCase(searchTextCurr)){
+                        setUpUIforCategoriesOpened(activity.getCategoryOpened());
+
+                    }
                     if(activity.getCategoryOpened()!=null && activity.getCategoryIdOpened()>0){
                         activity.getTopBar().etSearch.setHint("Search in " + activity.getCategoryOpened().getCategoryName());
 
@@ -562,14 +565,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                     if (menusResponse.getCategories().size() == 1) {
                                         activity.setCategoryIdOpened(menusResponse.getCategories().get(0));
                                     }
-                                    noOfCategories = menusResponse.getCategories().size();
+                                    noOfCategories = menusResponse.getCategories()==null?0:menusResponse.getCategories().size();
                                     activity.setMenusResponse(menusResponse);
 //                                    deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
                                 }
 
                                 //Set a category
-                                if(activity.getCategoryIdOpened()==-1 && menusResponse.getCategories().size()<1 && activity.getAppType()== AppConstant.ApplicationType.MENUS){
+                                if(activity.getCategoryIdOpened()==Constants.CATEGORY_ID_RESTAURANTS && (menusResponse.getCategories()!=null ||  menusResponse.getCategories().size()<1 )&& activity.getAppType()== AppConstant.ApplicationType.MENUS){
                                     activity.setCategoryIdOpened(null);
+
                                 }
 
                                 if(activity.getMenusResponse() == null){

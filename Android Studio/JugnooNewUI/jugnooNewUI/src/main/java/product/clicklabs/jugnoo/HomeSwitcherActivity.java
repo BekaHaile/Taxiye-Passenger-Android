@@ -121,7 +121,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
                 offerings.add(new OfferingListAdapter.Offering(Config.getMenusClientId(), getString(R.string.menus), "Online food delivering from restaurants", R.drawable.ic_menus_switcher,R.drawable.ic_graph_menus,R.drawable.bg_home_switcher_menus));
             }
 			if ((Data.userData.getDeliveryCustomerEnabled() == 1)) {
-				offerings.add(new OfferingListAdapter.Offering(Config.getDeliveryCustomerClientId(), getString(R.string.delivery_new_name), "Order online from nearby stores", R.drawable.ic_delivery_switcher,R.drawable.ic_graph_delivery,R.drawable.bg_home_switcher_delivery));
+				offerings.add(new OfferingListAdapter.Offering(Config.getDeliveryCustomerClientId(), getString(R.string.delivery_new_name), "Order online from nearby stores", R.drawable.ic_delivery_switcher,R.drawable.ic_graph_del_customer,R.drawable.bg_home_switcher_delivery));
 			}
             if ((Data.userData.getFeedEnabled() == 1)) {
                 offerings.add(new OfferingListAdapter.Offering(Config.getFeedClientId(), Data.getFeedName(this), "Get anything delivered from anywhere", R.drawable.ic_anywhere_switcher,R.drawable.ic_graph_anywhere,R.drawable.bg_home_switcher_feed));

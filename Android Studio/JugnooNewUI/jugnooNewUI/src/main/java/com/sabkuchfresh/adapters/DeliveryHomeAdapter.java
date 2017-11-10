@@ -210,7 +210,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         // service unavailable case
-        if(!isPagination && (menusResponse.getServiceUnavailable() == 1 || (vendorsCount == 0 && activity.getCategoryIdOpened() < 0))){
+        if(!isPagination && (menusResponse.getServiceUnavailable() == 1 /*|| (vendorsCount == 0 && activity.getCategoryIdOpened() < 0)*/)){
             int messageResId = Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()) ?
                     R.string.no_delivery_available_your_location : R.string.no_menus_available_your_location;
             if (activity.getMenusFragment() != null
@@ -223,14 +223,19 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         // no more pages case
         else if(!hasMorePages) {
-            if (activity.getCategoryIdOpened() < 0) {
+       /*     if (activity.getCategoryIdOpened() < 0) {
                 dataToDisplay.add(BlankFooterModel.getInstance());
-            } else {
-                int index = activity.getMenusResponse().getCategories().indexOf(new MenusResponse.Category(activity.getCategoryIdOpened()));
-                if (index > -1) {
-                    dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(), activity.getMenusResponse().getCategories().get(index).getCategoryName()));
+            } else {*/
+
+                if(activity.getMenusResponse().getCategories()!=null && activity.getCategoryIdOpened()>0){
+                    dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Stores"));
+
+                }else{
+                    dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(), "Store"));
+
                 }
-            }
+
+//            }
         }
 
 

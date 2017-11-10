@@ -603,6 +603,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 lastClientId = Config.getDeliveryCustomerClientId();
             }
 
+
             createAppCart(lastClientId);
 
             if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
