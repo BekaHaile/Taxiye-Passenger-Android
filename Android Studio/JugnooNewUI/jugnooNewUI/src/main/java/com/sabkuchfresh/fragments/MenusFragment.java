@@ -194,7 +194,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         recyclerViewRestaurant.setAdapter(deliveryHomeAdapter);
         activity.setLocalityAddressFirstTime(activity.getAppType());
 
-        if(!activity.checkForReorderMenus()) {
+        if(!activity.checkForReorderMenus(true)) {
             // to open pending feedback page
             try {
                 if (getMenusOrDeliveryData() != null && getMenusOrDeliveryData().getPendingFeedback() == 1) {
