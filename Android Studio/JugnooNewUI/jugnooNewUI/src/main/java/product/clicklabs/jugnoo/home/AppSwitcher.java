@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -89,17 +90,19 @@ public class AppSwitcher {
 				}
 
 
-				boolean noOfferingEnabledForHomeScreen = false;
+				boolean noOfferingEnabledForHomeScreen = false, isOnlyFatafatNewEnabled = false;
 				// to check id Data.userData's key of <offering>_enabled is 1 for the client_id to open
 				if(Data.userData != null){
-					if((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.userData.getFreshEnabled() != 1)
+					isOnlyFatafatNewEnabled = Data.userData.isOnlyFatafatNewEnabled();
+					if(!isOnlyFatafatNewEnabled
+							&& ((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.userData.getFreshEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.userData.getMealsEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.userData.getMenusEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getPayClientId()) && Data.userData.getPayEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getFeedClientId()) && Data.userData.getFeedEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getProsClientId()) && Data.userData.getProsEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && Data.userData.getDeliveryCustomerEnabled() != 1)
-							|| (Data.userData.getIntegratedJugnooEnabled() == 0)
+							|| (Data.userData.getIntegratedJugnooEnabled() == 0))
 							){
 						clientId = Config.getAutosClientId();
 					}
@@ -107,7 +110,8 @@ public class AppSwitcher {
 					if (Data.userData.getMealsEnabled() == 0
 							&& Data.userData.getFreshEnabled() == 0
 							&& Data.userData.getMenusEnabled() == 0
-							&& Data.userData.getFeedEnabled() == 0 && Data.userData.getDeliveryCustomerEnabled()==0) {
+							&& Data.userData.getFeedEnabled() == 0
+							&& Data.userData.getDeliveryCustomerEnabled()==0) {
 						noOfferingEnabledForHomeScreen = true;
 					}
 				}
@@ -356,8 +360,16 @@ public class AppSwitcher {
 							Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 						}
 					}
-				else if (activity instanceof FreshActivity && !clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))) {
-					if ((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.getFreshData() == null)
+				else if (activity instanceof FreshActivity
+							&& !clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))) {
+						if(isOnlyFatafatNewEnabled){
+							Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
+							broadcastIntent.putExtra(Constants.KEY_FLAG, Constants.OPEN_APP_CLIENT_ID);
+							broadcastIntent.putExtra(Constants.KEY_CLIENT_ID, clientId);
+							LocalBroadcastManager.getInstance(activity).sendBroadcast(broadcastIntent);
+							return;
+						}
+						if ((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.getFreshData() == null)
 							|| (clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.getMealsData() == null)
 							|| (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && Data.getGroceryData() == null)
 							|| (clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.getMenusData() == null)

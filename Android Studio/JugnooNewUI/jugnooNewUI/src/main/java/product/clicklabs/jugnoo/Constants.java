@@ -638,6 +638,7 @@ public interface Constants {
     String KEY_SHOW_TUTORIAL = "show_tutorial";
 
     int OPEN_DEEP_INDEX = 122112;
+    int OPEN_APP_CLIENT_ID = 122114;
 
     String KEY_LIKE_IS_ENABLED = "like_is_enabled";
     String KEY_SHARE_IS_ENABLED = "share_is_enabled";
@@ -821,4 +822,6 @@ public interface Constants {
     String KEY_IS_RAZORPAY_ENABLED = "is_razorpay_enabled";
     int ORDER_MODE_UNAVAILABLE = 3;
     int ORDER_MODE_CHAT= 0;
+    int CATEGORY_ID_RESTAURANTS= 1;
+    String CATEGORY_RESTAURANTS_NAME = "Restaurants";
 }

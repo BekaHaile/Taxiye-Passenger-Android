@@ -1157,8 +1157,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
 
         if(activity instanceof FreshActivity &&
-                ((productType == ProductType.MENUS.getOrdinal() && Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,null).equals(Config.getMenusClientId()))
-                || (productType == ProductType.DELIVERY_CUSTOMER.getOrdinal() && Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,null).equals(Config.getDeliveryCustomerClientId()))
+                ((productType == ProductType.MENUS.getOrdinal() && Config.getLastOpenedClientId(activity).equals(Config.getMenusClientId()))
+                || (productType == ProductType.DELIVERY_CUSTOMER.getOrdinal() && Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()))
                 )){
 
             ((FreshActivity)activity).onBackPressed();
