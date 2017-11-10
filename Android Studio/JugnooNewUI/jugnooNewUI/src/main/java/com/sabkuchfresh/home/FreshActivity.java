@@ -597,8 +597,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             if(fromOncreate
                     && Data.userData != null
                     && Data.userData.isOnlyFatafatNewEnabled()
-                    && checkForReorderMenus(false)){
-                String clientId = Config.getLastOpenedClientId(this);
+                    && (checkForReorderMenus(false) //either reorder case
+                        ||!Prefs.with(this).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "").equalsIgnoreCase(""))){ //or deeplink to other client id
                 Config.setLastOpenedClientId(this, Config.getDeliveryCustomerClientId());
                 lastClientId = Config.getDeliveryCustomerClientId();
             }
@@ -996,7 +996,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     };
 
-    private void switchOfferingViaClientId(final String clientId) {
+    public void switchOfferingViaClientId(final String clientId) {
         clearFragmentStackTillLast();
         handler.postDelayed(new Runnable() {
 			@Override
