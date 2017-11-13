@@ -69,27 +69,31 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 	public void onBindViewHolder(RecyclerView.ViewHolder mholder, int position) {
 
 
-		MenusResponse.Category prosCatalogueDatum = categoriesList.get(position);
-		ViewHolderCategory holder = ((ViewHolderCategory) mholder);
-		if (prosCatalogueDatum.getId() == -1) {
-			holder.tvSuperCategoryName.setText(R.string.all);
-			holder.ivSuperCategoryImage.setImageResource(R.drawable.ic_category_all);
-			return;
-		}
-
-		holder.tvSuperCategoryName.setText(prosCatalogueDatum.getCategoryName());
-
 		try {
-			if (!TextUtils.isEmpty(prosCatalogueDatum.getImage())) {
-				Picasso.with(context).load(prosCatalogueDatum.getImage())
-						.placeholder(R.drawable.ic_fresh_item_placeholder)
-						.error(R.drawable.ic_fresh_item_placeholder)
-						.into(holder.ivSuperCategoryImage);
-			} else {
-				throw new Exception();
-			}
+			MenusResponse.Category prosCatalogueDatum = categoriesList.get(position);
+			ViewHolderCategory holder = ((ViewHolderCategory) mholder);
+			if (prosCatalogueDatum.getId() == -1) {
+                holder.tvSuperCategoryName.setText(R.string.all);
+                holder.ivSuperCategoryImage.setImageResource(R.drawable.ic_category_all);
+                return;
+            }
+
+			holder.tvSuperCategoryName.setText(prosCatalogueDatum.getCategoryName());
+
+			try {
+                if (!TextUtils.isEmpty(prosCatalogueDatum.getImage())) {
+                    Picasso.with(context).load(prosCatalogueDatum.getImage())
+                            .placeholder(R.drawable.ic_fresh_item_placeholder)
+                            .error(R.drawable.ic_fresh_item_placeholder)
+                            .into(holder.ivSuperCategoryImage);
+                } else {
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                holder.ivSuperCategoryImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
+            }
 		} catch (Exception e) {
-			holder.ivSuperCategoryImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
+			e.printStackTrace();
 		}
 
 			/*if (prosCatalogueDatum.getIsEnabled() == 0) {

@@ -719,6 +719,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 setFetchedAddressToTextView(addressRes);
                 autoCompleteResultClicked = true;
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14), 300, null);
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
             // else do normally, direct to AddToAddressBook Fragment
             else {

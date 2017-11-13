@@ -14,10 +14,12 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.home.FreshActivity;
 
 import java.util.ArrayList;
 
@@ -38,6 +40,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 	private ScrollView scroll;
 	private int scrollPaddingTop;
 	private TextView tvGreeting;
+	private FuguNotificationConfig fuguNotificationConfig  = new FuguNotificationConfig();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +106,10 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 		GAUtils.trackScreenView(JUGNOO + HOME + PAGE);
 		fetchWalletBalance();
 
+		if(Data.getFuguChatBundle()!=null) {
+			fuguNotificationConfig.handleFuguPushNotification(this, Data.getFuguChatBundle());
+			Data.setFuguChatBundle(null);
+		}
 
 	}
 

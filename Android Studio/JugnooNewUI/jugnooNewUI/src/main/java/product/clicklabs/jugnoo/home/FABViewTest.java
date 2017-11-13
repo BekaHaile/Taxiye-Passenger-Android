@@ -560,12 +560,16 @@ public class FABViewTest implements GACategory, GAAction {
     };
 
     public void setRelativeLayoutFABTestVisibility(int visibility){
-        if(visibility == View.VISIBLE
-                && Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1
-                && Data.userData.getIntegratedJugnooEnabled() == 1){
-            relativeLayoutFABTest.setVisibility(View.VISIBLE);
-        } else {
-            relativeLayoutFABTest.setVisibility(View.GONE);
+        try {
+            if(visibility == View.VISIBLE
+                    && Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1
+                    && Data.userData.getIntegratedJugnooEnabled() == 1){
+                relativeLayoutFABTest.setVisibility(View.VISIBLE);
+            } else {
+                relativeLayoutFABTest.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         if(visibility != View.VISIBLE){
 //            hideJeanieHelpInSession();

@@ -83,10 +83,10 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     TextView tvReviewCount;
     @Bind(R.id.tvOpensAt)
     TextView tvOpensAt;
-    @Bind(R.id.ivChatNow)
-    ImageView ivChatNow;
-    @Bind(R.id.llChatNow)
-    LinearLayout llChatNow;
+  /*  @Bind(R.id.ivChatNow)
+    ImageView ivChatNow;*/
+    /*@Bind(R.id.llChatNow)
+    LinearLayout llChatNow;*/
     @Bind(R.id.llCall)
     LinearLayout llCall;
     @Bind(R.id.bOrderOnline)
@@ -350,7 +350,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 setOpenCloseStateText(true);
                 activity.getHandler().postDelayed(timerRunnable, 6000);
 
-                if (activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE) {
+                if (activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE || activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_CHAT) {
                     layoutOrderDetails.setVisibility(View.GONE);
                     bOrderOnline.setVisibility(View.GONE);
                 } else {
@@ -381,11 +381,11 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 rvTopReviews.setVisibility(View.GONE);
                 llSeeAll.setVisibility(View.GONE);
                 fetchFeedback();
-                if (!activity.getVendorOpened().isChatModeEnabled()) {
+               /* if (!activity.getVendorOpened().isChatModeEnabled()) {
                     ivChatNow.getDrawable().setColorFilter(BW_FILTER);
                 } else {
                     ivChatNow.getDrawable().setColorFilter(null);
-                }
+                }*/
 
                 bOrderOnline.setBackgroundResource((activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0) ?
                         R.drawable.capsule_grey_dark_bg : R.drawable.capsule_theme_color_selector);
@@ -443,19 +443,19 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.llChatNow, R.id.llCall, R.id.bOrderOnline, R.id.llSeeAll, R.id.llLocate,
+    @OnClick({/*R.id.llChatNow,*/ R.id.llCall, R.id.bOrderOnline, R.id.llSeeAll, R.id.llLocate,
             R.id.tvSubmitReview, R.id.llOffer, R.id.tvReviewCount})
     public void onViewClicked(View view) {
         try {
             switch (view.getId()) {
-                case R.id.llChatNow:
+              /*  case R.id.llChatNow:
                     if (activity.getVendorOpened().isChatModeEnabled()) {
 
                         sendUserClickEvent(Constants.KEY_CHAT_MODE);
                     } else {
                         Utils.showToast(activity, activity.getString(R.string.chat_is_not_enabled_format, activity.getVendorOpened().getName()));
                     }
-                    break;
+                    break;*/
                 case R.id.llCall:
                     callVendor();
                     sendUserClickEvent(Constants.KEY_CALL_MODE);

@@ -93,7 +93,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int FORM_ITEM = 10;
     private static final int BLANK_LAYOUT = 11;
     private static final int ITEM_TOTAL_CATEGORIES = 12;
-
+    private CategoriesData categoriesData;
 
     private static final int RECENT_ORDERS_TO_SHOW = 1;
 
@@ -159,10 +159,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             showPaginationProgressBar(false,false);
         }else{
             dataToDisplay.add(new DeliveryDivider());
-           if(activity.getCategoryIdOpened()<0 && menusResponse.getCategories()!=null && menusResponse.getCategories().size()>0 &&  activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER){
+            if(!activity.getMenusFragment().searchOpened){
+                categoriesData = null;
+                if(activity.getCategoryIdOpened()<0 && menusResponse.getCategories()!=null && menusResponse.getCategories().size()>0 &&  activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER){
+                    categoriesData  = new CategoriesData(menusResponse.getCategories());
+                    dataToDisplay.add(categoriesData);
 
-               dataToDisplay.add(new CategoriesData(menusResponse.getCategories()));
-           }
+                }
+            }
+
+
         }
 
         // recent orders
@@ -267,8 +273,23 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
+    public void hideCateogiresBar(boolean hide){
 
+        try {
+            if(hide){
+                dataToDisplay.remove(categoriesData);
 
+            }else{
+                if(categoriesData!=null){
+                    dataToDisplay.add(1,categoriesData);
+
+                }
+            }
+            notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void setList(List<Object> dataToDisplay) {
         this.dataToDisplay = dataToDisplay;
         notifyDataSetChanged();

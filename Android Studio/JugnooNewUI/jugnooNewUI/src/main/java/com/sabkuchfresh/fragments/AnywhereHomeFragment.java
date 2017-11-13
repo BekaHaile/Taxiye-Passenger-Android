@@ -26,7 +26,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.fugu.FuguConfig;
-import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -121,7 +120,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         textHintColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color_hint));
         rgTimeSlot.check(R.id.rb_asap);
         isAsapSelected = true;
-        setCurrentAddressToDelivery();
+        setCurrentSelectedAddressToDelivery();
         paySlider = new PaySlider(activity.llPayViewContainer) {
             @Override
             public void onPayClick() {
@@ -187,8 +186,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         return rootView;
     }
 
-    private void setCurrentAddressToDelivery() {
-        SearchResult searchResult =   HomeUtil.getNearBySavedAddress(activity,new LatLng(Data.latitude,Data.longitude), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION,false);
+    private void setCurrentSelectedAddressToDelivery() {
+        SearchResult searchResult =   HomeUtil.getNearBySavedAddress(activity,activity.getSelectedLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION,false);
         setAddress(true,searchResult);
 
     }
@@ -507,7 +506,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         rgTimeSlot.check(R.id.rb_asap);
         isAsapSelected= true;
         rbSt.setText(R.string.label_rb_schedule_time);
-        setCurrentAddressToDelivery();
+        setCurrentSelectedAddressToDelivery();
         setAddress(false,null);
         timePickerFragment=null;
 

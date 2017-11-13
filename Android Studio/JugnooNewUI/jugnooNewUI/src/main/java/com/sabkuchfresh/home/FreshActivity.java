@@ -2396,7 +2396,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void performBackPressed(boolean isBackPressed) {
 
 
-        if(isDeliveryOpenInBackground()  &&  (getTopFragment() instanceof MealFragment|| getTopFragment() instanceof FreshHomeFragment || getTopFragment() instanceof AnywhereHomeFragment||getTopFragment() instanceof MerchantInfoFragment)){
+        if(isDeliveryOpenInBackground()  && (getTopFragment() instanceof MealFragment|| getTopFragment() instanceof FreshHomeFragment || getTopFragment() instanceof AnywhereHomeFragment||getTopFragment() instanceof MerchantInfoFragment)){
             saveAppCart();
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryCustomerClientId());
             Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.DELIVERY_CUSTOMER);
@@ -4506,6 +4506,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 @Override
                 public void success(String clientId) {
+                    llCheckoutBarSetVisibilityDirect(View.GONE);
+                    rlfabViewFatafat.setVisibility(View.GONE);
+                    fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
                     saveAppCart();
                     Prefs.with(FreshActivity.this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
                     setOfferingData(lastClientId,false);
@@ -4531,6 +4534,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
         }else{
+            llCheckoutBarSetVisibilityDirect(View.GONE);
             rlfabViewFatafat.setVisibility(View.GONE);
             fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
             saveAppCart();
