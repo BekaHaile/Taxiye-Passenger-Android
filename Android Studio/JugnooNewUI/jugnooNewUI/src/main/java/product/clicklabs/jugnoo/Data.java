@@ -328,6 +328,11 @@ public class Data {
             if (!dontTryParsingDeeplink && data.getQueryParameter(Constants.KEY_DEEPINDEX) != null) {
                 Data.deepLinkIndex = Integer.parseInt(data.getQueryParameter(Constants.KEY_DEEPINDEX));
 
+                //restaurant_id deeplinked in case of custom scheme
+                if(data.getQueryParameter("restaurant_id") != null){
+                    Prefs.with(context).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, data.getQueryParameter("restaurant_id"));
+                }
+
                 // For deep linking with Offering Order Status Fragment
                 if (intent.getIntExtra(Constants.KEY_ORDER_ID, 0) != 0) {
                     Data.deepLinkOrderId = intent.getIntExtra(Constants.KEY_ORDER_ID, 0);
