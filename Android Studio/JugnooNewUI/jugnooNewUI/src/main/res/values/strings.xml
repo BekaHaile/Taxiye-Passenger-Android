@@ -1396,6 +1396,7 @@
 \n- Grocery/daily needs items
 \n- Pick &amp; drop documents/keys/other items</string>
     <string name="anywhere_hint_order_via_chat">Please enter item details</string>
+    <string name="action_order_via_fatafat">Order via Fatafat</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

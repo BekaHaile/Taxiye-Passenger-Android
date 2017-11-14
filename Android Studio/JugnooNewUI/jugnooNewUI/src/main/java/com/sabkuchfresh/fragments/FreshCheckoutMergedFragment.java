@@ -214,6 +214,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private final static IntentFilter ICICI_STATUS_BROADCAST_FILTER = new IntentFilter(Constants.INTENT_ICICI_PAYMENT_STATUS_UPDATE);
     private TextView tvLabelIciciUpi;
     private TextView tvMinOrderLabelDisplay;
+    private LinearLayout layoutMinOrder;
+    private TextView tvOrderViaFatafat;
 
 
     public FreshCheckoutMergedFragment() {
@@ -281,6 +283,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
         tvMinOrderLabelDisplay=(TextView)rootView.findViewById(R.id.tv_min_order_label);
+        layoutMinOrder =(LinearLayout)rootView.findViewById(R.id.layout_min_order);
+        tvOrderViaFatafat =(TextView)rootView.findViewById(R.id.tv_order_via_fatafaat);
+        tvOrderViaFatafat.setTypeface(tvOrderViaFatafat.getTypeface(),Typeface.BOLD);
+        tvOrderViaFatafat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         try {
             if (linearLayoutRoot != null) {
@@ -2973,6 +2984,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 if(diffDouble>0){
                     String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format(diffDouble));
                     tvMinOrderLabelDisplay.setText(textToSet);
+                    layoutMinOrder.setVisibility(View.VISIBLE);
                     tvMinOrderLabelDisplay.setVisibility(View.VISIBLE);
                     shadowMinOrder.setVisibility(View.VISIBLE);
                     showPaySliderEnabled(false);
@@ -2981,6 +2993,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                     showPaySliderEnabled(true);
                     tvMinOrderLabelDisplay.setVisibility(View.GONE);
+                    layoutMinOrder.setVisibility(View.GONE);
                     shadowMinOrder.setVisibility(View.GONE);
                 }
 
@@ -2991,6 +3004,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format(diffDouble));
                     tvMinOrderLabelDisplay.setText(textToSet);
                     tvMinOrderLabelDisplay.setVisibility(View.VISIBLE);
+                    layoutMinOrder.setVisibility(View.VISIBLE);
                     shadowMinOrder.setVisibility(View.VISIBLE);
                     showPaySliderEnabled(false);
 
@@ -2998,12 +3012,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                     showPaySliderEnabled(true);
                     tvMinOrderLabelDisplay.setVisibility(View.GONE);
+                    layoutMinOrder.setVisibility(View.GONE);
                     shadowMinOrder.setVisibility(View.GONE);
                 }
 
             }else{
                 showPaySliderEnabled(true);
                 tvMinOrderLabelDisplay.setVisibility(View.GONE);
+                layoutMinOrder.setVisibility(View.GONE);
                 shadowMinOrder.setVisibility(View.GONE);
 
             }

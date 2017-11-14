@@ -594,8 +594,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             float marginBottom = 60f;
 
-
-
             if(fromOncreate
                     && Data.userData != null
                     && Data.userData.isOnlyFatafatNewEnabled()
@@ -605,15 +603,26 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 lastClientId = Config.getDeliveryCustomerClientId();
             }
 
+
+            if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
+                Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
+
+            } else  if (lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
+                Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
+
+            }
+            if(!fromOncreate){
+                updateItemListFromSPDB();
+                updateCartValuesGetTotalPrice();
+
+            }
+
+
             createAppCart(lastClientId);
 
             if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
                 Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
-                if(!fromOncreate){
-                    updateItemListFromSPDB(); // this is necessary
-                    updateCartValuesGetTotalPrice();
 
-                }
                 addMealFragment(fromOncreate);
 //                    addProsHomeFragment();
 
@@ -681,11 +690,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             } else {
                 Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
 
-                if(!fromOncreate){
-                    updateItemListFromSPDB(); // this is necessary
-                    updateCartValuesGetTotalPrice();
-
-                }
                 openCart();
                 addFreshHomeFragment(fromOncreate);
             }

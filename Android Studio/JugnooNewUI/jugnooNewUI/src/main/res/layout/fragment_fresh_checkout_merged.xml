@@ -7,25 +7,47 @@
     android:background="@color/menu_item_selector_color_F7"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_min_order_label"
-        android:background="#fff6e4"
-        android:gravity="center"
-        android:textColor="#c77327"
-        android:paddingLeft="60px"
-        android:paddingRight="60px"
-        android:paddingTop="22px"
-        android:paddingBottom="22px"
-        android:textSize="25px"
-        app:font="maven"
-        android:visibility="gone"
+    <LinearLayout
+        android:id="@+id/layout_min_order"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:background="#fff6e4"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_min_order_label"
+            android:gravity="center"
+            android:textColor="@color/text_color"
+            android:paddingLeft="60px"
+            android:paddingRight="60px"
+            android:paddingTop="22px"
+            android:paddingBottom="22px"
+            android:textSize="25px"
+            app:font="maven"
+
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/tv_order_via_fatafaat"
+            android:textColor="#ff742c"
+            android:textSize="30px"
+            android:paddingBottom="22px"
+            android:gravity="center"
+            android:text="@string/action_order_via_fatafat"
+            app:font="maven"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
 
 
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_below="@id/tv_min_order_label"
+        android:layout_below="@id/layout_min_order"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
