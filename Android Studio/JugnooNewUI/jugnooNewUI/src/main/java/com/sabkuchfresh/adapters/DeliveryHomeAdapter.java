@@ -426,9 +426,12 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }else{
                     ((ViewHolderVendor) mholder).textViewDelivery.setText(distance);
                 }
-                if(vendor.getOrderMode()==Constants.ORDER_MODE_UNAVAILABLE){
+                if(vendor.getOrderMode()==Constants.ORDER_MODE_UNAVAILABLE || vendor.getOrderMode()==Constants.ORDER_MODE_CHAT){
                     ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+                    if(vendor.getIsClosed()==1 || vendor.getIsAvailable()==0){
+                        ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
+                    }
                 } else {
                     if(vendor.getIsClosed()==1 || vendor.getIsAvailable()==0){
                         ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
@@ -709,7 +712,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public static String showDeliveryStringWithTime(MenusResponse.Vendor vendor) {
-        if(vendor.getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE){
+        if(vendor.getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE || vendor.getOrderMode() == Constants.ORDER_MODE_CHAT){
             if(!TextUtils.isEmpty(vendor.getOpensAt()) && !TextUtils.isEmpty(vendor.getCloseIn())
                     && !"00:00:00".equals(vendor.getOpensAt()) && !"00:00:00".equals(vendor.getCloseIn())) {
                 return DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt(), false) + "-" + DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn(), false);
@@ -725,6 +728,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (vendor.getMinDeliveryTime() != null) {
             deliveryTime = String.valueOf(vendor.getMinDeliveryTime()) + "-" + deliveryTime;
         }
+
 
         return deliveryTime + " mins";
     }
@@ -1641,7 +1645,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
             textView.setText("Closed ");
         } else {
-            if (minutes <= vendor.getBufferTime() && minutes > 0 && vendor.getOrderMode()!=Constants.ORDER_MODE_UNAVAILABLE) {
+            if (minutes <= vendor.getBufferTime() && minutes > 0 && vendor.getOrderMode()!=Constants.ORDER_MODE_UNAVAILABLE && vendor.getOrderMode()!=Constants.ORDER_MODE_CHAT) {
                 textView.setText("Closing in " + minutes + (minutes>1?" mins ":" min " ));
             }
             else {

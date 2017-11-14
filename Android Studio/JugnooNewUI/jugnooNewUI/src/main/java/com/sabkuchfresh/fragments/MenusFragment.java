@@ -594,15 +594,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 }
 
 
-                                /*//Set a category
-
-
-                                if(!isSearchingCase(searchTextCurr) && activity.getCategoryIdOpened()==Constants.CATEGORY_ID_RESTAURANTS &&
-                                         activity.getAppType()== AppConstant.ApplicationType.MENUS && (menusResponse.getCategories()==null ||  menusResponse.getCategories().size()<1 )){
-                                    activity.setCategoryIdOpened(null);
-
-                                }*/
-
                                 if(activity.getMenusResponse() == null){
                                     activity.setMenusResponse(menusResponse);
                                 }
@@ -617,7 +608,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 activity.setMenuRefreshLatLng(latLng);
                                 currentMenusLatLngData = latLng;
                                 boolean serviceUnavailable = setUpServiceUnavailability(menusResponse);
-                                activity.rlfabViewFatafat.setVisibility(serviceUnavailable ? View.GONE : View.VISIBLE);
+                                if(serviceUnavailable){
+                                    activity.rlfabViewFatafat.setVisibility(View.GONE);
+
+                                }
                                 checkIciciPaymentStatusApi(activity);
 
 

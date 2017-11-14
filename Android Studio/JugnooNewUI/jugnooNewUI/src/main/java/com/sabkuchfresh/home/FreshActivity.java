@@ -594,6 +594,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             float marginBottom = 60f;
 
+
+
             if(fromOncreate
                     && Data.userData != null
                     && Data.userData.isOnlyFatafatNewEnabled()
@@ -603,13 +605,20 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 lastClientId = Config.getDeliveryCustomerClientId();
             }
 
-
             createAppCart(lastClientId);
 
             if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
+                Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
+                if(!fromOncreate){
+                    updateItemListFromSPDB(); // this is necessary
+                    updateCartValuesGetTotalPrice();
+
+                }
                 addMealFragment(fromOncreate);
 //                    addProsHomeFragment();
-                Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
+
+
+
             } else if (lastClientId.equalsIgnoreCase(Config.getGroceryClientId())) {
                 openCart();
                 addGroceryFragment();
@@ -670,9 +679,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 addProsHomeFragment();
                 Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.PROS);
             } else {
+                Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
+
+                if(!fromOncreate){
+                    updateItemListFromSPDB(); // this is necessary
+                    updateCartValuesGetTotalPrice();
+
+                }
                 openCart();
                 addFreshHomeFragment(fromOncreate);
-                Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
             }
 
 
@@ -697,6 +712,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             fabViewFatafat.setMenuLabelsRightTestPadding(marginBottom,this,fabViewFatafat);
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             Data.AppType = getAppType();
+
+
         } catch (Exception e) {
             e.printStackTrace();
             addFreshHomeFragment(fromOncreate);
@@ -1480,7 +1497,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);
                 }
-                if (Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
+                if ((Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) ) {
                     llSearchCartVis = View.GONE;
                 }
                 topBar.title.setVisibility(View.VISIBLE);
@@ -4237,6 +4254,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 Prefs.with(this).save(
                         Constants.SP_DELIVERY_CUSTOMER_CART_ADDRESS,
                         gson.toJson(deliveryAddressModel, DeliveryAddressModel.class));
+            }else if(getAppType()==AppConstant.ApplicationType.MEALS){
+                Prefs.with(this).save(
+                        Constants.SP_MEALS_CUSTOMER_CART_ADDRESS,
+                        gson.toJson(deliveryAddressModel, DeliveryAddressModel.class));
             }else{
                 Prefs.with(this).save(Constants.SP_FRESH_CART_ADDRESS,
                         gson.toJson(deliveryAddressModel, DeliveryAddressModel.class));
@@ -4251,6 +4272,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 constantStringSp=Constants.SP_MENUS_CART_ADDRESS;
             }else if(getAppType()==AppConstant.ApplicationType.DELIVERY_CUSTOMER){
                 constantStringSp=Constants.SP_DELIVERY_CUSTOMER_CART_ADDRESS;
+            }else if(getAppType()==AppConstant.ApplicationType.MEALS){
+                constantStringSp=Constants.SP_MEALS_CUSTOMER_CART_ADDRESS;
             }else{
                 constantStringSp=Constants.SP_FRESH_CART_ADDRESS;
             }
@@ -4268,6 +4291,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     constantStringSp=Constants.SP_MENUS_CART_ADDRESS;
                 }else if(getAppType()==AppConstant.ApplicationType.DELIVERY_CUSTOMER){
                     constantStringSp=Constants.SP_DELIVERY_CUSTOMER_CART_ADDRESS;
+                }else if(getAppType()==AppConstant.ApplicationType.MEALS){
+                    constantStringSp=Constants.SP_MEALS_CUSTOMER_CART_ADDRESS;
                 }else{
                     constantStringSp=Constants.SP_FRESH_CART_ADDRESS;
                 }
@@ -4506,7 +4531,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 @Override
                 public void success(String clientId) {
-                    llCheckoutBarSetVisibilityDirect(View.GONE);
                     rlfabViewFatafat.setVisibility(View.GONE);
                     fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
                     saveAppCart();
@@ -4534,7 +4558,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
         }else{
-            llCheckoutBarSetVisibilityDirect(View.GONE);
             rlfabViewFatafat.setVisibility(View.GONE);
             fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
             saveAppCart();
