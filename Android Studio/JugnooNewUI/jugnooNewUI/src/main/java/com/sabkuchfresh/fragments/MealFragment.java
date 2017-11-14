@@ -471,7 +471,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
                     activity.openCart(AppConstant.ApplicationType.MEALS, true);
                 }
-            });
+            }, AppConstant.ApplicationType.MEALS);
         }
 
     }

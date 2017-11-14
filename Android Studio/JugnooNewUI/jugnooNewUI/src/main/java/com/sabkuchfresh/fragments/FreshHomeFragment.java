@@ -369,7 +369,7 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
                 public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
                     activity.openCart(AppConstant.ApplicationType.FRESH, true);
                 }
-            });
+            }, AppConstant.ApplicationType.FRESH);
         }
 
     }

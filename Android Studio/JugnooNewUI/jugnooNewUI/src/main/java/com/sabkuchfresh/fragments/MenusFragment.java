@@ -339,7 +339,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     private MenusData getMenusOrDeliveryData() {
-        if (activity.getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
+        if (activity.getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER || activity.isDeliveryOpenInBackground()) {
             return Data.getDeliveryCustomerData();
         } else {
             return Data.getMenusData();
@@ -941,14 +941,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
     private static void checkIciciPaymentStatusApi(final FreshActivity activity) {
-        if (Data.getCurrentIciciUpiTransaction(activity.getAppType()) != null) {
-            activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction(activity.getAppType()));
+        int apptype = activity.isDeliveryOpenInBackground()? AppConstant.ApplicationType.DELIVERY_CUSTOMER: AppConstant.ApplicationType.MENUS;
+        if (Data.getCurrentIciciUpiTransaction(apptype) != null) {
+            activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction(apptype));
             ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, true, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
                 @Override
                 public void onGoToCheckout(IciciPaymentOrderStatus iciciPaymentOrderStatus) {
                     activity.getMenusCartSelectedLayout().getRlMenusCartSelectedInner().performClick();
                 }
-            });
+            },apptype);
         }
 
     }
@@ -1086,6 +1087,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 	}
 
 	public boolean iSChildCategoryOpen(){
-        return activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER && noOfCategories>0&& activity.getCategoryIdOpened()>0;
+        return activity.isDeliveryOpenInBackground() && noOfCategories>0&& activity.getCategoryIdOpened()>0;
     }
 }

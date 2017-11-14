@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -428,6 +429,28 @@ public class HomeUtil {
 			drawableRes = R.drawable.ic_work;
 		}
 		return drawableRes;
+	}
+
+	/**
+	 * Returns client id corresponding to deep index for offerings merged in Fafatat NEW
+	 * @param deepIndex
+	 * @return
+	 */
+	public static String getClientIdFromDeepIndexForMergedOfferings(int deepIndex){
+		if(deepIndex == AppLinkIndex.FRESH_PAGE.getOrdinal()){
+			return Config.getFreshClientId();
+		} else if(deepIndex == AppLinkIndex.MEAL_PAGE.getOrdinal()){
+			return Config.getMealsClientId();
+		} else if(deepIndex == AppLinkIndex.MENUS_PAGE.getOrdinal()){
+			return Config.getMenusClientId();
+		} else if(deepIndex == AppLinkIndex.DELIVERY_CUSTOMER_PAGE.getOrdinal()){
+			return Config.getDeliveryCustomerClientId();
+		} else if(deepIndex == AppLinkIndex.FEED_PAGE.getOrdinal()){
+			return Config.getFeedClientId();
+		} else if(deepIndex == AppLinkIndex.PROS_PAGE.getOrdinal()){
+			return Config.getProsClientId();
+		}
+		return "";
 	}
 
 }

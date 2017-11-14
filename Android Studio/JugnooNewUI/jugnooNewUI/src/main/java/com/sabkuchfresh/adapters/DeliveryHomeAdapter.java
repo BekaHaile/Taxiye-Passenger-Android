@@ -161,7 +161,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dataToDisplay.add(new DeliveryDivider());
             if(!activity.getMenusFragment().searchOpened){
                 categoriesData = null;
-                if(activity.getCategoryIdOpened()<0 && menusResponse.getCategories()!=null && menusResponse.getCategories().size()>0 &&  activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER){
+                if(activity.getCategoryIdOpened()<0 && menusResponse.getCategories()!=null && menusResponse.getCategories().size()>0 && activity.isDeliveryOpenInBackground()){
                     categoriesData  = new CategoriesData(menusResponse.getCategories());
                     dataToDisplay.add(categoriesData);
 
@@ -419,7 +419,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 mHolder.imageViewRestaurantImage.setColorFilter(null);
                 mHolder.tvOffer.getBackground().setColorFilter(null);
             }
-            if(activity.getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER){
+            if(activity.isDeliveryOpenInBackground()){
                 ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setVisibility(View.VISIBLE);
                 if(!TextUtils.isEmpty(vendor.getDisplayAddress())){
                     ((ViewHolderVendor) mholder).textViewDelivery.setText(distance + activity.getString(R.string.bullet) + " " + vendor.getDisplayAddress());

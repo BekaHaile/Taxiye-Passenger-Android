@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -21,6 +22,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
 import product.clicklabs.jugnoo.apis.ApiUpdateClientId;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -107,7 +109,7 @@ public class AppSwitcher {
 						clientId = Config.getAutosClientId();
 					}
 
-					//if only delivery customer enabled and client id to open is another than that
+					//if only delivery customer enabled and client id to open is other than that
 					if(isOnlyFatafatNewEnabled
 							&& (clientId.equalsIgnoreCase(Config.getFreshClientId())
 									|| clientId.equalsIgnoreCase(Config.getMealsClientId())
@@ -116,6 +118,15 @@ public class AppSwitcher {
 									|| clientId.equalsIgnoreCase(Config.getProsClientId()))){
 						Prefs.with(activity).save(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, clientId);
 						clientId = Config.getDeliveryCustomerClientId();
+					}
+
+					//if only delivery customer enabled and deepindex is for other than delivery customer
+					String clientIdFromDeepLink = HomeUtil.getClientIdFromDeepIndexForMergedOfferings(Data.deepLinkIndex);
+					if(isOnlyFatafatNewEnabled
+							&& Data.deepLinkIndex != AppLinkIndex.DELIVERY_CUSTOMER_PAGE.getOrdinal()
+							&& !TextUtils.isEmpty(clientIdFromDeepLink)){
+						Prefs.with(activity).save(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, clientIdFromDeepLink);
+						Data.deepLinkIndex = -1;
 					}
 
 					if (Data.userData.getMealsEnabled() == 0
