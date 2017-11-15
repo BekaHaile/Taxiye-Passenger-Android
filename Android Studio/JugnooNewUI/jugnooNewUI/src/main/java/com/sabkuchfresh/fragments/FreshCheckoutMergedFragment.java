@@ -236,7 +236,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private SubscriptionData.Subscription selectedSubscription = null;
 
     public ArrayList<SubItem> subItemsInCart;
-    private ArrayList<Tax> chargesList;
+    private ArrayList<Tax> chargesList, chargesListForFatafat;
     private Tax taxSubTotal, taxTotal;
     private ArrayList<Item> itemsInCart = new ArrayList<>();
     private MenusCartItemsAdapter menusCartItemsAdapter;
@@ -289,7 +289,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         tvOrderViaFatafat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                try {
+                    orderViaFatafat();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -430,7 +434,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
         listViewCharges = (NonScrollListView) rootView.findViewById(R.id.listViewCharges);
-        chargesList = new ArrayList<>();
+        chargesList = new ArrayList<>(); chargesListForFatafat = new ArrayList<>();
         taxSubTotal = new Tax(activity.getString(R.string.sub_total), activity.getTotalPrice());
         taxTotal = new Tax(activity.getString(R.string.total).toUpperCase(), activity.getTotalPrice());
         chargesList.add(taxSubTotal);
@@ -675,7 +679,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         imageViewDeleteCart.setVisibility(View.GONE);
 
         checkoutApiDoneOnce = false;
-        showPaySliderEnabled(true);
+        activity.showPaySliderEnabled(true);
         activity.tvSlide.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -828,20 +832,31 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         return (float) params.width;
     }
 
+    double chargesNotConsideredForFatafat;
     private void updateCartUI() {
         editTextDeliveryInstructions.setText(activity.getSpecialInst());
 
         chargesList.clear();
         chargesList.add(taxSubTotal);
 
-        if (getTotalPromoAmount() > 0) {
-            chargesList.add(new Tax(activity.getString(R.string.discount), getTotalPromoAmount()));
+        chargesListForFatafat.clear();
+        chargesListForFatafat.add(taxSubTotal);
+        chargesNotConsideredForFatafat = 0;
+
+        double promoAmount = getTotalPromoAmount();
+        if (promoAmount > 0) {
+            chargesNotConsideredForFatafat+=promoAmount;
+            chargesList.add(new Tax(activity.getString(R.string.discount), promoAmount));
         }
 
         if(activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getTaxes() != null){
             for(Tax tax : activity.getUserCheckoutResponse().getTaxes()){
                 Tax taxForDisplay = new Tax(tax.getKey(), tax.getCalculatedValue(subTotalAmount, getTotalPromoAmount()));
                 chargesList.add(taxForDisplay);
+                if(!taxForDisplay.getKey().toLowerCase().contains("delivery charges")) {
+                    chargesNotConsideredForFatafat -= taxForDisplay.getValue();
+                    chargesListForFatafat.add(taxForDisplay);
+                }
             }
         }
         if (isMenusOrDeliveryOpen()) {
@@ -850,10 +865,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 Tax tax = new Tax(charges1.getText(), getCalculatedCharges(charges1, activity.getMenuProductsResponse().getCharges()));
                 if (tax.getValue() > 0 || charges1.getForceShow() == 1) {
                     chargesList.add(tax);
+                    if(!tax.getKey().toLowerCase().contains("delivery charges")) {
+                        chargesNotConsideredForFatafat -= tax.getValue();
+                        chargesListForFatafat.add(tax);
+                    }
                 }
                 totalTaxAmount = totalTaxAmount + tax.getValue();
             }
         } else {
+            chargesNotConsideredForFatafat -=deliveryCharges();
             chargesList.add(new Tax(activity.getString(R.string.delivery_charges), deliveryCharges()));
         }
 
@@ -872,6 +892,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         taxTotal.setValue((double) Math.round(payableAmount()));
         chargesList.add(taxTotal);
+        chargesListForFatafat.add(taxTotal);
         chargesAdapter.notifyDataSetChanged();
 
 
@@ -1795,7 +1816,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
              });
          }
         showOrderPlacedPopup(placeOrderResponse,type,activity,dialogOrderComplete);
-        activity.clearAllCartAtOrderComplete();
+        activity.clearAllCartAtOrderComplete(activity.getAppType());
         activity.setSelectedPromoCoupon(noSelectionCoupon);
         flurryEventPlaceOrder(placeOrderResponse);
         fbPurchasedEvent(paramsPlaceOrder, placeOrderResponse);
@@ -1958,12 +1979,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
 
+    private boolean isPayBarEnabled;
+    public int lastAppTypeOpen;
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
             onResume();
+            activity.showPaySliderEnabled(isPayBarEnabled);
+        }else{
+            isPayBarEnabled = activity.isPaySliderEnabled();
         }
     }
 
@@ -2987,11 +3014,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     layoutMinOrder.setVisibility(View.VISIBLE);
                     tvMinOrderLabelDisplay.setVisibility(View.VISIBLE);
                     shadowMinOrder.setVisibility(View.VISIBLE);
-                    showPaySliderEnabled(false);
+                    activity.showPaySliderEnabled(false);
 
                 }else{
 
-                    showPaySliderEnabled(true);
+                    activity.showPaySliderEnabled(true);
                     tvMinOrderLabelDisplay.setVisibility(View.GONE);
                     layoutMinOrder.setVisibility(View.GONE);
                     shadowMinOrder.setVisibility(View.GONE);
@@ -3006,18 +3033,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     tvMinOrderLabelDisplay.setVisibility(View.VISIBLE);
                     layoutMinOrder.setVisibility(View.VISIBLE);
                     shadowMinOrder.setVisibility(View.VISIBLE);
-                    showPaySliderEnabled(false);
+                    activity.showPaySliderEnabled(false);
 
                 }else{
 
-                    showPaySliderEnabled(true);
+                    activity.showPaySliderEnabled(true);
                     tvMinOrderLabelDisplay.setVisibility(View.GONE);
                     layoutMinOrder.setVisibility(View.GONE);
                     shadowMinOrder.setVisibility(View.GONE);
                 }
 
             }else{
-                showPaySliderEnabled(true);
+                activity.showPaySliderEnabled(true);
                 tvMinOrderLabelDisplay.setVisibility(View.GONE);
                 layoutMinOrder.setVisibility(View.GONE);
                 shadowMinOrder.setVisibility(View.GONE);
@@ -3357,7 +3384,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        activity.setDeliveryAddressModelToSelectedAddress(true);
+                        activity.setDeliveryAddressModelToSelectedAddress(true,true);
 						deliveryAddressUpdated = true;
                         getCheckoutDataAPI(selectedSubscription, false);
                     }
@@ -3580,36 +3607,38 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     @Override
     public void onResume() {
         super.onResume();
-        try {
-            activity.getHandler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    orderPaymentModes();
-                    setPaymentOptionUI();
+        if (activity.getTopFragment() instanceof FreshCheckoutMergedFragment) {
+            try {
+                activity.getHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        orderPaymentModes();
+                        setPaymentOptionUI();
 
-                    if (dialogOrderComplete == null || dialogOrderComplete.getDialog()==null || !dialogOrderComplete.getDialog().isShowing()) {
-                        if(checkoutRequestPaymentDialog==null||!checkoutRequestPaymentDialog.isShowing())
-                             getCheckoutDataAPI(selectedSubscription, false);
+                        if (dialogOrderComplete == null || dialogOrderComplete.getDialog()==null || !dialogOrderComplete.getDialog().isShowing()) {
+                            if(checkoutRequestPaymentDialog==null||!checkoutRequestPaymentDialog.isShowing())
+                                 getCheckoutDataAPI(selectedSubscription, false);
+                        }
+                    }
+                }, 150);
+                if (Data.userData != null) {
+                    if (Data.userData.isSubscriptionActive()) {
+                        cvBecomeStar.setVisibility(View.GONE);
                     }
                 }
-            }, 150);
-            if (Data.userData != null) {
-                if (Data.userData.isSubscriptionActive()) {
-                    cvBecomeStar.setVisibility(View.GONE);
+
+                if(isIciciPaymentRunnableInProgress){
+                    activity.getHandler().postDelayed(checkIciciUpiPaymentStatusRunnable,1 * 1000);
                 }
-            }
 
-            if(isIciciPaymentRunnableInProgress){
-                activity.getHandler().postDelayed(checkIciciUpiPaymentStatusRunnable,1 * 1000);
-            }
+                if(checkoutRequestPaymentDialog!=null && checkoutRequestPaymentDialog.isShowing()){
+                    checkoutRequestPaymentDialog.resumeTimer();
+                }
 
-            if(checkoutRequestPaymentDialog!=null && checkoutRequestPaymentDialog.isShowing()){
-                checkoutRequestPaymentDialog.resumeTimer();
+                LocalBroadcastManager.getInstance(getActivity()).registerReceiver(iciciStatusBroadcast, ICICI_STATUS_BROADCAST_FILTER);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(iciciStatusBroadcast, ICICI_STATUS_BROADCAST_FILTER);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
     private BroadcastReceiver iciciStatusBroadcast = new BroadcastReceiver() {
@@ -3655,23 +3684,60 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
 
-    public void showPaySliderEnabled(boolean isEnable){
 
 
-            if(isEnable){
-                if(activity.viewAlpha.getTag()!=null && activity.viewAlpha.getTag().equals("Disabled")){
-                    activity.viewAlpha.setTag("Enabled");
-                    activity.viewAlpha.setBackgroundColor(ContextCompat.getColor(activity,R.color.slider_green));
-                    activity.viewAlpha.setAlpha(0);
+    private void orderViaFatafat(){
+        StringBuilder sb = new StringBuilder();
+        String newLine = "\n", sItem = "Item ", colon = ": ", quantity = "Quantity: ", cost = "Cost: ", xSpace = " X ";
+        if(activity.isMenusOrDeliveryOpen()){
+            int count = 0;
+            for(Item item : itemsInCart){
+                for(ItemSelected itemSelected : item.getItemSelectedList()){
+                    if(itemSelected.getQuantity() > 0){
+                        sb.append(itemSelected.getQuantity()).append(xSpace).append(item.getItemName());
+                        item.generateCustomizeText(itemSelected);
+
+                        if(!TextUtils.isEmpty(itemSelected.getCustomizeText())){
+                            sb.append(newLine).append(itemSelected.getCustomizeText());
+                        }
+                        sb.append(newLine);
+                        sb.append(newLine);
+                        count++;
+                    }
 
                 }
-            }else{
-                activity.viewAlpha.setTag("Disabled");
-                activity.viewAlpha.setBackgroundColor(ContextCompat.getColor(activity,R.color.grey_969696));
-                activity.viewAlpha.setAlpha(1);
             }
 
+           if(count>0){
+               //remove new line
+               sb.setLength(sb.length()-1);
+           }
+        } else {
+            for(SubItem subItem : subItemsInCart){
+
+                sb.append(subItem.getSubItemQuantitySelected()).append(xSpace).append(subItem.getSubItemName());
+                sb.append(newLine);
 
 
+             }
+        }
+
+
+        sb.append(newLine);
+        sb.append("Approx order amount").append(colon).append(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(subTotalAmount)));
+
+
+
+        String cartString;
+        if(sb.length()>0){
+            cartString = sb.toString().trim();
+        }else{
+            cartString=null;
+        }
+
+
+        lastAppTypeOpen = activity.getAppType();
+        activity.setOrderViaChatData(new FreshActivity.OrderViaChatData(activity.getVendorOpened().getLatLng(), activity.getVendorOpened().getAddress(), activity.getVendorOpened().getName(),cartString));
+        activity.switchOffering(Config.getFeedClientId(), null);
     }
 }

@@ -826,4 +826,5 @@ public interface Constants {
     int ORDER_MODE_CHAT= 0;
     int CATEGORY_ID_RESTAURANTS= 1;
     String CATEGORY_RESTAURANTS_NAME = "Restaurants";
+    String CATEGORY = "category";
 }

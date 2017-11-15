@@ -16,6 +16,7 @@
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
+        android:scrollbars="none"
         android:layout_height="match_parent"
         android:background="@color/menu_item_selector_color_F7">
 
@@ -55,7 +56,6 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:minHeight="50dp"
-                    android:maxLength="800"
                     android:gravity="top"
                     android:hint="Tell us what you need and we'll get it for you.\nAmazon or Flipkart product link works well."
                     android:padding="10dp"

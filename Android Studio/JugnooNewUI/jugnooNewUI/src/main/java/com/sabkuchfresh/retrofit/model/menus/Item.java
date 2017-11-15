@@ -1,5 +1,7 @@
 package com.sabkuchfresh.retrofit.model.menus;
 
+import android.text.TextUtils;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -259,5 +261,38 @@ public class Item {
 
 	public int getSubCategoryId() {
 		return subCategoryId;
+	}
+
+	public void generateCustomizeText(ItemSelected itemSelected){
+		if(TextUtils.isEmpty(itemSelected.getCustomizeText())
+				&& itemSelected.getCustomizeItemSelectedList().size() > 0){
+			StringBuilder sb = new StringBuilder();
+			for(CustomizeItemSelected customizeItemSelected : itemSelected.getCustomizeItemSelectedList()){
+				CustomizeItem customizeItem = new CustomizeItem();
+				customizeItem.setCustomizeId(customizeItemSelected.getCustomizeId());
+				int index = getCustomizeItem().indexOf(customizeItem);
+				if(index > -1){
+					customizeItem = getCustomizeItem().get(index);
+					StringBuilder sbOp = new StringBuilder();
+					for(Integer option : customizeItemSelected.getCustomizeOptions()){
+						CustomizeOption customizeOption = new CustomizeOption();
+						customizeOption.setCustomizeOptionId(option);
+						int index1 = customizeItem.getCustomizeOptions().indexOf(customizeOption);
+						if(index1 > -1){
+							customizeOption = customizeItem.getCustomizeOptions().get(index1);
+							if(sbOp.length() > 0){
+								sbOp.append(", ");
+							}
+							sbOp.append(customizeOption.getCustomizeOptionName());
+						}
+					}
+					if(sb.length() > 0){
+						sb.append("\n");
+					}
+					sb.append(customizeItem.getCustomizeItemName()).append(": ").append(sbOp);
+				}
+			}
+			itemSelected.setCustomizeText(sb.toString());
+		}
 	}
 }

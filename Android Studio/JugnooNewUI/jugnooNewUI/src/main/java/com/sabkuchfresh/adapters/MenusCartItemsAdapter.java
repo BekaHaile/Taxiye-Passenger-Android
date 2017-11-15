@@ -91,36 +91,37 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 			for(int j=0; j<item.getItemSelectedList().size(); j++){
 				if(count == position){
 					ItemSelected itemSelected = item.getItemSelectedList().get(j);
-					if(TextUtils.isEmpty(itemSelected.getCustomizeText())
-							&& itemSelected.getCustomizeItemSelectedList().size() > 0){
-						StringBuilder sb = new StringBuilder();
-						for(CustomizeItemSelected customizeItemSelected : itemSelected.getCustomizeItemSelectedList()){
-							CustomizeItem customizeItem = new CustomizeItem();
-							customizeItem.setCustomizeId(customizeItemSelected.getCustomizeId());
-							int index = item.getCustomizeItem().indexOf(customizeItem);
-							if(index > -1){
-								customizeItem = item.getCustomizeItem().get(index);
-								StringBuilder sbOp = new StringBuilder();
-								for(Integer option : customizeItemSelected.getCustomizeOptions()){
-									CustomizeOption customizeOption = new CustomizeOption();
-									customizeOption.setCustomizeOptionId(option);
-									int index1 = customizeItem.getCustomizeOptions().indexOf(customizeOption);
-									if(index1 > -1){
-										customizeOption = customizeItem.getCustomizeOptions().get(index1);
-										if(sbOp.length() > 0){
-											sbOp.append(", ");
-										}
-										sbOp.append(customizeOption.getCustomizeOptionName());
-									}
-								}
-								if(sb.length() > 0){
-									sb.append("\n");
-								}
-								sb.append(customizeItem.getCustomizeItemName()).append(": ").append(sbOp);
-							}
-						}
-						itemSelected.setCustomizeText(sb.toString());
-					}
+					item.generateCustomizeText(itemSelected);
+//					if(TextUtils.isEmpty(itemSelected.getCustomizeText())
+//							&& itemSelected.getCustomizeItemSelectedList().size() > 0){
+//						StringBuilder sb = new StringBuilder();
+//						for(CustomizeItemSelected customizeItemSelected : itemSelected.getCustomizeItemSelectedList()){
+//							CustomizeItem customizeItem = new CustomizeItem();
+//							customizeItem.setCustomizeId(customizeItemSelected.getCustomizeId());
+//							int index = item.getCustomizeItem().indexOf(customizeItem);
+//							if(index > -1){
+//								customizeItem = item.getCustomizeItem().get(index);
+//								StringBuilder sbOp = new StringBuilder();
+//								for(Integer option : customizeItemSelected.getCustomizeOptions()){
+//									CustomizeOption customizeOption = new CustomizeOption();
+//									customizeOption.setCustomizeOptionId(option);
+//									int index1 = customizeItem.getCustomizeOptions().indexOf(customizeOption);
+//									if(index1 > -1){
+//										customizeOption = customizeItem.getCustomizeOptions().get(index1);
+//										if(sbOp.length() > 0){
+//											sbOp.append(", ");
+//										}
+//										sbOp.append(customizeOption.getCustomizeOptionName());
+//									}
+//								}
+//								if(sb.length() > 0){
+//									sb.append("\n");
+//								}
+//								sb.append(customizeItem.getCustomizeItemName()).append(": ").append(sbOp);
+//							}
+//						}
+//						itemSelected.setCustomizeText(sb.toString());
+//					}
 					mcv.setName(item.getItemName());
 					mcv.setIsVeg(item.getIsVeg());
 					mcv.setPrice(itemSelected.getTotalPrice());

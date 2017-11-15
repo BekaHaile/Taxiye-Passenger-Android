@@ -87,8 +87,8 @@ public class ApiCurrentStatusIciciUpi {
 
 
                                 activity.saveCheckoutData(true);
-                                activity.clearAllCartAtOrderComplete();
-                                if(apptype== AppConstant.ApplicationType.MENUS){
+                                activity.clearAllCartAtOrderComplete(apptype);
+                                if(apptype== AppConstant.ApplicationType.MENUS || apptype ==AppConstant.ApplicationType.DELIVERY_CUSTOMER){
                                     activity.getMenusCartSelectedLayout().checkForVisibility();
                                 } else {
                                     activity.updateItemListFromSPDB(); // this is necessary

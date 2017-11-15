@@ -11,6 +11,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -379,34 +380,36 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     private void setUpUIforCategoriesOpened(MenusResponse.Category category) {
-        if (activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
-            if(activity.getCategoryIdOpened()<0 || noOfCategories==1){
-                if(searchOpened){
+        if (activity.getTopFragment() instanceof MenusFragment) {
+            if (activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
+                if(activity.getCategoryIdOpened()<0 || noOfCategories==1){
+                    if(searchOpened){
+                        activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
+                        activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
+                    }else{
+                        activity.getTopBar().imageViewMenu.setVisibility(View.VISIBLE);
+                        activity.getTopBar().imageViewBack.setVisibility(View.GONE);
+                    }
+
+                    activity.getTopBar().ivFilterApplied.setVisibility(View.GONE);
+                    activity.getTopBar().title.setText(noOfCategories==1&&category!=null?category.getCategoryName():activity.getString(R.string.delivery_new_name));
+                    activity.setMenusFilterVisibility(noOfCategories==1&&category!=null?View.VISIBLE:View.GONE);
+                    activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                    if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                        activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                    }
+                    if(Data.userData != null && Data.userData.getFeedEnabled()==0){
+                        activity.rlfabViewFatafat.setVisibility(View.VISIBLE);
+                    }
+                }else{
                     activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
                     activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
-                }else{
-                    activity.getTopBar().imageViewMenu.setVisibility(View.VISIBLE);
-                    activity.getTopBar().imageViewBack.setVisibility(View.GONE);
+                    activity.getTopBar().title.setText(category.getCategoryName());
+                    activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                    activity.setMenusFilterVisibility(View.VISIBLE);
+                    activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
+                    activity.rlfabViewFatafat.setVisibility(View.GONE);
                 }
-
-                activity.getTopBar().ivFilterApplied.setVisibility(View.GONE);
-                activity.getTopBar().title.setText(noOfCategories==1&&category!=null?category.getCategoryName():activity.getString(R.string.delivery_new_name));
-                activity.setMenusFilterVisibility(noOfCategories==1&&category!=null?View.VISIBLE:View.GONE);
-                activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
-                if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                }
-                if(Data.userData != null && Data.userData.getFeedEnabled()==0){
-                    activity.rlfabViewFatafat.setVisibility(View.VISIBLE);
-                }
-            }else{
-                activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
-                activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
-                activity.getTopBar().title.setText(category.getCategoryName());
-                activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-                activity.setMenusFilterVisibility(View.VISIBLE);
-                activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
-                activity.rlfabViewFatafat.setVisibility(View.GONE);
             }
         }
 
@@ -517,6 +520,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private LatLng currentMenusLatLngData;
     private int lastCategoryIdOpened ;
     public void getAllMenus(final boolean loader, final LatLng latLng, final boolean scrollToTop, final int categoryId) {
+        if(categoryId==-1){
+            requestedCategory=null;
+        }
         final String searchTextCurr = searchText;
         try {
             if (searchOpened && isMenusApiInProgress)
@@ -588,7 +594,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 //                                    deliveryDisplayCategoriesView.setCategories(menusResponse.getCategories());
                                 }
 
-                                if(lastCategoryIdOpened!=activity.getCategoryIdOpened()){
+                                if((lastCategoryIdOpened!=activity.getCategoryIdOpened()) || relativeLayoutNoMenus.getVisibility() == View.VISIBLE){
                                     setUpUIforCategoriesOpened(activity.getCategoryOpened());
 
                                 }

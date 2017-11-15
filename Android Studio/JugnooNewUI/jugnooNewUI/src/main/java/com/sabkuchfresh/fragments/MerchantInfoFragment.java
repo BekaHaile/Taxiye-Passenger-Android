@@ -470,8 +470,9 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         }
 
 
-                        activity.switchOffering(Config.getFeedClientId(), null);
+
                         activity.setOrderViaChatData(new FreshActivity.OrderViaChatData(activity.getVendorOpened().getLatLng(), activity.getVendorOpened().getAddress(), activity.getVendorOpened().getName()));
+                        activity.switchOffering(Config.getFeedClientId(), null);
                         return;
                     }
 

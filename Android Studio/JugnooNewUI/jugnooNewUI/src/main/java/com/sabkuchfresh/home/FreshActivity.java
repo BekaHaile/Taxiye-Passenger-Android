@@ -1232,7 +1232,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return (MerchantInfoFragment) getSupportFragmentManager().findFragmentByTag(MerchantInfoFragment.class.getName());
     }
 
-    private FreshCheckoutMergedFragment getFreshCheckoutMergedFragment() {
+    public FreshCheckoutMergedFragment getFreshCheckoutMergedFragment() {
         return (FreshCheckoutMergedFragment) getSupportFragmentManager().findFragmentByTag(FreshCheckoutMergedFragment.class.getName());
     }
 
@@ -1976,7 +1976,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
      */
     public int  setMinOrderAmountText(Fragment fragment) {
         try {
-            if (getFreshCheckoutMergedFragment() == null) {
+            if (getFreshCheckoutMergedFragment() == null || (getTopFragment() instanceof AnywhereHomeFragment)) {
                 if (getFreshFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
                     int textViewMinOrderVis;
                     if (fragment instanceof FreshFragment || fragment instanceof FreshSearchFragment) {
@@ -2159,8 +2159,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         selectedLatLng = new LatLng(Data.latitude, Data.longitude);
     }
 
-    public void clearAllCartAtOrderComplete() {
-        int type = getAppType();
+    public void clearAllCartAtOrderComplete(int type) {
         if (type == AppConstant.ApplicationType.FRESH) {
             clearCart();
         } else if (type == AppConstant.ApplicationType.GROCERY) {
@@ -2209,7 +2208,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void orderComplete() {
         orderJustCompleted = true;
-        clearAllCartAtOrderComplete();
+        clearAllCartAtOrderComplete(getAppType());
         splInstr = "";
         slotSelected = null;
         slotToSelect = null;
@@ -2247,7 +2246,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         clearEtFocus();
     }
 
-    private void clearFragmentStackTillLast() {
+    public void clearFragmentStackTillLast() {
         FragmentManager fm = getSupportFragmentManager();
         for (int i = 0; i < fm.getBackStackEntryCount() - 1; i++) {
             fm.popBackStack();
@@ -2996,9 +2995,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     public void clearMenusCart(int appType) {
+
         Prefs.with(this).remove(appType== AppConstant.ApplicationType.MENUS?Constants.CART_STATUS_REORDER_ID:Constants.CART_STATUS_REORDER_ID_CUSTOMER_DELIVERY);
         Paper.book().delete(appType==AppConstant.ApplicationType.MENUS?DB_MENUS_CART:DB_DELIVERY_CUSTOMER_CART);
-        createAppCart(Prefs.with(this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID,Config.getMenusClientId()));
+        createAppCart(Prefs.with(this).getString(appType== AppConstant.ApplicationType.MENUS?Config.getMenusClientId():Config.getDeliveryCustomerClientId(),Config.getDeliveryCustomerClientId()));
         updateItemListFromSPDB();
     }
 
@@ -4110,7 +4110,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            setDeliveryAddressModelToSelectedAddress(false);
+                            setDeliveryAddressModelToSelectedAddress(false,true);
                             callback.onNoClick();
                         }
                     }, false, false);
@@ -4183,12 +4183,25 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         private LatLng destinationlatLng;
         private String destinationAddress;
         private String restaurantName;
+        private String cartText;
+
+        public String getCartText() {
+            return cartText;
+        }
+
+        public OrderViaChatData(LatLng destinationlatLng, String destinationAddress, String restaurantName, String cartText) {
+            this.destinationlatLng = destinationlatLng;
+            this.destinationAddress = destinationAddress;
+            this.restaurantName = restaurantName;
+            this.cartText = cartText;
+        }
 
         public OrderViaChatData(LatLng destinationlatLng, String destinationAddress, String restaurantName) {
             this.destinationlatLng = destinationlatLng;
             this.destinationAddress = destinationAddress;
             this.restaurantName = restaurantName;
         }
+
 
 
         public LatLng getDestinationlatLng() {
@@ -4287,8 +4300,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return deliveryAddressModel;
     }
 
-    public void setDeliveryAddressModelToSelectedAddress(boolean dontRefresh) {
-        if (deliveryAddressModel == null) {
+    public void setDeliveryAddressModelToSelectedAddress(boolean dontRefresh,boolean pickUpCartAddress) {
+        if (deliveryAddressModel == null || pickUpCartAddress) {
             try {
                 String constantStringSp ;
                 if(getAppType()==AppConstant.ApplicationType.MENUS){
@@ -5492,4 +5505,26 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
    public boolean isDeliveryOpenInBackground(){
        return appTypeDeliveryInBackground;
    }
+
+    public void showPaySliderEnabled(boolean isEnable){
+
+
+        if(isEnable){
+            if(viewAlpha.getTag()!=null && viewAlpha.getTag().equals("Disabled")){
+                viewAlpha.setTag("Enabled");
+                viewAlpha.setBackgroundColor(ContextCompat.getColor(FreshActivity.this,R.color.slider_green));
+                viewAlpha.setAlpha(0);
+
+            }
+        }else{
+          viewAlpha.setTag("Disabled");viewAlpha.setBackgroundColor(ContextCompat.getColor(FreshActivity.this,R.color.grey_969696));
+           viewAlpha.setAlpha(1);
+        }
+
+
+
+    }
+    public boolean isPaySliderEnabled(){
+       return  !(viewAlpha.getTag()!=null && viewAlpha.getTag().equals("Disabled"));
+    }
 }

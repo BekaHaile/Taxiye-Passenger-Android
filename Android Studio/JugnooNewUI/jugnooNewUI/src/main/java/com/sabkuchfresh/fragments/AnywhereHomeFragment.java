@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -92,6 +93,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private PaySlider paySlider;
     private FreshActivity activity;
     private boolean isPickUpAddressRequested;
+    private boolean isOrderViaCheckoutFragment;
 
     public boolean isPickUpAddressRequested() {
         return isPickUpAddressRequested;
@@ -173,16 +175,30 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
         GAUtils.trackScreenView(activity.getGaCategory()+ HOME);
+
+
         if(activity.getOrderViaChat()!=null){
             FreshActivity.OrderViaChatData orderViaChatData = activity.getOrderViaChat();
-            setAddress(false,new SearchResult("",orderViaChatData.getRestaurantName()+", "+ orderViaChatData.getDestinationAddress(),"",orderViaChatData.getDestinationlatLng().latitude,orderViaChatData.getDestinationlatLng().longitude));
+
+            if(orderViaChatData.getCartText()!=null){
+                isOrderViaCheckoutFragment = true;
+                edtTaskDescription.setText(orderViaChatData.getCartText());
+                edtTaskDescription.setEnabled(false);
+            }else{
+                setMaxLength(edtTaskDescription,1000);
+                edtTaskDescription.setHint(R.string.anywhere_hint_order_via_chat);
+
+            }
+
+            setAddress(false,new SearchResult("",orderViaChatData.getRestaurantName()+"\n"+ orderViaChatData.getDestinationAddress(),"",orderViaChatData.getDestinationlatLng().latitude,orderViaChatData.getDestinationlatLng().longitude));
             activity.setOrderViaChatData(null);
             cvPickupAddress.setEnabled(false);
-            edtTaskDescription.setHint(R.string.anywhere_hint_order_via_chat);
         }else{
+            setMaxLength(edtTaskDescription,1000);
             edtTaskDescription.setHint(R.string.anywhere_hint);
 
         }
+        activity.showPaySliderEnabled(true);
         return rootView;
     }
 
@@ -420,6 +436,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             params.put(Constants.KEY_FROM_LATITUDE, "0");
             params.put(Constants.KEY_FROM_LONGITUDE, "0");
         }
+        if(isOrderViaCheckoutFragment){
+            params.put(Constants.CATEGORY, "1");
+        }
+
         params.put(Constants.KEY_TO_ADDRESS, deliveryAddress.getAddress());
         params.put(Constants.KEY_TO_LATITUDE, String.valueOf(deliveryAddress.getLatitude()));
         params.put(Constants.KEY_TO_LONGITUDE, String.valueOf(deliveryAddress.getLongitude()));
@@ -467,6 +487,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                     deliveryTime;
 
                             resetUI();
+                            if(isOrderViaCheckoutFragment && activity.getFreshCheckoutMergedFragment()!=null){
+                               activity.clearAllCartAtOrderComplete(activity.getFreshCheckoutMergedFragment().lastAppTypeOpen );activity.clearFragmentStackTillLast();
+
+                            }
                             if (orderAnywhereResponse != null && !TextUtils.isEmpty(orderAnywhereResponse.getFuguChannelId())) {
                                 FuguConfig.getInstance().openChatByTransactionId(orderAnywhereResponse.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
                                         orderAnywhereResponse.getFuguChannelName(), orderAnywhereResponse.getFuguTags(), new String[]{fuguMessage});
@@ -510,6 +534,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         setAddress(false,null);
         timePickerFragment=null;
 
+    }
+
+    private void setMaxLength(EditText edtText,int maxLength){
+        InputFilter[] fArray = new InputFilter[1];
+        fArray[0] = new InputFilter.LengthFilter(maxLength);
+        edtText.setFilters(fArray);
     }
 
 

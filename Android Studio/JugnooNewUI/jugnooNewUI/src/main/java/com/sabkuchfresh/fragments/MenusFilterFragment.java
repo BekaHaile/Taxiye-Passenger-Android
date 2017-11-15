@@ -408,10 +408,8 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 
 		}
 
-		if(activity.getCategoryIdOpened() > 0
-				&& menusResponse.getCategories() != null && menusResponse.getCategories().size() > 0){
-			MenusResponse.Category category = menusResponse.getCategories().get(menusResponse.getCategories()
-					.indexOf(new MenusResponse.Category(activity.getCategoryIdOpened())));
+		if(activity.getCategoryIdOpened() > 0 && activity.getCategoryOpened()!=null ){
+			MenusResponse.Category category = activity.getCategoryOpened();
 			if(category.getFilters()!=null){
 				filters.addAll(category.getFilters());
 
