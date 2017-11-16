@@ -28,6 +28,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.datastructure.FilterCuisine;
+import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -144,13 +145,13 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     private void searchVendors(String text, List<Integer> searchedRestaurantIds){
         if(TextUtils.isEmpty(text)){
             activity.setSearchedRestaurantIds(null);
-            activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryIdOpened());
+            activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryIdOpened(), MenusFragment.TYPE_API_MENUS_SEARCH);
 
         } else {
             activity.setSearchedRestaurantIds(searchedRestaurantIds);
 
             if(searchedRestaurantIds!=null && searchedRestaurantIds.size()>0){
-                activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryIdOpened());
+                activity.getMenusFragment().getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryIdOpened(), MenusFragment.TYPE_API_MENUS_SEARCH);
 
             }else{
                 vendorsComplete.clear();

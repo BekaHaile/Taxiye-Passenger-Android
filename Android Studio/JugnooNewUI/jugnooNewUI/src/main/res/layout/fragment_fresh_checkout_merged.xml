@@ -42,9 +42,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <View  android:layout_width="match_parent"
+       <!-- <View  android:layout_width="match_parent"
             android:background="@drawable/shadow_down_new"
-            android:layout_height="8dp"/>
+            android:layout_height="8dp"/>-->
     </LinearLayout>
 
 
@@ -790,7 +790,7 @@
         android:layout_height="@dimen/dp_7"
         android:tag="@string/dont_touch_me"
         android:visibility="gone"
-        android:layout_below="@id/tv_min_order_label"
+        android:layout_below="@id/layout_min_order"
         android:src="@drawable/shadow_down_new"/>
     <View
         android:layout_width="match_parent"

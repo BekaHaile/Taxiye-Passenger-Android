@@ -3738,6 +3738,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         lastAppTypeOpen = activity.getAppType();
         activity.setOrderViaChatData(new FreshActivity.OrderViaChatData(activity.getVendorOpened().getLatLng(), activity.getVendorOpened().getAddress(), activity.getVendorOpened().getName(),cartString));
-        activity.switchOffering(Config.getFeedClientId(), null);
+        activity.switchOffering(Config.getFeedClientId());
     }
 }

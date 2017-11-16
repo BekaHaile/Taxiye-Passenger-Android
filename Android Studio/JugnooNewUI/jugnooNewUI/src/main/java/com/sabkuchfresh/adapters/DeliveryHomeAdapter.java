@@ -847,6 +847,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 case R.id.bSubmit:
                     callback.apiRecommendRestaurant(getFormItemModel().getCategoryId(), getFormItemModel().getRestaurantName(),getFormItemModel().getLocality(),getFormItemModel().getTelephone());
                     break;
+                case R.id.bOrderViaFatafat:
+                    activity.switchOffering(Config.getFeedClientId());
+                    break;
             }
         }
     }
@@ -1144,7 +1147,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private class ViewHolderRestaurantForm extends RecyclerView.ViewHolder {
         TextView tvCouldNotFind, tvRecommend;
         EditText etRestaurantName, etLocality, etTelephone;
-        Button bSubmit;
+        Button bSubmit,bOrderViaFatafat;
 
         ViewHolderRestaurantForm(final View itemView, final ItemListener itemListener) {
             super(itemView);
@@ -1159,6 +1162,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             etTelephone = (EditText) itemView.findViewById(R.id.etTelephone);
             etTelephone.setTypeface(Fonts.mavenMedium(activity));
             bSubmit = (Button) itemView.findViewById(R.id.bSubmit);
+            bOrderViaFatafat = (Button) itemView.findViewById(R.id.bOrderViaFatafat);
             bSubmit.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 
             etRestaurantName.addTextChangedListener(twRestaurantName);
@@ -1166,6 +1170,13 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             etTelephone.addTextChangedListener(twTelephone);
             etTelephone.setOnEditorActionListener(onEditorActionListener);
             bSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.onClickItem(v,itemView);
+                }
+            });
+
+            bOrderViaFatafat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     itemListener.onClickItem(v,itemView);

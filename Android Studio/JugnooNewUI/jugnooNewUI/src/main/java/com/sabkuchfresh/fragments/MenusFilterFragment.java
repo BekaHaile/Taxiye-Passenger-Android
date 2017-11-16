@@ -199,27 +199,31 @@ public class MenusFilterFragment extends Fragment implements GAAction, MenusFilt
 		tvReset.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (activity.getCuisinesAll()!=null) {
-					for (FilterCuisine filterCuisine : activity.getCuisinesAll()) {
-                        filterCuisine.setSelected(0);
-                    }
-				}
-				activity.getCuisinesSelected().clear();
-				activity.setSortBySelected(null);
-				activity.getFilterSelected().clear();
-
-				adapterSort.notifyDataSetChanged();
-				adapterFilters.notifyDataSetChanged();
-				menusFilterCuisinesAdapter.notifyDataSetChanged();
-				setCuisinesList();
-
-				applyRealTimeFilters();
+				resetAllFilters();
 				GAUtils.event(activity.getGaCategory(), GAAction.FILTERS, GAAction.RESET_BUTTON + GAAction.CLICKED);
 			}
 		});
 
 
 		return rootView;
+	}
+
+	public void resetAllFilters() {
+		if (activity.getCuisinesAll()!=null) {
+            for (FilterCuisine filterCuisine : activity.getCuisinesAll()) {
+filterCuisine.setSelected(0);
+}
+        }
+		activity.getCuisinesSelected().clear();
+		activity.setSortBySelected(null);
+		activity.getFilterSelected().clear();
+
+		adapterSort.notifyDataSetChanged();
+		adapterFilters.notifyDataSetChanged();
+		menusFilterCuisinesAdapter.notifyDataSetChanged();
+		setCuisinesList();
+
+		applyRealTimeFilters();
 	}
 
 	@Override

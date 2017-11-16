@@ -151,7 +151,6 @@ import com.squareup.picasso.Picasso;
 import com.tsengvn.typekit.TypekitContextWrapper;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -315,7 +314,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 @Override
                 public void onClick(View v) {
                     if(isDeliveryOpenInBackground()){
-                        switchOffering(Config.getFeedClientId(),null);
+                        switchOffering(Config.getFeedClientId());
                     }
 
                 }
@@ -975,7 +974,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                         }
                                         if (fragment != null && FreshActivity.this.hasWindowFocus()) {
                                             if(Config.getLastOpenedClientId(FreshActivity.this).equals(intent.getStringExtra(Constants.KEY_CLIENT_ID))) {
-                                                ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false, -1);
+                                                ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false, -1, MenusFragment.TYPE_API_MENUS_ADDRESS_CHANGE);
                                             }
                                         } else {
                                             Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
@@ -1026,7 +1025,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 						&& getMenusFragment() != null){
 					getMenusFragment().switchCategory(new MenusResponse.Category(Constants.CATEGORY_ID_RESTAURANTS, Constants.CATEGORY_RESTAURANTS_NAME), false);
 				} else {
-					switchOffering(clientId, getSelectedLatLng());
+					switchOffering(clientId);
 				}
 			}
 		},10);
@@ -2062,7 +2061,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             if (isMenusOrDeliveryOpen()) {
                 if (getTopFragment() instanceof MenusFragment) {
-                    getMenusFragment().toggleSearch(true);
+                    getMenusFragment().toggleSearch(true, true);
                     topBar.title.setVisibility(View.GONE);
                     topBar.title.invalidate();
                     topBar.animateSearchBar(true);
@@ -2506,7 +2505,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 e.printStackTrace();
             }
         } else if (getTopFragment() instanceof MenusFragment && getMenusFragment().getSearchOpened()) {
-            getMenusFragment().toggleSearch(true);
+            getMenusFragment().toggleSearch(true, true);
         } else if (getTopFragment() instanceof MenusFragment
                 && (getCategoryIdOpened() > 0 )
                 && getMenusResponse().getCategories() != null  // if only more than one category coming from server for the place
@@ -3783,7 +3782,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     getGroceryFragment().getAllProducts(true, getSelectedLatLng());
                 } else if ((appType == AppConstant.ApplicationType.MENUS || appType == AppConstant.ApplicationType.DELIVERY_CUSTOMER)
                         && getMenusFragment() != null) {
-                    getMenusFragment().getAllMenus(true, getSelectedLatLng(), false, -1);
+
+                    getMenusFragment().getAllMenus(true, getSelectedLatLng(), false, -1, MenusFragment.TYPE_API_MENUS_ADDRESS_CHANGE);
                 } else if (appType == AppConstant.ApplicationType.FEED && getFeedHomeFragment() != null) {
                     getFeedHomeFragment().fetchFeedsApi(true, true, true);
                 } else if (appType == AppConstant.ApplicationType.PROS && getProsHomeFragment() != null) {
@@ -4518,7 +4518,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         tvCollapRestaurantName.setOnClickListener(reviewCLickListener);
 
     }
-    public void switchOffering(final String lastClientId, final LatLng latLng){
+    public void switchOffering(final String lastClientId){
 
 
 
@@ -4562,7 +4562,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 @Override
                 public void onRetry(View view) {
-                    switchOffering(lastClientId, latLng);
+                    switchOffering(lastClientId);
                 }
 
                 @Override
@@ -4570,7 +4570,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 }
             };
-            new ApiLoginUsingAccessToken(FreshActivity.this).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, lastClientId,
+            new ApiLoginUsingAccessToken(FreshActivity.this).hit(Data.userData.accessToken, getSelectedLatLng().latitude, getSelectedLatLng().longitude, lastClientId,
                     true, callback);
 
 

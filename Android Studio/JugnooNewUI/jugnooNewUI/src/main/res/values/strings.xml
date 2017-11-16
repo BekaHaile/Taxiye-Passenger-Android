@@ -1092,7 +1092,7 @@
     <string name="your_order_will_be_delivered_between">Your order will be delivered between</string>
     <string name="could_not_find_favorite_restaurant">Couldn’t find your favourite restaurant yet?</string>
     <string name="could_not_find_favorite_restaurant_format">Couldn’t find your favourite %s yet?</string>
-    <string name="why_not_recommend_it">Why not recommend it!</string>
+    <string name="why_not_recommend_it">Or, Why not recommend it!</string>
     <string name="restaurant_name_star">Restaurant Name*</string>
     <string name="restaurant_name_star_format">%s Name*</string>
     <string name="locality_optional">Locality (optional)</string>

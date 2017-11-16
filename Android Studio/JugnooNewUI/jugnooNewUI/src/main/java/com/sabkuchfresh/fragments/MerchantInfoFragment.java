@@ -24,7 +24,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -472,7 +471,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
 
                         activity.setOrderViaChatData(new FreshActivity.OrderViaChatData(activity.getVendorOpened().getLatLng(), activity.getVendorOpened().getAddress(), activity.getVendorOpened().getName()));
-                        activity.switchOffering(Config.getFeedClientId(), null);
+                        activity.switchOffering(Config.getFeedClientId());
                         return;
                     }
 
