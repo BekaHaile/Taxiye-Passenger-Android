@@ -242,7 +242,7 @@ public class FeedChildReviewFragment extends ImageSelectFragment {
             setUpImagesAdapter();
             suggestionSelected = new SuggestRestaurantQueryResp.Suggestion();
             suggestionSelected.setId(feedDetail.getRestaurantId());
-            ratingBar.setScore(feedDetail.getStarCount().floatValue());
+            ratingBar.setScore(feedDetail.getStarCount().floatValue(), true);
             tvRestaurantLocation.setText(feedDetail.getRestaurantName());
             tvRestaurantLocation.setOnClickListener(null);
 

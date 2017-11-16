@@ -86,14 +86,16 @@ public class RatingBarMenuFeedback extends LinearLayout {
         return mCurrentScore;
     }
 
-    public void setScore(float score) {
+    public void setScore(float score,boolean giveCallback) {
         score = Math.round(score * 2) / 2.0f;
         if (!mHalfStars)
             score = Math.round(score);
         mCurrentScore = score;
         refreshStars();
-        if (onScoreChanged != null)
-            onScoreChanged.scoreChanged(mCurrentScore);
+        if (giveCallback) {
+            if (onScoreChanged != null)
+                onScoreChanged.scoreChanged(mCurrentScore);
+        }
     }
 
 
@@ -213,21 +215,32 @@ public class RatingBarMenuFeedback extends LinearLayout {
             if (i <= mCurrentScore) {
                 mStarsViews[i - 1].setCompoundDrawablesWithIntrinsicBounds(0, mStarOnResource, 0, 0);
 
-                if(singleColor){
-                    mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(starColor, PorterDuff.Mode.SRC_ATOP);
+
+                if(mCurrentScore>=3){
+                    starColor = GOOD_RATING_GREEN;
+                }else if(mCurrentScore>1){
+                    starColor = MEDIUM_RATING_YELLOW;
+                }else {
+                    starColor = LOW_RATING_RED;
+                }
+
+                mStarsViews[i - 1].getCompoundDrawables()[1].mutate().setColorFilter(starColor, PorterDuff.Mode.SRC_ATOP);
+
+                /*if(singleColor){
+                    mStarsViews[i - 1].getCompoundDrawables()[1].mutate().setColorFilter(starColor, PorterDuff.Mode.SRC_ATOP);
                 } else {
                     switch (i) {
                         case 1:
-                            mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(LOW_RATING_RED, PorterDuff.Mode.SRC_ATOP);
+                            mStarsViews[i - 1].getCompoundDrawables()[1].mutate().setColorFilter(LOW_RATING_RED, PorterDuff.Mode.SRC_ATOP);
                             break;
                         case 2:
-                            mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(MEDIUM_RATING_YELLOW, PorterDuff.Mode.SRC_ATOP);
+                            mStarsViews[i - 1].getCompoundDrawables()[1].mutate().setColorFilter(MEDIUM_RATING_YELLOW, PorterDuff.Mode.SRC_ATOP);
                             break;
                         default:
-                            mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(GOOD_RATING_GREEN, PorterDuff.Mode.SRC_ATOP);
+                            mStarsViews[i - 1].getCompoundDrawables()[1].mutate().setColorFilter(GOOD_RATING_GREEN, PorterDuff.Mode.SRC_ATOP);
                             break;
                     }
-                }
+                }*/
 
 
             } else {
@@ -237,9 +250,9 @@ public class RatingBarMenuFeedback extends LinearLayout {
                     mStarsViews[i - 1].setCompoundDrawablesWithIntrinsicBounds(0, mStarOffResource, 0, 0);
 
                 if(singleColor){
-                    mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(noStarColor, PorterDuff.Mode.SRC_ATOP);
+                    mStarsViews[i - 1].getCompoundDrawables()[1].mutate().setColorFilter(RATING_DISABLED_COLOR, PorterDuff.Mode.SRC_ATOP);
                 } else {
-                    mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(NO_RATING_COLOR, PorterDuff.Mode.SRC_ATOP);
+                    mStarsViews[i - 1].getCompoundDrawables()[1].mutate().setColorFilter(RATING_DISABLED_COLOR, PorterDuff.Mode.SRC_ATOP);
                 }
             }
 
@@ -373,7 +386,7 @@ public class RatingBarMenuFeedback extends LinearLayout {
     public void setRatingDisabled(boolean disabled){
         if (disabled) {
             for (int i = 1; i <= mMaxStars; i++) {
-                    mStarsViews[i - 1].getCompoundDrawables()[1].setColorFilter(RATING_DISABLED_COLOR, PorterDuff.Mode.SRC_ATOP);
+                    mStarsViews[i - 1].getCompoundDrawables()[1].mutate().setColorFilter(RATING_DISABLED_COLOR, PorterDuff.Mode.SRC_ATOP);
              }
         }
         else{

@@ -3014,7 +3014,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                 double diffDouble = activity.getVendorOpened().getMinimumOrderAmount()-subTotalAmount;
                 if(diffDouble>0){
-                    String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format(diffDouble));
+                    String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format( activity.getVendorOpened().getMinimumOrderAmount()));
                     tvMinOrderLabelDisplay.setText(textToSet);
                     layoutMinOrder.setVisibility(View.VISIBLE);
                     tvMinOrderLabelDisplay.setVisibility(View.VISIBLE);
@@ -3033,7 +3033,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                 double diffDouble = activity.getOpenedDeliveryStore().getMinOrderAmount()-subTotalAmount;
                 if(diffDouble>0){
-                    String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format(diffDouble));
+                    String textToSet = activity.getString(R.string.min_order_checkout, Utils.getMoneyDecimalFormat().format( activity.getVendorOpened().getMinimumOrderAmount()));
                     tvMinOrderLabelDisplay.setText(textToSet);
                     tvMinOrderLabelDisplay.setVisibility(View.VISIBLE);
                     layoutMinOrder.setVisibility(View.VISIBLE);

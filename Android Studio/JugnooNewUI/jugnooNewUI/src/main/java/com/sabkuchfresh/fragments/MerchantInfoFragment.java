@@ -245,11 +245,9 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
             public void scoreChanged(float score) {
 
                 if (userHasReviewed == 0) {
-                    if(score>0){
-                        ratingBarReview.setScore(0);
-                        activity.getTransactionUtils().openRestaurantAddReviewFragment(activity, activity.getRelativeLayoutContainer(), activity.getVendorOpened().getRestaurantId(), score);
+                    ratingBarReview.setScore(0,false);
+                    activity.getTransactionUtils().openRestaurantAddReviewFragment(activity, activity.getRelativeLayoutContainer(), activity.getVendorOpened().getRestaurantId(), score);
 
-                    }
 //                etReview.setVisibility(score > 0 ? View.VISIBLE : View.GONE);
 //                tvSubmitReview.setVisibility(score > 0 ? View.VISIBLE : View.GONE);
 //                tvReviewTextCount.setVisibility(score > 0 ? (etReview.getText().toString().trim().length() > 0 ? View.VISIBLE : View.GONE) : View.GONE);
@@ -760,7 +758,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                             }
 
 
-                            ratingBarReview.setScore(0f);
+                            ratingBarReview.setScore(0f, true);
                             etReview.setText("");
                             fetchFeedback();
 

@@ -220,7 +220,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
         etFeedback.setSelection(etFeedback.length());
         if(prefilledRating!=null && prefilledRating>0){
-            customRatingBar.setScore(prefilledRating);
+            customRatingBar.setScore(prefilledRating, true);
         }
         updateSubmitButtonStatus();
 
@@ -346,7 +346,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
             if(activity.getCurrentReview().getRating()!=null && activity.getCurrentReview().getRating()>=1)
             {
-                customRatingBar.setScore(activity.getCurrentReview().getRating().floatValue());
+                customRatingBar.setScore(activity.getCurrentReview().getRating().floatValue(), true);
             }
 
         }

@@ -194,6 +194,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
             setAddress(false,new SearchResult("",orderViaChatData.getRestaurantName()+"\n"+ orderViaChatData.getDestinationAddress(),"",orderViaChatData.getDestinationlatLng().latitude,orderViaChatData.getDestinationlatLng().longitude));
             activity.setOrderViaChatData(null);
+            tvPickupAddress.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
             cvPickupAddress.setEnabled(false);
         }else{
             setMaxLength(edtTaskDescription,1000);
@@ -491,7 +492,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                             resetUI();
                             if(isOrderViaCheckoutFragment && activity.getFreshCheckoutMergedFragment()!=null){
                                activity.clearAllCartAtOrderComplete(activity.getFreshCheckoutMergedFragment().lastAppTypeOpen );activity.clearFragmentStackTillLast();
-
+                            }else if(isOrderViaRestaurantDetail){
+                                activity.clearFragmentStackTillLast();
                             }
                             if (orderAnywhereResponse != null && !TextUtils.isEmpty(orderAnywhereResponse.getFuguChannelId())) {
                                 FuguConfig.getInstance().openChatByTransactionId(orderAnywhereResponse.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
