@@ -7,6 +7,12 @@
     android:background="@color/menu_item_selector_color"
     android:tag="@string/dont_touch_me">
 
+    
+    <ImageView
+        android:src="@drawable/jugnoo_bg_home_switcher"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
     <RelativeLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"

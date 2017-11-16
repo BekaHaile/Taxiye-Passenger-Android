@@ -44,7 +44,7 @@ public abstract class PaySlider {
         ButterKnife.bind(this,view);
         llPayViewContainer.setVisibility(View.VISIBLE);
         rlSliderContainer.setVisibility(View.VISIBLE);
-        tvSlide.setText("Confirm");
+        tvSlide.setText("CONFIRM");
         sliderText.setText("Swipe right to confirm >>");
         setUpPayBar();
         paramsF = (RelativeLayout.LayoutParams) tvSlide.getLayoutParams();

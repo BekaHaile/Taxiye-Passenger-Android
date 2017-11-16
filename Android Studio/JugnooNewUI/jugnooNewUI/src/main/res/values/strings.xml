@@ -1092,7 +1092,8 @@
     <string name="your_order_will_be_delivered_between">Your order will be delivered between</string>
     <string name="could_not_find_favorite_restaurant">Couldn’t find your favourite restaurant yet?</string>
     <string name="could_not_find_favorite_restaurant_format">Couldn’t find your favourite %s yet?</string>
-    <string name="why_not_recommend_it">Or, Why not recommend it!</string>
+    <string name="could_not_find_favorite_restaurant_format_new_line">Couldn’t find your \n favourite %s yet?</string>
+    <string name="why_not_recommend_it">Why not recommend it!</string>
     <string name="restaurant_name_star">Restaurant Name*</string>
     <string name="restaurant_name_star_format">%s Name*</string>
     <string name="locality_optional">Locality (optional)</string>
@@ -1397,6 +1398,11 @@
 \n- Pick &amp; drop documents/keys/other items</string>
     <string name="anywhere_hint_order_via_chat">Please enter item details</string>
     <string name="action_order_via_fatafat">Order via Fatafat</string>
+    <string name="action_create_custom_order">Custom order</string>
+    <string name="label_custom_order">Get anything delivered anywhere by \n  placing a custom order.</string>
+    <string name="label_fav_restaurant">Couldn’t find your \n favourite store yet?</string>
+    <string name="label_fav_restaurant_format">Couldn’t find your \n favourite %s yet?</string>
+    <string name="label_or_above_order_via_fatafat">- OR -</string>
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>

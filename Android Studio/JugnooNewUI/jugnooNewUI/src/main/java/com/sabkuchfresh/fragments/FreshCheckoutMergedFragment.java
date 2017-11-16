@@ -216,6 +216,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private TextView tvMinOrderLabelDisplay;
     private LinearLayout layoutMinOrder;
     private TextView tvOrderViaFatafat;
+    private TextView labelOrMinOrder;
 
 
     public FreshCheckoutMergedFragment() {
@@ -280,7 +281,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         GAUtils.trackScreenView(activity.getGaCategory() + CHECKOUT);
         GAUtils.trackScreenView(activity.getGaCategory() + CHECKOUT + V2);
-
+        labelOrMinOrder = (TextView)rootView.findViewById(R.id.labelOrMinOrder);
+        labelOrMinOrder.setTypeface(labelOrMinOrder.getTypeface(),Typeface.BOLD);
         linearLayoutRoot = (RelativeLayout) rootView.findViewById(R.id.linearLayoutRoot);
         tvMinOrderLabelDisplay=(TextView)rootView.findViewById(R.id.tv_min_order_label);
         layoutMinOrder =(LinearLayout)rootView.findViewById(R.id.layout_min_order);

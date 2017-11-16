@@ -101,11 +101,13 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     private int maxNoImages = 5;
     private static final int REQUEST_CODE_SELECT_IMAGES=99;
     private boolean isKeyboardOpen = true;
+    private Float prefilledRating;
 
-    public static RestaurantAddReviewFragment newInstance(int restaurantId) {
+    public static RestaurantAddReviewFragment newInstance(int restaurantId,Float rating) {
         RestaurantAddReviewFragment fragment = new RestaurantAddReviewFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.KEY_RESTAURANT_ID, restaurantId);
+        bundle.putFloat(Constants.KEY_RATING, rating);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -114,6 +116,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     private void fetchArguments() {
         Bundle bundle = getArguments();
         restaurantId = bundle.getInt(Constants.KEY_RESTAURANT_ID, 0);
+        prefilledRating = bundle.getFloat(Constants.KEY_RATING,0);
     }
 
     @Override
@@ -216,6 +219,9 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
         updateTextCount();
 
         etFeedback.setSelection(etFeedback.length());
+        if(prefilledRating!=null && prefilledRating>0){
+            customRatingBar.setScore(prefilledRating);
+        }
         updateSubmitButtonStatus();
 
 
@@ -225,6 +231,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
                 updateSubmitButtonStatus();
             }
         });
+
 
         return rootView;
     }
@@ -646,6 +653,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
 
 
+                                activity.getVendorOpened().setHasRated(true);
                                 activity.performBackPressed(false);
                                 Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
                                 RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();

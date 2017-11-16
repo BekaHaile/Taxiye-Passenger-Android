@@ -1029,6 +1029,17 @@ public class Utils implements GAAction, GACategory{
 			Utils.showToast(context, "Could not open directions");
 		}
 	}
+
+	public static void openMapsDirections(Context context, LatLng source){
+		try {
+			Intent intent = new Intent(Intent.ACTION_VIEW,
+					Uri.parse("http://maps.google.com/maps?q="+source.latitude+","+source.longitude));
+			context.startActivity(intent);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Utils.showToast(context, "Could not open directions");
+		}
+	}
 }
 
 

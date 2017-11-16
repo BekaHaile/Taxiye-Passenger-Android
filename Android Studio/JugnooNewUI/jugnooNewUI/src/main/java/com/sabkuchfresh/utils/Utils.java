@@ -911,6 +911,10 @@ public class Utils {
 		product.clicklabs.jugnoo.utils.Utils.openMapsDirections(context, source, dest);
 	}
 
+	public static void openMapsDirections(Context context, LatLng source){
+		product.clicklabs.jugnoo.utils.Utils.openMapsDirections(context, source);
+	}
+
 }
 
 

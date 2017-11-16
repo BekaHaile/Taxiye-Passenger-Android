@@ -355,6 +355,7 @@ public class MenusResponse {
 		@Expose
 		private double longitude;
 
+		private boolean hasRated;
 		public boolean isChatModeEnabled() {
 			return chatMode == 1;
 		}
@@ -764,6 +765,14 @@ public class MenusResponse {
 
 		public void setNextOpenText(String nextOpenText) {
 			this.nextOpenText = nextOpenText;
+		}
+
+		public void setHasRated(boolean hasRated) {
+			this.hasRated = hasRated;
+		}
+
+		public boolean isHasRated() {
+			return hasRated;
 		}
 	}
 

@@ -10,9 +10,9 @@
     <LinearLayout
         android:id="@+id/layout_min_order"
         android:layout_width="match_parent"
-        android:background="#fff6e4"
+        android:background="#FFEDE4"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_height="wrap_content">
 
         <TextView
@@ -23,7 +23,7 @@
             android:paddingRight="60px"
             android:paddingTop="22px"
             android:paddingBottom="22px"
-            android:textSize="25px"
+            android:textSize="28px"
             app:font="maven"
 
             android:visibility="visible"
@@ -31,9 +31,20 @@
             android:layout_height="wrap_content"/>
 
         <TextView
+            android:id="@+id/labelOrMinOrder"
+            android:layout_gravity="center"
+            app:font="@string/maven"
+            android:text="@string/label_or_above_order_via_fatafat"
+            android:textSize="25px"
+            android:textColor="@color/text_color"
+            android:layout_marginBottom="20px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
             android:id="@+id/tv_order_via_fatafaat"
             android:textColor="#ff742c"
-            android:textSize="30px"
+            android:textSize="34px"
             android:paddingBottom="22px"
             android:gravity="center"
             android:text="@string/action_order_via_fatafat"

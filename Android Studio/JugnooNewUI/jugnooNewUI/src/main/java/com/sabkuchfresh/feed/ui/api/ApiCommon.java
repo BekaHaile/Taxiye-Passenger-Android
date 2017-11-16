@@ -189,6 +189,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case USER_CLICK_EVENTS:
                 RestClient.getMenusApiService().userClickEvents(params, callback);
                 break;
+            case USER_CLICK_EVENTS_CATEGORY:
+                RestClient.getMenusApiService().userCategoryLogs(params, callback);
+                break;
             case ANYWHERE_PLACE_ORDER:
                 RestClient.getFatafatApiService().anywherePlaceOrder(params, callback);
                 break;

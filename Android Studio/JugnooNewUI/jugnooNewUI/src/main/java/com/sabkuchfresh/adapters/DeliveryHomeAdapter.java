@@ -93,6 +93,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int FORM_ITEM = 10;
     private static final int BLANK_LAYOUT = 11;
     private static final int ITEM_TOTAL_CATEGORIES = 12;
+    private static final int ITEM_CUSTOM_ORDER = 13;
     private CategoriesData categoriesData;
 
     private static final int RECENT_ORDERS_TO_SHOW = 1;
@@ -233,6 +234,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 dataToDisplay.add(BlankFooterModel.getInstance());
             } else {*/
 
+
+                if(dataToDisplay!=null && dataToDisplay.size()>1){
+                    dataToDisplay.add(new DeliveryDivider());
+                }
+
                 if(activity.getMenusResponse().getCategories()!=null && activity.getCategoryIdOpened()>0){
                     dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Stores"));
 
@@ -351,7 +357,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case VIEW_TITLE_CATEGORY:
                 View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_delivery_title, parent, false);
                 return new ViewTitleCategory(v, this);
-
             case ITEM_TOTAL_CATEGORIES:
                  v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_delivery_category_dropdown, parent, false);
                 return  new DeliveryDisplayCategoriesView(activity, v, this);
@@ -382,6 +387,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case FORM_ITEM :
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_recommend_restaurant, parent, false);
                 return new ViewHolderRestaurantForm(v, this);
+            case ITEM_CUSTOM_ORDER :
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout_custom_order, parent, false);
+                return new ViewHolderCustomOrder(v, this);
             case BLANK_LAYOUT :
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_footer, parent, false);
                 return new ProgressBarViewHolder(v);
@@ -698,6 +706,18 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             titleHolder.etRestaurantName.clearFocus();
             titleHolder.etLocality.clearFocus();
             titleHolder.etTelephone.clearFocus();
+        }else if (mholder instanceof ViewHolderCustomOrder) {
+            ViewHolderCustomOrder titleHolder = (ViewHolderCustomOrder) mholder;
+            titleHolder.tVCustomText.setText(activity.getString(R.string.could_not_find_favorite_restaurant_format, getFormItemModel().getCategoryName()));
+
+           /* titleHolder.etRestaurantName.setText(getFormItemModel().getRestaurantName());
+            titleHolder.etLocality.setText(getFormItemModel().getLocality());
+            titleHolder.etTelephone.setText(getFormItemModel().getTelephone());
+            titleHolder.tvCouldNotFind.setText(activity.getString(R.string.could_not_find_favorite_restaurant_format, getFormItemModel().getCategoryName()));
+            titleHolder.etRestaurantName.setHint(activity.getString(R.string.restaurant_name_star_format, getFormItemModel().getCategoryName()));
+            titleHolder.etRestaurantName.clearFocus();
+            titleHolder.etLocality.clearFocus();
+            titleHolder.etTelephone.clearFocus();*/
         }
     }
 
@@ -773,7 +793,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return NO_VENDORS_ITEM;
 
         if(object instanceof FormAddRestaurantModel)
-            return FORM_ITEM;
+            return ITEM_CUSTOM_ORDER;
 
         if(object instanceof BlankFooterModel)
             return BLANK_LAYOUT;
@@ -1162,7 +1182,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             etTelephone = (EditText) itemView.findViewById(R.id.etTelephone);
             etTelephone.setTypeface(Fonts.mavenMedium(activity));
             bSubmit = (Button) itemView.findViewById(R.id.bSubmit);
-            bOrderViaFatafat = (Button) itemView.findViewById(R.id.bOrderViaFatafat);
             bSubmit.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 
             etRestaurantName.addTextChangedListener(twRestaurantName);
@@ -1176,12 +1195,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             });
 
-            bOrderViaFatafat.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemListener.onClickItem(v,itemView);
-                }
-            });
+
         }
 
         private TextView.OnEditorActionListener onEditorActionListener = new TextView.OnEditorActionListener() {
@@ -1668,5 +1682,25 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             textView.setVisibility(visibilityCloseTime);
         }
         return visibilityCloseTime;
+    }
+
+    private class ViewHolderCustomOrder extends RecyclerView.ViewHolder {
+
+        private TextView tVCustomText;
+        private Button btnCustomOrder;
+        public ViewHolderCustomOrder(final View view, final ItemListener itemListener) {
+            super(view);
+            btnCustomOrder= (Button) view.findViewById(R.id.bOrderViaFatafat);
+            tVCustomText= (TextView) view.findViewById(R.id.tvCustomText);
+            tVCustomText.setTypeface(tVCustomText.getTypeface(),Typeface.BOLD);
+            btnCustomOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.onClickItem(btnCustomOrder,view);
+                }
+            });
+
+
+        }
     }
 }

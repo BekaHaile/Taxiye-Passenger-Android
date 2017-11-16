@@ -561,6 +561,7 @@ public interface Constants {
     String KEY_CHAT_COUNT = "chat_count";
 
     String KEY_RESTAURANT_ID = "restaurant_id";
+    String KEY_RATING = "rating";
     String KEY_RESTAURANT_NAME = "restaurant_name";
     String KEY_RESTAURANT_DATA = "restaurant_data";
     String KEY_USER_SELECTED_SLOT = "user_selected_slot";

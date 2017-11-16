@@ -24,6 +24,10 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -362,9 +366,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             switch (category.getClientId()){
                 case Config.MEALS_CLIENT_ID:
                 case Config.FRESH_CLIENT_ID:
-                case Config.MENUS_CLIENT_ID:
                     activity.setCategoryIdOpened(null);
                     activity.switchOffering(category.getClientId());
+                    try {
+                        sendUserClickEvent(category.getClientId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:
                     break;
@@ -377,6 +385,45 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         }
 
+    }
+
+    public void sendUserClickEvent(String clientId) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_MERCHANT_CATEGORY_ID, "0");
+        params.put(Constants.KEY_CLIENT_ID, clientId);
+
+        new ApiCommon<>(activity).showLoader(false).execute(params, ApiName.USER_CLICK_EVENTS_CATEGORY,
+                new APICommonCallback<FeedCommonResponse>() {
+                    @Override
+                    public boolean onNotConnected() {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onException(Exception e) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
+
+                    }
+
+                    @Override
+                    public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onFailure(RetrofitError error) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onNegativeClick() {
+
+                    }
+                });
     }
 
     private void setUpUIforCategoriesOpened(MenusResponse.Category category) {

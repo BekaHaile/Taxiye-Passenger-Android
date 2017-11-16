@@ -42,8 +42,8 @@ public class OfferingListAdapter extends RecyclerView.Adapter<OfferingListAdapte
 	private int minHeightOfEachCell;
 	private int maxHeightGraphLayout;
 	private int nonScrollHeightAvailable;
-	private static final float FONT_UPPER_LIMIT = 16.0f;
-	private static  final float FONT_LOWER_LIMIT = 14.0f;
+	private static final float FONT_UPPER_LIMIT = 18.0f;
+	private static  final float FONT_LOWER_LIMIT = 16.0f;
 
 	public OfferingListAdapter(Context context, ArrayList<Offering> offerings, Callback callback, RecyclerView recyclerView, int measuredHeight) {
 		this.context = context;

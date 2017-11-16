@@ -134,4 +134,10 @@ public interface MenusApiService {
 	void userClickEvents(@FieldMap Map<String, String> params,
 							   Callback<FeedCommonResponse> callback);
 
+	@FormUrlEncoded
+	@POST("/user_category_logs")
+	void userCategoryLogs(@FieldMap Map<String, String> params,
+						 Callback<FeedCommonResponse> callback);
+
+
 }

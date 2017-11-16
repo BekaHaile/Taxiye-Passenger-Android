@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:minHeight="50dp"
+                    android:minHeight="100dp"
                     android:gravity="top"
                     android:hint="Tell us what you need and we'll get it for you.\nAmazon or Flipkart product link works well."
                     android:padding="10dp"

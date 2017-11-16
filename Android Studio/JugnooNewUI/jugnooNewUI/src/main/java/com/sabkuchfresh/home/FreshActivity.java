@@ -4831,7 +4831,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             if(isPlusButtonClicked){
                 this.currentReview=null;
             }
-            getTransactionUtils().openRestaurantAddReviewFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId());
+            getTransactionUtils().openRestaurantAddReviewFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId(), null);
         }
     }
 
