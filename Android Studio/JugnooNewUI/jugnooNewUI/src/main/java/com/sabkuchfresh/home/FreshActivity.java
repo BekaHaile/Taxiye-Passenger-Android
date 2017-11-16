@@ -314,6 +314,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 @Override
                 public void onClick(View v) {
                     if(isDeliveryOpenInBackground()){
+                        GAUtils.event(GACategory.FATAFAT3, GAAction.FATAFAT_FAB_CLICKED, GAAction.LABEL_ORDER_VIA_FATAFAT);
                         switchOffering(Config.getFeedClientId());
                     }
 

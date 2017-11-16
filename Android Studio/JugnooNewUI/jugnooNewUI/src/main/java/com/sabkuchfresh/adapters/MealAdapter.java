@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.home.FreshActivity;

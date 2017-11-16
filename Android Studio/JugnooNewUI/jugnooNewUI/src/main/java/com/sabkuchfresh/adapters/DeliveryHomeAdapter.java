@@ -25,6 +25,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -868,6 +871,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     callback.apiRecommendRestaurant(getFormItemModel().getCategoryId(), getFormItemModel().getRestaurantName(),getFormItemModel().getLocality(),getFormItemModel().getTelephone());
                     break;
                 case R.id.bOrderViaFatafat:
+                    GAUtils.event(GACategory.FATAFAT3, GAAction.CUSTOM_ORDER, GAAction.LABEL_ORDER_VIA_FATAFAT);
                     activity.switchOffering(Config.getFeedClientId());
                     break;
             }

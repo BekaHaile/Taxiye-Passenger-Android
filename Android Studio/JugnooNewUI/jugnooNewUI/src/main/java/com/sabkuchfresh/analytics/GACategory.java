@@ -21,4 +21,5 @@ public interface GACategory {
 	String PROFILE_SCREEN = "Profile Screen ";
 	String GENIE_OPEN_SCREEN = "Genie Open Screen ";
 	String DELIVERY_CUSTOMER = "Delivery Customer ";
+	String FATAFAT3 = "FATAFAT 3.0 ";
 }

@@ -244,5 +244,17 @@ public interface GAAction {
 	String ONLINE_PAYMENT = "Online Payment ";
 	String PAGE = "Page ";
 	String ASAP = "ASAP ";
+
 	String SCHEDULE = "Schedule ";
+	String FATAFAT_FAB_CLICKED = "Fatafat Fab Clicked ";
+	String MIN_ORDER = "Min Order ";
+	String RESTAURANT_DETAIL = "Restaurant Detail ";
+	String CUSTOM_ORDER = "Custom Order ";
+	String ACTION_FATAFAT_ORDER_CONFIRMED_CHECKOUT = "Fatafat Order Confirmed Min Order " ;
+	String	ACTION_FATAFAT_ORDER_CONFIRMED_RESTAURANT_DETAIL = "Fatfat Order Confirmed Restaurant Detail " ;
+	String	ACTION_FATAFAT_ORDER_CONFIRMED_RESTAURANT_CUSTOM_ORDER = "Fatafat Order Confirmed Custom Order " ;
+	String LABEL_ORDER_VIA_FATAFAT = "Order Via Fatafat ";
+	String LABEL_FATAFAT_ORDER_CONFIRMED = "Fatafat Order Confirmed ";
+
+
 }

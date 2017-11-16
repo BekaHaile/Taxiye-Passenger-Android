@@ -54,6 +54,7 @@ import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.adapters.MenusCartItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.commoncalls.ApiCancelOrder;
@@ -292,6 +293,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             @Override
             public void onClick(View v) {
                 try {
+                    GAUtils.event(GACategory.FATAFAT3, GAAction.MIN_ORDER, GAAction.LABEL_ORDER_VIA_FATAFAT);
+
                     orderViaFatafat();
                 } catch (Exception e) {
                     e.printStackTrace();

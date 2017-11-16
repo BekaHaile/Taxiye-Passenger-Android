@@ -94,6 +94,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private FreshActivity activity;
     private boolean isPickUpAddressRequested;
     private boolean isOrderViaCheckoutFragment;
+    private boolean isOrderViaRestaurantDetail;
 
     public boolean isPickUpAddressRequested() {
         return isPickUpAddressRequested;
@@ -185,6 +186,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 edtTaskDescription.setText(orderViaChatData.getCartText());
                 edtTaskDescription.setEnabled(false);
             }else{
+                isOrderViaRestaurantDetail = true;
                 setMaxLength(edtTaskDescription,1000);
                 edtTaskDescription.setHint(R.string.anywhere_hint_order_via_chat);
 
@@ -497,6 +499,16 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                             } else {
                                 FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
                             }
+                            String action ;
+                            if(isOrderViaCheckoutFragment){
+                                action = GAAction.ACTION_FATAFAT_ORDER_CONFIRMED_CHECKOUT;
+                            } else if(isOrderViaRestaurantDetail){
+                                action = GAAction.ACTION_FATAFAT_ORDER_CONFIRMED_RESTAURANT_DETAIL;
+                            }else{
+                                action = ACTION_FATAFAT_ORDER_CONFIRMED_RESTAURANT_CUSTOM_ORDER;
+                            }
+                            GAUtils.event(GACategory.FATAFAT3, action, GAAction.LABEL_FATAFAT_ORDER_CONFIRMED);
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
