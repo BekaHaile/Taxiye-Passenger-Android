@@ -103,7 +103,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     private boolean isKeyboardOpen = true;
     private Float prefilledRating;
 
-    public static RestaurantAddReviewFragment newInstance(int restaurantId,Float rating) {
+    public static RestaurantAddReviewFragment newInstance(int restaurantId,float rating) {
         RestaurantAddReviewFragment fragment = new RestaurantAddReviewFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.KEY_RESTAURANT_ID, restaurantId);
