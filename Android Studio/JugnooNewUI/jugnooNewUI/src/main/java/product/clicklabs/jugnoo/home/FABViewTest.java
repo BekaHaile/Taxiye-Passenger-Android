@@ -239,6 +239,7 @@ public class FABViewTest implements GACategory, GAAction {
                 menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity,R.color.orange_rides_fab_pressed));
             }
         }else{
+            menuLabelsRightTest.setMenuIcon(ContextCompat.getDrawable(activity,R.drawable.ic_fab_jeanie));
             menuLabelsRightTest.setMenuButtonColorNormal(activity.getResources().getColor(R.color.white));
             menuLabelsRightTest.setMenuButtonColorPressed(activity.getResources().getColor(R.color.grey_light));
             menuLabelsRightTest.setMenuButtonColorRipple(activity.getResources().getColor(R.color.grey_light_alpha));

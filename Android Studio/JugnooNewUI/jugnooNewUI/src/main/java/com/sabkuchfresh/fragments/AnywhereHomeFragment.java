@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.fugu.FuguConfig;
+import com.picker.image.util.Util;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -118,7 +119,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         View rootView = inflater.inflate(R.layout.fragment_anywhere_home, container, false);
         activity.fragmentUISetup(this);
         ButterKnife.bind(this, rootView);
-
+        try {
+            product.clicklabs.jugnoo.utils.Utils.hideSoftKeyboard(activity,edtTaskDescription);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         textColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color));
         textHintColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color_hint));
         rgTimeSlot.check(R.id.rb_asap);

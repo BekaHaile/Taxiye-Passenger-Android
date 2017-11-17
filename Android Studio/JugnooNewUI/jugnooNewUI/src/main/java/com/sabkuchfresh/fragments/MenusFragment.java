@@ -100,6 +100,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private boolean isPagingApiInProgress;
     private boolean hasMorePages;
     private int noOfCategories;
+    private boolean isFatfatChatIconEnabledFromServer;
 
     public MenusResponse.StripInfo getCurrentStripInfo() {
         return currentStripInfo;
@@ -125,6 +126,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         activity.setCategoryIdOpened(null);
         activity.rlfabViewFatafat.setVisibility(View.GONE);
         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE); //only for first time
+        if(Data.userData!=null && Data.userData.getFeedEnabled()!=1 && Data.userData.getDeliveryCustomerEnabled()==1){
+            isFatfatChatIconEnabledFromServer =true;
+        }
 
       /*  deliveryDisplayCategoriesView = new DeliveryDisplayCategoriesView(activity,
                 rootView.findViewById(R.id.rLCategoryDropDown), this);*/
@@ -276,28 +280,32 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 (TextView) rootView.findViewById(R.id.tvScroll), new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
-                if (activity.getAppType()== AppConstant.ApplicationType.MENUS || ( activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER &&
-                        activity.getTopFragment() instanceof MenusFragment && (activity.getCategoryIdOpened()<0 || noOfCategories==1))) {
+                if(activity.getTopFragment() instanceof  MenusFragment){
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
-
-                 /*   if(deliveryDisplayCategoriesView.isDropDownVisible()){
-                        deliveryDisplayCategoriesView.toggleDropDown();
-                    }*/
                     activity.hideMenusCartSelectedLayout();
-                    activity.rlfabViewFatafat.setVisibility(View.GONE);
+
+                    toggleFatafatChatIconVisibility();
+
+
+
                 }
+
             }
 
             @Override
             public void keyBoardClosed() {
-                if (activity.getAppType()== AppConstant.ApplicationType.MENUS || ( activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER &&
-                        activity.getTopFragment() instanceof MenusFragment && (activity.getCategoryIdOpened()<0 || noOfCategories==1))){
+
+
+                if(activity.getTopFragment() instanceof  MenusFragment){
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
                     activity.getMenusCartSelectedLayout().checkForVisibility();
-                    activity.rlfabViewFatafat.setVisibility(View.VISIBLE);
+                    activity.rlfabViewFatafat.setVisibility(View.GONE);
+
+
                 }
+
             }
         });
         keyboardLayoutListener.setResizeTextView(false);
@@ -445,8 +453,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
-                    if(Data.userData != null && Data.userData.getFeedEnabled()==0){
-                        activity.rlfabViewFatafat.setVisibility(View.VISIBLE);
+                    if(!toggleFatafatChatIconVisibility()){
+                        activity.rlfabViewFatafat.setVisibility(View.GONE);
+
                     }
                 }else{
                     activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
@@ -498,6 +507,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     return;
                 }
                 activity.fragmentUISetup(this);
+                if(searchOpened){
+                    activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
+
+                }
                 setUpUIforCategoriesOpened(activity.getCategoryOpened());
                 activity.setCurrentDeliveryStripToMinOrder();
                 if (!activity.isOrderJustCompleted()) {
@@ -507,10 +520,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 }
                activity.getMenuBar().setUserData();
 //                activity.resumeMethod();
-                if (searchOpened) {
-                    searchOpened = false;
+              /*  if (searchOpened) {
                     toggleSearch(false, true);
-                }
+                }*/
 
 
                 final boolean refreshCartFinal = activity.isRefreshCart()
@@ -605,6 +617,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     DialogPopup.dismissLoadingDialog();
                     lastTimeRefreshed = System.currentTimeMillis();
                     if (typeApi == TYPE_API_MENUS_ADDRESS_CHANGE || typeApi == TYPE_API_MENUS_CATEGORY_CHANGE) {
+                        serviceUnavailable = (menusResponse.getServiceUnavailable() == 1);
                         activity.setCategoryIdOpened(categoryObject);
 
 
@@ -660,11 +673,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                                 activity.setMenuRefreshLatLng(latLng);
                                 currentMenusLatLngData = latLng;
-                                boolean serviceUnavailable = setUpServiceUnavailability(menusResponse);
-                                if (serviceUnavailable) {
-                                    activity.rlfabViewFatafat.setVisibility(View.GONE);
-
-                                }
+                                setUpServiceUnavailability(menusResponse);
                                 checkIciciPaymentStatusApi(activity);
 
 
@@ -732,7 +741,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private boolean serviceUnavailable;
     private boolean setUpServiceUnavailability(MenusResponse menusResponse) {
-		serviceUnavailable = (menusResponse.getServiceUnavailable() == 1);
         relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0 && menusResponse.getServiceUnavailable() == 1) ? View.VISIBLE : View.GONE);
 
         if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
@@ -1160,5 +1168,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return activity.isDeliveryOpenInBackground() && noOfCategories>1&& activity.getCategoryIdOpened()>0;
     }
 
-
+    public boolean toggleFatafatChatIconVisibility(){
+        if(isFatfatChatIconEnabledFromServer && activity.getAppType()==AppConstant.ApplicationType.DELIVERY_CUSTOMER && !iSChildCategoryOpen() && !isServiceUnavailable()){
+            activity.rlfabViewFatafat.setVisibility(View.VISIBLE);
+            return true;
+        }
+        return false;
+    }
 }

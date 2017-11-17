@@ -320,7 +320,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 }
             });
-//            fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.ic_));
             rlfabViewFatafat = (RelativeLayout)findViewById(R.id.rlMenuLabelfatat);
             rlfabViewFatafat.setVisibility(View.GONE);
             toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -1777,7 +1776,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
 
-            rlfabViewFatafat.setVisibility(fabFatafatVisibility);
+            rlfabViewFatafat.setVisibility(View.GONE);
             topBar.imageViewBack.setPadding(padding, padding, padding, padding);
 
             if(visMinOrder != 1) {
