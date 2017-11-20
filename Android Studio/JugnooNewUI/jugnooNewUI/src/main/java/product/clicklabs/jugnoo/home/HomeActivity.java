@@ -3022,7 +3022,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         } else{
                             rlSpecialPickup.setVisibility(View.GONE);
                             setGoogleMapPadding(0f);
-                            showPoolInforBar();
+                            showPoolInforBar(false);
                         }
 
 
@@ -3056,7 +3056,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                         searchedALocation = false;
 
-                        setFabMarginInitial(false);
+                        setFabMarginInitial(false, false);
 
                         initAndClearInRidePath();
                         getTrackingLogHelper().uploadAllTrackLogs();
@@ -5047,7 +5047,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     fabViewTest = new FABViewTest(this, fabViewIntial);
                     setJeanieVisibility();
                     setServiceAvailablityUI(Data.autoData.getFarAwayCity());
-                    showPoolInforBar();
+                    showPoolInforBar(false);
                     if(showPoolIntro) {
 //                        showPoolIntroDialog();
                     }
@@ -9061,7 +9061,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     textViewDestSearch.setText(getResources().getString(R.string.destination_required));
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
                 }
-                showPoolInforBar();
+                showPoolInforBar(false);
                 try {
                     if (Prefs.with(HomeActivity.this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
                         imageViewPokemonOnOffInitial.setAlpha(1.0f);
@@ -9083,8 +9083,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
                 }
                 viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
-                showPoolInforBar();
-                setFabMarginInitial(false);
+                showPoolInforBar(false);
+                setFabMarginInitial(false, false);
             }
             slidingBottomPanel.getRequestRideOptionsFragment()
                     .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
@@ -9108,7 +9108,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    public void setFabMarginInitial(boolean isSliding){
+    public void setFabMarginInitial(boolean isSliding, boolean isSlidingPanelCollapsing){
         try {
             if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                 fabViewFinal.setVisibility(View.GONE);
@@ -9139,6 +9139,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                     }
                 });
+                if(isSlidingPanelCollapsing){
+                    handlerTime = 200;
+                }
                 animator.setDuration(300);
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -9169,7 +9172,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    public void showPoolInforBar(){
+    public void showPoolInforBar(boolean isSlidingPanelCollapsing){
         try {
             float mapBottomPadding = 0f;
             String textToShow = "";
@@ -9196,7 +9199,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
                     (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) && !isCustomCouponText){
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
-                setFabMarginInitial(false);
+                setFabMarginInitial(false, isSlidingPanelCollapsing);
                 textViewPoolInfo1.setText(textToShow);
                 relativeLayoutPoolInfoBar.setBackgroundResource(R.drawable.background_pool_info);
                 textViewPoolInfo1.setTextColor(getResources().getColor(R.color.text_color));
@@ -9207,7 +9210,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
-                setFabMarginInitial((Data.autoData.getRegions().size() == 1));
+                setFabMarginInitial((Data.autoData.getRegions().size() == 1), isSlidingPanelCollapsing);
 
                 textViewPoolInfo1.setText(textToShow);
                 relativeLayoutPoolInfoBar.setBackgroundColor(getResources().getColor(R.color.text_color));
@@ -9223,7 +9226,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 //setGoogleMapPadding(70);
             } else{
                 viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
-                setFabMarginInitial(false);
+                setFabMarginInitial(false, isSlidingPanelCollapsing);
             }
             if(PassengerScreenMode.P_INITIAL == passengerScreenMode
                     && !specialPickupScreenOpened && !confirmedScreenOpened) {
@@ -9447,7 +9450,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else{
                 imageViewOfferConfirm.setVisibility(View.GONE);
             }
-            showPoolInforBar();
+            showPoolInforBar(false);
 
         } catch (Exception e) {
             e.printStackTrace();

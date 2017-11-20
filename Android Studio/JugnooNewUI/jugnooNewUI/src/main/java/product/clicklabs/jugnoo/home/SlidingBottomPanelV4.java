@@ -86,11 +86,11 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 try {
-                    if(slideOffset > 0.2f){
+                   /* if(slideOffset > 0.2f){
 						activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
 						activity.setFabMarginInitial(true);
 						activity.getFabViewTest().hideJeanieHelpInSession();
-					}
+					}*/
                     imageViewExtraForSliding.setVisibility(View.VISIBLE);
                     if (activity.relativeLayoutSearchContainer.getVisibility() == View.GONE
 							&& slideOffset < 1f) {
@@ -109,7 +109,7 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
                     activity.relativeLayoutSearchContainer.setVisibility(View.GONE);
                     requestRideOptionsFragment.setSurgeImageVisibility();
                     activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
-                    activity.setFabMarginInitial(true);
+                    activity.setFabMarginInitial(true, false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -121,7 +121,7 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
                     imageViewExtraForSliding.setVisibility(View.GONE);
                     activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
                     requestRideOptionsFragment.setSurgeImageVisibility();
-                    activity.showPoolInforBar();
+                    activity.showPoolInforBar(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -304,7 +304,7 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
             linearLayoutSlidingBottomSingle.setVisibility(View.VISIBLE);
             linearLayoutSlidingBottom.setVisibility(View.GONE);
             activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
-            activity.setFabMarginInitial(true);
+            activity.setFabMarginInitial(true, false);
         }
     }
 
