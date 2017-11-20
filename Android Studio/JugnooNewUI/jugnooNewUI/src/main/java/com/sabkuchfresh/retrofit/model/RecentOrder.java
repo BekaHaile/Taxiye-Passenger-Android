@@ -26,6 +26,14 @@ public class RecentOrder implements Serializable{
     @SerializedName("order_status_text")
     @Expose
     private String orderStatusText;
+    @SerializedName("delivery_time")
+    @Expose
+    private String deliveryTime;
+
+    public String getDeliveryTime() {
+        return deliveryTime;
+    }
+
     @SerializedName("pickup_latitude")
     @Expose
     private Double pickupLatitude;

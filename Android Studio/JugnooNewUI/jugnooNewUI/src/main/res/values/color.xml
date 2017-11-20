@@ -309,6 +309,7 @@
     <color name="home_switcher_meals_pressed">#D9ff9b4d</color>
     <color name="fatafat_fab">#353542</color>
     <color name="fatafat_fab_pressed">#D9353542</color>
+    <color name="text_color_orange">#ff742c</color>
 
 
 </resources>

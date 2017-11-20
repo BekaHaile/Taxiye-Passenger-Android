@@ -36,6 +36,14 @@ public class MenusResponse {
 	@SerializedName("recent_orders_possible_meals_status")
 	@Expose
 	private List<String> recentOrdersPossibleMealsStatus = new ArrayList<String>();
+	@SerializedName("recent_orders_possible_fatafat_status")
+	@Expose
+	private List<String> recentOrdersPossibleFatafatStatus = new ArrayList<String>();
+
+	public List<String> getRecentOrdersPossibleFatafatStatus() {
+		return recentOrdersPossibleFatafatStatus;
+	}
+
 	@SerializedName("banner_info")
 	@Expose
 	private List<BannerInfo> bannerInfos;

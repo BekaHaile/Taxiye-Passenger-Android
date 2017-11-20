@@ -90,6 +90,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private ArrayList<String> status = new ArrayList<>();
     private ArrayList<String> statusMeals = new ArrayList<>();
+    private ArrayList<String> statusFatafat = new ArrayList<>();
 
     PushDialog pushDialog;
     public boolean resumed = false, searchOpened = false;
@@ -203,7 +204,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
             }
-        }, recyclerViewRestaurant, status,statusMeals);
+        }, recyclerViewRestaurant, status,statusMeals,statusFatafat);
 
         recyclerViewRestaurant.setAdapter(deliveryHomeAdapter);
         activity.setLocalityAddressFirstTime(activity.getAppType());
@@ -648,6 +649,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         status.addAll(menusResponse.getRecentOrdersPossibleStatus());
                         statusMeals.clear();
                         statusMeals.addAll(menusResponse.getRecentOrdersPossibleMealsStatus());
+                        statusFatafat.clear();
+                        statusFatafat.addAll(menusResponse.getRecentOrdersPossibleFatafatStatus());
                         currentStripInfo = null;
                         currentStripInfo = menusResponse.getStripInfo();
                         activity.setCurrentDeliveryStripToMinOrder();

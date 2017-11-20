@@ -79,6 +79,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private List<RecentOrder> remainingRecentOrders;
     private ArrayList<String> possibleStatus;
     private ArrayList<String> possibleMealsStatus;
+    private ArrayList<String> possibleFatafatStatus;
     private Callback callback;
     private boolean ordersExpanded;
     private DeliverySeeAll deliverySeeAllModel;
@@ -97,6 +98,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int BLANK_LAYOUT = 11;
     private static final int ITEM_TOTAL_CATEGORIES = 12;
     private static final int ITEM_CUSTOM_ORDER = 13;
+    private static final int NEW_VIEW_ORDER_ITEM = 14;
     private CategoriesData categoriesData;
 
     private static final int RECENT_ORDERS_TO_SHOW = 1;
@@ -112,12 +114,13 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
-    public DeliveryHomeAdapter(FreshActivity activity, Callback callback, RecyclerView recyclerView, ArrayList<String> possibleStatus, ArrayList<String> possibleMealsStatus) {
+    public DeliveryHomeAdapter(FreshActivity activity, Callback callback, RecyclerView recyclerView, ArrayList<String> possibleStatus, ArrayList<String> possibleMealsStatus,ArrayList<String> possibleFatafatStatus) {
         this.activity = activity;
         this.callback = callback;
         this.recyclerView = recyclerView;
         this.possibleStatus = possibleStatus;
         this.possibleMealsStatus = possibleMealsStatus;
+        this.possibleFatafatStatus = possibleFatafatStatus;
         timerHandler = activity.getHandler();
         timerHandler.postDelayed(timerRunnable, 1000);
     }
@@ -366,6 +369,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case VIEW_ORDER_ITEM:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menus_order_status, parent, false);
                 return new ViewOrderStatus(v, this);
+            case NEW_VIEW_ORDER_ITEM:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_order_status_fatafat_new, parent, false);
+                return new ViewNewOrderStatus(v, this);
             case VIEW_SEE_ALL:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_see_all, parent, false);
                 return new ViewSeeAll(v, this);
@@ -540,103 +546,48 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             mHolder.tvOffer.setVisibility(TextUtils.isEmpty(vendor.getOfferText())?View.INVISIBLE:View.VISIBLE);
             mHolder.tvOffer.setText(vendor.getOfferText());
-        } else if(mholder instanceof ViewOrderStatus){
+        } else if(mholder instanceof ViewNewOrderStatus){
 
-            ViewOrderStatus statusHolder = ((ViewOrderStatus) mholder);
+            ViewNewOrderStatus statusHolder = ((ViewNewOrderStatus) mholder);
             try {
                 RecentOrder recentOrder = (RecentOrder) dataToDisplay.get(position);
-                statusHolder.relativeStatusBar.setVisibility(View.VISIBLE);
-                for (int i = 0; i < statusHolder.relativeStatusBar.getChildCount(); i++) {
-                    if (statusHolder.relativeStatusBar.getChildAt(i) instanceof ViewGroup) {
-                        ViewGroup viewGroup = (ViewGroup) (statusHolder.relativeStatusBar.getChildAt(i));
-                        for (int j = 0; j < viewGroup.getChildCount(); j++) {
-                            viewGroup.getChildAt(j).setVisibility(View.GONE);
-                        }
-                    } else {
-                        statusHolder.relativeStatusBar.getChildAt(i).setVisibility(View.GONE);
-                    }
-                }
-                showPossibleStatus(recentOrder.getProductType()==ProductType.MEALS.getOrdinal()?possibleMealsStatus:possibleStatus, recentOrder.getStatus(), statusHolder);
-                statusHolder.tvOrderIdValue.setText(Utils.fromHtml("Order: #<b>"+recentOrder.getOrderId().toString()+"</b>"));
-                statusHolder.tvOrderIdValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
 
+                String restaurantName = recentOrder.getRestaurantName();
+                String orderId = " Order: #"+ recentOrder.getOrderId().toString();
+                String deliveryTime,orderStatus;
                 if(recentOrder.getProductType() == ProductType.MEALS.getOrdinal()) {
                     if ((recentOrder.getOrderStatusText() != null) && (!recentOrder.getOrderStatusText().equalsIgnoreCase(""))) {
-                        statusHolder.tvDeliveryTime.setText(recentOrder.getOrderStatusText());
+                        deliveryTime=recentOrder.getOrderStatusText();
                     } else {
-                        statusHolder.tvDeliveryTime.setText(activity.getResources().getString(R.string.delivery_before_colon) + " " + recentOrder.getEndTime());
+                        deliveryTime=activity.getResources().getString(R.string.delivery_before_colon) + " " + recentOrder.getEndTime();
                     }
-                } else {
-                    statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
-                    statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+                    orderStatus = possibleMealsStatus.get(recentOrder.getStatus());
+                } else  if(recentOrder.getProductType() == ProductType.FEED.getOrdinal()) {
+                    deliveryTime = recentOrder.getDeliveryTime();
+                    orderStatus = possibleFatafatStatus.get(recentOrder.getStatus());
+
+                }else {
+                    deliveryTime = recentOrder.getEndTime();
+                    orderStatus = possibleStatus.get(recentOrder.getStatus());
+
                 }
+                if(restaurantName==null){
+                    restaurantName = "";
 
-
-
-                statusHolder.rlRestaurantInfo.setVisibility(!TextUtils.isEmpty(recentOrder.getRestaurantName()) ? View.VISIBLE : View.GONE);
-                statusHolder.tvRestaurantName.setText(recentOrder.getRestaurantName());
-                if(recentOrder.getOrderAmount() != null) {
-                    statusHolder.tvOrderAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(recentOrder.getOrderAmount())));
                 }
+                if(deliveryTime==null){
+                    deliveryTime="";
 
-                // track or view order buttons
-                statusHolder.tvTrackOrder.setVisibility(recentOrder.getProductType()==ProductType.MEALS.getOrdinal()?View.GONE:View.VISIBLE);
-                statusHolder.vMidSep.setVisibility(recentOrder.getProductType()==ProductType.MEALS.getOrdinal()?View.GONE:View.VISIBLE);
-                if(recentOrder.getShowLiveTracking() == 1 && recentOrder.getDeliveryId() > 0){
-                    statusHolder.tvTrackOrder.setTextColor(ContextCompat.getColorStateList(activity, R.color.purple_text_color_selector));
-                } else {
-                    statusHolder.tvTrackOrder.setTextColor(ContextCompat.getColor(activity, R.color.purple_text_color_aplha));
+                } else{
+                    deliveryTime = ", " + deliveryTime;
                 }
+                String orderDescription = restaurantName + orderId;
+                String orderDetail =  orderStatus + deliveryTime;
+                statusHolder.tvOrderDetails.setText(orderDetail);
+                statusHolder.tvOrderDescription.setText(orderDescription);
 
-                // not delivered views case
-                if(recentOrder.isDeliveryNotDone() ||
-                        recentOrder.getDeliveryConfirmation() == 1 || recentOrder.getDeliveryConfirmation() == 0){
-                    statusHolder.rlOrderNotDelivered.setVisibility(View.VISIBLE);
-                    statusHolder.rlTrackViewOrder.setVisibility(View.GONE);
-                    statusHolder.relativeStatusBar.setVisibility(View.GONE);
-                    Utils.setTextUnderline(statusHolder.tvDeliveryTime, activity.getString(R.string.view_order));
-                    statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColorStateList(activity, R.color.text_color_selector));
 
-                    RelativeLayout.LayoutParams paramsTV = (RelativeLayout.LayoutParams) statusHolder.tvOrderNotDelivered.getLayoutParams();
-                    boolean deliveryMarkedYes = recentOrder.getDeliveryConfirmation() == 1;
-                    int marginTop = activity.getResources().getDimensionPixelSize(deliveryMarkedYes ? R.dimen.dp_8 : R.dimen.dp_14);
-                    statusHolder.tvOrderDeliveredDigIn.setVisibility(deliveryMarkedYes ? View.VISIBLE : View.GONE);
-                    statusHolder.llOrderDeliveredYes.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
-                    statusHolder.llOrderDeliveredNo.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
-                    statusHolder.vOrderDeliveredMidSep.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
-                    statusHolder.vOrderDeliveredTopSep.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
-
-                    if(recentOrder.isDeliveryNotDone() && recentOrder.getDeliveryConfirmation() < 0){
-                        statusHolder.tvOrderNotDelivered.setText(recentOrder.getDeliveryNotDoneMsg());
-                        statusHolder.ivOrderDeliveredYes.setVisibility(View.GONE);
-                        statusHolder.ivOrderDeliveredNo.setVisibility(View.GONE);
-                        statusHolder.tvOrderDeliveredYes.setText(activity.getString(R.string.yes).toUpperCase()); statusHolder.tvOrderDeliveredYes.setTextSize(14);
-                        statusHolder.tvOrderDeliveredNo.setText(activity.getString(R.string.no).toUpperCase()); statusHolder.tvOrderDeliveredNo.setTextSize(14);
-                    }
-                    else if(recentOrder.getDeliveryConfirmation() == 0){ // no case
-                        statusHolder.tvOrderNotDelivered.setText(recentOrder.getDeliveryConfirmationMsg());
-                        statusHolder.ivOrderDeliveredYes.setVisibility(View.VISIBLE);
-                        statusHolder.ivOrderDeliveredYes.setImageResource(Data.isFuguChatEnabled()?R.drawable.ic_restaurant_chat:R.drawable.ic_restaurant_report);
-                        statusHolder.ivOrderDeliveredNo.setVisibility(View.VISIBLE);
-                        statusHolder.tvOrderDeliveredYes.setText(Data.isFuguChatEnabled()?R.string.chat_with_us :R.string.report_issue); statusHolder.tvOrderDeliveredYes.setTextSize(12);
-                        statusHolder.tvOrderDeliveredNo.setText(R.string.call_restaurant); statusHolder.tvOrderDeliveredNo.setTextSize(12);
-                    }
-                    else if(deliveryMarkedYes){ // yes local case
-                        statusHolder.tvOrderNotDelivered.setText(R.string.dig_in_enjoy_food_experience_feedback);
-                    }
-                    paramsTV.setMargins(paramsTV.leftMargin, marginTop, paramsTV.rightMargin, paramsTV.bottomMargin);
-                    statusHolder.tvOrderNotDelivered.setLayoutParams(paramsTV);
-                } else {
-                    statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
-                }
-
-                // if orders are not expanded vDivider will be gone, else visibile
-                if(remainingRecentOrders != null && remainingRecentOrders.size() > 0){
-                    statusHolder.vDivider.setVisibility((ordersExpanded
-                        && !recentOrder.getOrderId().equals(remainingRecentOrders.get(remainingRecentOrders.size()-1).getOrderId())) ? View.VISIBLE : View.GONE);
-                } else {
-                    statusHolder.vDivider.setVisibility(View.GONE);
-                }
+//                setHolderMethod(statusHolder, recentOrder);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -724,6 +675,102 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    private void setHolderMethod(ViewOrderStatus statusHolder, RecentOrder recentOrder) {
+        statusHolder.relativeStatusBar.setVisibility(View.VISIBLE);
+        for (int i = 0; i < statusHolder.relativeStatusBar.getChildCount(); i++) {
+            if (statusHolder.relativeStatusBar.getChildAt(i) instanceof ViewGroup) {
+                ViewGroup viewGroup = (ViewGroup) (statusHolder.relativeStatusBar.getChildAt(i));
+                for (int j = 0; j < viewGroup.getChildCount(); j++) {
+                    viewGroup.getChildAt(j).setVisibility(View.GONE);
+                }
+            } else {
+                statusHolder.relativeStatusBar.getChildAt(i).setVisibility(View.GONE);
+            }
+        }
+        showPossibleStatus(recentOrder.getProductType()== ProductType.MEALS.getOrdinal()?possibleMealsStatus:possibleStatus, recentOrder.getStatus(), statusHolder);
+        statusHolder.tvOrderIdValue.setText(Utils.fromHtml("Order: #<b>"+recentOrder.getOrderId().toString()+"</b>"));
+        statusHolder.tvOrderIdValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+
+        if(recentOrder.getProductType() == ProductType.MEALS.getOrdinal()) {
+            if ((recentOrder.getOrderStatusText() != null) && (!recentOrder.getOrderStatusText().equalsIgnoreCase(""))) {
+                statusHolder.tvDeliveryTime.setText(recentOrder.getOrderStatusText());
+            } else {
+                statusHolder.tvDeliveryTime.setText(activity.getResources().getString(R.string.delivery_before_colon) + " " + recentOrder.getEndTime());
+            }
+        } else {
+            statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
+            statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
+        }
+
+
+        statusHolder.rlRestaurantInfo.setVisibility(!TextUtils.isEmpty(recentOrder.getRestaurantName()) ? View.VISIBLE : View.GONE);
+        statusHolder.tvRestaurantName.setText(recentOrder.getRestaurantName());
+
+
+        if(recentOrder.getOrderAmount() != null) {
+            statusHolder.tvOrderAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(recentOrder.getOrderAmount())));
+        }
+
+        // track or view order buttons
+        statusHolder.tvTrackOrder.setVisibility(recentOrder.getProductType()==ProductType.MEALS.getOrdinal()?View.GONE:View.VISIBLE);
+        statusHolder.vMidSep.setVisibility(recentOrder.getProductType()==ProductType.MEALS.getOrdinal()?View.GONE:View.VISIBLE);
+        if(recentOrder.getShowLiveTracking() == 1 && recentOrder.getDeliveryId() > 0){
+            statusHolder.tvTrackOrder.setTextColor(ContextCompat.getColorStateList(activity, R.color.purple_text_color_selector));
+        } else {
+            statusHolder.tvTrackOrder.setTextColor(ContextCompat.getColor(activity, R.color.purple_text_color_aplha));
+        }
+
+        // not delivered views case
+        if(recentOrder.isDeliveryNotDone() ||
+                recentOrder.getDeliveryConfirmation() == 1 || recentOrder.getDeliveryConfirmation() == 0){
+            statusHolder.rlOrderNotDelivered.setVisibility(View.VISIBLE);
+            statusHolder.rlTrackViewOrder.setVisibility(View.GONE);
+            statusHolder.relativeStatusBar.setVisibility(View.GONE);
+            Utils.setTextUnderline(statusHolder.tvDeliveryTime, activity.getString(R.string.view_order));
+            statusHolder.tvDeliveryTime.setTextColor(ContextCompat.getColorStateList(activity, R.color.text_color_selector));
+
+            RelativeLayout.LayoutParams paramsTV = (RelativeLayout.LayoutParams) statusHolder.tvOrderNotDelivered.getLayoutParams();
+            boolean deliveryMarkedYes = recentOrder.getDeliveryConfirmation() == 1;
+            int marginTop = activity.getResources().getDimensionPixelSize(deliveryMarkedYes ? R.dimen.dp_8 : R.dimen.dp_14);
+            statusHolder.tvOrderDeliveredDigIn.setVisibility(deliveryMarkedYes ? View.VISIBLE : View.GONE);
+            statusHolder.llOrderDeliveredYes.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
+            statusHolder.llOrderDeliveredNo.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
+            statusHolder.vOrderDeliveredMidSep.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
+            statusHolder.vOrderDeliveredTopSep.setVisibility(deliveryMarkedYes ? View.GONE : View.VISIBLE);
+
+            if(recentOrder.isDeliveryNotDone() && recentOrder.getDeliveryConfirmation() < 0){
+                statusHolder.tvOrderNotDelivered.setText(recentOrder.getDeliveryNotDoneMsg());
+                statusHolder.ivOrderDeliveredYes.setVisibility(View.GONE);
+                statusHolder.ivOrderDeliveredNo.setVisibility(View.GONE);
+                statusHolder.tvOrderDeliveredYes.setText(activity.getString(R.string.yes).toUpperCase()); statusHolder.tvOrderDeliveredYes.setTextSize(14);
+                statusHolder.tvOrderDeliveredNo.setText(activity.getString(R.string.no).toUpperCase()); statusHolder.tvOrderDeliveredNo.setTextSize(14);
+            }
+            else if(recentOrder.getDeliveryConfirmation() == 0){ // no case
+                statusHolder.tvOrderNotDelivered.setText(recentOrder.getDeliveryConfirmationMsg());
+                statusHolder.ivOrderDeliveredYes.setVisibility(View.VISIBLE);
+                statusHolder.ivOrderDeliveredYes.setImageResource(Data.isFuguChatEnabled()?R.drawable.ic_restaurant_chat:R.drawable.ic_restaurant_report);
+                statusHolder.ivOrderDeliveredNo.setVisibility(View.VISIBLE);
+                statusHolder.tvOrderDeliveredYes.setText(Data.isFuguChatEnabled()?R.string.chat_with_us :R.string.report_issue); statusHolder.tvOrderDeliveredYes.setTextSize(12);
+                statusHolder.tvOrderDeliveredNo.setText(R.string.call_restaurant); statusHolder.tvOrderDeliveredNo.setTextSize(12);
+            }
+            else if(deliveryMarkedYes){ // yes local case
+                statusHolder.tvOrderNotDelivered.setText(R.string.dig_in_enjoy_food_experience_feedback);
+            }
+            paramsTV.setMargins(paramsTV.leftMargin, marginTop, paramsTV.rightMargin, paramsTV.bottomMargin);
+            statusHolder.tvOrderNotDelivered.setLayoutParams(paramsTV);
+        } else {
+            statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
+        }
+
+        // if orders are not expanded vDivider will be gone, else visibile
+        if(remainingRecentOrders != null && remainingRecentOrders.size() > 0){
+            statusHolder.vDivider.setVisibility((ordersExpanded
+                && !recentOrder.getOrderId().equals(remainingRecentOrders.get(remainingRecentOrders.size()-1).getOrderId())) ? View.VISIBLE : View.GONE);
+        } else {
+            statusHolder.vDivider.setVisibility(View.GONE);
+        }
+    }
+
     public static String getDistanceRestaurant(MenusResponse.Vendor vendor) {
         if(vendor.getDistance()==null){
             return null;
@@ -778,7 +825,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return VIEW_DIVIDER;
 
         if(object instanceof RecentOrder)
-            return VIEW_ORDER_ITEM;
+            return NEW_VIEW_ORDER_ITEM;
 
         if(object instanceof MenusResponse.Vendor)
             return VIEW_VENDOR;
@@ -1075,6 +1122,29 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             llOrderDeliveredNo.setOnClickListener(onClickListener);
         }
     }
+    public class ViewNewOrderStatus extends RecyclerView.ViewHolder{
+
+        @Bind(R.id.tv_order_restaurant_and_id)
+        TextView tvOrderDescription;
+        @Bind(R.id.tv_order_details)
+        TextView tvOrderDetails;
+        @Bind(R.id.rlRoot)
+        View rootView;
+
+        public ViewNewOrderStatus(final View itemView, final ItemListener itemListener) {
+            super(itemView);
+            ButterKnife.bind(this,itemView);
+            tvOrderDescription.setTypeface(tvOrderDescription.getTypeface(),Typeface.BOLD);
+            rootView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.onClickItem(rootView,itemView);
+                }
+            });
+        }
+    }
+
+
     class ViewTitleCategory extends RecyclerView.ViewHolder {
         @Bind(R.id.icon_title)
         ImageView iconTitle;
