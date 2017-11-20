@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.picker.image.util.Util;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -283,8 +284,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 if(activity.getTopFragment() instanceof  MenusFragment){
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
                     activity.hideMenusCartSelectedLayout();
-
-                    toggleFatafatChatIconVisibility();
+                    activity.rlfabViewFatafat.setVisibility(View.GONE);
 
 
 
@@ -301,7 +301,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
                     activity.getMenusCartSelectedLayout().checkForVisibility();
-                    activity.rlfabViewFatafat.setVisibility(View.GONE);
+                    toggleFatafatChatIconVisibility();
+
 
 
                 }
@@ -309,6 +310,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         });
         keyboardLayoutListener.setResizeTextView(false);
+
 
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
         llRoot.post(new Runnable() {
@@ -508,7 +510,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 }
                 activity.fragmentUISetup(this);
                 if(searchOpened){
+                    activity.getTopBar().ivSearch.setVisibility(View.GONE);
                     activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
+                    try {
+                        activity.getTopBar().etSearch.setSelection(activity.getTopBar().etSearch.getText().toString().length()-1);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
                 }
                 setUpUIforCategoriesOpened(activity.getCategoryOpened());
@@ -546,6 +554,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             } else {
                 activity.hideMenusCartSelectedLayout();
 
+            }
+            try {
+                product.clicklabs.jugnoo.utils.Utils.hideSoftKeyboard(activity,activity.getTopBar().etSearch);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         } catch (Exception e) {
             e.printStackTrace();
