@@ -19,6 +19,7 @@ public final class DateParser {
     private static final DateFormat FORMAT_UTC_WITHOUT_TIMEZONE = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
     private static final DateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     public static final DateFormat DISPLAY_DATE_FORMAT = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
+    public static final DateFormat DISPLAY_DATE_FORMAT_JUGNOO = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
     private static final Calendar cal = Calendar.getInstance();
 
     static {
@@ -45,6 +46,14 @@ public final class DateParser {
         }
 
 
+    }
+    public static String getLocalDateStringFatfat(String utcDate){
+        try {
+            return DISPLAY_DATE_FORMAT_JUGNOO.format(FORMAT_UTC.parse(utcDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

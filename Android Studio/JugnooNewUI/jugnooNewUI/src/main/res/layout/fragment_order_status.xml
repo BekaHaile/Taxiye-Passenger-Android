@@ -213,6 +213,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:id="@+id/layout_menus_order"
                 android:layout_height="wrap_content"
                 android:background="@color/offer_popup_item_color"
                 android:orientation="vertical"
@@ -230,7 +231,7 @@
                     android:visibility="visible">
 
                     <TextView
-                        android:id="@+id/tv1r"
+                        android:id="@+id/tvOrderStatusLabel"
                         android:layout_width="200px"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -244,7 +245,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/tv1r"
+                        android:layout_toRightOf="@+id/tvOrderStatusLabel"
                         android:text=""
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
@@ -783,6 +784,7 @@
 
                 </LinearLayout>
             </LinearLayout>
+            <include layout="@layout/fragment_pros_order_status"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

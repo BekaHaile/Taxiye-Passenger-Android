@@ -53,15 +53,19 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -76,6 +80,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+
+import static product.clicklabs.jugnoo.MyApplication.getInstance;
 
 /**
  * Created by ankit on 27/10/16.
@@ -119,6 +125,64 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private LinearLayout llShadowPeek;
     private int llShadowPeekHeight, openLiveTracking;
     private JSONObject responseOrderDataApi;
+    private boolean isFeedOrder;
+    private int feedOrderId;
+    private HomeUtil homeUtil = new HomeUtil();
+
+    @Bind(R.id.tv2r)
+    TextView tv2r;
+    @Bind(R.id.tv3r)
+    TextView tv3r;
+    @Bind(R.id.ivDeliveryPlaceFeed)
+    ImageView ivDeliveryPlaceFeed;
+    @Bind(R.id.tvDeliveryPlace)
+    TextView tvDeliveryPlace;
+    @Bind(R.id.llDeliveryPlaceFeed)
+    LinearLayout llDeliveryPlaceFeed;
+    @Bind(R.id.tvDeliveryToValFeed)
+    TextView tvDeliveryToValFeed;
+    @Bind(R.id.tvAmountValue)
+    TextView tvAmountValue;
+    @Bind(R.id.ivPaidVia)
+    ImageView ivPaidVia;
+    @Bind(R.id.tvPaidViaValue)
+    TextView tvPaidViaValue;
+    @Bind(R.id.bNeedHelpFeed)
+    Button bNeedHelpFeed;
+    @Bind(R.id.bCancelOrder)
+    Button bCancelOrder;
+    @Bind(R.id.tv1r)
+    TextView tv1r;
+    @Bind(R.id.tv1l)
+    TextView tv1l;
+    @Bind(R.id.tv2l)
+    TextView tv2l;
+    @Bind(R.id.tv3l)
+    TextView tv3l;
+    @Bind(R.id.tv4l)
+    TextView tv4l;
+    @Bind(R.id.ivFromPlace)
+    ImageView ivFromPlace;
+    @Bind(R.id.tvFromPlace)
+    TextView tvFromPlace;
+    @Bind(R.id.llFromPlace)
+    LinearLayout llFromPlace;
+    @Bind(R.id.tvFromToVal)
+    TextView tvFromToVal;
+    @Bind(R.id.llFromAddress)
+    LinearLayout llFromAddress;
+    @Bind(R.id.tv5l)
+    TextView tv5l;
+    @Bind(R.id.tvTaskDetails)
+    TextView tvTaskDetails;
+    @Bind(R.id.llAmount)
+    LinearLayout llAmount;
+    @Bind(R.id.llPaidVia)
+    LinearLayout llPaidVia;
+    @Bind(R.id.rlOrderStatusFeed)
+     LinearLayout rlOrderStatusFeed;
+    @Bind(R.id.divider_below_rlOrderStatusFeed)
+     View dividerBelowRlOrderStatusFeed;
 
 
     @Nullable
@@ -195,7 +259,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
         llMain = (LinearLayout) rootView.findViewById(R.id.llMain);
         llMain.setVisibility(View.GONE);
-        tvOrderStatus = (TextView) rootView.findViewById(R.id.tv1r);
+        tvOrderStatus = (TextView) rootView.findViewById(R.id.tvOrderStatusLabel);
         tvOrderStatus.setTypeface(Fonts.mavenMedium(activity));
         tvOrderStatusVal = (TextView) rootView.findViewById(R.id.tvOrderStatusVal);
         tvOrderStatusVal.setTypeface(Fonts.mavenMedium(activity));
@@ -293,7 +357,35 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         orderItemsAdapter = new OrderItemsAdapter(activity, subItemsOrders);
         listViewOrder.setAdapter(orderItemsAdapter);
 
-        getOrderData(activity);
+        if(productType==ProductType.FEED.getOrdinal()){
+            ButterKnife.bind(this,  rootView.findViewById(R.id.layout_feed_order));
+            bNeedHelpFeed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (datum1 != null && !TextUtils.isEmpty(datum1.getFuguChannelId())) {
+                        FuguConfig.getInstance().openChatByTransactionId(datum1.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
+                                datum1.getFuguChannelName(), datum1.getFuguTags());
+                    }
+                }
+            });
+            rootView.findViewById(R.id.layout_menus_order).setVisibility(View.GONE);
+            rootView.findViewById(R.id.layout_feed_order).setVisibility(View.VISIBLE);
+            tv1l.setText(R.string.status_colon);
+            tv2l.setText(R.string.order_time_colon);
+            tv3l.setText(R.string.delivery_time_colon);
+            llFromAddress.setVisibility(View.VISIBLE);
+            tv5l.setText(R.string.to_colon);
+            tvTaskDetails.setVisibility(View.VISIBLE);
+            llAmount.setVisibility(View.GONE);
+            llPaidVia.setVisibility(View.GONE);
+            bNeedHelpFeed.setText(R.string.chat_support);
+            getFeedOrderData(activity);
+        }else{
+            rootView.findViewById(R.id.layout_menus_order).setVisibility(View.VISIBLE);
+            rootView.findViewById(R.id.layout_feed_order).setVisibility(View.GONE);
+            getOrderData(activity);
+
+        }
 
 
         bNeedHelp.setOnClickListener(new View.OnClickListener() {
@@ -311,11 +403,166 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 }
             }
         });
-
         LocalBroadcastManager.getInstance(activity).registerReceiver(orderUpdateBroadcast, new IntentFilter(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE));
 
         return relative;
     }
+    public void getFeedOrderData(final Activity activity) {
+        try {
+            if (MyApplication.getInstance().isOnline()) {
+
+                DialogPopup.showLoadingDialog(activity, "Loading...");
+
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_ORDER_ID, "" + orderId);
+                params.put(Constants.KEY_PRODUCT_TYPE, "" + productType);
+                params.put(Constants.KEY_CLIENT_ID,  getClientIdByProductType(productType));
+                params.put(Constants.INTERATED, "1");
+
+                Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
+                    @Override
+                    public void success(HistoryResponse historyResponse, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        Log.i("Server response", "response = " + responseStr);
+                        try {
+                            JSONObject jObj = new JSONObject(responseStr);
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                int flag = jObj.getInt("flag");
+                                String message = JSONParser.getServerMessage(jObj);
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                    datum1 = historyResponse.getData().get(0);
+                                    llMain.setVisibility(View.VISIBLE);
+                                    if (historyResponse.getRecentOrdersPossibleFatafatStatus().size() > 0) {
+                                        cvOrderStatus.setVisibility(View.VISIBLE);
+                                        rlOrderStatusFeed.setVisibility(View.GONE);
+                                        dividerBelowRlOrderStatusFeed.setVisibility(View.GONE);
+
+
+                                        showPossibleStatus(historyResponse.getRecentOrdersPossibleFatafatStatus(), datum1.getOrderStatusIndex(),true);
+
+                                    } else {
+                                        cvOrderStatus.setVisibility(View.GONE);
+                                        rlOrderStatusFeed.setVisibility(View.VISIBLE);
+                                        dividerBelowRlOrderStatusFeed.setVisibility(View.VISIBLE);
+                                    }
+
+                                    setFeedOrderData(datum1, activity);
+                                    openTrackOrderFragment();
+                                } else {
+                                    retryDialogCancelOrderOrOrderStatusFeed(message, DialogErrorType.SERVER_ERROR);
+                                }
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                            retryDialogCancelOrderOrOrderStatusFeed("", DialogErrorType.SERVER_ERROR);
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e("TAG", "getRecentRidesAPI error=" + error.toString());
+                        DialogPopup.dismissLoadingDialog();
+                        retryDialogCancelOrderOrOrderStatusFeed("", DialogErrorType.CONNECTION_LOST);
+                    }
+                };
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getFatafatApiService().getCustomOrderHistory(params, callback);
+            } else {
+                retryDialogCancelOrderOrOrderStatusFeed("", DialogErrorType.NO_NET);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setFeedOrderData(HistoryResponse.Datum datum, Activity activity) {
+        tv1r.setText(datum.getOrderStatus());
+        try{
+            tv1r.setTextColor(Color.parseColor(datum.getOrderStatusColor()));
+        } catch (Exception e){
+            tv1r.setTextColor(ContextCompat.getColor(activity, R.color.green_status));
+        }
+        tv2r.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum.getCreatedAt())));
+        if(!TextUtils.isEmpty(datum.getDeliveryTime())){
+            tv3r.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum.getDeliveryTime())));
+        } else {
+            tv3r.setText("ASAP");
+        }
+
+        SearchResult searchResultFrom = homeUtil.getNearBySavedAddress(activity,
+                new LatLng(datum.getFromLatitude(), datum.getFromLongitude()),
+                Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+        if (searchResultFrom != null && !TextUtils.isEmpty(searchResultFrom.getName())) {
+            llFromPlace.setVisibility(View.VISIBLE);
+            ivFromPlace.setImageResource(homeUtil.getSavedLocationIcon(searchResultFrom.getName()));
+            tvFromPlace.setText(searchResultFrom.getName());
+            tvFromToVal.setText(searchResultFrom.getAddress());
+        } else {
+            llFromPlace.setVisibility(View.GONE);
+            tvFromToVal.setText(datum.getFromAddress());
+        }
+
+        SearchResult searchResultTo = homeUtil.getNearBySavedAddress(activity,
+                new LatLng(datum.getToLatitude(), datum.getToLongitude()),
+                Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+        if (searchResultTo != null && !TextUtils.isEmpty(searchResultTo.getName())) {
+            llDeliveryPlaceFeed.setVisibility(View.VISIBLE);
+            ivDeliveryPlaceFeed.setImageResource(homeUtil.getSavedLocationIcon(searchResultTo.getName()));
+            tvDeliveryPlace.setText(searchResultTo.getName());
+            tvDeliveryToValFeed.setText(searchResultTo.getAddress());
+        } else {
+            llDeliveryPlaceFeed.setVisibility(View.GONE);
+            tvDeliveryToValFeed.setText(datum.getToAddress());
+        }
+        tvTaskDetails.setText(datum.getDetails());
+    }
+
+
+    private void retryDialogCancelOrderOrOrderStatusFeed(String message, DialogErrorType dialogErrorType) {
+        if (TextUtils.isEmpty(message)) {
+            DialogPopup.dialogNoInternet(activity,
+                    dialogErrorType,
+                    new Utils.AlertCallBackWithButtonsInterface() {
+                        @Override
+                        public void positiveClick(View view) {
+                            if(productType == ProductType.PROS.getOrdinal()) {
+                            } else {
+                                getFeedOrderData(activity);
+                            }
+                        }
+
+                        @Override
+                        public void neutralClick(View view) {
+
+                        }
+
+                        @Override
+                        public void negativeClick(View view) {
+                        }
+                    });
+        } else {
+            DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
+                    activity.getString(R.string.retry), activity.getString(R.string.cancel),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(productType == ProductType.PROS.getOrdinal()) {
+                            } else {
+                                getFeedOrderData(activity);
+                            }
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            activity.onBackPressed();
+                        }
+                    }, false, false);
+        }
+    }
+
 
     @Override
     public void onDestroy() {
@@ -503,9 +750,18 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     }
 
 
-    private void showPossibleStatus(ArrayList<String> possibleStatus, int status) {
+    private void showPossibleStatus(ArrayList<String> possibleStatus, int status,boolean isFeedOrder) {
         setDefaultState();
         int selectedSize = (int) (35 * ASSL.Xscale());
+        if(isFeedOrder){
+            tvStatus3.setVisibility(View.GONE);
+            ivStatus3.setVisibility(View.GONE);
+            lineStatus3.setVisibility(View.GONE);
+        }else{
+            tvStatus3.setVisibility(View.VISIBLE);
+            ivStatus3.setVisibility(View.VISIBLE);
+            lineStatus3.setVisibility(View.VISIBLE);
+        }
         switch (possibleStatus.size()) {
             case 4:
                 tvStatus3.setVisibility(View.VISIBLE);
@@ -664,7 +920,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 cvOrderStatus.setVisibility(View.VISIBLE);
                 rlOrderStatus.setVisibility(View.GONE);
                 setDefaultState();
-                showPossibleStatus(historyResponse.getRecentOrdersPossibleStatus(), datum1.getOrderTrackingIndex());
+                showPossibleStatus(historyResponse.getRecentOrdersPossibleStatus(), datum1.getOrderTrackingIndex(),false);
             } else {
                 cvOrderStatus.setVisibility(View.GONE);
                 rlOrderStatus.setVisibility(View.VISIBLE);

@@ -206,6 +206,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             edtTaskDescription.setHint(R.string.anywhere_hint);
 
         }
+        paySlider.setSlideInitial();
         activity.showPaySliderEnabled(true);
         return rootView;
     }
@@ -499,13 +500,26 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                activity.clearAllCartAtOrderComplete(activity.getFreshCheckoutMergedFragment().lastAppTypeOpen );activity.clearFragmentStackTillLast();
                             }else if(isOrderViaRestaurantDetail){
                                 activity.clearFragmentStackTillLast();
+                            }else{
+                                activity.clearFragmentStackTillLast();
+
                             }
+                            activity.getHandler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(activity.getMenusFragment()!=null){
+                                        activity.getMenusFragment().onRefresh();
+                                    }
+                                }
+                            },1000);
                             if (orderAnywhereResponse != null && !TextUtils.isEmpty(orderAnywhereResponse.getFuguChannelId())) {
                                 FuguConfig.getInstance().openChatByTransactionId(orderAnywhereResponse.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
                                         orderAnywhereResponse.getFuguChannelName(), orderAnywhereResponse.getFuguTags(), new String[]{fuguMessage});
                             } else {
                                 FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
                             }
+
+
                             String action ;
                             if(isOrderViaCheckoutFragment){
                                 action = GAAction.ACTION_FATAFAT_ORDER_CONFIRMED_CHECKOUT;

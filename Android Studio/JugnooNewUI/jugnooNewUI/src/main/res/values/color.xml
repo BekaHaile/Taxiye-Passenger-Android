@@ -143,6 +143,7 @@
     <color name="menu_item_selector_color_F7">#F7F7F7</color>
     <color name="google_path_polyline_color">#0889da</color>
     <color name="bar_color">#EBEBEB</color>
+    <color name="fatafat_divider_color">#d6d9df</color>
 
     <color name="text_green_color">#22BD21</color>
 
@@ -308,6 +309,8 @@
     <color name="home_switcher_meals">#ff9b4d</color>
     <color name="home_switcher_meals_pressed">#D9ff9b4d</color>
     <color name="fatafat_fab">#353542</color>
+    <color name="text_color_fatafat_light">#CC353542</color>
+    <color name="text_color_fatafat_bold">#353542</color>
     <color name="fatafat_fab_pressed">#D9353542</color>
     <color name="text_color_orange">#ff742c</color>
 

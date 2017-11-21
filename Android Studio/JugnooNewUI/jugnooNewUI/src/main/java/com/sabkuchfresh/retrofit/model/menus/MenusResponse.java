@@ -363,6 +363,20 @@ public class MenusResponse {
 		@Expose
 		private double longitude;
 
+		@SerializedName("out_of_radius")
+		private Object outOfRadius;
+
+		public int getOutOfRadius() {
+			if(outOfRadius instanceof Integer || outOfRadius instanceof Double)
+				return (int) outOfRadius;
+			else if(outOfRadius instanceof Boolean)
+			{
+				return (boolean)outOfRadius?1:0;
+			}
+
+			return 0;
+		}
+
 		private boolean hasRated;
 		public boolean isChatModeEnabled() {
 			return chatMode == 1;

@@ -2,17 +2,26 @@ package com.sabkuchfresh.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
+import android.text.style.TypefaceSpan;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -32,6 +41,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.utils.DateParser;
 import com.sabkuchfresh.widgets.DeliveryDisplayCategoriesView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundBorderTransform;
@@ -99,9 +109,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int ITEM_TOTAL_CATEGORIES = 12;
     private static final int ITEM_CUSTOM_ORDER = 13;
     private static final int NEW_VIEW_ORDER_ITEM = 14;
+    private static final int ITEM_BANNER_FATAFAT_RESTAURANTS = 15;
     private CategoriesData categoriesData;
 
-    private static final int RECENT_ORDERS_TO_SHOW = 1;
+    private static final int RECENT_ORDERS_TO_SHOW = 2;
 
     private RecyclerView recyclerView;
 
@@ -148,6 +159,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    private boolean isFatafatBannerInserted;
     public void setList(MenusResponse menusResponse, boolean isPagination, boolean hasMorePages) {
 
         // for stopping scrolling to form layout editText in case of less vendors
@@ -155,8 +167,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             recyclerView.requestFocus();
         }
 
-        if(!isPagination || dataToDisplay==null)
-          this.dataToDisplay = new ArrayList<>();
+        if(!isPagination || dataToDisplay==null){
+            this.dataToDisplay = new ArrayList<>();
+            isFatafatBannerInserted = false;
+        }
 
 
 
@@ -190,10 +204,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             if(sizeRecentOrders > RECENT_ORDERS_TO_SHOW){
                 cacheRemainingRecentOrders(menusResponse.getRecentOrders());
-                if(deliverySeeAllModel == null){
+              /*  if(deliverySeeAllModel == null){
                     deliverySeeAllModel = new DeliverySeeAll(new MenusResponse.Category(-1));
                 }
-                dataToDisplay.add(deliverySeeAllModel);
+                dataToDisplay.add(deliverySeeAllModel);*/
             }
             dataToDisplay.add(new DeliveryDivider());
         }
@@ -217,9 +231,22 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         }
 
+
         //vendors Assignmend
         if(menusResponse.getVendors() != null){
-            dataToDisplay.addAll(menusResponse.getVendors());
+            for(MenusResponse.Vendor vendor : menusResponse.getVendors()){
+
+                if(!isFatafatBannerInserted && vendor.getOutOfRadius()==1){
+                    if(menusResponse.getVendors().size()>1){
+                        dataToDisplay.add(new DeliveryDivider());
+
+                    }
+                    dataToDisplay.add(new OutOfRadiusBanner());
+                    isFatafatBannerInserted = true;
+                }
+                dataToDisplay.add(vendor);
+
+            }
         }
 
         // service unavailable case
@@ -332,26 +359,18 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void toggleRemainingOrdersVisibility(int position, boolean show){
         if(remainingRecentOrders != null && remainingRecentOrders.size() > 0){
             if(show) {
-                dataToDisplay.addAll(position, remainingRecentOrders);
-                dataToDisplay.remove(deliverySeeAllModel);
                 ordersExpanded = true;
-                int startPosition = position - RECENT_ORDERS_TO_SHOW - 1; // - RECENT_ORDERS_TO_SHOW - 1 is for
-                                                                        // header and already visible orders notifying
-                if(startPosition >= 0){
-                    notifyItemRangeChanged(startPosition, RECENT_ORDERS_TO_SHOW+2);
-                    if (remainingRecentOrders.size() > 1){
-                        notifyItemRangeInserted(position + 1, remainingRecentOrders.size()-1);
-                    }
-                }
+                notifyItemChanged(position);
+                dataToDisplay.addAll(position+RECENT_ORDERS_TO_SHOW+1, remainingRecentOrders);
+                notifyItemRangeInserted(position+RECENT_ORDERS_TO_SHOW +1,position+RECENT_ORDERS_TO_SHOW+remainingRecentOrders.size());
+
             } else {
-                dataToDisplay.removeAll(remainingRecentOrders);
-                dataToDisplay.add(position+RECENT_ORDERS_TO_SHOW+1, deliverySeeAllModel);
                 ordersExpanded = false;
-                notifyItemRangeChanged(position, RECENT_ORDERS_TO_SHOW+2);
-                if (remainingRecentOrders.size() > 1){
-                    recyclerView.getItemAnimator().getAddDuration();
-                    notifyItemRangeRemoved(position+RECENT_ORDERS_TO_SHOW+2, remainingRecentOrders.size()-1);
-                }
+                notifyItemChanged(position);
+                dataToDisplay.removeAll(remainingRecentOrders);
+                notifyItemRangeRemoved(position+RECENT_ORDERS_TO_SHOW+1, remainingRecentOrders.size());
+
+
             }
         }
     }
@@ -402,6 +421,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case BLANK_LAYOUT :
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_footer, parent, false);
                 return new ProgressBarViewHolder(v);
+            case ITEM_BANNER_FATAFAT_RESTAURANTS :
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_banner_fatafat_restaurants, parent, false);
+                return new ViewHolderItemBannerFatafat(v);
+
 
             default:
                 throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
@@ -443,7 +466,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }else{
                     ((ViewHolderVendor) mholder).textViewDelivery.setText(distance);
                 }
-                if(vendor.getOrderMode()==Constants.ORDER_MODE_UNAVAILABLE || vendor.getOrderMode()==Constants.ORDER_MODE_CHAT){
+                if(vendor.getOrderMode()==Constants.ORDER_MODE_UNAVAILABLE || vendor.getOrderMode()==Constants.ORDER_MODE_CHAT || vendor.getOutOfRadius()==1){
                     ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                     if(vendor.getIsClosed()==1 || vendor.getIsAvailable()==0){
@@ -552,9 +575,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             try {
                 RecentOrder recentOrder = (RecentOrder) dataToDisplay.get(position);
 
-                String restaurantName = recentOrder.getRestaurantName() + "";
-                String orderId = " Order: #"+ recentOrder.getOrderId().toString();
-                String deliveryTime,orderStatus;
+                String restaurantName =recentOrder.getRestaurantName()  ;
+                String orderId = "#"+ recentOrder.getOrderId().toString();
+                String deliveryTime=null,orderStatus;
                 if(recentOrder.getProductType() == ProductType.MEALS.getOrdinal()) {
                     if ((recentOrder.getOrderStatusText() != null) && (!recentOrder.getOrderStatusText().equalsIgnoreCase(""))) {
                         deliveryTime=recentOrder.getOrderStatusText();
@@ -563,7 +586,12 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                     orderStatus = possibleMealsStatus.get(recentOrder.getStatus());
                 } else  if(recentOrder.getProductType() == ProductType.FEED.getOrdinal()) {
-                    deliveryTime = recentOrder.getDeliveryTime();
+                    if(recentOrder.getIsAsap()==1){
+                        deliveryTime="Delivery: As Soon as possible.";
+                    }else{
+                        deliveryTime ="Delivery: "+ DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(recentOrder.getDeliveryTime()));
+
+                    }
                     orderStatus = possibleFatafatStatus.get(recentOrder.getStatus());
 
                 }else {
@@ -572,16 +600,18 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 }
 
-                if(deliveryTime==null){
-                    deliveryTime="";
-
-                } else{
-                    deliveryTime = ", " + deliveryTime;
+                statusHolder.tvOrderRestaurant.setVisibility(restaurantName!=null && restaurantName.trim().length()>0?View.VISIBLE:View.INVISIBLE);
+                statusHolder.tvOrderStatus.setVisibility(orderStatus!=null && orderStatus.trim().length()>0?View.VISIBLE:View.INVISIBLE);
+                statusHolder.tvOrderRestaurant.setText(restaurantName);
+                statusHolder.tvOrderId.setText(orderId);
+                statusHolder.tvOrderStatus.setText(orderStatus);
+                statusHolder.tvOrderTime.setText(deliveryTime);
+                GradientDrawable shapeDrawable = (GradientDrawable) statusHolder.tvOrderStatus.getBackground();
+                try {
+                    shapeDrawable.setColor(Color.parseColor(recentOrder.getOrderStatusColor()));
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                String orderDescription = restaurantName + orderId;
-                String orderDetail =  orderStatus + deliveryTime;
-                statusHolder.tvOrderDetails.setText(orderDetail);
-                statusHolder.tvOrderDescription.setText(orderDescription);
 
 
 //                setHolderMethod(statusHolder, recentOrder);
@@ -595,10 +625,13 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             MenusResponse.Category category = (MenusResponse.Category) dataToDisplay.get(position);
             if(category.isTypeOrder()){
                 holder.tvCateogoryTitle.setText(R.string.ongoing_orders);
+                holder.tvCategoryArrow.setVisibility(ordersExpanded?View.GONE:View.VISIBLE);
+                holder.ivCategoryArrow.setVisibility(ordersExpanded?View.VISIBLE:View.GONE);
                 holder.iconTitle.setImageResource(R.drawable.ic_ongoing_orders);
-                holder.ivCategoryArrow.setVisibility(ordersExpanded ? View.VISIBLE : View.GONE);
+
             } else {
                 holder.tvCateogoryTitle.setText(category.getCategoryName());
+                holder.tvCategoryArrow.setVisibility(View.GONE);
                 holder.ivCategoryArrow.setVisibility(View.GONE);
                 if(!TextUtils.isEmpty(category.getImage())){
                     Picasso.with(activity).load(category.getImage())
@@ -779,7 +812,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public static String showDeliveryStringWithTime(MenusResponse.Vendor vendor) {
-        if(vendor.getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE || vendor.getOrderMode() == Constants.ORDER_MODE_CHAT){
+        if(vendor.getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE || vendor.getOrderMode() == Constants.ORDER_MODE_CHAT || vendor.getOutOfRadius()==1){
             if(!TextUtils.isEmpty(vendor.getOpensAt()) && !TextUtils.isEmpty(vendor.getCloseIn())
                     && !"00:00:00".equals(vendor.getOpensAt()) && !"00:00:00".equals(vendor.getCloseIn())) {
                 return DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt(), false) + "-" + DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn(), false);
@@ -824,6 +857,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(object instanceof RecentOrder)
             return NEW_VIEW_ORDER_ITEM;
 
+
+
         if(object instanceof MenusResponse.Vendor)
             return VIEW_VENDOR;
 
@@ -844,6 +879,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if(object instanceof BlankFooterModel)
             return BLANK_LAYOUT;
+
+        if(object instanceof OutOfRadiusBanner)
+            return ITEM_BANNER_FATAFAT_RESTAURANTS;
 
         Log.e(TAG, ">"+object);
 
@@ -888,9 +926,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     break;
                 case R.id.rLCategory:
                     if(dataToDisplay.get(pos) instanceof MenusResponse.Category
-                            && ((MenusResponse.Category)dataToDisplay.get(pos)).isTypeOrder()
-                            && ordersExpanded){
-                        toggleRemainingOrdersVisibility(pos, false);
+                            && ((MenusResponse.Category)dataToDisplay.get(pos)).isTypeOrder()){
+                        toggleRemainingOrdersVisibility(pos, !ordersExpanded);
                     }
                     break;
                 case R.id.llRoot:
@@ -1124,21 +1161,26 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
     public class ViewNewOrderStatus extends RecyclerView.ViewHolder{
 
-        @Bind(R.id.tv_order_restaurant_and_id)
-        TextView tvOrderDescription;
-        @Bind(R.id.tv_order_details)
-        TextView tvOrderDetails;
-        @Bind(R.id.rlRoot)
-        View rootView;
+        @Bind(R.id.tv_order_restaurant)
+        TextView tvOrderRestaurant;
+        @Bind(R.id.tv_order_id)
+        TextView tvOrderId;
+        @Bind(R.id.tv_order_status)
+        TextView tvOrderStatus;
+        @Bind(R.id.tv_order_time)
+        TextView tvOrderTime;
+
+        @Bind(R.id.rlRootNewOrder)
+        View rlRootNewOrder;
 
         public ViewNewOrderStatus(final View itemView, final ItemListener itemListener) {
             super(itemView);
             ButterKnife.bind(this,itemView);
-            tvOrderDescription.setTypeface(tvOrderDescription.getTypeface(),Typeface.BOLD);
-            rootView.setOnClickListener(new View.OnClickListener() {
+            tvOrderRestaurant.setTypeface(tvOrderRestaurant.getTypeface(),Typeface.BOLD);
+            rlRootNewOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemListener.onClickItem(rootView,itemView);
+                    itemListener.onClickItem(rlRootNewOrder,itemView);
                 }
             });
         }
@@ -1150,6 +1192,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageView iconTitle;
         @Bind(R.id.tv_cateogory_title)
         TextView tvCateogoryTitle;
+        @Bind(R.id.tv_category_arrow)
+        TextView tvCategoryArrow;
         @Bind(R.id.iv_category_arrow)
         ImageView ivCategoryArrow;
         @Bind(R.id.rLCategory)
@@ -1234,6 +1278,23 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(itemView);
             rlLayoutNoVender = (RelativeLayout) itemView.findViewById(R.id.rlLayoutNoVender);
             textViewNoMenus = (TextView) itemView.findViewById(R.id.textViewNoMenus);
+        }
+    }
+
+    private class ViewHolderItemBannerFatafat extends RecyclerView.ViewHolder {
+        TextView tVBannerText;
+
+        ViewHolderItemBannerFatafat(View itemView) {
+            super(itemView);
+            tVBannerText = (TextView) itemView.findViewById(R.id.tv_banner_text);
+            String heading = activity.getString(R.string.fatafat_banner_heading);
+            String subHeading = activity.getString(R.string.fatafat_banner_sub_heading);
+            StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+            SpannableString spannableString = new SpannableString(heading +subHeading);
+            spannableString.setSpan(new RelativeSizeSpan(0.9f),heading.length(),spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(bss,0,heading.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity,R.color.text_color_fatafat_light)),heading.length(),spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            tVBannerText.setText(spannableString);
         }
     }
 
@@ -1744,7 +1805,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
             textView.setText("Closed ");
         } else {
-            if (minutes <= vendor.getBufferTime() && minutes > 0 && vendor.getOrderMode()!=Constants.ORDER_MODE_UNAVAILABLE && vendor.getOrderMode()!=Constants.ORDER_MODE_CHAT) {
+            if (minutes <= vendor.getBufferTime() && minutes > 0 && vendor.getOrderMode()!=Constants.ORDER_MODE_UNAVAILABLE && vendor.getOrderMode()!=Constants.ORDER_MODE_CHAT && vendor.getOutOfRadius()!=1) {
                 textView.setText("Closing in " + minutes + (minutes>1?" mins ":" min " ));
             }
             else {
@@ -1776,5 +1837,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
         }
+    }
+
+    private class OutOfRadiusBanner {
     }
 }

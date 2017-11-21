@@ -1403,6 +1403,7 @@
     <string name="label_fav_restaurant">Couldn’t find your \n favourite store yet?</string>
     <string name="label_fav_restaurant_format">Couldn’t find your \n favourite %s yet?</string>
     <string name="label_or_above_order_via_fatafat">- OR -</string>
+    <string name="fatafat_banner_string" />
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>
@@ -1415,6 +1416,8 @@
         <item quantity="zero">No Rating</item>
         <item quantity="other">%d Ratings</item>
     </plurals>
+    <string name="fatafat_banner_heading"><b>Get it delivered via Fatafat \n</b></string>
+    <string name="fatafat_banner_sub_heading">These stores don’t deliver to your address but \n you can still get delivery via Fatafat.</string>
 
 
 </resources>

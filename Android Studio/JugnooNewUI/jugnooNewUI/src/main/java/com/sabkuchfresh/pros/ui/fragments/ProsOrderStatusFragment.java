@@ -75,22 +75,22 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 	TextView tv2r;
 	@Bind(R.id.tv3r)
 	TextView tv3r;
-	@Bind(R.id.ivDeliveryPlace)
-	ImageView ivDeliveryPlace;
+	@Bind(R.id.ivDeliveryPlaceFeed)
+	ImageView ivDeliveryPlaceFeed;
 	@Bind(R.id.tvDeliveryPlace)
 	TextView tvDeliveryPlace;
-	@Bind(R.id.llDeliveryPlace)
-	LinearLayout llDeliveryPlace;
-	@Bind(R.id.tvDeliveryToVal)
-	TextView tvDeliveryToVal;
+	@Bind(R.id.llDeliveryPlaceFeed)
+	LinearLayout llDeliveryPlaceFeed;
+	@Bind(R.id.tvDeliveryToValFeed)
+	TextView tvDeliveryToValFeed;
 	@Bind(R.id.tvAmountValue)
 	TextView tvAmountValue;
 	@Bind(R.id.ivPaidVia)
 	ImageView ivPaidVia;
 	@Bind(R.id.tvPaidViaValue)
 	TextView tvPaidViaValue;
-	@Bind(R.id.bNeedHelp)
-	Button bNeedHelp;
+	@Bind(R.id.bNeedHelpFeed)
+	Button bNeedHelpFeed;
 	@Bind(R.id.bCancelOrder)
 	Button bCancelOrder;
 	@Bind(R.id.tv1r)
@@ -123,10 +123,10 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 	LinearLayout llPaidVia;
 
 	private Activity activity;
-	private int jobId, orderId, productType;
+	private int jobId, feedOrderId, productType;
 	private int supportCategory;
 	private String date;
-	private HistoryResponse.Datum datum;
+	private HistoryResponse.Datum datumFeed;
 
 
 	public static ProsOrderStatusFragment newInstance(int jobId, int productType) {
@@ -147,7 +147,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 		if(productType == ProductType.PROS.getOrdinal()) {
 			jobId = getArguments().getInt(Constants.KEY_JOB_ID, -1);
 		} else if(productType == ProductType.FEED.getOrdinal()) {
-			orderId = getArguments().getInt(Constants.KEY_ORDER_ID, -1);
+			feedOrderId = getArguments().getInt(Constants.KEY_ORDER_ID, -1);
 		}
 	}
 
@@ -163,7 +163,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 		ButterKnife.bind(this, rootView);
 
 		if (activity instanceof SupportActivity) {
-			bNeedHelp.setVisibility(View.GONE);
+			bNeedHelpFeed.setVisibility(View.GONE);
 		}
 
 		if(productType == ProductType.PROS.getOrdinal()) {
@@ -175,7 +175,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 			tvTaskDetails.setVisibility(View.GONE);
 			llAmount.setVisibility(View.VISIBLE);
 			llPaidVia.setVisibility(View.VISIBLE);
-			bNeedHelp.setText(R.string.need_help);
+			bNeedHelpFeed.setText(R.string.need_help);
 
 			getApiProsOrderStatus().getOrderData(activity, jobId);
 		} else if(productType == ProductType.FEED.getOrdinal()) {
@@ -187,9 +187,9 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 			tvTaskDetails.setVisibility(View.VISIBLE);
 			llAmount.setVisibility(View.GONE);
 			llPaidVia.setVisibility(View.GONE);
-			bNeedHelp.setText(R.string.chat_support);
+			bNeedHelpFeed.setText(R.string.chat_support);
 
-			getOrderData(activity);
+			getFeedOrderData(activity);
 		}
 
 		return rootView;
@@ -224,12 +224,12 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 					}
 					if (container != null) {
 						homeUtil.openFuguOrSupport((FragmentActivity) activity, container,
-								productType == ProductType.PROS.getOrdinal() ? jobId : orderId, supportCategory, date, productType);
+								productType == ProductType.PROS.getOrdinal() ? jobId : feedOrderId, supportCategory, date, productType);
 					}
 				} else if(productType == ProductType.FEED.getOrdinal()){
-					if (datum != null && !TextUtils.isEmpty(datum.getFuguChannelId())) {
-						FuguConfig.getInstance().openChatByTransactionId(datum.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-								datum.getFuguChannelName(), datum.getFuguTags());
+					if (datumFeed != null && !TextUtils.isEmpty(datumFeed.getFuguChannelId())) {
+						FuguConfig.getInstance().openChatByTransactionId(datumFeed.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
+								datumFeed.getFuguChannelName(), datumFeed.getFuguTags());
 					} else {
 						FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
 					}
@@ -264,7 +264,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 		if(productType == ProductType.PROS.getOrdinal()){
 			title = activity.getString(R.string.service_hash_format, String.valueOf(jobId));
 		} else if(productType == ProductType.FEED.getOrdinal()){
-			title = activity.getString(R.string.order_hash_format, String.valueOf(orderId));
+			title = activity.getString(R.string.order_hash_format, String.valueOf(feedOrderId));
 		}
 		if (activity instanceof FreshActivity) {
 			((FreshActivity) activity).fragmentUISetup(this);
@@ -316,13 +316,13 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 					new LatLng(datum.getJobLatitude(), datum.getJobLongitude()),
 					Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
 			if (searchResult != null && !TextUtils.isEmpty(searchResult.getName())) {
-				llDeliveryPlace.setVisibility(View.VISIBLE);
-				ivDeliveryPlace.setImageResource(homeUtil.getSavedLocationIcon(searchResult.getName()));
+				llDeliveryPlaceFeed.setVisibility(View.VISIBLE);
+				ivDeliveryPlaceFeed.setImageResource(homeUtil.getSavedLocationIcon(searchResult.getName()));
 				tvDeliveryPlace.setText(searchResult.getName());
-				tvDeliveryToVal.setText(searchResult.getAddress());
+				tvDeliveryToValFeed.setText(searchResult.getAddress());
 			} else {
-				llDeliveryPlace.setVisibility(View.GONE);
-				tvDeliveryToVal.setText(datum.getJobAddress());
+				llDeliveryPlaceFeed.setVisibility(View.GONE);
+				tvDeliveryToValFeed.setText(datum.getJobAddress());
 			}
 			date = datum.getJobPickupDatetime();
 			supportCategory = datum.getSupportCategory();
@@ -406,7 +406,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 							if(productType == ProductType.PROS.getOrdinal()) {
 								cancelOrderApi(activity);
 							} else {
-								getOrderData(activity);
+								getFeedOrderData(activity);
 							}
 						}
 
@@ -428,7 +428,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 							if(productType == ProductType.PROS.getOrdinal()) {
 								cancelOrderApi(activity);
 							} else {
-								getOrderData(activity);
+								getFeedOrderData(activity);
 							}
 						}
 					},
@@ -442,7 +442,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 	}
 
 
-	public void getOrderData(final Activity activity) {
+	public void getFeedOrderData(final Activity activity) {
 		try {
 			if (MyApplication.getInstance().isOnline()) {
 
@@ -450,7 +450,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				params.put(Constants.KEY_ORDER_ID, "" + orderId);
+				params.put(Constants.KEY_ORDER_ID, "" + feedOrderId);
 				params.put(Constants.KEY_PRODUCT_TYPE, "" + productType);
 				params.put(Constants.KEY_CLIENT_ID, "" + Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 				params.put(Constants.INTERATED, "1");
@@ -466,8 +466,8 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 								int flag = jObj.getInt("flag");
 								String message = JSONParser.getServerMessage(jObj);
 								if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-									datum = historyResponse.getData().get(0);
-									setFeedOrderData(datum, activity);
+									datumFeed = historyResponse.getData().get(0);
+									setFeedOrderData(datumFeed, activity);
 								} else {
 									retryDialogCancelOrderOrOrderStatus(message, DialogErrorType.SERVER_ERROR);
 								}
@@ -527,13 +527,13 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 				new LatLng(datum.getToLatitude(), datum.getToLongitude()),
 				Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
 		if (searchResultTo != null && !TextUtils.isEmpty(searchResultTo.getName())) {
-			llDeliveryPlace.setVisibility(View.VISIBLE);
-			ivDeliveryPlace.setImageResource(homeUtil.getSavedLocationIcon(searchResultTo.getName()));
+			llDeliveryPlaceFeed.setVisibility(View.VISIBLE);
+			ivDeliveryPlaceFeed.setImageResource(homeUtil.getSavedLocationIcon(searchResultTo.getName()));
 			tvDeliveryPlace.setText(searchResultTo.getName());
-			tvDeliveryToVal.setText(searchResultTo.getAddress());
+			tvDeliveryToValFeed.setText(searchResultTo.getAddress());
 		} else {
-			llDeliveryPlace.setVisibility(View.GONE);
-			tvDeliveryToVal.setText(datum.getToAddress());
+			llDeliveryPlaceFeed.setVisibility(View.GONE);
+			tvDeliveryToValFeed.setText(datum.getToAddress());
 		}
 		tvTaskDetails.setText(datum.getDetails());
 	}

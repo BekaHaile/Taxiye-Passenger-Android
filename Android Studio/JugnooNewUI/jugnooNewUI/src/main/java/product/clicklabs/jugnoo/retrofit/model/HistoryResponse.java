@@ -33,7 +33,13 @@ public class HistoryResponse {
     @SerializedName("recent_orders_possible_status")
     @Expose
     private ArrayList<String> recentOrdersPossibleStatus = new ArrayList<>();
+    @SerializedName("recent_orders_possible_fatafat_status")
+    @Expose
+    private ArrayList<String> recentOrdersPossibleFatafatStatus = new ArrayList<String>();
 
+    public ArrayList<String> getRecentOrdersPossibleFatafatStatus() {
+        return recentOrdersPossibleFatafatStatus;
+    }
     /**
      * @return The flag
      */
@@ -303,7 +309,12 @@ public class HistoryResponse {
         @SerializedName("delivery_time")
         @Expose
         private String deliveryTime;
+        @SerializedName("status")
+        private int orderStatusIndex;
 
+        public int getOrderStatusIndex() {
+            return orderStatusIndex;
+        }
 
         public String getFuguChannelName() {
             return fuguChannelName;

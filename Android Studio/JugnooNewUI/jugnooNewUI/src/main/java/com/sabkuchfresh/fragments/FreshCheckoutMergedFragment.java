@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -294,8 +295,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             public void onClick(View v) {
                 try {
                     GAUtils.event(GACategory.FATAFAT3, GAAction.MIN_ORDER, GAAction.LABEL_ORDER_VIA_FATAFAT);
-
-                    orderViaFatafat();
+                    lastAppTypeOpen = activity.getAppType();
+                    orderViaFatafat(itemsInCart,subItemsInCart,activity,subTotalAmount);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -326,25 +327,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 itemsInCart.clear();
 
 
-                if (activity.getMenuProductsResponse().getCategories() != null) {
-                    for (Category category : activity.getMenuProductsResponse().getCategories()) {
-                        if (category.getSubcategories() != null) {
-                            for (Subcategory subcategory : category.getSubcategories()) {
-                                for (Item item : subcategory.getItems()) {
-                                    if (item.getTotalQuantity() > 0) {
-                                        itemsInCart.add(item);
-                                    }
-                                }
-                            }
-                        } else if (category.getItems() != null) {
-                            for (Item item : category.getItems()) {
-                                if (item.getTotalQuantity() > 0) {
-                                    itemsInCart.add(item);
-                                }
-                            }
-                        }
-                    }
-                }
+                itemsInCart = prepareItemsInCartForMenus(activity,itemsInCart);
 
                 try {
                     for (int i = 0; i < itemsInCart.size(); i++) {
@@ -746,6 +729,33 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             (rootView.findViewById(R.id.labelOrMinOrder)).setVisibility(View.GONE);
         }
         return rootView;
+    }
+
+    public static  ArrayList<Item> prepareItemsInCartForMenus(FreshActivity activity,ArrayList<Item> items) {
+        if(items==null){
+            items = new ArrayList<>();
+        }
+
+        if (activity.getMenuProductsResponse().getCategories() != null) {
+            for (Category category : activity.getMenuProductsResponse().getCategories()) {
+                if (category.getSubcategories() != null) {
+                    for (Subcategory subcategory : category.getSubcategories()) {
+                        for (Item item : subcategory.getItems()) {
+                            if (item.getTotalQuantity() > 0) {
+                                items.add(item);
+                            }
+                        }
+                    }
+                } else if (category.getItems() != null) {
+                    for (Item item : category.getItems()) {
+                        if (item.getTotalQuantity() > 0) {
+                            items.add(item);
+                        }
+                    }
+                }
+            }
+        }
+        return items;
     }
 
     TextWatcher selectIciciPaymentTextWatcher = new TextWatcher() {
@@ -3695,7 +3705,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
 
-    private void orderViaFatafat(){
+    public static void orderViaFatafat(ArrayList<Item> itemsInCart,ArrayList<SubItem> subItemsInCart,FreshActivity activity,Double subTotalAmount){
         StringBuilder sb = new StringBuilder();
         String newLine = "\n", sItem = "Item ", colon = ": ", quantity = "Quantity: ", cost = "Cost: ", xSpace = " X ";
         if(activity.isMenusOrDeliveryOpen()){
@@ -3745,7 +3755,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
 
 
-        lastAppTypeOpen = activity.getAppType();
+
         activity.setOrderViaChatData(new FreshActivity.OrderViaChatData(activity.getVendorOpened().getLatLng(), activity.getVendorOpened().getAddress(), activity.getVendorOpened().getName(),cartString));
         activity.switchOffering(Config.getFeedClientId());
     }

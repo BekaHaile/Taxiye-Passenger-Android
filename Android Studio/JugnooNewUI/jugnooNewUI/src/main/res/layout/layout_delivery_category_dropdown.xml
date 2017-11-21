@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_divider_choose_category"
         android:layout_below="@+id/recycler_categories"
-        android:background="@drawable/shadow_gradient_seperator"
+        android:background="@drawable/shadow_gradient_seperator_fatafat"
         android:visibility="visible"
         />
 

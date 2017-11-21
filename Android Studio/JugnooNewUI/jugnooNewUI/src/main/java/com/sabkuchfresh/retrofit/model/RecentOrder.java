@@ -89,7 +89,18 @@ public class RecentOrder implements Serializable{
     @SerializedName("product_type")
     @Expose
     private int productType;
+    @SerializedName("order_status_color")
+    private String orderStatusColor;
+    @SerializedName("is_immediate")
+    private int isAsap;
 
+    public int getIsAsap() {
+        return isAsap;
+    }
+
+    public String getOrderStatusColor() {
+        return orderStatusColor;
+    }
 
     /**
      *

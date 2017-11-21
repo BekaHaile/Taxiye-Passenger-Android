@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/layout_feed_order"
+    android:tag="@string/dont_touch_me"
     android:background="@color/offer_popup_item_color">
 
     <ScrollView
@@ -21,9 +23,11 @@
             >
 
             <LinearLayout
+                android:id="@+id/rlOrderStatusFeed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_10"
+                android:visibility="visible"
                 android:layout_marginLeft="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_20"
                 android:layout_marginTop="@dimen/dp_10"
@@ -50,16 +54,18 @@
                     android:textSize="@dimen/sp_14"
                     app:font="@string/maven"
                     />
+
             </LinearLayout>
 
+
             <View
+                android:id="@+id/divider_below_rlOrderStatusFeed"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_1"
                 android:layout_marginLeft="@dimen/dp_20"
                 android:layout_marginRight="@dimen/dp_20"
                 android:background="@color/stroke_light_grey_alpha"
                 />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -245,7 +251,7 @@
                     android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/llDeliveryPlace"
+                        android:id="@+id/llDeliveryPlaceFeed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/dp_3"
@@ -254,7 +260,7 @@
                         android:visibility="gone">
 
                         <ImageView
-                            android:id="@+id/ivDeliveryPlace"
+                            android:id="@+id/ivDeliveryPlaceFeed"
                             android:layout_width="@dimen/dp_20"
                             android:layout_height="@dimen/dp_18"
                             android:src="@drawable/home"
@@ -274,7 +280,7 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/tvDeliveryToVal"
+                        android:id="@+id/tvDeliveryToValFeed"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text=""
@@ -407,7 +413,7 @@
                 android:weightSum="2">
 
                 <Button
-                    android:id="@+id/bNeedHelp"
+                    android:id="@+id/bNeedHelpFeed"
                     android:layout_width="0px"
                     android:layout_height="@dimen/dp_40"
                     android:layout_margin="@dimen/dp_7"

@@ -5,6 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
     android:background="@android:color/white"
     android:orientation="vertical">
 
@@ -16,6 +18,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="12dp"
         android:padding="-10dp"
+        android:visibility="gone"
         android:src="@drawable/ic_fresh_item_placeholder"/>
 
     <TextView
@@ -23,13 +26,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:textAllCaps="true"
         android:layout_marginBottom="10dp"
         android:layout_toRightOf="@+id/icon_title"
         android:layout_marginTop="10dp"
         android:text="Ongoing Orders"
         android:textColor="@color/text_color"
-        android:textSize="14.5sp"
+        android:textSize="14.3sp"
         app:font="@string/maven"/>
+
+    <TextView
+        android:id="@+id/tv_category_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:text="See All"
+        android:textSize="14.3sp"
+        app:font="@string/maven"
+        android:textColor="@color/text_color"
+        android:background="?android:attr/selectableItemBackground" />
 
     <ImageView
         android:id="@+id/iv_category_arrow"
@@ -37,9 +53,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
         android:padding="@dimen/dp_10"
         android:rotation="-90"
+        android:visibility="gone"
         android:background="?android:attr/selectableItemBackground"
         android:src="@drawable/ic_arrow_grey"/>
 

@@ -127,7 +127,8 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 									|| historyData.getProductType() == ProductType.GROCERY.getOrdinal()
 									|| historyData.getProductType() == ProductType.MENUS.getOrdinal()
 									|| historyData.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()
-									|| historyData.getProductType() == ProductType.PAY.getOrdinal()) {
+									|| historyData.getProductType() == ProductType.PAY.getOrdinal() ||
+									historyData.getProductType() == ProductType.FEED.getOrdinal()) {
 								if (activity instanceof RideTransactionsActivity) {
 										new TransactionUtils().openOrderStatusFragment(activity, ((RideTransactionsActivity) activity).getContainer(),
 												historyData.getOrderId(), historyData.getProductType(), 0);

@@ -303,7 +303,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="left|bottom"
                     android:layout_gravity="bottom"
-                    android:maxLines="1"
                     android:singleLine="true"
                     android:ellipsize="marquee"
                     android:text="Share the ride\nSplit the fare"
