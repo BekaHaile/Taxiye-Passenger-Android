@@ -741,6 +741,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             e.printStackTrace();
         }
         setSlideInitial();
+        if(!activity.isDeliveryOpenInBackground()){
+            tvOrderViaFatafat.setVisibility(View.GONE);
+            (rootView.findViewById(R.id.labelOrMinOrder)).setVisibility(View.GONE);
+        }
         return rootView;
     }
 

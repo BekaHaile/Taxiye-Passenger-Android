@@ -552,7 +552,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             try {
                 RecentOrder recentOrder = (RecentOrder) dataToDisplay.get(position);
 
-                String restaurantName = recentOrder.getRestaurantName();
+                String restaurantName = recentOrder.getRestaurantName() + "";
                 String orderId = " Order: #"+ recentOrder.getOrderId().toString();
                 String deliveryTime,orderStatus;
                 if(recentOrder.getProductType() == ProductType.MEALS.getOrdinal()) {
@@ -571,10 +571,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     orderStatus = possibleStatus.get(recentOrder.getStatus());
 
                 }
-                if(restaurantName==null){
-                    restaurantName = "";
 
-                }
                 if(deliveryTime==null){
                     deliveryTime="";
 
@@ -861,6 +858,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             switch (viewClicked.getId()) {
                 case R.id.rlRoot:
                     callback.onRestaurantSelected(((MenusResponse.Vendor)dataToDisplay.get(pos)).getRestaurantId());
+                    break;
+                case R.id.rlRootNewOrder:
+                    viewOrderClick(pos);
                     break;
                 case R.id.tvViewOrder:
                 case R.id.tvDeliveryTime:
