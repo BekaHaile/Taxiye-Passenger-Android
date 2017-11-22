@@ -183,6 +183,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
      LinearLayout rlOrderStatusFeed;
     @Bind(R.id.divider_below_rlOrderStatusFeed)
      View dividerBelowRlOrderStatusFeed;
+    @Bind(R.id.feed_fragment_shadow_top)
+     View feedFragmentShadowTop;
 
 
     @Nullable
@@ -368,6 +370,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                     }
                 }
             });
+            feedFragmentShadowTop.setVisibility(View.GONE);
             rootView.findViewById(R.id.layout_menus_order).setVisibility(View.GONE);
             rootView.findViewById(R.id.layout_feed_order).setVisibility(View.VISIBLE);
             tv1l.setText(R.string.status_colon);
@@ -494,7 +497,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         SearchResult searchResultFrom = homeUtil.getNearBySavedAddress(activity,
                 new LatLng(datum.getFromLatitude(), datum.getFromLongitude()),
                 Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
-        if (searchResultFrom != null && !TextUtils.isEmpty(searchResultFrom.getName())) {
+        if (searchResultFrom != null && !TextUtils.isEmpty(searchResultFrom.getName()) && datum.getCategory()==0) {
             llFromPlace.setVisibility(View.VISIBLE);
             ivFromPlace.setImageResource(homeUtil.getSavedLocationIcon(searchResultFrom.getName()));
             tvFromPlace.setText(searchResultFrom.getName());

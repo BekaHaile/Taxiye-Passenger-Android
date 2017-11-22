@@ -311,6 +311,12 @@ public class HistoryResponse {
         private String deliveryTime;
         @SerializedName("status")
         private int orderStatusIndex;
+        @SerializedName("category")
+        private int category;
+
+        public int getCategory() {
+            return category;
+        }
 
         public int getOrderStatusIndex() {
             return orderStatusIndex;

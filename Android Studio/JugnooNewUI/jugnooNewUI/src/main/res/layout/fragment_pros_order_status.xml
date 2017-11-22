@@ -447,6 +447,7 @@
     </ScrollView>
 
     <View
+        android:id="@+id/feed_fragment_shadow_top"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_7"
         android:background="@drawable/shadow_down_new"

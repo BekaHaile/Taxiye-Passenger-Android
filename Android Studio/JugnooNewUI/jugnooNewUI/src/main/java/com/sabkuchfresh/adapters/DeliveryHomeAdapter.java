@@ -198,7 +198,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         // recent orders
-        if(!isPagination && menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0){
+        if(!isPagination && menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0 && !activity.getMenusFragment().searchOpened){
             int sizeRecentOrders = menusResponse.getRecentOrders().size();
             ordersExpanded = false;
 
@@ -594,7 +594,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     orderStatus = possibleMealsStatus.get(recentOrder.getStatus());
                 } else  if(recentOrder.getProductType() == ProductType.FEED.getOrdinal()) {
                     if(recentOrder.getIsAsap()==1){
-                        deliveryTime="Delivery: As Soon as possible.";
+//                        deliveryTime="Delivery: As Soon as possible.";
+                        deliveryTime="";
                     }else{
                         deliveryTime ="Delivery: "+ DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(recentOrder.getDeliveryTime()));
 

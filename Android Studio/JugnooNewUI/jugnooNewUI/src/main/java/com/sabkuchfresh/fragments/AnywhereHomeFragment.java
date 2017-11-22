@@ -508,7 +508,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                 @Override
                                 public void run() {
                                     if(activity.getMenusFragment()!=null){
-                                        activity.getMenusFragment().onRefresh();
+                                        activity.getMenusFragment().getAllMenus(true, activity.getSelectedLatLng(), true, null, MenusFragment.TYPE_API_MENUS_ADDRESS_CHANGE);
+
                                     }
                                 }
                             },1000);
