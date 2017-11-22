@@ -2,37 +2,37 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
     >
     <!-- Drop Shadow Stack -->
-    <item >
+    <item>
         <shape>
-            <padding  android:right="1dp" android:bottom="1dp" android:left="1dp" />
+            <padding android:top="1dp" android:right="1dp" android:bottom="0.5dp" android:left="1dp" />
             <solid android:color="#02AAAAAA" />
             <corners android:radius="5dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <padding  android:right="1dp" android:bottom="1dp" android:left="1dp" />
+            <padding android:top="1dp" android:right="1dp" android:bottom="0.5dp" android:left="1dp" />
             <solid android:color="#05AAAAAA" />
             <corners android:radius="5dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <padding  android:right="1dp" android:bottom="1dp" android:left="1dp" />
+            <padding android:top="1dp" android:right="1dp" android:bottom="0.5dp" android:left="1dp" />
             <solid android:color="#0FAAAAAA" />
             <corners android:radius="5dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <padding  android:right="1dp" android:bottom="1dp" android:left="1dp" />
+            <padding android:top="1dp" android:right="1dp" android:bottom="0.5dp" android:left="1dp" />
             <solid android:color="#1CAAAAAA" />
             <corners android:radius="5dp" />
         </shape>
     </item>
     <item>
         <shape>
-            <padding  android:right="1dp" android:bottom="1dp" android:left="1dp" />
+            <padding android:top="1dp" android:right="1dp" android:bottom="0.5dp" android:left="1dp" />
             <solid android:color="#24AAAAAA" />
             <corners android:radius="5dp" />
         </shape>
@@ -42,7 +42,7 @@
     <item>
         <shape>
             <solid android:color="@color/white" />
-
+            <corners android:topLeftRadius="5dp"  android:topRightRadius="5dp" />
         </shape>
     </item>
 </layer-list>

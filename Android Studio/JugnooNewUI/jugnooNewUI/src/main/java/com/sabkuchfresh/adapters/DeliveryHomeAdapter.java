@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.os.Handler;
@@ -169,6 +170,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if(!isPagination || dataToDisplay==null){
             this.dataToDisplay = new ArrayList<>();
+            remainingRecentOrders=null;
+            ordersExpanded = false;
             isFatafatBannerInserted = false;
         }
 
@@ -613,6 +616,23 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     e.printStackTrace();
                 }
 
+             /*   int backgroundDrawable;
+                try {
+
+                    if(position==dataToDisplay.size()-1  || (position<=dataToDisplay.size()-2 && !(dataToDisplay.get(position+1) instanceof RecentOrder))){
+                        backgroundDrawable =R.drawable.recent_orders_bottom_element_background;
+
+                    }else{
+                        backgroundDrawable =R.drawable.recent_orders_middle_elements_background;
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    backgroundDrawable =R.drawable.recent_orders_middle_elements_background;
+
+                }
+                statusHolder.rlRootNewOrder.setBackgroundDrawable(ContextCompat.getDrawable(activity,backgroundDrawable));*/
+
 
 //                setHolderMethod(statusHolder, recentOrder);
 
@@ -625,9 +645,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             MenusResponse.Category category = (MenusResponse.Category) dataToDisplay.get(position);
             if(category.isTypeOrder()){
                 holder.tvCateogoryTitle.setText(R.string.ongoing_orders);
-                holder.tvCategoryArrow.setVisibility(ordersExpanded?View.GONE:View.VISIBLE);
-                holder.ivCategoryArrow.setVisibility(ordersExpanded?View.VISIBLE:View.GONE);
-                holder.iconTitle.setImageResource(R.drawable.ic_ongoing_orders);
+                if(remainingRecentOrders!=null&& remainingRecentOrders.size()>0){
+                    holder.tvCategoryArrow.setVisibility(ordersExpanded?View.GONE:View.VISIBLE);
+                    holder.ivCategoryArrow.setVisibility(ordersExpanded?View.VISIBLE:View.GONE);
+                }else{
+                    holder.tvCategoryArrow.setVisibility(View.GONE);
+                    holder.ivCategoryArrow.setVisibility(View.GONE);
+                }
+
 
             } else {
                 holder.tvCateogoryTitle.setText(category.getCategoryName());
