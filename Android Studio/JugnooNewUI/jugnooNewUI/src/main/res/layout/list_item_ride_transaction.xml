@@ -28,7 +28,7 @@
                 android:layout_marginTop="@dimen/px_20"
                 android:background="@drawable/circle_green"
                 android:padding="12px"
-                android:src="@drawable/ic_fresh"
+                android:src="@drawable/ic_groceries_new_vector"
                 android:tag="mwar" />
 
             <RelativeLayout

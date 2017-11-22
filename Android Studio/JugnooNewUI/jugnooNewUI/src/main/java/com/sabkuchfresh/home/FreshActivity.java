@@ -973,7 +973,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                                         }
                                         if (fragment != null && FreshActivity.this.hasWindowFocus()) {
-                                            if(Config.getLastOpenedClientId(FreshActivity.this).equals(intent.getStringExtra(Constants.KEY_CLIENT_ID))) {
+                                            if(getMenusFragment()!=null) {
                                                 ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false, null, MenusFragment.TYPE_API_MENUS_ADDRESS_CHANGE);
                                             }
                                         } else {

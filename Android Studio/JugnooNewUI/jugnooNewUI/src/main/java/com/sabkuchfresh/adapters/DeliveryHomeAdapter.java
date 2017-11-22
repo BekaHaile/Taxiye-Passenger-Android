@@ -112,6 +112,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int NEW_VIEW_ORDER_ITEM = 14;
     private static final int ITEM_BANNER_FATAFAT_RESTAURANTS = 15;
     private CategoriesData categoriesData;
+    private ArrayList<Object> collapsedRecentOrdersData;
+    private int posFromWhichOrdersStart;
 
     private static final int RECENT_ORDERS_TO_SHOW = 2;
     private int paddingRecentOrders;
@@ -125,6 +127,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         BW_FILTER = new ColorMatrixColorFilter(BW_MATRIX);
 
     }
+
 
 
     public DeliveryHomeAdapter(FreshActivity activity, Callback callback, RecyclerView recyclerView, ArrayList<String> possibleStatus, ArrayList<String> possibleMealsStatus,ArrayList<String> possibleFatafatStatus) {
@@ -172,9 +175,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if(!isPagination || dataToDisplay==null){
             this.dataToDisplay = new ArrayList<>();
-            remainingRecentOrders=null;
-            ordersExpanded = false;
             isFatafatBannerInserted = false;
+
         }
 
 
@@ -199,22 +201,26 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         // recent orders
         if(!isPagination && menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0 && !activity.getMenusFragment().searchOpened){
-            int sizeRecentOrders = menusResponse.getRecentOrders().size();
             ordersExpanded = false;
-
-            dataToDisplay.add(new MenusResponse.Category(true));
+            remainingRecentOrders=null;
+            collapsedRecentOrdersData  = new ArrayList<>();
+            int sizeRecentOrders = menusResponse.getRecentOrders().size();
+            posFromWhichOrdersStart = dataToDisplay.size();
+            MenusResponse.Category categoryTitle = new MenusResponse.Category(true);
+            collapsedRecentOrdersData.add(categoryTitle);
+            dataToDisplay.add(categoryTitle);
             int count = Math.min(RECENT_ORDERS_TO_SHOW, sizeRecentOrders);
             for(int i=0; i<count; i++){
+                collapsedRecentOrdersData.add(menusResponse.getRecentOrders().get(i));
                 dataToDisplay.add(menusResponse.getRecentOrders().get(i));
             }
             if(sizeRecentOrders > RECENT_ORDERS_TO_SHOW){
                 cacheRemainingRecentOrders(menusResponse.getRecentOrders());
-              /*  if(deliverySeeAllModel == null){
-                    deliverySeeAllModel = new DeliverySeeAll(new MenusResponse.Category(-1));
-                }
-                dataToDisplay.add(deliverySeeAllModel);*/
+
             }
-            dataToDisplay.add(new DeliveryDivider());
+            DeliveryDivider deliveryDivider = new DeliveryDivider();
+            collapsedRecentOrdersData.add(deliveryDivider);
+            dataToDisplay.add(deliveryDivider);
         }
 
         // vendors calculation
@@ -321,12 +327,20 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         try {
             if(hide){
+                if(ordersExpanded){
+                    toggleRemainingOrdersVisibility(posFromWhichOrdersStart,false);
+
+                }
                 dataToDisplay.remove(categoriesData);
+                dataToDisplay.removeAll(collapsedRecentOrdersData);
 
             }else{
                 if(categoriesData!=null){
                     dataToDisplay.add(1,categoriesData);
 
+                }
+                if(collapsedRecentOrdersData!=null){
+                    dataToDisplay.addAll(posFromWhichOrdersStart,collapsedRecentOrdersData);
                 }
             }
             notifyDataSetChanged();

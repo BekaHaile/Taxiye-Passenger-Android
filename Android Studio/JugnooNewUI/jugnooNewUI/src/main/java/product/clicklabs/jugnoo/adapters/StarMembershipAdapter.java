@@ -50,7 +50,7 @@ public class StarMembershipAdapter extends BaseAdapter {
 			}
 			else if(benefits.get(position).getProductType() == ProductType.FRESH.getOrdinal()){
 				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_green_fresh_fab);
-				viewHolder.ivOfferring.setImageResource(R.drawable.ic_fresh);
+				viewHolder.ivOfferring.setImageResource(R.drawable.ic_groceries_new_vector);
 			}
 			else if(benefits.get(position).getProductType() == ProductType.MEALS.getOrdinal()){
 				viewHolder.rlOffering.setBackgroundResource(R.drawable.circle_pink_meals_fab);

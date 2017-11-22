@@ -168,13 +168,13 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
 
                 if (orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
-                    holder.imageViewProductType.setImageResource(R.drawable.ic_fresh);
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_groceries_new_vector);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_green);
                 } else if (orderHistory.getProductType() == ProductType.MEALS.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_meals);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_pink_meals_fab);
                 } else if (orderHistory.getProductType() == ProductType.GROCERY.getOrdinal()) {
-                    holder.imageViewProductType.setImageResource(R.drawable.ic_fresh);
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_groceries_new_vector);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_green);
                 } else if (orderHistory.getProductType() == ProductType.MENUS.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_menus);

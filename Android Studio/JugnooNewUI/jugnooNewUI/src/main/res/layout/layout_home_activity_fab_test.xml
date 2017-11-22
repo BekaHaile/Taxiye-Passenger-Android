@@ -109,7 +109,7 @@
             android:id="@+id/fabFreshTest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_fresh"
+            android:src="@drawable/ic_groceries_new_vector"
             android:tag="DontTouchMe"
             fab:fab_colorNormal="@color/green_fresh_fab"
             fab:fab_colorPressed="@color/green_fresh_fab_pressed"
