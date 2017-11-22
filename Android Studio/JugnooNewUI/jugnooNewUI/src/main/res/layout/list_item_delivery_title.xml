@@ -4,10 +4,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="40dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:background="@android:color/white"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:background="@drawable/recent_orders_top_elements_background"
     android:orientation="vertical">
 
     <ImageView
@@ -27,9 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:textAllCaps="true"
-        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/icon_title"
-        android:layout_marginTop="10dp"
         android:text="Ongoing Orders"
         android:textColor="@color/text_color"
         android:textSize="14.3sp"
@@ -42,8 +43,10 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:text="See All"
+        android:layout_marginRight="5dp"
         android:textSize="14.3sp"
         app:font="@string/maven"
+        android:visibility="visible"
         android:textColor="@color/text_color"
         android:background="?android:attr/selectableItemBackground" />
 
@@ -59,10 +62,10 @@
         android:background="?android:attr/selectableItemBackground"
         android:src="@drawable/ic_arrow_grey"/>
 
-    <View
+   <!-- <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/tv_cateogory_title"
-        android:background="@color/stroke_light_grey_alpha"/>
+        android:background="@color/stroke_light_grey_alpha"/>-->
 
 </RelativeLayout>

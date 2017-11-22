@@ -8,15 +8,15 @@
     android:layout_width="match_parent"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:background="?android:attr/selectableItemBackground"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+    android:background="@drawable/recent_orders_middle_elements_background"
+    android:padding="10dp"
     android:layout_height="wrap_content">
 
 
 
     <RelativeLayout
         android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
         android:layout_toLeftOf="@id/iv_arrow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -95,7 +95,8 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_arrow_grey"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         android:layout_width="@dimen/dp_7"
         android:layout_height="@dimen/dp_11"/>
 </RelativeLayout>

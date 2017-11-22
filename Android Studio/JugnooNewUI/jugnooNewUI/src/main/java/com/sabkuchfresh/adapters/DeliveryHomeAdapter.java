@@ -114,6 +114,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private CategoriesData categoriesData;
 
     private static final int RECENT_ORDERS_TO_SHOW = 2;
+    private int paddingRecentOrders;
 
     private RecyclerView recyclerView;
 
@@ -128,6 +129,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public DeliveryHomeAdapter(FreshActivity activity, Callback callback, RecyclerView recyclerView, ArrayList<String> possibleStatus, ArrayList<String> possibleMealsStatus,ArrayList<String> possibleFatafatStatus) {
         this.activity = activity;
+        paddingRecentOrders = activity.getResources().getDimensionPixelSize(R.dimen.dp_10);
         this.callback = callback;
         this.recyclerView = recyclerView;
         this.possibleStatus = possibleStatus;
@@ -365,13 +367,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ordersExpanded = true;
                 notifyItemChanged(position);
                 dataToDisplay.addAll(position+RECENT_ORDERS_TO_SHOW+1, remainingRecentOrders);
-                notifyItemRangeInserted(position+RECENT_ORDERS_TO_SHOW +1,position+RECENT_ORDERS_TO_SHOW+remainingRecentOrders.size());
+                notifyItemRangeInserted(position+RECENT_ORDERS_TO_SHOW+1 ,remainingRecentOrders.size());
+                notifyItemChanged(position+RECENT_ORDERS_TO_SHOW);
 
             } else {
                 ordersExpanded = false;
                 notifyItemChanged(position);
                 dataToDisplay.removeAll(remainingRecentOrders);
                 notifyItemRangeRemoved(position+RECENT_ORDERS_TO_SHOW+1, remainingRecentOrders.size());
+                notifyItemChanged(position+RECENT_ORDERS_TO_SHOW);
 
 
             }
@@ -616,7 +620,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     e.printStackTrace();
                 }
 
-             /*   int backgroundDrawable;
+                int backgroundDrawable;
                 try {
 
                     if(position==dataToDisplay.size()-1  || (position<=dataToDisplay.size()-2 && !(dataToDisplay.get(position+1) instanceof RecentOrder))){
@@ -631,7 +635,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     backgroundDrawable =R.drawable.recent_orders_middle_elements_background;
 
                 }
-                statusHolder.rlRootNewOrder.setBackgroundDrawable(ContextCompat.getDrawable(activity,backgroundDrawable));*/
+                statusHolder.rlRootNewOrder.setBackgroundDrawable(ContextCompat.getDrawable(activity,backgroundDrawable));
+                statusHolder.rlRootNewOrder.setPadding(paddingRecentOrders,paddingRecentOrders,paddingRecentOrders,paddingRecentOrders);
 
 
 //                setHolderMethod(statusHolder, recentOrder);

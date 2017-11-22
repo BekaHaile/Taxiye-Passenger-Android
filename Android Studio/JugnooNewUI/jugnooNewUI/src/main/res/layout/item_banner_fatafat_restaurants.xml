@@ -4,12 +4,13 @@
     android:id="@+id/tv_banner_text"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:background="@color/menu_item_selector_color_F7"
+    android:background="@drawable/shadow_gradient_seperator_fatafat"
     android:padding="15dp"
     android:textSize="14.5sp"
     app:font="maven"
     android:layout_gravity="center"
     android:gravity="center"
+
     android:textColor="@color/text_color"
     android:layout_height="wrap_content">
 
