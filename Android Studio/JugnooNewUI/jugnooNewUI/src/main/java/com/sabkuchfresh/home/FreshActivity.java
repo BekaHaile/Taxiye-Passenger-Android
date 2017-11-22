@@ -953,15 +953,19 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                                             .putExtra(Constants.KEY_ORDER_ID,intent.getIntExtra(Constants.KEY_ORDER_ID,0)));
                                         }
 
-                                        if (fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus()) {
+                                        if(Data.userData.isOnlyFatafatNewEnabled() && isDeliveryOpenInBackground()){
+                                            if(getMenusFragment()!=null) {
+                                                ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false, null, MenusFragment.TYPE_API_MENUS_ADDRESS_CHANGE);
+                                            }
+                                        }if (!Data.userData.isOnlyFatafatNewEnabled() && fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus()) {
                                             ((MealFragment) fragment).getAllProducts(true, getSelectedLatLng());
-                                        } else {
+                                        }
                                             Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
                                             intent1.putExtra(Constants.KEY_FLAG, flag);
                                             intent1.putExtra(Constants.KEY_ORDER_ID, intent.getIntExtra(Constants.KEY_ORDER_ID, -1));
                                             intent1.putExtra(Constants.KEY_CLOSE_TRACKING, intent.getIntExtra(Constants.KEY_CLOSE_TRACKING, 0));
                                             LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
-                                        }
+
                                     } else if (PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
                                         Fragment fragment = getMenusFragment();
                                         if(getTopFragment()!=null && getTopFragment() instanceof FreshCheckoutMergedFragment && intent.hasExtra(Constants.ICICI_ORDER_STATUS)){
@@ -973,18 +977,18 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                                             .putExtra(Constants.KEY_ORDER_ID,intent.getIntExtra(Constants.KEY_ORDER_ID,0)));
 
                                         }
-                                        if (fragment != null && FreshActivity.this.hasWindowFocus()) {
+                                        if (fragment != null) {
                                             if(getMenusFragment()!=null) {
                                                 ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false, null, MenusFragment.TYPE_API_MENUS_ADDRESS_CHANGE);
                                             }
-                                        } else {
+                                        }
                                             Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
                                             intent1.putExtra(Constants.KEY_FLAG, flag);
                                             intent1.putExtra(Constants.KEY_ORDER_ID, intent.getIntExtra(Constants.KEY_ORDER_ID, -1));
                                             intent1.putExtra(Constants.KEY_CLOSE_TRACKING, intent.getIntExtra(Constants.KEY_CLOSE_TRACKING, 0));
                                             intent1.putExtra(Constants.KEY_CLIENT_ID, intent.getStringExtra(Constants.KEY_CLIENT_ID));
                                             LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
-                                        }
+
                                     } else if (Constants.OPEN_DEEP_INDEX == flag) {
                                         deepLinkAction.openDeepLink(menuBar);
                                     } else if (Constants.OPEN_APP_CLIENT_ID == flag && intent.hasExtra(Constants.KEY_CLIENT_ID)) {
@@ -2761,23 +2765,26 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             e.printStackTrace();
         }
 
-        if (cartChangedAtCheckout && getFreshCheckoutMergedFragment() != null) {
-            updateItemListFromDBFMG(null);
-        }
+
         try {
+
+            if (cartChangedAtCheckout && getFreshCheckoutMergedFragment() != null) {
+                updateItemListFromDBFMG(null);
+            }
             if(isMenusOrDeliveryOpen()){
 				getMenusCart().clearEmptyRestaurantCarts();
 			}
+            saveItemListToSPDB();
+            saveAppCart();
+
+            if (isMenusOrDeliveryOpen()) {
+                saveFilters();
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        saveItemListToSPDB();
-        saveAppCart();
-
-        if (isMenusOrDeliveryOpen()) {
-            saveFilters();
-        }
 
 
         MyApplication.getInstance().getLocationFetcher().destroy();

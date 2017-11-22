@@ -222,28 +222,30 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             activity.openFeedback();
                         }
                     }, 300);
+                }else{
+                    // to open restaurant page if from deep link
+                    try {
+                        if (!"-1".equalsIgnoreCase(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"))) {
+                            int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"));
+                            activity.fetchRestaurantMenuAPI(restId, false, null, null, -1, null);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
+                    }
+
+                    // for other client ids deeplink on delivery customer only case
+                    String clientIdForDeepLink = Prefs.with(activity).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "");
+                    if(!clientIdForDeepLink.equalsIgnoreCase("")){
+                        activity.switchOfferingViaClientId(clientIdForDeepLink);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            // to open restaurant page if from deep link
-            try {
-                if (!"-1".equalsIgnoreCase(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"))) {
-                    int restId = Integer.parseInt(Prefs.with(activity).getString(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1"));
-                    activity.fetchRestaurantMenuAPI(restId, false, null, null, -1, null);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                Prefs.with(activity).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "-1");
-            }
 
-            // for other client ids deeplink on delivery customer only case
-            String clientIdForDeepLink = Prefs.with(activity).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "");
-            if(!clientIdForDeepLink.equalsIgnoreCase("")){
-                activity.switchOfferingViaClientId(clientIdForDeepLink);
-            }
 
             Prefs.with(activity).save(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "");
         }
