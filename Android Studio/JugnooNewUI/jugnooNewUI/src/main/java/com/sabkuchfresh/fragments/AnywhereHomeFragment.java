@@ -496,8 +496,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                     deliveryTime;
 
                             resetUI();
-                            if(isOrderViaCheckoutFragment && activity.getFreshCheckoutMergedFragment()!=null){
-                               activity.clearAllCartAtOrderComplete(activity.getFreshCheckoutMergedFragment().lastAppTypeOpen );activity.clearFragmentStackTillLast();
+                            if(isOrderViaCheckoutFragment){
+                               activity.clearAllCartAtOrderComplete(activity.lastAppTypeOpen);activity.clearFragmentStackTillLast();
                             }else if(isOrderViaRestaurantDetail){
                                 activity.clearFragmentStackTillLast();
                             }else{

@@ -218,8 +218,8 @@
     <color name="orange_rides_fab_pressed">#eb693f</color>
     <color name="pink_meals_fab">#ef6692</color>
     <color name="pink_meals_fab_pressed">#db527e</color>
-    <color name="green_fresh_fab">#72c559</color>
-    <color name="green_fresh_fab_pressed">#5eb145</color>
+    <color name="green_fresh_fab">#E99E13</color>
+    <color name="green_fresh_fab_pressed">#D89300</color>
     <color name="purple_menus_fab">#b368a9</color>
     <color name="purple_menus_fab_pressed">#9f5495</color>
     <color name="green_delivery_customer_fab">#88c700</color>
@@ -300,8 +300,8 @@
     <color name="home_switcher_feed_pressed">#D959cacc</color>
     <color name="home_switcher_autos">#454552</color>
     <color name="home_switcher_autos_pressed">#D9454552</color>
-    <color name="home_switcher_grocery">#9cc450</color>
-    <color name="home_switcher_grocery_pressed">#D99cc450</color>
+    <color name="home_switcher_grocery">#E99E13</color>
+    <color name="home_switcher_grocery_pressed">#D89300</color>
     <color name="home_switcher_menus">#f67754</color>
     <color name="home_switcher_menus_pressed">#D9f67754</color>
     <color name="home_switcher_delivery">#8cc521</color>

@@ -295,7 +295,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             public void onClick(View v) {
                 try {
                     GAUtils.event(GACategory.FATAFAT3, GAAction.MIN_ORDER, GAAction.LABEL_ORDER_VIA_FATAFAT);
-                    lastAppTypeOpen = activity.getAppType();
+
                     orderViaFatafat(itemsInCart,subItemsInCart,activity,subTotalAmount);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1999,7 +1999,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
     private boolean isPayBarEnabled;
-    public int lastAppTypeOpen;
+
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -3706,6 +3706,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
     public static void orderViaFatafat(ArrayList<Item> itemsInCart,ArrayList<SubItem> subItemsInCart,FreshActivity activity,Double subTotalAmount){
+        activity.lastAppTypeOpen = activity.getAppType();
         StringBuilder sb = new StringBuilder();
         String newLine = "\n", sItem = "Item ", colon = ": ", quantity = "Quantity: ", cost = "Cost: ", xSpace = " X ";
         if(activity.isMenusOrDeliveryOpen()){

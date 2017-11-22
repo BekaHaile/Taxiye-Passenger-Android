@@ -618,7 +618,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         }
         if(pcFatafat.size() > 0) {
             offeringPromotions.add(new OfferingPromotion(getString(R.string.fatafat), Config.getFreshClientId(),
-                    R.drawable.ic_fresh_grey, pcFatafat));
+                    R.drawable.ic_grocery_grey_vector, pcFatafat));
         }
         if(pcMenus.size() > 0) {
             offeringPromotions.add(new OfferingPromotion(getString(R.string.menus), Config.getMenusClientId(),

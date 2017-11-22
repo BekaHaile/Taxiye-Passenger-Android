@@ -169,7 +169,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
                 if (orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_groceries_new_vector);
-                    holder.imageViewProductType.setBackgroundResource(R.drawable.circle_green);
+                    holder.imageViewProductType.setBackgroundResource(R.drawable.circle_grocery_new);
                 } else if (orderHistory.getProductType() == ProductType.MEALS.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_meals);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_pink_meals_fab);

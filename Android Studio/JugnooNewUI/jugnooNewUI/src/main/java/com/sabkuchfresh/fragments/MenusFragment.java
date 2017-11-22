@@ -21,6 +21,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.picker.image.util.Util;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
 import com.sabkuchfresh.datastructure.FilterCuisine;
@@ -369,8 +370,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public void switchCategory(MenusResponse.Category category) {
 
 
-
-
+        try {
+            GAUtils.event(GACategory.FATAFAT3, GAAction.FATAFAT_CATEGORY, category.getCategoryName() + " " + GAAction.CLICKED);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if(category!=null && !TextUtils.isEmpty(category.getClientId()))
         {

@@ -300,8 +300,8 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         ratingBarMenuFeedback = (RatingBarMenuFeedback) rootView.findViewById(R.id.rating_bar);
 
         if (Config.getFreshClientId().equals(lastClientId)) {
-            imageviewType.setImageResource(R.drawable.ic_fresh_grey);
-            ivOffering.setImageResource(R.drawable.ic_fresh_grey);
+            imageviewType.setImageResource(R.drawable.ic_grocery_grey_vector);
+            ivOffering.setImageResource(R.drawable.ic_grocery_grey_vector);
         } else if (Config.getMenusClientId().equals(lastClientId)
                 || Config.getDeliveryCustomerClientId().equals(lastClientId)
                 || Config.getProsClientId().equals(lastClientId)) {
@@ -311,8 +311,8 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 imageviewType.setImageResource(R.drawable.ic_pros_grey);
                 ivOffering.setImageResource(R.drawable.ic_pros_grey);
             } else if(Config.getDeliveryCustomerClientId().equals(lastClientId)){
-                imageviewType.setImageResource(R.drawable.ic_menus_grey);
-                ivOffering.setImageResource(R.drawable.ic_menus_grey);
+                imageviewType.setImageResource(R.drawable.ic_menus_delivery_customer_grey);
+                ivOffering.setImageResource(R.drawable.ic_menus_delivery_customer_grey);
             } else {
                 imageviewType.setImageResource(R.drawable.ic_menus_grey);
                 ivOffering.setImageResource(R.drawable.ic_menus_grey);

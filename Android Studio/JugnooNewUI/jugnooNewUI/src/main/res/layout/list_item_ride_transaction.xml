@@ -26,7 +26,7 @@
                 android:layout_height="64px"
                android:layout_marginLeft="20px"
                 android:layout_marginTop="@dimen/px_20"
-                android:background="@drawable/circle_green"
+                android:background="@drawable/circle_grocery_new"
                 android:padding="12px"
                 android:src="@drawable/ic_groceries_new_vector"
                 android:tag="mwar" />

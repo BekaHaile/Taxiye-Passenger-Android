@@ -290,6 +290,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private boolean showingEarlyBirdDiscount;
     private boolean appTypeDeliveryInBackground;
     public RelativeLayout rlfabViewFatafat;
+    public int lastAppTypeOpen;
 
 
     public View getFeedHomeAddPostView() {

@@ -257,4 +257,5 @@ public interface GAAction {
 	String LABEL_FATAFAT_ORDER_CONFIRMED = "Fatafat Order Confirmed ";
 
 
+	String FATAFAT_CATEGORY = "Fatafat Category";
 }
