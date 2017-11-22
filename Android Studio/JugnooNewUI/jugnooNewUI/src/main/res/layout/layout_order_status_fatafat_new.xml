@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:background="@drawable/recent_orders_middle_elements_background"
+    android:background="@drawable/recent_orders_middle_elements_background_normal"
     android:padding="10dp"
     android:layout_height="wrap_content">
 

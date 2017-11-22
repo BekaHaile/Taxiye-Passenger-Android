@@ -6,9 +6,7 @@ import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -22,7 +20,6 @@ import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -42,7 +39,6 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.AppConstant;
-import com.sabkuchfresh.utils.DateParser;
 import com.sabkuchfresh.widgets.DeliveryDisplayCategoriesView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundBorderTransform;
@@ -639,15 +635,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 try {
 
                     if(position==dataToDisplay.size()-1  || (position<=dataToDisplay.size()-2 && !(dataToDisplay.get(position+1) instanceof RecentOrder))){
-                        backgroundDrawable =R.drawable.recent_orders_bottom_element_background;
+                        backgroundDrawable =R.drawable.recent_orders_bottom_background;
 
                     }else{
-                        backgroundDrawable =R.drawable.recent_orders_middle_elements_background;
+                        backgroundDrawable =R.drawable.recent_orders_middle_background;
 
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    backgroundDrawable =R.drawable.recent_orders_middle_elements_background;
+                    backgroundDrawable =R.drawable.recent_orders_middle_background;
 
                 }
                 statusHolder.rlRootNewOrder.setBackgroundDrawable(ContextCompat.getDrawable(activity,backgroundDrawable));

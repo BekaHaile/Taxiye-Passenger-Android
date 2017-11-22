@@ -39,17 +39,11 @@
         </shape>
     </item>
 
-    <!-- Background -->
-    <item >
-        <shape>
-            <solid android:color="@color/white" />
-            <corners android:bottomLeftRadius="5dp"  android:bottomRightRadius="5dp" />
-        </shape>
-    </item>
+
 
     <item>
         <shape>
-            <solid android:color="@color/white" />
+            <solid android:color="@android:color/white" />
             <corners android:bottomLeftRadius="5dp"  android:bottomRightRadius="5dp" />
         </shape>
     </item>

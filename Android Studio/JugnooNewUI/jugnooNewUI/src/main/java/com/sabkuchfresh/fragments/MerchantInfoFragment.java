@@ -494,6 +494,10 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         return;
                     }
 
+                    if(activity.getVendorOpened().getOutOfRadius()==1 && (activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0)){
+                        return;
+                    }
+
 
                     if (activity.getMenuProductsResponse().getCategories() != null
                             && activity.getVendorOpened().getRestaurantId().equals(activity.getMenuProductsResponse().getVendor().getRestaurantId())) {

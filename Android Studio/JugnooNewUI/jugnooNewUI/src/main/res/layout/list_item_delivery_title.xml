@@ -9,7 +9,7 @@
     android:layout_marginRight="10dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:background="@drawable/recent_orders_top_elements_background"
+    android:background="@drawable/recent_orders_top_background"
     android:orientation="vertical">
 
     <ImageView

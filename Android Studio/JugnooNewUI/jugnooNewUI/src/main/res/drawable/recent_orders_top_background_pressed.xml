@@ -46,9 +46,17 @@
         </shape>
     </item>
     <!-- Background -->
+
+
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="@android:color/white" />
+            <corners android:topLeftRadius="5dp"  android:topRightRadius="5dp" />
+        </shape>
+    </item>
     <item>
         <shape>
-            <solid android:color="@color/white" />
+            <solid android:color="@color/menu_item_selector_color" />
             <corners android:topLeftRadius="5dp"  android:topRightRadius="5dp" />
         </shape>
     </item>
