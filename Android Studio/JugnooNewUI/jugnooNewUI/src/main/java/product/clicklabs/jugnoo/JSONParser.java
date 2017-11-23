@@ -614,7 +614,7 @@ public class JSONParser implements Constants {
 
             Data.setMenusData(new MenusData(question, orderId, questionType, pendingFeedback, stores, popupData,
                     amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText,
-                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName));
+                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName, 0));
 
             try {
                 if(Data.getMenusData().getPromoCoupons() == null){
@@ -640,6 +640,7 @@ public class JSONParser implements Constants {
             String restaurantName = jData.optString(KEY_RESTAURANT_NAME, "");
             String question = jData.optString(KEY_QUESTION, "");
             int questionType = jData.optInt(KEY_QUESTION_TYPE, 0);
+            int category = jData.optInt(KEY_MERCHANT_CATEGORY_ID, 0);
             int pendingFeedback = jData.optInt(KEY_PENDING_FEEDBACK, 0);
             double amount = jData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
             String feedbackDeliveryDate = jData.optString(KEY_FEEDBACK_DATE, "");
@@ -689,7 +690,7 @@ public class JSONParser implements Constants {
 
             Data.setDeliveryCustomerData(new MenusData(question, orderId, questionType, pendingFeedback, stores, popupData,
                     amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText,
-                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName));
+                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName,category));
 
             try {
                 if(Data.getDeliveryCustomerData().getPromoCoupons() == null){

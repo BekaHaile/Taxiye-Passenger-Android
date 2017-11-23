@@ -9140,7 +9140,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                 });
                 if(isSlidingPanelCollapsing){
-                    handlerTime = 200;
+                    handlerTime = 300;
                 }
                 animator.setDuration(300);
                 new Handler().postDelayed(new Runnable() {

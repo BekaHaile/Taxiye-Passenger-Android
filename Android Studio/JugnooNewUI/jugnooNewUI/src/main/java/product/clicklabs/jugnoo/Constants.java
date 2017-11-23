@@ -444,10 +444,10 @@ public interface Constants {
     String KEY_SP_LAST_OPENED_CLIENT_ID = "last_opened_client_id";
     String SP_CLIENT_ID_VIA_DEEP_LINK = "sp_client_id_via_deep_link";
     String KEY_SPECIFIC_CLIENT_DATA = "specific_client_data";
-
     String KEY_FEEDBACK_ORDER_ID = "feedback_order_id";
     String KEY_QUESTION = "question";
     String KEY_QUESTION_TYPE = "question_type";
+    String KEY_CATEGORY = "category";
     String KEY_PENDING_FEEDBACK = "pending_feedback";
     String KEY_APP_VERSION = "app_version";
     String KEY_DEVICE_TYPE = "device_type";

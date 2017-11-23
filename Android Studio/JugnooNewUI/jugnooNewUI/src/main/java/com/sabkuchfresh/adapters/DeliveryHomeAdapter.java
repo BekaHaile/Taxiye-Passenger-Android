@@ -244,7 +244,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             for(MenusResponse.Vendor vendor : menusResponse.getVendors()){
 
                 if(!isFatafatBannerInserted && vendor.getOutOfRadius()==1){
-                    if(menusResponse.getVendors().size()>1){
+                    if(dataToDisplay.size()>1){
                         dataToDisplay.add(new DeliveryDivider());
 
                     }

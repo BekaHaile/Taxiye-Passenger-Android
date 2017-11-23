@@ -24,6 +24,7 @@ public class MenusData {
 	private JSONArray negativeFeedbackReasons;
 	private JSONArray positiveFeedbackReasons;
 	private String restaurantName;
+	private int merchantCategoryId;
 
 	public JSONArray getPositiveFeedbackReasons() {
 		return positiveFeedbackReasons;
@@ -31,7 +32,7 @@ public class MenusData {
 
 	public MenusData(String question, String orderId, int questionType, int pendingFeedback, ArrayList<Store> stores, PopupData popupData, double amount, String feedbackDeliveryDate,
 					 int feedbackViewType, int isFatafatEnabled, String rideEndGoodFeedbackText, JSONArray negativeFeedbackReasons, JSONArray positiveFeedbackReasons,
-					 String restaurantName) {
+					 String restaurantName, int category) {
 		this.question = question;
 		this.orderId = orderId;
 		this.questionType = questionType;
@@ -46,6 +47,11 @@ public class MenusData {
 		this.negativeFeedbackReasons = negativeFeedbackReasons;
 		this.positiveFeedbackReasons = positiveFeedbackReasons;
 		this.restaurantName = restaurantName;
+		this.merchantCategoryId = category;
+	}
+
+	public int getMerchantCategoryId() {
+		return merchantCategoryId;
 	}
 
 	public String getQuestion() {

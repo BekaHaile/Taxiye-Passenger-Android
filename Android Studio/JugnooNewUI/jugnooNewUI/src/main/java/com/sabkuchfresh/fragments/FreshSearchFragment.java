@@ -43,7 +43,9 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -197,6 +199,25 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
             }
         });
 
+
+		KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(rlRoot,
+				null, new KeyboardLayoutListener.KeyBoardStateHandler() {
+			@Override
+			public void keyboardOpened() {
+				activity.llCheckoutBarSetVisibilityDirect(View.GONE);
+				activity.textViewMinOrder.setVisibility(View.INVISIBLE);
+
+			}
+
+			@Override
+			public void keyBoardClosed() {
+				activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
+				activity.textViewMinOrder.setVisibility(View.VISIBLE);
+
+			}
+		});
+		keyboardLayoutListener.setResizeTextView(false);
+		rlRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 		return rootView;
 	}
 

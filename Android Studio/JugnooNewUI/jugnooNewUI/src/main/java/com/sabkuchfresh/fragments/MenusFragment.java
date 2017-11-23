@@ -104,6 +104,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private boolean hasMorePages;
     private int noOfCategories;
     private boolean isFatfatChatIconEnabledFromServer;
+    private boolean isKeyboardOpen;
 
     public MenusResponse.StripInfo getCurrentStripInfo() {
         return currentStripInfo;
@@ -285,6 +286,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 (TextView) rootView.findViewById(R.id.tvScroll), new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
+                isKeyboardOpen = true;
                 if(activity.getTopFragment() instanceof  MenusFragment){
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
                     activity.hideMenusCartSelectedLayout();
@@ -299,7 +301,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             @Override
             public void keyBoardClosed() {
 
-
+                isKeyboardOpen = false;
                 if(activity.getTopFragment() instanceof  MenusFragment){
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
@@ -313,6 +315,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
             }
         });
+
         keyboardLayoutListener.setResizeTextView(false);
 
 
@@ -785,7 +788,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         } else {
             activity.getTopBar().getLlSearchCart().setVisibility(serviceUnavailable ? View.GONE : View.VISIBLE);
             recyclerViewRestaurant.setVisibility(View.VISIBLE);
-            activity.getMenusCartSelectedLayout().checkForVisibility();
+            if(!isKeyboardOpen){
+                activity.getMenusCartSelectedLayout().checkForVisibility();
+
+            }
         }
         activity.setTitleAlignment(false);
         return serviceUnavailable;

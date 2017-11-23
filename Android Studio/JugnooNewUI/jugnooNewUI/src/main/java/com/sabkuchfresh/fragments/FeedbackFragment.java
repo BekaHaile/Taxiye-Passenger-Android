@@ -109,6 +109,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
     private int jobId = 0;
     private String lastClientId = "";
+    private int merchantCategoryId;
 
     @Nullable
     @Override
@@ -178,6 +179,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 dateValue = getMenusOrDeliveryData().getFeedbackDeliveryDate();
                 orderAmount = getMenusOrDeliveryData().getAmount();
                 orderId = getMenusOrDeliveryData().getOrderId();
+                merchantCategoryId = getMenusOrDeliveryData().getMerchantCategoryId();
                 if(!TextUtils.isEmpty(getMenusOrDeliveryData().getRestaurantName())){
                     activity.getTopBar().title.setText(getMenusOrDeliveryData().getRestaurantName());
                 } else {
@@ -314,7 +316,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             if(Config.getProsClientId().equals(lastClientId)){
                 imageviewType.setImageResource(R.drawable.ic_pros_grey);
                 ivOffering.setImageResource(R.drawable.ic_pros_grey);
-            } else if(Config.getDeliveryCustomerClientId().equals(lastClientId)){
+            } else if(Config.getDeliveryCustomerClientId().equals(lastClientId) && merchantCategoryId !=Constants.CATEGORY_ID_RESTAURANTS){
                 imageviewType.setImageResource(R.drawable.ic_menus_delivery_customer_grey);
                 ivOffering.setImageResource(R.drawable.ic_menus_delivery_customer_grey);
             } else {
