@@ -217,17 +217,15 @@
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="2dp">
 
-
-                <RadioGroup
-                    android:id="@+id/rg_time_slot"
+                <RelativeLayout
+                    android:animateLayoutChanges="true"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
 
 
-                    <RadioButton
+                    <TextView
                         android:id="@+id/rb_asap"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:gravity="top"
@@ -237,17 +235,43 @@
                         android:textSize="14sp"
                         app:font="@string/maven" />
 
-                    <RadioButton
+                    <android.support.v7.widget.SwitchCompat
+                        android:id="@+id/switchDeliveryTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/rb_asap"
+                        android:layout_alignParentRight="true"
+                        android:padding="10dp"
+                        android:theme="@style/ThemeSwitchAlternate"
+                        android:visibility="visible"
+                        android:tag="@string/dont_touch_me"
+                        />
+
+                    <TextView
                         android:id="@+id/rb_st"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@null"
                         android:gravity="top"
                         android:padding="10dp"
+                        android:visibility="gone"
                         android:text="Scheduled Time"
+                        android:layout_below="@+id/rb_asap"
                         android:textColor="@color/text_color"
                         android:textSize="14sp"
                         app:font="@string/maven" />
+                </RelativeLayout>
+
+                <RadioGroup
+                    android:id="@+id/rg_time_slot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+
+
+
 
                 </RadioGroup>
 

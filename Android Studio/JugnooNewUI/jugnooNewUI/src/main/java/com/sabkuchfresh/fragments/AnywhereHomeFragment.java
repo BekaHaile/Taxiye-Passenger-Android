@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.SwitchCompat;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -17,17 +18,15 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.fugu.FuguConfig;
-import com.picker.image.util.Util;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -72,6 +71,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     ImageView ivPickUpAddressType;
     @Bind(R.id.ivDelAddressType)
     ImageView ivDelAddressType;
+    @Bind(R.id.switchDeliveryTime)
+    SwitchCompat switchDeliveryTime;
     private ForegroundColorSpan textHintColorSpan;
     private ForegroundColorSpan textColorSpan;
     @Bind(R.id.edt_task_description)
@@ -81,21 +82,21 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     @Bind(R.id.tv_delivery_address)
     TextView tvDeliveryAddress;
     @Bind(R.id.rb_asap)
-    RadioButton rbAsap;
+    TextView rbAsap;
     @Bind(R.id.rb_st)
-    RadioButton rbSt;
+    TextView rbSt;
     @Bind(R.id.cv_pickup_address)
     CardView cvPickupAddress;
     @Bind(R.id.cv_delivery_address)
     CardView cvDeliveryAddress;
 
-    @Bind(R.id.rg_time_slot)
-    RadioGroup rgTimeSlot;
+
     private PaySlider paySlider;
     private FreshActivity activity;
     private boolean isPickUpAddressRequested;
     private boolean isOrderViaCheckoutFragment;
     private boolean isOrderViaRestaurantDetail;
+    private CompoundButton.OnCheckedChangeListener switchListenerTime;
 
     public boolean isPickUpAddressRequested() {
         return isPickUpAddressRequested;
@@ -120,13 +121,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         activity.fragmentUISetup(this);
         ButterKnife.bind(this, rootView);
         try {
-            product.clicklabs.jugnoo.utils.Utils.hideSoftKeyboard(activity,edtTaskDescription);
+            product.clicklabs.jugnoo.utils.Utils.hideSoftKeyboard(activity, edtTaskDescription);
         } catch (Exception e) {
             e.printStackTrace();
         }
         textColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color));
         textHintColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color_hint));
-        rgTimeSlot.check(R.id.rb_asap);
         isAsapSelected = true;
         setCurrentSelectedAddressToDelivery();
         paySlider = new PaySlider(activity.llPayViewContainer) {
@@ -134,25 +134,25 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             public void onPayClick() {
                 try {
                     String taskDetails = edtTaskDescription.getText().toString().trim();
-                    if(taskDetails.length() == 0){
-						Utils.showToast(activity, activity.getString(R.string.please_enter_some_desc));
-						throw new Exception();
-					}
-                    if(deliveryAddress == null){
+                    if (taskDetails.length() == 0) {
+                        Utils.showToast(activity, activity.getString(R.string.please_enter_some_desc));
+                        throw new Exception();
+                    }
+                    if (deliveryAddress == null) {
                         Utils.showToast(activity, activity.getString(R.string.please_select_a_delivery_address));
                         throw new Exception();
                     }
-                    if(!isAsapSelected){
-                        if(TextUtils.isEmpty(selectedDate)){
+                    if (!isAsapSelected) {
+                        if (TextUtils.isEmpty(selectedDate)) {
                             Utils.showToast(activity, activity.getString(R.string.please_select_date));
                             throw new Exception();
-                        } else if(TextUtils.isEmpty(selectedTime)){
+                        } else if (TextUtils.isEmpty(selectedTime)) {
                             Utils.showToast(activity, activity.getString(R.string.please_select_time));
                             throw new Exception();
                         }
                     }
                     placeOrderApi(taskDetails);
-                    GAUtils.event(activity.getGaCategory(), HOME , ORDER_PLACED);
+                    GAUtils.event(activity.getGaCategory(), HOME, ORDER_PLACED);
                 } catch (Exception e) {
                     paySlider.setSlideInitial();
                 }
@@ -180,40 +180,69 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         keyboardLayoutListener.setResizeTextView(false);
         llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
-        GAUtils.trackScreenView(activity.getGaCategory()+ HOME);
+        GAUtils.trackScreenView(activity.getGaCategory() + HOME);
 
 
-        if(activity.getOrderViaChat()!=null){
+        if (activity.getOrderViaChat() != null) {
             FreshActivity.OrderViaChatData orderViaChatData = activity.getOrderViaChat();
 
-            if(orderViaChatData.getCartText()!=null){
+            if (orderViaChatData.getCartText() != null) {
                 isOrderViaCheckoutFragment = true;
                 edtTaskDescription.setText(orderViaChatData.getCartText());
                 edtTaskDescription.setEnabled(false);
-            }else{
+            } else {
                 isOrderViaRestaurantDetail = true;
-                setMaxLength(edtTaskDescription,1000);
+                setMaxLength(edtTaskDescription, 1000);
                 edtTaskDescription.setHint(R.string.anywhere_hint_order_via_chat);
 
             }
 
-            setAddress(false,new SearchResult("",orderViaChatData.getRestaurantName()+"\n"+ orderViaChatData.getDestinationAddress(),"",orderViaChatData.getDestinationlatLng().latitude,orderViaChatData.getDestinationlatLng().longitude));
+            setAddress(false, new SearchResult("", orderViaChatData.getRestaurantName() + "\n" + orderViaChatData.getDestinationAddress(), "", orderViaChatData.getDestinationlatLng().latitude, orderViaChatData.getDestinationlatLng().longitude));
             activity.setOrderViaChatData(null);
-            tvPickupAddress.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
+            tvPickupAddress.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             cvPickupAddress.setEnabled(false);
-        }else{
-            setMaxLength(edtTaskDescription,1000);
+        } else {
+            setMaxLength(edtTaskDescription, 1000);
             edtTaskDescription.setHint(R.string.anywhere_hint);
 
         }
         paySlider.setSlideInitial();
         activity.showPaySliderEnabled(true);
+        switchListenerTime = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+
+
+                if(isChecked){
+                    isAsapSelected = true;
+                    selectedTime = null;
+                    selectedDate = null;
+                    rbSt.setVisibility(View.GONE);
+                }else{
+                    try {
+                        getDatePickerFragment().show(getChildFragmentManager(), "datePicker", onDateSetListener);
+                        GAUtils.event(activity.getGaCategory(), HOME, SCHEDULE + CLICKED);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    buttonView.setOnCheckedChangeListener(null);
+                    buttonView.setChecked(true);
+                    buttonView.setOnCheckedChangeListener(this);
+                }
+
+
+
+            }
+        };
+        switchDeliveryTime.setOnCheckedChangeListener(switchListenerTime);
+        switchDeliveryTime.setChecked(true);
         return rootView;
     }
 
     private void setCurrentSelectedAddressToDelivery() {
-        SearchResult searchResult =   HomeUtil.getNearBySavedAddress(activity,activity.getSelectedLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION,false);
-        setAddress(true,searchResult);
+        SearchResult searchResult = HomeUtil.getNearBySavedAddress(activity, activity.getSelectedLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+        setAddress(true, searchResult);
 
     }
 
@@ -224,7 +253,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     }
 
 
-    private void setAddress(boolean isDeliveryAddress,SearchResult searchResult) {
+    private void setAddress(boolean isDeliveryAddress, SearchResult searchResult) {
 
         TextView textViewToSet;
         ImageView imageViewToSet;
@@ -241,8 +270,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         }
 
 
-
-        if (searchResult!=null && searchResult.getName()!=null) {
+        if (searchResult != null && searchResult.getName() != null) {
             textViewToSet.setVisibility(View.VISIBLE);
 //          tvNoAddressAlert.setVisibility(View.GONE);
             String addressType;
@@ -258,8 +286,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             }
 
 
-            addressType = addressType.length()==0?addressType:addressType+"\n";
-            SpannableString spannableString = new SpannableString(addressType  + searchResult.getAddress());
+            addressType = addressType.length() == 0 ? addressType : addressType + "\n";
+            SpannableString spannableString = new SpannableString(addressType + searchResult.getAddress());
             spannableString.setSpan(textHintColorSpan, 0, addressType.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             spannableString.setSpan(RELATIVE_SIZE_SPAN, 0, addressType.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
             spannableString.setSpan(textColorSpan, spannableString.length() - searchResult.getAddress().length(), spannableString.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -267,24 +295,21 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
         } else {
             imageViewToSet.setImageResource(R.drawable.ic_loc_other);
-            if(isDeliveryAddress){
-                deliveryAddress= null;
+            if (isDeliveryAddress) {
+                deliveryAddress = null;
                 textViewToSet.setText(activity.getResources().getString(R.string.add_delivery_address));
 
-            }else{
+            } else {
                 pickUpAddress = null;
                 textViewToSet.setText(activity.getResources().getString(R.string.label_anywhere));
 
             }
 
 
-
-
         }
 
 
     }
-
 
 
     @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st})
@@ -299,23 +324,23 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
                 break;
             case R.id.rb_asap:
-                isAsapSelected = true;
-                GAUtils.event(activity.getGaCategory(), HOME , ASAP+CLICKED);
+               /* isAsapSelected = true;
+                GAUtils.event(activity.getGaCategory(), HOME, ASAP + CLICKED);*/
                 break;
             case R.id.rb_st:
-                rbSt.setEnabled(false);
+              /*  rbSt.setEnabled(false);
                 if (selectedDate == null || selectedTime == null) {
                     rgTimeSlot.check(R.id.rb_asap);
 
                 }
 
-                activity.getHandler().postDelayed(enableStRbRunnable,300);
+                activity.getHandler().postDelayed(enableStRbRunnable, 300);
                 try {
                     getDatePickerFragment().show(getChildFragmentManager(), "datePicker", onDateSetListener);
-                    GAUtils.event(activity.getGaCategory(), HOME , SCHEDULE+CLICKED);
+                    GAUtils.event(activity.getGaCategory(), HOME, SCHEDULE + CLICKED);
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
                 break;
         }
     }
@@ -323,7 +348,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private Runnable enableStRbRunnable = new Runnable() {
         @Override
         public void run() {
-                rbSt.setEnabled(true);
+            rbSt.setEnabled(true);
         }
     };
 
@@ -336,7 +361,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     }
 
     public void setRequestedAddress(SearchResult searchResult) {
-            setAddress(!isPickUpAddressRequested,searchResult);
+        setAddress(!isPickUpAddressRequested, searchResult);
 
     }
 
@@ -345,7 +370,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private DatePickerFragment getDatePickerFragment() {
         if (datePickerFragment == null) {
             Bundle bundle = new Bundle();
-            bundle.putSerializable(DatePickerFragment.ADD_DAYS,false);
+            bundle.putSerializable(DatePickerFragment.ADD_DAYS, false);
             datePickerFragment = new DatePickerFragment();
             datePickerFragment.setArguments(bundle);
         }
@@ -376,7 +401,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         if (timePickerFragment == null) {
             timePickerFragment = new TimePickerFragment();
             Bundle bundle = new Bundle();
-            bundle.putInt(TimePickerFragment.ADDITIONAL_TIME_MINUTES,MIN_BUFFER_TIME_MINS+ BUFFER_TIME_TO_SELECT_MINS);
+            bundle.putInt(TimePickerFragment.ADDITIONAL_TIME_MINUTES, MIN_BUFFER_TIME_MINS + BUFFER_TIME_TO_SELECT_MINS);
             timePickerFragment.setArguments(bundle);
         }
         return timePickerFragment;
@@ -394,9 +419,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         if (validateDateTime(selectedDate, time)) {
             selectedTime = time;
             String display = DateOperations.convertDayTimeAPViaFormat(time, true);
-            rgTimeSlot.check(R.id.rb_st);
+            switchDeliveryTime.setOnCheckedChangeListener(null);
+            switchDeliveryTime.setChecked(false);
+            rbSt.setVisibility(View.VISIBLE);
+            switchDeliveryTime.setOnCheckedChangeListener(switchListenerTime);
             isAsapSelected = false;
-            rbSt.setText("Schedule Time " + DateOperations.getDateFormatted(selectedDate) + " " + display );
+            rbSt.setText("Schedule Time " + DateOperations.getDateFormatted(selectedDate) + " " + display);
             return true;
         } else {
             Utils.showToast(activity, activity.getString(R.string.please_select_appropriate_time));
@@ -405,7 +433,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     }
 
     private boolean validateDateTime(String date, String time) {
-        String currentTimePlus24Hrs = DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), MIN_BUFFER_TIME_MINS,Calendar.MINUTE);
+        String currentTimePlus24Hrs = DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), MIN_BUFFER_TIME_MINS, Calendar.MINUTE);
         return DateOperations.getTimeDifference(getFormattedDateTime(date, time, true), currentTimePlus24Hrs) > 0
                 &&
                 DateOperations.getTimeDifference(getFormattedDateTime(date, time, false),
@@ -413,12 +441,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     }
 
 
-
     private String getFormattedDateTime(String selectedDate, String selectedTime, boolean addHours) {
         if (TextUtils.isEmpty(selectedDate) || TextUtils.isEmpty(selectedTime)) {
             Calendar calendar = Calendar.getInstance();
             if (TextUtils.isEmpty(selectedTime)) {
-                calendar.add(Calendar.MINUTE, addHours ? MIN_BUFFER_TIME_MINS+ BUFFER_TIME_TO_SELECT_MINS : 0);
+                calendar.add(Calendar.MINUTE, addHours ? MIN_BUFFER_TIME_MINS + BUFFER_TIME_TO_SELECT_MINS : 0);
                 selectedTime = calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE) + ":00";
             }
             if (TextUtils.isEmpty(selectedDate)) {
@@ -431,12 +458,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     public void placeOrderApi(final String taskDetails) {
 
-        if(paySlider.isSliderInIntialStage())
+        if (paySlider.isSliderInIntialStage())
             paySlider.fullAnimate();
 
         final HashMap<String, String> params = new HashMap<>();
         params.put("details", taskDetails);
-        if(pickUpAddress != null) {
+        if (pickUpAddress != null) {
             params.put(Constants.KEY_FROM_ADDRESS, pickUpAddress.getAddress());
             params.put(Constants.KEY_FROM_LATITUDE, String.valueOf(pickUpAddress.getLatitude()));
             params.put(Constants.KEY_FROM_LONGITUDE, String.valueOf(pickUpAddress.getLongitude()));
@@ -445,7 +472,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             params.put(Constants.KEY_FROM_LATITUDE, "0");
             params.put(Constants.KEY_FROM_LONGITUDE, "0");
         }
-        if(isOrderViaCheckoutFragment){
+        if (isOrderViaCheckoutFragment) {
             params.put(Constants.CATEGORY, "1");
         }
 
@@ -455,7 +482,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         params.put(Constants.KEY_IS_IMMEDIATE, isAsapSelected ? "1" : "0");
 
         String finalDateTime = null;
-        if(!isAsapSelected){
+        if (!isAsapSelected) {
             finalDateTime = getFormattedDateTime(selectedDate, selectedTime, true);
             params.put(Constants.KEY_DELIVERY_TIME, DateOperations.localToUTC(finalDateTime));
         }
@@ -484,35 +511,36 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                             String deliveryTime = finalDateTime1 == null ? "ASAP" : DateOperations.convertDateViaFormat(finalDateTime1);
                             String pickupAddress = pickUpAddress != null ? pickUpAddress.getAddress() : "Anywhere";
                             String fuguMessage = "I need:\n" +
-                                    taskDetails+"\n" +
+                                    taskDetails + "\n" +
                                     "\n" +
                                     "From:\n" +
-                                    pickupAddress+"\n" +
+                                    pickupAddress + "\n" +
                                     "\n" +
                                     "To:\n" +
-                                    deliveryAddress.getAddress()+"\n" +
+                                    deliveryAddress.getAddress() + "\n" +
                                     "\n" +
                                     "When:\n" +
                                     deliveryTime;
 
                             resetUI();
-                            if(isOrderViaCheckoutFragment){
-                               activity.clearAllCartAtOrderComplete(activity.lastAppTypeOpen);activity.clearFragmentStackTillLast();
-                            }else if(isOrderViaRestaurantDetail){
+                            if (isOrderViaCheckoutFragment) {
+                                activity.clearAllCartAtOrderComplete(activity.lastAppTypeOpen);
                                 activity.clearFragmentStackTillLast();
-                            }else{
+                            } else if (isOrderViaRestaurantDetail) {
+                                activity.clearFragmentStackTillLast();
+                            } else {
                                 activity.clearFragmentStackTillLast();
 
                             }
                             activity.getHandler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(activity.getMenusFragment()!=null){
+                                    if (activity.getMenusFragment() != null) {
                                         activity.getMenusFragment().getAllMenus(true, activity.getSelectedLatLng(), true, null, MenusFragment.TYPE_API_MENUS_ADDRESS_CHANGE);
 
                                     }
                                 }
-                            },1000);
+                            }, 1000);
                             if (orderAnywhereResponse != null && !TextUtils.isEmpty(orderAnywhereResponse.getFuguChannelId())) {
                                 FuguConfig.getInstance().openChatByTransactionId(orderAnywhereResponse.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
                                         orderAnywhereResponse.getFuguChannelName(), orderAnywhereResponse.getFuguTags(), new String[]{fuguMessage});
@@ -521,12 +549,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                             }
 
 
-                            String action ;
-                            if(isOrderViaCheckoutFragment){
+                            String action;
+                            if (isOrderViaCheckoutFragment) {
                                 action = GAAction.ACTION_FATAFAT_ORDER_CONFIRMED_CHECKOUT;
-                            } else if(isOrderViaRestaurantDetail){
+                            } else if (isOrderViaRestaurantDetail) {
                                 action = GAAction.ACTION_FATAFAT_ORDER_CONFIRMED_RESTAURANT_DETAIL;
-                            }else{
+                            } else {
                                 action = ACTION_FATAFAT_ORDER_CONFIRMED_RESTAURANT_CUSTOM_ORDER;
                             }
                             GAUtils.event(GACategory.FATAFAT3, action, GAAction.LABEL_FATAFAT_ORDER_CONFIRMED);
@@ -558,19 +586,20 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     private void resetUI() {
         paySlider.setSlideInitial();
-        selectedTime=null;
-        selectedDate=null;
+        selectedTime = null;
+        selectedDate = null;
         edtTaskDescription.setText(null);
-        rgTimeSlot.check(R.id.rb_asap);
-        isAsapSelected= true;
+        switchDeliveryTime.setChecked(true);
+//        rgTimeSlot.check(R.id.rb_asap);
+        isAsapSelected = true;
         rbSt.setText(R.string.label_rb_schedule_time);
         setCurrentSelectedAddressToDelivery();
-        setAddress(false,null);
-        timePickerFragment=null;
+        setAddress(false, null);
+        timePickerFragment = null;
 
     }
 
-    private void setMaxLength(EditText edtText,int maxLength){
+    private void setMaxLength(EditText edtText, int maxLength) {
         InputFilter[] fArray = new InputFilter[1];
         fArray[0] = new InputFilter.LengthFilter(maxLength);
         edtText.setFilters(fArray);
