@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
@@ -23,10 +25,14 @@ import product.clicklabs.jugnoo.R;
 
 public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
 
+	public static final int MAX_CATEGORIES_TO_SHOW = 8;
+	public static final int CATEGORY_SEE_ALL = -1;
 	private Context context;
 	private List<MenusResponse.Category> categoriesList;
 	private Callback callback;
 	private RecyclerView recyclerView;
+	private List<MenusResponse.Category> cachedList;
+
 
 	public DeliveryDisplayCategoriesAdpater(Context context, Callback callback, RecyclerView recyclerView) {
 		this.context = context;
@@ -35,6 +41,17 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 	}
 
 	public synchronized void setList(List<MenusResponse.Category> elements) {
+
+
+		if(elements!=null && elements.size()> MAX_CATEGORIES_TO_SHOW){
+			cachedList = new ArrayList<>();
+			for(int i=elements.size()-1;i>=MAX_CATEGORIES_TO_SHOW-1;i--){
+				cachedList.add(elements.get(i));
+				elements.remove(elements.get(i));
+			}
+			elements.add(new MenusResponse.Category(CATEGORY_SEE_ALL));
+
+		}
 		this.categoriesList = elements;
 		notifyDataSetChanged();
 	}
@@ -73,7 +90,7 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 			MenusResponse.Category prosCatalogueDatum = categoriesList.get(position);
 			ViewHolderCategory holder = ((ViewHolderCategory) mholder);
 			if (prosCatalogueDatum.getId() == -1) {
-                holder.tvSuperCategoryName.setText(R.string.all);
+                holder.tvSuperCategoryName.setText(R.string.see_all);
                 holder.ivSuperCategoryImage.setImageResource(R.drawable.ic_category_all);
                 return;
             }
@@ -96,11 +113,7 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 			e.printStackTrace();
 		}
 
-			/*if (prosCatalogueDatum.getIsEnabled() == 0) {
-				holder.viewBG.setBackgroundResource(R.drawable.bg_white_60_selector_color);
-			} else {
-				holder.viewBG.setBackgroundResource(R.drawable.bg_transparent_white_60_selector);
-			}*/
+
 
 	}
 
@@ -122,7 +135,17 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 			switch (viewClicked.getId()) {
 				case R.id.llRoot:
 					if (callback != null) {
-						callback.onItemClick(categoriesList.get(pos));
+						
+						if(categoriesList.get(pos)!=null){
+							if(categoriesList.get(pos).getId()==-1){
+								categoriesList.remove(categoriesList.size()-1);
+								categoriesList.addAll(cachedList);
+								notifyDataSetChanged();
+							}else{
+								callback.onItemClick(categoriesList.get(pos));
+
+							}
+						}
 					}
 					break;
 
