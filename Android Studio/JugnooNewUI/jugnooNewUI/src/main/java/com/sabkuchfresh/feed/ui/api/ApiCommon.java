@@ -42,6 +42,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
     private ApiName apiName;
     private boolean putAccessToken = true;
     private boolean isCancelled;
+    private boolean isErrorCancellable = true;
 
     public boolean isInProgress() {
         return isInProgress;
@@ -66,6 +67,11 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
     public ApiCommon<T> showLoader(boolean showLoader) {
         this.showLoader = showLoader;
+        return this;
+    }
+
+    public ApiCommon<T> isErrorCancellable(boolean isErrorCancellable) {
+        this.isErrorCancellable = isErrorCancellable;
         return this;
     }
 
@@ -195,6 +201,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case ANYWHERE_PLACE_ORDER:
                 RestClient.getFatafatApiService().anywherePlaceOrder(params, callback);
                 break;
+            case ANYWHERE_DYNAMIC_DELIVERY:
+                RestClient.getFatafatApiService().dynamicDeliveryCharges(params, callback);
+                break;
             case INITIATE_RIDE_END_PAYMENT:
                 RestClient.getApiService().initiateRideEndPayment(params, callback);
                 break;
@@ -223,7 +232,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                     public void negativeClick(View view) {
                         apiCommonCallback.onNegativeClick();
                     }
-                });
+                },isErrorCancellable);
 
     }
 

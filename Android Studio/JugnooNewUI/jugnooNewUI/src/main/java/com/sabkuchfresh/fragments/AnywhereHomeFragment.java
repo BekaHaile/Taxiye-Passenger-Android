@@ -15,6 +15,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
@@ -36,11 +38,13 @@ import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.pros.utils.DatePickerFragment;
 import com.sabkuchfresh.pros.utils.TimePickerFragment;
+import com.sabkuchfresh.retrofit.model.feed.DynamicDeliveryResponse;
 import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -237,6 +241,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         };
         switchDeliveryTime.setOnCheckedChangeListener(switchListenerTime);
         switchDeliveryTime.setChecked(true);
+        fetchDynamicDeliveryCharges();
         return rootView;
     }
 
@@ -362,6 +367,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     public void setRequestedAddress(SearchResult searchResult) {
         setAddress(!isPickUpAddressRequested, searchResult);
+        fetchDynamicDeliveryCharges();
 
     }
 
@@ -605,5 +611,77 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         edtText.setFilters(fArray);
     }
 
+    private void fetchDynamicDeliveryCharges(){
 
+        if (deliveryAddress!=null) {
+            final HashMap<String, String> params = new HashMap<>();
+            if (pickUpAddress != null) {
+                params.put(Constants.KEY_FROM_LATITUDE, String.valueOf(pickUpAddress.getLatitude()));
+                params.put(Constants.KEY_FROM_LONGITUDE, String.valueOf(pickUpAddress.getLongitude()));
+            } else {
+                params.put(Constants.KEY_FROM_ADDRESS, "Anywhere");
+                params.put(Constants.KEY_FROM_LATITUDE, "0");
+                params.put(Constants.KEY_FROM_LONGITUDE, "0");
+            }
+
+            params.put(Constants.KEY_TO_LATITUDE, String.valueOf(deliveryAddress.getLatitude()));
+            params.put(Constants.KEY_TO_LONGITUDE, String.valueOf(deliveryAddress.getLongitude()));
+
+
+            new ApiCommon<DynamicDeliveryResponse>(activity).showLoader(true).isErrorCancellable(false).execute(params, ApiName.ANYWHERE_DYNAMIC_DELIVERY,
+                    new APICommonCallback<DynamicDeliveryResponse>() {
+                        @Override
+                        public boolean onNotConnected() {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onException(Exception e) {
+                            return false;
+
+                        }
+
+                        @Override
+                        public void onSuccess(DynamicDeliveryResponse dynamicDeliveryResponse, String message, int flag) {
+                            Toast.makeText(activity, "Success "+ message, Toast.LENGTH_SHORT).show();
+
+                            String data = "" ;
+
+                            for(HashMap<String,Double> mapValue: dynamicDeliveryResponse.getDeliveryCharges().getPopupData()){
+                                Map.Entry<String,Double> entry = mapValue.entrySet().iterator().next();
+                                String ab = entry.getKey();
+                                double val = entry.getValue();
+                                data+=ab+": " + val + "\n";
+
+
+                            }
+                            data += "estimated_charges " + dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges();
+                            data += "estimated_distance " + dynamicDeliveryResponse.getDeliveryCharges().getEstimatedDistance();
+
+                            Log.i(TAG, "onSuccess:\n " + data);
+
+                        }
+
+                        @Override
+                        public boolean onError(DynamicDeliveryResponse dynamicDeliveryResponse, String message, int flag) {
+                            return false;
+                        }
+
+
+
+                        @Override
+                        public boolean onFailure(RetrofitError error) {
+                            return false;
+                        }
+
+                        @Override
+                        public void onNegativeClick() {
+
+                        }
+                    });
+        }else{
+
+        }
+
+    }
 }
