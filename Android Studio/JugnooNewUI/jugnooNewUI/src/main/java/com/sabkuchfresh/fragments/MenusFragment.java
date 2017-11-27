@@ -984,13 +984,14 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     if (previousVendors != null) {
                         deliveryHomeAdapter.setList(previousVendors);
                     }
+                    deliveryHomeAdapter.hideCateogiresBar(false);
+
                 } else {
 
                         getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryOpened(), MenusFragment.TYPE_API_MENUS_CATEGORY_CHANGE);
 
 
                 }
-                deliveryHomeAdapter.hideCateogiresBar(false);
 
             }
 

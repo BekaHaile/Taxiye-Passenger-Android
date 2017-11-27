@@ -327,8 +327,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     toggleRemainingOrdersVisibility(posFromWhichOrdersStart,false);
 
                 }
-                dataToDisplay.remove(categoriesData);
-                dataToDisplay.removeAll(collapsedRecentOrdersData);
+
+                if(categoriesData!=null){
+                    dataToDisplay.remove(categoriesData);
+
+                }
+                if(collapsedRecentOrdersData!=null && collapsedRecentOrdersData.size()>0){
+                    dataToDisplay.removeAll(collapsedRecentOrdersData);
+
+                }
 
             }else{
                 if(categoriesData!=null){
