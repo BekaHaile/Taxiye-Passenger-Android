@@ -3433,7 +3433,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void openCart(int appType, boolean forceCheckout) {
         if (isMenusOrDeliveryOpen() && getVendorOpened() != null) {
 
-            if(getVendorOpened().getOutOfRadius()==1){
+            if(getVendorOpened().getOutOfRadius()==1 && isDeliveryOpenInBackground()){
                 FreshCheckoutMergedFragment.orderViaFatafat(FreshCheckoutMergedFragment.prepareItemsInCartForMenus(this,null),null,
                         this,updateCartValuesGetTotalPrice().first);
                 return;

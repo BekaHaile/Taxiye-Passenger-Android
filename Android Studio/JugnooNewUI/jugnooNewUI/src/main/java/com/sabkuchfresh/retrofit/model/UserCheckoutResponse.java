@@ -50,6 +50,14 @@ public class UserCheckoutResponse{
 	@SerializedName("cityId")
 	@Expose
 	private Integer cityId;
+	@SerializedName("chat_available")
+	@Expose
+	private Integer chatAvailable;
+
+	public Integer getChatAvailable() {
+		return chatAvailable;
+	}
+
 	@SerializedName("subscription_info")
 	@Expose
 	private SubscriptionInfo subscriptionInfo;

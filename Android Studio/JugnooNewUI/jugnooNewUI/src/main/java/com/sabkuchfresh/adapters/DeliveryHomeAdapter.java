@@ -257,7 +257,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         // service unavailable case
-        if(!isPagination && (menusResponse.getServiceUnavailable() == 1 /*|| (vendorsCount == 0 && activity.getCategoryIdOpened() < 0)*/)){
+        if(!isPagination && (menusResponse.getServiceUnavailable() == 1 || (vendorsCount == 0 ))){
             int messageResId = Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()) ?
                     R.string.no_delivery_available_your_location : R.string.no_menus_available_your_location;
             if (activity.getMenusFragment() != null
@@ -269,7 +269,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dataToDisplay.add(new NoVendorModel(activity.getString(messageResId)));
         }
         // no more pages case
-        else if(!hasMorePages) {
+         if(!hasMorePages && activity.getMenusFragment()!=null && activity.getMenusFragment().chatAvailable) {
        /*     if (activity.getCategoryIdOpened() < 0) {
                 dataToDisplay.add(BlankFooterModel.getInstance());
             } else {*/

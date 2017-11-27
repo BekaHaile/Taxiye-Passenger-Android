@@ -58,6 +58,9 @@ public class MenusResponse {
 	@SerializedName("service_unavailable")
 	private int serviceUnavailable;
 
+    @SerializedName("chat_available")
+	private int chatAvailable;
+
 
 	@SerializedName("category_map")
 	@Expose
@@ -76,6 +79,9 @@ public class MenusResponse {
 	@Expose
 	private int isOpenMerchantInfo;
 
+	public int getChatAvailable() {
+		return chatAvailable;
+	}
 
 	/**
 	 * @return The flag

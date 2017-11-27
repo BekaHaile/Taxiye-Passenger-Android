@@ -724,11 +724,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             e.printStackTrace();
         }
         setSlideInitial();
-        if(!activity.isDeliveryOpenInBackground()){
+        toggleChatAvailability(false);
+        return rootView;
+    }
+
+    private void toggleChatAvailability(boolean isChatAvailable) {
+        if(activity.isDeliveryOpenInBackground() && isChatAvailable && activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER){
+            tvOrderViaFatafat.setVisibility(View.VISIBLE);
+            (rootView.findViewById(R.id.labelOrMinOrder)).setVisibility(View.VISIBLE);
+        }else{
             tvOrderViaFatafat.setVisibility(View.GONE);
             (rootView.findViewById(R.id.labelOrMinOrder)).setVisibility(View.GONE);
         }
-        return rootView;
     }
 
     public static  ArrayList<Item> prepareItemsInCartForMenus(FreshActivity activity,ArrayList<Item> items) {
@@ -2417,7 +2424,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         setDeliverySlotsDataUI();
 
                                         updateAddressView();
-
+                                        toggleChatAvailability(userCheckoutResponse.getChatAvailable()==1);
                                         if (isMenusOrDeliveryOpen()
                                                 && userCheckoutResponse.getRestaurantInfo() != null
                                                 && !TextUtils.isEmpty(userCheckoutResponse.getRestaurantInfo().getAddress())) {

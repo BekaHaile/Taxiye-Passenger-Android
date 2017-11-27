@@ -328,11 +328,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 GAUtils.event(activity.getGaCategory(), HOME, ASAP + CLICKED);*/
                 break;
             case R.id.rb_st:
-              /*  rbSt.setEnabled(false);
-                if (selectedDate == null || selectedTime == null) {
+                rbSt.setEnabled(false);
+               /* if (selectedDate == null || selectedTime == null) {
                     rgTimeSlot.check(R.id.rb_asap);
 
-                }
+                }*/
 
                 activity.getHandler().postDelayed(enableStRbRunnable, 300);
                 try {
@@ -340,7 +340,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     GAUtils.event(activity.getGaCategory(), HOME, SCHEDULE + CLICKED);
                 } catch (Exception e) {
                     e.printStackTrace();
-                }*/
+                }
                 break;
         }
     }

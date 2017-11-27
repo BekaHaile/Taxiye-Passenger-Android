@@ -105,6 +105,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private int noOfCategories;
     private boolean isFatfatChatIconEnabledFromServer;
     private boolean isKeyboardOpen;
+    public boolean chatAvailable;
 
     public MenusResponse.StripInfo getCurrentStripInfo() {
         return currentStripInfo;
@@ -641,6 +642,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     lastTimeRefreshed = System.currentTimeMillis();
                     if (typeApi == TYPE_API_MENUS_ADDRESS_CHANGE || typeApi == TYPE_API_MENUS_CATEGORY_CHANGE) {
                         serviceUnavailable = (menusResponse.getServiceUnavailable() == 1);
+                        chatAvailable = menusResponse.getChatAvailable() ==1;
                         activity.setCategoryIdOpened(categoryObject);
 
 
@@ -1197,7 +1199,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     public boolean toggleFatafatChatIconVisibility(){
-        if(isFatfatChatIconEnabledFromServer && activity.getAppType()==AppConstant.ApplicationType.DELIVERY_CUSTOMER && !iSChildCategoryOpen() && !isServiceUnavailable()){
+        if(isFatfatChatIconEnabledFromServer && activity.getAppType()==AppConstant.ApplicationType.DELIVERY_CUSTOMER && !iSChildCategoryOpen() && chatAvailable){
             activity.rlfabViewFatafat.setVisibility(View.VISIBLE);
             return true;
         }
