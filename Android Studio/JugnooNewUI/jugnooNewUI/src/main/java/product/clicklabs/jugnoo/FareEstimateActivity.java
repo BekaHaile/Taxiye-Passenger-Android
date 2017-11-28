@@ -34,6 +34,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiFareEstimate;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
@@ -75,6 +76,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     private Region region;
     private PromoCoupon promoCoupon;
     private GoogleApiClient mGoogleApiClient;
+    private TextView tvCouponApplied;
 
     @Override
     protected void onResume() {
@@ -89,11 +91,15 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         try {
             Gson gson = new Gson();
             region = gson.fromJson(getIntent().getStringExtra(Constants.KEY_REGION), Region.class);
-            promoCoupon = gson.fromJson(getIntent().getStringExtra(Constants.KEY_COUPON_SELECTED), PromoCoupon.class);
             rideType = getIntent().getIntExtra(Constants.KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
             if (rideType == RideTypeValue.POOL.getOrdinal()) {
                 isPooled = 1;
             }
+            if(getIntent().hasExtra(Constants.KEY_COUPON_SELECTED)){
+                promoCoupon = (PromoCoupon) getIntent().getSerializableExtra(Constants.KEY_COUPON_SELECTED);
+
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -123,9 +129,17 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         assl = new ASSL(this, relative, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+        tvCouponApplied = (TextView) findViewById(R.id.tv_coupon_applied);
         textViewTitle.setTypeface(Fonts.avenirNext(this));
+        tvCouponApplied.setTypeface(Fonts.mavenRegular(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+        if(promoCoupon!=null && promoCoupon.getId()!=-1 ){
+            tvCouponApplied.setVisibility(View.VISIBLE);
+            tvCouponApplied.setText("Coupon Applied: " + promoCoupon.getTitle());
+        }else{
+            tvCouponApplied.setVisibility(View.GONE);
 
+        }
 
         linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
         linearLayoutContainer.setVisibility(View.VISIBLE);

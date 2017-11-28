@@ -69,7 +69,7 @@ public class SlidingBottomFareFragment extends Fragment implements GAAction, GAC
                 Intent intent = new Intent(activity, FareEstimateActivity.class);
                 intent.putExtra(Constants.KEY_REGION, gson.toJson(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), Region.class));
                 intent.putExtra(Constants.KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
-                intent.putExtra(Constants.KEY_COUPON_SELECTED, gson.toJson(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon(), PromoCoupon.class));
+                intent.putExtra(Constants.KEY_COUPON_SELECTED,activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
 
                 try {
                     intent.putExtra(Constants.KEY_LATITUDE, activity.map.getCameraPosition().target.latitude);

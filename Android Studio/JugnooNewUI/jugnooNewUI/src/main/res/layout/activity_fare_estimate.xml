@@ -153,6 +153,7 @@
 
         <!-- Estimate time and distance -->
         <LinearLayout
+            android:id="@+id/layout_distance_ride_time_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/relativeLayoutEndRideStartEndInfo"
@@ -254,6 +255,26 @@
                 android:background="@color/stroke_color_light" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_coupon_applied"
+            android:text="Coupon Applied: "
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/layout_distance_ride_time_details"
+            android:drawableLeft="@drawable/ic_tick_coupon"
+            android:tag="@string/dont_touch_me"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:layout_marginRight="15dp"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/sp_13"
+            android:visibility="gone"
+            android:textColor="@color/text_color"
+            android:layout_height="wrap_content" />
 
 
         <TextView

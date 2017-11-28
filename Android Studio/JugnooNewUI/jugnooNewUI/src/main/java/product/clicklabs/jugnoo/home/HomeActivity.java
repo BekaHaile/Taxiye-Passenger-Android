@@ -1019,7 +1019,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 Gson gson = new Gson();
                 Intent intent = new Intent(HomeActivity.this, FareEstimateActivity.class);
                 intent.putExtra(Constants.KEY_REGION, gson.toJson(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), Region.class));
-                intent.putExtra(Constants.KEY_COUPON_SELECTED, gson.toJson(getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon(), PromoCoupon.class));
+                intent.putExtra(Constants.KEY_COUPON_SELECTED, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
                 intent.putExtra(KEY_RIDE_TYPE, slidingBottomPanel
                         .getRequestRideOptionsFragment().getRegionSelected().getRideType());
                 try {
@@ -8284,6 +8284,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     ||
                     (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)
                     ? true : false;
+            PromoCoupon promoCouponSelected =null;
+            try {
+                promoCouponSelected = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             new ApiFareEstimate(HomeActivity.this, new ApiFareEstimate.Callback() {
                 @Override
                 public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText, double distanceValue, double timeValue) {
@@ -8389,7 +8395,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
                 }
             }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, callFareEstimate,
-                    getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(),getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
+                    getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(),promoCouponSelected);
         } else{
                 textViewDestSearch.setText(getResources().getString(R.string.destination_required));
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
