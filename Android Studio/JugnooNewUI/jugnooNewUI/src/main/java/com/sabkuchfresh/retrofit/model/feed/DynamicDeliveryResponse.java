@@ -32,6 +32,13 @@ public class DynamicDeliveryResponse extends FeedCommonResponse {
         @SerializedName("estimated_charges")
         double estimatedCharges;
 
+        @SerializedName("delivery_text")
+        String deliveryLabel;
+
+        public String getDeliveryLabel() {
+            return deliveryLabel;
+        }
+
         public ArrayList<HashMap<String, Double>> getPopupData() {
             return popupData;
         }

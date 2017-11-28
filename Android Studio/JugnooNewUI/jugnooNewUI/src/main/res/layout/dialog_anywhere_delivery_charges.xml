@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:layout_gravity="center_vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_rounded"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:layout_centerInParent="true"
+        android:paddingBottom="10dp"
+        android:layout_margin="20dp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_menu_item_selector_tlrr"
+            android:text="@string/estimated_delivery_charges"
+            android:paddingTop="10dp"
+            android:textAllCaps="true"
+            android:textColor="@color/text_color"
+            android:textSize="15sp"
+            app:font="@string/maven_r"
+            android:gravity="center"
+
+            />
+
+        <TextView
+            android:id="@+id/textViewFareDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:background="@drawable/bg_menu_item_selector_tlrr"
+            android:textAllCaps="true"
+            android:text="@string/fare_details"
+
+            android:textColor="@color/text_color"
+            android:textSize="30sp"
+            android:gravity="center"
+            />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="15dp"
+            android:background="@color/text_color_light"
+            />
+
+
+
+
+
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/imageViewClose"
+        style="@style/cross_popup"
+        android:visibility="gone"
+        />
+
+
+</RelativeLayout>

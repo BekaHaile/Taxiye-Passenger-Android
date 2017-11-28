@@ -769,7 +769,7 @@
 
     <style name="ThemeSwitchAlternate">
         <item name="colorControlActivated">
-            @color/green_fresh_fab
+            @color/theme_green_color
         </item>
         <item name="android:colorForeground">
             @color/feed_grey_text_secondary

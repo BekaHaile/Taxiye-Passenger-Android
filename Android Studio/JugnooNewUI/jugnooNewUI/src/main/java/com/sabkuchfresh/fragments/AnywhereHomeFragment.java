@@ -15,7 +15,6 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +25,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.dialogs.AnywhereDeliveryChargesDialog;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
@@ -44,7 +43,6 @@ import com.sabkuchfresh.utils.Utils;
 
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -77,6 +75,14 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     ImageView ivDelAddressType;
     @Bind(R.id.switchDeliveryTime)
     SwitchCompat switchDeliveryTime;
+    @Bind(R.id.label_delivery_info)
+    TextView labelDeliveryInfo;
+    @Bind(R.id.label_delivery_value)
+    TextView labelDeliveryValue;
+    @Bind(R.id.tv_heading_delivery_charges)
+    TextView tvHeadingDeliveryCharges;
+    @Bind(R.id.cv_delivery_charges)
+    CardView cvDeliveryCharges;
     private ForegroundColorSpan textHintColorSpan;
     private ForegroundColorSpan textColorSpan;
     @Bind(R.id.edt_task_description)
@@ -93,6 +99,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     CardView cvPickupAddress;
     @Bind(R.id.cv_delivery_address)
     CardView cvDeliveryAddress;
+
+    // TODO: 28/11/17 Slider stuck on fatafat error
 
 
     private PaySlider paySlider;
@@ -217,13 +225,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
 
-
-                if(isChecked){
+                if (isChecked) {
                     isAsapSelected = true;
                     selectedTime = null;
                     selectedDate = null;
                     rbSt.setVisibility(View.GONE);
-                }else{
+                } else {
                     try {
                         getDatePickerFragment().show(getChildFragmentManager(), "datePicker", onDateSetListener);
                         GAUtils.event(activity.getGaCategory(), HOME, SCHEDULE + CLICKED);
@@ -236,12 +243,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 }
 
 
-
             }
         };
         switchDeliveryTime.setOnCheckedChangeListener(switchListenerTime);
         switchDeliveryTime.setChecked(true);
-//        fetchDynamicDeliveryCharges();
+        fetchDynamicDeliveryCharges();
         return rootView;
     }
 
@@ -317,7 +323,9 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     }
 
 
-    @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st})
+    AnywhereDeliveryChargesDialog anywhereDeliveryChargesDialog;
+
+    @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st, R.id.label_delivery_info})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.cv_pickup_address:
@@ -347,6 +355,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     e.printStackTrace();
                 }
                 break;
+            case R.id.label_delivery_info:
+
+                if (anywhereDeliveryChargesDialog != null) {
+                    anywhereDeliveryChargesDialog.show();
+                }
+                break;
         }
     }
 
@@ -367,7 +381,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     public void setRequestedAddress(SearchResult searchResult) {
         setAddress(!isPickUpAddressRequested, searchResult);
-//        fetchDynamicDeliveryCharges();
+        fetchDynamicDeliveryCharges();
 
     }
 
@@ -611,9 +625,9 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         edtText.setFilters(fArray);
     }
 
-    private void fetchDynamicDeliveryCharges(){
+    private void fetchDynamicDeliveryCharges() {
 
-        if (deliveryAddress!=null) {
+        if (deliveryAddress != null) {
             final HashMap<String, String> params = new HashMap<>();
             if (pickUpAddress != null) {
                 params.put(Constants.KEY_FROM_LATITUDE, String.valueOf(pickUpAddress.getLatitude()));
@@ -643,34 +657,41 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                         @Override
                         public void onSuccess(DynamicDeliveryResponse dynamicDeliveryResponse, String message, int flag) {
-                            Toast.makeText(activity, "Success "+ message, Toast.LENGTH_SHORT).show();
+                            try {
+                                tvHeadingDeliveryCharges.setVisibility(View.VISIBLE);
+                                cvDeliveryCharges.setVisibility(View.VISIBLE);
+                                labelDeliveryInfo.setText(dynamicDeliveryResponse.getDeliveryCharges().getDeliveryLabel());
+                                labelDeliveryValue.setText(String.format("%s%s", activity.getString(R.string.rupee), product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges())));
+                                if (dynamicDeliveryResponse.getDeliveryCharges() != null && dynamicDeliveryResponse.getDeliveryCharges().getPopupData() != null) {
+                                    anywhereDeliveryChargesDialog = new AnywhereDeliveryChargesDialog(activity, new AnywhereDeliveryChargesDialog.Callback() {
+                                        @Override
+                                        public void onDialogDismiss() {
 
-                            String data = "" ;
+                                        }
+                                    }, dynamicDeliveryResponse.getDeliveryCharges().getPopupData(), dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges());
 
-                            for(HashMap<String,Double> mapValue: dynamicDeliveryResponse.getDeliveryCharges().getPopupData()){
-                                Map.Entry<String,Double> entry = mapValue.entrySet().iterator().next();
-                                String ab = entry.getKey();
-                                double val = entry.getValue();
-                                data+=ab+": " + val + "\n";
-
-
+                                } else {
+                                    anywhereDeliveryChargesDialog = null;
+                                }
+                            } catch (Exception e) {
+                                cvDeliveryCharges.setVisibility(View.GONE);
+                                e.printStackTrace();
                             }
-                            data += "estimated_charges " + dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges();
-                            data += "estimated_distance " + dynamicDeliveryResponse.getDeliveryCharges().getEstimatedDistance();
-
-                            Log.i(TAG, "onSuccess:\n " + data);
 
                         }
 
                         @Override
                         public boolean onError(DynamicDeliveryResponse dynamicDeliveryResponse, String message, int flag) {
+                            tvHeadingDeliveryCharges.setVisibility(View.GONE);
+                            cvDeliveryCharges.setVisibility(View.GONE);
                             return false;
                         }
 
 
-
                         @Override
                         public boolean onFailure(RetrofitError error) {
+                            tvHeadingDeliveryCharges.setVisibility(View.GONE);
+                            cvDeliveryCharges.setVisibility(View.GONE);
                             return false;
                         }
 
@@ -679,9 +700,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                         }
                     });
-        }else{
+        } else {
+            cvDeliveryCharges.setVisibility(View.GONE);
 
         }
 
     }
+
+
 }
