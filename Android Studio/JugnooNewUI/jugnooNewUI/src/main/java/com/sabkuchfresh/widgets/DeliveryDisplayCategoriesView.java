@@ -98,14 +98,15 @@ public class DeliveryDisplayCategoriesView extends RecyclerView.ViewHolder {
                 }
             }, rvCategories);
             rvCategories.setAdapter(deliveryDisplayCategoriesAdpater);
-        }
-        List<MenusResponse.Category> categoryList = new ArrayList<>();
-        categoryList.addAll(deliveryCategoryModel);
-       /* if(deliveryCategoryModel != null) {
-            categoryList.add(0, new MenusResponse.Category(-1));
+            List<MenusResponse.Category> categoryList = new ArrayList<>();
             categoryList.addAll(deliveryCategoryModel);
-        }*/
-        deliveryDisplayCategoriesAdpater.setList(categoryList);
+            deliveryDisplayCategoriesAdpater.setList(categoryList);
+        }else{
+            deliveryDisplayCategoriesAdpater.notifyDataSetChanged();
+
+        }
+
+
     }
 
   /*  @OnClick({R.id.layout_choose_category, R.id.view_bottom_blank})

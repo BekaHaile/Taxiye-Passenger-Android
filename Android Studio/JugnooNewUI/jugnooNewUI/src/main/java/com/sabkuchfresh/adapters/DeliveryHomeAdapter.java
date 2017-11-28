@@ -89,7 +89,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private ArrayList<String> possibleFatafatStatus;
     private Callback callback;
     private boolean ordersExpanded;
-    private DeliverySeeAll deliverySeeAllModel;
 
 
     private static final int VIEW_TITLE_CATEGORY = 1;
