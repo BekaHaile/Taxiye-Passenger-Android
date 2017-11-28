@@ -220,6 +220,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 Intent intent = new Intent(activity, FareEstimateActivity.class);
                 intent.putExtra(Constants.KEY_REGION, gson.toJson(getRegionSelected(), Region.class));
                 intent.putExtra(Constants.KEY_RIDE_TYPE, getRegionSelected().getRideType());
+                intent.putExtra(Constants.KEY_COUPON_SELECTED, gson.toJson(getSelectedCoupon(), PromoCoupon.class));
+
                 try {
                     intent.putExtra(Constants.KEY_LATITUDE, activity.map.getCameraPosition().target.latitude);
                     intent.putExtra(Constants.KEY_LONGITUDE, activity.map.getCameraPosition().target.longitude);

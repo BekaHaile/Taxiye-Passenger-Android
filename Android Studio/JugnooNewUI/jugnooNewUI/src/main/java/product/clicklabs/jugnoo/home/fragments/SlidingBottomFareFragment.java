@@ -19,6 +19,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
@@ -68,6 +69,8 @@ public class SlidingBottomFareFragment extends Fragment implements GAAction, GAC
                 Intent intent = new Intent(activity, FareEstimateActivity.class);
                 intent.putExtra(Constants.KEY_REGION, gson.toJson(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), Region.class));
                 intent.putExtra(Constants.KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
+                intent.putExtra(Constants.KEY_COUPON_SELECTED, gson.toJson(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon(), PromoCoupon.class));
+
                 try {
                     intent.putExtra(Constants.KEY_LATITUDE, activity.map.getCameraPosition().target.latitude);
                     intent.putExtra(Constants.KEY_LONGITUDE, activity.map.getCameraPosition().target.longitude);
