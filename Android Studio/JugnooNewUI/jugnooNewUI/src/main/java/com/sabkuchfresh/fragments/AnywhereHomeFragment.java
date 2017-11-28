@@ -241,7 +241,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         };
         switchDeliveryTime.setOnCheckedChangeListener(switchListenerTime);
         switchDeliveryTime.setChecked(true);
-        fetchDynamicDeliveryCharges();
+//        fetchDynamicDeliveryCharges();
         return rootView;
     }
 
@@ -367,7 +367,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     public void setRequestedAddress(SearchResult searchResult) {
         setAddress(!isPickUpAddressRequested, searchResult);
-        fetchDynamicDeliveryCharges();
+//        fetchDynamicDeliveryCharges();
 
     }
 

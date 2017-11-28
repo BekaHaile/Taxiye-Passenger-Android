@@ -32,7 +32,11 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 	private Callback callback;
 	private RecyclerView recyclerView;
 	private List<MenusResponse.Category> cachedList;
+	private boolean isCategoriesCollapsed;
 
+	public boolean isCategoriesCollapsed() {
+		return isCategoriesCollapsed;
+	}
 
 	public DeliveryDisplayCategoriesAdpater(Context context, Callback callback, RecyclerView recyclerView) {
 		this.context = context;
@@ -50,6 +54,7 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 				elements.remove(elements.get(i));
 			}
 			elements.add(new MenusResponse.Category(CATEGORY_SEE_ALL));
+			isCategoriesCollapsed = true;
 
 		}
 		this.categoriesList = elements;
@@ -90,11 +95,13 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 			MenusResponse.Category prosCatalogueDatum = categoriesList.get(position);
 			ViewHolderCategory holder = ((ViewHolderCategory) mholder);
 			if (prosCatalogueDatum.getId() == -1) {
-                holder.tvSuperCategoryName.setText(R.string.see_all);
+                holder.tvSuperCategoryName.setText(R.string.more_caps);
+                holder.ivSuperCategoryImage.setScaleType(ImageView.ScaleType.CENTER);
                 holder.ivSuperCategoryImage.setImageResource(R.drawable.ic_category_all);
                 return;
             }
 
+            holder.ivSuperCategoryImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
 			holder.tvSuperCategoryName.setText(prosCatalogueDatum.getCategoryName());
 
 			try {
@@ -140,6 +147,7 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 							if(categoriesList.get(pos).getId()==-1){
 								categoriesList.remove(categoriesList.size()-1);
 								categoriesList.addAll(cachedList);
+								isCategoriesCollapsed = false;
 								notifyDataSetChanged();
 							}else{
 								callback.onItemClick(categoriesList.get(pos));

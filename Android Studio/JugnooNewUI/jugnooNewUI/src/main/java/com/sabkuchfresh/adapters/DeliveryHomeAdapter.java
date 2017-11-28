@@ -185,7 +185,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if(!activity.getMenusFragment().searchOpened){
                 categoriesData = null;
                 if(activity.getCategoryIdOpened()<0 && menusResponse.getCategories()!=null && menusResponse.getCategories().size()>0 && activity.isDeliveryOpenInBackground()){
-                    categoriesData  = new CategoriesData(menusResponse.getCategories());
+                    categoriesData  = new CategoriesData(menusResponse.getCategories(),true);
                     dataToDisplay.add(categoriesData);
 
                 }
@@ -269,9 +269,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
         // no more pages case
          if(!hasMorePages && activity.getMenusFragment()!=null && activity.getMenusFragment().chatAvailable) {
-       /*     if (activity.getCategoryIdOpened() < 0) {
-                dataToDisplay.add(BlankFooterModel.getInstance());
-            } else {*/
+
 
 
                 if(dataToDisplay!=null && dataToDisplay.size()>1){
@@ -286,7 +284,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 }
 
-//            }
+
         }
 
 
@@ -463,7 +461,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             DeliveryDisplayCategoriesView deliveryDisplayCategoriesView = (DeliveryDisplayCategoriesView) mholder;
             CategoriesData categoriesData = (CategoriesData)dataToDisplay.get(position);
-            deliveryDisplayCategoriesView.setCategories(categoriesData.getCategories());
+            deliveryDisplayCategoriesView.setCategories(categoriesData.getCategories(),categoriesData.isCollapseCategories);
+            categoriesData.setCollapseCategories(false);
 
         }else if(mholder instanceof ViewHolderVendor){
             DeliveryHomeAdapter.ViewHolderVendor mHolder = ((DeliveryHomeAdapter.ViewHolderVendor) mholder);
@@ -1583,8 +1582,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private static class CategoriesData{
         private List<MenusResponse.Category> categories;
-        private CategoriesData(List<MenusResponse.Category> categories){
+        private boolean isCollapseCategories;
+        private CategoriesData(List<MenusResponse.Category> categories,boolean isCollapseCategories){
             this.categories = categories;
+            this.isCollapseCategories= isCollapseCategories;
+        }
+
+        public void setCollapseCategories(boolean collapseCategories) {
+            isCollapseCategories = collapseCategories;
         }
 
         public List<MenusResponse.Category> getCategories() {

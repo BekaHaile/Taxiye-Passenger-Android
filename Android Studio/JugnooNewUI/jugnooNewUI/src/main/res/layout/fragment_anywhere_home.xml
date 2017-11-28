@@ -286,6 +286,7 @@
                 android:layout_marginTop="5dp"
                 android:paddingBottom="10dp"
                 android:layout_marginBottom="@dimen/dp_25"
+                android:visibility="gone"
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="2dp">
 

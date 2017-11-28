@@ -85,13 +85,12 @@ public class DeliveryDisplayCategoriesView extends RecyclerView.ViewHolder {
         tvCategoryName.setText(categoryName);
     }
 
-    public void setCategories(List<MenusResponse.Category> deliveryCategoryModel) {
-        if (rvCategories.getAdapter() == null) {
+    public void setCategories(List<MenusResponse.Category> deliveryCategoryModel,boolean isCollapseCategories) {
+        if (deliveryDisplayCategoriesAdpater == null) {
             rvCategories.setLayoutManager(new GridLayoutManager(activity, 4));
             deliveryDisplayCategoriesAdpater = new DeliveryDisplayCategoriesAdpater(activity, new DeliveryDisplayCategoriesAdpater.Callback() {
                 @Override
                 public void onItemClick(MenusResponse.Category category) {
-//                    OnCategoryClick(layoutChooseCategory);
                     if(callback != null){
                         callback.onCategoryClick(category);
                     }
@@ -101,11 +100,14 @@ public class DeliveryDisplayCategoriesView extends RecyclerView.ViewHolder {
             List<MenusResponse.Category> categoryList = new ArrayList<>();
             categoryList.addAll(deliveryCategoryModel);
             deliveryDisplayCategoriesAdpater.setList(categoryList);
-        }else{
-            deliveryDisplayCategoriesAdpater.notifyDataSetChanged();
 
         }
 
+        if(isCollapseCategories && !deliveryDisplayCategoriesAdpater.isCategoriesCollapsed()){
+            List<MenusResponse.Category> categoryList = new ArrayList<>();
+            categoryList.addAll(deliveryCategoryModel);
+            deliveryDisplayCategoriesAdpater.setList(categoryList);
+        }
 
     }
 
