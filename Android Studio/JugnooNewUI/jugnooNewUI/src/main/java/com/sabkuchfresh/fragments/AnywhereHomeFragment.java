@@ -586,12 +586,15 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                     @Override
                     public boolean onError(OrderAnywhereResponse feedCommonResponse, String message, int flag) {
+                        Utils.showToast(activity, message);
                         paySlider.setSlideInitial();
-                        return false;
+                        return true;
                     }
 
                     @Override
                     public boolean onFailure(RetrofitError error) {
+
+
                         paySlider.setSlideInitial();
                         return false;
                     }
@@ -675,10 +678,13 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                     }, dynamicDeliveryResponse.getDeliveryCharges().getPopupData(), dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges());
 
                                 } else {
+                                    cvDeliveryCharges.setVisibility(View.GONE);
+                                    tvHeadingDeliveryCharges.setVisibility(View.GONE);
                                     anywhereDeliveryChargesDialog = null;
                                 }
                             } catch (Exception e) {
                                 cvDeliveryCharges.setVisibility(View.GONE);
+                                tvHeadingDeliveryCharges.setVisibility(View.GONE);
                                 e.printStackTrace();
                             }
 
@@ -705,6 +711,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                         }
                     });
         } else {
+            tvHeadingDeliveryCharges.setVisibility(View.GONE);
             cvDeliveryCharges.setVisibility(View.GONE);
 
         }

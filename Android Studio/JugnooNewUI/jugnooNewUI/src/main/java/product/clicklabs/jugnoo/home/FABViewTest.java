@@ -316,7 +316,7 @@ public class FABViewTest implements GACategory, GAAction {
                     && (Data.userData.getGroceryEnabled() == 0)
                     && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
                     && (Data.userData.getFeedEnabled() == 0)
-                    && Data.userData.getProsEnabled() == 0
+                    && Data.userData.getProsEnabled() == 0 && Data.userData.getFreshEnabled()==0
                     && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                 if(!fabtoggleModeOn){
                     fabtoggleModeOn = true;
