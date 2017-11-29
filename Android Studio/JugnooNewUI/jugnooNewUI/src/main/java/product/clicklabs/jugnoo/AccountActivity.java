@@ -839,7 +839,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             } else {
                 editTextUserName.setText("");
             }
-            if(!Data.userData.userEmail.contains("@facebook.com")
+            if(!Data.userData.userEmail.contains("@facebook.com") && !Data.userData.userEmail.toLowerCase().startsWith("guest")
                     && (!Data.userData.userEmail.contains("@app.jugnoo.in"))) {
                 editTextEmail.setText(Data.userData.userEmail);
             } else {
@@ -994,7 +994,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 if(!Data.userData.userName.equalsIgnoreCase("User")) {
                                     editTextUserName.setText(Data.userData.userName);
                                 }
-                                if(!Data.userData.userEmail.contains("@facebook.com")
+                                if(!Data.userData.userEmail.contains("@facebook.com") && !Data.userData.userEmail.toLowerCase().startsWith("guest")
                                         && (!Data.userData.userEmail.contains("@app.jugnoo.in"))) {
                                     editTextEmail.setText(Data.userData.userEmail);
                                 }
