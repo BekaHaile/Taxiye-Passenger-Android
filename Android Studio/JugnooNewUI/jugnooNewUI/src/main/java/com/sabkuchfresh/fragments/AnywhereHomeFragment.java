@@ -660,7 +660,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                             try {
                                 tvHeadingDeliveryCharges.setVisibility(View.VISIBLE);
                                 cvDeliveryCharges.setVisibility(View.VISIBLE);
-                                labelDeliveryInfo.setText(dynamicDeliveryResponse.getDeliveryCharges().getDeliveryLabel());
+                                String label = dynamicDeliveryResponse.getDeliveryCharges().getDeliveryLabel();
+                                if(!TextUtils.isEmpty(dynamicDeliveryResponse.getDeliveryCharges().getEstimatedDistance())){
+                                    label+="(" + dynamicDeliveryResponse.getDeliveryCharges().getEstimatedDistance() + ")";
+                                }
+                                labelDeliveryInfo.setText(label);
                                 labelDeliveryValue.setText(String.format("%s%s", activity.getString(R.string.rupee), product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges())));
                                 if (dynamicDeliveryResponse.getDeliveryCharges() != null && dynamicDeliveryResponse.getDeliveryCharges().getPopupData() != null) {
                                     anywhereDeliveryChargesDialog = new AnywhereDeliveryChargesDialog(activity, new AnywhereDeliveryChargesDialog.Callback() {

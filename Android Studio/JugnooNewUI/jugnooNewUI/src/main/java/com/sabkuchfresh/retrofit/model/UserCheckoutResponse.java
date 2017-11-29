@@ -52,9 +52,9 @@ public class UserCheckoutResponse{
 	private Integer cityId;
 	@SerializedName("chat_available")
 	@Expose
-	private Integer chatAvailable;
+	private int chatAvailable;
 
-	public Integer getChatAvailable() {
+	public int getChatAvailable() {
 		return chatAvailable;
 	}
 

@@ -27,7 +27,7 @@ public class DynamicDeliveryResponse extends FeedCommonResponse {
         ArrayList<HashMap<String,Double>> popupData ;
 
         @SerializedName("estimated_distance")
-        double estimatedDistance;
+        String estimatedDistance;
 
         @SerializedName("estimated_charges")
         double estimatedCharges;
@@ -43,7 +43,7 @@ public class DynamicDeliveryResponse extends FeedCommonResponse {
             return popupData;
         }
 
-        public double getEstimatedDistance() {
+        public String getEstimatedDistance() {
             return estimatedDistance;
         }
 
