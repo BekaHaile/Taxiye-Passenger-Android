@@ -238,7 +238,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
 
-        //vendors Assignmend
+        //vendors Assignment
         if(menusResponse.getVendors() != null){
             for(MenusResponse.Vendor vendor : menusResponse.getVendors()){
 
@@ -268,21 +268,27 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dataToDisplay.add(new NoVendorModel(activity.getString(messageResId)));
         }
         // no more pages case
-         if(!hasMorePages && activity.getMenusFragment()!=null && activity.getMenusFragment().chatAvailable) {
+         if(!hasMorePages && activity.getMenusFragment()!=null) {
 
 
 
+
+            if( activity.isDeliveryOpenInBackground()){
+
+                 if(activity.getMenusFragment().chatAvailable){
+                     if(dataToDisplay!=null && dataToDisplay.size()>1){
+                         dataToDisplay.add(new DeliveryDivider());
+                     }
+                     dataToDisplay.add(CustomOrderModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Store"));
+
+                 }
+            }else{
                 if(dataToDisplay!=null && dataToDisplay.size()>1){
                     dataToDisplay.add(new DeliveryDivider());
                 }
+                dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Restaurant"));
 
-                if(activity.getMenusResponse().getCategories()!=null && activity.getCategoryIdOpened()>0){
-                    dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Stores"));
-
-                }else{
-                    dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getAppType()==AppConstant.ApplicationType.MENUS?"Restaurant":"Store"));
-
-                }
+            }
 
 
         }
@@ -920,8 +926,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(object instanceof NoVendorModel)
             return NO_VENDORS_ITEM;
 
-        if(object instanceof FormAddRestaurantModel)
+        if(object instanceof CustomOrderModel)
             return ITEM_CUSTOM_ORDER;
+
+        if(object instanceof FormAddRestaurantModel)
+            return FORM_ITEM;
 
         if(object instanceof BlankFooterModel)
             return BLANK_LAYOUT;
@@ -1557,6 +1566,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void setCategoryId(int categoryId) {
             this.categoryId = categoryId;
         }
+    }
+    private static  class CustomOrderModel extends FormAddRestaurantModel{
+
     }
     private static class BannerInfosModel{
         private List<MenusResponse.BannerInfo> bannerInfos;

@@ -225,7 +225,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     }
 
     private MenusData getMenusOrDeliveryData() {
-        if(lastClientId.equals(Config.getDeliveryCustomerClientId())){
+        if(lastClientId.equals(Config.getDeliveryCustomerClientId()) || activity.isDeliveryOpenInBackground()){
             return Data.getDeliveryCustomerData();
         } else {
             return Data.getMenusData();
@@ -591,6 +591,8 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 Data.getGroceryData().setPendingFeedback(0);
             } else if (lastClientId.equals(Config.getMenusClientId())
                     || lastClientId.equals(Config.getDeliveryCustomerClientId())) {
+                getMenusOrDeliveryData().setPendingFeedback(0);
+            }else if(activity.isDeliveryOpenInBackground()) {
                 getMenusOrDeliveryData().setPendingFeedback(0);
             } else {
                 activity.finish();
