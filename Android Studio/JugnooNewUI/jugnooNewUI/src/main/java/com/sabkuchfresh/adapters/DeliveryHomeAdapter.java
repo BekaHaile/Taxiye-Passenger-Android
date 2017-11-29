@@ -38,7 +38,6 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
-import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.widgets.DeliveryDisplayCategoriesView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundBorderTransform;
@@ -267,26 +266,24 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             dataToDisplay.add(new NoVendorModel(activity.getString(messageResId)));
         }
+
         // no more pages case
-         if(!hasMorePages && activity.getMenusFragment()!=null) {
+         if(!hasMorePages && menusResponse.getServiceUnavailable() != 1 && vendorsCount != 0) {
 
 
 
 
-            if( activity.isDeliveryOpenInBackground()){
+            if( activity.isDeliveryOpenInBackground() && activity.getMenusFragment().chatAvailable){
 
-                 if(activity.getMenusFragment().chatAvailable){
-                     if(dataToDisplay!=null && dataToDisplay.size()>1){
-                         dataToDisplay.add(new DeliveryDivider());
-                     }
-                     dataToDisplay.add(CustomOrderModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Store"));
-
-                 }
+                if(dataToDisplay!=null && dataToDisplay.size()>1){
+                    dataToDisplay.add(new DeliveryDivider());
+                }
+                dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Store", true));
             }else{
                 if(dataToDisplay!=null && dataToDisplay.size()>1){
                     dataToDisplay.add(new DeliveryDivider());
                 }
-                dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Restaurant"));
+                dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Restaurant", false));
 
             }
 
@@ -926,11 +923,12 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(object instanceof NoVendorModel)
             return NO_VENDORS_ITEM;
 
-        if(object instanceof CustomOrderModel)
-            return ITEM_CUSTOM_ORDER;
 
-        if(object instanceof FormAddRestaurantModel)
-            return FORM_ITEM;
+        if(object instanceof FormAddRestaurantModel){
+            return ((FormAddRestaurantModel)object).isCustomOrderModel?ITEM_CUSTOM_ORDER:FORM_ITEM;
+
+        }
+
 
         if(object instanceof BlankFooterModel)
             return BLANK_LAYOUT;
@@ -1511,13 +1509,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private String restaurantName = "", locality = "", telephone = "";
         private String categoryName;
         private int categoryId;
+        private boolean isCustomOrderModel;
+
         private FormAddRestaurantModel() {
         }
-        public static FormAddRestaurantModel getInstance(int categoryId, String categoryName){
+        public static FormAddRestaurantModel getInstance(int categoryId, String categoryName, boolean isCustomOrderModel){
             if(formAddRestaurantModel ==null)
                 formAddRestaurantModel = new FormAddRestaurantModel();
             formAddRestaurantModel.setCategoryName(categoryName);
             formAddRestaurantModel.setCategoryId(categoryId);
+            formAddRestaurantModel.setCustomOrderModel(isCustomOrderModel);
             return formAddRestaurantModel;
         }
 
@@ -1566,10 +1567,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void setCategoryId(int categoryId) {
             this.categoryId = categoryId;
         }
-    }
-    private static  class CustomOrderModel extends FormAddRestaurantModel{
 
+        public void setCustomOrderModel(boolean customOrderModel) {
+            isCustomOrderModel = customOrderModel;
+        }
+
+        public boolean isCustomOrderModel() {
+            return isCustomOrderModel;
+        }
     }
+
     private static class BannerInfosModel{
         private List<MenusResponse.BannerInfo> bannerInfos;
 

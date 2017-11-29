@@ -226,6 +226,12 @@ public class FABViewTest implements GACategory, GAAction {
 
     private void setUIInital() {
         if(fabtoggleModeOn){
+
+           boolean wasMenuOpen =  menuLabelsRightTest.close(true,true);
+            if(activity instanceof HomeActivity && wasMenuOpen){
+                ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
+
+            }
             if(activity instanceof HomeActivity){
                 menuLabelsRightTest.setMenuIcon(ContextCompat.getDrawable(activity, R.drawable.ic_delivery_customer));
                 menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity,R.color.green_delivery_customer_fab));
@@ -442,7 +448,7 @@ public class FABViewTest implements GACategory, GAAction {
                 latLng = ((MainActivity)activity).getCurrentPlaceLatLng();
             }
             final LatLng finalLatLng = latLng;
-            menuLabelsRightTest.close(true);
+            menuLabelsRightTest.close(true, false);
             String selectedOffering = RIDES;
             switch (v.getId()) {
                 case R.id.fabMealsTest:
@@ -528,7 +534,7 @@ public class FABViewTest implements GACategory, GAAction {
 
     public void closeMenu(){
         try {
-            menuLabelsRightTest.close(false);
+            menuLabelsRightTest.close(false, false);
             menuLabelsRightTest.getMenuIconView().setImageResource(R.drawable.ic_fab_jeanie);
         } catch (Exception e) {
             e.printStackTrace();

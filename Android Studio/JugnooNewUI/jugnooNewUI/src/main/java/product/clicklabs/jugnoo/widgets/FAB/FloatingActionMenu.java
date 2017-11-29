@@ -15,7 +15,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +24,12 @@ import android.view.animation.AnticipateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -628,7 +627,7 @@ public class FloatingActionMenu extends ViewGroup {
                     handled = isOpened();
                     break;
                 case MotionEvent.ACTION_UP:
-                    close(mIsAnimated);
+                    close(mIsAnimated, false);
                     handled = true;
             }
 
@@ -646,7 +645,7 @@ public class FloatingActionMenu extends ViewGroup {
 
     public void toggle(boolean animate) {
         if (isOpened()) {
-            close(animate);
+            close(animate, false);
         } else {
             open(animate);
         }
@@ -720,18 +719,20 @@ public class FloatingActionMenu extends ViewGroup {
         }
     }
 
-    public void close(final boolean animate) {
+    public boolean close(final boolean animate, final boolean forceClose) {
         if (!lock && isOpened()) {
             if (isBackgroundEnabled()) {
                 mHideBackgroundAnimator.start();
             }
 
-            if (mIconAnimated) {
-                if (mIconToggleSet != null) {
-                    mIconToggleSet.start();
-                } else {
-                    mCloseAnimatorSet.start();
-                    mOpenAnimatorSet.cancel();
+            if (!forceClose) {
+                if (mIconAnimated) {
+                    if (mIconToggleSet != null) {
+                        mIconToggleSet.start();
+                    } else {
+                        mCloseAnimatorSet.start();
+                        mOpenAnimatorSet.cancel();
+                    }
                 }
             }
 
@@ -768,16 +769,23 @@ public class FloatingActionMenu extends ViewGroup {
                 public void run() {
                     mMenuOpened = false;
 
-                    if (mToggleListener != null) {
-                        mToggleListener.onMenuToggle(false);
+                    if (!forceClose) {
+                        if (mToggleListener != null) {
+                            mToggleListener.onMenuToggle(false);
+                        }
                     }
                 }
             }, ++counter * mAnimationDelayPerItem);
             lock = true;
             handler.removeCallbacks(runnable);
             handler.postDelayed(runnable, 200);
+            return true;
         }
+        return false;
     }
+
+
+
 
     /**
      * Sets the {@link Interpolator} for <b>FloatingActionButton's</b> icon animation.
@@ -885,7 +893,7 @@ public class FloatingActionMenu extends ViewGroup {
         if (!isMenuHidden() && !mIsMenuButtonAnimationRunning) {
             mIsMenuButtonAnimationRunning = true;
             if (isOpened()) {
-                close(animate);
+                close(animate, false);
                 mUiHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -936,7 +944,7 @@ public class FloatingActionMenu extends ViewGroup {
         if (!isMenuButtonHidden() && !mIsMenuButtonAnimationRunning) {
             mIsMenuButtonAnimationRunning = true;
             if (isOpened()) {
-                close(animate);
+                close(animate, false);
                 mUiHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -1029,7 +1037,7 @@ public class FloatingActionMenu extends ViewGroup {
     }
 
     public void removeAllMenuButtons() {
-        close(true);
+        close(true, false);
         
         List<FloatingActionButton> viewsToRemove = new ArrayList<>();
         for (int i = 0; i < getChildCount(); i++) {

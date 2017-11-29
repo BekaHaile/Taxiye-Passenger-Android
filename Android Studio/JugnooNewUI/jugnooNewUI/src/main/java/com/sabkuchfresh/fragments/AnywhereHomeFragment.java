@@ -662,7 +662,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                 cvDeliveryCharges.setVisibility(View.VISIBLE);
                                 String label = dynamicDeliveryResponse.getDeliveryCharges().getDeliveryLabel();
                                 if(!TextUtils.isEmpty(dynamicDeliveryResponse.getDeliveryCharges().getEstimatedDistance())){
-                                    label+="(" + dynamicDeliveryResponse.getDeliveryCharges().getEstimatedDistance() + ")";
+                                    label+=" (" + dynamicDeliveryResponse.getDeliveryCharges().getEstimatedDistance() + ")";
                                 }
                                 labelDeliveryInfo.setText(label);
                                 labelDeliveryValue.setText(String.format("%s%s", activity.getString(R.string.rupee), product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges())));

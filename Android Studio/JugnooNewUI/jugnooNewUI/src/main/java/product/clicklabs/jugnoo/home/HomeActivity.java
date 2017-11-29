@@ -4797,7 +4797,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 				return;
 			}
             if(fabViewTest.menuLabelsRightTest.isOpened()){
-				fabViewTest.menuLabelsRightTest.close(true);
+				fabViewTest.menuLabelsRightTest.close(true, false);
 				return;
 			}
         } catch (Exception e) {
