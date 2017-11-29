@@ -1,102 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/rlRootNewOrder"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:background="@drawable/recent_orders_middle_elements_background_normal"
-    android:padding="10dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/menu_item_selector_color_F7">
 
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/rlRootNewOrder"
 
-
-    <RelativeLayout
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="5dp"
-        android:layout_toLeftOf="@id/iv_arrow"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/tv_order_restaurant"
-            android:layout_width="wrap_content"
-            android:textSize="16sp"
-            android:layout_marginBottom="3dp"
-            android:textColor="@color/text_color_fatafat_bold"
-            app:font="@string/maven"
-            android:gravity="left"
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            android:layout_marginRight="55dp"
-            android:paddingRight="2dp"
-            android:text="dsakjdajskhdjsfhkdshfkdsjfhsdjeqweqweqweqweqweqwewqeqwf"
-            android:visibility="visible"
-            android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/recent_orders_middle_elements_background_normal"
+        android:padding="10dp">
 
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toLeftOf="@id/iv_arrow">
 
-        <TextView
-            android:id="@+id/tv_order_id"
-            android:layout_width="wrap_content"
-            android:textSize="14.3sp"
-            android:layout_marginLeft="-55dp"
-            android:paddingRight="5dp"
-            android:layout_alignBottom="@id/tv_order_restaurant"
-            android:textColor="@color/text_color_fatafat_bold"
-            android:layout_toRightOf="@id/tv_order_restaurant"
-            app:font="@string/maven_r"
-            android:singleLine="true"
-            android:text="#5289"
-            android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_order_restaurant"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginRight="55dp"
+                android:ellipsize="marquee"
+                android:gravity="left"
+                android:paddingRight="2dp"
+                android:singleLine="true"
+                android:text="dsakjdajskhdjsfhkdshfkdsjfhsdjeqweqweqweqweqweqwewqeqwf"
+                android:textColor="@color/text_color_fatafat_bold"
+                android:textSize="16sp"
+                android:visibility="visible"
+                app:font="@string/maven" />
 
 
-        <TextView
-            android:id="@+id/tv_order_status"
-            android:textColor="@color/white_dark1"
-            app:font="@string/maven"
-            android:textSize="12sp"
-            android:text="dasjdasd"
-            android:background="@drawable/bg_tv_order_status"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:textAllCaps="true"
-            android:layout_below="@id/tv_order_restaurant"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <TextView
-            android:id="@+id/tv_order_time"
-            android:textColor="@color/text_color_light"
-            android:layout_marginLeft="4dp"
-            android:text="ewqeq"
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            android:textSize="12.3sp"
+            <TextView
+                android:id="@+id/tv_order_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/tv_order_restaurant"
+                android:layout_marginLeft="-55dp"
+                android:layout_toRightOf="@id/tv_order_restaurant"
+                android:paddingRight="5dp"
+                android:singleLine="true"
+                android:text="#5289"
+                android:textColor="@color/text_color_fatafat_bold"
+                android:textSize="14.3sp"
+                app:font="@string/maven_r" />
 
-            android:layout_alignBottom="@id/tv_order_status"
-            android:layout_below="@id/tv_order_restaurant"
-            android:layout_toRightOf="@id/tv_order_status"
-            app:font="@string/maven_r"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
+            <TextView
+                android:id="@+id/tv_order_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_order_restaurant"
+                android:background="@drawable/bg_tv_order_status"
+                android:paddingBottom="2dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="2dp"
+                android:text="dasjdasd"
+                android:textAllCaps="true"
+                android:textColor="@color/white_dark1"
+                android:textSize="12sp"
+                app:font="@string/maven" />
+
+            <TextView
+                android:id="@+id/tv_order_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/tv_order_status"
+                android:layout_below="@id/tv_order_restaurant"
+                android:layout_marginLeft="4dp"
+                android:layout_toRightOf="@id/tv_order_status"
+
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="ewqeq"
+                android:textColor="@color/text_color_light"
+                android:textSize="12.3sp"
+                app:font="@string/maven_r" />
+
+        </RelativeLayout>
+
+
+        <ImageView
+            android:id="@+id/iv_arrow"
+            android:layout_width="@dimen/dp_7"
+            android:layout_height="@dimen/dp_11"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_arrow_grey" />
     </RelativeLayout>
-
-
-
-
-    <ImageView
-        android:id="@+id/iv_arrow"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_arrow_grey"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_width="@dimen/dp_7"
-        android:layout_height="@dimen/dp_11"/>
 </RelativeLayout>
