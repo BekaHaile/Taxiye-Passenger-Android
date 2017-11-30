@@ -447,7 +447,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         if (activity.getVendorOpened() != null) {
             if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
                 Picasso.with(activity).load(activity.getVendorOpened().getImage())
-                        .placeholder(R.drawable.ic_fresh_item_placeholder)
+                       .fit().centerCrop().placeholder(R.drawable.ic_fresh_item_placeholder)
                         .into(activity.ivCollapseRestImage);
             } else {
                 activity.ivCollapseRestImage.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_fresh_item_placeholder));
