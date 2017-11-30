@@ -460,7 +460,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     }
 
                     activity.getTopBar().ivFilterApplied.setVisibility(View.GONE);
-                    activity.getTopBar().title.setText(noOfCategories==1&&category!=null?category.getCategoryName():activity.getString(R.string.delivery_new_name));
+                    activity.getTopBar().title.setText(activity.getString(R.string.delivery_new_name));
                     activity.setMenusFilterVisibility(noOfCategories==1&&category!=null?View.VISIBLE:View.GONE);
                     activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {

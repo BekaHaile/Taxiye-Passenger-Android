@@ -197,6 +197,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
                 @Override
                 public void onSuccess(FetchFeedbackResponse fetchFeedbackResponse, boolean scrollToTop) {
                     if(RestaurantReviewsListFragment.this.getView() != null) {
+                        bAddReview.setVisibility(fetchFeedbackResponse.getHasAlreadyRated()==1?View.GONE:View.VISIBLE);
                         restaurantReviews.clear();
                         restaurantReviews.addAll(fetchFeedbackResponse.getReviews());
                         reviewsAdapter.notifyDataSetChanged();

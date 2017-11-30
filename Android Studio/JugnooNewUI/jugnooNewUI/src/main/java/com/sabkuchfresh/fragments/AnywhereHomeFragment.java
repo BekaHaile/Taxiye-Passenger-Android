@@ -392,6 +392,13 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             Bundle bundle = new Bundle();
             bundle.putSerializable(DatePickerFragment.ADD_DAYS, false);
             datePickerFragment = new DatePickerFragment();
+            try {
+                DatePickerDialog datePickerDialog = (DatePickerDialog) datePickerFragment.getDialog();
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setText("Ok");
+                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setText("Cancel");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             datePickerFragment.setArguments(bundle);
         }
         return datePickerFragment;
@@ -420,6 +427,13 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private TimePickerFragment getTimePickerFragment() {
         if (timePickerFragment == null) {
             timePickerFragment = new TimePickerFragment();
+            try {
+                TimePickerDialog timePickerDialog = (TimePickerDialog) timePickerFragment.getDialog();
+                timePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setText("Ok");
+                timePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setText("Cancel");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             Bundle bundle = new Bundle();
             bundle.putInt(TimePickerFragment.ADDITIONAL_TIME_MINUTES, MIN_BUFFER_TIME_MINS + BUFFER_TIME_TO_SELECT_MINS);
             timePickerFragment.setArguments(bundle);
@@ -645,7 +659,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             params.put(Constants.KEY_TO_LONGITUDE, String.valueOf(deliveryAddress.getLongitude()));
 
 
-            new ApiCommon<DynamicDeliveryResponse>(activity).showLoader(true).isErrorCancellable(false).execute(params, ApiName.ANYWHERE_DYNAMIC_DELIVERY,
+            new ApiCommon<DynamicDeliveryResponse>(activity).showLoader(true).execute(params, ApiName.ANYWHERE_DYNAMIC_DELIVERY,
                     new APICommonCallback<DynamicDeliveryResponse>() {
                         @Override
                         public boolean onNotConnected() {

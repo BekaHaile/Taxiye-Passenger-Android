@@ -121,6 +121,7 @@
         android:id="@+id/bAddReview"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50"
+        android:visibility="gone"
         android:background="@drawable/bg_theme_color_selector"
         android:layout_alignParentBottom="true"
         android:text="@string/write_a_review"
