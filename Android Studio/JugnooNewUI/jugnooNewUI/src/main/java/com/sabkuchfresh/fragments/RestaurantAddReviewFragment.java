@@ -211,6 +211,9 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
         setupReviewEditText();
 
+        if(prefilledRating!=null && prefilledRating>0){
+            customRatingBar.setScore(prefilledRating, true);
+        }
         loadDataIfEditingFeedback();
 
 
@@ -219,9 +222,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
         updateTextCount();
 
         etFeedback.setSelection(etFeedback.length());
-        if(prefilledRating!=null && prefilledRating>0){
-            customRatingBar.setScore(prefilledRating, true);
-        }
+
         updateSubmitButtonStatus();
 
 

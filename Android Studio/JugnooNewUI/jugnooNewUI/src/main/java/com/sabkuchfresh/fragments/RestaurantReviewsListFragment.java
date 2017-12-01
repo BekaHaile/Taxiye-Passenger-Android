@@ -3,7 +3,6 @@ package com.sabkuchfresh.fragments;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -89,7 +88,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
             @Override
             public void onEdit(FetchFeedbackResponse.Review review) {
                 activity.setCurrentReview(review);
-                activity.openRestaurantAddReviewFragment(false);
+                activity.openRestaurantAddReviewFragment(true, 0.0f);
             }
 
             @Override
@@ -175,7 +174,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
         bAddReview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.openRestaurantAddReviewFragment(true);
+                activity.openRestaurantAddReviewFragment(false, 0.0f);
             }
         });
 

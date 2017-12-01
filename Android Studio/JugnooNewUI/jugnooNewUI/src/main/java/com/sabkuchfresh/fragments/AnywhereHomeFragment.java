@@ -392,13 +392,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             Bundle bundle = new Bundle();
             bundle.putSerializable(DatePickerFragment.ADD_DAYS, false);
             datePickerFragment = new DatePickerFragment();
-            try {
-                DatePickerDialog datePickerDialog = (DatePickerDialog) datePickerFragment.getDialog();
-                datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setText("Ok");
-                datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setText("Cancel");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             datePickerFragment.setArguments(bundle);
         }
         return datePickerFragment;
@@ -427,13 +420,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private TimePickerFragment getTimePickerFragment() {
         if (timePickerFragment == null) {
             timePickerFragment = new TimePickerFragment();
-            try {
-                TimePickerDialog timePickerDialog = (TimePickerDialog) timePickerFragment.getDialog();
-                timePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE).setText("Ok");
-                timePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE).setText("Cancel");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             Bundle bundle = new Bundle();
             bundle.putInt(TimePickerFragment.ADDITIONAL_TIME_MINUTES, MIN_BUFFER_TIME_MINS + BUFFER_TIME_TO_SELECT_MINS);
             timePickerFragment.setArguments(bundle);
@@ -689,7 +675,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                         public void onDialogDismiss() {
 
                                         }
-                                    }, dynamicDeliveryResponse.getDeliveryCharges().getPopupData(), dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges());
+                                    }, dynamicDeliveryResponse.getDeliveryCharges().getPopupData(), dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges(), dynamicDeliveryResponse.getDeliveryCharges().getTandC() );
 
                                 } else {
                                     cvDeliveryCharges.setVisibility(View.GONE);

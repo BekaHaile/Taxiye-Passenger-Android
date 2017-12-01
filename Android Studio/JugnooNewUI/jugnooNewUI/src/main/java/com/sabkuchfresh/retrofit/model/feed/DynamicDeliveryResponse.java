@@ -35,6 +35,13 @@ public class DynamicDeliveryResponse extends FeedCommonResponse {
         @SerializedName("delivery_text")
         String deliveryLabel;
 
+        @SerializedName("tnc")
+        String tandC;
+
+        public String getTandC() {
+            return tandC;
+        }
+
         public String getDeliveryLabel() {
             return deliveryLabel;
         }

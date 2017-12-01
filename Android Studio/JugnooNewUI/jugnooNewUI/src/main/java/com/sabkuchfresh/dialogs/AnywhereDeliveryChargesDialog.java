@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -13,19 +13,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.picker.image.util.Util;
 import com.sabkuchfresh.home.FreshActivity;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.home.models.Region;
-import product.clicklabs.jugnoo.home.models.RideTypeValue;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -42,12 +38,15 @@ public class AnywhereDeliveryChargesDialog {
 	private LinearLayout linearLayoutInner;
 	private double estimatedCharges;
 	private TextView textViewFare;
+	private String tandCText ;
+	private TextView textViewTandC;
 
-	public AnywhereDeliveryChargesDialog(FreshActivity activity, Callback callback, ArrayList<HashMap<String, Double>> popupData, double estimatedCharges) {
+	public AnywhereDeliveryChargesDialog(FreshActivity activity, Callback callback, ArrayList<HashMap<String, Double>> popupData, double estimatedCharges, String tandCText) {
 		this.activity = activity;
 		this.callback = callback;
 		this.popupData = popupData;
 		this.estimatedCharges = estimatedCharges;
+		this.tandCText = tandCText;
 		init();
 		setPopupData();
 
@@ -78,12 +77,19 @@ public class AnywhereDeliveryChargesDialog {
             ((TextView)linearLayout.findViewById(R.id.tv_label)).setText(label);
 			((TextView)linearLayout.findViewById(R.id.tv_value)).setText(String.format("%s%s", activity.getString(R.string.rupee), Utils.getMoneyDecimalFormat().format(value)));
             ((View)linearLayout.findViewById(R.id.view_dotted)).setLayerType(View.LAYER_TYPE_SOFTWARE, null) ;
-            linearLayoutInner.addView(linearLayout);
+			linearLayoutInner.addView(linearLayout,linearLayoutInner.getChildCount()-1);
 
-;
+
 
 
         }
+
+		if(!TextUtils.isEmpty(tandCText)){
+			textViewTandC.setText(tandCText);
+			textViewTandC.setVisibility(View.VISIBLE);
+		}else{
+			textViewTandC.setVisibility(View.GONE);
+		}
 	}
 
 	@NonNull
@@ -103,6 +109,7 @@ public class AnywhereDeliveryChargesDialog {
 
 		 linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 		textViewFare = ((TextView) dialog.findViewById(R.id.textViewFareDetails));
+		textViewTandC = ((TextView) dialog.findViewById(R.id.textViewTandC));
 		textViewFare.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 		ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
 		imageViewClose.setOnClickListener(new View.OnClickListener() {

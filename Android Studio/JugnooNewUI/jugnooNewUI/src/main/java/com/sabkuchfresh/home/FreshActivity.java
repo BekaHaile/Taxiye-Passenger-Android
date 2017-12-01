@@ -4841,12 +4841,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     }
 
-    public void openRestaurantAddReviewFragment(boolean isPlusButtonClicked) {
+    public void openRestaurantAddReviewFragment(boolean isEditingReview, float rating) {
         if (getVendorOpened() != null) {
-            if(isPlusButtonClicked){
+            if(!isEditingReview){
                 this.currentReview=null;
             }
-            getTransactionUtils().openRestaurantAddReviewFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId(), 0.0f);
+            getTransactionUtils().openRestaurantAddReviewFragment(this, relativeLayoutContainer, getVendorOpened().getRestaurantId(), rating);
         }
     }
 

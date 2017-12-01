@@ -167,7 +167,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
             @Override
             public void onEdit(FetchFeedbackResponse.Review review) {
                 activity.setCurrentReview(review);
-                activity.openRestaurantAddReviewFragment(false);
+                activity.openRestaurantAddReviewFragment(true, 0.0f);
             }
 
             @Override
@@ -246,11 +246,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
                 if (userHasReviewed == 0) {
                     ratingBarReview.setScore(0,false);
-                    activity.getTransactionUtils().openRestaurantAddReviewFragment(activity, activity.getRelativeLayoutContainer(), activity.getVendorOpened().getRestaurantId(), score);
+                    activity.openRestaurantAddReviewFragment(false, score);
 
-//                etReview.setVisibility(score > 0 ? View.VISIBLE : View.GONE);
-//                tvSubmitReview.setVisibility(score > 0 ? View.VISIBLE : View.GONE);
-//                tvReviewTextCount.setVisibility(score > 0 ? (etReview.getText().toString().trim().length() > 0 ? View.VISIBLE : View.GONE) : View.GONE);
                     if (score <= 0) {
                         Utils.hideSoftKeyboard(activity, etReview);
                     }

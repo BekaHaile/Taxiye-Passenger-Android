@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -206,7 +207,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 			public void keyboardOpened() {
 				if (activity.getTopFragment() instanceof FreshSearchFragment) {
 					activity.llCheckoutBarSetVisibilityDirect(View.GONE);
-					activity.textViewMinOrder.setVisibility(View.INVISIBLE);
+					activity.textViewMinOrder.setVisibility(View.GONE);
 				}
 
 			}
@@ -216,7 +217,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 				if (activity.getTopFragment() instanceof FreshSearchFragment) {
 
 					activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
-				activity.textViewMinOrder.setVisibility(View.VISIBLE);
+					activity.setMinOrderAmountText(FreshSearchFragment.this);
 
 				}
 			}

@@ -48,12 +48,15 @@ public class DatePickerFragment extends DialogFragment
 
 		// Create a new instance of DatePickerDialog and return it
 		DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, year, month, day+1);
+		dialog.setButton(DatePickerDialog.BUTTON_POSITIVE,"OK",dialog);
+		dialog.setButton(DatePickerDialog.BUTTON_NEGATIVE,"DISMISS",dialog);
 
 		dialog.getDatePicker().setMinDate(c.getTimeInMillis());
 		dialog.getDatePicker().updateDate(year, month, day);
 
 		c.add(Calendar.DAY_OF_MONTH, 30);
 		dialog.getDatePicker().setMaxDate(c.getTimeInMillis());
+
 		datePickerDialog = dialog;
 		return dialog;
 	}

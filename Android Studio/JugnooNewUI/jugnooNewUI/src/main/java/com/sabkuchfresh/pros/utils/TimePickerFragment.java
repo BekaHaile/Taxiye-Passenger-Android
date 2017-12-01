@@ -1,5 +1,6 @@
 package com.sabkuchfresh.pros.utils;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -32,8 +33,15 @@ public class TimePickerFragment extends DialogFragment
 		int minute = c.get(Calendar.MINUTE);
 
 		// Create a new instance of TimePickerDialog and return it
-		return new TimePickerDialog(getActivity(), this, hour, minute,
+		TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), this, hour, minute,
 				DateFormat.is24HourFormat(getActivity()));
+		try {
+			timePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE,"OK",timePickerDialog);
+			timePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE,"DISMISS",timePickerDialog);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return timePickerDialog;
 	}
 
 	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
