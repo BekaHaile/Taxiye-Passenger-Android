@@ -395,8 +395,19 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                         rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.VISIBLE);
                     }
 
-                    setUpCollapseToolbarData();
+                    if(activity.collapsingToolBarEnabled(this)){
+                        setUpCollapseToolbarData();
 
+                    }
+
+                    tvSwitchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);
+                    switchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);
+
+                    if(switchVegToggle.getVisibility() == View.GONE && tvOfferTitle.getVisibility() == View.GONE){
+                        viewPromoTitle.setVisibility(View.GONE);
+                        rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.GONE);
+                    }
+                    activity.setMinOrderAmountText(VendorMenuFragment.this);
                     activity.getHandler().post(new Runnable() {
                         @Override
                         public void run() {
@@ -420,8 +431,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             activity.tvCollapRestaurantName.setText(activity.getVendorOpened().getName().toUpperCase());
 
             if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
-                Picasso.with(activity).load(activity.getVendorOpened().getImage())
-                        .placeholder(R.drawable.ic_fresh_item_placeholder)
+                Picasso.with(activity).load(activity.getVendorOpened().getImage()).
+                        fit().centerCrop().placeholder(R.drawable.ic_fresh_item_placeholder)
                         .into(activity.ivCollapseRestImage);
             } else {
                 activity.ivCollapseRestImage.setImageDrawable(null);
@@ -439,14 +450,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                 activity.llCollapRatingStars.setVisibility(View.INVISIBLE);
             }
 
-            tvSwitchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);
-            switchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);
-
-            if(switchVegToggle.getVisibility() == View.GONE && tvOfferTitle.getVisibility() == View.GONE){
-                viewPromoTitle.setVisibility(View.GONE);
-                rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.GONE);
-            }
-            activity.setMinOrderAmountText(VendorMenuFragment.this);
         }
     }
 

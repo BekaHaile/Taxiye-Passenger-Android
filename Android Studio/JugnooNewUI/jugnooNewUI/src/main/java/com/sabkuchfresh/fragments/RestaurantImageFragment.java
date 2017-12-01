@@ -152,7 +152,8 @@ public class RestaurantImageFragment extends Fragment {
                     ivRestOriginalImage.setLayoutParams(layoutParams);
 
                     if (!TextUtils.isEmpty(activity.getVendorOpened().getImage())) {
-                        Picasso.with(getActivity()).load(activity.getVendorOpened().getImage()).placeholder(R.drawable.ic_fresh_item_placeholder).into(ivRestOriginalImage);
+                        Picasso.with(getActivity()).load(activity.getVendorOpened().getImage()).fit().centerCrop().
+                                placeholder(R.drawable.ic_fresh_item_placeholder).into(ivRestOriginalImage);
                     }
                 }
 

@@ -5507,7 +5507,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
          return getAppType()== AppConstant.ApplicationType.MENUS || getAppType()==AppConstant.ApplicationType.DELIVERY_CUSTOMER;
     }
 
-    private boolean collapsingToolBarEnabled(Fragment fragment){
+    public boolean collapsingToolBarEnabled(Fragment fragment){
         boolean isEnable = shouldOpenMerchantInfoFragment() ?
                 fragment instanceof MerchantInfoFragment : fragment instanceof VendorMenuFragment;
         return isEnable;

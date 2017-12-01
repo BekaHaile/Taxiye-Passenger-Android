@@ -186,6 +186,10 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
         super.onHiddenChanged(hidden);
         if(!hidden){
             activity.fragmentUISetup(this);
+            if( activity.getVendorOpened().isHasRated()){
+                bAddReview.setVisibility(View.GONE);
+            }
+
         }
     }
 

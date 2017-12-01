@@ -18,6 +18,7 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -246,8 +247,9 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
                 if (userHasReviewed == 0) {
                     ratingBarReview.setScore(0,false);
+                    ratingBarReview.setEnabled(false);
                     activity.openRestaurantAddReviewFragment(false, score);
-
+                    activity.getHandler().postDelayed( enableRatingBarRunnable,300);
                     if (score <= 0) {
                         Utils.hideSoftKeyboard(activity, etReview);
                     }
@@ -283,6 +285,12 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
         return rootView;
     }
+    private Runnable enableRatingBarRunnable = new Runnable() {
+        @Override
+        public void run() {
+            ratingBarReview.setEnabled(true);
+        }
+    };
 
 
     public void makeBold(TextView... textViews) {
@@ -290,6 +298,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
             textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
         }
     }
+
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -307,13 +316,18 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 activity.tvCollapRestaurantDeliveryTime.setVisibility(View.GONE);
                 activity.tvCollapRestaurantName.setVisibility(View.GONE);
                 activity.llCollapseRating.setVisibility(View.GONE);
+
+
                 if (getView() != null) {
                     scrollView.postDelayed(scrollToTopRunnable, 30);
                 }
+
             }
         } catch (Exception e) {
         }
     }
+
+
 
     private Runnable scrollToTopRunnable = new Runnable() {
         @Override

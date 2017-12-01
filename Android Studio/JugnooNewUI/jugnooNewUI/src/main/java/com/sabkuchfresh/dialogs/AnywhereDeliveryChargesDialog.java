@@ -111,6 +111,7 @@ public class AnywhereDeliveryChargesDialog {
 		textViewFare = ((TextView) dialog.findViewById(R.id.textViewFareDetails));
 		textViewTandC = ((TextView) dialog.findViewById(R.id.textViewTandC));
 		textViewFare.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+		textViewTandC.setTypeface(Fonts.mavenLight(activity));
 		ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
 		imageViewClose.setOnClickListener(new View.OnClickListener() {
             @Override
