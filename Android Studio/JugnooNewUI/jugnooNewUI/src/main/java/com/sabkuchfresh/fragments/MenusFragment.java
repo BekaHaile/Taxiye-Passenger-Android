@@ -304,7 +304,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                 isKeyboardOpen = false;
                 if(activity.getTopFragment() instanceof  MenusFragment){
-                    if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                    if (!iSChildCategoryOpen() && Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
                     activity.getMenusCartSelectedLayout().checkForVisibility();

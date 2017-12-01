@@ -1980,7 +1980,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
      */
     public int  setMinOrderAmountText(Fragment fragment) {
         try {
-            if (getFreshCheckoutMergedFragment() == null || (getTopFragment() instanceof AnywhereHomeFragment)) {
+            if (!(getTopFragment() instanceof FreshCheckoutMergedFragment)) {
                 if (getFreshFragment() != null || (getFreshSearchFragment() != null && getVendorMenuFragment() == null)) {
                     int textViewMinOrderVis;
                     if (fragment instanceof FreshFragment || fragment instanceof FreshSearchFragment) {

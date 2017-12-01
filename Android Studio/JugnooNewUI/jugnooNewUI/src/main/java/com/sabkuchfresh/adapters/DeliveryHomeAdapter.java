@@ -268,7 +268,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         // no more pages case
-         if(!hasMorePages && menusResponse.getServiceUnavailable() != 1 && vendorsCount != 0) {
+         if(!hasMorePages && menusResponse.getServiceUnavailable() != 1) {
 
 
 
