@@ -204,18 +204,24 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 				null, new KeyboardLayoutListener.KeyBoardStateHandler() {
 			@Override
 			public void keyboardOpened() {
-				activity.llCheckoutBarSetVisibilityDirect(View.GONE);
-				activity.textViewMinOrder.setVisibility(View.INVISIBLE);
+				if (activity.getTopFragment() instanceof FreshSearchFragment) {
+					activity.llCheckoutBarSetVisibilityDirect(View.GONE);
+					activity.textViewMinOrder.setVisibility(View.INVISIBLE);
+				}
 
 			}
 
 			@Override
 			public void keyBoardClosed() {
-				activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
+				if (activity.getTopFragment() instanceof FreshSearchFragment) {
+
+					activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
 				activity.textViewMinOrder.setVisibility(View.VISIBLE);
 
+				}
 			}
 		});
+
 		keyboardLayoutListener.setResizeTextView(false);
 		rlRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 		return rootView;
