@@ -9519,13 +9519,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         openConfirmRequestView();
                     }
                 } else {
-                    rlSpecialPickup.setVisibility(View.VISIBLE);
+//                    rlSpecialPickup.setVisibility(View.VISIBLE);
                     destinationRequiredShake();
                 }
             } else {
                 if (Data.autoData.getDropLatLng() == null && getSlidingBottomPanel().getRequestRideOptionsFragment()
                         .getRegionSelected().getDestinationMandatory() == 1) {
-                    rlSpecialPickup.setVisibility(View.VISIBLE);
+//                    rlSpecialPickup.setVisibility(View.VISIBLE);
                     destinationRequiredShake();
                 } else {
                     if(updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()){
