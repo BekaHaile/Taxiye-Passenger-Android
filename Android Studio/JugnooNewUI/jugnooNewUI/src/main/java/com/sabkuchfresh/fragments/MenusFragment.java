@@ -18,7 +18,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.picker.image.util.Util;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -95,7 +94,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     PushDialog pushDialog;
     public boolean resumed = false, searchOpened = false;
-    private KeyboardLayoutListener keyboardLayoutListener;
     private WrapContentLinearLayoutManager linearLayoutManager;
     private int visibleItemCount;
     private int totalItemCount;
@@ -106,6 +104,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private boolean isFatfatChatIconEnabledFromServer;
     private boolean isKeyboardOpen;
     public boolean chatAvailable;
+    private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
 
     public MenusResponse.StripInfo getCurrentStripInfo() {
         return currentStripInfo;
@@ -283,8 +282,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         });
 
-        keyboardLayoutListener = new KeyboardLayoutListener(llRoot,
-                (TextView) rootView.findViewById(R.id.tvScroll), new KeyboardLayoutListener.KeyBoardStateHandler() {
+
+        mKeyBoardStateHandler = new KeyboardLayoutListener.KeyBoardStateHandler() {
+
             @Override
             public void keyboardOpened() {
                 isKeyboardOpen = true;
@@ -292,11 +292,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
                     activity.hideMenusCartSelectedLayout();
                     activity.rlfabViewFatafat.setVisibility(View.GONE);
-
-
-
                 }
-
             }
 
             @Override
@@ -309,18 +305,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     }
                     activity.getMenusCartSelectedLayout().checkForVisibility();
                     toggleFatafatChatIconVisibility();
-
-
-
                 }
-
             }
-        });
+        };
+        // register for keyboard event
+        activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
 
-        keyboardLayoutListener.setResizeTextView(false);
-
-
-        llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
         llRoot.post(new Runnable() {
             @Override
             public void run() {
@@ -507,6 +497,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         super.onHiddenChanged(hidden);
         try {
             if (!hidden) {
+                activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
                 if(activity.isDeliveryOpenInBackground() && (activity.getAppType()!= AppConstant.ApplicationType.DELIVERY_CUSTOMER || !Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()))){
                     Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryCustomerClientId());
                     Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.DELIVERY_CUSTOMER);
@@ -563,6 +554,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
             } else {
+                activity.unRegisterKeyBoardListener();
                 activity.hideMenusCartSelectedLayout();
 
             }
@@ -586,6 +578,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onDestroyView() {
         try {
+            if(activity!=null){
+                activity.unRegisterKeyBoardListener();
+            }
             deliveryHomeAdapter.removeHandler();
         } catch (Exception e) {
             e.printStackTrace();
@@ -996,7 +991,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
 
 
-            if (keyboardLayoutListener.getKeyBoardState() == 1) {
+            if (isKeyboardOpen) {
                 activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
                 activity.rlfabViewFatafat.setVisibility(View.GONE);
             }
