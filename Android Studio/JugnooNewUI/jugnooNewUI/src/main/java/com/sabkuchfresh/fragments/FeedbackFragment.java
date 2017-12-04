@@ -110,6 +110,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     private int jobId = 0;
     private String lastClientId = "";
     private int merchantCategoryId;
+    private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
 
     @Nullable
     @Override
@@ -511,8 +512,9 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         });
         activity.fragmentUISetup(this);
 
-        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutRideSummary, textViewRSScroll,
-                new KeyboardLayoutListener.KeyBoardStateHandler() {
+        // set up keyboard listener
+        mKeyBoardStateHandler = new KeyboardLayoutListener.KeyBoardStateHandler() {
+
             @Override
             public void keyboardOpened() {
                 scrollViewRideSummary.scrollTo(0, editTextRSFeedback.getBottom());
@@ -522,9 +524,10 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             public void keyBoardClosed() {
 
             }
-        });
-        keyboardLayoutListener.setResizeTextView(false);
-        linearLayoutRideSummary.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+        };
+        // register for keyboard event
+        activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
+
     }
 
     private void afterGoodRating() {
@@ -729,6 +732,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.fragmentUISetup(this);
+            activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
             if (lastClientId.equals(Config.getFreshClientId())) {
                 activity.getTopBar().title.setText(getResources().getString(R.string.fatafat));
             } else if (lastClientId.equals(Config.getMealsClientId())) {
@@ -749,6 +753,17 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                     activity.getTopBar().title.setText(pair.first);
                 }
             }
+        }
+        else {
+            activity.unRegisterKeyBoardListener();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(activity!=null){
+            activity.unRegisterKeyBoardListener();
         }
     }
 
