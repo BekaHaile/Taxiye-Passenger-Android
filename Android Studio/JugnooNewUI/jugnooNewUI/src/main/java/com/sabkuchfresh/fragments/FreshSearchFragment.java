@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +45,6 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -67,8 +65,9 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 	private ArrayList<SubItem> subItemsInSearch;
 
 	private FreshSearchResponse freshSearchResponse;
+	private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
 
-    @Override
+	@Override
     public void onStart() {
         super.onStart();
     }
@@ -201,8 +200,8 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
         });
 
 
-		KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(rlRoot,
-				null, new KeyboardLayoutListener.KeyBoardStateHandler() {
+		mKeyBoardStateHandler = new KeyboardLayoutListener.KeyBoardStateHandler() {
+
 			@Override
 			public void keyboardOpened() {
 				if (activity.getTopFragment() instanceof FreshSearchFragment) {
@@ -221,10 +220,9 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 
 				}
 			}
-		});
-
-		keyboardLayoutListener.setResizeTextView(false);
-		rlRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+		};
+		// register for keyboard event
+		activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
 		return rootView;
 	}
 
@@ -340,6 +338,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 	public void onHiddenChanged(boolean hidden) {
 		super.onHiddenChanged(hidden);
 		if(!hidden){
+			activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
             activity.getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -368,6 +367,9 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 				new SubItemsSearchAsync().execute(activity.getTopBar().etSearch.getText().toString().trim());
 			}
 		}
+		else {
+			activity.unRegisterKeyBoardListener();
+		}
 	}
 
 	@Override
@@ -375,6 +377,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 		super.onDestroyView();
 		try {
 			if(activity != null) {
+				activity.unRegisterKeyBoardListener();
 				activity.clearEtFocus();
 			}
 		} catch (Exception e) {
