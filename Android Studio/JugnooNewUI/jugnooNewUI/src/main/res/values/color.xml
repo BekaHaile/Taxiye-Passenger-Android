@@ -314,5 +314,8 @@
     <color name="fatafat_fab_pressed">#D9353542</color>
     <color name="text_color_orange">#ff742c</color>
 
+    <!-- Fatafat tutorial -->
+    <color name="text_color_tutorial_black">#393737</color>
+
 
 </resources>

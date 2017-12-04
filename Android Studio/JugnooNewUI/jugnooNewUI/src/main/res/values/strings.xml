@@ -1377,6 +1377,7 @@
     <string name="label_anywhere">Anywhere</string>
     <string name="add_delivery_address">Select Delivery Address</string>
     <string name="avenir">avenir</string>
+    <string name="avenir_next_bold">avenir_next_bold</string>
     <string name="avenir_book">avenir_book</string>
     <string name="created_at_colon">Created at:</string>
     <string name="order_time_colon">Order Time:</string>
@@ -1421,6 +1422,10 @@
     <string name="fatafat_banner_heading"><b>Get it delivered via Fatafat \n</b></string>
     <string name="fatafat_banner_sub_heading">These stores don’t deliver to your address but \n you can still get delivery via Fatafat.</string>
     <string name="estimated_delivery_charges">Estimated Delivery Charges</string>
+    
+    
+    <!-- Fatafat how it works -->
+    <string name="txt_how_it_works">How it works</string>
 
 
 </resources>

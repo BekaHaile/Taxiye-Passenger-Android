@@ -93,6 +93,7 @@ public class MyApplication extends Application {
 				.add("avenir_book",Typekit.createFromAsset(this,  "fonts/avenir_book.ttf"))
 				.add(getString(R.string.maven_l), Typekit.createFromAsset(this, "fonts/maven_pro_light_300.otf"))
 				.add(getString(R.string.montserrat_m), Typekit.createFromAsset(this, "fonts/montserrat_medium.otf"))
+                .add(getString(R.string.avenir_next_bold), Typekit.createFromAsset(this, "fonts/avenir_next_bold.ttf"))
 		;
 
 
