@@ -204,21 +204,14 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 
 			@Override
 			public void keyboardOpened() {
-				if (activity.getTopFragment() instanceof FreshSearchFragment) {
 					activity.llCheckoutBarSetVisibilityDirect(View.GONE);
 					activity.textViewMinOrder.setVisibility(View.GONE);
-				}
-
 			}
 
 			@Override
 			public void keyBoardClosed() {
-				if (activity.getTopFragment() instanceof FreshSearchFragment) {
-
 					activity.llCheckoutBarSetVisibilityDirect(View.VISIBLE);
 					activity.setMinOrderAmountText(FreshSearchFragment.this);
-
-				}
 			}
 		};
 		// register for keyboard event

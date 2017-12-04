@@ -287,25 +287,23 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
             @Override
             public void keyboardOpened() {
-                isKeyboardOpen = true;
-                if(activity.getTopFragment() instanceof  MenusFragment){
+                    isKeyboardOpen = true;
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
                     activity.hideMenusCartSelectedLayout();
                     activity.rlfabViewFatafat.setVisibility(View.GONE);
-                }
+
             }
 
             @Override
             public void keyBoardClosed() {
 
-                isKeyboardOpen = false;
-                if(activity.getTopFragment() instanceof  MenusFragment){
+                    isKeyboardOpen = false;
                     if (!iSChildCategoryOpen() && Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
                     activity.getMenusCartSelectedLayout().checkForVisibility();
                     toggleFatafatChatIconVisibility();
-                }
+
             }
         };
         // register for keyboard event
