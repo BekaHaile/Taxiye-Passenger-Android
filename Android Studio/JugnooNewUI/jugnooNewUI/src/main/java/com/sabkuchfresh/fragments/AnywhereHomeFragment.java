@@ -109,6 +109,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private boolean isOrderViaCheckoutFragment;
     private boolean isOrderViaRestaurantDetail;
     private CompoundButton.OnCheckedChangeListener switchListenerTime;
+    private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
 
     public boolean isPickUpAddressRequested() {
         return isPickUpAddressRequested;
@@ -171,26 +172,27 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             }
         };
 
-        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(llRoot,
-                null, new KeyboardLayoutListener.KeyBoardStateHandler() {
+
+        mKeyBoardStateHandler = new KeyboardLayoutListener.KeyBoardStateHandler() {
+
             @Override
             public void keyboardOpened() {
-                if (activity.getTopFragment() instanceof AnywhereHomeFragment && !activity.isDeliveryOpenInBackground()) {
+                if (!activity.isDeliveryOpenInBackground()) {
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
                 }
             }
 
             @Override
             public void keyBoardClosed() {
-                if (activity.getTopFragment() instanceof AnywhereHomeFragment && !activity.isDeliveryOpenInBackground()) {
+                if (!activity.isDeliveryOpenInBackground()) {
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
                 }
             }
-        });
-        keyboardLayoutListener.setResizeTextView(false);
-        llRoot.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+        };
+        // register for keyboard event
+        activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
 
         GAUtils.trackScreenView(activity.getGaCategory() + HOME);
 
@@ -260,6 +262,9 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if(activity!=null){
+            activity.unRegisterKeyBoardListener();
+        }
         ButterKnife.unbind(this);
     }
 
@@ -375,7 +380,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
+            activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
             activity.fragmentUISetup(this);
+        }
+        else {
+            activity.unRegisterKeyBoardListener();
         }
     }
 
