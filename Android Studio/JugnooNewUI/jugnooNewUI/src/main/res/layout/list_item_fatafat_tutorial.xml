@@ -44,7 +44,7 @@
                 android:minWidth="@dimen/tv_point_min_size"
                 android:padding="@dimen/spacing_tiny"
                 android:textColor="@color/text_color_tutorial_black"
-                app:font="@string/avenir_next_bold"
+                app:font="@string/avenir"
                 tools:text="1"
                 />
 
