@@ -170,9 +170,9 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
     public void update() {
         try {
             updatePannelHeight();
-            if (Data.userData.getCoupons(ProductType.AUTO) != null) {
-                if (Data.userData.getCoupons(ProductType.AUTO).size() > 0) {
-                    textViewOffersValue.setText(String.valueOf(Data.userData.getCoupons(ProductType.AUTO).size()));
+            if (Data.userData.getCoupons(ProductType.AUTO, activity) != null) {
+                if (Data.userData.getCoupons(ProductType.AUTO, activity).size() > 0) {
+                    textViewOffersValue.setText(String.valueOf(Data.userData.getCoupons(ProductType.AUTO, activity).size()));
                 } else {
                     textViewOffersValue.setText("-");
                 }

@@ -233,9 +233,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
                 GAUtils.event(RIDES, HOME, FARE_ESTIMATE+CLICKED);
             } else if(v.getId() == R.id.textViewOffers || v.getId() == R.id.textViewOffersMode){
-                if(Data.userData.getCoupons(ProductType.AUTO).size() > 0
+                if(Data.userData.getCoupons(ProductType.AUTO, activity).size() > 0
                         || Data.userData.getShowOfferDialog() == 1) {
-                    getPromoCouponsDialog().show(ProductType.AUTO, Data.userData.getCoupons(ProductType.AUTO));
+                    getPromoCouponsDialog().show(ProductType.AUTO, Data.userData.getCoupons(ProductType.AUTO, activity));
                 }
                 GAUtils.event(RIDES, HOME, OFFER+CLICKED);
             }
@@ -244,9 +244,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     public void updateOffersCount(){
         try {
-            if(Data.userData.getCoupons(ProductType.AUTO).size() > 0) {
-                textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getCoupons(ProductType.AUTO).size());
-                textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getCoupons(ProductType.AUTO).size());
+            if(Data.userData.getCoupons(ProductType.AUTO, activity).size() > 0) {
+                textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getCoupons(ProductType.AUTO, activity).size());
+                textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getCoupons(ProductType.AUTO, activity).size());
             } else{
                 textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + "-");
                 textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + "-");
@@ -442,7 +442,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     public void initSelectedCoupon(){
         try {
             if(selectedCoupon == null) {
-                if (Data.userData.getCoupons(ProductType.AUTO).size() > 0) {
+                if (Data.userData.getCoupons(ProductType.AUTO, activity).size() > 0) {
                     selectedCoupon = noSelectionCoupon;
                 } else {
                     selectedCoupon = new CouponInfo(0, "");
@@ -464,8 +464,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     public boolean setSelectedCoupon(int position) {
         PromoCoupon promoCoupon;
-        if (position > -1 && position < Data.userData.getCoupons(ProductType.AUTO).size()) {
-            promoCoupon = Data.userData.getCoupons(ProductType.AUTO).get(position);
+        if (position > -1 && position < Data.userData.getCoupons(ProductType.AUTO, activity).size()) {
+            promoCoupon = Data.userData.getCoupons(ProductType.AUTO, activity).get(position);
             GAUtils.event(RIDES, HOME+OFFER+SELECTED, promoCoupon.getTitle());
         } else {
             promoCoupon = noSelectionCoupon;
@@ -624,8 +624,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
             int promoCouponId = Prefs.with(activity).getInt(Constants.SP_USE_COUPON_+clientId, -1);
             boolean isCouponInfo = Prefs.with(activity).getBoolean(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
             if(promoCouponId > 0){
-                for(int i=0; i<Data.userData.getCoupons(ProductType.AUTO).size(); i++){
-                    PromoCoupon pc = Data.userData.getCoupons(ProductType.AUTO).get(i);
+                for(int i = 0; i<Data.userData.getCoupons(ProductType.AUTO, activity).size(); i++){
+                    PromoCoupon pc = Data.userData.getCoupons(ProductType.AUTO, activity).get(i);
                     if(((isCouponInfo && pc instanceof CouponInfo) || (!isCouponInfo && pc instanceof PromotionInfo))
                             && pc.getId() == promoCouponId) {
                         if (pc.getIsValid() == 1 && setSelectedCoupon(i)) {

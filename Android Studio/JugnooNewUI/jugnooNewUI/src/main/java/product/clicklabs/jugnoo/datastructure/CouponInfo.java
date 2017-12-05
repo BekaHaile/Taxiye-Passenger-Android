@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class CouponInfo extends PromoCoupon implements Serializable{
 	@SerializedName("account_id")
@@ -60,6 +61,9 @@ public class CouponInfo extends PromoCoupon implements Serializable{
 	@SerializedName("invalid_message")
 	@Expose
 	private String invalidMessage;
+	@SerializedName("allowed_vehicles")
+	@Expose
+	private ArrayList<Integer> allowedVehicles;
 
 	@SerializedName("coupon_id")
 	@Expose
@@ -270,5 +274,8 @@ public class CouponInfo extends PromoCoupon implements Serializable{
 
 	public void setCheckWithCouponId(boolean checkWithCouponId) {
 		this.checkWithCouponId = checkWithCouponId;
+	}
+	public ArrayList<Integer> getAllowedVehicles() {
+		return allowedVehicles;
 	}
 }

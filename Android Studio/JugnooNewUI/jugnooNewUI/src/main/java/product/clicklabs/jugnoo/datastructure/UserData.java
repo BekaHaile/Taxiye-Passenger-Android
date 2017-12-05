@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import android.app.Activity;
 import android.content.Context;
 
 import org.json.JSONObject;
@@ -10,6 +11,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
@@ -775,7 +777,8 @@ public class UserData {
 		return count;
 	}
 
-	public ArrayList<PromoCoupon> getCoupons(ProductType productType) {
+
+	public ArrayList<PromoCoupon> getCoupons(ProductType productType, Activity activity) {
 		ArrayList<PromoCoupon> coupons = new ArrayList<>();
 
 		if (productType == ProductType.AUTO) {
@@ -810,13 +813,29 @@ public class UserData {
 
 		ArrayList<PromoCoupon> validPC = new ArrayList<>();
 		ArrayList<PromoCoupon> invalidPC = new ArrayList<>();
-		for(PromoCoupon pc : coupons){
-			if(pc.getIsValid() == 1){
-				validPC.add(pc);
-			} else {
-				invalidPC.add(pc);
+		if(activity instanceof HomeActivity){
+			int currentVehicleTypeSelected = ((HomeActivity) activity).getVehicleTypeSelected();
+			for(PromoCoupon pc : coupons){
+				if (pc.getAllowedVehicles() != null && pc.getAllowedVehicles().size() > 0 && !pc.isVehicleTypeExists(currentVehicleTypeSelected)){
+					continue;
+				}
+				if (pc.getIsValid() == 1) {
+					validPC.add(pc);
+				} else {
+					invalidPC.add(pc);
+				}
+			}
+		}else{
+			for(PromoCoupon pc : coupons){
+
+					if(pc.getIsValid() == 1){
+						validPC.add(pc);
+					} else {
+						invalidPC.add(pc);
+					}
 			}
 		}
+
 		coupons.clear();
 		coupons.addAll(validPC);
 		for (int i = 0; i < promoCoupons.size(); i++) {

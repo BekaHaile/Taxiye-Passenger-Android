@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public abstract class PromoCoupon implements Serializable {
 
@@ -21,6 +22,7 @@ public abstract class PromoCoupon implements Serializable {
 	public abstract Integer getPay();
 	public abstract String getInvalidMessage();
 	public abstract String getExpiryDate();
+	public abstract ArrayList<Integer> getAllowedVehicles();
 
 	private int repeatedCount;
 
@@ -41,6 +43,15 @@ public abstract class PromoCoupon implements Serializable {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean isVehicleTypeExists(int vehicleType){
+		for(Integer vehicleTypeAllowed:getAllowedVehicles()){
+			if(vehicleType==vehicleTypeAllowed){
+				return true;
+			}
 		}
 		return false;
 	}

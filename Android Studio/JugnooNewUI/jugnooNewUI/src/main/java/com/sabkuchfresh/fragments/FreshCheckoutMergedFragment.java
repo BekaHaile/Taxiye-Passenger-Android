@@ -1,6 +1,5 @@
 package com.sabkuchfresh.fragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -2124,7 +2123,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             promoCoupons = new ArrayList<>();
         }
         promoCoupons.clear();
-        ArrayList<PromoCoupon> promoCouponsList = Data.userData.getCoupons(productType);
+        ArrayList<PromoCoupon> promoCouponsList = Data.userData.getCoupons(productType, activity);
         if (applicablePaymentMode == ApplicablePaymentMode.CASH.getOrdinal()) {
             for (PromoCoupon promoCoupon : promoCouponsList) {
                 if (MyApplication.getInstance().getWalletCore().couponOfWhichWallet(promoCoupon) == PaymentOption.CASH.getOrdinal()) {
@@ -2139,9 +2138,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private void updateCouponsDataView() {
         try {
             if (type == AppConstant.ApplicationType.MEALS) {
-                promoCoupons = Data.userData.getCoupons(ProductType.MEALS);
+                promoCoupons = Data.userData.getCoupons(ProductType.MEALS, activity);
             } else if (type == AppConstant.ApplicationType.GROCERY) {
-                promoCoupons = Data.userData.getCoupons(ProductType.GROCERY);
+                promoCoupons = Data.userData.getCoupons(ProductType.GROCERY, activity);
             } else if (type == AppConstant.ApplicationType.MENUS) {
                 filterCouponsByApplicationPaymentMode(activity.getVendorOpened().getApplicablePaymentMode(), ProductType.MENUS);
             } else if (type == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {

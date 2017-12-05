@@ -997,7 +997,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							slidingBottomPanel.slideOnClick(findViewById(R.id.linearLayoutOffers));
 						} else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
 							slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
-									Data.userData.getCoupons(ProductType.AUTO));
+									Data.userData.getCoupons(ProductType.AUTO, HomeActivity.this));
 						}
                         GAUtils.event(RIDES, HOME, OFFERS+BAR+CLICKED);
 					} else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
@@ -1044,7 +1044,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(promoCouponSelectedForRide);
 					}
                     slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
-							Data.userData.getCoupons(ProductType.AUTO));
+							Data.userData.getCoupons(ProductType.AUTO, HomeActivity.this));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -9016,6 +9016,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
             }
         }
+    }
+
+    public int getVehicleTypeSelected(){
+        return  slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
     }
 
     private SelectorBitmapLoader selectorBitmapLoader;
