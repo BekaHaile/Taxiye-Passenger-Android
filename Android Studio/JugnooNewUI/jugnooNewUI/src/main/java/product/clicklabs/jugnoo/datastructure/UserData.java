@@ -858,6 +858,16 @@ public class UserData {
 
 		return coupons;
 	}
+	public PromoCoupon getDefaultCoupon(){
+		if(getPromoCoupons()!=null){
+
+			for(PromoCoupon promoCoupon: getPromoCoupons()){
+				  if(promoCoupon.getIsSelected()==1)
+				  	return promoCoupon;
+			}
+		}
+		return null;
+	}
 
 	public JeanieIntroDialogContent getJeanieIntroDialogContent() {
 		return jeanieIntroDialogContent;
@@ -1079,4 +1089,5 @@ public class UserData {
 				&& getFeedEnabled() == 0
 				&& getProsEnabled() == 0;
 	}
+
 }

@@ -9016,6 +9016,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
             }
         }
+
+        // This code checks if the current Coupon selected is valid for the new Vehicle Type and if not it then checks for a default coupon
+        // if it exists for that vehicle type, if it cannot find anything it then sets the coupon to null
+
+        PromoCoupon selectedCoupon = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
+        if(selectedCoupon!=null & selectedCoupon.getId()!=-1){
+            int vehicleTypeSelected = getVehicleTypeSelected();
+            if(!selectedCoupon.isVehicleTypeExists(vehicleTypeSelected)){
+                PromoCoupon defaultCoupon = Data.userData.getDefaultCoupon();
+
+                if(defaultCoupon!=null && defaultCoupon.isVehicleTypeExists(vehicleTypeSelected)){
+                    slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(defaultCoupon);
+
+                }else{
+                    slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(-1);
+                }
+            }
+        }
     }
 
     public int getVehicleTypeSelected(){
