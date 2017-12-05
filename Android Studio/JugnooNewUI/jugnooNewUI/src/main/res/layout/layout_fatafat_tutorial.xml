@@ -45,7 +45,7 @@
         android:layout_height="@dimen/grey_divider_height"
         android:background="@color/text_color_light"/>
 
-    <android.support.v7.app.AlertController.RecycleListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/rvHowItWorks"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
