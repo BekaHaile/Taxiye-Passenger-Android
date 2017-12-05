@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
@@ -66,10 +67,12 @@ public class FatafatTutorialDialog {
      * Init the dialog
      */
     private void init() {
-        mTutorialDialog = new Dialog(mContext, android.R.style.Theme_Translucent_NoTitleBar);
+        mTutorialDialog = new Dialog(mContext);
+        mTutorialDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mTutorialDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
         mTutorialDialog.setContentView(R.layout.layout_fatafat_tutorial);
         WindowManager.LayoutParams layoutParams = mTutorialDialog.getWindow().getAttributes();
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         layoutParams.dimAmount = 0.6f;
         mTutorialDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         mTutorialDialog.setCancelable(true);
