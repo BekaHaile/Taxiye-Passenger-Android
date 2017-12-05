@@ -76,6 +76,7 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
     HorizontalScrollView scrollViewSuggestions;
     private ApiCommon<HandleSuggestionsResponse> handleSuggestionsAPI;
     private RotateAnimation rotateAnimation;
+    private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
 
 
     @Nullable
@@ -124,7 +125,8 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
         });
 
 
-        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(llMain, null, new KeyboardLayoutListener.KeyBoardStateHandler() {
+        mKeyBoardStateHandler = new KeyboardLayoutListener.KeyBoardStateHandler() {
+
             @Override
             public void keyboardOpened() {
                 if (getView()!=null) {
@@ -142,8 +144,11 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
 
 
             }
-        });
-        llMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+        };
+        // register for keyboard event
+        activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
+
+
         GAUtils.trackScreenView(FEED + HANDLE_INPUT);
         tvSuggestion1.setOnClickListener(suggestionListener);
         tvSuggestion2.setOnClickListener(suggestionListener);
@@ -285,6 +290,9 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if(activity!=null){
+            activity.unRegisterKeyBoardListener();
+        }
         if (handleSuggestionsAPI != null) {
             handleSuggestionsAPI.setCancelled(true);
         }

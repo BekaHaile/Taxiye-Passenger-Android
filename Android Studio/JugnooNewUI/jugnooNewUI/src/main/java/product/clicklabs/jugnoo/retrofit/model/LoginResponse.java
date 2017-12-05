@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.datastructure.FatafatTutorialData;
 import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
@@ -450,6 +451,13 @@ public class LoginResponse {
 
 		@SerializedName("bottom_strip")
 		private MealsData.OfferStripMeals bottomStrip;
+
+		@SerializedName("how_it_works")
+		private ArrayList<FatafatTutorialData> fatafatTutorialData;
+
+		public ArrayList<FatafatTutorialData> getFatafatTutorialData() {
+			return fatafatTutorialData;
+		}
 
 		public MealsData.OfferStripMeals getBottomStrip() {
 			return bottomStrip;

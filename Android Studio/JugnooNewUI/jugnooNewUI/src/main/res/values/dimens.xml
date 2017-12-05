@@ -557,6 +557,9 @@
     <dimen name="font_huge">
         20sp
     </dimen>
+    <dimen name="font_xxl">
+        18sp
+    </dimen>
     <dimen name="font_extra_large">
         17sp
     </dimen>
@@ -874,4 +877,11 @@
     <dimen name="top_padding_scroll_content_home_switcher">15dp</dimen>
     <dimen name="margin_bottom_home_switcher_item">10dp</dimen>
     <!--Breakdown = height_choose_cateogry + 2 * height_divider_choose_category-->
+    <dimen name="grey_divider_height">1dp</dimen>
+
+
+    <!-- Fatafat how it works/ tutorial -->
+    <dimen name="image_width_fatafat_tutorial">46dp</dimen>
+    <dimen name="tv_point_min_size">24dp</dimen>
+
 </resources>

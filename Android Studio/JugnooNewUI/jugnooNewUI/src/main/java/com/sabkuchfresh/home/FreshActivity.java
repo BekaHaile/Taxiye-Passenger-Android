@@ -205,6 +205,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -291,6 +292,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private boolean appTypeDeliveryInBackground;
     public RelativeLayout rlfabViewFatafat;
     public int lastAppTypeOpen;
+    private KeyboardLayoutListener mParentKeyboardLayoutListener;
+    private KeyboardLayoutListener.KeyBoardStateHandler mChildKeyboardListener;
+
 
 
     public View getFeedHomeAddPostView() {
@@ -588,6 +592,43 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             Data.setFuguChatBundle(null);
         }
 
+        // add parent keyboard listener
+        mParentKeyboardLayoutListener = new KeyboardLayoutListener(relativeLayoutContainer,
+                null, new KeyboardLayoutListener.KeyBoardStateHandler() {
+            @Override
+            public void keyboardOpened() {
+                if (mChildKeyboardListener != null) {
+                    mChildKeyboardListener.keyboardOpened();
+                }
+            }
+
+            @Override
+            public void keyBoardClosed() {
+                if (mChildKeyboardListener != null) {
+                    mChildKeyboardListener.keyBoardClosed();
+                }
+            }
+        });
+        mParentKeyboardLayoutListener.setResizeTextView(false);
+        relativeLayoutContainer.getViewTreeObserver().addOnGlobalLayoutListener(mParentKeyboardLayoutListener);
+
+
+    }
+
+    /**
+     * Enables child fragments to listen for keyboard change event
+     *
+     * @param keyboardListener the keystate handler listener
+     */
+    public void registerForKeyBoardEvent(final KeyboardLayoutListener.KeyBoardStateHandler keyboardListener) {
+        mChildKeyboardListener = keyboardListener;
+    }
+
+    /**
+     * Unregisters the current associated keyboard listener
+     */
+    public void unRegisterKeyBoardListener() {
+        mChildKeyboardListener =null;
     }
 
     private void setOfferingData(String lastClientId,boolean fromOncreate) {
@@ -1437,6 +1478,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void fragmentUISetup(Fragment fragment) {
         try {
+            // setting fatafat tutorial visibility
+            if(fragment instanceof AnywhereHomeFragment){
+                topBar.imgVwFatafatTutorial.setVisibility(View.VISIBLE);
+            }
+            else {
+                topBar.imgVwFatafatTutorial.setVisibility(View.GONE);
+            }
+
             int llSearchCartContainerVis = View.VISIBLE;
             int llSearchCartVis = View.VISIBLE;
             int llCartContainerVis = View.GONE;
@@ -4190,6 +4239,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             fabViewFatafat.setMenuLabelsRightTestPadding(padding,this,fabViewFatafat);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Show Fatafat tutorial
+     */
+    public void showFatafatTutorial() {
+        if(getTopFragment() instanceof AnywhereHomeFragment){
+            ((AnywhereHomeFragment)getTopFragment()).showFatafatTutorial();
         }
     }
 

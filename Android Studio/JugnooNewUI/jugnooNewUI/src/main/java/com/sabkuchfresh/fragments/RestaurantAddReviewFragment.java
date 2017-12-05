@@ -102,6 +102,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     private static final int REQUEST_CODE_SELECT_IMAGES=99;
     private boolean isKeyboardOpen = true;
     private Float prefilledRating;
+    private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
 
     public static RestaurantAddReviewFragment newInstance(int restaurantId,float rating) {
         RestaurantAddReviewFragment fragment = new RestaurantAddReviewFragment();
@@ -167,7 +168,8 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
             }
         });
 
-        rlRoot.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(rlRoot, null, new KeyboardLayoutListener.KeyBoardStateHandler() {
+
+        mKeyBoardStateHandler = new KeyboardLayoutListener.KeyBoardStateHandler() {
             @Override
             public void keyboardOpened() {
                 isKeyboardOpen= true;
@@ -177,7 +179,9 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
             public void keyBoardClosed() {
                 isKeyboardOpen= false;
             }
-        }));
+        };
+        // register for keyboard event
+        activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
 
 //        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
@@ -458,7 +462,11 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
+            activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
             activity.fragmentUISetup(this);
+        }
+        else {
+            activity.unRegisterKeyBoardListener();
         }
     }
 
@@ -717,6 +725,9 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     public void onDestroyView() {
 //        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onDestroyView();
+        if(activity!=null){
+            activity.unRegisterKeyBoardListener();
+        }
         if(imageCompressionTask!=null && !imageCompressionTask.isCancelled()) {
             imageCompressionTask.cancel(true);
         }

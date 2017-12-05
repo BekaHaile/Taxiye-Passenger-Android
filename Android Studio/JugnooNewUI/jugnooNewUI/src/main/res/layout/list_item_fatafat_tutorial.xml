@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@android:color/white"
+              android:orientation="horizontal"
+              android:paddingEnd="@dimen/spacing_large"
+              android:paddingLeft="@dimen/spacing_extra_large"
+              android:paddingRight="@dimen/spacing_large"
+              android:paddingStart="@dimen/spacing_extra_large">
+
+    <ImageView
+        android:id="@+id/imgVwCatIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="@dimen/image_width_fatafat_tutorial"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/ic_fatafat"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/spacing_small"
+        android:layout_marginStart="@dimen/spacing_small">
+
+
+        <LinearLayout
+            android:id="@+id/llPoints"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/llContent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvPointNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/circle_dull_gray"
+                android:gravity="center"
+                android:minHeight="@dimen/tv_point_min_size"
+                android:minWidth="@dimen/tv_point_min_size"
+                android:padding="@dimen/spacing_tiny"
+                android:textColor="@color/text_color_tutorial_black"
+                app:font="@string/avenir"
+                tools:text="1"
+                />
+
+            <RelativeLayout
+                android:id="@+id/rlTimeLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:layout_width="@dimen/grey_divider_height"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/dull_background"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_down_arrow_tutorial"/>
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:layout_toEndOf="@+id/llPoints"
+            android:layout_toRightOf="@+id/llPoints"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/spacing_large"
+            android:paddingTop="@dimen/spacing_tiny">
+
+            <TextView
+                android:id="@+id/tvHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color_tutorial_black"
+                android:textSize="@dimen/font_large"
+                app:font="@string/avenir"
+                tools:text="Item 1 Text"
+                />
+
+            <TextView
+                android:id="@+id/tvContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_dimin"
+                android:textColor="@color/text_color_grey_menus"
+                android:textSize="@dimen/font_normal"
+                app:font="@string/maven_r"
+                tools:text="Item 1 main content which indicates the true item content"
+                />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</LinearLayout>
