@@ -858,11 +858,11 @@ public class UserData {
 
 		return coupons;
 	}
-	public PromoCoupon getDefaultCoupon(){
+	public PromoCoupon getDefaultCoupon(int currentVehicleType){
 		if(getPromoCoupons()!=null){
 
 			for(PromoCoupon promoCoupon: getPromoCoupons()){
-				  if(promoCoupon.getIsSelected()==1)
+				  if(promoCoupon.getIsSelected()==1 && promoCoupon.isVehicleTypeExists(currentVehicleType))
 				  	return promoCoupon;
 			}
 		}

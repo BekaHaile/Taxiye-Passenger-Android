@@ -2247,12 +2247,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 pcOld = null;
             }
 
-            for (PromoCoupon promoCoupon : promoCoupons) {
-                if (promoCoupon.getIsSelected() == 1) {
-                    activity.setSelectedPromoCoupon(promoCoupon);
-                    break;
+                for (PromoCoupon promoCoupon : promoCoupons) {
+                    if (promoCoupon.getIsSelected() == 1) {
+                        activity.setSelectedPromoCoupon(promoCoupon);
+                        break;
+                    }
                 }
-            }
             return pcOld;
         } else if (activity.getUserCheckoutResponse() != null) {
             PromoCoupon pcOld = activity.getSelectedPromoCoupon();

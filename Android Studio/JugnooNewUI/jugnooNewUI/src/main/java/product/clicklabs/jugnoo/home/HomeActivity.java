@@ -5065,7 +5065,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         PromoCoupon lasSelectedCustomCoupon = getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
         boolean lastSelectedCouponExits = false ;
-        PromoCoupon serverSelectedDefaultCoupon =null;
         if(lasSelectedCustomCoupon!=null){
             for(PromoCoupon promoCoupon : Data.autoData.getPromoCoupons()){
                 if(promoCoupon.getId() == lasSelectedCustomCoupon.getId()){
@@ -5075,19 +5074,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         }
 
-        if(!lastSelectedCouponExits){
-
-            for(PromoCoupon promoCoupon : Data.autoData.getPromoCoupons()){
-                if(promoCoupon.getIsSelected()==1){
-                    serverSelectedDefaultCoupon = promoCoupon;
-                    break;
-                }
-
-
-            }
-           getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(serverSelectedDefaultCoupon);
-
+        if(!lastSelectedCouponExits) {
+            getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(Data.userData.getDefaultCoupon(getVehicleTypeSelected()));
         }
+
 
 
 
@@ -9024,9 +9014,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(selectedCoupon!=null & selectedCoupon.getId()!=-1){
             int vehicleTypeSelected = getVehicleTypeSelected();
             if(!selectedCoupon.isVehicleTypeExists(vehicleTypeSelected)){
-                PromoCoupon defaultCoupon = Data.userData.getDefaultCoupon();
+                PromoCoupon defaultCoupon = Data.userData.getDefaultCoupon(getVehicleTypeSelected());
 
-                if(defaultCoupon!=null && defaultCoupon.isVehicleTypeExists(vehicleTypeSelected)){
+                if(defaultCoupon!=null){
                     slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(defaultCoupon);
 
                 }else{
