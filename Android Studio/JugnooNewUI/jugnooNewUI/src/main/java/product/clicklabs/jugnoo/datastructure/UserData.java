@@ -858,11 +858,12 @@ public class UserData {
 
 		return coupons;
 	}
-	public PromoCoupon getDefaultCoupon(int currentVehicleType){
-		if(getPromoCoupons()!=null){
+	public PromoCoupon getDefaultCoupon(int vehicleType, HomeActivity homeActivity){
+		ArrayList<PromoCoupon> promoCoupons = getCoupons(ProductType.AUTO,homeActivity) ;
+		if(promoCoupons!=null){
 
-			for(PromoCoupon promoCoupon: getPromoCoupons()){
-				  if(promoCoupon.getIsSelected()==1 && promoCoupon.isVehicleTypeExists(currentVehicleType))
+			for(PromoCoupon promoCoupon: promoCoupons){
+				  if(promoCoupon.getIsSelected()==1 && promoCoupon.isVehicleTypeExists(vehicleType))
 				  	return promoCoupon;
 			}
 		}

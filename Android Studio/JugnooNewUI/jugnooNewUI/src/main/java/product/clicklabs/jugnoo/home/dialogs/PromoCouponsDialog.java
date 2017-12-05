@@ -111,7 +111,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 				@Override
 				public boolean setSelectedCoupon(int position) {
 					if(activity instanceof HomeActivity) {
-						if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
+						if (promoCoupons != null && position > -1 && position < promoCoupons.size() ) {
 							onDialogOpenPromoSelectOperation = true;
 						} else {
 							onDialogOpenPromoSelectOperation = false;

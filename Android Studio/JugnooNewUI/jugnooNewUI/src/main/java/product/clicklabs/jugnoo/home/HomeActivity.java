@@ -5075,7 +5075,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
 
         if(!lastSelectedCouponExits) {
-            getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(Data.userData.getDefaultCoupon(getVehicleTypeSelected()));
+            getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(Data.userData.getDefaultCoupon(getVehicleTypeSelected(),HomeActivity.this));
         }
 
 
@@ -9011,19 +9011,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         // if it exists for that vehicle type, if it cannot find anything it then sets the coupon to null
 
         PromoCoupon selectedCoupon = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
-        if(selectedCoupon!=null & selectedCoupon.getId()!=-1){
-            int vehicleTypeSelected = getVehicleTypeSelected();
-            if(!selectedCoupon.isVehicleTypeExists(vehicleTypeSelected)){
-                PromoCoupon defaultCoupon = Data.userData.getDefaultCoupon(getVehicleTypeSelected());
+        int vehicleTypeSelected = getVehicleTypeSelected();
 
-                if(defaultCoupon!=null){
-                    slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(defaultCoupon);
+        if(selectedCoupon==null || selectedCoupon.getId()==-1 || !selectedCoupon.isVehicleTypeExists(vehicleTypeSelected)){
+            PromoCoupon defaultCoupon = Data.userData.getDefaultCoupon(getVehicleTypeSelected(),HomeActivity.this);
 
-                }else{
-                    slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(-1);
-                }
+            if(defaultCoupon!=null){
+                slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(defaultCoupon);
+
+            }else{
+                slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(-1);
             }
         }
+        showPoolInforBar(false);
     }
 
     public int getVehicleTypeSelected(){
