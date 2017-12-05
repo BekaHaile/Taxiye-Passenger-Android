@@ -464,7 +464,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     public boolean setSelectedCoupon(int position) {
         PromoCoupon promoCoupon;
-        if (position > -1 && position < Data.userData.getCoupons(ProductType.AUTO, activity).size()) {
+        if (position > -1 && position < Data.userData.getCoupons(ProductType.AUTO, activity).size() && Data.userData.getPromoCoupons().get(position).isVehicleTypeExists(activity.getVehicleTypeSelected())) {
             promoCoupon = Data.userData.getCoupons(ProductType.AUTO, activity).get(position);
             GAUtils.event(RIDES, HOME+OFFER+SELECTED, promoCoupon.getTitle());
         } else {
@@ -480,7 +480,12 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     }
 
     public void setSelectedCoupon(PromoCoupon promoCoupon){
-        selectedCoupon = promoCoupon;
+        if(promoCoupon.isVehicleTypeExists(activity.getVehicleTypeSelected())){
+            selectedCoupon = promoCoupon;
+
+        }else{
+            selectedCoupon = noSelectionCoupon;
+        }
     }
 
     public boolean displayAlertAndCheckForSelectedWalletCoupon() {

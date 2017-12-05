@@ -816,7 +816,7 @@ public class UserData {
 		if(activity instanceof HomeActivity){
 			int currentVehicleTypeSelected = ((HomeActivity) activity).getVehicleTypeSelected();
 			for(PromoCoupon pc : coupons){
-				if (pc.getAllowedVehicles() != null && pc.getAllowedVehicles().size() > 0 && !pc.isVehicleTypeExists(currentVehicleTypeSelected)){
+				if (!pc.isVehicleTypeExists(currentVehicleTypeSelected)){
 					continue;
 				}
 				if (pc.getIsValid() == 1) {

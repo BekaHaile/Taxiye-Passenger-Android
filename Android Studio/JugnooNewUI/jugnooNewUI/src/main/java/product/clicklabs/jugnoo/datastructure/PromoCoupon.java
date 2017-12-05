@@ -48,6 +48,9 @@ public abstract class PromoCoupon implements Serializable {
 	}
 
 	public boolean isVehicleTypeExists(int vehicleType){
+		if(getAllowedVehicles()==null || getAllowedVehicles().size()<=0)
+			return true;
+
 		for(Integer vehicleTypeAllowed:getAllowedVehicles()){
 			if(vehicleType==vehicleTypeAllowed){
 				return true;
