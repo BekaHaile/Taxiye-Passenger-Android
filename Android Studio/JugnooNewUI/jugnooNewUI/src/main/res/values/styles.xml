@@ -34,6 +34,10 @@
 
     </style>
 
+    <style name="FatafatTutorial" parent="AppBaseTheme">
+        <item name="colorControlHighlight">@color/dull_background</item>
+    </style>
+
     <style name="AppThemePicker.NoActionBar" parent="AppThemePicker">
         <item name="windowActionBar">
             false

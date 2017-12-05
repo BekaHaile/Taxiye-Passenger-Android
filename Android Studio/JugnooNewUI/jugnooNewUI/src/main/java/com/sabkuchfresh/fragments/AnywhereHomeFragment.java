@@ -31,6 +31,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.dialogs.AnywhereDeliveryChargesDialog;
+import com.sabkuchfresh.dialogs.FatafatTutorialDialog;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
@@ -83,8 +84,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     TextView tvHeadingDeliveryCharges;
     @Bind(R.id.cv_delivery_charges)
     CardView cvDeliveryCharges;
-    private ForegroundColorSpan textHintColorSpan;
-    private ForegroundColorSpan textColorSpan;
     @Bind(R.id.edt_task_description)
     EditText edtTaskDescription;
     @Bind(R.id.tv_pickup_address)
@@ -99,10 +98,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     CardView cvPickupAddress;
     @Bind(R.id.cv_delivery_address)
     CardView cvDeliveryAddress;
+    AnywhereDeliveryChargesDialog anywhereDeliveryChargesDialog;
+    private ForegroundColorSpan textHintColorSpan;
 
     // TODO: 28/11/17 Slider stuck on fatafat error
-
-
+    private ForegroundColorSpan textColorSpan;
     private PaySlider paySlider;
     private FreshActivity activity;
     private boolean isPickUpAddressRequested;
@@ -110,15 +110,45 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private boolean isOrderViaRestaurantDetail;
     private CompoundButton.OnCheckedChangeListener switchListenerTime;
     private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
+    private SearchResult pickUpAddress;
+    private SearchResult deliveryAddress;
+    private boolean isAsapSelected;
+    private Runnable enableStRbRunnable = new Runnable() {
+        @Override
+        public void run() {
+            rbSt.setEnabled(true);
+        }
+    };
+    private DatePickerFragment datePickerFragment;
+    private String selectedDate;
+    private String selectedTime;
+    private TimePickerFragment timePickerFragment;
+    private FatafatTutorialDialog mFatafatTutorialDialog;
+    private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+            setTimeToVars(hourOfDay + ":" + minute + ":00");
+        }
+    };
+    private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            String date = year + "-" + (month + 1) + "-" + dayOfMonth;
+            if (validateDateTime(date, null)) {
+                selectedDate = date;
+//                tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
+                getTimePickerFragment().show(getChildFragmentManager(), "timePicker", onTimeSetListener);
+
+            } else {
+                Utils.showToast(activity, activity.getString(R.string.please_select_appropriate_time));
+            }
+        }
+    };
 
     public boolean isPickUpAddressRequested() {
         return isPickUpAddressRequested;
     }
-
-    private SearchResult pickUpAddress;
-    private SearchResult deliveryAddress;
-    private boolean isAsapSelected;
-
 
     @Override
     public void onAttach(Context context) {
@@ -250,6 +280,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         switchDeliveryTime.setOnCheckedChangeListener(switchListenerTime);
         switchDeliveryTime.setChecked(true);
         fetchDynamicDeliveryCharges();
+
         return rootView;
     }
 
@@ -262,12 +293,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(activity!=null){
+        if (activity != null) {
             activity.unRegisterKeyBoardListener();
         }
         ButterKnife.unbind(this);
     }
-
 
     private void setAddress(boolean isDeliveryAddress, SearchResult searchResult) {
 
@@ -327,9 +357,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     }
 
-
-    AnywhereDeliveryChargesDialog anywhereDeliveryChargesDialog;
-
     @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st, R.id.label_delivery_info})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -369,21 +396,13 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         }
     }
 
-    private Runnable enableStRbRunnable = new Runnable() {
-        @Override
-        public void run() {
-            rbSt.setEnabled(true);
-        }
-    };
-
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
             activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
             activity.fragmentUISetup(this);
-        }
-        else {
+        } else {
             activity.unRegisterKeyBoardListener();
         }
     }
@@ -393,8 +412,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         fetchDynamicDeliveryCharges();
 
     }
-
-    private DatePickerFragment datePickerFragment;
 
     private DatePickerFragment getDatePickerFragment() {
         if (datePickerFragment == null) {
@@ -406,26 +423,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         return datePickerFragment;
     }
 
-    private String selectedDate;
-    private String selectedTime;
-    private DatePickerDialog.OnDateSetListener onDateSetListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            String date = year + "-" + (month + 1) + "-" + dayOfMonth;
-            if (validateDateTime(date, null)) {
-                selectedDate = date;
-//                tvSelectDate.setText(DateOperations.getDateFormatted(selectedDate));
-                getTimePickerFragment().show(getChildFragmentManager(), "timePicker", onTimeSetListener);
-
-            } else {
-                Utils.showToast(activity, activity.getString(R.string.please_select_appropriate_time));
-            }
-        }
-    };
-
-
-    private TimePickerFragment timePickerFragment;
-
     private TimePickerFragment getTimePickerFragment() {
         if (timePickerFragment == null) {
             timePickerFragment = new TimePickerFragment();
@@ -435,14 +432,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         }
         return timePickerFragment;
     }
-
-    private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-            setTimeToVars(hourOfDay + ":" + minute + ":00");
-        }
-    };
 
     private boolean setTimeToVars(String time) {
         if (validateDateTime(selectedDate, time)) {
@@ -673,8 +662,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                 tvHeadingDeliveryCharges.setVisibility(View.VISIBLE);
                                 cvDeliveryCharges.setVisibility(View.VISIBLE);
                                 String label = dynamicDeliveryResponse.getDeliveryCharges().getDeliveryLabel();
-                                if(!TextUtils.isEmpty(dynamicDeliveryResponse.getDeliveryCharges().getEstimatedDistance())){
-                                    label+=" (" + dynamicDeliveryResponse.getDeliveryCharges().getEstimatedDistance() + ")";
+                                if (!TextUtils.isEmpty(dynamicDeliveryResponse.getDeliveryCharges().getEstimatedDistance())) {
+                                    label += " (" + dynamicDeliveryResponse.getDeliveryCharges().getEstimatedDistance() + ")";
                                 }
                                 labelDeliveryInfo.setText(label);
                                 labelDeliveryValue.setText(String.format("%s%s", activity.getString(R.string.rupee), product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges())));
@@ -684,7 +673,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                         public void onDialogDismiss() {
 
                                         }
-                                    }, dynamicDeliveryResponse.getDeliveryCharges().getPopupData(), dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges(), dynamicDeliveryResponse.getDeliveryCharges().getTandC() );
+                                    }, dynamicDeliveryResponse.getDeliveryCharges().getPopupData(), dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges(), dynamicDeliveryResponse.getDeliveryCharges().getTandC());
 
                                 } else {
                                     cvDeliveryCharges.setVisibility(View.GONE);
@@ -727,5 +716,20 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     }
 
+    /**
+     * Shows fatafat tutorial
+     */
+    public void showFatafatTutorial() {
 
+        if(mFatafatTutorialDialog!=null){
+            mFatafatTutorialDialog.showDialog();
+        }
+        else {
+            if (Data.getFeedData().getFatafatTutorialData() != null &&
+                    Data.getFeedData().getFatafatTutorialData().size() != 0) {
+                mFatafatTutorialDialog = new FatafatTutorialDialog(activity, Data.getFeedData().getFatafatTutorialData());
+                mFatafatTutorialDialog.showDialog();
+            }
+        }
+    }
 }

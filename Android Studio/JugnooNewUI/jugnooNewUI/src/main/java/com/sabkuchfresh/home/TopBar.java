@@ -38,7 +38,7 @@ public class TopBar implements GAAction, GACategory {
     public ImageView imageViewMenu;
     public TextView title;
     public Button buttonCheckServer;
-    public ImageView imageViewBack, ivDeliveryAddressCross, imageViewDelete;
+    public ImageView imageViewBack, ivDeliveryAddressCross, imageViewDelete, imgVwFatafatTutorial;
     public EditText editTextDeliveryAddress;
     public TextView tvDeliveryAddress;
     public ProgressWheel progressWheelDeliveryAddressPin;
@@ -73,6 +73,7 @@ public class TopBar implements GAAction, GACategory {
         llSearchCart = (LinearLayout) drawerLayout.findViewById(R.id.llSearchCart);
 
         imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
+        imgVwFatafatTutorial=(ImageView)topRl.findViewById(R.id.ivTutorial);
         editTextDeliveryAddress = (EditText) drawerLayout.findViewById(R.id.editTextDeliveryAddress);
         editTextDeliveryAddress.setTypeface(Fonts.mavenLight(activity));
         tvDeliveryAddress = (TextView) drawerLayout.findViewById(R.id.tvDeliveryAddress);
@@ -101,6 +102,7 @@ public class TopBar implements GAAction, GACategory {
         rlFilter.setOnClickListener(topBarOnClickListener);
         imageViewBack.setOnClickListener(topBarOnClickListener);
         ivFreshSort.setOnClickListener(topBarOnClickListener);
+        imgVwFatafatTutorial.setOnClickListener(topBarOnClickListener);
 
         buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -259,6 +261,11 @@ public class TopBar implements GAAction, GACategory {
                         ((FreshActivity)activity).openFreshSortDialog();
                     }
                     break;
+
+                case R.id.ivTutorial:
+                    if(activity instanceof FreshActivity){
+                        ((FreshActivity)activity).showFatafatTutorial();
+                    }
 
             }
         }

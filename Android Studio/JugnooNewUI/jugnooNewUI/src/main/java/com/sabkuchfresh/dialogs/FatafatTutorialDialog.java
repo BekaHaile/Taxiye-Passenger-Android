@@ -3,10 +3,16 @@ package com.sabkuchfresh.dialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
+import com.sabkuchfresh.adapters.FatafatTutorialAdapter;
+import com.sabkuchfresh.datastructure.FatafatTutorialData;
+
+import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 
@@ -15,24 +21,34 @@ import product.clicklabs.jugnoo.R;
  * Tutorial dialog for fatafat how it works
  */
 
-public class FatafatHowItWorksDialog {
+public class FatafatTutorialDialog {
 
     private Context mContext;
     private DialogCallback mDialogCallback;
     private Dialog mTutorialDialog;
     private RecyclerView mRecyclerViewHowItWorks;
+    private ArrayList<FatafatTutorialData> mFatafatTutorialData = new ArrayList<>();
 
     /**
      * Constructor
      *
-     * @param context        calling context
-     * @param dialogCallback mTutorialDialog dismiss callback
+     * @param context             calling context
+     * @param fatafatTutorialData tutorial data
      */
-    public FatafatHowItWorksDialog(Context context, DialogCallback dialogCallback) {
+    public FatafatTutorialDialog(Context context, ArrayList<FatafatTutorialData> fatafatTutorialData) {
         mContext = context;
-        mDialogCallback = dialogCallback;
+        mFatafatTutorialData = fatafatTutorialData;
         init();
         populateData();
+    }
+
+    /**
+     * Sets dismiss dialog callback
+     *
+     * @param dialogCallback the dialog callback
+     */
+    public void setDismissCallback(DialogCallback dialogCallback) {
+        mDialogCallback = dialogCallback;
     }
 
     /**
@@ -40,7 +56,9 @@ public class FatafatHowItWorksDialog {
      */
     private void populateData() {
 
-        // todo set data
+        FatafatTutorialAdapter fatafatTutorialAdapter = new FatafatTutorialAdapter(mContext, mFatafatTutorialData);
+        mRecyclerViewHowItWorks.setLayoutManager(new LinearLayoutManager(mContext));
+        mRecyclerViewHowItWorks.setAdapter(fatafatTutorialAdapter);
     }
 
 
@@ -60,7 +78,6 @@ public class FatafatHowItWorksDialog {
         ImageView imgVwCross = (ImageView) mTutorialDialog.findViewById(R.id.imgVwCross);
         mRecyclerViewHowItWorks = (RecyclerView) mTutorialDialog.findViewById(R.id.rvHowItWorks);
 
-
         imgVwCross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -71,7 +88,9 @@ public class FatafatHowItWorksDialog {
         mTutorialDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(final DialogInterface dialog) {
-                mDialogCallback.onDialogDismiss();
+                if (mDialogCallback != null) {
+                    mDialogCallback.onDialogDismiss();
+                }
             }
         });
     }

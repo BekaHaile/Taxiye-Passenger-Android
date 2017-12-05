@@ -285,6 +285,18 @@
 
                 </LinearLayout>
 
+                <ImageView
+                    android:id="@+id/ivTutorial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_tutorial_selector"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:theme="@style/FatafatTutorial"
+                    android:visibility="gone"
+                    />
+
             </RelativeLayout>
 
         </RelativeLayout>

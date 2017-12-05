@@ -1478,6 +1478,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void fragmentUISetup(Fragment fragment) {
         try {
+            // setting fatafat tutorial visibility
+            if(fragment instanceof AnywhereHomeFragment){
+                topBar.imgVwFatafatTutorial.setVisibility(View.VISIBLE);
+            }
+            else {
+                topBar.imgVwFatafatTutorial.setVisibility(View.GONE);
+            }
+
             int llSearchCartContainerVis = View.VISIBLE;
             int llSearchCartVis = View.VISIBLE;
             int llCartContainerVis = View.GONE;
@@ -4231,6 +4239,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             fabViewFatafat.setMenuLabelsRightTestPadding(padding,this,fabViewFatafat);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Show Fatafat tutorial
+     */
+    public void showFatafatTutorial() {
+        if(getTopFragment() instanceof AnywhereHomeFragment){
+            ((AnywhereHomeFragment)getTopFragment()).showFatafatTutorial();
         }
     }
 
