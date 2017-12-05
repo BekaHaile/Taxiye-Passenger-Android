@@ -853,7 +853,9 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     Utils.openCallIntent(activity, strName);
                 }
             });
+            builderSingle.setCancelable(true);
             builderSingle.show();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

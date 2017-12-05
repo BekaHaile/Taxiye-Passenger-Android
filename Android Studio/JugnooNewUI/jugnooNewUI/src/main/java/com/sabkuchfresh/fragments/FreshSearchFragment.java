@@ -232,6 +232,11 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 		subItemsInSearch.clear();
 		tokenSearched = "";
 		listHashMap.clear();
+		if(freshCategoryItemsAdapter!=null){
+			freshCategoryItemsAdapter.notifyDataSetChanged();
+
+		}
+
 	}
 
 	private synchronized void notifyAdapter(){
