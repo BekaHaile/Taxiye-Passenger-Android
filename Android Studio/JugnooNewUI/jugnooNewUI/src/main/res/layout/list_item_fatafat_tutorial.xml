@@ -18,7 +18,7 @@
         android:maxWidth="@dimen/image_width_fatafat_tutorial"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        tools:src="@drawable/ic_fatafat"/>
+        tools:src="@drawable/ic_fresh_item_placeholder"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
