@@ -1479,7 +1479,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void fragmentUISetup(Fragment fragment) {
         try {
             // setting fatafat tutorial visibility
-            if(fragment instanceof AnywhereHomeFragment){
+            if(fragment instanceof AnywhereHomeFragment &&
+                    Data.getFeedData().getFatafatTutorialData()!=null &&
+                    Data.getFeedData().getFatafatTutorialData().size()!=0){
                 topBar.imgVwFatafatTutorial.setVisibility(View.VISIBLE);
             }
             else {

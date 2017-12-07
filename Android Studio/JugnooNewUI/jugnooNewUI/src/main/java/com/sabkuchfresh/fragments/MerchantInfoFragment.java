@@ -14,11 +14,14 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,6 +146,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     LinearLayout layoutPhotos;
     @Bind(R.id.tvMerchantPhone)
     TextView tvMerchantPhone;
+    @Bind(R.id.tvOutOfRadiusFatafatBanner)
+    TextView tvOutOfRadiusFatafatBanner;
 
     private View rootView;
     private FreshActivity activity;
@@ -421,6 +426,26 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         R.drawable.capsule_grey_dark_bg : R.drawable.capsule_theme_color_selector);
                 bOrderOnline.setVisibility(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE ? View.GONE : View.VISIBLE);
                 bOrderOnline.setText(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_CHAT || activity.getVendorOpened().getOutOfRadius()==1 ? R.string.action_order_via_fatafat : R.string.order_online);
+
+                // decide whether to show out of radius strip
+                if(activity.getVendorOpened().isOutOfRadiusStrip()){
+
+                    tvOutOfRadiusFatafatBanner.setVisibility(View.VISIBLE);
+                    String heading = activity.getString(R.string.fatafat_banner_heading);
+                    String subHeading = activity.getString(R.string.fatafat_banner_sub_heading);
+                    StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+                    SpannableString spannableString = new SpannableString(heading +subHeading);
+                    spannableString.setSpan(new RelativeSizeSpan(0.9f),heading.length(),spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                    spannableString.setSpan(bss,0,heading.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                    spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity,R.color.text_color_fatafat_light)),heading.length(),spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                    tvOutOfRadiusFatafatBanner.setText(spannableString);
+                }
+                else {
+                    tvOutOfRadiusFatafatBanner.setVisibility(View.GONE);
+                }
+
+
+
             }
         } catch (Exception exception) {
             exception.printStackTrace();

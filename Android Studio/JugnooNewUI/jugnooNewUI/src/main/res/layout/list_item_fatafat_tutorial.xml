@@ -18,7 +18,7 @@
         android:maxWidth="@dimen/image_width_fatafat_tutorial"
         android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        tools:src="@drawable/ic_fatafat"/>
+        tools:src="@drawable/ic_fresh_item_placeholder"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -38,16 +38,13 @@
 
             <TextView
                 android:id="@+id/tvPointNo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/tv_point_min_size"
+                android:layout_height="@dimen/tv_point_min_size"
                 android:background="@drawable/circle_dull_gray"
                 android:gravity="center"
-                android:minHeight="@dimen/tv_point_min_size"
-                android:minWidth="@dimen/tv_point_min_size"
-                android:padding="@dimen/spacing_tiny"
                 android:textColor="@color/text_color_tutorial_black"
                 app:font="@string/avenir"
-                tools:text="1"
+                tools:text="99"
                 />
 
             <RelativeLayout
@@ -82,8 +79,7 @@
             android:layout_toEndOf="@+id/llPoints"
             android:layout_toRightOf="@+id/llPoints"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/spacing_large"
-            android:paddingTop="@dimen/spacing_tiny">
+            android:paddingBottom="@dimen/spacing_large">
 
             <TextView
                 android:id="@+id/tvHeader"

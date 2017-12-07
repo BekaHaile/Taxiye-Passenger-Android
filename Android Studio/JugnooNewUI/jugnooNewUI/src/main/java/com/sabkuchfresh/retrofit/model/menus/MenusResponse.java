@@ -372,6 +372,13 @@ public class MenusResponse {
 		@SerializedName("out_of_radius")
 		private Object outOfRadius;
 
+		@SerializedName("out_of_radius_strip")
+		private boolean outOfRadiusStrip;
+
+		public boolean isOutOfRadiusStrip() {
+			return outOfRadiusStrip;
+		}
+
 		public int getOutOfRadius() {
 			if(outOfRadius instanceof Integer || outOfRadius instanceof Double)
 				return (int) outOfRadius;
