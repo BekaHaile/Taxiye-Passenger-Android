@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="10dp"
-                android:text="Describe your Task"
+                android:text="@string/txt_describe_your_task"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
                 app:font="@string/maven_r" />

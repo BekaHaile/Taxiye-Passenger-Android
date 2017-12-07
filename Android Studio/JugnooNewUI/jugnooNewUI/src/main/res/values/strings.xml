@@ -1425,6 +1425,8 @@
     
     <!-- Fatafat how it works -->
     <string name="txt_how_it_works">How it works</string>
+    <string name="txt_describe_your_task">What do you need?</string>
+
 
 
 </resources>
