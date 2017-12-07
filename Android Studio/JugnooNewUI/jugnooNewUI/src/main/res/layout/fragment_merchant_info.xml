@@ -283,6 +283,10 @@
 
 
 
+            <include
+                android:id="@+id/tvOutOfRadiusFatafatBanner"
+                layout="@layout/item_banner_fatafat_restaurants"
+                android:visibility="gone"/>
 
 
             <View
