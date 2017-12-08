@@ -1,6 +1,7 @@
 package com.sabkuchfresh.fragments;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -42,6 +43,7 @@ import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.AppConstant;
+import com.sabkuchfresh.widgets.UserLockBottomSheetBehavior;
 import com.squareup.otto.Bus;
 
 import java.util.Arrays;
@@ -114,6 +116,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     LinearLayout llLocationsContainer;
     @Bind(R.id.llSetAnywhere)
     LinearLayout llSetAnywhere;
+    @Bind(R.id.ll_set_location_on_map)
+    LinearLayout llSetLocationOnMap;
 
 
     public double current_latitude = 0.0;
@@ -127,9 +131,11 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     private SearchResult searchResultNearPin = null;
 
 
-    private BottomSheetBehavior bottomSheetBehavior;
+    private UserLockBottomSheetBehavior bottomSheetBehavior;
     private GoogleMap googleMap;
     private boolean autoCompleteResultClicked = false;
+    private boolean isAnywhereFragmentLayout;
+
 
     @OnClick(R.id.bMyLocation)
     void zoomToCurrentLocation(){
@@ -224,18 +230,6 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 }, true, true, false);
                 listViewSavedLocations.setAdapter(savedPlacesAdapter);
 
-                if(activity instanceof FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment() != null && ((FreshActivity)activity).getAnywhereHomeFragment().isPickUpAddressRequested()){
-                    llSetAnywhere.setVisibility(View.VISIBLE);
-                    llSetAnywhere.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(null);
-                            ((FreshActivity)activity).performBackPressed(false);
-                        }
-                    });
-                } else {
-                    llSetAnywhere.setVisibility(View.GONE);
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -338,7 +332,15 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                             editTextDeliveryAddress.setText("");
                             scrollViewSearch.setVisibility(View.GONE);
 
-                            goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false, true);
+                            // in case of anywhere fragment redirect back and avoid address book
+                            if(activity instanceof  FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment() != null
+                                    && ((FreshActivity)activity).getAnywhereHomeFragment().isPickUpAddressRequested()){
+                                ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(searchResult);
+                                ((FreshActivity) activity).getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName()
+                                        , FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                            } else {
+                                goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false, true);
+                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -370,7 +372,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         listViewSearch.setAdapter(searchListAdapter);
 
 
-        bottomSheetBehavior = BottomSheetBehavior.from(scrollViewSuggestions);
+        bottomSheetBehavior = (UserLockBottomSheetBehavior) UserLockBottomSheetBehavior.from(scrollViewSuggestions);
         setSavedPlaces();
         if(!Data.isRecentAddressesFetched()) {
             getApiFetchUserAddress().hit(false);
@@ -441,6 +443,41 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         });
 
 
+        if(activity instanceof FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment() != null ){
+            isAnywhereFragmentLayout = true;
+            if(((FreshActivity)activity).getAnywhereHomeFragment().isPickUpAddressRequested()){
+                llSetAnywhere.setVisibility(View.VISIBLE);
+                llSetAnywhere.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(null);
+                        ((FreshActivity)activity).performBackPressed(false);
+                    }
+                });
+
+
+            }
+            bottomSheetBehavior.setDragEnabled(false);
+            bottomSheetBehavior.setPeekHeight(0);
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            llSetLocationOnMap.setVisibility(View.VISIBLE);
+            llSetLocationOnMap.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+
+                }
+            });
+            bottomSheetBehavior.setBottomSheetCallback(null);
+
+        } else {
+            llSetAnywhere.setVisibility(View.GONE);
+            llSetLocationOnMap.setVisibility(View.GONE);
+
+        }
+
+
         return rootView;
     }
 
@@ -468,37 +505,47 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
     private void setupMapAndButtonMargins() {
         if(getView() != null) {
-            RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
-            RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
-            int height = activity.getResources().getDimensionPixelSize(R.dimen.dp_162);
+
+            if(isAnywhereFragmentLayout){
+                RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
+                int height = activity.getResources().getDimensionPixelSize(R.dimen.dp_20);
+                paramsB.bottomMargin = height;
+                bNext.setLayoutParams(paramsB);
+
+            }else{
+                RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
+                RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
+                int height = activity.getResources().getDimensionPixelSize(R.dimen.dp_162);
 //        if (savedPlacesAdapter.getCount() + savedPlacesAdapterRecent.getCount() <= 5) {
 //            ViewGroup.LayoutParams layoutParams = scrollViewSuggestions.getLayoutParams();
 //            layoutParams.height = llLocationsContainer.getMeasuredHeight() + activity.getResources().getDimensionPixelSize(R.dimen.dp_8);
 //            scrollViewSuggestions.setLayoutParams(layoutParams);
 //            height = layoutParams.height;
 //        }
-            if (scrollViewSuggestions.getVisibility() == View.VISIBLE) {
-                if (savedPlacesAdapter.getCount() >= 3) {
-                    height = activity.getResources().getDimensionPixelSize(R.dimen.dp_280);
-                    paramsRL.setMargins(0, 0, 0, height);
-                    paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_300));
+                if (scrollViewSuggestions.getVisibility() == View.VISIBLE) {
+                    if (savedPlacesAdapter.getCount() >= 3) {
+                        height = activity.getResources().getDimensionPixelSize(R.dimen.dp_280);
+                        paramsRL.setMargins(0, 0, 0, height);
+                        paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_300));
+                    } else {
+                        paramsRL.setMargins(0, 0, 0, height);
+                        paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_186));
+                    }
                 } else {
-                    paramsRL.setMargins(0, 0, 0, height);
-                    paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_186));
+                    paramsRL.setMargins(0, 0, 0, 0);
+                    paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
                 }
-            } else {
-                paramsRL.setMargins(0, 0, 0, 0);
-                paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
+                rlMarkerPin.setLayoutParams(paramsRL);
+                bNext.setLayoutParams(paramsB);
+                if (googleMap != null) {
+                    googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
+                            height : 0);
+                }
+                if (bottomSheetBehavior != null ) {
+                    bottomSheetBehavior.setPeekHeight(height);
+                }
             }
-            rlMarkerPin.setLayoutParams(paramsRL);
-            bNext.setLayoutParams(paramsB);
-            if (googleMap != null) {
-                googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
-                        height : 0);
-            }
-            if (bottomSheetBehavior != null) {
-                bottomSheetBehavior.setPeekHeight(height);
-            }
+
         }
     }
 
@@ -909,11 +956,31 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 if (activity instanceof FreshActivity) {
                     // If searchResultNearPin is null, directing user to save this location to address book
                     if(searchResultNearPin == null) {
-                        FreshActivity freshActivity = (FreshActivity) activity;
-                        freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
-                        freshActivity.setSearchResult(null);
-                        freshActivity.setEditThisAddress(false);
-                        freshActivity.openAddToAddressBook(createAddressBundle(""));
+
+                        // in case of anywhere fragment redirect back and avoid address book
+                        if(((FreshActivity)activity).getAnywhereHomeFragment() != null
+                                && ((FreshActivity)activity).getAnywhereHomeFragment().isPickUpAddressRequested()){
+                            StringBuilder addressBuilder = new StringBuilder();
+                            addressBuilder.append(current_street)
+                                    .append(TextUtils.isEmpty(current_street)?"":", ")
+                                    .append(current_route)
+                                    .append(current_area)
+                                    .append(TextUtils.isEmpty(current_area)?"":", ")
+                                    .append(current_city)
+                                    .append(TextUtils.isEmpty(current_city)?"":", ")
+                                    .append(current_pincode);
+
+                            SearchResult searchResult = new SearchResult("",addressBuilder.toString()
+                                    ,"",current_latitude,current_longitude);
+                            ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(searchResult);
+                            ((FreshActivity) activity).getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        } else {
+                            FreshActivity freshActivity = (FreshActivity) activity;
+                            freshActivity.setPlaceRequestCode(Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+                            freshActivity.setSearchResult(null);
+                            freshActivity.setEditThisAddress(false);
+                            freshActivity.openAddToAddressBook(createAddressBundle(""));
+                        }
                     }
                     // Else use searchResultNearPin and perform saved addresses list click functionality
                     else {
