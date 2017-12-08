@@ -3,6 +3,7 @@ package com.sabkuchfresh.fragments;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -52,6 +53,8 @@ import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -561,9 +564,23 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                     }
                                 }
                             }, 1000);
+
+
+
                             if (orderAnywhereResponse != null && !TextUtils.isEmpty(orderAnywhereResponse.getFuguChannelId())) {
-                                FuguConfig.getInstance().openChatByTransactionId(orderAnywhereResponse.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-                                        orderAnywhereResponse.getFuguChannelName(), orderAnywhereResponse.getFuguTags(), new String[]{fuguMessage});
+
+                                // start ride transaction with indication to start fugu chat
+                                Intent intent = new Intent(activity, RideTransactionsActivity.class);
+                                intent.putExtra(Constants.KEY_ORDER_ID,orderAnywhereResponse.getOrderId());
+                                intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.FEED.getOrdinal());
+                                intent.putExtra(Constants.KEY_FUGU_CHANNEL_ID,orderAnywhereResponse.getFuguChannelId());
+                                intent.putExtra(Constants.KEY_FUGU_CHANNEL_NAME,orderAnywhereResponse.getFuguChannelName());
+                                intent.putStringArrayListExtra(Constants.KEY_FUGU_TAGS,orderAnywhereResponse.getFuguTags());
+                                intent.putExtra(Constants.KEY_MESSAGE,fuguMessage);
+
+                                activity.startActivity(intent);
+                                activity.overridePendingTransition(R.anim.hold, R.anim.hold);
+
                             } else {
                                 FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
                             }
