@@ -238,7 +238,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 edtTaskDescription.setText(orderViaChatData.getCartText());
                 edtTaskDescription.setEnabled(false);
             } else {
-                ((TextView)rootView.findViewById(R.id.tv_label_edt)).setText(R.string.txt_what_do_you_need);
                 isOrderViaRestaurantDetail = true;
                 setMaxLength(edtTaskDescription, 1000);
                 edtTaskDescription.setHint(R.string.anywhere_hint_order_via_chat);
@@ -416,7 +415,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     public void setRequestedAddress(SearchResult searchResult) {
         setAddress(!isPickUpAddressRequested, searchResult);
-        fetchDynamicDeliveryCharges(false,true);
+        fetchDynamicDeliveryCharges(false,false);
 
     }
 
@@ -736,7 +735,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                         }
                     });
         }else{
-            Utils.showToast(activity,getString(R.string.add_delivery_address));
+            if(showLoader){
+                Utils.showToast(activity,getString(R.string.add_delivery_address));
+
+            }
 
         }
 

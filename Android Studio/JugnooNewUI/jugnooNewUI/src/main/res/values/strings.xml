@@ -1372,7 +1372,7 @@
     <string name="submit_your_rating">Submit Your Rating</string>
     <string name="submit_your_review">Submit Your Review</string>
     <string name="locate">Locate</string>
-    <string name="please_enter_some_desc">Please enter some description about the task</string>
+    <string name="please_enter_some_desc">Please tell us what you need.</string>
     <string name="please_select_a_pickup_address">Please select a pickup address</string>
     <string name="label_anywhere">Anywhere</string>
     <string name="add_delivery_address">Select Delivery Address</string>

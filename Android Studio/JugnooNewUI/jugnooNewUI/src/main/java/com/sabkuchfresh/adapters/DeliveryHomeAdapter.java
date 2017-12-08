@@ -239,8 +239,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         //vendors Assignment
         if(menusResponse.getVendors() != null){
-            for(MenusResponse.Vendor vendor : menusResponse.getVendors()){
-
+            /*
                 if(!isFatafatBannerInserted && vendor.getOutOfRadius()==1){
                     if(dataToDisplay.size()>1){
                         dataToDisplay.add(new DeliveryDivider());
@@ -248,10 +247,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                     dataToDisplay.add(new OutOfRadiusBanner());
                     isFatafatBannerInserted = true;
-                }
-                dataToDisplay.add(vendor);
-
-            }
+                }*/
+            dataToDisplay.addAll(menusResponse.getVendors());
         }
 
         // service unavailable case

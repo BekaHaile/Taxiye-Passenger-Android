@@ -71,10 +71,11 @@
         android:id="@+id/scrollViewSuggestions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/shadow_up_address_map"
+        android:background="@color/menu_item_selector_color_F7"
         android:clipToPadding="true"
         android:visibility="visible"
-        app:layout_behavior="com.sabkuchfresh.widgets.UserLockBottomSheetBehavior">
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior" >
+        <!--app:layout_behavior="com.sabkuchfresh.widgets.UserLockBottomSheetBehavior">-->
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -94,37 +95,7 @@
                 android:orientation="vertical">
 
 
-                <LinearLayout
-                    android:id="@+id/ll_set_location_on_map"
-                    android:visibility="gone"
-                    android:paddingTop="15px"
-                    android:paddingBottom="15px"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
 
-
-                    <ImageView
-                        android:id="@+id/imageViewType"
-                        android:layout_width="50px"
-                        android:layout_height="50px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="30px"
-                        android:src="@drawable/ic_loc_other"
-                        android:tag="mwar"
-                        android:visibility="visible" />
-
-                    <TextView
-                        android:background="@android:color/white"
-                        android:layout_width="match_parent"
-                        app:font="@string/maven"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="20px"
-                        android:gravity="center|left"
-                        android:textSize="32px"
-                        android:textColor="@color/text_color"
-                        android:text="Set Location on Map"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/llSetAnywhere"
@@ -156,10 +127,62 @@
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
+
+
+
                 <View
-                    android:background="@color/grey_light_choose_destination"
+                    android:id="@+id/divider_above_map"
                     android:layout_width="match_parent"
-                    android:layout_height="2px"/>
+                    android:layout_height="2px"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginRight="60px"
+                    android:background="@color/stroke_light_grey_alpha"
+                    />
+
+
+                <LinearLayout
+                    android:id="@+id/ll_set_location_on_map"
+                    android:visibility="gone"
+                    android:paddingTop="15px"
+                    android:paddingBottom="15px"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+
+
+
+                    <ImageView
+                        android:id="@+id/imageViewType"
+                        android:layout_width="50px"
+                        android:layout_height="50px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="30px"
+                        android:src="@drawable/ic_loc_other"
+                        android:tag="mwar"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:background="@android:color/white"
+                        android:layout_width="match_parent"
+                        app:font="@string/maven"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20px"
+                        android:gravity="center|left"
+                        android:textSize="32px"
+                        android:textColor="@color/text_color"
+                        android:text="Set Location on Map"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/grey_light_choose_destination"
+                    android:layout_width="match_parent"
+                    android:background="@color/stroke_light_grey_alpha"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="40px"
+                    android:layout_marginRight="60px"/>
+
 
                 <TextView
                     android:id="@+id/textViewSavedPlaces"

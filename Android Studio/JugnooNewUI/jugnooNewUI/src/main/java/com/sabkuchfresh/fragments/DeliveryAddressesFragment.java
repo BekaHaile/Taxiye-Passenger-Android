@@ -131,7 +131,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     private SearchResult searchResultNearPin = null;
 
 
-    private UserLockBottomSheetBehavior bottomSheetBehavior;
+    private BottomSheetBehavior bottomSheetBehavior;
+    private UserLockBottomSheetBehavior bottomSheetBehaviorLocked;
     private GoogleMap googleMap;
     private boolean autoCompleteResultClicked = false;
     private boolean isAnywhereFragmentLayout;
@@ -240,16 +241,24 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
 					@Override
 					public void onItemClick(SearchResult searchResult) {
-						if(searchResult.getIsConfirmed() == 1){
-							onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-									searchResult.getAddress(), searchResult.getId(), searchResult.getName(),searchResult);
-                            if(activity instanceof FreshActivity) {
-                                GAUtils.event(((FreshActivity) activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES + SELECTED);
+                        if(activity instanceof  FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment() != null
+                                && ((FreshActivity)activity).getAnywhereHomeFragment().isPickUpAddressRequested()){
+                            ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(searchResult);
+                            ((FreshActivity) activity).getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName()
+                                    , FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        } else {
+                            if(searchResult.getIsConfirmed() == 1){
+                                onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
+                                        searchResult.getAddress(), searchResult.getId(), searchResult.getName(),searchResult);
+                                if(activity instanceof FreshActivity) {
+                                    GAUtils.event(((FreshActivity) activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES + SELECTED);
+                                }
+                            } else {
+                                goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false, false);
                             }
-						} else {
-							goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false, false);
-						}
-					}
+                        }
+                        }
+
 
 					@Override
 					public void onDeleteClick(SearchResult searchResult) {
@@ -317,6 +326,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
                     @Override
                     public void onPlaceClick(SearchResult autoCompleteSearchResult) {
+
                     }
 
                     @Override
@@ -372,7 +382,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         listViewSearch.setAdapter(searchListAdapter);
 
 
-        bottomSheetBehavior = (UserLockBottomSheetBehavior) UserLockBottomSheetBehavior.from(scrollViewSuggestions);
+        setBottomSheetBehavior();
         setSavedPlaces();
         if(!Data.isRecentAddressesFetched()) {
             getApiFetchUserAddress().hit(false);
@@ -445,6 +455,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
         if(activity instanceof FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment() != null ){
             isAnywhereFragmentLayout = true;
+            rootView.findViewById(R.id.divider_above_map).setVisibility(View.GONE);
+
             if(((FreshActivity)activity).getAnywhereHomeFragment().isPickUpAddressRequested()){
                 llSetAnywhere.setVisibility(View.VISIBLE);
                 llSetAnywhere.setOnClickListener(new View.OnClickListener() {
@@ -455,23 +467,26 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     }
                 });
 
+                rootView.findViewById(R.id.divider_above_map).setVisibility(View.VISIBLE);
 
             }
-            bottomSheetBehavior.setDragEnabled(false);
-            bottomSheetBehavior.setPeekHeight(0);
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+            getBottomSheetBehaviour().setPeekHeight(0);
+            getBottomSheetBehaviour().setState(BottomSheetBehavior.STATE_EXPANDED);
             llSetLocationOnMap.setVisibility(View.VISIBLE);
             llSetLocationOnMap.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    getBottomSheetBehaviour().setState(BottomSheetBehavior.STATE_COLLAPSED);
 
 
                 }
             });
-            bottomSheetBehavior.setBottomSheetCallback(null);
+
+            getBottomSheetBehaviour().setBottomSheetCallback(null);
 
         } else {
+            rootView.findViewById(R.id.divider_above_map).setVisibility(View.GONE);
             llSetAnywhere.setVisibility(View.GONE);
             llSetLocationOnMap.setVisibility(View.GONE);
 
@@ -508,10 +523,16 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
             if(isAnywhereFragmentLayout){
                 RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
+                RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
                 int height = activity.getResources().getDimensionPixelSize(R.dimen.dp_20);
                 paramsB.bottomMargin = height;
                 bNext.setLayoutParams(paramsB);
-
+                if (googleMap != null) {
+                    googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
+                            height : 0);
+                }
+                paramsRL.setMargins(0, 0, 0, 0);
+                rlMarkerPin.setLayoutParams(paramsRL);
             }else{
                 RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
                 RelativeLayout.LayoutParams paramsB = (RelativeLayout.LayoutParams) bNext.getLayoutParams();
@@ -541,8 +562,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
                             height : 0);
                 }
-                if (bottomSheetBehavior != null ) {
-                    bottomSheetBehavior.setPeekHeight(height);
+                if (getBottomSheetBehaviour() != null ) {
+                    getBottomSheetBehaviour().setPeekHeight(height);
                 }
             }
 
@@ -766,7 +787,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 setFetchedAddressToTextView(addressRes);
                 autoCompleteResultClicked = true;
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14), 300, null);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                getBottomSheetBehaviour().setState(BottomSheetBehavior.STATE_COLLAPSED);
             }
             // else do normally, direct to AddToAddressBook Fragment
             else {
@@ -1028,5 +1049,30 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             goToPredefinedSearchResultConfirmation(searchResult, searchResult.getPlaceRequestCode(), true, false);
         }
     }
+
+    private BottomSheetBehavior getBottomSheetBehaviour(){
+        if(activity instanceof FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment()!=null){
+            return bottomSheetBehaviorLocked;
+        }else{
+           return  bottomSheetBehavior;
+        }
+    }
+
+    private void setBottomSheetBehavior(){
+        if(activity instanceof FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment()!=null){
+            CoordinatorLayout.LayoutParams params =
+                    (CoordinatorLayout.LayoutParams) scrollViewSuggestions.getLayoutParams();
+            params.setBehavior(new UserLockBottomSheetBehavior());
+            scrollViewSuggestions.requestLayout();
+            bottomSheetBehaviorLocked = (UserLockBottomSheetBehavior) UserLockBottomSheetBehavior.from(scrollViewSuggestions);
+        }else{
+            CoordinatorLayout.LayoutParams params =
+                    (CoordinatorLayout.LayoutParams) scrollViewSuggestions.getLayoutParams();
+            params.setBehavior(new BottomSheetBehavior());
+            scrollViewSuggestions.requestLayout();
+            bottomSheetBehavior = BottomSheetBehavior.from(scrollViewSuggestions);
+        }
+    }
+
 
 }

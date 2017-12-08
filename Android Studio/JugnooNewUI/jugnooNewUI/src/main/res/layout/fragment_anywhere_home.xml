@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="10dp"
-                android:text="@string/txt_describe_your_task"
+                android:text="@string/txt_what_do_you_need"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
                 app:font="@string/maven_r" />
@@ -315,7 +315,7 @@
                         android:id="@+id/label_delivery_info"
                         android:textColor="@color/text_color"
                         android:textSize="14sp"
-                        android:text="Estimated Charges"
+                        android:text="@string/estimated_delivery"
                         android:gravity="center"
                         android:minHeight="40dp"
                         android:paddingLeft="10dp"

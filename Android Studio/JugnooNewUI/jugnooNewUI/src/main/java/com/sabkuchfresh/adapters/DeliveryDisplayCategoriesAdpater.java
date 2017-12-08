@@ -146,9 +146,10 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 						if(categoriesList.get(pos)!=null){
 							if(categoriesList.get(pos).getId()==-1){
 								categoriesList.remove(categoriesList.size()-1);
+								int size = categoriesList.size();
 								categoriesList.addAll(cachedList);
 								isCategoriesCollapsed = false;
-								notifyDataSetChanged();
+								notifyItemRangeChanged(size,cachedList.size());
 							}else{
 								callback.onItemClick(categoriesList.get(pos));
 

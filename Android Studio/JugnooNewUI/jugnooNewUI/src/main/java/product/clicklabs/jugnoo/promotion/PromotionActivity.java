@@ -55,6 +55,7 @@ import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
 import product.clicklabs.jugnoo.promotion.adapters.PromoAdapter;
 import product.clicklabs.jugnoo.promotion.fragments.PromoDescriptionFragment;
 import product.clicklabs.jugnoo.promotion.models.Promo;
@@ -683,7 +684,16 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         if(pcRides.size() > 0) {
             pcRides = countAndRemoveDuplicatePromoCoupons(pcRides);
             for(PromoCoupon pc : pcRides){
-                promosList.add(new Promo(getString(R.string.rides), Config.getAutosClientId(), pc, R.drawable.ic_promo_rides, R.color.theme_color));
+                int id  = R.drawable.ic_promo_all;
+                if(pc.getAllowedVehicles()!=null && pc.getAllowedVehicles().size()==1){
+                    if(pc.getAllowedVehicles().get(0).equals(VehicleTypeValue.AUTOS.getOrdinal())){
+                        id = R.drawable.ic_promo_rides;
+                    }else if(pc.getAllowedVehicles().get(0).equals(VehicleTypeValue.TAXI.getOrdinal())){
+                        id = R.drawable.ic_taxi_gradient;
+                    }
+                }
+
+                promosList.add(new Promo(getString(R.string.rides), Config.getAutosClientId(), pc, id, R.color.theme_color));
             }
         }
         if(pcMeals.size() > 0) {

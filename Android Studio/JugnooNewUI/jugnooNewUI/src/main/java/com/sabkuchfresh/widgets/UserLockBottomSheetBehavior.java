@@ -16,7 +16,7 @@ public class UserLockBottomSheetBehavior<V extends View> extends BottomSheetBeha
 
 
 
-    private boolean isDragEnabled = true;
+    private boolean isDragEnabled = false;
     public UserLockBottomSheetBehavior() {
         super();
     }
@@ -55,7 +55,5 @@ public class UserLockBottomSheetBehavior<V extends View> extends BottomSheetBeha
         return isDragEnabled;
     }
 
-    public boolean isDragEnabled() {
-        return isDragEnabled;
-    }
+
 }
