@@ -76,6 +76,14 @@ public class FatafatTutorialAdapter extends RecyclerView.Adapter<FatafatTutorial
             holder.mRlTimeLine.setVisibility(View.VISIBLE);
         }
 
+        // hide the top view in case of first position
+        if (mPosition == 0) {
+            holder.mVwTopLine.setVisibility(View.INVISIBLE);
+        } else {
+            holder.mVwTopLine.setVisibility(View.VISIBLE);
+        }
+
+
     }
 
     @Override
@@ -91,6 +99,7 @@ public class FatafatTutorialAdapter extends RecyclerView.Adapter<FatafatTutorial
         private TextView mTvPointNo, mTvPointHeader, mTvPointContent;
         private ImageView mImgVwCatIcon;
         private RelativeLayout mRlTimeLine;
+        private View mVwTopLine;
 
         TutorialViewHolder(final View itemView) {
             super(itemView);
@@ -100,6 +109,7 @@ public class FatafatTutorialAdapter extends RecyclerView.Adapter<FatafatTutorial
             mTvPointContent = (TextView) itemView.findViewById(R.id.tvContent);
             mImgVwCatIcon = (ImageView) itemView.findViewById(R.id.imgVwCatIcon);
             mRlTimeLine = (RelativeLayout) itemView.findViewById(R.id.rlTimeLine);
+            mVwTopLine = itemView.findViewById(R.id.vwTopLine);
         }
     }
 }

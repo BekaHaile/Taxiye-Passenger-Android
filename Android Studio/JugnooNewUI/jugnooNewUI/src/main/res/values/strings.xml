@@ -1419,7 +1419,7 @@
         <item quantity="other">%d Ratings</item>
     </plurals>
     <string name="fatafat_banner_heading"><b>Get it delivered via Fatafat \n</b></string>
-    <string name="fatafat_banner_sub_heading">These stores don’t deliver to your address but \n you can still get delivery via Fatafat.</string>
+    <string name="fatafat_banner_sub_heading">Your location is outside store\'s delivery area but you can get it through Fatafat</string>
     <string name="estimated_delivery_charges">Estimated Delivery Charges</string>
     <string name="estimated_delivery">Estimated Delivery</string>
 

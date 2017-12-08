@@ -43,6 +43,12 @@
             android:gravity="center"
             android:orientation="vertical">
 
+            <View
+                android:id="@+id/vwTopLine"
+                android:layout_width="@dimen/grey_divider_height"
+                android:layout_height="@dimen/dp_12"
+                android:background="@color/dull_background"/>
+
             <TextView
                 android:id="@+id/tvPointNo"
                 android:layout_width="@dimen/tv_point_min_size"
@@ -92,6 +98,7 @@
                 android:id="@+id/tvHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_12"
                 android:textColor="@color/text_color_tutorial_black"
                 android:textSize="@dimen/font_large"
                 app:font="@string/maven"
