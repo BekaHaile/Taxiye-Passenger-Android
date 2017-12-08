@@ -331,7 +331,7 @@
                         android:gravity="center|right"
                         android:layout_toRightOf="@id/label_delivery_info"
                         android:layout_alignTop="@id/label_delivery_info"
-                        android:text="--"
+                        android:text="@string/no_value_delivery_charges"
                         android:minHeight="40dp"
                         android:textSize="20sp"
                         android:paddingRight="10dp"

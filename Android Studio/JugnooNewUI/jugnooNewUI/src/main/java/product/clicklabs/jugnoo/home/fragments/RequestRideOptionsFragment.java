@@ -480,7 +480,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     }
 
     public void setSelectedCoupon(PromoCoupon promoCoupon){
-        if(promoCoupon.isVehicleTypeExists(activity.getVehicleTypeSelected())){
+        if(promoCoupon!=null && promoCoupon.isVehicleTypeExists(activity.getVehicleTypeSelected())){
             selectedCoupon = promoCoupon;
 
         }else{

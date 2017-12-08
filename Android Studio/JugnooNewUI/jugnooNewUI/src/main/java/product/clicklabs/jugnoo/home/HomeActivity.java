@@ -9024,6 +9024,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         }
         showPoolInforBar(false);
+        slidingBottomPanel.getRequestRideOptionsFragment().updateOffersCount();
     }
 
     public int getVehicleTypeSelected(){

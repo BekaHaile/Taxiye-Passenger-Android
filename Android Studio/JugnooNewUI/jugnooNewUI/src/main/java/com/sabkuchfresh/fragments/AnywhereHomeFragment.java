@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
@@ -672,6 +673,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     new APICommonCallback<DynamicDeliveryResponse>() {
                         @Override
                         public boolean onNotConnected() {
+                            resetDeliveryViews();
                             // we return false if showLoader is true otherwise true
                             return !showLoader;
 
@@ -679,6 +681,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                         @Override
                         public boolean onException(Exception e) {
+                            resetDeliveryViews();
                             e.printStackTrace();
                             return !showLoader;
 
@@ -706,7 +709,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                     }
 
                                 } else {
-                                    anywhereDeliveryChargesDialog = null;
+                                    resetDeliveryViews();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -716,12 +719,14 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                         @Override
                         public boolean onError(DynamicDeliveryResponse dynamicDeliveryResponse, String message, int flag) {
+                            resetDeliveryViews();
                             return !showLoader;
                         }
 
 
                         @Override
                         public boolean onFailure(RetrofitError error) {
+                            resetDeliveryViews();
                             return !showLoader;
                         }
 
@@ -730,8 +735,17 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                         }
                     });
+        }else{
+            Utils.showToast(activity,getString(R.string.add_delivery_address));
+
         }
 
+    }
+
+    private void resetDeliveryViews() {
+        labelDeliveryValue.setText(R.string.no_value_delivery_charges);
+        labelDeliveryInfo.setText(R.string.estimated_delivery);
+        anywhereDeliveryChargesDialog = null;
     }
 
     /**
