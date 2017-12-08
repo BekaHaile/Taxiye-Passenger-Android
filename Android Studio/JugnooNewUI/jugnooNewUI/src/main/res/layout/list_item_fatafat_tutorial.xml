@@ -11,12 +11,21 @@
               android:paddingRight="@dimen/spacing_large"
               android:paddingStart="@dimen/spacing_extra_large">
 
-    <ImageView
-        android:id="@+id/imgVwCatIcon"
-        android:layout_height="wrap_content"
+    <RelativeLayout
         android:layout_width="@dimen/image_size_fatafat_tutorial"
-        android:adjustViewBounds="true"
-        tools:src="@drawable/ic_fresh_item_placeholder"/>
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imgVwCatIcon"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_centerInParent="true"
+            tools:src="@drawable/ic_fresh_item_placeholder"/>
+
+    </RelativeLayout>
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
