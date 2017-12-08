@@ -62,7 +62,7 @@ public class FatafatTutorialAdapter extends RecyclerView.Adapter<FatafatTutorial
         }
         if (fatafatTutorialData.getImageUrl() != null && !TextUtils.isEmpty(fatafatTutorialData.getImageUrl())) {
             Picasso.with(mContext).load(fatafatTutorialData.getImageUrl())
-                    .fit().centerCrop().placeholder(R.drawable.ic_fresh_item_placeholder)
+                    .fit().centerInside().placeholder(R.drawable.ic_fresh_item_placeholder)
                     .error(R.drawable.ic_fresh_item_placeholder)
                     .into(holder.mImgVwCatIcon);
         } else {

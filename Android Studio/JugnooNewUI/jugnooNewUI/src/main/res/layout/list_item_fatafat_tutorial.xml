@@ -13,11 +13,9 @@
 
     <ImageView
         android:id="@+id/imgVwCatIcon"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="@dimen/image_width_fatafat_tutorial"
+        android:layout_width="@dimen/image_size_fatafat_tutorial"
         android:adjustViewBounds="true"
-        android:scaleType="centerCrop"
         tools:src="@drawable/ic_fresh_item_placeholder"/>
 
     <RelativeLayout
