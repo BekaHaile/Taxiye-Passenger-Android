@@ -14,13 +14,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
 import android.text.style.URLSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -431,14 +427,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 if(activity.getVendorOpened().isOutOfRadiusStrip()){
 
                     tvOutOfRadiusFatafatBanner.setVisibility(View.VISIBLE);
-                    String heading = activity.getString(R.string.fatafat_banner_heading);
                     String subHeading = activity.getString(R.string.fatafat_banner_sub_heading);
-                    StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-                    SpannableString spannableString = new SpannableString(heading +subHeading);
-                    spannableString.setSpan(new RelativeSizeSpan(0.9f),heading.length(),spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                    spannableString.setSpan(bss,0,heading.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                    spannableString.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity,R.color.text_color_fatafat_light)),heading.length(),spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                    tvOutOfRadiusFatafatBanner.setText(spannableString);
+                    tvOutOfRadiusFatafatBanner.setText(subHeading);
                 }
                 else {
                     tvOutOfRadiusFatafatBanner.setVisibility(View.GONE);
