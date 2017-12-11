@@ -25,11 +25,13 @@
             <ImageView
                 android:id="@+id/imageViewMenu"
                 android:layout_width="65px"
-                android:layout_height="50px"
+                android:layout_height="65px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10px"
                 android:padding="@dimen/px_15"
                 android:src="@drawable/ic_menu_new_selector"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:theme="@style/GreyHighlight"
                 android:tag="mwar" />
 
             <Button
@@ -41,7 +43,8 @@
 
             <ImageView
                 android:id="@+id/imageViewBack"
-                style="@style/back_image" />
+                style="@style/back_image"
+                />
 
             <EditText
                 android:id="@+id/editTextDeliveryAddress"
@@ -112,6 +115,8 @@
                 android:padding="20px"
                 android:src="@drawable/ic_cross_et"
                 android:tag="mwar"
+                android:theme="@style/GreyHighlight"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:visibility="gone" />
 
             <ImageView
@@ -121,8 +126,10 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="10px"
+                android:theme="@style/GreyHighlight"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="20px"
-                android:src="@drawable/ic_delete_selector"
+                android:src="@drawable/ic_delete"
                 android:tag="mwar"
                 android:visibility="gone" />
 
@@ -258,6 +265,8 @@
                         android:layout_marginTop="5px"
                         android:layout_marginBottom="5px"
                         android:layout_gravity="center_vertical"
+                        android:theme="@style/GreyHighlight"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:layout_marginRight="@dimen/px_15"
                         android:src="@drawable/ic_cross_grey_selector"
                         android:visibility="visible" />
@@ -269,12 +278,14 @@
                     android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
                     android:layout_alignParentRight="true"
+                    android:paddingRight="@dimen/dp_10"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/px_20"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:visibility="visible">
+
 
                     <ImageView
                         android:id="@+id/ivSearch"
@@ -329,17 +340,17 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
-                    android:padding="10dp"
+                    android:padding="@dimen/dp_10"
                     android:tag="@string/dont_touch_me"
+                    android:theme="@style/GreyHighlight"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
-                    <ImageView
 
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_tutorial_selector"
-
-                        android:theme="@style/FatafatTutorial"
                         android:visibility="visible"
                         />
                 </RelativeLayout>

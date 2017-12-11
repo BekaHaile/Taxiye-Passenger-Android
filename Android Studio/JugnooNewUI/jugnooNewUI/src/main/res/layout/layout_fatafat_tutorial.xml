@@ -35,7 +35,7 @@
             android:layout_marginEnd="@dimen/spacing_small"
             android:layout_marginRight="@dimen/spacing_small"
             android:padding="@dimen/spacing_small"
-            android:theme="@style/FatafatTutorial"
+            android:theme="@style/GreyHighlight"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_cross"/>
 

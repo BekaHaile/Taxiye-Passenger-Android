@@ -11,4 +11,35 @@
         <item name="android:textColorHint">#595968</item>
         <item name="android:windowContentTransitions">true</item>
     </style>
+
+    <style name="back_image">
+        <item name="android:layout_width">
+            76px
+        </item>
+        <item name="android:layout_height">
+            76px
+        </item>
+        <item name="android:layout_centerVertical">
+            true
+        </item>
+        <item name="android:padding">
+            20px
+        </item>
+        <item name="android:src">
+            @drawable/ic_back_selector
+        </item>
+        <item name="android:scaleType">
+            centerInside
+        </item>
+        <item name="android:layout_marginLeft">
+            10px
+        </item>
+        <item name="android:theme">@style/GreyHighlight</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:tag">
+            mwar
+        </item>
+
+    </style>
+
 </resources>
