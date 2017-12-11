@@ -57,6 +57,7 @@ public class TopBar implements GAAction, GACategory {
     private Animation searchBarCloseAnimation;
     public ImageView ivFreshSort;
     private TextView tvTopBarDeliveryAddressLocation;
+    private TextView tvAddressLayoutTitle;
 
 
     public TopBar(Activity activity, DrawerLayout drawerLayout) {
@@ -76,6 +77,7 @@ public class TopBar implements GAAction, GACategory {
         llSearchCart = (LinearLayout) drawerLayout.findViewById(R.id.llSearchCart);
         llTopBarDeliveryAddress = (LinearLayout) drawerLayout.findViewById(R.id.llTopBarDeliveryAddress);
         tvTopBarDeliveryAddressLocation = (TextView) drawerLayout.findViewById(R.id.tvTopBarDeliveryAddressLocation);
+        tvAddressLayoutTitle = (TextView) drawerLayout.findViewById(R.id.tvAddressLayoutTitle);
 
         imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
         imgVwFatafatTutorial=(RelativeLayout)topRl.findViewById(R.id.ivTutorial);
@@ -108,6 +110,7 @@ public class TopBar implements GAAction, GACategory {
         imageViewBack.setOnClickListener(topBarOnClickListener);
         ivFreshSort.setOnClickListener(topBarOnClickListener);
         imgVwFatafatTutorial.setOnClickListener(topBarOnClickListener);
+        llTopBarDeliveryAddress.setOnClickListener(topBarOnClickListener);
 
         buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -311,6 +314,14 @@ public class TopBar implements GAAction, GACategory {
 
     public TextView getTvTopBarDeliveryAddressLocation() {
         return tvTopBarDeliveryAddressLocation;
+    }
+
+    public LinearLayout getLlTopBarDeliveryAddress() {
+        return llTopBarDeliveryAddress;
+    }
+
+    public TextView getTvAddressLayoutTitle() {
+        return tvAddressLayoutTitle;
     }
 }
 

@@ -156,7 +156,7 @@ public class AddPlaceActivity extends BaseFragmentActivity {
 //        } else {
 //            getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer);
 //        }
-        getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer);
+        getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer, false);
 
     }
 

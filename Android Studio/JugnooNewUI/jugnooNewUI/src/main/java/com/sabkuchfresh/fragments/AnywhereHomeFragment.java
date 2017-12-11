@@ -27,7 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
@@ -365,11 +364,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         switch (view.getId()) {
             case R.id.cv_pickup_address:
                 isPickUpAddressRequested = true;
-                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
+                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer(), true);
                 break;
             case R.id.cv_delivery_address:
                 isPickUpAddressRequested = false;
-                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
+                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer(), false);
                 break;
             case R.id.rb_asap:
                /* isAsapSelected = true;

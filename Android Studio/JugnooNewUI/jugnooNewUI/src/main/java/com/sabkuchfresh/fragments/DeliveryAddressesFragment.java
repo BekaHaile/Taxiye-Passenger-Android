@@ -155,7 +155,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         return new LatLng(Data.latitude, Data.longitude);
     }
 
-    public DeliveryAddressesFragment() {
+    public DeliveryAddressesFragment(boolean canProceedWithUnsavedAddressMode) {
+        this.canProceedWithUnsavedAddressMode = canProceedWithUnsavedAddressMode;
 
     }
 
@@ -253,8 +254,11 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                                     GAUtils.event(((FreshActivity) activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES + SELECTED);
                                 }
                             }
-                            ((FreshActivity) activity).getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName()
-                                    , FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                            if(activity instanceof FreshActivity){
+                                ((FreshActivity) activity).getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName()
+                                        , FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                            }
+
                         }
                         else {
                             if(searchResult.getIsConfirmed() == 1){
@@ -367,8 +371,11 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                                     }
                                 }
 
-                                ((FreshActivity) activity).getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName()
-                                        , FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                if(activity instanceof FreshActivity){
+                                    ((FreshActivity) activity).getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName()
+                                            , FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                }
+
                             }
                             else {
                                 goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false, true);
@@ -483,8 +490,11 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 llSetAnywhere.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(null);
-                        ((FreshActivity)activity).performBackPressed(false);
+                        if(activity instanceof FreshActivity){
+                            ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(null);
+                            ((FreshActivity)activity).performBackPressed(false);
+                        }
+
                     }
                 });
 
@@ -694,6 +704,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
             params.put("language", Locale.getDefault().getCountry());
             params.put("sensor", "false");
+
 
             RestClient.getGoogleApiService().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
                 @Override
@@ -1004,6 +1015,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                             addressBuilder.append(current_street)
                                     .append(TextUtils.isEmpty(current_street)?"":", ")
                                     .append(current_route)
+                                    .append(TextUtils.isEmpty(current_route)?"":", ")
                                     .append(current_area)
                                     .append(TextUtils.isEmpty(current_area)?"":", ")
                                     .append(current_city)

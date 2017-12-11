@@ -7,12 +7,10 @@
     android:orientation="vertical"
     android:background="@android:color/white">
 
-    <include
-        layout="@layout/layout_delivery_address_bar"/>
+
 
     <View
         android:id="@+id/vDividerLocation"
-        android:layout_below="@+id/llLocation"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/stroke_light_grey_alpha"

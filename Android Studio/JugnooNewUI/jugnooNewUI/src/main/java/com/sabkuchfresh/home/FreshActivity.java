@@ -1524,8 +1524,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);
                 }
-                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setVisibility(View.GONE);
+                deliveryAddressInTopBarVisibility = View.VISIBLE;
                 topBar.title.setText(getResources().getString(R.string.fatafat));
+                topBar.getTvAddressLayoutTitle().setText(getResources().getString(R.string.fatafat));
                 visMinOrder = setMinOrderAmountText(fragment);
 
             } else if (fragment instanceof FreshFragment) {
@@ -1560,8 +1562,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 if ((Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) ) {
                     llSearchCartVis = View.GONE;
                 }
-                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setVisibility(View.GONE);
+                deliveryAddressInTopBarVisibility = View.VISIBLE;
                 topBar.title.setText(getResources().getString(R.string.meals));
+                topBar.getTvAddressLayoutTitle().setText(getResources().getString(R.string.meals));
             } else if (fragment instanceof GroceryFragment) {
                 topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
@@ -1579,10 +1583,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 				}
                 rlFilterVis = View.VISIBLE;
 
-                deliveryAddressInTopBarVisibility = View.VISIBLE;
-                topBar.title.setVisibility(View.GONE);
+
                 if(getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER ){
                     topBar.title.setText(R.string.delivery_new_name);
+                    topBar.getTvAddressLayoutTitle().setText(R.string.title_fatafat_home_page);
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                     topBar.imageViewMenu.setVisibility(View.VISIBLE);
                     topBar.imageViewBack.setVisibility(View.GONE);
@@ -1599,6 +1603,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }else{
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                     topBar.title.setText(R.string.menus);
+                    topBar.getTvAddressLayoutTitle().setText(R.string.menus);
+
                     topBar.imageViewMenu.setVisibility(View.VISIBLE);
                     topBar.imageViewBack.setVisibility(View.GONE);
                     if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
@@ -1607,9 +1613,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
 
                 topBar.getLlSearchCart().setLayoutTransition(null);
-
-
                 visMinOrder = setMinOrderAmountText(fragment);
+                deliveryAddressInTopBarVisibility = View.VISIBLE;
+                topBar.title.setVisibility(View.GONE);
 
             } else if (fragment instanceof VendorMenuFragment
                     || fragment instanceof RestaurantImageFragment
@@ -1836,6 +1842,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             rlfabViewFatafat.setVisibility(View.GONE);
             topBar.imageViewBack.setPadding(padding, padding, padding, padding);
+            topBar.getLlTopBarDeliveryAddress().setVisibility(deliveryAddressInTopBarVisibility);
 
             if(visMinOrder != 1) {
                 textViewMinOrderSetVisibility(View.GONE);
@@ -1874,8 +1881,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
 
-            topBar.ivFreshSort.setVisibility(freshSortVis);
 
+            topBar.ivFreshSort.setVisibility(freshSortVis);
             feedHomeAddPostView.setVisibility(View.GONE);
             setCollapsingToolbar(collapsingToolBarEnabled(fragment), fragment);
 
@@ -2478,9 +2485,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryCustomerClientId());
             Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.DELIVERY_CUSTOMER);
             Data.AppType = getAppType();
-            if(getMenusFragment() != null && getMenusFragment().getView() != null) {
+           /* if(getMenusFragment() != null && getMenusFragment().getView() != null) {
                 setDeliveryAddressView(getMenusFragment().rootView);
-            }
+            }*/
             super.onBackPressed();
             return;
         }
@@ -4153,7 +4160,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void onChangeLocalityClick() {
         textViewMinOrder.setVisibility(View.GONE);
-        getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
+
+        getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer(), canProceedWithoutSavedAddress(getTopFragment()));
         GAUtils.event(getGaCategory(), HOME, DELIVERY_ADDRESS+CLICKED);
     }
 
@@ -4163,6 +4171,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     }
 
+    /**
+     *
+     * @param fragment pass the fragment that is open
+     * @return If we want the DeliveryAddressFragment to allow Selection of unsaved addresses in addressBook pass this as true;
+     */
+    public boolean canProceedWithoutSavedAddress(Fragment fragment){
+        return  fragment instanceof MealFragment || fragment instanceof MenusFragment || fragment instanceof FreshHomeFragment;
+    }
 
     public boolean checkForCityChange(final int cityId, final CityChangeCallback callback) {
         if (fetchCartList().size() > 0

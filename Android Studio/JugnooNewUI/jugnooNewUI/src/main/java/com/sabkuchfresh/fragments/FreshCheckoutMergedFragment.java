@@ -585,7 +585,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         relativeLayoutDeliveryAddress.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
+                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer(), false);
             }
         });
 
@@ -2758,7 +2758,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
     public boolean addressSelectedNotValid() {
-        return TextUtils.isEmpty(activity.getSelectedAddressType());
+        return TextUtils.isEmpty(activity.getSelectedAddressType()) || activity.getSelectedAddressId()<=0;
     }
 
     public void updateAddressView() {

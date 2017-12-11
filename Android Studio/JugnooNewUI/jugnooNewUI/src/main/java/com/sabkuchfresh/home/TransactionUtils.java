@@ -154,11 +154,11 @@ public class TransactionUtils {
         }
     }
 
-    public void openDeliveryAddressFragment(FragmentActivity activity, View container) {
+    public void openDeliveryAddressFragment(FragmentActivity activity, View container, boolean isUnsavedAddressSelectionOn) {
         if (!checkIfFragmentAdded(activity, DeliveryAddressesFragment.class.getName())) {
             FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                    .add(container.getId(), new DeliveryAddressesFragment(),
+                    .add(container.getId(), new DeliveryAddressesFragment(isUnsavedAddressSelectionOn),
                             DeliveryAddressesFragment.class.getName())
                     .addToBackStack(DeliveryAddressesFragment.class.getName());
 

@@ -12,8 +12,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:soundEffectsEnabled="false"
-        >
+        android:soundEffectsEnabled="false">
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/topRl"
@@ -21,7 +20,7 @@
             android:layout_height="@dimen/top_bar_height"
             android:background="@android:color/transparent"
             android:splitMotionEvents="false"
-                        android:soundEffectsEnabled="false">
+            android:soundEffectsEnabled="false">
 
             <ImageView
                 android:id="@+id/imageViewMenu"
@@ -157,27 +156,26 @@
 
                 <LinearLayout
                     android:id="@+id/llTopBarDeliveryAddress"
-                    android:background="@android:color/holo_red_dark"
-                    android:layout_width="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20px"
-                    android:layout_marginRight="@dimen/px_10"
+                    android:layout_marginRight="@dimen/px_20"
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/llSearchCart"
                     android:orientation="vertical"
                     android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:text="@string/app_name"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_34">
 
                     <TextView
+                        android:id="@+id/tvAddressLayoutTitle"
                         android:textSize="25px"
                         app:font="@string/maven"
                         android:textColor="@color/text_color_80alpha"
-                        android:text="@string/your_location"
+                        android:text="@string/title_fatafat_home_page"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <TextView

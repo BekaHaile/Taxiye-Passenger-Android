@@ -126,7 +126,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         rootView = inflater.inflate(R.layout.fragment_menus, container, false);
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);setUpUIforCategoriesOpened(activity.getCategoryOpened());
-        activity.setDeliveryAddressView(rootView);
+//        activity.setDeliveryAddressView(rootView);
         activity.setCategoryIdOpened(null);
         activity.rlfabViewFatafat.setVisibility(View.GONE);
         activity.getTopBar().getLlSearchCart().setVisibility(View.GONE); //only for first time
@@ -449,6 +449,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     activity.getTopBar().ivFilterApplied.setVisibility(View.GONE);
                     activity.getTopBar().title.setText(activity.getString(R.string.delivery_new_name));
+                    activity.getTopBar().getTvAddressLayoutTitle().setText(noOfCategories==1 && category!=null?category.getCategoryName():activity.getString(R.string.title_fatafat_home_page));
                     activity.setMenusFilterVisibility(noOfCategories==1&&category!=null?View.VISIBLE:View.GONE);
                     activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
@@ -462,6 +463,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
                     activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
                     activity.getTopBar().title.setText(category.getCategoryName());
+                    activity.getTopBar().getTvAddressLayoutTitle().setText(category.getCategoryName());
                     activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                     activity.setMenusFilterVisibility(View.VISIBLE);
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);

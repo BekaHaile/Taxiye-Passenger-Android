@@ -77,7 +77,6 @@ public class FreshHomeFragment extends Fragment implements SwipeRefreshLayout.On
             e.printStackTrace();
         }
         activity.fragmentUISetup(this);
-        activity.setDeliveryAddressView(rootView);
 
         swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(this);

@@ -107,7 +107,7 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
-        activity.setDeliveryAddressView(rootView);
+//        activity.setDeliveryAddressView(rootView);
 
         mBus = activity.getBus();
         Data.AppType = AppConstant.ApplicationType.MEALS;

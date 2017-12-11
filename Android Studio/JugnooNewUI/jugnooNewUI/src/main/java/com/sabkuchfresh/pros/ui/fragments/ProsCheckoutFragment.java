@@ -206,7 +206,7 @@ public class ProsCheckoutFragment extends Fragment {
 			case R.id.tvRateCard:
 				break;
 			case R.id.relativeLayoutDeliveryAddress:
-				activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer());
+				activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer(), false);
 				break;
 			case R.id.tvSelectDate:
 				getDatePickerFragment().show(getChildFragmentManager(), "datePicker", onDateSetListener);
