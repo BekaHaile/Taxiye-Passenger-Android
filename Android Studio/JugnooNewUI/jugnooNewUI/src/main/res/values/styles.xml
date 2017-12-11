@@ -34,7 +34,7 @@
 
     </style>
 
-    <style name="GreyHighlight" parent="AppBaseTheme">
+    <style name="GreyHighlight" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorControlHighlight">@color/dull_background</item>
     </style>
 
@@ -245,7 +245,7 @@
             20px
         </item>
         <item name="android:src">
-            @drawable/ic_back_selector
+            @drawable/ic_back
         </item>
         <item name="android:scaleType">
             centerInside
@@ -253,13 +253,10 @@
         <item name="android:layout_marginLeft">
             10px
         </item>
+        <item name="android:background">@drawable/white_selector</item>
         <item name="android:tag">
             mwar
         </item>
-        <item name="android:theme">
-            @style/GreyHighlight
-        </item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
 
     </style>
 
