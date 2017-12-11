@@ -52,9 +52,11 @@ public class TopBar implements GAAction, GACategory {
 
     private RelativeLayout llSearchCartContainer;
     private LinearLayout llSearchCart;
+    private LinearLayout llTopBarDeliveryAddress;
     private Animation searchBarAnimation;
     private Animation searchBarCloseAnimation;
     public ImageView ivFreshSort;
+    private TextView tvTopBarDeliveryAddressLocation;
 
 
     public TopBar(Activity activity, DrawerLayout drawerLayout) {
@@ -72,6 +74,8 @@ public class TopBar implements GAAction, GACategory {
         buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
         llSearchCartContainer = (RelativeLayout) drawerLayout.findViewById(R.id.llSearchCartContainer);
         llSearchCart = (LinearLayout) drawerLayout.findViewById(R.id.llSearchCart);
+        llTopBarDeliveryAddress = (LinearLayout) drawerLayout.findViewById(R.id.llTopBarDeliveryAddress);
+        tvTopBarDeliveryAddressLocation = (TextView) drawerLayout.findViewById(R.id.tvTopBarDeliveryAddressLocation);
 
         imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
         imgVwFatafatTutorial=(RelativeLayout)topRl.findViewById(R.id.ivTutorial);
@@ -152,9 +156,14 @@ public class TopBar implements GAAction, GACategory {
                         if (activity instanceof FreshActivity
                                 && ((FreshActivity) activity).getTopFragment() != null
                                 && ((FreshActivity) activity).getTopFragment() instanceof MenusFragment) {
-                            title.setAlpha(0.0f);
+//                            title.setAlpha(0.0f);
+                            for(int i = 0;i<llTopBarDeliveryAddress.getChildCount();i++){
+                                llTopBarDeliveryAddress.getChildAt(i).setAlpha(0.0f);
+                            }
+
                             ivSearch.setAlpha(0.0f);
-                            title.setVisibility(View.VISIBLE);
+//                            title.setVisibility(View.VISIBLE);
+                            llTopBarDeliveryAddress.setVisibility(View.VISIBLE);
                             ivSearch.setVisibility(View.VISIBLE);
 
                             if(activity instanceof FreshActivity && ((FreshActivity) activity).getMenusFragment().iSChildCategoryOpen()){
@@ -170,7 +179,11 @@ public class TopBar implements GAAction, GACategory {
                             }
 
 
-                            title.animate().alpha(1.0f).setDuration(200);
+//                            title.animate().alpha(1.0f).setDuration(200);
+                            for(int i = 0;i<llTopBarDeliveryAddress.getChildCount();i++){
+                                llTopBarDeliveryAddress.getChildAt(i).animate().alpha(1.0f).setDuration(200);
+
+                            }
                             ivSearch.animate().alpha(1.0f).setDuration(200);
                             imageViewMenu.animate().alpha(1.0f).setDuration(200);
                         }
@@ -267,6 +280,11 @@ public class TopBar implements GAAction, GACategory {
                     if(activity instanceof FreshActivity){
                         ((FreshActivity)activity).showFatafatTutorial();
                     }
+                case R.id.llTopBarDeliveryAddress:
+                    if(activity instanceof FreshActivity){
+                        ((FreshActivity)activity).onChangeLocalityClick();
+                    }
+                    break;
 
             }
         }
@@ -288,6 +306,11 @@ public class TopBar implements GAAction, GACategory {
             pbSearch.stopSpinning();
         }
         pbSearch.setVisibility(visibility);
+    }
+
+
+    public TextView getTvTopBarDeliveryAddressLocation() {
+        return tvTopBarDeliveryAddressLocation;
     }
 }
 

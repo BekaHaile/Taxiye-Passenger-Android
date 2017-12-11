@@ -269,6 +269,7 @@
 
     <color name="green_light">#FD7945</color>
     <color name="text_color_30alpha">#4E595968</color>
+    <color name="text_color_80alpha">#CC595968</color>
 
     <color name="grey_969696">#969696</color>
 

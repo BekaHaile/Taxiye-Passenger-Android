@@ -1512,6 +1512,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
             bRequestBooking.setVisibility(View.GONE);
             int fabFatafatVisibility = View.GONE;
+            int deliveryAddressInTopBarVisibility = View.GONE;
 
             if (fragment instanceof FreshHomeFragment) {
                 topBar.buttonCheckServer.setVisibility(View.VISIBLE);
@@ -1578,7 +1579,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 				}
                 rlFilterVis = View.VISIBLE;
 
-                topBar.title.setVisibility(View.VISIBLE);
+                deliveryAddressInTopBarVisibility = View.VISIBLE;
+                topBar.title.setVisibility(View.GONE);
                 if(getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER ){
                     topBar.title.setText(R.string.delivery_new_name);
                     drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
@@ -4135,6 +4137,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         if (deliveryAddressView != null) {
             deliveryAddressView.tvLocation.setText(address);
         }
+       getTopBar().getTvTopBarDeliveryAddressLocation().setText(address);
     }
 
     private void setLlLocalityClick() {
@@ -4142,12 +4145,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             deliveryAddressView.llLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    textViewMinOrder.setVisibility(View.GONE);
-                    getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
-                    GAUtils.event(getGaCategory(), HOME, DELIVERY_ADDRESS+CLICKED);
+                    onChangeLocalityClick();
                 }
             });
         }
+    }
+
+    public void onChangeLocalityClick() {
+        textViewMinOrder.setVisibility(View.GONE);
+        getTransactionUtils().openDeliveryAddressFragment(FreshActivity.this, getRelativeLayoutContainer());
+        GAUtils.event(getGaCategory(), HOME, DELIVERY_ADDRESS+CLICKED);
     }
 
     public void setDeliveryAddressViewVisibility(int visibility) {

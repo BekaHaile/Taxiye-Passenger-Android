@@ -127,6 +127,7 @@
                 android:tag="mwar"
                 android:visibility="gone" />
 
+
             <RelativeLayout
                 android:id="@+id/llSearchCartContainer"
                 android:layout_width="match_parent"
@@ -153,6 +154,46 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_34"/>
+
+                <LinearLayout
+                    android:id="@+id/llTopBarDeliveryAddress"
+                    android:background="@android:color/holo_red_dark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20px"
+                    android:layout_marginRight="@dimen/px_10"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/llSearchCart"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:text="@string/app_name"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_34">
+
+                    <TextView
+                        android:textSize="25px"
+                        app:font="@string/maven"
+                        android:textColor="@color/text_color_80alpha"
+                        android:text="@string/your_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/tvTopBarDeliveryAddressLocation"
+                        android:textSize="33px"
+                        android:textColor="@color/text_color"
+                        app:font="@string/maven"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
+                        android:drawablePadding="5dp"
+                        android:drawableRight="@drawable/ic_arrow_grey"
+                        android:text="Sector 26 Chandigarh"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/llSearchContainer"
@@ -307,6 +348,7 @@
 
 
             </RelativeLayout>
+
 
         </RelativeLayout>
 
