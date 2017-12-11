@@ -239,12 +239,14 @@
                     android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
                     android:layout_alignParentRight="true"
+                    android:paddingRight="@dimen/dp_10"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/px_20"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:visibility="visible">
+
 
                     <ImageView
                         android:id="@+id/ivSearch"
@@ -299,8 +301,10 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentEnd="true"
-                    android:padding="10dp"
+                    android:padding="@dimen/dp_10"
                     android:tag="@string/dont_touch_me"
+                    android:theme="@style/GreyHighlight"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
@@ -308,7 +312,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_tutorial_selector"
-                        android:theme="@style/GreyHighlight"
                         android:visibility="visible"
                         />
                 </RelativeLayout>
