@@ -87,7 +87,8 @@
             android:layout_height="96px"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10px"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="28px"
             android:src="@drawable/ic_settings"
             android:tag="mwar" />
