@@ -73,6 +73,8 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:padding="@dimen/px_20"
+        android:theme="@style/GreyHighlight"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_delete_address"
         android:visibility="visible"
         />
