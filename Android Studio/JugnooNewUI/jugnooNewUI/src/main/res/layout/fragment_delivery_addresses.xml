@@ -176,7 +176,7 @@
                 </LinearLayout>
 
                 <View
-                    android:id="@+id/grey_light_choose_destination"
+                    android:id="@+id/divider_below_map"
                     android:layout_width="match_parent"
                     android:background="@color/stroke_light_grey_alpha"
                     android:layout_height="2px"
