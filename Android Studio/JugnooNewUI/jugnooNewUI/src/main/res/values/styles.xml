@@ -34,7 +34,7 @@
 
     </style>
 
-    <style name="FatafatTutorial" parent="AppBaseTheme">
+    <style name="GreyHighlight" parent="AppBaseTheme">
         <item name="colorControlHighlight">@color/dull_background</item>
     </style>
 
@@ -256,6 +256,11 @@
         <item name="android:tag">
             mwar
         </item>
+        <item name="android:theme">
+            @style/GreyHighlight
+        </item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+
     </style>
 
     <style name="forward_image">

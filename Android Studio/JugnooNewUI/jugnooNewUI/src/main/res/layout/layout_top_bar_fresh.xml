@@ -26,11 +26,13 @@
             <ImageView
                 android:id="@+id/imageViewMenu"
                 android:layout_width="65px"
-                android:layout_height="50px"
+                android:layout_height="65px"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10px"
                 android:padding="@dimen/px_15"
                 android:src="@drawable/ic_menu_new_selector"
+                android:background="?attr/selectableItemBackground"
+                android:theme="@style/GreyHighlight"
                 android:tag="mwar" />
 
             <Button
@@ -294,13 +296,12 @@
                     android:tag="@string/dont_touch_me"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
-                    <ImageView
 
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_tutorial_selector"
-
-                        android:theme="@style/FatafatTutorial"
+                        android:theme="@style/GreyHighlight"
                         android:visibility="visible"
                         />
                 </RelativeLayout>
