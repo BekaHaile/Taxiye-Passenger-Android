@@ -34,10 +34,13 @@
             <RelativeLayout
                 android:id="@+id/rlFilter"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/px_20"
+                android:layout_height="match_parent"
+                android:padding="@dimen/px_10"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:theme="@style/GreyHighlight"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center"
                 >
                 <ImageView
                     android:id="@+id/ivFilter"
