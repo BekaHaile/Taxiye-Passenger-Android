@@ -245,7 +245,7 @@
             20px
         </item>
         <item name="android:src">
-            @drawable/ic_back
+            @drawable/ic_back_selector
         </item>
         <item name="android:scaleType">
             centerInside
