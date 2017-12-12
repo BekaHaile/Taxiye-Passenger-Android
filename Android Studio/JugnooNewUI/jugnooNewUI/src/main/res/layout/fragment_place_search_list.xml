@@ -251,6 +251,8 @@
                                 android:id="@+id/ll_set_location_on_map"
                                 android:paddingTop="15px"
                                 android:paddingBottom="15px"
+                                android:theme="@style/GreyHighlight"
+                                android:background="?attr/selectableItemBackground"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content">
 

@@ -33,7 +33,7 @@
             android:padding="@dimen/dp_10"
             android:tag="@string/dont_touch_me"
             android:text="@string/about"
-            android:textColor="@color/text_color_selector"
+            android:textColor="@color/text_color"
             android:textSize="@dimen/sp_13"
             android:theme="@style/GreyHighlight"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -101,6 +101,8 @@
                             android:layout_gravity="right"
                             android:padding="@dimen/dp_7"
                             android:src="@drawable/edit_icon_selector"
+                            android:theme="@style/GreyHighlight"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:visibility="visible"/>
 
                         <ImageView
@@ -109,6 +111,8 @@
                             android:layout_height="@dimen/dp_30"
                             android:layout_gravity="right"
                             android:padding="@dimen/dp_8"
+                            android:theme="@style/GreyHighlight"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:src="@drawable/profile_save"
                             android:visibility="visible"/>
 
@@ -369,6 +373,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:animateLayoutChanges="true"
+                        android:theme="@style/GreyHighlight"
+                        android:background="?attr/selectableItemBackground"
                         android:visibility="gone">
 
 
@@ -404,6 +410,8 @@
                             android:layout_marginRight="20px"
                             android:padding="15px"
                             android:src="@drawable/edit_icon_selector"
+                            android:theme="@style/GreyHighlight"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:tag="mwar"
                             android:visibility="visible"/>
 
@@ -415,6 +423,8 @@
                             android:layout_centerVertical="true"
                             android:layout_marginRight="35px"
                             android:gravity="center"
+                            android:theme="@style/GreyHighlight"
+                            android:background="?attr/selectableItemBackground"
                             android:orientation="horizontal"
                             android:visibility="gone">
 
@@ -457,6 +467,8 @@
                         android:id="@+id/relativeLayoutAddressBook"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:theme="@style/GreyHighlight"
+                        android:background="?attr/selectableItemBackground"
                         android:tag="@string/dont_touch_me"
                         >
 
@@ -471,7 +483,7 @@
                             android:layout_marginTop="@dimen/dp_17"
                             android:gravity="center"
                             android:text="@string/address_book"
-                            android:textColor="@color/text_color_light_selector"
+                            android:textColor="@color/text_color"
                             android:textSize="@dimen/sp_14"/>
 
 
@@ -481,6 +493,8 @@
                         android:id="@+id/relativeLayoutEmergencyContact"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:theme="@style/GreyHighlight"
+                        android:background="?attr/selectableItemBackground"
                         android:tag="@string/dont_touch_me">
 
 
@@ -501,7 +515,7 @@
                             android:layout_marginTop="@dimen/dp_17"
                             android:gravity="center"
                             android:text="@string/emergency_contacts"
-                            android:textColor="@color/text_color_light_selector"
+                            android:textColor="@color/text_color"
                             android:textSize="@dimen/sp_14"/>
 
                     </RelativeLayout>
