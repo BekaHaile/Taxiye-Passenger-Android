@@ -318,5 +318,8 @@
     <!-- Fatafat tutorial -->
     <color name="text_color_tutorial_black">#393737</color>
 
+    <color name="text_color_heading_fatafat">#32323f</color>
+    <color name="text_color_heading_fatafat_80">#CC32323f</color>
+
 
 </resources>

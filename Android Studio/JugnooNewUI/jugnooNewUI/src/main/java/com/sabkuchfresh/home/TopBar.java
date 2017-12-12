@@ -1,6 +1,7 @@
 package com.sabkuchfresh.home;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
@@ -16,6 +17,9 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.fragments.FreshHomeFragment;
+import com.sabkuchfresh.fragments.GroceryFragment;
+import com.sabkuchfresh.fragments.MealFragment;
 import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.utils.AppConstant;
 
@@ -299,7 +303,11 @@ public class TopBar implements GAAction, GACategory {
                     }
                 case R.id.llTopBarDeliveryAddress:
                     if(activity instanceof FreshActivity){
-                        ((FreshActivity)activity).onChangeLocalityClick();
+                        Fragment topFragment = ((FreshActivity) activity).getTopFragment();
+                        if(topFragment!=null&& (topFragment instanceof MenusFragment || topFragment instanceof MealFragment || topFragment instanceof FreshHomeFragment)){
+                            ((FreshActivity)activity).onChangeLocalityClick();
+
+                        }
                     }
                     break;
 
