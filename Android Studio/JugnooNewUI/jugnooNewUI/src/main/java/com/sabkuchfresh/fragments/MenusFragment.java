@@ -510,7 +510,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 }
                 activity.fragmentUISetup(this);
                 if(searchOpened){
-                    activity.getTopBar().ivSearch.setVisibility(View.GONE);
+                    activity.getTopBar().rlSearch.setVisibility(View.GONE);
                     activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
                     try {
                         activity.getTopBar().etSearch.setSelection(activity.getTopBar().etSearch.getText().toString().length()-1);
@@ -1020,7 +1020,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             activity.getTopBar().title.setVisibility(View.GONE);
             activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
             activity.getTopBar().setSearchVisibility(View.VISIBLE);
-            activity.getTopBar().ivSearch.setVisibility(View.GONE);
+            activity.getTopBar().rlSearch.setVisibility(View.GONE);
             activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             activity.getTopBar().etSearch.requestFocus();
             Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);

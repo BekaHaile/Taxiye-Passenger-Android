@@ -239,7 +239,6 @@
                     android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
                     android:layout_alignParentRight="true"
-                    android:paddingRight="@dimen/dp_10"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/px_20"
@@ -247,25 +246,35 @@
                     android:orientation="horizontal"
                     android:visibility="visible">
 
+                    <RelativeLayout
+                        android:id="@+id/rlSearch"
+                        android:layout_width="@dimen/top_bar_height"
+                        android:layout_height="@dimen/top_bar_height"
+                        android:theme="@style/GreyHighlight"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:gravity="center">
 
-                    <ImageView
-                        android:id="@+id/ivSearch"
-                        android:layout_width="62px"
-                        android:layout_height="62px"
-                        android:layout_gravity="center_vertical"
-                        android:layout_margin="7px"
-                        android:layout_marginTop="9px"
-                        android:src="@drawable/ic_search_new_selector"
-                        android:tag="mwar"
-                        android:visibility="visible" />
+                        <ImageView
+                            android:id="@+id/ivSearch"
+                            android:layout_width="62px"
+                            android:layout_height="62px"
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_search_new_selector"
+                            android:tag="mwar"
+                            android:visibility="visible" />
+
+                    </RelativeLayout>
+
 
 
                     <RelativeLayout
                         android:id="@+id/rlFilter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/top_bar_height"
+                        android:layout_height="@dimen/top_bar_height"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/px_20">
+                        android:theme="@style/GreyHighlight"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:gravity="center">
                         <ImageView
                             android:id="@+id/ivFilter"
                             android:layout_width="62px"
@@ -282,17 +291,28 @@
                             android:tag="mwar"
                             android:visibility="visible" />
                     </RelativeLayout>
-                    
-                    <ImageView
-                        android:id="@+id/ivFreshSort"
-                        android:layout_width="@dimen/dp_32"
-                        android:layout_height="@dimen/dp_32"
-                        android:src="@drawable/ic_fresh_sort_svg_selector"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/dp_10"
-                        android:tag="@string/dont_touch_me"
-                        android:padding="1dp"
-                        />
+
+
+                    <RelativeLayout
+                        android:id="@+id/rlFreshSort"
+                        android:layout_width="@dimen/top_bar_height"
+                        android:layout_height="@dimen/top_bar_height"
+                        android:theme="@style/GreyHighlight"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/ivFreshSort"
+                            android:layout_width="@dimen/dp_32"
+                            android:layout_height="@dimen/dp_32"
+                            android:src="@drawable/ic_fresh_sort_svg_selector"
+                            android:layout_gravity="center_vertical"
+                            android:tag="@string/dont_touch_me"
+                            />
+
+                    </RelativeLayout>
+
+
 
                 </LinearLayout>
 
@@ -306,7 +326,8 @@
                     android:theme="@style/GreyHighlight"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <ImageView
                         android:layout_width="wrap_content"
