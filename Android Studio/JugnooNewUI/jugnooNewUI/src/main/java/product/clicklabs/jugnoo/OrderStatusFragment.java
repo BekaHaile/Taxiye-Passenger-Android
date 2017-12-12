@@ -64,8 +64,8 @@ import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.BillSummaryModel;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -80,8 +80,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
-
-import static product.clicklabs.jugnoo.MyApplication.getInstance;
 
 /**
  * Created by ankit on 27/10/16.
@@ -185,6 +183,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
      View dividerBelowRlOrderStatusFeed;
     @Bind(R.id.feed_fragment_shadow_top)
      View feedFragmentShadowTop;
+    @Bind(R.id.cardFeedBillSummary)
+     CardView cardFeedBillSummary;
+    @Bind(R.id.llFeedExtraCharges)
+     LinearLayout llFeedExtraCharges;
+
 
 
     @Nullable
@@ -373,6 +376,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             feedFragmentShadowTop.setVisibility(View.GONE);
             rootView.findViewById(R.id.layout_menus_order).setVisibility(View.GONE);
             rootView.findViewById(R.id.layout_feed_order).setVisibility(View.VISIBLE);
+            ((TextView) rootView.findViewById(R.id.tvFeedBillSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
             tv1l.setText(R.string.status_colon);
             tv2l.setText(R.string.order_time_colon);
             tv3l.setText(R.string.delivery_time_colon);
@@ -520,6 +524,50 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             tvDeliveryToValFeed.setText(datum.getToAddress());
         }
         tvTaskDetails.setText(datum.getDetails());
+
+
+        // set delivery charges if available
+        if (datum.getBillSummary() != null && datum.getBillSummary().size() != 0) {
+
+            cardFeedBillSummary.setVisibility(View.VISIBLE);
+            llFeedExtraCharges.removeAllViews();
+
+            LayoutInflater layoutInflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            int i=0;
+            for (BillSummaryModel bill : datum.getBillSummary()) {
+
+                View view = layoutInflater.inflate(R.layout.layout_order_amount_new, null);
+                RelativeLayout relative = (RelativeLayout) view.findViewById(R.id.relative);
+                TextView tvDelCharges = (TextView) view.findViewById(R.id.tvDelCharges);
+                TextView tvDelChargesVal = (TextView) view.findViewById(R.id.tvDelChargesVal);
+                tvDelCharges.setText(bill.getKey());
+                tvDelCharges.setTextColor(Color.parseColor(bill.getFormat().getColor()));
+                tvDelChargesVal.setText(bill.getValue());
+                tvDelChargesVal.setTextColor(Color.parseColor(bill.getFormat().getColor()));
+                if(bill.getFormat().getIsBold()==1){
+                    tvDelChargesVal.setTypeface(tvDelChargesVal.getTypeface(), Typeface.BOLD);
+                    tvDelCharges.setTypeface(tvDelChargesVal.getTypeface(), Typeface.BOLD);
+                }
+
+                View vDivider = view.findViewById(R.id.vDivider);
+
+                if (i==datum.getBillSummary().size()-1) {
+                    vDivider.setVisibility(View.INVISIBLE);
+                }
+
+                llFeedExtraCharges.addView(view);
+                ASSL.DoMagic(relative);
+                i++;
+
+            }
+
+        }
+        else {
+            cardFeedBillSummary.setVisibility(View.GONE);
+        }
+
+
     }
 
 

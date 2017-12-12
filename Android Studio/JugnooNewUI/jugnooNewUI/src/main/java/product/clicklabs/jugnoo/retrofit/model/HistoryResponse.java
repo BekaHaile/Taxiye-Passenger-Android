@@ -255,6 +255,12 @@ public class HistoryResponse {
         @Expose
         private LiveTracking liveTracking;
 
+        @SerializedName("bill_summary")
+        private ArrayList<BillSummaryModel> billSummary;
+
+        public ArrayList<BillSummaryModel> getBillSummary() {
+            return billSummary;
+        }
 
         // pros data
         @SerializedName("job_id")
