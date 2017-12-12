@@ -595,9 +595,68 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             ViewNewOrderStatus statusHolder = ((ViewNewOrderStatus) mholder);
             try {
-                RecentOrder recentOrder = (RecentOrder) dataToDisplay.get(position);
 
-                String restaurantName =recentOrder.getRestaurantName()  ;
+                RecentOrder recentOrder = (RecentOrder) dataToDisplay.get(position);
+                int productType = recentOrder.getProductType();
+                String line1=null,line2=null,deliveryText=null,status=null;
+
+                if(productType == ProductType.MEALS.getOrdinal()){
+                    line1 = recentOrder.getOrderLine1();
+                    line2=recentOrder.getOrderLine2();
+                    if ((recentOrder.getOrderStatusText() != null) && (!recentOrder.getOrderStatusText().equalsIgnoreCase(""))) {
+                        deliveryText=recentOrder.getOrderStatusText();
+                    } else {
+                        deliveryText=activity.getResources().getString(R.string.delivery_before_colon) + " " + recentOrder.getEndTime();
+                    }
+                    status = possibleMealsStatus.get(recentOrder.getStatus());
+                }
+                else if(productType == ProductType.MENUS.getOrdinal()){
+                    line1 = recentOrder.getOrderLine1();
+                    line2=recentOrder.getOrderLine2();
+                    deliveryText = recentOrder.getEndTime();
+                    status = possibleStatus.get(recentOrder.getStatus());
+
+                }
+                else {
+                    // fatafat type
+                    line1 = recentOrder.getOrderLine1();
+                    if(recentOrder.getPickupLatitude()==null ||
+                            recentOrder.getPickupLongitude() == null){
+
+                        // from anywhere case, so show only line 1
+                        line2 = null;
+                    }
+                    else {
+                        line2 = recentOrder.getOrderLine2();
+                    }
+
+                    if(recentOrder.getIsAsap()==1){
+                        deliveryText="";
+                    }else{
+                        if(recentOrder.getDeliveryTimeText()!=null && !TextUtils.isEmpty(recentOrder.getDeliveryTimeText())){
+                            deliveryText = recentOrder.getDeliveryTimeText();
+                        }
+                        else {
+                            deliveryText = "Delivery: " + DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(recentOrder.getDeliveryTime()));
+                        }
+                    }
+                    status = possibleFatafatStatus.get(recentOrder.getStatus());
+                }
+
+                statusHolder.tvOrderRestaurant.setText(Utils.fromHtml(line1));
+                if(line2 !=null){
+                    statusHolder.tvOrderDescription.setVisibility(View.VISIBLE);
+                    statusHolder.tvOrderDescription.setText(Utils.fromHtml(line2));
+                }
+                else {
+                    statusHolder.tvOrderDescription.setVisibility(View.GONE);
+                    statusHolder.tvOrderDescription.setText("");
+                }
+
+                statusHolder.tvOrderTime.setText(deliveryText);
+                statusHolder.tvOrderStatus.setText(status);
+                statusHolder.tvOrderStatus.setTextColor(Color.parseColor(recentOrder.getOrderStatusColor()));
+                /*String restaurantName =recentOrder.getRestaurantName()  ;
                 String orderId = "#"+ recentOrder.getOrderId().toString();
                 String deliveryTime=null,orderStatus;
                 if(recentOrder.getProductType() == ProductType.MEALS.getOrdinal()) {
@@ -626,12 +685,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 statusHolder.tvOrderRestaurant.setVisibility(restaurantName!=null && restaurantName.trim().length()>0?View.VISIBLE:View.INVISIBLE);
                 statusHolder.tvOrderStatus.setVisibility(orderStatus!=null && orderStatus.trim().length()>0?View.VISIBLE:View.INVISIBLE);
                 statusHolder.tvOrderRestaurant.setText(restaurantName);
-                statusHolder.tvOrderId.setText(orderId);
                 statusHolder.tvOrderStatus.setText(orderStatus);
-                statusHolder.tvOrderTime.setText(deliveryTime);
+                statusHolder.tvOrderTime.setText(deliveryTime);*/
                 GradientDrawable shapeDrawable = (GradientDrawable) statusHolder.tvOrderStatus.getBackground();
                 try {
-                    shapeDrawable.setColor(Color.parseColor(recentOrder.getOrderStatusColor()));
+                    shapeDrawable.setStroke(Utils.dpToPx(activity,2),Color.parseColor(recentOrder.getOrderStatusColor()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1213,12 +1271,12 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @Bind(R.id.tv_order_restaurant)
         TextView tvOrderRestaurant;
-        @Bind(R.id.tv_order_id)
-        TextView tvOrderId;
         @Bind(R.id.tv_order_status)
         TextView tvOrderStatus;
         @Bind(R.id.tv_order_time)
         TextView tvOrderTime;
+        @Bind(R.id.tv_order_description)
+        TextView tvOrderDescription;
 
         @Bind(R.id.rlRootNewOrder)
         View rlRootNewOrder;
@@ -1226,7 +1284,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public ViewNewOrderStatus(final View itemView, final ItemListener itemListener) {
             super(itemView);
             ButterKnife.bind(this,itemView);
-            tvOrderRestaurant.setTypeface(tvOrderRestaurant.getTypeface(),Typeface.BOLD);
             rlRootNewOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

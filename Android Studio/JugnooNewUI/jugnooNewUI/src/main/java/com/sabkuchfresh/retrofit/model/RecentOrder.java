@@ -93,6 +93,24 @@ public class RecentOrder implements Serializable{
     private String orderStatusColor;
     @SerializedName("is_immediate")
     private int isAsap;
+    @SerializedName("line1")
+    private String orderLine1;
+    @SerializedName("line2")
+    private String orderLine2;
+    @SerializedName("delivery_time_text")
+    private String deliveryTimeText;
+
+    public String getOrderLine1() {
+        return orderLine1;
+    }
+
+    public String getOrderLine2() {
+        return orderLine2;
+    }
+
+    public String getDeliveryTimeText() {
+        return deliveryTimeText;
+    }
 
     public int getIsAsap() {
         return isAsap;
