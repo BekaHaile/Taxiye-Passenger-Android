@@ -103,11 +103,13 @@ public class DeliveryDisplayCategoriesView extends RecyclerView.ViewHolder {
 
         }
 
-        if(isCollapseCategories && !deliveryDisplayCategoriesAdpater.isCategoriesCollapsed()){
+        if(isCollapseCategories!=deliveryDisplayCategoriesAdpater.isCategoriesCollapsed() || isCollapseCategories){
             List<MenusResponse.Category> categoryList = new ArrayList<>();
             categoryList.addAll(deliveryCategoryModel);
             deliveryDisplayCategoriesAdpater.setList(categoryList);
         }
+
+
 
     }
 

@@ -600,6 +600,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public void getAllMenus(final boolean loader, final LatLng latLng, final boolean scrollToTop, final MenusResponse.Category categoryObject, final int typeApi) {
 
 
+        if (isMenusApiInProgress)
+            return;
+
         if (typeApi == TYPE_API_MENUS_ADDRESS_CHANGE || typeApi == TYPE_API_MENUS_CATEGORY_CHANGE) {
             if (activity.getMenusFilterFragment() != null) {
                 activity.getMenusFilterFragment().resetAllFilters();
@@ -615,8 +618,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         final String searchTextCurr = searchText;
         try {
-            if (searchOpened && isMenusApiInProgress)
-                return;
+
 
             if (!MyApplication.getInstance().isOnline()) {
                 retryDialog(DialogErrorType.NO_NET, latLng, loader, false, scrollToTop, categoryObject, typeApi);
@@ -669,7 +671,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     swipeRefreshLayout.setRefreshing(false);
                     activity.getTopBar().setPBSearchVisibility(View.GONE);
-                    isMenusApiInProgress = false;
+
                     recallSearch(searchTextCurr);
                     relativeLayoutNoMenus.setVisibility(View.GONE);
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
@@ -714,6 +716,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         exception.printStackTrace();
                         retryDialog(DialogErrorType.SERVER_ERROR, latLng, loader, false, scrollToTop, categoryObject, typeApi);
                     }
+
+                    isMenusApiInProgress = false;
+
                 }
 
                 @Override
