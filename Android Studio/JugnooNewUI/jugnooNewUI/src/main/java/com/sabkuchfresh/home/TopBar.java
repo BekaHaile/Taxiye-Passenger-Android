@@ -48,6 +48,7 @@ public class TopBar implements GAAction, GACategory {
     public EditText etSearch;
     public ProgressWheel pbSearch;
     public ImageView ivSearchCross, ivSearch, ivFilterApplied;
+    public RelativeLayout rlSearch;
     public RelativeLayout rlFilter;
 
     private RelativeLayout llSearchCartContainer;
@@ -56,8 +57,12 @@ public class TopBar implements GAAction, GACategory {
     private Animation searchBarAnimation;
     private Animation searchBarCloseAnimation;
     public ImageView ivFreshSort;
+
     private TextView tvTopBarDeliveryAddressLocation;
     private TextView tvAddressLayoutTitle;
+
+    public RelativeLayout rlFreshSort;
+
 
 
     public TopBar(Activity activity, DrawerLayout drawerLayout) {
@@ -94,21 +99,24 @@ public class TopBar implements GAAction, GACategory {
         etSearch = (EditText) drawerLayout.findViewById(R.id.etSearch);
         etSearch.setTypeface(Fonts.mavenMedium(activity));
         ivSearch = (ImageView) drawerLayout.findViewById(R.id.ivSearch);
+        rlSearch=(RelativeLayout)drawerLayout.findViewById(R.id.rlSearch);
         pbSearch = (ProgressWheel) drawerLayout.findViewById(R.id.pbSearch);
         rlFilter = (RelativeLayout) drawerLayout.findViewById(R.id.rlFilter);
         ivFilterApplied = (ImageView) drawerLayout.findViewById(R.id.ivFilterApplied);
         ivSearchCross = (ImageView) drawerLayout.findViewById(R.id.ivSearchCross);
         ivFilterApplied.setVisibility(View.GONE);
         ivFreshSort = (ImageView) drawerLayout.findViewById(R.id.ivFreshSort);
+        rlFreshSort=(RelativeLayout)drawerLayout.findViewById(R.id.rlFreshSort);
         //setSearchVisibility(View.GONE);
 
         topRl.setOnClickListener(topBarOnClickListener);
         imageViewMenu.setOnClickListener(topBarOnClickListener);
         buttonCheckServer.setOnClickListener(topBarOnClickListener);
-        ivSearch.setOnClickListener(topBarOnClickListener);
+        //ivSearch.setOnClickListener(topBarOnClickListener);
+        rlSearch.setOnClickListener(topBarOnClickListener);
         rlFilter.setOnClickListener(topBarOnClickListener);
         imageViewBack.setOnClickListener(topBarOnClickListener);
-        ivFreshSort.setOnClickListener(topBarOnClickListener);
+        rlFreshSort.setOnClickListener(topBarOnClickListener);
         imgVwFatafatTutorial.setOnClickListener(topBarOnClickListener);
         llTopBarDeliveryAddress.setOnClickListener(topBarOnClickListener);
 
@@ -159,15 +167,17 @@ public class TopBar implements GAAction, GACategory {
                         if (activity instanceof FreshActivity
                                 && ((FreshActivity) activity).getTopFragment() != null
                                 && ((FreshActivity) activity).getTopFragment() instanceof MenusFragment) {
+
 //                            title.setAlpha(0.0f);
                             for(int i = 0;i<llTopBarDeliveryAddress.getChildCount();i++){
                                 llTopBarDeliveryAddress.getChildAt(i).setAlpha(0.0f);
                             }
 
-                            ivSearch.setAlpha(0.0f);
+                            rlSearch.setAlpha(0.0f);
 //                            title.setVisibility(View.VISIBLE);
                             llTopBarDeliveryAddress.setVisibility(View.VISIBLE);
-                            ivSearch.setVisibility(View.VISIBLE);
+                            rlSearch.setVisibility(View.VISIBLE);
+
 
                             if(activity instanceof FreshActivity && ((FreshActivity) activity).getMenusFragment().iSChildCategoryOpen()){
                                 imageViewBack.setVisibility(View.VISIBLE);
@@ -187,7 +197,9 @@ public class TopBar implements GAAction, GACategory {
                                 llTopBarDeliveryAddress.getChildAt(i).animate().alpha(1.0f).setDuration(200);
 
                             }
-                            ivSearch.animate().alpha(1.0f).setDuration(200);
+
+                            rlSearch.animate().alpha(1.0f).setDuration(200);
+
                             imageViewMenu.animate().alpha(1.0f).setDuration(200);
                         }
                     }
@@ -219,6 +231,8 @@ public class TopBar implements GAAction, GACategory {
     public ImageView getIvSearch() {
         return ivSearch;
     }
+
+    public RelativeLayout getRlSearch() {return rlSearch;}
 
     public RelativeLayout getLlSearchCartContainer() {
         return llSearchCartContainer;
@@ -260,7 +274,7 @@ public class TopBar implements GAAction, GACategory {
                     }
                     break;
 
-                case R.id.ivSearch:
+                case R.id.rlSearch:
                     if (activity instanceof FreshActivity) {
                         ((FreshActivity) activity).searchItem();
                     }
@@ -273,7 +287,7 @@ public class TopBar implements GAAction, GACategory {
                     }
                     break;
 
-                case R.id.ivFreshSort:
+                case R.id.rlFreshSort:
                     if(activity instanceof FreshActivity){
                         ((FreshActivity)activity).openFreshSortDialog();
                     }

@@ -1854,7 +1854,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 llCartContainerVis = View.GONE;
             }
             llCheckoutBarSetVisibilityDirect(llCartContainerVis);
-            topBar.getIvSearch().setVisibility(ivSearchVis);
+            topBar.getRlSearch().setVisibility(ivSearchVis);
             topBar.getLlSearchContainer().setVisibility(llSearchContainerVis);
             setMenusFilterVisibility(rlFilterVis);
             llAddToCart.setVisibility(llAddToCartVis);
@@ -1882,7 +1882,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
 
-            topBar.ivFreshSort.setVisibility(freshSortVis);
+            topBar.rlFreshSort.setVisibility(freshSortVis);
+
             feedHomeAddPostView.setVisibility(View.GONE);
             setCollapsingToolbar(collapsingToolBarEnabled(fragment), fragment);
 
@@ -4518,8 +4519,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     if (!topBar.getIvSearch().isSelected()) {
                         topBar.getIvSearch().setSelected(true);
                     }
-                    topBar.getIvSearch().setAlpha((int) searchAndCapsuleAlpha2);
-                    topBar.ivFreshSort.setAlpha((int) searchAndCapsuleAlpha2);
+                    topBar.getRlSearch().setAlpha((int) searchAndCapsuleAlpha2);
+                    topBar.rlFreshSort.setAlpha((int) searchAndCapsuleAlpha2);
                     if (!topBar.ivFreshSort.isSelected()) {
                         topBar.ivFreshSort.setSelected(true);
                     }
@@ -4539,8 +4540,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         topBar.getIvSearch().setSelected(false);
                     }
 
-                    topBar.getIvSearch().setAlpha((int) searchAndCapsuleAlpha1);
-                    topBar.ivFreshSort.setAlpha((int) searchAndCapsuleAlpha1);
+                    topBar.getRlSearch().setAlpha((int) searchAndCapsuleAlpha1);
+                    topBar.rlFreshSort.setAlpha((int) searchAndCapsuleAlpha1);
                     if (topBar.ivFreshSort.isSelected()) {
                         topBar.ivFreshSort.setSelected(false);
                     }
@@ -4697,9 +4698,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
               /*  llCartContainer.getBackground().setAlpha(255);
                 llCartContainer.setSelected(true);*/
                 topBar.getIvSearch().setSelected(true);
-                topBar.getIvSearch().setAlpha(255);
+                topBar.getRlSearch().setAlpha(255);
                 topBar.ivFreshSort.setSelected(true);
-                topBar.ivFreshSort.setAlpha(255);
+                topBar.rlFreshSort.setAlpha(255);
 
 
                 //back Button
@@ -4727,9 +4728,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
               /*  llCartContainer.getBackground().setAlpha(255);
                 llCartContainer.setSelected(false);*/
                 topBar.getIvSearch().setSelected(false);
-                topBar.getIvSearch().setAlpha(255);
+                topBar.getRlSearch().setAlpha(255);
                 topBar.ivFreshSort.setSelected(false);
-                topBar.ivFreshSort.setAlpha(255);
+                topBar.rlFreshSort.setAlpha(255);
 
                 //back Button
                 topBar.imageViewBack.getDrawable().mutate().setColorFilter(ContextCompat.getColor(this, R.color.lightBlackTxtColor), PorterDuff.Mode.SRC_ATOP);
@@ -4918,7 +4919,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         if (getVendorOpened() != null) {
             appBarLayout.setExpanded(false, false);
             llCheckoutBarSetVisibility(View.GONE);
-            topBar.ivSearch.setVisibility(View.GONE);
+            topBar.rlSearch.setVisibility(View.GONE);
             GAUtils.event(GACategory.MENUS, GAAction.RESTAURANT_HOME , GAAction.FEED + GAAction.CLICKED);
             getTransactionUtils().openRestaurantReviewsListFragment(this, relativeLayoutContainer, getVendorOpened());
         }

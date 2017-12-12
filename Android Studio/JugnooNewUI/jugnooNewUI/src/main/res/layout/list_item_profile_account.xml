@@ -74,7 +74,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless">
 
             <ImageView
                 android:layout_width="10px"
@@ -107,7 +109,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless">
             <ImageView
                 android:layout_width="10px"
                 android:layout_height="match_parent"
@@ -137,7 +141,9 @@
             android:gravity="center_vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless">
             <ImageView
                 android:layout_width="10px"
                 android:layout_height="match_parent"
@@ -167,7 +173,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless">
             <ImageView
                 android:layout_width="10px"
                 android:layout_height="match_parent"
@@ -198,7 +206,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless">
             <ImageView
                 android:layout_width="10px"
                 android:layout_height="match_parent"
@@ -227,7 +237,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless">
             <ImageView
                 android:layout_width="10px"
                 android:layout_height="match_parent"
@@ -258,7 +270,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless">
             <ImageView
                 android:layout_width="10px"
                 android:layout_height="match_parent"
@@ -290,7 +304,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless">
             <ImageView
                 android:layout_width="10px"
                 android:layout_height="match_parent"
@@ -322,7 +338,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless">
             <ImageView
                 android:layout_width="10px"
                 android:layout_height="match_parent"
