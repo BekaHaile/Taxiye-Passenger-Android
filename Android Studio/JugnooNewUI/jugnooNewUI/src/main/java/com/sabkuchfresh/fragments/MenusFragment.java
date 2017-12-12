@@ -331,6 +331,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             fetchNextPage();
                         }
                     }
+                    if(activity.rlfabViewFatafat.getVisibility()==View.VISIBLE && activity.tvFatfatChatIconText.getVisibility()==View.VISIBLE){
+                      activity.tvFatfatChatIconText.setVisibility(View.GONE);
+                    }
+                }else{
+                    if(activity.rlfabViewFatafat.getVisibility()==View.VISIBLE && activity.tvFatfatChatIconText.getVisibility()==View.GONE){
+                        activity.tvFatfatChatIconText.setVisibility(View.VISIBLE);
+                    }
                 }
 
                 try {

@@ -46,6 +46,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -291,6 +292,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private boolean showingEarlyBirdDiscount;
     private boolean appTypeDeliveryInBackground;
     public RelativeLayout rlfabViewFatafat;
+    public TextView tvFatfatChatIconText;
     public int lastAppTypeOpen;
     private KeyboardLayoutListener mParentKeyboardLayoutListener;
     private KeyboardLayoutListener.KeyBoardStateHandler mChildKeyboardListener;
@@ -308,25 +310,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             setContentView(R.layout.activity_fresh);
 			ButterKnife.bind(this);
-            fabViewFatafat = (FloatingActionMenu) findViewById(R.id.menuLabelFatafat);
-            fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.custom_copy));
-            fabViewFatafat.setMenuButtonColorNormal(ContextCompat.getColor(this,R.color.fatafat_fab));
-            fabViewFatafat.setMenuButtonColorPressed(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
-            fabViewFatafat.setMenuButtonColorRipple(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
-            fabViewFatafat.setOnMenuToggleListener(null);
-            fabViewFatafat.setOnMenuButtonLongClickListener(null);
-            fabViewFatafat.setOnMenuButtonClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(isDeliveryOpenInBackground()){
-                        GAUtils.event(GACategory.FATAFAT3, GAAction.FATAFAT_FAB_CLICKED, GAAction.LABEL_ORDER_VIA_FATAFAT);
-                        switchOffering(Config.getFeedClientId());
-                    }
+            initFatafatChatIcon();
 
-                }
-            });
-            rlfabViewFatafat = (RelativeLayout)findViewById(R.id.rlMenuLabelfatat);
-            rlfabViewFatafat.setVisibility(View.GONE);
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             toolbar.setTitle("");
@@ -615,6 +600,52 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     }
 
+    private void initFatafatChatIcon() {
+        rlfabViewFatafat = (RelativeLayout)findViewById(R.id.rlMenuLabelfatat);
+        fabViewFatafat = (FloatingActionMenu) findViewById(R.id.menuLabelFatafat);
+        tvFatfatChatIconText = (TextView) findViewById(R.id.tv_fatafat_icon_desc);
+        fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.custom_copy));
+        fabViewFatafat.setMenuButtonColorNormal(ContextCompat.getColor(this,R.color.fatafat_fab));
+        fabViewFatafat.setMenuButtonColorPressed(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
+        fabViewFatafat.setMenuButtonColorRipple(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
+        fabViewFatafat.setOnMenuToggleListener(null);
+        fabViewFatafat.setOnMenuButtonLongClickListener(null);
+        fabViewFatafat.setOnMenuButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isDeliveryOpenInBackground()){
+                    GAUtils.event(GACategory.FATAFAT3, GAAction.FATAFAT_FAB_CLICKED, GAAction.LABEL_ORDER_VIA_FATAFAT);
+                    switchOffering(Config.getFeedClientId());
+                }
+
+            }
+        });
+
+        rlfabViewFatafat.getLayoutTransition().addTransitionListener(new LayoutTransition.TransitionListener() {
+            @Override
+            public void startTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
+                if(transitionType==LayoutTransition.CHANGE_APPEARING){
+                    fabViewFatafat.getmMenuButton().setShadowColor(ContextCompat.getColor(FreshActivity.this,R.color.fatafat_fab));
+                    fabViewFatafat.getmMenuButton().updateBackground();
+                    rlfabViewFatafat.setBackgroundDrawable(ContextCompat.getDrawable(FreshActivity.this,R.drawable.fatafat_chat_icon_background));
+
+                }
+            }
+
+            @Override
+            public void endTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
+                if(transitionType==LayoutTransition.CHANGE_DISAPPEARING){
+                    fabViewFatafat.getmMenuButton().setShadowColor(ContextCompat.getColor(FreshActivity.this,R.color.black_50));
+                    fabViewFatafat.getmMenuButton().updateBackground();
+                    rlfabViewFatafat.setBackgroundDrawable(null);
+
+                }
+
+            }
+        });
+        rlfabViewFatafat.setVisibility(View.GONE);
+    }
+
     /**
      * Enables child fragments to listen for keyboard change event
      *
@@ -754,7 +785,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
             fabViewTest.setRlGenieHelpBottomMargin(200f);
-            fabViewFatafat.setMenuLabelsRightTestPadding(marginBottom,this,fabViewFatafat);
+            float scale = getResources().getDisplayMetrics().density;
+            int paddingBottom = (int) (marginBottom * scale + 0.5f);
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) rlfabViewFatafat.getLayoutParams();
+            layoutParams.leftMargin = 0 ;
+            layoutParams.topMargin= 0;
+            layoutParams.rightMargin = (int) (40f * ASSL.Yscale());
+            layoutParams.bottomMargin = paddingBottom;
+            rlfabViewFatafat.setLayoutParams(layoutParams);
+            rlfabViewFatafat.invalidate();;
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             Data.AppType = getAppType();
 
@@ -4262,7 +4301,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 padding+=25f;
             }
             fabViewTest.setMenuLabelsRightTestPadding(padding);
-            fabViewFatafat.setMenuLabelsRightTestPadding(padding,this,fabViewFatafat);
+            float scale = getResources().getDisplayMetrics().density;
+            int paddingBottom = (int) (padding * scale + 0.5f);
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) rlfabViewFatafat.getLayoutParams();
+            layoutParams.leftMargin = 0 ;
+            layoutParams.topMargin= 0;
+            layoutParams.rightMargin = (int) (40f * ASSL.Yscale());
+            layoutParams.bottomMargin = paddingBottom;
+            rlfabViewFatafat.setLayoutParams(layoutParams);
+            rlfabViewFatafat.invalidate();;
         } catch (Exception e) {
             e.printStackTrace();
         }
