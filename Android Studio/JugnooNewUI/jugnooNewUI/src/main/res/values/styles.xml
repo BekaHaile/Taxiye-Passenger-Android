@@ -35,7 +35,7 @@
     </style>
 
     <style name="GreyHighlight" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorControlHighlight">@color/dull_background</item>
+        <item name="colorControlHighlight">@color/grey_dark_less</item>
     </style>
 
     <style name="AppThemePicker.NoActionBar" parent="AppThemePicker">
