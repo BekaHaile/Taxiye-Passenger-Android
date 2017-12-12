@@ -136,6 +136,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     private GoogleMap googleMap;
     private boolean autoCompleteResultClicked = false;
     private boolean canProceedWithUnsavedAddressMode;
+    public static final String KEY_ARGS_PROCEED_WITHOUT_UNSAVED_ADDRESS = "key_args_proceed_without_unsaved_address";
 
 
     @OnClick(R.id.bMyLocation)
@@ -155,9 +156,22 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         return new LatLng(Data.latitude, Data.longitude);
     }
 
-    public DeliveryAddressesFragment(boolean canProceedWithUnsavedAddressMode) {
-        this.canProceedWithUnsavedAddressMode = canProceedWithUnsavedAddressMode;
 
+   public static DeliveryAddressesFragment newInstance(boolean canProceedWithUnsavedAddressMode) {
+
+        Bundle args = new Bundle();
+        args.putBoolean(KEY_ARGS_PROCEED_WITHOUT_UNSAVED_ADDRESS,canProceedWithUnsavedAddressMode);
+        DeliveryAddressesFragment fragment = new DeliveryAddressesFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments()!=null && getArguments().containsKey(KEY_ARGS_PROCEED_WITHOUT_UNSAVED_ADDRESS)){
+            canProceedWithUnsavedAddressMode = getArguments().getBoolean(KEY_ARGS_PROCEED_WITHOUT_UNSAVED_ADDRESS,canProceedWithUnsavedAddressMode);
+        }
     }
 
     @Nullable
