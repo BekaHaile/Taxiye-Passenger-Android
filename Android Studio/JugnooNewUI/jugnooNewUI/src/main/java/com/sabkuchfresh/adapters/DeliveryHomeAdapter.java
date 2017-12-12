@@ -689,7 +689,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 statusHolder.tvOrderTime.setText(deliveryTime);*/
                 GradientDrawable shapeDrawable = (GradientDrawable) statusHolder.tvOrderStatus.getBackground();
                 try {
-                    shapeDrawable.setStroke(Utils.dpToPx(activity,2),Color.parseColor(recentOrder.getOrderStatusColor()));
+                    shapeDrawable.setStroke(Utils.dpToPx(activity,1),Color.parseColor(recentOrder.getOrderStatusColor()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
