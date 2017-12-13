@@ -1180,6 +1180,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     if(deliveryAddressModel != null && deliveryAddressModel.getId() == previousAddressId){
                         saveDeliveryAddressModel(deliveryAddressModel.getAddress(), deliveryAddressModel.getLatLng(), 0, "");
                     }
+
+                    getAddressAndFetchOfferingData(getSelectedLatLng(),getAppType());
                 }
                 // else if selected address is updated by user, updating address related local variables
                 // from SP search result

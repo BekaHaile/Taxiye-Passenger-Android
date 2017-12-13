@@ -20,6 +20,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="true"
         app:layout_behavior="com.sabkuchfresh.widgets.LockableBottomSheetBehavior"
+        android:background="@color/offer_popup_item_color"
         >
 
         <LinearLayout

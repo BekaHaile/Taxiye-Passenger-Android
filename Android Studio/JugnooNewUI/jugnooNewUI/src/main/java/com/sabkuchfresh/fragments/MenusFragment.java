@@ -501,6 +501,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     activity.getTopBar().ivFilterApplied.setVisibility(View.GONE);
                     activity.getTopBar().title.setText(activity.getString(R.string.delivery_new_name));
+                    /*String titleToSet = noOfCategories==1 && category!=null?category.getCategoryName():activity.getString(R.string.title_fatafat_home_page);
+                    String locationText = activity.getTopBar().getTvTopBarDeliveryAddressLocation().getText().toString().trim();
+                    if(locationText.length()>0){
+                        titleToSet+=" NEAR " + activity.getTopBar().getTvTopBarDeliveryAddressLocation();
+
+                    }*/
                     activity.getTopBar().getTvAddressLayoutTitle().setText(noOfCategories==1 && category!=null?category.getCategoryName():activity.getString(R.string.title_fatafat_home_page));
                     activity.setMenusFilterVisibility(noOfCategories==1&&category!=null?View.VISIBLE:View.GONE);
                     activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
