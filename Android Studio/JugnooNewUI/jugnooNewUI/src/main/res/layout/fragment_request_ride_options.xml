@@ -146,6 +146,7 @@
             android:layout_width="match_parent"
             android:layout_height="125px"
             android:layout_below="@+id/relativeLayoutPoolInfoBar"
+            android:background="@android:color/white"
             android:splitMotionEvents="false"/>
 
         <ImageView

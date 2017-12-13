@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="185px"
-    android:layout_height="125px"
-    android:background="@color/white">
+    android:layout_height="125px" android:theme="@style/GreyHighlight"
+    android:background="?attr/selectableItemBackground">
 
     <RelativeLayout
         android:id="@+id/linearLayoutContainer"
@@ -30,7 +30,7 @@
             android:layout_marginTop="-3px"
             android:text="@string/auto"
             android:textAllCaps="true"
-            android:textColor="@color/text_color_theme_color_selector"
+            android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_22" />
 
         <ImageView
