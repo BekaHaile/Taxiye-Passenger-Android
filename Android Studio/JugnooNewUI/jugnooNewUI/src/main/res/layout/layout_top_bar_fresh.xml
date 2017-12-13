@@ -34,12 +34,7 @@
                 android:theme="@style/GreyHighlight"
                 android:tag="mwar" />
 
-            <Button
-                android:id="@+id/buttonCheckServer"
-                android:layout_width="80px"
-                android:layout_height="80px"
-                android:layout_marginLeft="150px"
-                android:background="@drawable/background_transparent" />
+
 
             <ImageView
                 android:id="@+id/imageViewBack"
@@ -164,6 +159,7 @@
 
                 <LinearLayout
                     android:id="@+id/llTopBarDeliveryAddress"
+                    android:theme="@style/GreyHighlight"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

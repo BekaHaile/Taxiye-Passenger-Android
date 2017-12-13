@@ -341,7 +341,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
                     @Override
                     public void onSearchPre() {
-                        progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
+                        showProgressWheelDeliveryPin();
                     }
 
                     @Override
@@ -359,7 +359,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
                     @Override
                     public void onPlaceSearchPre() {
-                        progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
+                        showProgressWheelDeliveryPin();
                         DialogPopup.showLoadingDialog(activity, "");
                     }
 
@@ -551,6 +551,15 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         return rootView;
     }
 
+    private void showProgressWheelDeliveryPin() {
+     /*   if(activity instanceof AddPlaceActivity && ((AddPlaceActivity) activity).getTopFragment() instanceof DeliveryAddressesFragment
+                || (activity instanceof FreshActivity && ((FreshActivity) activity).getTopFragment() instanceof DeliveryAddressesFragment)){
+
+        }*/
+        progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
+
+    }
+
     private void moveCameraToCurrent(){
         if(getView() != null && googleMap != null) {
             if (activity instanceof AddPlaceActivity
@@ -720,7 +729,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             }
 
             if(isVisible() && !isRemoving()) {
-                progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
+                showProgressWheelDeliveryPin();
             }
             final Map<String, String> params = new HashMap<String, String>(6);
 
@@ -983,6 +992,11 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        try {
+            progressWheelDeliveryAddressPin.setVisibility(View.GONE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ButterKnife.unbind(this);
     }
 

@@ -41,7 +41,7 @@ public class TopBar implements GAAction, GACategory {
     public RelativeLayout topRl;
     public ImageView imageViewMenu;
     public TextView title;
-    public Button buttonCheckServer;
+
     public ImageView imageViewBack, ivDeliveryAddressCross, imageViewDelete ;
     RelativeLayout  imgVwFatafatTutorial;
     public EditText editTextDeliveryAddress;
@@ -81,7 +81,6 @@ public class TopBar implements GAAction, GACategory {
         title = (TextView) drawerLayout.findViewById(R.id.title);
         title.setTypeface(Fonts.avenirNext(activity));
 
-        buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
         llSearchCartContainer = (RelativeLayout) drawerLayout.findViewById(R.id.llSearchCartContainer);
         llSearchCart = (LinearLayout) drawerLayout.findViewById(R.id.llSearchCart);
         llTopBarDeliveryAddress = (LinearLayout) drawerLayout.findViewById(R.id.llTopBarDeliveryAddress);
@@ -115,7 +114,6 @@ public class TopBar implements GAAction, GACategory {
 
         topRl.setOnClickListener(topBarOnClickListener);
         imageViewMenu.setOnClickListener(topBarOnClickListener);
-        buttonCheckServer.setOnClickListener(topBarOnClickListener);
         //ivSearch.setOnClickListener(topBarOnClickListener);
         rlSearch.setOnClickListener(topBarOnClickListener);
         rlFilter.setOnClickListener(topBarOnClickListener);
@@ -124,20 +122,7 @@ public class TopBar implements GAAction, GACategory {
         imgVwFatafatTutorial.setOnClickListener(topBarOnClickListener);
         llTopBarDeliveryAddress.setOnClickListener(topBarOnClickListener);
 
-        buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (Data.AppType == com.sabkuchfresh.utils.AppConstant.ApplicationType.MENUS
-                        || Data.AppType == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
-                    Utils.showToast(activity, Config.getMenusServerUrlName());
-                } else if (Data.AppType == AppConstant.ApplicationType.FEED) {
-                    Utils.showToast(activity, Config.getFatafatServerUrlName());
-                } else {
-                    Utils.showToast(activity, Config.getFreshServerUrlName());
-                }
-                return false;
-            }
-        });
+
 
 
     }
@@ -266,8 +251,7 @@ public class TopBar implements GAAction, GACategory {
 
                     break;
 
-                case R.id.buttonCheckServer:
-                    break;
+
 
                 case R.id.imageViewBack:
                     if (activity instanceof FreshActivity) {

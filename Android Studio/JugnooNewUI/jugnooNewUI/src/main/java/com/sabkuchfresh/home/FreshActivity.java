@@ -1521,7 +1521,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             topBar.editTextDeliveryAddress.setVisibility(View.GONE);
 
             int rlFilterVis = View.GONE;
-            topBar.buttonCheckServer.setVisibility(View.GONE);
             topBar.imageViewBack.setImageResource(R.drawable.ic_back_selector);
             topBar.tvDeliveryAddress.setVisibility(View.GONE);
             int padding = (int) (20f * ASSL.minRatio());
@@ -1536,7 +1535,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             int deliveryAddressInTopBarVisibility = View.GONE;
 
             if (fragment instanceof FreshHomeFragment) {
-                topBar.buttonCheckServer.setVisibility(View.VISIBLE);
+
                 llCartContainerVis = View.VISIBLE;
                 ivSearchVis = View.VISIBLE;
                 topBar.imageViewMenu.setVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);

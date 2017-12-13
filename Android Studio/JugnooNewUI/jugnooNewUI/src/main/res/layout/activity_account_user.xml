@@ -293,6 +293,8 @@
                                 android:layout_toRightOf="@+id/linearLayoutPhone"
                                 android:layout_centerVertical="true"
                                 android:padding="@dimen/dp_5"
+                                android:theme="@style/GreyHighlight"
+                                android:background="?attr/selectableItemBackgroundBorderless"
                                 android:src="@drawable/edit_icon_selector"
                                 android:tag="mwar"
                                 android:visibility="visible"/>
