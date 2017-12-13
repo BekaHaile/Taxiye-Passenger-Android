@@ -598,10 +598,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 RecentOrder recentOrder = (RecentOrder) dataToDisplay.get(position);
                 int productType = recentOrder.getProductType();
-                String line1=null,line2=null,deliveryText=null,status=null;
+
+                // line 1 shall always come be it any type
+                String line2=null,deliveryText=null,status=null;
 
                 if(productType == ProductType.MEALS.getOrdinal()){
-                    line1 = recentOrder.getOrderLine1();
                     line2=recentOrder.getOrderLine2();
                     if ((recentOrder.getOrderStatusText() != null) && (!recentOrder.getOrderStatusText().equalsIgnoreCase(""))) {
                         deliveryText=recentOrder.getOrderStatusText();
@@ -611,7 +612,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     status = possibleMealsStatus.get(recentOrder.getStatus());
                 }
                 else if(productType == ProductType.MENUS.getOrdinal()){
-                    line1 = recentOrder.getOrderLine1();
                     line2=recentOrder.getOrderLine2();
                     deliveryText = recentOrder.getEndTime();
                     status = possibleStatus.get(recentOrder.getStatus());
@@ -619,7 +619,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
                 else {
                     // fatafat type
-                    line1 = recentOrder.getOrderLine1();
                     if(recentOrder.getPickupLatitude()==null ||
                             recentOrder.getPickupLongitude() == null){
 
@@ -643,7 +642,19 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     status = possibleFatafatStatus.get(recentOrder.getStatus());
                 }
 
-                statusHolder.tvOrderRestaurant.setText(Utils.fromHtml(line1));
+                if(recentOrder.getOrderLine1Start()!=null){
+                    statusHolder.tvOrderRestaurant.setText(recentOrder.getOrderLine1Start());
+                }
+                else {
+                    statusHolder.tvOrderRestaurant.setText("");
+                }
+                if(recentOrder.getOrderLine1End()!=null){
+                    statusHolder.tvOrderId.setText(recentOrder.getOrderLine1End());
+                }
+                else {
+                    statusHolder.tvOrderId.setText("");
+                }
+
                 if(line2 !=null){
                     statusHolder.tvOrderDescription.setVisibility(View.VISIBLE);
                     statusHolder.tvOrderDescription.setText(Utils.fromHtml(line2));
@@ -1271,6 +1282,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @Bind(R.id.tv_order_restaurant)
         TextView tvOrderRestaurant;
+        @Bind(R.id.tv_order_id)
+        TextView tvOrderId;
         @Bind(R.id.tv_order_status)
         TextView tvOrderStatus;
         @Bind(R.id.tv_order_time)
@@ -1284,6 +1297,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public ViewNewOrderStatus(final View itemView, final ItemListener itemListener) {
             super(itemView);
             ButterKnife.bind(this,itemView);
+            tvOrderRestaurant.setTypeface(tvOrderRestaurant.getTypeface(),Typeface.BOLD);
             rlRootNewOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

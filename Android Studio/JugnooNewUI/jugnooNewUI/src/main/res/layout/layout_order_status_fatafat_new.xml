@@ -25,20 +25,40 @@
             android:layout_marginLeft="5dp"
             android:layout_toLeftOf="@id/iv_arrow">
 
+
             <TextView
                 android:id="@+id/tv_order_restaurant"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_5"
-                android:ellipsize="marquee"
-                android:gravity="left"
-                android:paddingRight="2dp"
-                android:singleLine="true"
-                tools:text="dsakjdajskhdjsfhkdshfkdsjfhsdjeqweqweqweqweqweqwewqeqwf"
-                android:textColor="@color/text_color_fatafat_bold"
                 android:textSize="16sp"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:textColor="@color/text_color_fatafat_bold"
+                app:font="@string/maven"
+                android:gravity="left"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:layout_marginRight="55dp"
+                android:paddingRight="2dp"
+                tools:text="dsakjdajskhdjsfhkdshfkdsjfhsdjeqweqweqweqweqweqwewqeqwf"
                 android:visibility="visible"
-                app:font="@string/maven" />
+                android:layout_height="wrap_content" />
+
+
+
+            <TextView
+                android:id="@+id/tv_order_id"
+                android:layout_width="wrap_content"
+                android:textSize="14.3sp"
+                android:layout_marginLeft="-52dp"
+                android:paddingRight="5dp"
+                android:layout_alignBottom="@id/tv_order_restaurant"
+                android:textColor="@color/text_color_fatafat_bold"
+                android:layout_toRightOf="@id/tv_order_restaurant"
+                app:font="@string/maven_r"
+                android:singleLine="true"
+                android:text="#5289"
+                android:layout_height="wrap_content" />
+
+
 
 
             <TextView
