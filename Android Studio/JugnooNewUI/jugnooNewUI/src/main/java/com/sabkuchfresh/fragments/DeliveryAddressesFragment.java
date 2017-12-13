@@ -470,8 +470,12 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
                         @Override
                         public void onMapSettled() {
-                            fillAddressDetails(DeliveryAddressesFragment.this.googleMap.getCameraPosition().target);
                             autoCompleteResultClicked = false;
+                            if(scrollViewSuggestions.getVisibility()== View.GONE || getBottomSheetBehaviour()==null || getBottomSheetBehaviour().getState()==BottomSheetBehavior.STATE_COLLAPSED){
+                                fillAddressDetails(DeliveryAddressesFragment.this.googleMap.getCameraPosition().target);
+
+                            }
+
                         }
 
                         @Override
@@ -523,6 +527,11 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 @Override
                 public void onClick(View v) {
                     getBottomSheetBehaviour().setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    try {
+                        fillAddressDetails(DeliveryAddressesFragment.this.googleMap.getCameraPosition().target);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
 
                 }
