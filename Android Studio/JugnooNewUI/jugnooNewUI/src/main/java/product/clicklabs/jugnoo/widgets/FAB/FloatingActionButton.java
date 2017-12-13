@@ -347,7 +347,7 @@ public class FloatingActionButton extends ImageButton {
         super.setLayoutParams(params);
     }
 
-    void updateBackground() {
+   public void updateBackground() {
         LayerDrawable layerDrawable;
         if (hasShadow()) {
             layerDrawable = new LayerDrawable(new Drawable[]{
@@ -1328,4 +1328,9 @@ public class FloatingActionButton extends ImageButton {
     public void setLabelTextColor(ColorStateList colors) {
         getLabelView().setTextColor(colors);
     }
+
+    public void seShadowColor(int mShadowColor){
+        this.mShadowColor = mShadowColor;
+    }
+
 }

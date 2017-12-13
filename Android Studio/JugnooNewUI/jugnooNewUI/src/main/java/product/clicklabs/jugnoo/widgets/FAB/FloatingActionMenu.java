@@ -116,10 +116,11 @@ public class FloatingActionMenu extends ViewGroup {
         isFABToggleModeOn = FABToggleModeOn;
     }
 
-    public void setMenuLabelsRightTestPadding(float paddingBottom, Activity activity,FloatingActionMenu floatingActionMenu){
+    public int setMenuLabelsRightTestPadding(float paddingBottom, Activity activity,FloatingActionMenu floatingActionMenu){
         float scale = activity.getResources().getDisplayMetrics().density;
         int dpAsPixels = (int) (paddingBottom * scale + 0.5f);
         setMenuLabelsRightTestPadding(dpAsPixels,floatingActionMenu);
+        return dpAsPixels;
     }
     public void setMenuLabelsRightTestPadding(int paddingBottom,FloatingActionMenu floatingActionMenu){
         floatingActionMenu.setPadding(0, 0, (int) (40f * ASSL.Yscale()), paddingBottom);
@@ -1065,5 +1066,9 @@ public class FloatingActionMenu extends ViewGroup {
 
     public void setOnMenuButtonLongClickListener(OnLongClickListener longClickListener) {
         mMenuButton.setOnLongClickListener(longClickListener);
+    }
+
+    public FloatingActionButton getmMenuButton() {
+        return mMenuButton;
     }
 }

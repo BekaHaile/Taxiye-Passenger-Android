@@ -129,27 +129,74 @@
 
         <RelativeLayout
             android:id="@+id/rlMenuLabelfatat"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu
-                android:id="@+id/menuLabelFatafat"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
-                android:contentDescription="@string/fatafat"
-                android:paddingBottom="@dimen/padding_bottom_menu_labels"
-                android:paddingLeft="@dimen/padding_left_menu_labels"
-                android:tag="DontTouchMe"
-                fab:fab_colorRipple="@color/grey_light_alpha"
-                fab:menu_animationDelayPerItem="25"
-                fab:menu_backgroundColor="@color/black_70"
-                fab:menu_icon="@drawable/ic_fab_jeanie"
-                fab:menu_labels_colorNormal="@color/white"
-                fab:menu_labels_colorPressed="@color/grey_light"
-                fab:menu_labels_ellipsize="end"
-                fab:menu_labels_position="right"
-                fab:menu_labels_singleLine="true"
-                fab:menu_shadowColor="@color/black_50"/>
+            android:layout_gravity="right|bottom"
+            android:layout_width="wrap_content"
+            android:tag="DontTouchMe"
+            android:layout_height="wrap_content">
+
+
+
+                <RelativeLayout
+                    android:id="@+id/fab_fatafat_container"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:tag="DontTouchMe"
+                    android:background="@drawable/fatafat_chat_icon_background"
+                    android:layout_height="wrap_content">
+
+
+
+                 <!--   <product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu
+                        android:id="@+id/menuLabelFatafat"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:contentDescription="@string/fatafat"
+                        android:tag="DontTouchMe"
+                        fab:fab_colorRipple="@color/fatafat_fab_pressed"
+                        fab:menu_animationDelayPerItem="25"
+                        app:menu_shadowColor="#353542"
+                        fab:menu_backgroundColor="@color/black_70"
+                        fab:menu_icon="@drawable/ic_fatafat_chat_new"
+                        fab:menu_shadowColor="@color/black_50"
+                        fab:menu_labels_colorNormal="@color/fatafat_fab"
+                        fab:menu_labels_colorPressed="@color/fatafat_fab_pressed"
+                        fab:menu_labels_ellipsize="end"
+                        fab:menu_labels_position="right"
+                        fab:menu_labels_singleLine="true"/>-->
+
+                    <ImageView
+                        android:id="@+id/menuLabelFatafat"
+                        android:background="@drawable/ic_fatafat_chat_icon_background"
+                        android:layout_width="wrap_content"
+                        android:padding="13.5dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_fatafat_chat_new"
+                        android:layout_height="wrap_content" />
+
+
+                    <TextView
+                        android:id="@+id/tv_fatafat_icon_desc"
+                        android:layout_centerVertical="true"
+                        android:text="Custom Order"
+                        android:textAllCaps="true"
+                        android:layout_toRightOf="@id/menuLabelFatafat"
+                        android:visibility="visible"
+                        app:font="@string/maven"
+                        android:maxLines="1"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/white"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content" />
+
+
+                </RelativeLayout>
+
+
+                <!--fab:menu_shadowColor="@color/black_50"/>-->
 
         </RelativeLayout>
 

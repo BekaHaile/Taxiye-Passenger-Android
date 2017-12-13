@@ -602,9 +602,13 @@ public class FABViewTest implements GACategory, GAAction {
      * @param paddingBottom in pixels without scale
      */
     public void setMenuLabelsRightTestPadding(float paddingBottom){
-        float scale = activity.getResources().getDisplayMetrics().density;
-        int dpAsPixels = (int) (paddingBottom * scale + 0.5f);
+        int dpAsPixels = getPaddingAsPerDisplayMetrics(paddingBottom);
         setMenuLabelsRightTestPadding(dpAsPixels);
+    }
+
+    public int getPaddingAsPerDisplayMetrics(float paddingBottom) {
+        float scale = activity.getResources().getDisplayMetrics().density;
+        return (int) (paddingBottom * scale + 0.5f);
     }
 
     /**

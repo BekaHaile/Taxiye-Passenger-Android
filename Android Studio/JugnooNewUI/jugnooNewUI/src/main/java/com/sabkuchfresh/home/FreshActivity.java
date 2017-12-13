@@ -1,6 +1,7 @@
 package com.sabkuchfresh.home;
 
 import android.animation.LayoutTransition;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -46,6 +47,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -231,7 +234,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private MenuBar menuBar;
     private TopBar topBar;
     private FABViewTest fabViewTest;
-    private FloatingActionMenu fabViewFatafat;
+    private ImageView fabViewFatafat;
     private TransactionUtils transactionUtils;
 
     private ProductsResponse productsResponse;
@@ -291,6 +294,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private boolean showingEarlyBirdDiscount;
     private boolean appTypeDeliveryInBackground;
     public RelativeLayout rlfabViewFatafat;
+    public TextView tvFatfatChatIconText;
     public int lastAppTypeOpen;
     private KeyboardLayoutListener mParentKeyboardLayoutListener;
     private KeyboardLayoutListener.KeyBoardStateHandler mChildKeyboardListener;
@@ -308,25 +312,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             setContentView(R.layout.activity_fresh);
 			ButterKnife.bind(this);
-            fabViewFatafat = (FloatingActionMenu) findViewById(R.id.menuLabelFatafat);
-            fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.custom_copy));
-            fabViewFatafat.setMenuButtonColorNormal(ContextCompat.getColor(this,R.color.fatafat_fab));
-            fabViewFatafat.setMenuButtonColorPressed(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
-            fabViewFatafat.setMenuButtonColorRipple(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
-            fabViewFatafat.setOnMenuToggleListener(null);
-            fabViewFatafat.setOnMenuButtonLongClickListener(null);
-            fabViewFatafat.setOnMenuButtonClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(isDeliveryOpenInBackground()){
-                        GAUtils.event(GACategory.FATAFAT3, GAAction.FATAFAT_FAB_CLICKED, GAAction.LABEL_ORDER_VIA_FATAFAT);
-                        switchOffering(Config.getFeedClientId());
-                    }
+            initFatafatChatIcon();
 
-                }
-            });
-            rlfabViewFatafat = (RelativeLayout)findViewById(R.id.rlMenuLabelfatat);
-            rlfabViewFatafat.setVisibility(View.GONE);
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             toolbar.setTitle("");
@@ -615,6 +602,32 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     }
 
+    private void initFatafatChatIcon() {
+        rlfabViewFatafat = (RelativeLayout)findViewById(R.id.rlMenuLabelfatat);
+        fabViewFatafat = (ImageView) findViewById(R.id.menuLabelFatafat);
+        tvFatfatChatIconText = (TextView) findViewById(R.id.tv_fatafat_icon_desc);
+        /*
+        fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.ic_fatafat_chat_new));
+        fabViewFatafat.setMenuButtonColorNormal(ContextCompat.getColor(this,R.color.fatafat_fab));
+        fabViewFatafat.setMenuButtonColorPressed(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
+        fabViewFatafat.setMenuButtonColorRipple(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
+        fabViewFatafat.setOnMenuToggleListener(null);
+        fabViewFatafat.setOnMenuButtonLongClickListener(null);*/
+        findViewById(R.id.fab_fatafat_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isDeliveryOpenInBackground()){
+                    GAUtils.event(GACategory.FATAFAT3, GAAction.FATAFAT_FAB_CLICKED, GAAction.LABEL_ORDER_VIA_FATAFAT);
+                    switchOffering(Config.getFeedClientId());
+                }
+
+            }
+        });
+
+
+        rlfabViewFatafat.setVisibility(View.GONE);
+    }
+
     /**
      * Enables child fragments to listen for keyboard change event
      *
@@ -754,7 +767,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             fabViewTest.setMenuLabelsRightTestPadding(marginBottom);
             fabViewTest.setRlGenieHelpBottomMargin(200f);
-            fabViewFatafat.setMenuLabelsRightTestPadding(marginBottom,this,fabViewFatafat);
+            float scale = getResources().getDisplayMetrics().density;
+            int paddingBottom = (int) (marginBottom * scale + 0.5f);
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) rlfabViewFatafat.getLayoutParams();
+            layoutParams.leftMargin = 0 ;
+            layoutParams.topMargin= 0;
+            layoutParams.rightMargin = (int) (40f * ASSL.Yscale());
+            layoutParams.bottomMargin = paddingBottom;
+            rlfabViewFatafat.setLayoutParams(layoutParams);
+            rlfabViewFatafat.invalidate();;
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             Data.AppType = getAppType();
 
@@ -4262,7 +4283,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 padding+=25f;
             }
             fabViewTest.setMenuLabelsRightTestPadding(padding);
-            fabViewFatafat.setMenuLabelsRightTestPadding(padding,this,fabViewFatafat);
+            float scale = getResources().getDisplayMetrics().density;
+            int paddingBottom = (int) (padding * scale + 0.5f);
+            CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) rlfabViewFatafat.getLayoutParams();
+            layoutParams.leftMargin = 0 ;
+            layoutParams.topMargin= 0;
+            layoutParams.rightMargin = (int) (40f * ASSL.Yscale());
+            layoutParams.bottomMargin = paddingBottom;
+            rlfabViewFatafat.setLayoutParams(layoutParams);
+            rlfabViewFatafat.invalidate();;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -5626,4 +5655,33 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public boolean isPaySliderEnabled(){
        return  !(viewAlpha.getTag()!=null && viewAlpha.getTag().equals("Disabled"));
     }
+
+    public static void expand(final View v) {
+        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
+        final int targetHeight = v.getMeasuredHeight();
+
+        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
+        v.getLayoutParams().width = 1;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().width = interpolatedTime == 1
+                        ? ViewGroup.LayoutParams.WRAP_CONTENT
+                        : (int)(targetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        // 1dp/ms
+        a.setDuration((int)(targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
+    }
+
 }

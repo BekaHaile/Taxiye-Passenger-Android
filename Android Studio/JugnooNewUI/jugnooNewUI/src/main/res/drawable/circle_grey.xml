@@ -4,7 +4,7 @@
     >
     
     <solid 
-        android:color="@color/text_color_light"
+        android:color="@color/fatafat_fab"
         />
 
 </shape>
