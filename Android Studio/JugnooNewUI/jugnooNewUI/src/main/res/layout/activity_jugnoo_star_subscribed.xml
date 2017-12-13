@@ -80,11 +80,14 @@
 
                     <TextView
                         android:id="@+id/tvSavingsMeterRetry"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10px"
+                        android:gravity="center"
                         android:text="@string/retry_underline"
-                        android:textColor="@color/text_color_selector"
+                        android:textColor="@color/text_color"
+                        android:theme="@style/GreyHighlight"
+                        android:background="?attr/selectableItemBackground"
                         android:textSize="@dimen/text_size_30"
                         android:visibility="visible" />
 

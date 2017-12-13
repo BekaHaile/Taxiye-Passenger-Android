@@ -67,7 +67,7 @@
                     android:layout_marginLeft="30px"
                     android:layout_marginRight="30px"
                     android:layout_marginTop="15px"
-                    android:background="@drawable/background_white_rounded_bordered">
+                    android:background="@drawable/white_background_rounded_corner_selector">
 
 
                     <ImageView
@@ -106,7 +106,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/jugnoo_cash"
-                            android:textColor="@color/text_color_light_selector"
+                            android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_32" />
 
                         <TextView
@@ -129,7 +129,7 @@
                     android:layout_marginLeft="30px"
                     android:layout_marginRight="30px"
                     android:layout_marginTop="15px"
-                    android:background="@drawable/background_white_rounded_bordered"
+                    android:background="@drawable/white_background_rounded_corner_selector"
                     android:visibility="visible">
 
                     <ImageView
@@ -145,7 +145,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="120px"
                         android:text="@string/paytm_wallet"
-                        android:textColor="@color/text_color_light_selector"
+                        android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
 
 
@@ -171,7 +171,7 @@
                     android:layout_marginLeft="30px"
                     android:layout_marginRight="30px"
                     android:layout_marginTop="15px"
-                    android:background="@drawable/background_white_rounded_bordered"
+                    android:background="@drawable/white_background_rounded_corner_selector"
                     android:visibility="visible">
 
                     <ImageView
@@ -187,7 +187,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="120px"
                         android:text="@string/mobikwik_wallet"
-                        android:textColor="@color/text_color_light_selector"
+                        android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
 
 
@@ -213,7 +213,7 @@
                     android:layout_marginLeft="30px"
                     android:layout_marginRight="30px"
                     android:layout_marginTop="15px"
-                    android:background="@drawable/background_white_rounded_bordered"
+                    android:background="@drawable/white_background_rounded_corner_selector"
                     android:visibility="visible">
 
                     <ImageView
@@ -230,7 +230,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="120px"
                         android:text="@string/freecharge_wallet"
-                        android:textColor="@color/text_color_light_selector"
+                        android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
 
 
@@ -261,7 +261,7 @@
             android:layout_marginLeft="30px"
             android:layout_marginRight="30px"
             android:layout_above="@+id/relativeLayoutWalletTransactions"
-            android:background="@drawable/background_white_rounded_bordered">
+            android:background="@drawable/white_background_rounded_corner_selector">
 
             <ImageView
                 android:id="@+id/imageViewPayTransactionsIcon"
@@ -279,7 +279,7 @@
                 android:layout_marginLeft="20px"
                 android:layout_toRightOf="@+id/imageViewPayTransactionsIcon"
                 android:text="@string/pay_transactions"
-                android:textColor="@color/text_color_light_selector"
+                android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_32" />
 
             <ImageView
@@ -299,7 +299,7 @@
             android:layout_marginBottom="30px"
             android:layout_marginLeft="30px"
             android:layout_marginRight="30px"
-            android:background="@drawable/background_white_rounded_bordered">
+            android:background="@drawable/white_background_rounded_corner_selector">
 
             <ImageView
                 android:id="@+id/imageViewWalletTransactionsIcon"
@@ -317,7 +317,7 @@
                 android:layout_marginLeft="20px"
                 android:layout_toRightOf="@+id/imageViewWalletTransactionsIcon"
                 android:text="@string/wallet_transactions"
-                android:textColor="@color/text_color_light_selector"
+                android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_32" />
 
             <ImageView

@@ -27,12 +27,15 @@
         <TextView
             android:id="@+id/tvSkip"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
+            android:gravity="center"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/px_30"
+            android:padding="@dimen/px_10"
             android:text="@string/skip"
             android:textAllCaps="true"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_30"
             app:font="maven" />

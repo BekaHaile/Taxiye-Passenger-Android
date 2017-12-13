@@ -145,6 +145,8 @@
                     android:visibility="gone"
                     android:paddingTop="15px"
                     android:paddingBottom="15px"
+                    android:theme="@style/GreyHighlight"
+                    android:background="?attr/selectableItemBackground"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -163,7 +165,6 @@
                         android:visibility="visible" />
 
                     <TextView
-                        android:background="@android:color/white"
                         android:layout_width="match_parent"
                         app:font="@string/maven"
                         android:layout_gravity="center"

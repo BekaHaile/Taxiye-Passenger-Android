@@ -30,6 +30,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_5"
             android:padding="@dimen/dp_10"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back_selector"
             />
 
