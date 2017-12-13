@@ -48,7 +48,7 @@
                 android:id="@+id/tv_order_id"
                 android:layout_width="wrap_content"
                 android:textSize="14.3sp"
-                android:layout_marginLeft="-55dp"
+                android:layout_marginLeft="-52dp"
                 android:paddingRight="5dp"
                 android:layout_alignBottom="@id/tv_order_restaurant"
                 android:textColor="@color/text_color_fatafat_bold"
