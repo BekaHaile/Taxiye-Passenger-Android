@@ -173,9 +173,8 @@ public class TopBar implements GAAction, GACategory {
                                 && ((FreshActivity) activity).getTopFragment() instanceof MenusFragment) {
 
 //                            title.setAlpha(0.0f);
-                            for(int i = 0;i<llTopBarDeliveryAddress.getChildCount();i++){
-                                llTopBarDeliveryAddress.getChildAt(i).setAlpha(0.0f);
-                            }
+                            llTopBarDeliveryAddress.setAlpha(0.0f);
+
 
                             rlSearch.setAlpha(0.0f);
 //                            title.setVisibility(View.VISIBLE);
@@ -197,10 +196,8 @@ public class TopBar implements GAAction, GACategory {
 
 
 //                            title.animate().alpha(1.0f).setDuration(200);
-                            for(int i = 0;i<llTopBarDeliveryAddress.getChildCount();i++){
-                                llTopBarDeliveryAddress.getChildAt(i).animate().alpha(1.0f).setDuration(200);
 
-                            }
+                            llTopBarDeliveryAddress.animate().alpha(1.0f).setDuration(200);
 
                             rlSearch.animate().alpha(1.0f).setDuration(200);
 

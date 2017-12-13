@@ -1028,6 +1028,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
             activity.getTopBar().setSearchVisibility(View.VISIBLE);
             activity.getTopBar().rlSearch.setVisibility(View.GONE);
+            activity.getTopBar().getLlTopBarDeliveryAddress().setVisibility(View.GONE);
             activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             activity.getTopBar().etSearch.requestFocus();
             Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
