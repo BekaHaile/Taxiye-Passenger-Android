@@ -351,17 +351,15 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="28px"
-                android:layout_marginRight="28px"
-                android:layout_marginTop="26px"
+                android:layout_marginLeft="@dimen/dp_12"
+                android:layout_marginRight="@dimen/dp_14"
+                android:layout_marginTop="@dimen/dp_12"
                 android:orientation="vertical"
-                android:paddingLeft="4px"
-                android:paddingRight="4px"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="8px"
+                app:cardCornerRadius="@dimen/dp_5"
                 app:cardPreventCornerOverlap="true"
                 android:visibility="visible"
-                app:cardUseCompatPadding="true">
+                app:cardUseCompatPadding="false">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -373,7 +371,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="46dp"
                         android:gravity="center_vertical"
-                        android:paddingLeft="@dimen/dp_17"
+                        android:paddingLeft="@dimen/dp_14"
                         android:text="@string/bill_summary"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
