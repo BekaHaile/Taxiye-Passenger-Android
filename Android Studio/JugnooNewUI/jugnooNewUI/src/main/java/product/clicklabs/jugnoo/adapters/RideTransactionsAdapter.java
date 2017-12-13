@@ -236,7 +236,14 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewToValue.setText(orderHistory.getToAddress());
                 holder.textViewDetails.setText(R.string.created_at_colon);
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(orderHistory.getCreatedAt())));
-                holder.textViewAmount.setText("");
+
+                if(orderHistory.getDeliveryCharges()!=0){
+                    holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
+                            Utils.getMoneyDecimalFormat().format(orderHistory.getDeliveryCharges())));
+                }
+                else {
+                    holder.textViewAmount.setText("");
+                }
                 holder.imageViewProductType.setImageResource(Data.userData.isOnlyFatafatNewEnabled()?R.drawable.ic_delivery_customer:R.drawable.ic_anywhere_fab);
                 holder.imageViewProductType.setBackgroundResource(Data.userData.isOnlyFatafatNewEnabled()?R.drawable.circle_green_delivery_customer_fab:R.drawable.circle_feed_grey_fab);
 

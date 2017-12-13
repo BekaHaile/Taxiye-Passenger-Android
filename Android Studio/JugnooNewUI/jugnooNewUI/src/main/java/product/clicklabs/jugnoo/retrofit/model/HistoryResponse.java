@@ -258,6 +258,13 @@ public class HistoryResponse {
         @SerializedName("bill_summary")
         private ArrayList<BillSummaryModel> billSummary;
 
+        @SerializedName("delivery_charges")
+        private double deliveryCharges;
+
+        public double getDeliveryCharges() {
+            return deliveryCharges;
+        }
+
         public ArrayList<BillSummaryModel> getBillSummary() {
             return billSummary;
         }
