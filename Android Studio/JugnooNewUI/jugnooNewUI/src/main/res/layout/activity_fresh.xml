@@ -137,17 +137,20 @@
 
 
                 <RelativeLayout
+                    android:id="@+id/fab_fatafat_container"
                     android:layout_width="wrap_content"
                     android:layout_marginTop="6dp"
                     android:layout_marginBottom="6dp"
                     android:tag="DontTouchMe"
                     android:background="@drawable/fatafat_chat_icon_background"
-                    android:layout_height="50dp">
+                    android:layout_height="wrap_content">
 
-                    <product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu
+
+
+                 <!--   <product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu
                         android:id="@+id/menuLabelFatafat"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:contentDescription="@string/fatafat"
@@ -162,7 +165,17 @@
                         fab:menu_labels_colorPressed="@color/fatafat_fab_pressed"
                         fab:menu_labels_ellipsize="end"
                         fab:menu_labels_position="right"
-                        fab:menu_labels_singleLine="true"/>
+                        fab:menu_labels_singleLine="true"/>-->
+
+                    <ImageView
+                        android:id="@+id/menuLabelFatafat"
+                        android:background="@drawable/circle_grey"
+                        android:layout_width="wrap_content"
+                        android:padding="13.5dp"
+                        android:layout_alignParentLeft="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_fatafat_chat_new"
+                        android:layout_height="wrap_content" />
 
 
                     <TextView
@@ -170,7 +183,7 @@
                         android:layout_centerVertical="true"
                         android:text="Start Chat"
                         android:textAllCaps="true"
-                        android:layout_marginLeft="60dp"
+                        android:layout_toRightOf="@id/menuLabelFatafat"
                         android:visibility="visible"
                         app:font="@string/maven"
                         android:maxLines="1"

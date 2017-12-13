@@ -234,7 +234,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private MenuBar menuBar;
     private TopBar topBar;
     private FABViewTest fabViewTest;
-    private FloatingActionMenu fabViewFatafat;
+    private ImageView fabViewFatafat;
     private TransactionUtils transactionUtils;
 
     private ProductsResponse productsResponse;
@@ -604,15 +604,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private void initFatafatChatIcon() {
         rlfabViewFatafat = (RelativeLayout)findViewById(R.id.rlMenuLabelfatat);
-        fabViewFatafat = (FloatingActionMenu) findViewById(R.id.menuLabelFatafat);
+        fabViewFatafat = (ImageView) findViewById(R.id.menuLabelFatafat);
         tvFatfatChatIconText = (TextView) findViewById(R.id.tv_fatafat_icon_desc);
+        /*
         fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.ic_fatafat_chat_new));
         fabViewFatafat.setMenuButtonColorNormal(ContextCompat.getColor(this,R.color.fatafat_fab));
         fabViewFatafat.setMenuButtonColorPressed(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
         fabViewFatafat.setMenuButtonColorRipple(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
         fabViewFatafat.setOnMenuToggleListener(null);
-        fabViewFatafat.setOnMenuButtonLongClickListener(null);
-        fabViewFatafat.setOnMenuButtonClickListener(new View.OnClickListener() {
+        fabViewFatafat.setOnMenuButtonLongClickListener(null);*/
+        findViewById(R.id.fab_fatafat_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isDeliveryOpenInBackground()){
