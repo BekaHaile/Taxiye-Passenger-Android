@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -83,6 +84,15 @@ public class FatafatTutorialAdapter extends RecyclerView.Adapter<FatafatTutorial
             holder.mVwTopLine.setVisibility(View.VISIBLE);
         }
 
+        holder.mllContent.post(new Runnable() {
+            @Override
+            public void run() {
+
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)holder.mllPoints.getLayoutParams();
+                layoutParams.height=holder.mllContent.getMeasuredHeight();
+                holder.mllPoints.requestLayout();
+            }
+        });
 
     }
 
@@ -100,6 +110,7 @@ public class FatafatTutorialAdapter extends RecyclerView.Adapter<FatafatTutorial
         private ImageView mImgVwCatIcon;
         private RelativeLayout mRlTimeLine;
         private View mVwTopLine;
+        private LinearLayout mllPoints,mllContent;
 
         TutorialViewHolder(final View itemView) {
             super(itemView);
@@ -110,6 +121,8 @@ public class FatafatTutorialAdapter extends RecyclerView.Adapter<FatafatTutorial
             mImgVwCatIcon = (ImageView) itemView.findViewById(R.id.imgVwCatIcon);
             mRlTimeLine = (RelativeLayout) itemView.findViewById(R.id.rlTimeLine);
             mVwTopLine = itemView.findViewById(R.id.vwTopLine);
+            mllPoints=(LinearLayout)itemView.findViewById(R.id.llPoints);
+            mllContent=(LinearLayout)itemView.findViewById(R.id.llContent);
         }
     }
 }

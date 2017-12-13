@@ -103,6 +103,8 @@
                     android:paddingBottom="25px"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:theme="@style/GreyHighlight"
+                    android:background="?attr/selectableItemBackground"
                     android:visibility="gone">
 
                     <ImageView
@@ -115,7 +117,6 @@
                         android:visibility="visible" />
 
                     <TextView
-                        android:background="@android:color/white"
                         android:layout_width="match_parent"
                         app:font="@string/maven"
                         android:layout_gravity="center"

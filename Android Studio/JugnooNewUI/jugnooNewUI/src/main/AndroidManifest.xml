@@ -160,7 +160,7 @@
             android:name=".promotion.PromotionActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/BaseAppCompatTheme"/>
         <activity
             android:name=".HelpParticularActivity"
             android:label="@string/app_name"
@@ -200,7 +200,7 @@
             android:name=".AccountActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/BaseAppCompatTheme"/>
         <activity
             android:name=".PhoneNoOTPConfirmScreen"
             android:label="@string/app_name"
@@ -250,7 +250,7 @@
             android:name=".NotificationCenterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".emergency.EmergencyActivity"
             android:label="@string/app_name"
