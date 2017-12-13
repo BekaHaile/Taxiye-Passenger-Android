@@ -169,7 +169,7 @@
 
                     <ImageView
                         android:id="@+id/menuLabelFatafat"
-                        android:background="@drawable/circle_grey"
+                        android:background="@drawable/ic_fatafat_chat_icon_background"
                         android:layout_width="wrap_content"
                         android:padding="13.5dp"
                         android:layout_alignParentLeft="true"
@@ -181,12 +181,13 @@
                     <TextView
                         android:id="@+id/tv_fatafat_icon_desc"
                         android:layout_centerVertical="true"
-                        android:text="Start Chat"
+                        android:text="Custom Order"
                         android:textAllCaps="true"
                         android:layout_toRightOf="@id/menuLabelFatafat"
                         android:visibility="visible"
                         app:font="@string/maven"
                         android:maxLines="1"
+                        android:textSize="14sp"
                         android:textColor="@android:color/white"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content" />

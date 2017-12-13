@@ -3,6 +3,8 @@ package com.sabkuchfresh.fragments;
 import android.animation.ValueAnimator;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -15,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -109,7 +110,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
     private ValueAnimator openAnim;
     private ValueAnimator closeAnim;
-    private int heightOfTextView;
+    private int widthFatafatChatIconText;
 
     public MenusResponse.StripInfo getCurrentStripInfo() {
         return currentStripInfo;
@@ -138,7 +139,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if(Data.userData!=null && Data.userData.getFeedEnabled()!=1 && Data.userData.getDeliveryCustomerEnabled()==1){
             isFatfatChatIconEnabledFromServer =true;
         }
-        heightOfTextView =  activity.getResources().getDimensionPixelSize(R.dimen.dp_100);
+        widthFatafatChatIconText =  activity.getResources().getDimensionPixelSize(R.dimen.dp_120);
+
 
       /*  deliveryDisplayCategoriesView = new DeliveryDisplayCategoriesView(activity,
                 rootView.findViewById(R.id.rLCategoryDropDown), this);*/
@@ -362,52 +364,25 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
 
-                  /*  if(activity.rlfabViewFatafat.getVisibility()==View.VISIBLE && activity.tvFatfatChatIconText.getVisibility()==View.VISIBLE){
-                        activity.rlfabViewFatafat.findViewById(R.id.animationViewChat).setScaleX(100);
-                        activity.rlfabViewFatafat.findViewById(R.id.animationViewChat).animate().scaleXBy(-100).setDuration(300).start();
-                        activity.tvFatfatChatIconText.setPivotX(0);
-                        activity.tvFatfatChatIconText.animate().translationXBy(50).setDuration(300).start();
-                        activity.getHandler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                activity.tvFatfatChatIconText.setVisibility(View.GONE);
-                            }
-                        },300);
-                    }*/
+
                 }else{
-                    if(/*activity.rlfabViewFatafat.getVisibility()==View.VISIBLE && activity.tvFatfatChatIconText.getVisibility()==View.GONE*/true){
-//                        activity.tvFatfatChatIconText.setVisibility(View.VISIBLE);
-
-                        if(closeAnim!=null && closeAnim.isRunning())
-                           closeAnim.cancel();
-                        if(openAnim==null || !openAnim.isRunning()){
-                            openAnim = ValueAnimator.ofInt(activity.tvFatfatChatIconText.getMeasuredWidth(), heightOfTextView);
-                            openAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                @Override
-                                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                    int val = (Integer) valueAnimator.getAnimatedValue();
-                                    ViewGroup.LayoutParams layoutParams = activity.tvFatfatChatIconText.getLayoutParams();
-                                    layoutParams.width = val;
-                                    activity.tvFatfatChatIconText.setLayoutParams(layoutParams);
-                                }
-                            });
-                            openAnim.setDuration(180);
-                            openAnim.start();
-                        }
-
-                       /* activity.tvFatfatChatIconText.setScaleX(-50);
-                        activity.tvFatfatChatIconText.animate().scaleXBy(50).setDuration(300).start();
-                        activity.tvFatfatChatIconText.setPivotX(0);
-                        activity.tvFatfatChatIconText.setTranslationX(50);
-                        activity.tvFatfatChatIconText.animate().translationXBy(-50).setDuration(300).start();
-                        activity.getHandler().postDelayed(new Runnable() {
+                    if(closeAnim!=null && closeAnim.isRunning())
+                        closeAnim.cancel();
+                    if(openAnim==null || !openAnim.isRunning()){
+                        openAnim = ValueAnimator.ofInt(activity.tvFatfatChatIconText.getMeasuredWidth(), widthFatafatChatIconText);
+                        openAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                             @Override
-                            public void run() {
-                                activity.tvFatfatChatIconText.setVisibility(View.VISIBLE);
+                            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                int val = (Integer) valueAnimator.getAnimatedValue();
+                                ViewGroup.LayoutParams layoutParams = activity.tvFatfatChatIconText.getLayoutParams();
+                                layoutParams.width = val;
+                                activity.tvFatfatChatIconText.setLayoutParams(layoutParams);
                             }
-                        },300);
-*/
+                        });
+                        openAnim.setDuration(180);
+                        openAnim.start();
                     }
+
                 }
 
                 try {
