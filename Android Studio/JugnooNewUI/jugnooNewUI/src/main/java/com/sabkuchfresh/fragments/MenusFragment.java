@@ -1,7 +1,10 @@
 package com.sabkuchfresh.fragments;
 
+import android.animation.ValueAnimator;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -105,6 +108,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private boolean isKeyboardOpen;
     public boolean chatAvailable;
     private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
+    private ValueAnimator openAnim;
+    private ValueAnimator closeAnim;
+    private int widthFatafatChatIconText;
 
     public MenusResponse.StripInfo getCurrentStripInfo() {
         return currentStripInfo;
@@ -133,6 +139,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if(Data.userData!=null && Data.userData.getFeedEnabled()!=1 && Data.userData.getDeliveryCustomerEnabled()==1){
             isFatfatChatIconEnabledFromServer =true;
         }
+        widthFatafatChatIconText =  activity.getResources().getDimensionPixelSize(R.dimen.dp_120);
+
 
       /*  deliveryDisplayCategoriesView = new DeliveryDisplayCategoriesView(activity,
                 rootView.findViewById(R.id.rLCategoryDropDown), this);*/
@@ -331,6 +339,50 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             fetchNextPage();
                         }
                     }
+
+
+
+
+                    if(openAnim!=null && openAnim.isRunning())
+                       openAnim.cancel();
+
+                    if(closeAnim==null || !closeAnim.isRunning()){
+                        closeAnim = ValueAnimator.ofInt(activity.tvFatfatChatIconText.getMeasuredWidth(), 0);
+                        closeAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                int val = (Integer) valueAnimator.getAnimatedValue();
+                                ViewGroup.LayoutParams layoutParams = activity.tvFatfatChatIconText.getLayoutParams();
+                                layoutParams.width = val;
+                                activity.tvFatfatChatIconText.setLayoutParams(layoutParams);
+                            }
+                        });
+
+                        closeAnim.setDuration(180);
+                        closeAnim.start();
+                    }
+
+
+
+
+                }else{
+                    if(closeAnim!=null && closeAnim.isRunning())
+                        closeAnim.cancel();
+                    if(openAnim==null || !openAnim.isRunning()){
+                        openAnim = ValueAnimator.ofInt(activity.tvFatfatChatIconText.getMeasuredWidth(), widthFatafatChatIconText);
+                        openAnim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                int val = (Integer) valueAnimator.getAnimatedValue();
+                                ViewGroup.LayoutParams layoutParams = activity.tvFatfatChatIconText.getLayoutParams();
+                                layoutParams.width = val;
+                                activity.tvFatfatChatIconText.setLayoutParams(layoutParams);
+                            }
+                        });
+                        openAnim.setDuration(180);
+                        openAnim.start();
+                    }
+
                 }
 
                 try {
