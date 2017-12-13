@@ -268,7 +268,6 @@
                                     android:visibility="visible" />
 
                                 <TextView
-                                    android:background="@android:color/white"
                                     android:layout_width="match_parent"
                                     app:font="@string/maven"
                                     android:layout_gravity="center"
