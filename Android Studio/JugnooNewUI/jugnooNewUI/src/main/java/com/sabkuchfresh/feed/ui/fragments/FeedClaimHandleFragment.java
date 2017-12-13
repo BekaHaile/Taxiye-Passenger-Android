@@ -290,9 +290,7 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(activity!=null){
-            activity.unRegisterKeyBoardListener();
-        }
+
         if (handleSuggestionsAPI != null) {
             handleSuggestionsAPI.setCancelled(true);
         }

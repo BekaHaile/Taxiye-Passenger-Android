@@ -124,7 +124,6 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private int llShadowPeekHeight, openLiveTracking;
     private JSONObject responseOrderDataApi;
     private boolean isFeedOrder;
-    private int feedOrderId;
     private HomeUtil homeUtil = new HomeUtil();
 
     @Bind(R.id.tv2r)
@@ -387,6 +386,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             llPaidVia.setVisibility(View.GONE);
             bNeedHelpFeed.setText(R.string.chat_support);
             getFeedOrderData(activity);
+            isFeedOrder = true;
         }else{
             rootView.findViewById(R.id.layout_menus_order).setVisibility(View.VISIBLE);
             rootView.findViewById(R.id.layout_feed_order).setVisibility(View.GONE);
@@ -1343,10 +1343,20 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
                         int orderId = intent.getIntExtra(Constants.KEY_ORDER_ID, 0);
                         if (PushFlags.STATUS_CHANGED.getOrdinal() == flag) {
-                            getOrderData(activity);
+                            if(isFeedOrder){
+                                getFeedOrderData(activity);
+                            }else{
+                                getOrderData(activity);
+
+                            }
                         } else if (PushFlags.MENUS_STATUS.getOrdinal() == flag || PushFlags.MENUS_STATUS_SILENT.getOrdinal() == flag) {
                             if(orderId == OrderStatusFragment.this.orderId) {
-                                getOrderData(activity);
+                                if(isFeedOrder){
+                                    getFeedOrderData(activity);
+                                }else{
+                                    getOrderData(activity);
+
+                                }
                             }
                         }
                     } catch (Exception e) {

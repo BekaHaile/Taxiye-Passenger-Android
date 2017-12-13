@@ -375,7 +375,6 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 		super.onDestroyView();
 		try {
 			if(activity != null) {
-				activity.unRegisterKeyBoardListener();
 				activity.clearEtFocus();
 			}
 		} catch (Exception e) {

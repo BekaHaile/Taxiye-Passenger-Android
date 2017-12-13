@@ -725,9 +725,6 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     public void onDestroyView() {
 //        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         super.onDestroyView();
-        if(activity!=null){
-            activity.unRegisterKeyBoardListener();
-        }
         if(imageCompressionTask!=null && !imageCompressionTask.isCancelled()) {
             imageCompressionTask.cancel(true);
         }

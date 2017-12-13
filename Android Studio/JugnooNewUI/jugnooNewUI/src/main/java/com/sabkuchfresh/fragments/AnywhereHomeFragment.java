@@ -295,9 +295,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (activity != null) {
-            activity.unRegisterKeyBoardListener();
-        }
         ButterKnife.unbind(this);
     }
 

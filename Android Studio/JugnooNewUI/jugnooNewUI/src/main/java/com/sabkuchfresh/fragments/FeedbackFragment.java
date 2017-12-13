@@ -762,9 +762,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(activity!=null){
-            activity.unRegisterKeyBoardListener();
-        }
+
     }
 
     SendFeedbackQuery sendFeedbackQuery;

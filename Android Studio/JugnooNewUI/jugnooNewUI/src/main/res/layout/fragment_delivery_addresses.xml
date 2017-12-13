@@ -99,8 +99,8 @@
 
                 <LinearLayout
                     android:id="@+id/llSetAnywhere"
-                    android:paddingTop="15px"
-                    android:paddingBottom="15px"
+                    android:paddingTop="25px"
+                    android:paddingBottom="25px"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone">
@@ -143,8 +143,8 @@
                 <LinearLayout
                     android:id="@+id/ll_set_location_on_map"
                     android:visibility="gone"
-                    android:paddingTop="15px"
-                    android:paddingBottom="15px"
+                    android:paddingTop="25px"
+                    android:paddingBottom="25px"
                     android:theme="@style/GreyHighlight"
                     android:background="?attr/selectableItemBackground"
                     android:layout_width="match_parent"

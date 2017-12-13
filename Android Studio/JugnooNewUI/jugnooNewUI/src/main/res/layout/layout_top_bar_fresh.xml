@@ -56,6 +56,7 @@
                 android:background="@drawable/bg_delivery_address_topbar"
                 android:hint="@string/type_delivery_address"
                 android:textColor="@color/text_color"
+                android:textColorHint="@color/text_color_hint"
                 android:textCursorDrawable="@drawable/cursor_black"
                 android:drawableLeft="@drawable/ic_location_marker_grey"
                 android:drawablePadding="8dp"
@@ -181,6 +182,7 @@
                         android:id="@+id/tvAddressLayoutTitle"
                         android:textSize="25px"
                         app:font="@string/maven"
+                        android:clickable="false"
                         android:textColor="@color/text_color_heading_fatafat_80"
                         android:text="@string/title_fatafat_home_page"
                         android:textAllCaps="true"
@@ -189,6 +191,7 @@
                     <TextView
                         android:id="@+id/tvTopBarDeliveryAddressLocation"
                         android:textSize="30px"
+                        android:clickable="false"
                         android:textColor="@color/text_color_heading_fatafat"
                         app:font="@string/montserrat_m"
                         android:singleLine="true"

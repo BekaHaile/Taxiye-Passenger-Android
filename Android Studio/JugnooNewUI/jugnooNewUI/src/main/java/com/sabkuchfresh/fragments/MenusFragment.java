@@ -630,9 +630,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onDestroyView() {
         try {
-            if(activity!=null){
-                activity.unRegisterKeyBoardListener();
-            }
+
             deliveryHomeAdapter.removeHandler();
         } catch (Exception e) {
             e.printStackTrace();
