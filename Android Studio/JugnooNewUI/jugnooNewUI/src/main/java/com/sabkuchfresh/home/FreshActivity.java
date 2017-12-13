@@ -1,6 +1,7 @@
 package com.sabkuchfresh.home;
 
 import android.animation.LayoutTransition;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -47,6 +48,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -604,7 +606,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         rlfabViewFatafat = (RelativeLayout)findViewById(R.id.rlMenuLabelfatat);
         fabViewFatafat = (FloatingActionMenu) findViewById(R.id.menuLabelFatafat);
         tvFatfatChatIconText = (TextView) findViewById(R.id.tv_fatafat_icon_desc);
-        fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.custom_copy));
+        fabViewFatafat.setMenuIcon(ContextCompat.getDrawable(this,R.drawable.ic_fatafat_chat_new));
         fabViewFatafat.setMenuButtonColorNormal(ContextCompat.getColor(this,R.color.fatafat_fab));
         fabViewFatafat.setMenuButtonColorPressed(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
         fabViewFatafat.setMenuButtonColorRipple(ContextCompat.getColor(this,R.color.fatafat_fab_pressed));
@@ -621,28 +623,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         });
 
-        rlfabViewFatafat.getLayoutTransition().addTransitionListener(new LayoutTransition.TransitionListener() {
-            @Override
-            public void startTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
-                if(transitionType==LayoutTransition.CHANGE_APPEARING){
-                    fabViewFatafat.getmMenuButton().setShadowColor(ContextCompat.getColor(FreshActivity.this,R.color.fatafat_fab));
-                    fabViewFatafat.getmMenuButton().updateBackground();
-                    rlfabViewFatafat.setBackgroundDrawable(ContextCompat.getDrawable(FreshActivity.this,R.drawable.fatafat_chat_icon_background));
 
-                }
-            }
-
-            @Override
-            public void endTransition(LayoutTransition transition, ViewGroup container, View view, int transitionType) {
-                if(transitionType==LayoutTransition.CHANGE_DISAPPEARING){
-                    fabViewFatafat.getmMenuButton().setShadowColor(ContextCompat.getColor(FreshActivity.this,R.color.black_50));
-                    fabViewFatafat.getmMenuButton().updateBackground();
-                    rlfabViewFatafat.setBackgroundDrawable(null);
-
-                }
-
-            }
-        });
         rlfabViewFatafat.setVisibility(View.GONE);
     }
 
@@ -5673,4 +5654,33 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public boolean isPaySliderEnabled(){
        return  !(viewAlpha.getTag()!=null && viewAlpha.getTag().equals("Disabled"));
     }
+
+    public static void expand(final View v) {
+        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
+        final int targetHeight = v.getMeasuredHeight();
+
+        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
+        v.getLayoutParams().width = 1;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().width = interpolatedTime == 1
+                        ? ViewGroup.LayoutParams.WRAP_CONTENT
+                        : (int)(targetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        // 1dp/ms
+        a.setDuration((int)(targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
+    }
+
 }
