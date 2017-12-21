@@ -809,6 +809,7 @@ public interface Constants {
     String KEY_TO_ADDRESS = "to_address";
     String KEY_TO_LATITUDE = "to_latitude";
     String KEY_TO_LONGITUDE = "to_longitude";
+    String KEY_USER_IDENTIFIER = "user_identifier";
     String KEY_IS_IMMEDIATE = "is_immediate";
     String KEY_TIME = "time";
     String KEY_DELIVERY_TIME = "delivery_time";
