@@ -500,6 +500,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         params.put(Constants.KEY_TO_LATITUDE, String.valueOf(deliveryAddress.getLatitude()));
         params.put(Constants.KEY_TO_LONGITUDE, String.valueOf(deliveryAddress.getLongitude()));
         params.put(Constants.KEY_IS_IMMEDIATE, isAsapSelected ? "1" : "0");
+        params.put(Constants.KEY_USER_IDENTIFIER, String.valueOf(Data.userData.userIdentifier));
 
         String finalDateTime = null;
         if (!isAsapSelected) {
