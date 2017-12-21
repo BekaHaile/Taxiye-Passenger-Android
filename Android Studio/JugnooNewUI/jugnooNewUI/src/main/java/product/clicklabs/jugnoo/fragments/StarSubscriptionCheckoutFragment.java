@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -28,12 +29,19 @@ import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.commoncalls.ApiCancelOrder;
+import com.sabkuchfresh.dialogs.CheckoutRequestPaymentDialog;
+import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
+import com.sabkuchfresh.fatafatchatpay.FatafatChatPayActivity;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshWalletBalanceLowDialog;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.PurchaseSubscriptionResponse;
+import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
+import com.sabkuchfresh.utils.AppConstant;
 
 import org.json.JSONObject;
 
@@ -43,19 +51,24 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import butterknife.ButterKnife;
+import io.paperdb.Paper;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.PaperDBKeys;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RazorpayBaseActivity;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -77,6 +90,7 @@ import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -111,6 +125,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private TextView tvOtherModesToPay, tvUPI;
     private boolean isRazorUPI;
     private PaySlider paySlider;
+    private RelativeLayout relativeLayoutIcici;
     private ArrayList<SubscriptionData.Subscription> subscriptionsActivityList;
 
     private LinearLayout llRideInfo;
@@ -120,9 +135,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private int engagementId;
     private double totalFare, fareToPay;
     private String jugnooVpaHandle;
-
-
+    private EditText edtIciciVpa;
+    private TextView tvLabelIciciUpi,tvUPICashback;
+    private ImageView imageViewIcici;
+    private final static IntentFilter ICICI_STATUS_BROADCAST_FILTER = new IntentFilter(Constants.INTENT_ICICI_PAYMENT_STATUS_UPDATE);
     private static final String FOR_STAR_SUBSCRIPTION = "for_star_subscription";
+    private int orderId;
+    private boolean isFromFatafatChat;
 
 
     public static StarSubscriptionCheckoutFragment newInstance(String subscription, int type){
@@ -146,6 +165,16 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         return  fragment;
     }
 
+    public static StarSubscriptionCheckoutFragment newInstance(double amountToPay, int orderId){
+        StarSubscriptionCheckoutFragment fragment = new StarSubscriptionCheckoutFragment();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(FOR_STAR_SUBSCRIPTION, false);
+        bundle.putDouble(Constants.KEY_FARE_TO_PAY, amountToPay);
+        bundle.putInt(Constants.KEY_ORDER_ID,orderId);
+        fragment.setArguments(bundle);
+        return  fragment;
+    }
+
     private void parseArguments() {
         Bundle bundle = getArguments();
         fromStar = bundle.getBoolean(FOR_STAR_SUBSCRIPTION);
@@ -157,7 +186,11 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             engagementId = bundle.getInt(Constants.KEY_ENGAGEMENT_ID);
             totalFare = bundle.getDouble(Constants.KEY_TOTAL_FARE);
             fareToPay = bundle.getDouble(Constants.KEY_FARE_TO_PAY);
+            if(bundle.containsKey(Constants.KEY_ORDER_ID)){
+                orderId=bundle.getInt(Constants.KEY_ORDER_ID);
+            }
         }
+
     }
 
     @Nullable
@@ -190,6 +223,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
             relativeLayoutMobikwik = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutMobikwik);
             relativeLayoutFreeCharge = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutFreeCharge);
+            relativeLayoutIcici = (RelativeLayout) rootView.findViewById(R.id.rlIciciUpi);
+            edtIciciVpa = (EditText) rootView.findViewById(R.id.edtIciciVpa);
+            tvLabelIciciUpi = (TextView) rootView.findViewById(R.id.tv_label_below_edt_icici);
+            imageViewIcici = (ImageView) rootView.findViewById(R.id.ivRadioIciciUpi);
+
+            tvUPICashback = (TextView) rootView.findViewById(R.id.tvUPICashback);
+            tvUPICashback.setTypeface(tvUPICashback.getTypeface(), Typeface.ITALIC);
+
             imageViewPaytmRadio = (ImageView) rootView.findViewById(R.id.imageViewPaytmRadio);
             imageViewAddPaytm = (ImageView) rootView.findViewById(R.id.imageViewAddPaytm);
             imageViewRadioMobikwik = (ImageView)rootView.findViewById(R.id.imageViewRadioMobikwik);
@@ -231,6 +272,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
             rlUPI.setOnClickListener(onClickListenerPaymentOptionSelector);
             rlOtherModesToPay.setOnClickListener(onClickListenerPaymentOptionSelector);
+            relativeLayoutIcici.setOnClickListener(onClickListenerPaymentOptionSelector);
 
             paySlider = new PaySlider(rootView.findViewById(R.id.llPayViewContainer)) {
                 @Override
@@ -316,6 +358,18 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         Utils.getDoubleTwoDigits((double) Math.round(totalFare))));
                 textViewPaymentVia.setText(R.string.choose_payment_method);
             }
+            else if(activity instanceof FatafatChatPayActivity){
+
+                isFromFatafatChat = true;
+                cvStarPlans.setVisibility(View.GONE);
+                String fareRs = activity.getString(R.string.rupees_value_format,
+                        Utils.getDoubleTwoDigits((double) Math.round(fareToPay)));
+                paySlider.tvSlide.setText("PAY " + fareRs);
+                paySlider.sliderText.setText(R.string.swipe_right_to_pay);
+                llRideInfo.setVisibility(View.GONE);
+                textViewPaymentVia.setText(R.string.choose_payment_method);
+            }
+
 
             linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
             listViewOffers = (NonScrollListView) rootView.findViewById(R.id.listViewOffers);
@@ -336,11 +390,61 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         return rootView;
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
-        orderPaymentModes();
-        setPaymentOptionUI();
+        // fetch wallet balance while resuming also
+        fetchWalletBalance();
+
+        try {
+
+            if(isIciciPaymentRunnableInProgress){
+                activity.getHandler().postDelayed(checkIciciUpiPaymentStatusRunnable,1 * 1000);
+            }
+
+            if(checkoutRequestPaymentDialog!=null && checkoutRequestPaymentDialog.isShowing()){
+                checkoutRequestPaymentDialog.resumeTimer();
+            }
+
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(iciciStatusBroadcast, ICICI_STATUS_BROADCAST_FILTER);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private BroadcastReceiver iciciStatusBroadcast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            Integer orderStatus  = intent.getIntExtra(Constants.ICICI_ORDER_STATUS,Constants.NO_VALID_STATUS);
+            if(orderStatus!=Constants.NO_VALID_STATUS){
+                //Only if the payment is processing corresponding to that order ID
+                if(getPlaceOrderResponse()!=null && getPlaceOrderResponse().getOrderId()==intent.getIntExtra(Constants.KEY_ORDER_ID,0)) {
+                    onIciciStatusResponse(IciciPaymentRequestStatus.parseStatus(intent.getBooleanExtra(Constants.IS_MENUS_OR_DELIVERY, false), orderStatus),
+                            intent.hasExtra(Constants.KEY_MESSAGE) ? intent.getStringExtra(Constants.KEY_MESSAGE) : "");
+                }
+
+
+            }
+
+        }
+    };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
+        if(checkoutRequestPaymentDialog!=null){
+            checkoutRequestPaymentDialog.stopTimer();
+        }
+        try {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(iciciStatusBroadcast);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setPlan(){
@@ -474,6 +578,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         isRazorUPI = false;
                         callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.RAZOR_PAY);
                         break;
+
+                    case R.id.rlIciciUpi:
+                        callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.ICICI_UPI);
+                        break;
                 }
 
             } catch (Exception e) {
@@ -530,6 +638,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             }
 
             if (goAhead) {
+
+                if (getPaymentOption() == PaymentOption.ICICI_UPI && TextUtils.isEmpty(edtIciciVpa.getText().toString().trim())) {
+                    com.sabkuchfresh.utils.Utils.showToast(activity, activity.getString(R.string.error_enter_virtual_payment_address));
+                    paySlider.setSlideInitial();
+                    return;
+                }
+
                 hitAPI();
             }else{
                 paySlider.setSlideInitial();
@@ -682,6 +797,21 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
+                        } // show upi only if coming from fatafatChatPay
+                        else if(paymentModeConfigData.getPaymentOption() == PaymentOption.ICICI_UPI.getOrdinal()
+                                && activity instanceof FatafatChatPayActivity){
+                            linearLayoutWalletContainer.addView(relativeLayoutIcici);
+                            edtIciciVpa.removeTextChangedListener(selectIciciPaymentTextWatcher);
+                            edtIciciVpa.setText(paymentModeConfigData.getUpiHandle());
+                            if(paymentModeConfigData.getUpiHandle()!=null && paymentModeConfigData.getUpiHandle().length()>0){
+                                edtIciciVpa.setSelection(paymentModeConfigData.getUpiHandle().length()-1);
+
+                            }
+                            edtIciciVpa.addTextChangedListener(selectIciciPaymentTextWatcher);
+                            jugnooVpaHandle =  paymentModeConfigData.getJugnooVpaHandle();
+                            tvLabelIciciUpi.setText(activity.getString(R.string.label_below_icici_payment_edt, jugnooVpaHandle));
+                            tvUPICashback.setText(!TextUtils.isEmpty(paymentModeConfigData.getUpiCashbackValue())?paymentModeConfigData.getUpiCashbackValue():"");
+
                         }
                         else if(!fromStar){
                             if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()) {
@@ -760,6 +890,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
             ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_normal);
             ivUPI.setImageResource(R.drawable.ic_radio_button_normal);
+            imageViewIcici.setImageResource(R.drawable.ic_radio_button_normal);
 
             if (getPaymentOption() == PaymentOption.PAYTM) {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_selected);
@@ -773,7 +904,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 } else {
                     ivOtherModesToPay.setImageResource(R.drawable.ic_radio_button_selected);
                 }
+            }else if (getPaymentOption() == PaymentOption.ICICI_UPI) {
+                imageViewIcici.setImageResource(R.drawable.ic_radio_button_selected);
+
             }
+
+            edtIciciVpa.setVisibility(getPaymentOption() == PaymentOption.ICICI_UPI?View.VISIBLE:View.GONE);
+            tvLabelIciciUpi.setVisibility(getPaymentOption() == PaymentOption.ICICI_UPI?View.VISIBLE:View.GONE);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -917,7 +1055,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             } else{
                 apiPurchaseSubscription();
             }
-        } else {
+        } else if(isFromFatafatChat){
+            makeFatafatChatPayment();
+        }
+        else {
             initiateRideEndPaymentAPI();
         }
     }
@@ -1093,6 +1234,108 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         }
     };
 
+    /**
+     * Hits the place order api for orders coming from chat
+     */
+    public void makeFatafatChatPayment(){
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put(Constants.KEY_ACCESS_TOKEN,Data.userData.accessToken);
+        params.put(Constants.KEY_ORDER_ID,String.valueOf(orderId));
+        params.put(Constants.KEY_PAYMENT_MODE,String.valueOf(getPaymentOption().getOrdinal()));
+        params.put(Constants.KEY_AMOUNT,String.valueOf(getAmount()));
+
+        if (getPaymentOption().getOrdinal() == PaymentOption.ICICI_UPI.getOrdinal()) {
+            params.put(Constants.KEY_VPA, edtIciciVpa.getText().toString().trim());
+        }
+
+        new ApiCommon<PaymentResponse>(activity).showLoader(true).execute(params, ApiName.FEED_PAY_FOR_ORDER,
+                new APICommonCallback<PaymentResponse>() {
+                    @Override
+                    public boolean onNotConnected() {
+                        slideInitialDelay();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onException(final Exception e) {
+                        slideInitialDelay();
+                        return false;
+                    }
+
+                    @Override
+                    public void onSuccess(final PaymentResponse response, final String message, final int flag) {
+
+                        try {
+                            if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                                if (getPaymentOption() == PaymentOption.RAZOR_PAY) {
+                                    // razor pay case send data to RazorPay Checkout page
+                                    activity.startRazorPayPayment(response.getData().getRazorpayData(), isRazorUPI);
+                                } else {
+                                    PaymentResponse.PaymentData paymentData = response.getData().getPaymentData();
+                                    if(Data.userData != null ) {
+                                        Data.userData.setJugnooBalance(paymentData.getJugnooBalance());
+                                        if (getPaymentOption() == PaymentOption.PAYTM) {
+                                            Data.userData.setPaytmBalance(Data.userData.getPaytmBalance() - paymentData.getPaytmDeducted());
+                                            fatafatChatOrderPaidSuccess(message);
+                                        } else if (getPaymentOption() == PaymentOption.MOBIKWIK) {
+                                            Data.userData.setMobikwikBalance(Data.userData.getMobikwikBalance() - paymentData.getMobikwikDeducted());
+                                            fatafatChatOrderPaidSuccess(message);
+                                        } else if (getPaymentOption() == PaymentOption.FREECHARGE) {
+                                            Data.userData.setFreeChargeBalance(Data.userData.getFreeChargeBalance() - paymentData.getFreechargeDeducted());
+                                            fatafatChatOrderPaidSuccess(message);
+                                        } else if(getPaymentOption()==PaymentOption.ICICI_UPI && response.getData().getIcici()!=null ){
+
+                                            // Icici Upi Payment Initiated, prepare the order response and add extra key for fatafat chat
+                                            PlaceOrderResponse placeOrderResponse = new PlaceOrderResponse();
+                                            placeOrderResponse.setAmount(fareToPay);
+                                            placeOrderResponse.setOrderId(orderId);
+                                            placeOrderResponse.setIcici(response.getData().getIcici());
+                                            placeOrderResponse.setPaymentMode(String.valueOf(PaymentOption.ICICI_UPI.getOrdinal()));
+                                            placeOrderResponse.setPayViaFatafatChat(true);
+
+                                            setPlaceOrderResponse(placeOrderResponse);
+                                            onIciciUpiPaymentInitiated(response.getData().getIcici(),String.valueOf(fareToPay));
+
+                                        }
+                                    }
+
+
+                                }
+                            } else {
+                                DialogPopup.alertPopup(activity, "", message);
+                                slideInitialDelay();
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            slideInitialDelay();
+                        }
+                    }
+
+                    @Override
+                    public boolean onError(final PaymentResponse paymentResponse, final String message, final int flag) {
+                        slideInitialDelay();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onFailure(final RetrofitError error) {
+                        slideInitialDelay();
+                        return false;
+                    }
+
+                    @Override
+                    public void onNegativeClick() {
+                        slideInitialDelay();
+
+                    }
+                });
+
+    }
+
+
     public void initiateRideEndPaymentAPI() {
 
         final HashMap<String, String> params = new HashMap<>();
@@ -1197,6 +1440,21 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     }
 
+    /**
+     * Called when payment has been successful for fatafat chat order
+     * @param message the message to show
+     */
+    private void fatafatChatOrderPaidSuccess(String message){
+        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                paySlider.setSlideInitial();
+                activity.onBackPressed();
+            }
+        });
+    }
+
+
     private void rideEndPaymentSuccess(double remaining, String message) {
         if (Data.autoData != null && Data.autoData.getEndRideData() != null) {
 			Data.autoData.getEndRideData().setShowPaymentOptions(0);
@@ -1266,7 +1524,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                rideEndPaymentSuccess(remaining, message);
+                // if we come from chat then show fatafat pay success
+                if(isFromFatafatChat){
+                    fatafatChatOrderPaidSuccess(message);
+                }
+                else {
+                    rideEndPaymentSuccess(remaining, message);
+                }
             } else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
                 DialogPopup.alertPopup(activity, "", message);
                 paySlider.setSlideInitial();
@@ -1278,4 +1542,211 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         }
     }
 
+
+    private CheckoutRequestPaymentDialog checkoutRequestPaymentDialog;
+    private ApiCancelOrder apiCancelOrder;
+
+    private void showRequestPaymentDialog(String amount, long expiryTimeLeft, ArrayList<String> reasonList,Long timerStartedAt) {
+
+        if (checkoutRequestPaymentDialog == null) {
+            checkoutRequestPaymentDialog = CheckoutRequestPaymentDialog.init(activity);
+        }
+        checkoutRequestPaymentDialog.setData(amount, timerStartedAt, expiryTimeLeft, reasonList, new CheckoutRequestPaymentDialog.CheckoutRequestPaymentListener() {
+            @Override
+            public void onCancelClick(String reason) {
+                if(getPlaceOrderResponse()!=null){
+                    if(apiCancelOrder ==null){
+                        apiCancelOrder = new ApiCancelOrder(getActivity(), new ApiCancelOrder.Callback() {
+                            @Override
+                            public void onSuccess(String message) {
+                                onIciciStatusResponse(IciciPaymentOrderStatus.CANCELLED,message);
+                            }
+
+                            @Override
+                            public void onFailure() {
+
+                            }
+
+                            @Override
+                            public void onRetry(View view) {
+
+                            }
+
+                            @Override
+                            public void onNoRetry(View view) {
+
+                            }
+                        });
+                    }
+                    apiCancelOrder.hit(getPlaceOrderResponse().getOrderId(),Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()),
+                            -1,isMenusOrDeliveryOpen()? ProductType.MENUS.getOrdinal():ProductType.FRESH.getOrdinal(),reason,"");
+                }
+            }
+
+            @Override
+            public void onTimerComplete() {
+                isIciciPaymentRunnableInProgress = false;
+                activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
+                checkIciciPaymentStatusApi();
+
+            }
+
+            @Override
+            public void onRetryClick() {
+                checkIciciPaymentStatusApi();
+            }
+        }, jugnooVpaHandle).showDialog();
+
+    }
+
+    public boolean isMenusOrDeliveryOpen(){
+        return activity.getAppType()== AppConstant.ApplicationType.MENUS || activity.getAppType()==AppConstant.ApplicationType.DELIVERY_CUSTOMER;
+    }
+
+    private void onIciciUpiPaymentInitiated(PlaceOrderResponse.IciciUpi icici, String amount) {
+        currentStatus=null;
+        isIciciPaymentRunnableInProgress = true;
+        TOTAL_EXPIRY_TIME_ICICI_UPI = icici.getExpirationTimeMillis();
+        DELAY_ICICI_UPI_STATUS_CHECK = icici.getPollingTimeMillis();
+        Long timerStartedAt = icici.getTimerStartedAt()==null?System.currentTimeMillis():icici.getTimerStartedAt();
+        icici.setTimerStartedAt(timerStartedAt);
+        Data.saveCurrentIciciUpiTransaction(getPlaceOrderResponse(), activity.getAppType());
+        showRequestPaymentDialog(amount, TOTAL_EXPIRY_TIME_ICICI_UPI,icici.getReasonList(),icici.getTimerStartedAt()==null?System.currentTimeMillis():icici.getTimerStartedAt());
+        activity.getHandler().postDelayed(checkIciciUpiPaymentStatusRunnable, DELAY_ICICI_UPI_STATUS_CHECK);
+
+    }
+
+
+    private  boolean isIciciPaymentRunnableInProgress;
+    private IciciPaymentOrderStatus currentStatus ;
+    private void onIciciStatusResponse(IciciPaymentOrderStatus status,String toastMessage) {
+        if (currentStatus==null || status!=currentStatus) {
+            switch (status) {
+                case FAILURE:
+                case EXPIRED:
+                case CANCELLED:
+                    isIciciPaymentRunnableInProgress = false;
+                    activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
+                    if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
+                        checkoutRequestPaymentDialog.dismiss();
+                    }
+                    Toast.makeText(activity, toastMessage, Toast.LENGTH_SHORT).show();
+                    Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
+                    break;
+                case SUCCESSFUL:
+                case PROCESSED:
+                case COMPLETED:
+                    isIciciPaymentRunnableInProgress = false;
+                    activity.getHandler().removeCallbacks(checkIciciUpiPaymentStatusRunnable);
+
+                    if (checkoutRequestPaymentDialog != null && checkoutRequestPaymentDialog.isShowing()) {
+                        checkoutRequestPaymentDialog.dismiss();
+                    }
+
+                    //todo handle success
+                   // orderPlacedSuccess(getPlaceOrderResponse());
+                    Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
+
+                    break;
+                case PENDING:
+                    //Keep waiting for next status
+                    break;
+
+
+
+            }
+        }
+        currentStatus=status;
+
+
+    }
+
+
+
+    private long DELAY_ICICI_UPI_STATUS_CHECK = 30 * 1000;
+    private long TOTAL_EXPIRY_TIME_ICICI_UPI = 4 * 60 * 1000;
+    private Callback<IciciPaymentRequestStatus> iciciPaymentStatusCallback;
+
+    private Runnable checkIciciUpiPaymentStatusRunnable = new Runnable() {
+        @Override
+        public void run() {
+
+            checkIciciPaymentStatusApi();
+            activity.getHandler().postDelayed(this, DELAY_ICICI_UPI_STATUS_CHECK);
+
+
+        }
+    };
+
+
+
+    private void checkIciciPaymentStatusApi() {
+        if (MyApplication.getInstance().isOnline()) {
+            HashMap<String, String> params = new HashMap<>();
+            HomeUtil.addDefaultParams(params);
+            params.put(Constants.KEY_ORDER_ID, String.valueOf(getPlaceOrderResponse().getOrderId()));
+            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+            if (iciciPaymentStatusCallback == null) {
+
+                iciciPaymentStatusCallback = new Callback<IciciPaymentRequestStatus>() {
+                    @Override
+                    public void success(IciciPaymentRequestStatus commonResponse, Response response) {
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, commonResponse.getFlag(), commonResponse.getError(), commonResponse.getMessage())) {
+
+                            if (commonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                                onIciciStatusResponse(commonResponse.getStatus(),commonResponse.getToastMessage());
+
+                            }
+
+                        }
+                        if(checkoutRequestPaymentDialog!=null&&checkoutRequestPaymentDialog.isTimerExpired()){
+                            checkoutRequestPaymentDialog.enableRetryButton();
+                        }
+
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+
+                        if(checkoutRequestPaymentDialog!=null&&checkoutRequestPaymentDialog.isTimerExpired()){
+                            checkoutRequestPaymentDialog.enableRetryButton();
+                            checkoutRequestPaymentDialog.toggleConnectionState(false);
+
+                        }
+                    }
+
+                };
+            }
+
+                // the fatafat payment status for upi shall be used on the menus endpoint
+                RestClient.getMenusApiService().checkPaymentStatus(params, iciciPaymentStatusCallback);
+
+        }else{
+            if(checkoutRequestPaymentDialog!=null&&checkoutRequestPaymentDialog.isTimerExpired()){
+                checkoutRequestPaymentDialog.enableRetryButton();
+                checkoutRequestPaymentDialog.toggleConnectionState(false);
+
+            }
+            Log.e("TAG", "No net tried to hit get status icici api");
+        }
+    }
+
+    //placeOrderResponse cached for PAY and RAZORPAY payment callbacks
+    private PlaceOrderResponse placeOrderResponse;
+    public void setPlaceOrderResponse(PlaceOrderResponse placeOrderResponse){
+        this.placeOrderResponse = placeOrderResponse;
+        if(placeOrderResponse != null) {
+            Paper.book().write(PaperDBKeys.DB_PLACE_ORDER_RESP, placeOrderResponse);
+        } else {
+            Paper.book().delete(PaperDBKeys.DB_PLACE_ORDER_RESP);
+        }
+    }
+
+    public PlaceOrderResponse getPlaceOrderResponse(){
+        if(placeOrderResponse == null){
+            placeOrderResponse = Paper.book().read(PaperDBKeys.DB_PLACE_ORDER_RESP);
+        }
+        return placeOrderResponse;
+    }
 }

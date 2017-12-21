@@ -828,4 +828,8 @@ public interface Constants {
     int CATEGORY_ID_RESTAURANTS= 1;
     String CATEGORY_RESTAURANTS_NAME = "Restaurants";
     String CATEGORY = "category";
+
+    // fugu custom action
+    String FUGU_CUSTOM_ACTION_PAYLOAD = "FUGU_CUSTOM_ACTION_PAYLOAD";
+
 }

@@ -54,6 +54,8 @@ public enum AppLinkIndex {
 
 	DELIVERY_CUSTOMER_PAGE(25), // open Delivery Customer Screen
 
+	FATAFAT_PAY_VIA_CHAT(26), // open Fatafat chat pay
+
 	;
 
 	private int ordinal;

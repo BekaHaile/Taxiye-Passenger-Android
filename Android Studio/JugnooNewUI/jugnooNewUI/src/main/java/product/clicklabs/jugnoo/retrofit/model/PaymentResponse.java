@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 /**
  * Created by shankar on 14/10/17.
@@ -40,6 +41,13 @@ public class PaymentResponse extends FeedCommonResponse{
 		@SerializedName("razorpay_payment_object")
 		@Expose
 		private RazorpayData razorpayData;
+		@SerializedName("icici")
+		@Expose
+		private PlaceOrderResponse.IciciUpi icici;
+
+		public PlaceOrderResponse.IciciUpi getIcici() {
+			return icici;
+		}
 
 		public Integer getEngagementId() {
 			return engagementId;

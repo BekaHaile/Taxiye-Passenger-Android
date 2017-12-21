@@ -489,6 +489,14 @@
 
                         </RelativeLayout>
 
+                        <include
+                            layout="@layout/layout_icici_upi_payment_option"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/px_30"
+                            android:layout_marginRight="@dimen/px_30"
+                            />
+
                         <RelativeLayout
                             android:id="@+id/relativeLayoutFreeCharge"
                             android:layout_width="match_parent"
