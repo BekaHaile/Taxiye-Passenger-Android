@@ -276,6 +276,11 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity
+            android:name="com.sabkuchfresh.fatafatchatpay.FatafatChatPayActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme"/>
 
         <receiver android:name=".home.LocationReceiverBG"/>
 
@@ -294,6 +299,13 @@
             <intent-filter>
                 <action android:name="product.clicklabs.jugnoo.PUSH_PENDING_CALLS"/>
             </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.sabkuchfresh.fatafatchatpay.ChatCustomActionBroadCastReceiver">
+            <intent-filter>
+                <action android:name="FUGU_CUSTOM_ACTION_SELECTED"/>
+            </intent-filter>
+
         </receiver>
 
         <service
