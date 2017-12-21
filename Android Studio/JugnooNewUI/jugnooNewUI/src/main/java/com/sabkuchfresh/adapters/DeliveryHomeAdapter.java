@@ -268,24 +268,17 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
          if(!hasMorePages && menusResponse.getServiceUnavailable() != 1) {
 
 
+            boolean isCustomOrderModel = activity.isDeliveryOpenInBackground() && activity.getMenusFragment().chatAvailable;
+             String categoryName = activity.getCategoryOpened()==null?null:activity.getCategoryOpened().getCategoryName();
+             if(categoryName==null){
+                 categoryName=activity.isDeliveryOpenInBackground()?"Stores":"Restaurants";
+             }
+             if(dataToDisplay!=null && dataToDisplay.size()>1){
+                 dataToDisplay.add(new  DeliveryDivider());
+             }
+             dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),categoryName, isCustomOrderModel));
 
-
-            if( activity.isDeliveryOpenInBackground() && activity.getMenusFragment().chatAvailable){
-
-                if(dataToDisplay!=null && dataToDisplay.size()>1){
-                    dataToDisplay.add(new DeliveryDivider());
-                }
-                dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Store", true));
-            }else{
-                if(dataToDisplay!=null && dataToDisplay.size()>1){
-                    dataToDisplay.add(new DeliveryDivider());
-                }
-                dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Restaurant", false));
-
-            }
-
-
-        }
+         }
 
 
         // notify logic

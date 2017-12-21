@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import retrofit.client.Response;
@@ -23,15 +24,19 @@ public class ApiGoogleDirectionWaypoints extends AsyncTask<String, Integer, Stri
 	private String strOrigin = "", strDestination = "", strWaypoints = "";
 	private LatLng latLngInit;
 	private Callback callback;
+	private String  serverApiKey;
 
-	public ApiGoogleDirectionWaypoints(){}
+	public ApiGoogleDirectionWaypoints(){
 
-	public ApiGoogleDirectionWaypoints(ArrayList<LatLng> latLngs, boolean sortArray, Callback callback){
-		setData(latLngs, sortArray);
+	}
+
+	public ApiGoogleDirectionWaypoints(ArrayList<LatLng> latLngs, boolean sortArray, Callback callback,String serverApiKey){
+		setData(latLngs, sortArray,serverApiKey);
 		this.callback = callback;
 	}
 
-	public ApiGoogleDirectionWaypoints setData(ArrayList<LatLng> latLngs, boolean sortArray){
+	public ApiGoogleDirectionWaypoints setData(ArrayList<LatLng> latLngs, boolean sortArray,String serverApiKey ){
+		this.serverApiKey =serverApiKey;
 		latLngInit = latLngs.get(0);
 		if(sortArray) {
 			Collections.sort(latLngs, new Comparator<LatLng>() {
@@ -76,7 +81,7 @@ public class ApiGoogleDirectionWaypoints extends AsyncTask<String, Integer, Stri
 	@Override
 	protected String doInBackground(String... params) {
 		try {
-			Response response = RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination, strWaypoints);
+			Response response = RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination, strWaypoints,serverApiKey);
 			return new String(((TypedByteArray)response.getBody()).getBytes());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -100,7 +105,7 @@ public class ApiGoogleDirectionWaypoints extends AsyncTask<String, Integer, Stri
 		List<LatLng> list = new ArrayList<>();
 		String s = null;
 		try {
-			Response response = RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination, strWaypoints);
+			Response response = RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination, strWaypoints,serverApiKey);
 			s = new String(((TypedByteArray)response.getBody()).getBytes());
 			list = MapUtils.getLatLngListFromPath(s);
 		} catch (Exception e) {

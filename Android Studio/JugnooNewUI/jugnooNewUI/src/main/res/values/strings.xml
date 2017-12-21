@@ -9,6 +9,7 @@
     <string name="no_more_than_star">Can\'t add more than %d unit</string>
 
     <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>
+    <string name="google_maps_api_server_key">AIzaSyClJX3QZF2zKXuwhDKY8XpmDfa0Jzjk_HI</string>
     Live
     <!-- <string name="google_maps_api_key">AIzaSyCgijCQEJumfXprpDygpCzQmzy7VfJRaVQ</string> Dev -->
     <!--<string name="google_maps_api_key">AIzaSyCgflGVCfOr4aSmmBisoGUe_671qRngy2s</string> General-->
@@ -1421,7 +1422,7 @@
     <string name="fatafat_banner_heading"><b>Get it delivered via Fatafat \n</b></string>
     <string name="fatafat_banner_sub_heading">Your location is outside store\'s delivery area but you can get it through Fatafat</string>
     <string name="estimated_delivery_charges">Estimated Delivery Charges</string>
-    <string name="estimated_delivery">Estimated Delivery</string>
+    <string name="estimated_charges">Estimated Charges</string>
 
     
     <!-- Fatafat how it works -->

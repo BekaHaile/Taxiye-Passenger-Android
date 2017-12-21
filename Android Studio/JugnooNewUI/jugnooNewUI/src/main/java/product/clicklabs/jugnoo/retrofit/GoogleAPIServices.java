@@ -22,14 +22,14 @@ public interface GoogleAPIServices {
 						   @Query("destination") String destLatLng,
 						   @Query("sensor") Boolean sensor,
 						   @Query("mode") String mode,
-						   @Query("alternatives") Boolean alternatives);
+						   @Query("alternatives") Boolean alternatives,@Query("key") String apiKey);
 
 	@GET("/directions/json")
 	void getDirections(@Query("origin") String originLatLng,
 						   @Query("destination") String destLatLng,
 						   @Query("sensor") Boolean sensor,
 						   @Query("mode") String mode,
-						   @Query("alternatives") Boolean alternatives, Callback<SettleUserDebt> callback);
+						   @Query("alternatives") Boolean alternatives,@Query("key") String apiKey, Callback<SettleUserDebt> callback);
 
 	// language=EN&sensor=false&alternatives=false
 	@GET("/distancematrix/json")
@@ -43,7 +43,7 @@ public interface GoogleAPIServices {
 	@GET("/geocode/json")
 	void geocode(@Query("latlng") String latLng,
 					 @Query("language") String language,
-					 @Query("sensor") Boolean sensor, Callback<SettleUserDebt> callback);
+					 @Query("sensor") Boolean sensor,@Query("key") String key, Callback<SettleUserDebt> callback);
 
 	@GET("/geocode/json")
 	void getMyAddress(@QueryMap Map<String, String> params, Callback<GoogleGeocodeResponse> cb);
@@ -51,6 +51,6 @@ public interface GoogleAPIServices {
 	@GET("/directions/json")
 	Response getDirectionsWaypoints(@Query("origin") String originLatLng,
 									@Query("destination") String destLatLng,
-									@Query(value = "waypoints", encodeValue = false) String waypoints);
+									@Query(value = "waypoints", encodeValue = false) String waypoints,@Query("key") String apiKey);
 
 }
