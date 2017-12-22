@@ -1435,6 +1435,7 @@
 
     <!-- Fatafat chat pay -->
     <string name="txt_fatafat_order_already_paid">You have already paid for this order.</string>
+    <string name="txt_fatafat_chat_payment_success">Payment has been successfully made for the order %s.</string>
 
 
 

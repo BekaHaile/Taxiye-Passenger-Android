@@ -1662,8 +1662,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         checkoutRequestPaymentDialog.dismiss();
                     }
 
-                    //todo handle success
-                   // orderPlacedSuccess(getPlaceOrderResponse());
+                    //handle success
+                    String successMessage = String.format(activity.getResources()
+                                    .getString(R.string.txt_fatafat_chat_payment_success),String.valueOf(orderId));
+                    fatafatChatOrderPaidSuccess(successMessage);
                     Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
 
                     break;
