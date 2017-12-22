@@ -138,11 +138,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private EditText edtIciciVpa;
     private TextView tvLabelIciciUpi,tvUPICashback;
     private ImageView imageViewIcici;
-    private final static IntentFilter ICICI_STATUS_BROADCAST_FILTER = new IntentFilter(Constants.INTENT_ICICI_PAYMENT_STATUS_UPDATE);
+    private final static IntentFilter LOCAL_BROADCAST = new IntentFilter(Data.LOCAL_BROADCAST);
     private static final String FOR_STAR_SUBSCRIPTION = "for_star_subscription";
     private int orderId;
     private boolean isFromFatafatChat;
     private LinearLayout llFatafatChatPay;
+    // indicates if upi is pending
+    private boolean isUpiPending;
 
 
     public static StarSubscriptionCheckoutFragment newInstance(String subscription, int type){
@@ -166,12 +168,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         return  fragment;
     }
 
-    public static StarSubscriptionCheckoutFragment newInstance(double amountToPay, int orderId){
+    public static StarSubscriptionCheckoutFragment newInstance(double amountToPay, int orderId, boolean isUpiPending){
         StarSubscriptionCheckoutFragment fragment = new StarSubscriptionCheckoutFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean(FOR_STAR_SUBSCRIPTION, false);
         bundle.putDouble(Constants.KEY_FARE_TO_PAY, amountToPay);
         bundle.putInt(Constants.KEY_ORDER_ID,orderId);
+        bundle.putBoolean(Constants.KEY_IS_UPI_PENDING,isUpiPending);
         fragment.setArguments(bundle);
         return  fragment;
     }
@@ -189,6 +192,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             fareToPay = bundle.getDouble(Constants.KEY_FARE_TO_PAY);
             if(bundle.containsKey(Constants.KEY_ORDER_ID)){
                 orderId=bundle.getInt(Constants.KEY_ORDER_ID);
+            }
+            if(bundle.containsKey(Constants.KEY_IS_UPI_PENDING)){
+                isUpiPending = bundle.getBoolean(Constants.KEY_IS_UPI_PENDING);
             }
         }
 
@@ -365,6 +371,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             else if(activity instanceof FatafatChatPayActivity){
 
                 isFromFatafatChat = true;
+
+
                 cvStarPlans.setVisibility(View.GONE);
                 String fareRs = activity.getString(R.string.rupees_value_format,
                         Utils.getDoubleTwoDigits((double) Math.round(fareToPay)));
@@ -375,6 +383,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 llFatafatChatPay.setVisibility(View.VISIBLE);
                 TextView tvFatafatChatPayAmount =(TextView)llFatafatChatPay.findViewById(R.id.tvFatafatChatPayAmount);
                 tvFatafatChatPayAmount.setText(fareRs);
+
+                // initiate upi flow if payment is pending
+                if(isUpiPending){
+                    setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED));
+                    onIciciUpiPaymentInitiated(Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED).getIcici(), String.valueOf(fareToPay));
+                }
+
+
             }
 
 
@@ -415,7 +431,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 checkoutRequestPaymentDialog.resumeTimer();
             }
 
-            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(iciciStatusBroadcast, ICICI_STATUS_BROADCAST_FILTER);
+            LocalBroadcastManager.getInstance(getActivity()).registerReceiver(iciciStatusBroadcast, LOCAL_BROADCAST);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1447,6 +1463,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     }
 
+
+
     /**
      * Called when payment has been successful for fatafat chat order
      * @param message the message to show
@@ -1629,7 +1647,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         DELAY_ICICI_UPI_STATUS_CHECK = icici.getPollingTimeMillis();
         Long timerStartedAt = icici.getTimerStartedAt()==null?System.currentTimeMillis():icici.getTimerStartedAt();
         icici.setTimerStartedAt(timerStartedAt);
-        Data.saveCurrentIciciUpiTransaction(getPlaceOrderResponse(), activity.getAppType());
+        Data.saveCurrentIciciUpiTransaction(getPlaceOrderResponse(), AppConstant.ApplicationType.FEED);
         showRequestPaymentDialog(amount, TOTAL_EXPIRY_TIME_ICICI_UPI,icici.getReasonList(),icici.getTimerStartedAt()==null?System.currentTimeMillis():icici.getTimerStartedAt());
         activity.getHandler().postDelayed(checkIciciUpiPaymentStatusRunnable, DELAY_ICICI_UPI_STATUS_CHECK);
 
@@ -1650,7 +1668,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         checkoutRequestPaymentDialog.dismiss();
                     }
                     Toast.makeText(activity, toastMessage, Toast.LENGTH_SHORT).show();
-                    Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
+                    Data.deleteCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED);
                     break;
                 case SUCCESSFUL:
                 case PROCESSED:
@@ -1666,7 +1684,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     String successMessage = String.format(activity.getResources()
                                     .getString(R.string.txt_fatafat_chat_payment_success),String.valueOf(orderId));
                     fatafatChatOrderPaidSuccess(successMessage);
-                    Data.deleteCurrentIciciUpiTransaction(activity.getAppType());
+                    Data.deleteCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED);
 
                     break;
                 case PENDING:
@@ -1710,7 +1728,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
             // if we come from fatafat chat payment, send feed client id
             if(isFromFatafatChat){
-                params.put(Constants.KEY_CLIENT_ID,Config.getFreshClientId());
+                params.put(Constants.KEY_CLIENT_ID,Config.getFeedClientId());
             }
             else {
                 params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));

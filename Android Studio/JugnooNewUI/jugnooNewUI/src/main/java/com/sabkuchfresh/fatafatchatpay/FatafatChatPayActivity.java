@@ -11,6 +11,8 @@ import com.sabkuchfresh.feed.models.FetchOrderStatusResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
+import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.HashMap;
 
@@ -19,6 +21,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RazorpayBaseActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -32,23 +35,31 @@ import retrofit.RetrofitError;
 public class FatafatChatPayActivity extends RazorpayBaseActivity implements View.OnClickListener {
 
     private int orderId;
-    private String amount;
+    private double amount;
+    private boolean isUPIOrderPending;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // todo comment
-        /*orderId=1298;
-        amount="100";
-        startCheckout();*/
-
-        // fetch order id and amount from intent and then hit orderstatus api, if not paid show checkout
         if (getIntent().getExtras() != null) {
             Bundle extras = getIntent().getExtras();
-            orderId = extras.getInt(Constants.KEY_ORDER_ID);
-            amount = extras.getString(Constants.KEY_AMOUNT);
-            checkOrderStatus();
+
+            // check for upi pending, if yes open checkout
+            if (extras.containsKey(Constants.KEY_IS_UPI_PENDING) &&
+                    Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED) != null) {
+                PlaceOrderResponse placeOrderResponse = Data.getCurrentIciciUpiTransaction(ProductType.FEED.getOrdinal());
+                orderId = placeOrderResponse.getOrderId();
+                amount = placeOrderResponse.getAmount();
+                isUPIOrderPending = true;
+                startCheckout();
+            } else {
+                // we come from broadcast from fugu, check for order status
+                orderId = extras.getInt(Constants.KEY_ORDER_ID);
+                amount = extras.getDouble(Constants.KEY_AMOUNT);
+                checkOrderStatus();
+            }
+
         } else {
             finish();
         }
@@ -84,7 +95,7 @@ public class FatafatChatPayActivity extends RazorpayBaseActivity implements View
                             if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
 
                                 if (fetchOrderStatusResponse.getIsPaid() == 1) {
-                                    showAlreadyPaidAlert();
+                                    showAlreadyPaidAlert(message);
                                 } else {
                                     // show the checkout screen
                                     startCheckout();
@@ -111,6 +122,8 @@ public class FatafatChatPayActivity extends RazorpayBaseActivity implements View
                     @Override
                     public void onNegativeClick() {
 
+                        //exit
+                        finish();
                     }
                 });
 
@@ -132,23 +145,23 @@ public class FatafatChatPayActivity extends RazorpayBaseActivity implements View
         imageViewBack.setOnClickListener(this);
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                .add(R.id.rlFragment, StarSubscriptionCheckoutFragment.newInstance(Double.parseDouble(amount), orderId))
+                .add(R.id.rlFragment, StarSubscriptionCheckoutFragment.newInstance((amount), orderId, isUPIOrderPending))
                 .commit();
     }
 
     /**
      * Show order already placed / paid alert
      */
-    private void showAlreadyPaidAlert() {
+    private void showAlreadyPaidAlert(String message) {
 
         DialogPopup.alertPopupWithListener(this, "", getResources().getString(R.string.txt_fatafat_order_already_paid),
-                getResources().getString(android.R.string.ok), new View.OnClickListener() {
+                message, new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
                         // exit
                         finish();
                     }
-                },false);
+                }, false);
 
     }
 

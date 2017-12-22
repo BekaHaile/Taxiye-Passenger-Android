@@ -15,10 +15,10 @@ import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
  */
 public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
 
+    final String ACTION_NATIVE_ACTIVITY = "NATIVE_ACTIVITY";
+
     @Override
     public void onReceive(final Context context, final Intent intent) {
-
-        final String ACTION_NATIVE_ACTIVITY = "NATIVE_ACTIVITY";
 
         // handle incoming fugu broadcast
         String payload = intent.getStringExtra(Constants.FUGU_CUSTOM_ACTION_PAYLOAD);
@@ -35,7 +35,7 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
                         if (customActionModel.getOrderId() != 0 && customActionModel.getAmount() != 0) {
                             context.startActivity(new Intent(context, FatafatChatPayActivity.class)
                                     .putExtra(Constants.KEY_ORDER_ID, customActionModel.getOrderId())
-                                    .putExtra(Constants.KEY_AMOUNT, String.valueOf(customActionModel.getAmount())));
+                                    .putExtra(Constants.KEY_AMOUNT, customActionModel.getAmount()));
                         }
 
                     }
@@ -45,11 +45,5 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
 
             }
         }
-
-        // todo test code remove later
-        /*context.startActivity(new Intent(context, FatafatChatPayActivity.class)
-                .putExtra(Constants.KEY_ORDER_ID, 1300)
-                .putExtra(Constants.KEY_AMOUNT, "100"));*/
-
     }
 }

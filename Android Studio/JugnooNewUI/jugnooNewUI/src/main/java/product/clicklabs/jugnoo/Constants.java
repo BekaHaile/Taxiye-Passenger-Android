@@ -322,6 +322,7 @@ public interface Constants {
     String KEY_CITY_REG = "city_reg";
     String KEY_FARE_VALUE = "fare_value";
     String KEY_FARE_TO_PAY = "fare_to_pay";
+    String KEY_IS_UPI_PENDING= "is_upi_pending";
     String KEY_PAID_RIDE = "paid_ride";
     String KEY_OP_DROP_LATITUDE = "op_drop_latitude";
     String KEY_OP_DROP_LONGITUDE = "op_drop_longitude";

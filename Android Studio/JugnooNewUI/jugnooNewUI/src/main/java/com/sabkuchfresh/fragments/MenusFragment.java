@@ -1,10 +1,9 @@
 package com.sabkuchfresh.fragments;
 
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -28,6 +27,7 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
+import com.sabkuchfresh.fatafatchatpay.FatafatChatPayActivity;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
@@ -1108,7 +1108,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private static void checkIciciPaymentStatusApi(final FreshActivity activity) {
         int apptype = activity.isDeliveryOpenInBackground()? AppConstant.ApplicationType.DELIVERY_CUSTOMER: AppConstant.ApplicationType.MENUS;
-        if (Data.getCurrentIciciUpiTransaction(apptype) != null) {
+
+        // if we have any pay via fatafat chat order pending
+        boolean shouldCheckForFeedOrder = activity.isDeliveryOpenInBackground() && Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED)!=null;
+        if (Data.getCurrentIciciUpiTransaction(apptype) != null ) {
             activity.setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction(apptype));
             ApiCurrentStatusIciciUpi.checkIciciPaymentStatusApi(activity, true, new ApiCurrentStatusIciciUpi.ApiCurrentStatusListener() {
                 @Override
@@ -1116,6 +1119,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     activity.getMenusCartSelectedLayout().getRlMenusCartSelectedInner().performClick();
                 }
             },apptype);
+        } else if(shouldCheckForFeedOrder){
+            //open fatafat chat pay
+            activity.startActivity(new Intent(activity,FatafatChatPayActivity.class)
+            .putExtra(Constants.KEY_IS_UPI_PENDING,true));
         }
 
     }
