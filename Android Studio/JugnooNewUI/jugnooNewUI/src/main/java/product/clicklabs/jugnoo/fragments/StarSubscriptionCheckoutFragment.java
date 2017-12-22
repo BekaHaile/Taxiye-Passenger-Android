@@ -142,6 +142,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private static final String FOR_STAR_SUBSCRIPTION = "for_star_subscription";
     private int orderId;
     private boolean isFromFatafatChat;
+    private LinearLayout llFatafatChatPay;
 
 
     public static StarSubscriptionCheckoutFragment newInstance(String subscription, int type){
@@ -261,7 +262,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             ivUPI = (ImageView) rootView.findViewById(R.id.ivUPI);
             tvUPI = (TextView) rootView.findViewById(R.id.tvUPI);
 
-            llRideInfo = (LinearLayout) rootView.findViewById(R.id.llRideInfo); llRideInfo.setVisibility(View.GONE);
+            llRideInfo = (LinearLayout) rootView.findViewById(R.id.llRideInfo);
+            llRideInfo.setVisibility(View.GONE);
+            llFatafatChatPay = (LinearLayout) rootView.findViewById(R.id.llFatafatChatPay);
+            llFatafatChatPay.setVisibility(View.GONE);
             tvTotalFareValue = (TextView) rootView.findViewById(R.id.tvTotalFareValue); tvTotalFareValue.setTypeface(tvTotalFareValue.getTypeface(), Typeface.BOLD);
             tvCashPaidValue = (TextView) rootView.findViewById(R.id.tvCashPaidValue); tvCashPaidValue.setTypeface(tvCashPaidValue.getTypeface(), Typeface.BOLD);
             textViewPaymentVia = (TextView) rootView.findViewById(R.id.textViewPaymentVia);
@@ -368,6 +372,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 paySlider.sliderText.setText(R.string.swipe_right_to_pay);
                 llRideInfo.setVisibility(View.GONE);
                 textViewPaymentVia.setText(R.string.choose_payment_method);
+                llFatafatChatPay.setVisibility(View.VISIBLE);
+                TextView tvFatafatChatPayAmount =(TextView)llFatafatChatPay.findViewById(R.id.tvFatafatChatPayAmount);
+                tvFatafatChatPayAmount.setText(fareRs);
             }
 
 
@@ -1578,8 +1585,20 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             }
                         });
                     }
-                    apiCancelOrder.hit(getPlaceOrderResponse().getOrderId(),Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()),
-                            -1,isMenusOrDeliveryOpen()? ProductType.MENUS.getOrdinal():ProductType.FRESH.getOrdinal(),reason,"");
+
+                    String clientId; int productType;
+
+                    // if we come from fatafat chat pay, then return feed client id and MENUS product type ( api hosted on menus only )
+                    if(isFromFatafatChat){
+                        clientId = Config.getFeedClientId();
+                        productType = ProductType.MENUS.getOrdinal();
+                    }
+                    else {
+                        clientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
+                        productType = isMenusOrDeliveryOpen()? ProductType.MENUS.getOrdinal():ProductType.FRESH.getOrdinal();
+                    }
+
+                    apiCancelOrder.hit(getPlaceOrderResponse().getOrderId(),clientId,-1,productType,reason,"");
                 }
             }
 
@@ -1686,7 +1705,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             HomeUtil.addDefaultParams(params);
             params.put(Constants.KEY_ORDER_ID, String.valueOf(getPlaceOrderResponse().getOrderId()));
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-            params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+
+            // if we come from fatafat chat payment, send feed client id
+            if(isFromFatafatChat){
+                params.put(Constants.KEY_CLIENT_ID,Config.getFreshClientId());
+            }
+            else {
+                params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+            }
             if (iciciPaymentStatusCallback == null) {
 
                 iciciPaymentStatusCallback = new Callback<IciciPaymentRequestStatus>() {
