@@ -11,10 +11,6 @@ import android.net.NetworkInfo;
 import android.support.multidex.MultiDex;
 import android.widget.Toast;
 
-import com.clevertap.android.sdk.ActivityLifecycleCallback;
-import com.clevertap.android.sdk.CleverTapAPI;
-import com.clevertap.android.sdk.exceptions.CleverTapMetaDataNotFoundException;
-import com.clevertap.android.sdk.exceptions.CleverTapPermissionsNotSatisfied;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
@@ -45,7 +41,6 @@ import product.clicklabs.jugnoo.home.AppSwitcher;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
-import product.clicklabs.jugnoo.utils.CleverTapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 
@@ -75,11 +70,9 @@ public class MyApplication extends Application {
     private Bus mBus;
     public Branch branch;
 
-    private CleverTapAPI cleverTap;
 
     @Override
     public void onCreate() {
-        ActivityLifecycleCallback.register(this);
 
 
         /**
@@ -126,9 +119,6 @@ public class MyApplication extends Application {
                 branch = Branch.getTestInstance(this);
             }
 
-            if (BuildConfig.DEBUG_MODE) {
-                CleverTapAPI.setDebugLevel(1);
-            }
 
             mInstance = this;
             mBus = new Bus();
@@ -139,7 +129,6 @@ public class MyApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        getCleverTap();
     }
 
     public Bus getBus() {
@@ -314,91 +303,6 @@ public class MyApplication extends Application {
         return appSwitcher;
     }
 
-    public CleverTapAPI getCleverTap() {
-        if (cleverTap == null) {
-            try {
-                cleverTap = CleverTapAPI.getInstance(getApplicationContext());
-            } catch (CleverTapMetaDataNotFoundException e) {
-                // thrown if you haven't specified your CleverTap Account ID or Token in your AndroidManifest.xml
-            } catch (CleverTapPermissionsNotSatisfied e) {
-                // thrown if you haven’t requested the required permissions in your AndroidManifest.xml
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return cleverTap;
-    }
-
-    public void setLocationToCleverTap() {
-        try {
-            Location location = getCleverTap().getLocation();
-            getCleverTap().setLocation(location);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Method used to send event on clever tap
-     * @param eventName
-     * @param prodViewedAction
-     */
-	public void sendCleverTapEvent(String eventName, HashMap<String, Object> prodViewedAction) {
-		try{
-			prodViewedAction.put(Events.TIMING, new Date());
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-
-		getCleverTap().event.push(eventName, prodViewedAction);
-	}
-
-	/**
-	 * Clevertap charged event for app offerring transactions
-	 * @param chargeDetails
-	 * @param items
-	 */
-	public void charged(HashMap<String, Object> chargeDetails, ArrayList<HashMap<String, Object>> items) {
-		try {
-			try{
-				chargeDetails.put(Events.TIMING, new Date());
-			} catch (Exception e){
-				e.printStackTrace();
-			}
-			getCleverTap().event.push(CleverTapAPI.CHARGED_EVENT, chargeDetails, items);
-		} catch (Exception e) {
-		}
-	}
-
-	public void udpateUserData(String key, ArrayList<String> coupons) {
-		try {
-			if(coupons.size()>0)
-				getCleverTap().profile.setMultiValuesForKey(key, coupons);
-			else {
-				HashMap<String, Object> profileUpdate = new HashMap<>();
-				profileUpdate.put(key, "NA");
-				getCleverTap().profile.push(profileUpdate);
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-    public void updateUserDataAddInMultiValue(String key, String value) {
-        try {
-            getCleverTap().profile.addMultiValueForKey(key, value);
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-	private CleverTapUtils cleverTapUtils;
-	public CleverTapUtils getCleverTapUtils(){
-		if(cleverTapUtils == null){
-			cleverTapUtils = new CleverTapUtils();
-		}
-		return cleverTapUtils;
-	}
 
 
 	public Database2 getDatabase2(){

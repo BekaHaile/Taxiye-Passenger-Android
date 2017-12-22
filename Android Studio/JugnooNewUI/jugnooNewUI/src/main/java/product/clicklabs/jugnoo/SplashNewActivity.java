@@ -1293,14 +1293,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
             Prefs.with(this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 1);
         }
 
-		try{
-			if(!MyApplication.getInstance().getDeviceToken().equalsIgnoreCase("not_found")) {
-				MyApplication.getInstance().getCleverTap().data.pushFcmRegistrationId(MyApplication.getInstance().getDeviceToken(), true);
-				Log.d("Token", "token = "+MyApplication.getInstance().getDeviceToken());
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverDeviceToken,
 				new IntentFilter(INTENT_ACTION_DEVICE_TOKEN_UPDATE));

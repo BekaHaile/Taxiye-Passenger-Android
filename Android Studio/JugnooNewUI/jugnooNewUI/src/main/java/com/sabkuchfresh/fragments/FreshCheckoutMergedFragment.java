@@ -328,17 +328,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                 itemsInCart = prepareItemsInCartForMenus(activity,itemsInCart);
 
-                try {
-                    for (int i = 0; i < itemsInCart.size(); i++) {
-                        MyApplication.getInstance().getCleverTapUtils().addToCart(itemsInCart.get(i).getItemName(),
-                                itemsInCart.get(i).getRestaurantItemId(), itemsInCart.get(i).getTotalQuantity(),
-                                itemsInCart.get(i).getPrice(),
-                                Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()),
-                                Data.userData.getCity());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -355,17 +344,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
 
 
-            try {
-                for (int i = 0; i < subItemsInCart.size(); i++) {
-                    MyApplication.getInstance().getCleverTapUtils().addToCart(subItemsInCart.get(i).getSubItemName(),
-                            subItemsInCart.get(i).getSubItemId(), subItemsInCart.get(i).getSubItemQuantitySelected(),
-                            subItemsInCart.get(i).getPrice(),
-                            Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()),
-                            Data.userData.getCity());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
         }
 
 
@@ -1897,7 +1876,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private void flurryEventPlaceOrder(PlaceOrderResponse placeOrderResponse) {
         try {
             chargeDetails.put("Charged ID", placeOrderResponse.getOrderId());
-            MyApplication.getInstance().charged(chargeDetails, items);
 //            if(activity.getVendorOpened() != null) {
 //                MyApplication.getInstance().updateUserDataAddInMultiValue(Events.RESTAURANT_NAMES, activity.getVendorOpened().getName());
 //            }

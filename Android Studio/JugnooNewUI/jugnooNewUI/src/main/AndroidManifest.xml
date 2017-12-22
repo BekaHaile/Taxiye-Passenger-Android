@@ -398,38 +398,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme"/>
 
-        <meta-data
-            android:name="CLEVERTAP_ACCOUNT_ID"
-            android:value="@string/clevertap_account_id"/>
-        ;
-        <meta-data
-            android:name="CLEVERTAP_TOKEN"
-            android:value="@string/clevertap_account_token"/>
 
-        <service android:name="com.clevertap.android.sdk.FcmTokenListenerService">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
-        <service android:name="com.clevertap.android.sdk.FcmMessageListenerService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
-
-        <meta-data
-            android:name="CLEVERTAP_NOTIFICATION_ICON"
-            android:value="notification_icon"/>
-
-        <activity
-            android:name="com.clevertap.android.sdk.InAppNotificationActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
-        <!-- uncomment below block to ensure in-app notification isn't shown on a splash screen -->
-        <meta-data
-            android:name="CLEVERTAP_INAPP_EXCLUDE"
-            android:value="SplashNewActivity"/>
 
         <service
             android:name=".home.trackinglog.TrackingLogSyncIntentService"

@@ -170,7 +170,6 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                     applyPromoCodeAPI(PromotionActivity.this, promoCode);
                     HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
                     profileUpdate.put(Events.PROMO_CODE_USED, promoCode);
-                    MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
                     GAUtils.event(SIDE_MENU, PROMOTIONS, GAAction.PROMO_CODE+APPLIED);
                 } else {
                     Utils.hideKeyboard(PromotionActivity.this);
@@ -280,7 +279,6 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             recyclerViewOffers.setVisibility(View.VISIBLE);
             linearLayoutNoOffers.setVisibility(View.GONE);
             promoAdapter.notifyDataSetChanged();
-            updateUserCouponsToCleverTap1(promosList);
         }
     }
 
@@ -383,33 +381,6 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         }
     }
 
-    private void updateUserCouponsToCleverTap(List<OfferingPromotion> offeringPromotions) {
-        try{
-            ArrayList<String> coupons = new ArrayList<>();
-            double maxValue = 0.0;
-            if(offeringPromotions != null) {
-                for(OfferingPromotion offeringPromotion : offeringPromotions){
-                    for(PromoCoupon promoCoupon : offeringPromotion.getPromoCoupons()){
-                        coupons.add(promoCoupon.getTitle());
-                        String value = MyApplication.getInstance().getCleverTapUtils().getCouponValue(promoCoupon.getTitle());
-                        if(value.length()>0) {
-                            coupons.add(value);
-                            maxValue = MyApplication.getInstance().getCleverTapUtils().getCouponMaxValue(maxValue, value);
-                        }
-                    }
-                }
-            }
-            MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);
-
-            DecimalFormat df = new DecimalFormat("#.##");
-            HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
-            profileUpdate.put(Events.MAX_COUPON_VALUE, df.format(maxValue));
-            MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
-
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
 
@@ -748,30 +719,5 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
     }
 
 
-    private void updateUserCouponsToCleverTap1(List<Promo> promos) {
-        try{
-            ArrayList<String> coupons = new ArrayList<>();
-            double maxValue = 0.0;
-            if(promos != null) {
-                for(Promo promo : promos) {
-                    coupons.add(promo.getPromoCoupon().getTitle());
-                    String value = MyApplication.getInstance().getCleverTapUtils().getCouponValue(promo.getPromoCoupon().getTitle());
-                    if (value.length() > 0) {
-                        coupons.add(value);
-                        maxValue = MyApplication.getInstance().getCleverTapUtils().getCouponMaxValue(maxValue, value);
-                    }
-                }
-            }
-            MyApplication.getInstance().udpateUserData(Events.COUPONS, coupons);
-
-            DecimalFormat df = new DecimalFormat("#.##");
-            HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
-            profileUpdate.put(Events.MAX_COUPON_VALUE, df.format(maxValue));
-            MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
-
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 }
