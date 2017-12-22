@@ -43,7 +43,7 @@ public class MarkerAnimation {
     private static final double FAST_ANIMATION_TIME = 2000;
     private static final double MIN_DISTANCE = 80;
     private static final double MAX_DISTANCE = 1000;
-    private static final double MAX_DISTANCE_FACTOR_GAPI = 1.8;
+    public static final double MAX_DISTANCE_FACTOR_GAPI = 1.8;
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     public static void animateMarkerToGB(final Marker marker, final LatLng finalPosition, final LatLngInterpolator latLngInterpolator) {
@@ -199,6 +199,7 @@ public class MarkerAnimation {
                            GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth){
             this.engagementId = engagementId;
             this.source = marker.getPosition();
+            this.destination = (list != null && list.size() > 0) ? list.get(list.size()-1) : null;
             this.marker = marker;
             this.latLngInterpolator = latLngInterpolator;
             this.callbackAnim = callbackAnim;
@@ -272,7 +273,10 @@ public class MarkerAnimation {
                             }
                         } else if(list == null && TextUtils.isEmpty(result)){
                             straightLineCase();
-						}
+						} else if(list != null && destination != null
+                                && totalDistance > MapUtils.distance(source, destination) * MAX_DISTANCE_FACTOR_GAPI){
+                            straightLineCase();
+                        }
 
                         ArrayList<Double> duration = new ArrayList<>();
                         for (int i = 0; i < list.size(); i++) {
