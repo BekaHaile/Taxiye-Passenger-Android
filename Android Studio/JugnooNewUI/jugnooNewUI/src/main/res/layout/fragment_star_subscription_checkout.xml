@@ -112,28 +112,31 @@
                 android:layout_marginTop="40px"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/background_white_rounded_bordered"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="40px"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="20px"
                 android:visibility="gone">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:text="@string/to_be_paid"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/end_ride_fare_title_text_size"
+                        android:textSize="@dimen/text_size_30"
                         app:font="@string/maven_r"
                         />
 
                     <TextView
                         android:id="@+id/tvFatafatChatPayAmount"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10px"
+                        android:gravity="end"
                         tools:text="0"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/end_ride_fare_value_text_size"
+                        android:textSize="@dimen/text_size_36"
+
                         app:font="@string/avenir"
                         />
 
