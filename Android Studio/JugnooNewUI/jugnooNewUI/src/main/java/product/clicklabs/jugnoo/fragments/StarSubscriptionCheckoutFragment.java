@@ -395,8 +395,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     @Override
     public void onResume() {
         super.onResume();
-        // fetch wallet balance while resuming also
-        fetchWalletBalance();
+        orderPaymentModes();
+        setPaymentOptionUI();
 
         try {
 
