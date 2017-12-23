@@ -4447,8 +4447,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 Data.autoData.setSupportFeedbackSubmitted(false);
 
 
-                deepLinkAction.openDeepLink(menuBar);
-                performDeepLinkRequest();
+                performDeeplink();
 
 
                 String alertMessage = Prefs.with(this).getString(SPLabels.UPLOAD_CONTACTS_ERROR, "");
@@ -4510,6 +4509,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
+    }
+
+    private void performDeeplink() {
+        if(Data.userData != null && Data.userData.isOnlyFatafatNewEnabled()
+                && !Prefs.with(this).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "").equalsIgnoreCase("")){ //or deeplink to other client id
+            Data.deepLinkIndex = AppLinkIndex.DELIVERY_CUSTOMER_PAGE.getOrdinal();
+        }
+        deepLinkAction.openDeepLink(menuBar);
+        performDeepLinkForLatLngRequest();
     }
 
     public static void switchAppOfClientId(Activity activity, LatLng latLng) {
@@ -4624,7 +4632,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
 
-    private void performDeepLinkRequest(){
+    private void performDeepLinkForLatLngRequest(){
         try{
             if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
                 if(Data.deepLinkPickup == 1) {

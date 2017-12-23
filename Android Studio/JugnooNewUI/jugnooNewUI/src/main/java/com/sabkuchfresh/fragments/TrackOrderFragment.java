@@ -490,9 +490,19 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 											//to animate driver between curr and new points
 											if (positionNearNew > positionNearCurr) {
 												List<LatLng> latLngsAnimateDriver = new ArrayList<LatLng>();
+												double distanceToAnimate = 0; LatLng first = list.get(positionNearCurr);
 												for (int l = positionNearCurr; l <= positionNearNew; l++) {
 													latLngsAnimateDriver.add(list.get(l));
+													distanceToAnimate = distanceToAnimate + MapUtils.distance(first, list.get(l));
+													first = list.get(l);
 												}
+												//maximum distance for marker animation on google path should be less than 1.8times displacement between source and destination
+												if(distanceToAnimate > MapUtils.distance(list.get(positionNearCurr), list.get(positionNearNew-1)) * MarkerAnimation.MAX_DISTANCE_FACTOR_GAPI){
+													latLngsAnimateDriver.clear();
+													latLngsAnimateDriver.add(list.get(positionNearCurr));
+													latLngsAnimateDriver.add(list.get(positionNearNew-1));
+												}
+
 
 												int pathColor = ContextCompat.getColor(activity, R.color.theme_color);
 												int untrackedPathColor = ContextCompat.getColor(activity, R.color.text_color_30alpha);
