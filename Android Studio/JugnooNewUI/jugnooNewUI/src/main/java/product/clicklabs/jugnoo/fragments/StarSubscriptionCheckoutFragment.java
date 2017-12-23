@@ -1353,18 +1353,27 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                         } else if (getPaymentOption() == PaymentOption.FREECHARGE) {
                                             Data.userData.setFreeChargeBalance(Data.userData.getFreeChargeBalance() - paymentData.getFreechargeDeducted());
                                             fatafatChatOrderPaidSuccess(message);
-                                        } else if(getPaymentOption()==PaymentOption.ICICI_UPI && response.getData().getIcici()!=null ){
+                                        } else if(getPaymentOption()==PaymentOption.ICICI_UPI){
 
-                                            // Icici Upi Payment Initiated, prepare the order response and add extra key for fatafat chat
-                                            PlaceOrderResponse placeOrderResponse = new PlaceOrderResponse();
-                                            placeOrderResponse.setAmount(fareToPay);
-                                            placeOrderResponse.setOrderId(orderId);
-                                            placeOrderResponse.setIcici(response.getData().getIcici());
-                                            placeOrderResponse.setPaymentMode(String.valueOf(PaymentOption.ICICI_UPI.getOrdinal()));
-                                            placeOrderResponse.setPayViaFatafatChat(true);
+                                            if(response.getData().getIcici()!=null){
+                                                // Icici Upi Payment Initiated, prepare the order response and add extra key for fatafat chat
+                                                PlaceOrderResponse placeOrderResponse = new PlaceOrderResponse();
+                                                placeOrderResponse.setAmount(fareToPay);
+                                                placeOrderResponse.setOrderId(orderId);
+                                                placeOrderResponse.setIcici(response.getData().getIcici());
+                                                placeOrderResponse.setPaymentMode(String.valueOf(PaymentOption.ICICI_UPI.getOrdinal()));
+                                                placeOrderResponse.setPayViaFatafatChat(true);
 
-                                            setPlaceOrderResponse(placeOrderResponse);
-                                            onIciciUpiPaymentInitiated(response.getData().getIcici(),String.valueOf(fareToPay));
+                                                setPlaceOrderResponse(placeOrderResponse);
+                                                onIciciUpiPaymentInitiated(response.getData().getIcici(),String.valueOf(fareToPay));
+                                            }
+                                            else {
+                                                //handle success
+                                                String successMessage = String.format(activity.getResources()
+                                                        .getString(R.string.txt_fatafat_chat_payment_success),String.valueOf(orderId));
+                                                fatafatChatOrderPaidSuccess(successMessage);
+                                            }
+
 
                                         }
                                     }
