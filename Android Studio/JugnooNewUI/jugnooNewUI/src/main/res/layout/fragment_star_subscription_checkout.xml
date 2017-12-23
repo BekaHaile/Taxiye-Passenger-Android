@@ -113,9 +113,82 @@
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/background_white_rounded_bordered"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:padding="30px"
                 android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/llTotalAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/px_20">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sub_total"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_30"
+                        app:font="@string/maven_r"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvTotalAmount"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        tools:text="0"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_36"
+                        app:font="@string/avenir"
+                        />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/llJugnooCash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/px_20">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/jugnoo_cash"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_30"
+                        app:font="@string/maven_r"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvJugnooCash"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        tools:text="0"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_36"
+                        app:font="@string/avenir"
+                        />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/llAmtToBePaid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="0dp"
@@ -128,7 +201,7 @@
                         />
 
                     <TextView
-                        android:id="@+id/tvFatafatChatPayAmount"
+                        android:id="@+id/tvAmtToBePaid"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
@@ -136,9 +209,11 @@
                         tools:text="0"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_36"
-
                         app:font="@string/avenir"
                         />
+
+                </LinearLayout>
+
 
             </LinearLayout>
 

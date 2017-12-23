@@ -142,7 +142,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private static final String FOR_STAR_SUBSCRIPTION = "for_star_subscription";
     private int orderId;
     private boolean isFromFatafatChat;
-    private LinearLayout llFatafatChatPay;
+    private LinearLayout llFatafatChatPay,llTotalAmount,llJugnooCash,llAmtToBePaid;
+    private TextView tvTotalAmount,tvJugnooCash,tvAmtToBePaid;
     // indicates if upi is pending
     private boolean isUpiPending;
 
@@ -272,6 +273,12 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             llRideInfo.setVisibility(View.GONE);
             llFatafatChatPay = (LinearLayout) rootView.findViewById(R.id.llFatafatChatPay);
             llFatafatChatPay.setVisibility(View.GONE);
+            llTotalAmount = (LinearLayout) rootView.findViewById(R.id.llTotalAmount);
+            llJugnooCash = (LinearLayout) rootView.findViewById(R.id.llJugnooCash);
+            llAmtToBePaid = (LinearLayout) rootView.findViewById(R.id.llAmtToBePaid);
+            tvTotalAmount = (TextView) rootView.findViewById(R.id.tvTotalAmount);
+            tvJugnooCash = (TextView) rootView.findViewById(R.id.tvJugnooCash);
+            tvAmtToBePaid = (TextView) rootView.findViewById(R.id.tvAmtToBePaid);
             tvTotalFareValue = (TextView) rootView.findViewById(R.id.tvTotalFareValue); tvTotalFareValue.setTypeface(tvTotalFareValue.getTypeface(), Typeface.BOLD);
             tvCashPaidValue = (TextView) rootView.findViewById(R.id.tvCashPaidValue); tvCashPaidValue.setTypeface(tvCashPaidValue.getTypeface(), Typeface.BOLD);
             textViewPaymentVia = (TextView) rootView.findViewById(R.id.textViewPaymentVia);
@@ -374,15 +381,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
 
                 cvStarPlans.setVisibility(View.GONE);
-                String fareRs = activity.getString(R.string.rupees_value_format,
-                        Utils.getDoubleTwoDigits((double) Math.round(fareToPay)));
-                paySlider.tvSlide.setText("PAY " + fareRs);
                 paySlider.sliderText.setText(R.string.swipe_right_to_pay);
                 llRideInfo.setVisibility(View.GONE);
                 textViewPaymentVia.setText(R.string.choose_payment_method);
                 llFatafatChatPay.setVisibility(View.VISIBLE);
-                TextView tvFatafatChatPayAmount =(TextView)llFatafatChatPay.findViewById(R.id.tvFatafatChatPayAmount);
-                tvFatafatChatPayAmount.setText(fareRs);
 
                 // initiate upi flow if payment is pending
                 if(isUpiPending){
@@ -934,6 +936,50 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
             edtIciciVpa.setVisibility(getPaymentOption() == PaymentOption.ICICI_UPI?View.VISIBLE:View.GONE);
             tvLabelIciciUpi.setVisibility(getPaymentOption() == PaymentOption.ICICI_UPI?View.VISIBLE:View.GONE);
+
+            // in case we come from fatafat chat also enable jugnoo cash
+            if(isFromFatafatChat){
+
+                llFatafatChatPay.setVisibility(View.VISIBLE);
+                if(Data.userData.getJugnooBalance()!=0){
+                    llTotalAmount.setVisibility(View.VISIBLE);
+                    llJugnooCash.setVisibility(View.VISIBLE);
+                    llAmtToBePaid.setVisibility(View.VISIBLE);
+                    tvTotalAmount.setText(activity.getString(R.string.rupees_value_format,
+                            Utils.getDoubleTwoDigits((double) Math.round(fareToPay))));
+
+                    double jcToShow = Math.min(fareToPay,Data.userData.getJugnooBalance());
+                    tvJugnooCash.setText(activity.getString(R.string.rupees_value_format,
+                            Utils.getDoubleTwoDigits((double) Math.round(jcToShow))));
+
+                    double netPayableAmount = fareToPay - jcToShow;
+                    if (netPayableAmount < 0) {
+                        netPayableAmount = 0;
+                    }
+                    String netAmtToShow = (activity.getString(R.string.rupees_value_format,
+                            Utils.getDoubleTwoDigits((double) Math.round(netPayableAmount))));
+                    tvAmtToBePaid.setText(netAmtToShow);
+                    // update pay slider value
+                    String sliderText = activity.getString(R.string.pay).toUpperCase()+ " " +netAmtToShow;
+                    paySlider.tvSlide.setText(sliderText);
+                }
+                else {
+                    // only show net amount
+                    llTotalAmount.setVisibility(View.GONE);
+                    llJugnooCash.setVisibility(View.GONE);
+                    llAmtToBePaid.setVisibility(View.VISIBLE);
+                    String netAmtToShow = activity.getString(R.string.rupees_value_format,
+                            Utils.getDoubleTwoDigits((double) Math.round(fareToPay)));
+                    tvAmtToBePaid.setText(netAmtToShow);
+                    String sliderText = activity.getString(R.string.pay).toUpperCase()+ " " + netAmtToShow;
+                    paySlider.tvSlide.setText(sliderText);
+
+                }
+
+            }
+            else {
+                llFatafatChatPay.setVisibility(View.GONE);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
