@@ -213,7 +213,7 @@
                     android:layout_marginTop="@dimen/px_20"
                     android:textSize="@dimen/px_52"
                     android:textColor="@color/text_color"
-                    app:font="@string/maven_r"/>
+                    app:typekitFont="@string/maven_r"/>
 
                 <TextView
                     android:id="@+id/tvSubPlanDesc"
@@ -223,7 +223,7 @@
                     android:layout_gravity="center_horizontal"
                     android:textSize="@dimen/text_size_28"
                     android:textColor="@color/text_color"
-                    app:font="@string/maven_r"/>
+                    app:typekitFont="@string/maven_r"/>
 
                 <Button
                     android:id="@+id/bJoinNow"

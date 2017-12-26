@@ -53,6 +53,6 @@
         android:layout_below="@+id/ivArrow"
         android:layout_marginTop="@dimen/px_20"
         android:gravity="center"
-        app:font="maven"/>
+        app:typekitFont="maven"/>
 
 </RelativeLayout>

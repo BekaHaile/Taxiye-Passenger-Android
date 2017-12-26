@@ -33,7 +33,7 @@
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/ivArrow"
         android:layout_marginRight="@dimen/dp_6"
-        app:font="@string/maven"
+        app:typekitFont="@string/maven"
 
         />
 

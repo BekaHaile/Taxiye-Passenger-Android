@@ -151,7 +151,6 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
-import com.tsengvn.typekit.TypekitContextWrapper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -212,6 +211,7 @@ import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 import retrofit.Callback;
 import retrofit.RetrofitError;

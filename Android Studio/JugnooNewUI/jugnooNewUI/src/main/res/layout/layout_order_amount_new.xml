@@ -16,7 +16,7 @@
         android:text="@string/delivery_charges"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_32"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
     <TextView
@@ -29,7 +29,7 @@
         android:text="@string/rupee_0"
         android:textColor="@color/order_status_green"
         android:textSize="@dimen/text_size_32"
-        app:font="maven"/>
+        app:typekitFont="maven"/>
 
     <View
         android:id="@+id/vDivider"

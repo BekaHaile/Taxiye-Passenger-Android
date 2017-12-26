@@ -20,7 +20,7 @@
         android:text="@string/no_menus_available"
         android:gravity="center"
         android:visibility="visible"
-        app:font="@string/maven_r"
+        app:typekitFont="@string/maven_r"
         />
 
 </RelativeLayout>

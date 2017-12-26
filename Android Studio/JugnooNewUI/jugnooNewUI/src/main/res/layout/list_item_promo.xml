@@ -95,7 +95,7 @@
                     android:text="Valid until 20 June, 2017"
                     android:textColor="@color/promo_text_color_light_grey"
                     android:textSize="@dimen/sp_10"
-                    app:font="@string/maven_r"
+                    app:typekitFont="@string/maven_r"
                     />
 
                 <TextView
@@ -106,7 +106,7 @@
                     android:text="Can be used 3 times"
                     android:textColor="@color/promo_text_color_light_grey"
                     android:textSize="@dimen/sp_10"
-                    app:font="@string/maven_r"
+                    app:typekitFont="@string/maven_r"
                     />
 
             </LinearLayout>
@@ -123,7 +123,7 @@
                 android:text="@string/tnc_applied"
                 android:textColor="@color/promo_text_color_light_grey"
                 android:textSize="@dimen/sp_10"
-                app:font="@string/maven_r"
+                app:typekitFont="@string/maven_r"
                 />
 
 

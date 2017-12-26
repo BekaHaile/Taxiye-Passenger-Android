@@ -22,7 +22,7 @@
         android:gravity="center"
         android:text="@string/label_see_all"
         android:textColor="#C0595968"
-        app:font="@string/maven"/>
+        app:typekitFont="@string/maven"/>
 
     <View
         android:layout_width="match_parent"

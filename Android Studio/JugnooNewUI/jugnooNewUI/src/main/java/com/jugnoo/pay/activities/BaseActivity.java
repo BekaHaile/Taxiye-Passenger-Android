@@ -21,10 +21,10 @@ import android.widget.EditText;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.sabkuchfresh.utils.AppConstant;
-import com.tsengvn.typekit.TypekitContextWrapper;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 
 /**

@@ -24,7 +24,7 @@
         android:text="some text"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
 
@@ -40,7 +40,7 @@
         android:text="1\nmin"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_24"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
     <ImageView
@@ -79,7 +79,7 @@
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_16"
-            app:font="maven"
+            app:typekitFont="maven"
             />
 
     </LinearLayout>

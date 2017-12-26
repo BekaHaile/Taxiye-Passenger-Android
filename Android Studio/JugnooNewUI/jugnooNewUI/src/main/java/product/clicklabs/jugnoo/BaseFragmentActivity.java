@@ -11,10 +11,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.tsengvn.typekit.TypekitContextWrapper;
-
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 /**
  * Created by clicklabs on 7/3/15.

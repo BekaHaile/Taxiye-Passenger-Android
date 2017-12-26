@@ -37,7 +37,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:textColor="@color/feed_grey_text"
-            app:font="maven" />
+            app:typekitFont="maven" />
 
 
         <View
@@ -58,7 +58,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:textColor="@color/feed_grey_text"
-            app:font="maven" />
+            app:typekitFont="maven" />
 
     </LinearLayout>
 

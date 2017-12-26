@@ -56,7 +56,7 @@
                 android:text=""
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_42"
-                app:font="@string/maven"
+                app:typekitFont="@string/maven"
                 android:layout_marginTop="@dimen/px_10"
                 />
 
@@ -98,7 +98,7 @@
             android:textColor="@color/text_color_selector"
             android:text="Resend Code in 0:15"
             android:gravity="center_vertical"
-            app:font="@string/maven"
+            app:typekitFont="@string/maven"
             />
 
         <TextView
@@ -113,7 +113,7 @@
             android:textColor="@color/text_color_selector"
             android:text="Call Me in 0:15"
             android:gravity="center_vertical"
-            app:font="@string/maven"
+            app:typekitFont="@string/maven"
             />
 
         <View

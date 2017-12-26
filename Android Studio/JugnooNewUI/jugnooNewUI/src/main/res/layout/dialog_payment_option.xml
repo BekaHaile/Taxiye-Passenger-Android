@@ -265,7 +265,7 @@
                     android:text="@string/cash"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_17"
-                    app:font="@string/maven_l"
+                    app:typekitFont="@string/maven_l"
                     />
 
             </LinearLayout>

@@ -80,7 +80,7 @@
         android:visibility="gone"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_16"
-        app:font="maven" />
+        app:typekitFont="maven" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -269,7 +269,7 @@
 
                                 <TextView
                                     android:layout_width="match_parent"
-                                    app:font="@string/maven"
+                                    app:typekitFont="@string/maven"
                                     android:layout_gravity="center"
                                     android:layout_marginLeft="20px"
                                     android:gravity="center|left"

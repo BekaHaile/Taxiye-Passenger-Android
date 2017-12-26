@@ -36,7 +36,7 @@
         android:layout_marginBottom="5dp"
         android:textSize="@dimen/sp_16"
         android:textColor="@color/text_color"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
     <TextView
@@ -50,7 +50,7 @@
         android:textSize="@dimen/sp_12"
         android:gravity="center_vertical"
         android:textColor="@color/pf_grey_light"
-        app:font="maven"
+        app:typekitFont="maven"
         android:drawableLeft="@drawable/ic_like_active_new"
         android:drawablePadding="5dp"
         />

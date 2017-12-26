@@ -31,7 +31,7 @@
         android:layout_toRightOf="@+id/imageViewCheck"
         android:textColor="@color/text_color_selector"
         android:textSize="@dimen/sp_14"
-        app:font="@string/maven"
+        app:typekitFont="@string/maven"
         />
 
     <ImageView

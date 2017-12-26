@@ -47,7 +47,7 @@
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/sp_15"
-                app:font="@string/montserrat_m"
+                app:typekitFont="@string/montserrat_m"
                 />
 
             <TextView
@@ -57,7 +57,7 @@
                 android:text="Rides"
                 android:textColor="@color/white_80"
                 android:textSize="@dimen/sp_14"
-                app:font="@string/maven_r"
+                app:typekitFont="@string/maven_r"
                  />
         </LinearLayout>
 

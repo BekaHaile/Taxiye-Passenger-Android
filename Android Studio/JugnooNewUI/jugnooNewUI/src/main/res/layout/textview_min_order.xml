@@ -17,6 +17,6 @@
     android:textColor="@color/white"
     android:textSize="@dimen/sp_13"
     android:visibility="gone"
-    app:font="maven"
+    app:typekitFont="maven"
     android:tag="@string/dont_touch_me"
     />

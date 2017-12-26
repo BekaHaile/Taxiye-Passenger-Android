@@ -37,7 +37,7 @@
             android:textSize="@dimen/sp_13"
             android:theme="@style/GreyHighlight"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:font="@string/maven"
+            app:typekitFont="@string/maven"
             />
 
 

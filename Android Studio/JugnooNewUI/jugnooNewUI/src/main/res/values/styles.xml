@@ -760,7 +760,7 @@
         <item name="android:textColor">
             @color/text_color_theme_color_selector
         </item>
-        <item name="font">
+        <item name="typekitFont">
             @string/maven_r
         </item>
     </style>
@@ -775,7 +775,7 @@
         <item name="android:textColor">
             @color/text_color_theme_color_selector
         </item>
-        <item name="font">
+        <item name="typekitFont">
             @string/maven_r
         </item>
     </style>
@@ -817,7 +817,7 @@
         <item name="android:textSize">
             @dimen/font_medium
         </item>
-        <item name="font">
+        <item name="typekitFont">
             "maven"
         </item>
     </style>

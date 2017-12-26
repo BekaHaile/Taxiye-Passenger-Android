@@ -32,7 +32,7 @@
         android:textColor="@android:color/white"
         android:textSize="@dimen/sp_12"
         android:visibility="visible"
-        app:font="@string/maven" />
+        app:typekitFont="@string/maven" />
 
     <ImageView
         android:id="@+id/imageViewRestaurantImage"
@@ -69,7 +69,7 @@
         android:text="3.5"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_14"
-        app:font="@string/maven_r" />
+        app:typekitFont="@string/maven_r" />
 
 
     <TextView
@@ -84,7 +84,7 @@
         android:text="Title"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_16"
-        app:font="@string/maven" />
+        app:typekitFont="@string/maven" />
 
 
     <TextView
@@ -99,7 +99,7 @@
         android:text="Title"
         android:textColor="@color/text_color_light_less"
         android:textSize="@dimen/sp_14"
-        app:font="@string/maven_r" />
+        app:typekitFont="@string/maven_r" />
 
 
     <TextView
@@ -116,7 +116,7 @@
         android:text="Delivers in 40-60 min"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_14"
-        app:font="@string/maven" />
+        app:typekitFont="@string/maven" />
 
     <TextView
         android:id="@+id/textViewRestaurantCloseTime"
@@ -131,7 +131,7 @@
         android:text="Closing in 15 minute"
         android:textColor="@color/red_dark_more"
         android:textSize="@dimen/sp_14"
-        app:font="@string/maven" />
+        app:typekitFont="@string/maven" />
 
     <TextView
         android:id="@+id/textViewMinimumOrder"
@@ -143,7 +143,7 @@
         android:text="Min. 399"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_14"
-        app:font="@string/maven" />
+        app:typekitFont="@string/maven" />
 
 
 

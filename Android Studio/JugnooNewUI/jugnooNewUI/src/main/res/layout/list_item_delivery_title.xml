@@ -40,7 +40,7 @@
         android:text="Ongoing Orders"
         android:textColor="@color/text_color"
         android:textSize="14.3sp"
-        app:font="@string/maven"/>
+        app:typekitFont="@string/maven"/>
 
     <TextView
         android:id="@+id/tv_category_arrow"
@@ -52,7 +52,7 @@
         android:layout_marginRight="5dp"
         android:paddingTop="4dp"
         android:textSize="14.3sp"
-        app:font="@string/maven"
+        app:typekitFont="@string/maven"
         android:visibility="visible"
         android:textColor="@color/text_color"
         android:background="?android:attr/selectableItemBackground" />

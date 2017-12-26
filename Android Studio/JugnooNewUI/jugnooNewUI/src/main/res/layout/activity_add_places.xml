@@ -75,7 +75,7 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
-                    app:font="maven"
+                    app:typekitFont="maven"
                     />
 
                 <product.clicklabs.jugnoo.utils.ProgressWheel

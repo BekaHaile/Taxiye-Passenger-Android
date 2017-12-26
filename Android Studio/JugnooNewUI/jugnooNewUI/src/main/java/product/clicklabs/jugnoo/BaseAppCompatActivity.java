@@ -8,9 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.tsengvn.typekit.TypekitContextWrapper;
-
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 /**
  * Created by clicklabs on 7/3/15.

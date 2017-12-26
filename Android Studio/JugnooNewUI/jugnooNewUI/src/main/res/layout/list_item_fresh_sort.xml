@@ -21,7 +21,7 @@
         android:layout_marginLeft="@dimen/dp_15"
         android:layout_marginRight="@dimen/dp_15"
         android:drawableRight="@drawable/ic_fresh_sort_tick_svg"
-        app:font="maven"
+        app:typekitFont="maven"
         android:background="?attr/selectableItemBackground"
         />
 

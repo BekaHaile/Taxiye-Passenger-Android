@@ -38,7 +38,7 @@
         android:text="@string/place_bulk_order"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_15"
-        app:font="@string/maven"
+        app:typekitFont="@string/maven"
         />
 
 </RelativeLayout>

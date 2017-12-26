@@ -18,7 +18,7 @@
             android:id="@+id/tvTitle"
             style="@style/title"
             android:text=""
-            app:font="maven" />
+            app:typekitFont="maven" />
 
         <ImageView
             android:id="@+id/ivBack"
@@ -38,7 +38,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_30"
-            app:font="maven" />
+            app:typekitFont="maven" />
     </RelativeLayout>
 
 

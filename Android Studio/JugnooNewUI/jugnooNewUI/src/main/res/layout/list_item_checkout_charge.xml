@@ -16,7 +16,7 @@
         android:text="@string/sub_total"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_30"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
 
@@ -32,7 +32,7 @@
         android:textAllCaps="true"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_36"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
     <View

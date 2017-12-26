@@ -28,7 +28,7 @@
         android:paddingRight="@dimen/spacing_normal"
         android:inputType="textCapWords"
         android:maxLines="1"
-        app:font="maven"
+        app:typekitFont="maven"
         android:textColor="@color/text_color"
         android:textColorHint="@color/text_color_hint"
         android:textCursorDrawable="@drawable/cursor_black"
@@ -47,7 +47,7 @@
         android:gravity="center"
         android:text="@string/OR"
         android:textColor="@color/feed_grey_text"
-        app:font="@string/maven_r" />
+        app:typekitFont="@string/maven_r" />
 
     <LinearLayout
         android:id="@+id/layout_use_current_location"
@@ -88,7 +88,7 @@
         android:text="TRENDING CITIES"
         android:textColor="@color/text_color_less_light"
         android:textSize="@dimen/font_extra_small"
-        app:font="maven" />
+        app:typekitFont="maven" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rl_trending_cities"

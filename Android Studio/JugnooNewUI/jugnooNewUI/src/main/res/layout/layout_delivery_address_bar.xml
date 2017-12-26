@@ -30,7 +30,7 @@
         android:text="@string/label_confirm_delivery_address"
         android:textColor="@color/text_address_confirm"
         android:visibility="gone"
-        app:font="@string/maven_r"/>
+        app:typekitFont="@string/maven_r"/>
 
 
     <View

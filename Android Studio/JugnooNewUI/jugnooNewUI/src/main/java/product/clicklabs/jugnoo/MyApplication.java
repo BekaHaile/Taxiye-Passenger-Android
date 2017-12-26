@@ -26,7 +26,6 @@ import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.otto.Bus;
-import com.tsengvn.typekit.Typekit;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,6 +46,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
 import product.clicklabs.jugnoo.utils.CleverTapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.typekit.Typekit;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 
 /**

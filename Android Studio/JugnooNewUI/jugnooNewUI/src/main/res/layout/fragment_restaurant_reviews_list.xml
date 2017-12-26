@@ -32,7 +32,7 @@
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/sp_13"
                 android:visibility="visible"
-                app:font="@string/maven"
+                app:typekitFont="@string/maven"
                 />
 
             <TextView
@@ -44,7 +44,7 @@
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/sp_13"
                 android:visibility="visible"
-                app:font="@string/maven_r"
+                app:typekitFont="@string/maven_r"
                 android:layout_marginLeft="@dimen/dp_5"
                 />
 
@@ -91,7 +91,7 @@
             android:text="@string/no_reviews_yet_be_first"
             android:textColor="@color/text_color"
             android:textSize="@dimen/sp_18"
-            app:font="maven"
+            app:typekitFont="maven"
             />
 
         <ImageView
@@ -127,7 +127,7 @@
         android:text="@string/write_a_review"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_16"
-        app:font="maven"
+        app:typekitFont="maven"
 
         />
     

@@ -17,7 +17,7 @@
         android:layout_above="@+id/ivArrow"
         android:layout_marginBottom="@dimen/px_20"
         android:gravity="center"
-        app:font="maven"/>
+        app:typekitFont="maven"/>
 
 
     <ImageView

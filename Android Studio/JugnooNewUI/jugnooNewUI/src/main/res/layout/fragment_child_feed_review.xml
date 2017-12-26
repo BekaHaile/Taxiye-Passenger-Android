@@ -42,7 +42,7 @@
                 android:text="@string/review_at"
                 android:textColor="@color/text_color_light"
                 android:textSize="@dimen/sp_13"
-                app:font="maven" />
+                app:typekitFont="maven" />
 
 
             <LinearLayout
@@ -86,7 +86,7 @@
                         android:textColorHint="@color/text_color_hint"
                         android:textSize="@dimen/sp_13"
                         android:visibility="visible"
-                        app:font="maven"
+                        app:typekitFont="maven"
 
                         />
 
@@ -105,7 +105,7 @@
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@drawable/cursor_black"
                         android:textSize="@dimen/sp_13"
-                        app:font="maven" >
+                        app:typekitFont="maven" >
                         </EditText>
 
 
@@ -178,7 +178,7 @@
                 android:textColorHint="@color/text_color_hint"
                 android:textCursorDrawable="@drawable/cursor_black"
                 android:textSize="@dimen/sp_25"
-                app:font="@string/maven_r" />
+                app:typekitFont="@string/maven_r" />
 
             <com.sabkuchfresh.utils.RatingBarMenuFeedback
                 android:id="@+id/rating_bar_add_post"

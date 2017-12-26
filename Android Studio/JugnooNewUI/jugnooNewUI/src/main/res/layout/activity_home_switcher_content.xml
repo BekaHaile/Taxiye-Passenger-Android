@@ -37,7 +37,7 @@
             android:textAllCaps="true"
             android:textColor="@color/text_color"
             android:textSize="@dimen/sp_17"
-            app:font="@string/avenir"
+            app:typekitFont="@string/avenir"
             />
 
     </RelativeLayout>
@@ -55,7 +55,7 @@
         android:paddingTop="@dimen/dp_5"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_20"
-        app:font="@string/avenir_book"
+        app:typekitFont="@string/avenir_book"
         />
 
     <TextView
@@ -69,7 +69,7 @@
         android:paddingRight="@dimen/dp_20"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_24"
-        app:font="@string/montserrat_m"
+        app:typekitFont="@string/montserrat_m"
         android:lineSpacingExtra="-6sp"
         />
 
