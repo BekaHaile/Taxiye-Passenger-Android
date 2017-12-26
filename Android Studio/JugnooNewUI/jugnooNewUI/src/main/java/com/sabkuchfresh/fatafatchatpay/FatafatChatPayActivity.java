@@ -154,7 +154,7 @@ public class FatafatChatPayActivity extends RazorpayBaseActivity implements View
      */
     private void showAlreadyPaidAlert(String message) {
 
-        DialogPopup.alertPopupWithListener(this, "", getResources().getString(R.string.txt_fatafat_order_already_paid),
+        DialogPopup.alertPopupWithListener(this, "", message,
                 getString(android.R.string.ok), new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
