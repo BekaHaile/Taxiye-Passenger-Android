@@ -129,7 +129,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="@string/sub_total"
+                        android:text="@string/total_amount"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_30"
                         app:typekitFont="@string/maven_r"

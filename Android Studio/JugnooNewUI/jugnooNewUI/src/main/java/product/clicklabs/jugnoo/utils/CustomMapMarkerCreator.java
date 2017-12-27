@@ -113,9 +113,12 @@ public class CustomMapMarkerCreator {
 		Drawable shape = context.getResources().getDrawable(R.drawable.ic_centre_pin_big);
 		shape.setBounds(0, 0, bmpText.getWidth(), bmpText.getHeight());
 		shape.draw(canvasText);
-
+		String minsText = "MIN";
+		try{
+			minsText = Math.round(Double.parseDouble(text)) > 1 ? "MINS" : "MIN";
+		} catch (Exception e){}
 		canvasText.drawText(text, canvasText.getWidth() / 2, (31f*assl.Yscale()), paint);
-		canvasText.drawText("MIN", canvasText.getWidth() / 2, (int)(37f*assl.Yscale()) + boundsText.height(), paint);
+		canvasText.drawText(minsText, canvasText.getWidth() / 2, (int)(37f*assl.Yscale()) + boundsText.height(), paint);
 
 
 		return bmpText;

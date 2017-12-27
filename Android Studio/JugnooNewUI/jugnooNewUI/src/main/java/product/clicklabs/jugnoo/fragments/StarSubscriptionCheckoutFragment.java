@@ -392,7 +392,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 // initiate upi flow if payment is pending
                 if(isUpiPending){
                     setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED));
-                    onIciciUpiPaymentInitiated(Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED).getIcici(), String.valueOf(fareToPay));
+                    onIciciUpiPaymentInitiated(Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED).getIcici(),
+                            String.valueOf(Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED).getAmount()));
                 }
 
 
@@ -774,6 +775,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     public void onSuccess() {
                         try {
 //                            setPaymentOption(getPaymentOption());
+                            setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
                             orderPaymentModes();
                             setPaymentOptionUI();
                         } catch (Exception e) {
@@ -785,6 +787,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     public void onFailure() {
                         try {
 //                            setPaymentOption(getPaymentOption());
+                            setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
                             orderPaymentModes();
                             setPaymentOptionUI();
                         } catch (Exception e) {
@@ -955,7 +958,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     tvJugnooCash.setText(activity.getString(R.string.rupees_value_format,
                             Utils.getDoubleTwoDigits((double) Math.round(jcToShow))));
 
-                    netPayableAmount = fareToPay - jcToShow;
+                    // in case of upiPending fareToPay will be equal to netPayableAmt as object saved
+                    // in db for icici pending transaction has net amount ( after jc deduction )
+                    if(isUpiPending){
+                        netPayableAmount = fareToPay;
+                    }
+                    else {
+                       netPayableAmount = fareToPay - jcToShow;
+                    }
                     if (netPayableAmount < 0) {
                         netPayableAmount = 0;
                     }
@@ -963,7 +973,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             Utils.getDoubleTwoDigits((double) Math.round(netPayableAmount))));
                     tvAmtToBePaid.setText(netAmtToShow);
                     // update pay slider value
-                    String sliderText = activity.getString(R.string.pay).toUpperCase()+ " " +netAmtToShow;
+                    String sliderText;
+                    if(netPayableAmount==0){
+                        sliderText = activity.getString(R.string.pay).toUpperCase();
+                    }
+                    else {
+                        sliderText = activity.getString(R.string.pay).toUpperCase()+ " " +netAmtToShow;
+                    }
                     paySlider.tvSlide.setText(sliderText);
                 }
                 else {
@@ -1350,32 +1366,30 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                         Data.userData.setJugnooBalance(paymentData.getJugnooBalance());
                                         if (getPaymentOption() == PaymentOption.PAYTM) {
                                             Data.userData.setPaytmBalance(Data.userData.getPaytmBalance() - paymentData.getPaytmDeducted());
-                                            fatafatChatOrderPaidSuccess(message);
+                                            fatafatChatOrderPaidSuccess();
                                         } else if (getPaymentOption() == PaymentOption.MOBIKWIK) {
                                             Data.userData.setMobikwikBalance(Data.userData.getMobikwikBalance() - paymentData.getMobikwikDeducted());
-                                            fatafatChatOrderPaidSuccess(message);
+                                            fatafatChatOrderPaidSuccess();
                                         } else if (getPaymentOption() == PaymentOption.FREECHARGE) {
                                             Data.userData.setFreeChargeBalance(Data.userData.getFreeChargeBalance() - paymentData.getFreechargeDeducted());
-                                            fatafatChatOrderPaidSuccess(message);
+                                            fatafatChatOrderPaidSuccess();
                                         } else if(getPaymentOption()==PaymentOption.ICICI_UPI){
 
                                             if(response.getData().getIcici()!=null){
                                                 // Icici Upi Payment Initiated, prepare the order response and add extra key for fatafat chat
                                                 PlaceOrderResponse placeOrderResponse = new PlaceOrderResponse();
-                                                placeOrderResponse.setAmount(fareToPay);
+                                                placeOrderResponse.setAmount(paymentData.getAmount());
                                                 placeOrderResponse.setOrderId(orderId);
                                                 placeOrderResponse.setIcici(response.getData().getIcici());
                                                 placeOrderResponse.setPaymentMode(String.valueOf(PaymentOption.ICICI_UPI.getOrdinal()));
                                                 placeOrderResponse.setPayViaFatafatChat(true);
 
                                                 setPlaceOrderResponse(placeOrderResponse);
-                                                onIciciUpiPaymentInitiated(response.getData().getIcici(),String.valueOf(fareToPay));
+                                                onIciciUpiPaymentInitiated(response.getData().getIcici(),String.valueOf(paymentData.getAmount()));
                                             }
                                             else {
                                                 //handle success
-                                                String successMessage = String.format(activity.getResources()
-                                                        .getString(R.string.txt_fatafat_chat_payment_success),String.valueOf(orderId));
-                                                fatafatChatOrderPaidSuccess(successMessage);
+                                                fatafatChatOrderPaidSuccess();
                                             }
 
 
@@ -1526,16 +1540,12 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     /**
      * Called when payment has been successful for fatafat chat order
-     * @param message the message to show
      */
-    private void fatafatChatOrderPaidSuccess(String message){
-        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                paySlider.setSlideInitial();
-                activity.onBackPressed();
-            }
-        });
+    private void fatafatChatOrderPaidSuccess(){
+       if(activity!=null && !activity.isFinishing()){
+           paySlider.setSlideInitial();
+           activity.onBackPressed();
+       }
     }
 
 
@@ -1613,7 +1623,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 }
                 // if we come from chat then show fatafat pay success
                 if(isFromFatafatChat){
-                    fatafatChatOrderPaidSuccess(message);
+                    fatafatChatOrderPaidSuccess();
                 }
                 else {
                     rideEndPaymentSuccess(remaining, message);
@@ -1743,9 +1753,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
 
                     //handle success
-                    String successMessage = String.format(activity.getResources()
-                                    .getString(R.string.txt_fatafat_chat_payment_success),String.valueOf(orderId));
-                    fatafatChatOrderPaidSuccess(successMessage);
+                    fatafatChatOrderPaidSuccess();
                     Data.deleteCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED);
 
                     break;
