@@ -195,3 +195,8 @@
   public void onPayment*(...);
 }
 
+# fugu notification channel
+-dontwarn android.app.NotificationChannel
+-dontwarn com.fugu.FuguNotificationConfig
+
+
