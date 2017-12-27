@@ -230,7 +230,9 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 						}
 					};
 
+					setEtaText(-1);
 					setMapPaddingAndMoveCamera();
+
 
 					if (!TextUtils.isEmpty(driverPhoneNo)) {
 						bCallDriver.setVisibility(View.VISIBLE);
@@ -691,32 +693,20 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				lastEta = etaLong;
-				tvETA.setText(String.valueOf(etaLong) + "\n");
-				SpannableString spannableString = new SpannableString(etaLong > 1 ? "mins" : "min");
-				spannableString.setSpan(new RelativeSizeSpan(0.6f), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				tvETA.append(spannableString);
-				if (expanded && etaLong > 0) {
-					tvETA.setVisibility(View.GONE); //now eta will be shown along drop marker instead
+				if(etaLong>0){
+					lastEta = etaLong;
 
-					if (etaMarker == null) {
-						if(googleMap!=null){
-							etaMarker = googleMap.addMarker(getStartPickupLocMarkerOptions(deliveryLatLng, false, String.valueOf(etaLong)));
-
-						}
-					} else {
-						etaMarker.setIcon(BitmapDescriptorFactory
-								.fromBitmap(getEtaIconBitmap(String.valueOf(etaLong))));
-					}
-
-				} else {
-//					if (etaMarker != null) {
-//						etaMarker.remove();
-//						etaMarker = null;
-//					}
-					tvETA.setVisibility(View.GONE);
 				}
-//		tvETA.setVisibility((expanded && etaLong > 0) ? View.VISIBLE : View.GONE);
+				if (etaMarker == null) {
+					if(googleMap!=null){
+						etaMarker = googleMap.addMarker(getStartPickupLocMarkerOptions(deliveryLatLng, false,etaLong>0? String.valueOf(etaLong):"--"));
+
+					}
+				} else {
+					etaMarker.setIcon(BitmapDescriptorFactory
+							.fromBitmap(getEtaIconBitmap(String.valueOf(etaLong))));
+				}
+				tvETA.setVisibility(View.GONE);
 			}
 		});
 	}
@@ -780,24 +770,6 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 		markerOptions.icon(BitmapDescriptorFactory
 				.fromBitmap(getEtaIconBitmap(eta)));
-
-	/*	if(inRide){
-			markerOptions.icon(BitmapDescriptorFactory
-					.fromBitmap(CustomMapMarkerCreator
-							.createPinMarkerBitmapStart(getActivity(), assl)));
-		} else{
-			if(Data.autoData.getDropLatLng() != null){
-				markerOptions.icon(BitmapDescriptorFactory
-						.fromBitmap(CustomMapMarkerCreator
-								.getTextAssignBitmap(getActivity(), assl, eta,
-										getResources().getDimensionPixelSize(R.dimen.text_size_24))));
-			} else{
-				markerOptions.icon(BitmapDescriptorFactory
-						.fromBitmap(CustomMapMarkerCreator
-								.getTextBitmap(getActivity(), assl, eta,
-										getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
-			}
-		}*/
 		return markerOptions;
 	}
 
