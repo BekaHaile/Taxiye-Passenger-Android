@@ -392,7 +392,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 // initiate upi flow if payment is pending
                 if(isUpiPending){
                     setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED));
-                    onIciciUpiPaymentInitiated(Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED).getIcici(), String.valueOf(fareToPay));
+                    onIciciUpiPaymentInitiated(Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED).getIcici(),
+                            String.valueOf(Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED).getAmount()));
                 }
 
 
@@ -1370,14 +1371,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                             if(response.getData().getIcici()!=null){
                                                 // Icici Upi Payment Initiated, prepare the order response and add extra key for fatafat chat
                                                 PlaceOrderResponse placeOrderResponse = new PlaceOrderResponse();
-                                                placeOrderResponse.setAmount(fareToPay);
+                                                placeOrderResponse.setAmount(paymentData.getAmount());
                                                 placeOrderResponse.setOrderId(orderId);
                                                 placeOrderResponse.setIcici(response.getData().getIcici());
                                                 placeOrderResponse.setPaymentMode(String.valueOf(PaymentOption.ICICI_UPI.getOrdinal()));
                                                 placeOrderResponse.setPayViaFatafatChat(true);
 
                                                 setPlaceOrderResponse(placeOrderResponse);
-                                                onIciciUpiPaymentInitiated(response.getData().getIcici(),String.valueOf(fareToPay));
+                                                onIciciUpiPaymentInitiated(response.getData().getIcici(),String.valueOf(paymentData.getAmount()));
                                             }
                                             else {
                                                 //handle success

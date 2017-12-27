@@ -98,6 +98,9 @@ public class PaymentResponse extends FeedCommonResponse{
 		@SerializedName("jugnoo_balance")
 		@Expose
 		private double jugnooBalance;
+		@SerializedName("amount")
+		@Expose
+		private double amount;
 		@SerializedName("remaining")
 		@Expose
 		private double remaining;
@@ -122,6 +125,10 @@ public class PaymentResponse extends FeedCommonResponse{
 		@SerializedName("message")
 		@Expose
 		private String message;
+
+		public double getAmount() {
+			return amount;
+		}
 
 		public int getFlag() {
 			return flag;
