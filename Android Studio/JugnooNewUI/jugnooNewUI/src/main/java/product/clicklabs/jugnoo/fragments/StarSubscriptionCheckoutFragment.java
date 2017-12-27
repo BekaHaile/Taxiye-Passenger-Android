@@ -965,7 +965,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             Utils.getDoubleTwoDigits((double) Math.round(netPayableAmount))));
                     tvAmtToBePaid.setText(netAmtToShow);
                     // update pay slider value
-                    String sliderText = activity.getString(R.string.pay).toUpperCase()+ " " +netAmtToShow;
+                    String sliderText;
+                    if(netPayableAmount==0){
+                        sliderText = activity.getString(R.string.pay).toUpperCase();
+                    }
+                    else {
+                        sliderText = activity.getString(R.string.pay).toUpperCase()+ " " +netAmtToShow;
+                    }
                     paySlider.tvSlide.setText(sliderText);
                 }
                 else {
