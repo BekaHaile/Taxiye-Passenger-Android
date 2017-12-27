@@ -33,9 +33,11 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
                     if (linkIndex == AppLinkIndex.FATAFAT_PAY_VIA_CHAT.getOrdinal()) {
                         // open fatafat chat pay passing in orderId and amount
                         if (customActionModel.getOrderId() != 0 && customActionModel.getAmount() != 0) {
-                            context.startActivity(new Intent(context, FatafatChatPayActivity.class)
-                                    .putExtra(Constants.KEY_ORDER_ID, customActionModel.getOrderId())
-                                    .putExtra(Constants.KEY_AMOUNT, customActionModel.getAmount()));
+                            Intent payIntent = new Intent(context,FatafatChatPayActivity.class);
+                            payIntent.putExtra(Constants.KEY_ORDER_ID, customActionModel.getOrderId());
+                            payIntent.putExtra(Constants.KEY_AMOUNT, customActionModel.getAmount());
+                            payIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(payIntent);
                         }
 
                     }
