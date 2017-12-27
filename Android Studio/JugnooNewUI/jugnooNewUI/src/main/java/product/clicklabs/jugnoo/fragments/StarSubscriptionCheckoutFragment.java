@@ -146,6 +146,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private TextView tvTotalAmount,tvJugnooCash,tvAmtToBePaid;
     // indicates if upi is pending
     private boolean isUpiPending;
+    // amount after jugnoo cash deduction
+    private double netPayableAmount;
 
 
     public static StarSubscriptionCheckoutFragment newInstance(String subscription, int type){
@@ -367,6 +369,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 cvStarPlans.setVisibility(View.GONE);
                 String fareRs = activity.getString(R.string.rupees_value_format,
                         Utils.getDoubleTwoDigits((double) Math.round(fareToPay)));
+                netPayableAmount = fareToPay;
                 paySlider.tvSlide.setText("PAY " + fareRs);
                 paySlider.sliderText.setText(R.string.swipe_right_to_pay);
                 llRideInfo.setVisibility(View.VISIBLE);
@@ -952,7 +955,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     tvJugnooCash.setText(activity.getString(R.string.rupees_value_format,
                             Utils.getDoubleTwoDigits((double) Math.round(jcToShow))));
 
-                    double netPayableAmount = fareToPay - jcToShow;
+                    netPayableAmount = fareToPay - jcToShow;
                     if (netPayableAmount < 0) {
                         netPayableAmount = 0;
                     }
@@ -968,6 +971,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     llTotalAmount.setVisibility(View.GONE);
                     llJugnooCash.setVisibility(View.GONE);
                     llAmtToBePaid.setVisibility(View.VISIBLE);
+                    netPayableAmount = fareToPay;
                     String netAmtToShow = activity.getString(R.string.rupees_value_format,
                             Utils.getDoubleTwoDigits((double) Math.round(fareToPay)));
                     tvAmtToBePaid.setText(netAmtToShow);
@@ -1556,6 +1560,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private Integer getAmount(){
         if(fromStar){
             return subscription.getAmount();
+        }else if(isFromFatafatChat){
+            // if coming from fatafat return netamount ( that includes jugoo cash if present )
+            return (int)netPayableAmount;
         } else {
             return (int)fareToPay;
         }
