@@ -32,7 +32,7 @@
                 android:textSize="16sp"
                 android:layout_marginBottom="@dimen/dp_5"
                 android:textColor="@color/text_color_fatafat_bold"
-                app:font="@string/maven"
+                app:typekitFont="@string/maven"
                 android:gravity="left"
                 android:singleLine="true"
                 android:ellipsize="marquee"
@@ -53,7 +53,7 @@
                 android:layout_alignBottom="@id/tv_order_restaurant"
                 android:textColor="@color/text_color_fatafat_bold"
                 android:layout_toRightOf="@id/tv_order_restaurant"
-                app:font="@string/maven_r"
+                app:typekitFont="@string/maven_r"
                 android:singleLine="true"
                 android:text="#5289"
                 android:layout_height="wrap_content" />
@@ -75,7 +75,7 @@
                 android:textColor="@color/text_color_fatafat_bold"
                 android:textSize="@dimen/font_extra_small"
                 android:visibility="visible"
-                app:font="@string/maven" />
+                app:typekitFont="@string/maven" />
 
 
             <TextView
@@ -93,7 +93,7 @@
                 android:textAllCaps="true"
                 android:textColor="@color/green"
                 android:textSize="@dimen/font_extra_small"
-                app:font="@string/maven" />
+                app:typekitFont="@string/maven" />
 
             <TextView
                 android:id="@+id/tv_order_time"
@@ -109,7 +109,7 @@
                 android:text="ewqeq"
                 android:textColor="@color/text_color_light"
                 android:textSize="12.3sp"
-                app:font="@string/maven_r" />
+                app:typekitFont="@string/maven_r" />
 
         </RelativeLayout>
 

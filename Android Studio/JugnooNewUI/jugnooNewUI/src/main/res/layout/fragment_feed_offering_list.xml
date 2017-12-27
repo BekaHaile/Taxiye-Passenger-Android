@@ -58,7 +58,7 @@
                     android:text="AskLocal is empty!\nBE FIRST ONE TO ADD A POST..."
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_16"
-                    app:font="maven" />
+                    app:typekitFont="maven" />
 
 
             </RelativeLayout>

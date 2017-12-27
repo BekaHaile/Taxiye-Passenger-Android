@@ -27,7 +27,7 @@
             android:textAllCaps="true"
             android:textColor="@color/text_color"
             android:textSize="15sp"
-            app:font="@string/maven_r"
+            app:typekitFont="@string/maven_r"
             android:gravity="center"
 
             />

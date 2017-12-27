@@ -65,7 +65,7 @@
         android:textColor="@color/text_color_grey_menus"
         android:textSize="26px"
         android:visibility="gone"
-        app:font="maven"/>
+        app:typekitFont="maven"/>
 
 
     <TextView
@@ -81,7 +81,7 @@
         android:text="@string/veg_only"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_11"
-        app:font="@string/maven_r"
+        app:typekitFont="@string/maven_r"
         android:visibility="gone"
         android:tag="@string/dont_touch_me"
 

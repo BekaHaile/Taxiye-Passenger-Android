@@ -117,7 +117,7 @@
                 android:textSize="@dimen/sp_15"
                 android:textColor="@color/white"
                 android:text="@string/request_booking"
-                app:font="@string/maven"
+                app:typekitFont="@string/maven"
                 android:visibility="gone"
                 />
             
@@ -185,7 +185,7 @@
                         android:textAllCaps="true"
                         android:layout_toRightOf="@id/menuLabelFatafat"
                         android:visibility="visible"
-                        app:font="@string/maven"
+                        app:typekitFont="@string/maven"
                         android:maxLines="1"
                         android:textSize="14sp"
                         android:textColor="@android:color/white"

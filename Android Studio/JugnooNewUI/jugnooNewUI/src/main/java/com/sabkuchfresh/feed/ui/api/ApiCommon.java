@@ -207,6 +207,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case INITIATE_RIDE_END_PAYMENT:
                 RestClient.getApiService().initiateRideEndPayment(params, callback);
                 break;
+            case FEED_FETCH_ORDER_STATUS:
+                RestClient.getFatafatApiService().fetchOrderStatus(params,callback);
+                break;
+            case FEED_PAY_FOR_ORDER:
+                RestClient.getFatafatApiService().payForOrder(params,callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

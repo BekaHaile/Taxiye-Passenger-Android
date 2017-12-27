@@ -3,6 +3,7 @@
     android:id="@+id/linearLayoutRoot"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/menu_item_selector_color"
@@ -50,7 +51,7 @@
                         android:text="@string/total_fare"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/end_ride_fare_title_text_size"
-                        app:font="@string/maven_r"
+                        app:typekitFont="@string/maven_r"
                         />
 
                     <TextView
@@ -61,7 +62,7 @@
                         android:text="0"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/end_ride_fare_value_text_size"
-                        app:font="@string/avenir"
+                        app:typekitFont="@string/avenir"
                         />
                 </LinearLayout>
 
@@ -83,7 +84,7 @@
                         android:text="@string/to_be_paid"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/end_ride_fare_title_text_size"
-                        app:font="@string/maven_r"
+                        app:typekitFont="@string/maven_r"
                         android:textAllCaps="true"
                         />
 
@@ -95,10 +96,125 @@
                         android:text="0"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/end_ride_fare_value_text_size"
-                        app:font="@string/avenir"
+                        app:typekitFont="@string/avenir"
                         />
 
                 </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/llFatafatChatPay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20px"
+                android:layout_marginRight="20px"
+                android:layout_marginTop="40px"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/background_white_rounded_bordered"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:padding="30px"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/llTotalAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/px_20">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sub_total"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_30"
+                        app:typekitFont="@string/maven_r"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvTotalAmount"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        tools:text="0"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_36"
+                        app:typekitFont="@string/avenir"
+                        />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/llJugnooCash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/px_20">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/jugnoo_cash"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_30"
+                        app:typekitFont="@string/maven_r"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvJugnooCash"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        tools:text="0"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_36"
+                        app:typekitFont="@string/avenir"
+                        />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/llAmtToBePaid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/to_be_paid"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_30"
+                        app:typekitFont="@string/maven_r"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvAmtToBePaid"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        tools:text="0"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_36"
+                        app:typekitFont="@string/avenir"
+                        />
+
+                </LinearLayout>
+
+
             </LinearLayout>
 
             <android.support.v7.widget.CardView
@@ -202,7 +318,7 @@
                             android:text=""
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_20"
-                            app:font="@string/maven_r"/>
+                            app:typekitFont="@string/maven_r"/>
 
                     </RelativeLayout>
 
@@ -288,7 +404,7 @@
                             android:text=""
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_20"
-                            app:font="@string/maven_r"/>
+                            app:typekitFont="@string/maven_r"/>
 
                     </RelativeLayout>
 
@@ -354,7 +470,7 @@
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_26"
                     android:visibility="visible"
-                    app:font="@string/maven"
+                    app:typekitFont="@string/maven"
                     />
 
 
@@ -489,6 +605,14 @@
 
                         </RelativeLayout>
 
+                        <include
+                            layout="@layout/layout_icici_upi_payment_option"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/px_30"
+                            android:layout_marginRight="@dimen/px_30"
+                            />
+
                         <RelativeLayout
                             android:id="@+id/relativeLayoutFreeCharge"
                             android:layout_width="match_parent"
@@ -568,7 +692,7 @@
                                     android:text="@string/other_modes_to_pay"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_34"
-                                    app:font="maven"/>
+                                    app:typekitFont="maven"/>
 
                             </LinearLayout>
 
@@ -601,7 +725,7 @@
                                     android:text="@string/other_modes_to_pay"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_34"
-                                    app:font="maven"/>
+                                    app:typekitFont="maven"/>
 
                             </LinearLayout>
 

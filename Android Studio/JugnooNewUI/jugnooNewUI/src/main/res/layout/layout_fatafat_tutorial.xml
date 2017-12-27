@@ -23,7 +23,7 @@
             android:textAllCaps="true"
             android:textColor="@color/text_color_grey_menus"
             android:textSize="@dimen/font_xxl"
-            app:font="@string/avenir"/>
+            app:typekitFont="@string/avenir"/>
 
         <ImageView
             android:id="@+id/imgVwCross"

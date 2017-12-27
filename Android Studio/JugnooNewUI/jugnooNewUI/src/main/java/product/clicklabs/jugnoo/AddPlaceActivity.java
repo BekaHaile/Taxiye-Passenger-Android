@@ -17,7 +17,6 @@ import com.google.gson.Gson;
 import com.sabkuchfresh.fragments.AddToAddressBookFragment;
 import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.home.TransactionUtils;
-import com.tsengvn.typekit.TypekitContextWrapper;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,6 +29,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 
 /**

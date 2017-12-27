@@ -19,7 +19,7 @@
         android:text="Driver is late"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_15"
-        app:font="@string/maven_r"
+        app:typekitFont="@string/maven_r"
         />
 
     <ImageView

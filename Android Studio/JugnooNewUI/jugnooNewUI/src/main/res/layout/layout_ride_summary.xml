@@ -679,7 +679,7 @@
                         android:text="@string/invoice_amount_excluding_any_toll_taxes"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_24"
-                        app:font="maven"/>
+                        app:typekitFont="maven"/>
 
 
                     <!-- start end locations -->

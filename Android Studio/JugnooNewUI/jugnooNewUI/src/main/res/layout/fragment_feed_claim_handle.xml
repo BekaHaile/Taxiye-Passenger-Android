@@ -39,7 +39,7 @@
             android:text="@string/feed_claim_handle_description"
             android:textColor="@color/feed_grey_text"
             android:textSize="@dimen/font_huge"
-            app:font="maven" />
+            app:typekitFont="maven" />
 
 
         <RelativeLayout
@@ -63,7 +63,7 @@
                 android:textColorHint="@color/feed_grey_hint_color"
                 android:textCursorDrawable="@drawable/cursor_black"
                 android:textSize="@dimen/font_large"
-                app:font="maven" />
+                app:typekitFont="maven" />
 
             <ImageView
                 android:id="@+id/iv_refresh_suggestions"
@@ -93,7 +93,7 @@
             android:drawablePadding="3dp"
             android:drawableLeft="@drawable/ic_exclamation"
             android:visibility="invisible"
-            app:font="maven" />
+            app:typekitFont="maven" />
 
 
 
@@ -140,7 +140,7 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:gravity="center"
-                    app:font="maven"
+                    app:typekitFont="maven"
                     android:background="@drawable/bg_suggestion_handle_text"
                     android:layout_height="wrap_content" />
                 <TextView
@@ -155,7 +155,7 @@
                     android:paddingTop="@dimen/spacing_extra_tiny"
                     android:textColor="@color/feed_grey_text"
                     android:gravity="center"
-                    app:font="maven"
+                    app:typekitFont="maven"
                     android:layout_marginLeft="@dimen/spacing_extra_tiny"
                     android:layout_marginRight="@dimen/spacing_extra_tiny"
                     android:background="@drawable/bg_suggestion_handle_text"
@@ -166,7 +166,7 @@
                     android:minWidth="92dp"
                     android:maxLines="1"
                     android:gravity="center"
-                    app:font="maven"
+                    app:typekitFont="maven"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="@dimen/spacing_extra_tiny"
@@ -187,7 +187,7 @@
                 android:textAllCaps="true"
                 android:layout_marginLeft="@dimen/spacing_small"
                 android:layout_marginBottom="-10dp"
-                app:font="@string/maven_r"
+                app:typekitFont="@string/maven_r"
                 android:textColor="@color/text_color_hint"
                 android:text="@string/label_suggestions"
                 android:layout_width="wrap_content"

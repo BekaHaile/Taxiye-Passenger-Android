@@ -11,7 +11,7 @@
     android:paddingRight="@dimen/spacing_large"
     android:text="New Delhi"
     android:clickable="true"
-    app:font="maven"
+    app:typekitFont="maven"
     android:textColor="@color/feed_grey_text"
     android:textSize="@dimen/font_extra_large">
 

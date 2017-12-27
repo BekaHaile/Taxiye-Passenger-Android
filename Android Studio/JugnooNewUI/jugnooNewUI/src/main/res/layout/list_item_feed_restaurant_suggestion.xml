@@ -18,7 +18,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="10dp"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
     <TextView
@@ -33,7 +33,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="10dp"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
 

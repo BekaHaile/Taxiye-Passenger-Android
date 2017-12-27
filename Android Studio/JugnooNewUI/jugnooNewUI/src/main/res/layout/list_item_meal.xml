@@ -145,7 +145,7 @@
                             android:layout_marginTop="2.5dp"
                             android:textColor="@color/text_color"
                             android:textSize="12.5sp"
-                            app:font="maven" />
+                            app:typekitFont="maven" />
                     </LinearLayout>
 
 
@@ -198,7 +198,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginRight="20px"
                             android:gravity="right"
-                            app:font="@string/maven_r"
+                            app:typekitFont="@string/maven_r"
                             android:visibility="visible"
                             android:text="@string/rupee_0"
                             android:textColor="@color/text_color_light"
@@ -229,7 +229,7 @@
                         android:visibility="visible"
                         android:text="jsf"
                         android:textColor="@color/text_color_light"
-                        app:font="@string/maven_r"
+                        app:typekitFont="@string/maven_r"
                         />
                 </LinearLayout>
 

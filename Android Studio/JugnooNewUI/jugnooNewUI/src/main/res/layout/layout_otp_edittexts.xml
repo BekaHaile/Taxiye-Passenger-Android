@@ -21,7 +21,7 @@
             style="@style/pin_edittext_style"
             android:layout_width="@dimen/dp_52"
             android:layout_height="@dimen/dp_52"
-            app:font="@string/maven"
+            app:typekitFont="@string/maven"
             android:background="@drawable/bg_white_layer_shadow"
             />
 
@@ -30,7 +30,7 @@
             style="@style/pin_edittext_style"
             android:layout_width="@dimen/dp_52"
             android:layout_height="@dimen/dp_52"
-            app:font="@string/maven"
+            app:typekitFont="@string/maven"
             android:background="@drawable/bg_white_layer_shadow"
             />
 
@@ -39,7 +39,7 @@
             style="@style/pin_edittext_style"
             android:layout_width="@dimen/dp_52"
             android:layout_height="@dimen/dp_52"
-            app:font="@string/maven"
+            app:typekitFont="@string/maven"
             android:background="@drawable/bg_white_layer_shadow"
             />
 
@@ -48,7 +48,7 @@
             style="@style/pin_edittext_style"
             android:layout_width="@dimen/dp_52"
             android:layout_height="@dimen/dp_52"
-            app:font="@string/maven"
+            app:typekitFont="@string/maven"
             android:background="@drawable/bg_white_layer_shadow"
             />
 
@@ -57,7 +57,7 @@
             <!--style="@style/pin_edittext_style"-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
-            <!--app:font="@string/maven"-->
+            <!--app:typekitFont="@string/maven"-->
             <!--/>-->
     </LinearLayout>
 

@@ -58,6 +58,16 @@ public class PlaceOrderResponse {
 	@SerializedName("icici")
 	@Expose
 	private IciciUpi icici;
+	@SerializedName("is_pay_via_fatafat_chat")
+	private boolean isPayViaFatafatChat;
+
+	public boolean isPayViaFatafatChat() {
+		return isPayViaFatafatChat;
+	}
+
+	public void setPayViaFatafatChat(final boolean payViaFatafatChat) {
+		isPayViaFatafatChat = payViaFatafatChat;
+	}
 
 	public IciciUpi getIcici() {
 		return icici;

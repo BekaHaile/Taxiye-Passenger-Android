@@ -19,7 +19,7 @@
         android:text="Rides"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_16"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
     <RelativeLayout
@@ -62,7 +62,7 @@
                         android:text="Flat Rs.30 Off"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_19"
-                        app:font="maven"
+                        app:typekitFont="maven"
                         />
 
                     <TextView
@@ -76,7 +76,7 @@
                         android:text="Flat Rs.30 Off"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_10"
-                        app:font="maven"
+                        app:typekitFont="maven"
                         />
 
                     <View
@@ -93,7 +93,7 @@
                         android:text="Flat Rs.30 Off"
                         android:textColor="@color/feed_grey_text_heading"
                         android:textSize="@dimen/sp_14"
-                        app:font="maven"
+                        app:typekitFont="maven"
                         />
                 </LinearLayout>
             </ScrollView>
@@ -120,7 +120,7 @@
         android:textAllCaps="true"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_18"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
 </RelativeLayout>

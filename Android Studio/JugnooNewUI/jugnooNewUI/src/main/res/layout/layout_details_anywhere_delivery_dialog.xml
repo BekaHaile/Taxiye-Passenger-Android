@@ -11,7 +11,7 @@
 
     <TextView
         android:id="@+id/tv_label"
-        app:font="@string/maven"
+        app:typekitFont="@string/maven"
         android:text="Label"
         android:textSize="18sp"
         android:layout_marginRight="10dp"
@@ -32,7 +32,7 @@
 
     <TextView
         android:id="@+id/tv_value"
-        app:font="@string/maven"
+        app:typekitFont="@string/maven"
         android:textColor="@color/text_color"
         android:text="Value"
         android:gravity="top"

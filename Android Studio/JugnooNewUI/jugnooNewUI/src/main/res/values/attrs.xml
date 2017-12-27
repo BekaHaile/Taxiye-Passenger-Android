@@ -46,7 +46,7 @@
     <!--<attr name="fab_text_size" format="dimension" />-->
     <!--</declare-styleable>-->
 
-    <attr name="fontStyle" format="enum">
+    <attr name="jugnoofontStyle" format="enum">
         <enum name="regular" value="0" />
         <enum name="light" value="1" />
         <enum name="maven_regular" value="2" />
@@ -159,4 +159,11 @@
         <attr name="is_enabled" format="boolean"/>
         <attr name="anim_scale_factor" format="float"/>
     </declare-styleable>
+
+
+    <declare-styleable name="Typekit">
+        <attr name="typekitFont" format="string"/>
+    </declare-styleable>
+
+
 </resources>

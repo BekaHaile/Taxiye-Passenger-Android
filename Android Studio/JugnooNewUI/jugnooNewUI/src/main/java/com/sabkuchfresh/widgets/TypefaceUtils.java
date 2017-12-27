@@ -13,7 +13,7 @@ public class TypefaceUtils {
 
     private static final int[] TEXT_APPEARANCE_ATTRS = new int[]{android.R.attr.textAppearance};
 
-    private static final int[] FONT_STYLE_ATTRS = new int[]{R.attr.fontStyle};
+    private static final int[] FONT_STYLE_ATTRS = new int[]{R.attr.jugnoofontStyle};
 
     private TypefaceUtils() {
 

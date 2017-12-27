@@ -47,7 +47,7 @@
             android:layout_marginTop="200px"
             android:imeOptions="actionDone"
             android:text="@string/claim_coupon"
-            app:font="maven"/>
+            app:typekitFont="maven"/>
     </LinearLayout>
 
 

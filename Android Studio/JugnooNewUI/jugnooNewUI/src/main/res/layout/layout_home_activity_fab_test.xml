@@ -182,7 +182,7 @@
             android:text="Explore more from Jugnoo"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_30"
-            app:font="maven"/>
+            app:typekitFont="maven"/>
     </RelativeLayout>
 
     <ImageView
@@ -209,7 +209,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_45"
         android:visibility="gone"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
 

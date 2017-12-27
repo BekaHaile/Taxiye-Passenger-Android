@@ -39,7 +39,7 @@
                     android:text="@string/autodetecting_otp_sent_to"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_32"
-                    app:font="@string/maven_r"/>
+                    app:typekitFont="@string/maven_r"/>
 
                 <TextView
                     android:id="@+id/tvOtpPhoneNumber"

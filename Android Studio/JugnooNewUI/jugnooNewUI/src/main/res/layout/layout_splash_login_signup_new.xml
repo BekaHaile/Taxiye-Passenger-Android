@@ -84,7 +84,7 @@
                 android:textColor="@color/text_color"
                 android:layout_marginTop="@dimen/px_100"
                 android:layout_gravity="center_horizontal"
-                app:font="maven"/>
+                app:typekitFont="maven"/>
 
             <RelativeLayout
                 android:id="@+id/rlMobileNumber"
@@ -118,7 +118,7 @@
                     android:layout_marginLeft="@dimen/px_20"
                     android:textSize="@dimen/text_size_32"
                     android:layout_toRightOf="@+id/ivMobileNumber"
-                    app:font="maven"/>
+                    app:typekitFont="maven"/>
 
             </RelativeLayout>
 
@@ -190,7 +190,7 @@
                         android:layout_marginLeft="@dimen/px_20"
                         android:textSize="@dimen/text_size_32"
                         android:layout_toRightOf="@+id/bFacebook"
-                        app:font="maven"/>
+                        app:typekitFont="maven"/>
 
                 </RelativeLayout>
 
@@ -224,7 +224,7 @@
                         android:layout_marginLeft="@dimen/px_20"
                         android:textSize="@dimen/text_size_32"
                         android:layout_toRightOf="@+id/bGoogle"
-                        app:font="maven"/>
+                        app:typekitFont="maven"/>
 
                 </RelativeLayout>
 

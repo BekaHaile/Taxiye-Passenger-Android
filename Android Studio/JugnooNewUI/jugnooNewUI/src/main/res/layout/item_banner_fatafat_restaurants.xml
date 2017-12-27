@@ -7,7 +7,7 @@
     android:background="@drawable/shadow_gradient_seperator_fatafat"
     android:padding="15dp"
     android:textSize="14.5sp"
-    app:font="maven"
+    app:typekitFont="maven"
     android:layout_gravity="center"
     android:gravity="center"
 

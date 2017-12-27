@@ -27,7 +27,7 @@
         android:textColor="@color/text_color_selector"
         android:textSize="@dimen/sp_14"
         android:layout_toRightOf="@+id/ivCheck"
-        app:font="@string/maven"
+        app:typekitFont="@string/maven"
         />
 
     <ImageView

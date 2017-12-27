@@ -21,7 +21,7 @@
         android:text="G"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_28"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
     <ImageView
@@ -49,7 +49,7 @@
         android:text="Username"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_16"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
 
@@ -69,7 +69,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/sp_11"
         android:visibility="visible"
-        app:font="maven"/>
+        app:typekitFont="maven"/>
 
     <TextView
         android:id="@+id/tvReviewTag"
@@ -86,7 +86,7 @@
         android:text="Quality, Packaging"
         android:textColor="@color/document_layout_bordor_color"
         android:textSize="@dimen/sp_11"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
     <TextView
@@ -102,7 +102,7 @@
         android:text="12 hrs ago"
         android:textColor="@color/document_layout_bordor_color"
         android:textSize="@dimen/sp_10"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
     <TextView
@@ -116,7 +116,7 @@
         android:text="Ended up here on the way to Sukhna Lake to grab a pizza along. Got their BOGO offer and ordered medium cheesy 7 and Ala Mexican. The Ala mexican was kinda cold. "
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_13"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
 
@@ -169,7 +169,7 @@
                 android:text="Bittu Deluxe Dhaba"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/sp_13"
-                app:font="@string/maven"
+                app:typekitFont="@string/maven"
                 />
 
             <TextView
@@ -182,7 +182,7 @@
                 android:text="We are sorry for the cold food  and we promiss will take care next time you’ll order something."
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/sp_12"
-                app:font="@string/maven"
+                app:typekitFont="@string/maven"
                 />
 
             <TextView
@@ -198,7 +198,7 @@
                 android:text="12 hrs ago"
                 android:textColor="@color/document_layout_bordor_color"
                 android:textSize="@dimen/sp_10"
-                app:font="@string/maven"
+                app:typekitFont="@string/maven"
                 />
         </LinearLayout>
         
@@ -243,7 +243,7 @@
         android:text="1 Like | 1 Share"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_12"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
 

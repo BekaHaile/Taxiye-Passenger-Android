@@ -44,7 +44,7 @@
                 android:text="Pay 300"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/sp_12"
-                app:font="maven"
+                app:typekitFont="maven"
                 />
 
         </RelativeLayout>
@@ -59,7 +59,7 @@
             android:text="Swipe to confirm >>"
             android:textColor="#fff"
             android:textSize="@dimen/sp_12"
-            app:font="maven"/>
+            app:typekitFont="maven"/>
 
     </RelativeLayout>
 
@@ -75,7 +75,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/sp_17"
         android:visibility="gone"
-        app:font="@string/maven_r"
+        app:typekitFont="@string/maven_r"
         />
 
 </LinearLayout>

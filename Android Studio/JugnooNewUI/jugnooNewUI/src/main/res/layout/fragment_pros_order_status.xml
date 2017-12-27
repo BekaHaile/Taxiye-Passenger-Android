@@ -42,7 +42,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/sp_12"
-                    app:font="@string/maven_r"
+                    app:typekitFont="@string/maven_r"
                     />
 
                 <TextView
@@ -52,7 +52,7 @@
                     android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_14"
-                    app:font="@string/maven"
+                    app:typekitFont="@string/maven"
                     />
 
             </LinearLayout>
@@ -84,7 +84,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/sp_12"
-                    app:font="@string/maven_r"
+                    app:typekitFont="@string/maven_r"
                     />
 
                 <TextView
@@ -94,7 +94,7 @@
                     android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_14"
-                    app:font="@string/maven"
+                    app:typekitFont="@string/maven"
                     />
             </LinearLayout>
 
@@ -125,7 +125,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/sp_12"
-                    app:font="@string/maven_r"
+                    app:typekitFont="@string/maven_r"
                     />
 
                 <TextView
@@ -135,7 +135,7 @@
                     android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_14"
-                    app:font="@string/maven"
+                    app:typekitFont="@string/maven"
                     />
             </LinearLayout>
 
@@ -167,7 +167,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/sp_12"
-                    app:font="@string/maven_r"
+                    app:typekitFont="@string/maven_r"
                     />
 
                 <LinearLayout
@@ -200,7 +200,7 @@
                             android:textAllCaps="true"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/sp_14"
-                            app:font="@string/maven"
+                            app:typekitFont="@string/maven"
                             />
                     </LinearLayout>
 
@@ -211,7 +211,7 @@
                         android:text=""
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_14"
-                        app:font="@string/maven"/>
+                        app:typekitFont="@string/maven"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -242,7 +242,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/sp_12"
-                    app:font="@string/maven_r"
+                    app:typekitFont="@string/maven_r"
                     />
 
                 <LinearLayout
@@ -275,7 +275,7 @@
                             android:textAllCaps="true"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/sp_14"
-                            app:font="@string/maven"
+                            app:typekitFont="@string/maven"
                             />
                     </LinearLayout>
 
@@ -286,7 +286,7 @@
                         android:text=""
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_14"
-                        app:font="@string/maven"/>
+                        app:typekitFont="@string/maven"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -310,7 +310,7 @@
                     android:text=""
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_15"
-                    app:font="@string/maven_r"
+                    app:typekitFont="@string/maven_r"
                     />
 
                 <LinearLayout
@@ -327,7 +327,7 @@
                         android:text="@string/amount"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_15"
-                        app:font="@string/maven_r"
+                        app:typekitFont="@string/maven_r"
                         />
 
                     <TextView
@@ -339,7 +339,7 @@
                         android:text=""
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_15"
-                        app:font="@string/maven"
+                        app:typekitFont="@string/maven"
                         />
                 </LinearLayout>
 
@@ -419,7 +419,7 @@
                         android:text="@string/paid_via"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_15"
-                        app:font="@string/maven_r"
+                        app:typekitFont="@string/maven_r"
                         />
 
                     <ImageView
@@ -441,7 +441,7 @@
                         android:text="Cash"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_15"
-                        app:font="@string/maven"
+                        app:typekitFont="@string/maven"
                         />
                 </RelativeLayout>
 
@@ -471,7 +471,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_16"
-                    app:font="@string/maven"/>
+                    app:typekitFont="@string/maven"/>
 
                 <Button
                     android:id="@+id/bCancelOrder"
@@ -485,7 +485,7 @@
                     android:textColor="@color/text_color_theme_selector"
                     android:textSize="@dimen/sp_16"
                     android:visibility="gone"
-                    app:font="@string/maven"
+                    app:typekitFont="@string/maven"
                     />
 
             </LinearLayout>

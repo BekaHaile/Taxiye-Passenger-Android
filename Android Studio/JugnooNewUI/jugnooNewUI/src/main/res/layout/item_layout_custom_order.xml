@@ -12,7 +12,7 @@
 
     <TextView
         android:id="@+id/tvCustomText"
-        app:font="@string/maven"
+        app:typekitFont="@string/maven"
         android:text="@string/label_fav_restaurant"
         android:textSize="16sp"
         android:textColor="@color/text_color"
@@ -25,7 +25,7 @@
 
 
     <TextView
-        app:font="@string/maven"
+        app:typekitFont="@string/maven"
         android:text="@string/label_custom_order"
         android:gravity="center"
         android:layout_marginTop="10dp"
@@ -49,6 +49,6 @@
         android:textAllCaps="true"
         android:textColor="@android:color/white"
         android:textSize="@dimen/sp_16"
-        app:font="@string/maven" />
+        app:typekitFont="@string/maven" />
 
 </LinearLayout>

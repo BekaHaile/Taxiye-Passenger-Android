@@ -52,7 +52,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_13"
-                    app:font="maven" />
+                    app:typekitFont="maven" />
 
             </LinearLayout>
 
@@ -101,7 +101,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_30alpha"
                     android:textSize="@dimen/sp_13"
-                    app:font="maven" />
+                    app:typekitFont="maven" />
             </LinearLayout>
 
             <View
@@ -165,7 +165,7 @@
                     android:gravity="center"
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/sp_13"
-                    app:font="maven" />
+                    app:typekitFont="maven" />
 
 
                 <LinearLayout
@@ -211,7 +211,7 @@
                             android:textColorHint="@color/text_color_hint"
                             android:textSize="@dimen/sp_13"
                             android:visibility="visible"
-                            app:font="maven"
+                            app:typekitFont="maven"
 
                             />
 
@@ -229,7 +229,7 @@
                             android:textColorHint="@color/text_color_hint"
                             android:textCursorDrawable="@drawable/cursor_black"
                             android:textSize="@dimen/sp_13"
-                            app:font="maven" />
+                            app:typekitFont="maven" />
 
 
                         <product.clicklabs.jugnoo.utils.ProgressWheel xmlns:wheel="http://schemas.android.com/apk/res-auto"
@@ -295,7 +295,7 @@
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@drawable/cursor_black"
                         android:textSize="@dimen/sp_14"
-                        app:font="maven" />
+                        app:typekitFont="maven" />
 
                     <com.sabkuchfresh.utils.RatingBarMenuFeedback
                         android:id="@+id/rating_bar_add_post"
@@ -374,7 +374,7 @@
             android:layout_marginRight="@dimen/spacing_tiny"
             android:ellipsize="end"
             android:textSize="@dimen/font_small"
-            app:font="maven"
+            app:typekitFont="maven"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -392,7 +392,7 @@
             android:textAllCaps="false"
             android:textColor="@drawable/text_color_submit_add_post"
             android:textSize="@dimen/sp_15"
-            app:font="maven" />
+            app:typekitFont="maven" />
 
         <View
             android:id="@+id/submitDivider"
@@ -417,7 +417,7 @@
             android:visibility="gone"
             android:textColor="@color/text_color_light"
             android:textSize="@dimen/sp_13"
-            app:font="maven" />
+            app:typekitFont="maven" />
 
 
     </RelativeLayout>

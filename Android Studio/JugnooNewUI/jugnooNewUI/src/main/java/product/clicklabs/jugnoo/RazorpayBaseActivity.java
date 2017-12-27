@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Pair;
 
 import com.google.gson.Gson;
@@ -87,7 +88,7 @@ public class RazorpayBaseActivity extends BaseAppCompatActivity implements Payme
         }
     }
 
-    private int getAppType() {
+    public int getAppType() {
         return Prefs.with(this).getInt(Constants.APP_TYPE, Data.AppType);
     }
 
@@ -118,5 +119,13 @@ public class RazorpayBaseActivity extends BaseAppCompatActivity implements Payme
     }
     private int getAuthOrderId(){
         return Prefs.with(this).getInt(Constants.SP_RZP_AUTH_ORDER_ID, -1);
+    }
+
+    private Handler handler;
+    public Handler getHandler(){
+        if(handler == null){
+            handler = new Handler();
+        }
+        return handler;
     }
 }

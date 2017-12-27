@@ -94,7 +94,7 @@
                 android:text="have already signed up."
                 android:textColor="@color/feed_grey_text_heading"
                 android:textSize="20sp"
-                app:font="@string/maven_r"
+                app:typekitFont="@string/maven_r"
                 android:layout_marginBottom="10dp"/>
 
             <ImageView
@@ -122,7 +122,7 @@
                 android:textColor="@color/feed_grey_text_heading"
                 android:textSize="16sp"
                 android:layout_marginTop="-4dp"
-                app:font="@string/maven_r"/>
+                app:typekitFont="@string/maven_r"/>
 
             <RelativeLayout
                 android:id="@+id/rlCreateHandle"
@@ -146,7 +146,7 @@
                     android:padding="4dp"
                     android:background="@null"
                     android:hint="@string/create_a_handle"
-                    app:font="maven"
+                    app:typekitFont="maven"
                     android:textCursorDrawable="@drawable/cursor_black"
                     />
                 <View
@@ -170,7 +170,7 @@
                     android:text="@string/submit"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/font_medium"
-                    app:font="maven"
+                    app:typekitFont="maven"
                     android:layout_toRightOf="@+id/etCreateHandle"
                     />
 
@@ -187,7 +187,7 @@
                 android:text="Reserve MY SPOT"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/font_medium"
-                app:font="maven"/>
+                app:typekitFont="maven"/>
         </LinearLayout>
     </ScrollView>
 

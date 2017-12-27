@@ -541,7 +541,7 @@
                         android:layout_marginLeft="@dimen/px_20"
                         android:textSize="@dimen/text_size_32"
                         android:layout_toRightOf="@+id/bFacebook"
-                        app:font="maven"/>
+                        app:typekitFont="maven"/>
 
                 </RelativeLayout>
 
@@ -574,7 +574,7 @@
                         android:layout_marginLeft="@dimen/px_20"
                         android:textSize="@dimen/text_size_32"
                         android:layout_toRightOf="@+id/bGoogle"
-                        app:font="maven"/>
+                        app:typekitFont="maven"/>
 
                 </RelativeLayout>
 

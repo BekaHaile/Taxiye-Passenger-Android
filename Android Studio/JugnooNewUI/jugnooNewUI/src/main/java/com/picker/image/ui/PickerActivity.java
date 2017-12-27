@@ -41,7 +41,6 @@ import com.picker.image.util.CameraSupport;
 import com.picker.image.util.Events;
 import com.picker.image.util.Picker;
 import com.sabkuchfresh.home.FreshActivity;
-import com.tsengvn.typekit.TypekitContextWrapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +52,7 @@ import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 
 public class PickerActivity extends AppCompatActivity {

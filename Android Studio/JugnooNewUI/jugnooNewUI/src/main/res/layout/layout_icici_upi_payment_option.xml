@@ -41,7 +41,7 @@
             android:text=""
             android:textColor="@color/theme_color"
             android:textSize="@dimen/sp_15"
-            app:font="@string/maven"
+            app:typekitFont="@string/maven"
             />
 
     </LinearLayout>
@@ -60,7 +60,7 @@
         android:textColorHint="@color/text_color_hint"
         android:textSize="@dimen/px_28"
         android:visibility="gone"
-        app:font="maven"/>
+        app:typekitFont="maven"/>
 
     <TextView
         android:id="@+id/tv_label_below_edt_icici"
@@ -73,6 +73,6 @@
         android:textColor="@color/text_color"
         android:textSize="@dimen/px_24"
         android:visibility="gone"
-        app:font="maven"/>
+        app:typekitFont="maven"/>
 
 </RelativeLayout>

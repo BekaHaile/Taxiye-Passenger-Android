@@ -40,7 +40,7 @@
             android:ellipsize="end"
             android:textColor="@color/text_color"
             android:textSize="@dimen/sp_10"
-            app:font="maven"
+            app:typekitFont="maven"
             android:paddingLeft="@dimen/dp_10"
             android:paddingTop="@dimen/dp_5"
             android:paddingRight="@dimen/dp_14"
@@ -56,7 +56,7 @@
             android:ellipsize="end"
             android:textColor="@color/text_color"
             android:textSize="@dimen/sp_10"
-            app:font="maven"
+            app:typekitFont="maven"
             android:paddingTop="@dimen/dp_5"
             android:paddingLeft="@dimen/dp_10"
             android:paddingRight="@dimen/dp_14"
@@ -79,7 +79,7 @@
         android:layout_marginRight="@dimen/dp_4"
         android:text="2X"
         android:visibility="visible"
-        app:font="maven"
+        app:typekitFont="maven"
         />
 
 </RelativeLayout>

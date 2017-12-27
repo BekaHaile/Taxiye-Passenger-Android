@@ -112,7 +112,7 @@
                 android:text="@string/plus_add_new_address"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16"
-                app:font="maven"
+                app:typekitFont="maven"
                 android:textAllCaps="true"
                 />
 
