@@ -1358,13 +1358,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                         Data.userData.setJugnooBalance(paymentData.getJugnooBalance());
                                         if (getPaymentOption() == PaymentOption.PAYTM) {
                                             Data.userData.setPaytmBalance(Data.userData.getPaytmBalance() - paymentData.getPaytmDeducted());
-                                            fatafatChatOrderPaidSuccess(message);
+                                            fatafatChatOrderPaidSuccess();
                                         } else if (getPaymentOption() == PaymentOption.MOBIKWIK) {
                                             Data.userData.setMobikwikBalance(Data.userData.getMobikwikBalance() - paymentData.getMobikwikDeducted());
-                                            fatafatChatOrderPaidSuccess(message);
+                                            fatafatChatOrderPaidSuccess();
                                         } else if (getPaymentOption() == PaymentOption.FREECHARGE) {
                                             Data.userData.setFreeChargeBalance(Data.userData.getFreeChargeBalance() - paymentData.getFreechargeDeducted());
-                                            fatafatChatOrderPaidSuccess(message);
+                                            fatafatChatOrderPaidSuccess();
                                         } else if(getPaymentOption()==PaymentOption.ICICI_UPI){
 
                                             if(response.getData().getIcici()!=null){
@@ -1381,9 +1381,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                             }
                                             else {
                                                 //handle success
-                                                String successMessage = String.format(activity.getResources()
-                                                        .getString(R.string.txt_fatafat_chat_payment_success),String.valueOf(orderId));
-                                                fatafatChatOrderPaidSuccess(successMessage);
+                                                fatafatChatOrderPaidSuccess();
                                             }
 
 
@@ -1534,16 +1532,12 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     /**
      * Called when payment has been successful for fatafat chat order
-     * @param message the message to show
      */
-    private void fatafatChatOrderPaidSuccess(String message){
-        DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                paySlider.setSlideInitial();
-                activity.onBackPressed();
-            }
-        });
+    private void fatafatChatOrderPaidSuccess(){
+       if(activity!=null && !activity.isFinishing()){
+           paySlider.setSlideInitial();
+           activity.onBackPressed();
+       }
     }
 
 
@@ -1621,7 +1615,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 }
                 // if we come from chat then show fatafat pay success
                 if(isFromFatafatChat){
-                    fatafatChatOrderPaidSuccess(message);
+                    fatafatChatOrderPaidSuccess();
                 }
                 else {
                     rideEndPaymentSuccess(remaining, message);
@@ -1751,9 +1745,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
 
                     //handle success
-                    String successMessage = String.format(activity.getResources()
-                                    .getString(R.string.txt_fatafat_chat_payment_success),String.valueOf(orderId));
-                    fatafatChatOrderPaidSuccess(successMessage);
+                    fatafatChatOrderPaidSuccess();
                     Data.deleteCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED);
 
                     break;
