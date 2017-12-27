@@ -958,7 +958,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     tvJugnooCash.setText(activity.getString(R.string.rupees_value_format,
                             Utils.getDoubleTwoDigits((double) Math.round(jcToShow))));
 
-                    netPayableAmount = fareToPay - jcToShow;
+                    // in case of upiPending fareToPay will be equal to netPayableAmt as object saved
+                    // in db for icici pending transaction has net amount ( after jc deduction )
+                    if(isUpiPending){
+                        netPayableAmount = fareToPay;
+                    }
+                    else {
+                       netPayableAmount = fareToPay - jcToShow;
+                    }
                     if (netPayableAmount < 0) {
                         netPayableAmount = 0;
                     }
