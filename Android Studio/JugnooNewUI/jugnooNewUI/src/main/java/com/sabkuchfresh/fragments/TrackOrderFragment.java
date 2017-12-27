@@ -411,7 +411,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 							ArrayList<LatLng> latLngsWayPoints = new ArrayList<>();
 							latLngsWayPoints.add(latLngCurr);
 							latLngsWayPoints.add(latLngDriver);
-							latLngsWayPoints.add(deliveryLatLng);
+//							latLngsWayPoints.add(deliveryLatLng);
 							Pair<List<LatLng>, String> pair = apiGoogleDirectionWaypoints.setData(latLngsWayPoints, false,activity.getString(R.string.google_maps_api_server_key)).syncHit();
 							final List<LatLng> list = pair.first;
 							final String result = pair.second;
@@ -489,6 +489,10 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 													positionNearCurr = i;
 												}
 											}
+
+											//hard coding
+											positionNearCurr = 0; positionNearNew = list.size()-1;
+
 											polylineOptions1.add(pickupLatLng);
 											for (int j = 0; j <= positionNearCurr; j++) {
 												polylineOptions1.add(list.get(j));
@@ -562,26 +566,6 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 										} catch (Exception e) {
 											e.printStackTrace();
 										}
-
-										try {
-											if (TextUtils.isEmpty(eta)) {
-												GoogleDirectionWayPointsResponse googleDirectionWayPointsResponse = gson.fromJson(result, GoogleDirectionWayPointsResponse.class);
-												Log.i("googleDirectionWayPointsResponse", "=" + googleDirectionWayPointsResponse);
-												setEtaText(getEtaFromResponse(latLngDriver, googleDirectionWayPointsResponse));
-
-											} else {
-												long etaLong = 10;
-												try {
-													etaLong = Long.getLong(eta);
-												} catch (Exception e) {
-													e.printStackTrace();
-												}
-												setEtaText(etaLong);
-											}
-										} catch (Exception e) {
-											e.printStackTrace();
-											tvETA.setVisibility(View.GONE);
-										}
 										zoomedFirstTime = true;
 										latLngCurr = latLngDriver;
 									} else {
@@ -589,6 +573,38 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 									}
 								}
 							});
+
+							try {
+								if (TextUtils.isEmpty(eta)) {
+									String origin = latLngDriver.latitude + "," + latLngDriver.longitude;
+									String destination = deliveryLatLng.latitude + "," + deliveryLatLng.longitude;
+									Response responseDM = RestClient.getGoogleApiService().getDistanceMatrix(origin,
+											destination, "EN", false, false,
+											activity.getString(R.string.google_maps_api_server_key));
+									JSONObject jObjDM = new JSONObject(new String(((TypedByteArray)responseDM.getBody()).getBytes()));
+									if(jObjDM.getString("status").equals("OK")){
+										long minutes = (long) (jObjDM.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("duration").getDouble("value") / 60);
+										Log.v("distanceMatrix api", "eta = "+minutes);
+										setEtaText(minutes);
+									} else {
+										throw new Exception();
+									}
+//									GoogleDirectionWayPointsResponse googleDirectionWayPointsResponse = gson.fromJson(result, GoogleDirectionWayPointsResponse.class);
+//									Log.i("googleDirectionWayPointsResponse", "=" + googleDirectionWayPointsResponse);
+//									setEtaText(getEtaFromResponse(latLngDriver, googleDirectionWayPointsResponse));
+								} else {
+									long etaLong = 10;
+									try {
+										etaLong = Long.getLong(eta);
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+									setEtaText(etaLong);
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+
 						}
 					}
 				} catch (Exception e) {
@@ -671,35 +687,38 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	private Marker etaMarker;
 	private Bitmap etaMarkerBitmap;
 
-	private void setEtaText(long etaLong) {
-		lastEta = etaLong;
-		tvETA.setText(String.valueOf(etaLong) + "\n");
-		SpannableString spannableString = new SpannableString(etaLong > 1 ? "mins" : "min");
-		spannableString.setSpan(new RelativeSizeSpan(0.6f), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		tvETA.append(spannableString);
-		if (expanded && etaLong > 0) {
-			tvETA.setVisibility(View.GONE); //now eta will be shown along drop marker instead
+	private void setEtaText(final long etaLong) {
+		activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				lastEta = etaLong;
+				tvETA.setText(String.valueOf(etaLong) + "\n");
+				SpannableString spannableString = new SpannableString(etaLong > 1 ? "mins" : "min");
+				spannableString.setSpan(new RelativeSizeSpan(0.6f), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				tvETA.append(spannableString);
+				if (expanded && etaLong > 0) {
+					tvETA.setVisibility(View.GONE); //now eta will be shown along drop marker instead
 
-			if (etaMarker == null) {
-				if(googleMap!=null){
-					etaMarker = googleMap.addMarker(getStartPickupLocMarkerOptions(deliveryLatLng, false, String.valueOf(etaLong)));
+					if (etaMarker == null) {
+						if(googleMap!=null){
+							etaMarker = googleMap.addMarker(getStartPickupLocMarkerOptions(deliveryLatLng, false, String.valueOf(etaLong)));
 
+						}
+					} else {
+						etaMarker.setIcon(BitmapDescriptorFactory
+								.fromBitmap(getEtaIconBitmap(String.valueOf(etaLong))));
+					}
+
+				} else {
+//					if (etaMarker != null) {
+//						etaMarker.remove();
+//						etaMarker = null;
+//					}
+					tvETA.setVisibility(View.GONE);
 				}
-			} else {
-				etaMarker.setIcon(BitmapDescriptorFactory
-						.fromBitmap(getEtaIconBitmap(String.valueOf(etaLong))));
-			}
-
-		} else {
-			if (etaMarker != null) {
-				etaMarker.remove();
-				etaMarker = null;
-			}
-			tvETA.setVisibility(View.GONE);
-		}
 //		tvETA.setVisibility((expanded && etaLong > 0) ? View.VISIBLE : View.GONE);
-
-
+			}
+		});
 	}
 
 	private Handler handler = new Handler();
