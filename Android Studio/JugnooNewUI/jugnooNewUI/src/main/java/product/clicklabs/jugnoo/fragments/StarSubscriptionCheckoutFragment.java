@@ -774,6 +774,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     public void onSuccess() {
                         try {
 //                            setPaymentOption(getPaymentOption());
+                            setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
                             orderPaymentModes();
                             setPaymentOptionUI();
                         } catch (Exception e) {
@@ -785,6 +786,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     public void onFailure() {
                         try {
 //                            setPaymentOption(getPaymentOption());
+                            setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
                             orderPaymentModes();
                             setPaymentOptionUI();
                         } catch (Exception e) {
