@@ -137,7 +137,7 @@
     <color name="text_color_light_less">#9d9da3</color>
     <color name="sliding_bottom_bg_color">#FAFBFC</color>
     <color name="text_color_hint">#BCBCBC</color>
-    <color name="text_color_hint_anywhere">#D0D0D0</color>
+    <color name="text_color_hint_anywhere">#B4B4B4</color>
     <color name="nl_white_dark">#E0E0E0</color>
     <color name="menu_item_selector_color">#EEEEEE</color>
     <color name="menu_item_selector_color_F7">#F7F7F7</color>

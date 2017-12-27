@@ -384,7 +384,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             tvTaskDetails.setVisibility(View.VISIBLE);
             llAmount.setVisibility(View.GONE);
             llPaidVia.setVisibility(View.GONE);
-            bNeedHelpFeed.setText(R.string.chat_support);
+            bNeedHelpFeed.setText(R.string.chat);
             getFeedOrderData(activity);
             isFeedOrder = true;
         }else{

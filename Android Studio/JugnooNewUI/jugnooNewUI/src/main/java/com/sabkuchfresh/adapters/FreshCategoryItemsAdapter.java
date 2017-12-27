@@ -107,9 +107,10 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0 && categoryBanners != null && showCategoryBanner == 1) {
-            return BANNER_ITEM;
-        } else if(position == subItems.size()) {
+//        if(position == 0 && categoryBanners != null && showCategoryBanner == 1) {
+//            return BANNER_ITEM;
+//        } else
+        if(position == subItems.size()) {
             return BLANK_ITEM;
         }
         return MAIN_ITEM;

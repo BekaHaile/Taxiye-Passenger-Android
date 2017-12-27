@@ -3216,7 +3216,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             } else {
                                 MarkerAnimation.clearAsyncList();
                                 MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0, 0, 0, true);
+                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0, 0, 0, true, getString(R.string.google_maps_api_server_key));
                             }
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), false));
                         }
@@ -3294,7 +3294,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             } else {
                                 MarkerAnimation.clearAsyncList();
                                 MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0, 0, 0, true);
+                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0, 0, 0, true, getString(R.string.google_maps_api_server_key));
                             }
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
                         }
@@ -5527,7 +5527,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 textView.setHint(R.string.getting_address);
                 RestClient.getGoogleApiService().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                        "en", false, new Callback<SettleUserDebt>() {
+                        "en", false, getString(R.string.google_maps_api_server_key),new Callback<SettleUserDebt>() {
                             @Override
                             public void success(SettleUserDebt settleUserDebt, Response response) {
                                 try {
@@ -6015,7 +6015,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                                                     public void onAnimNotDone() {
 
                                                                                     }
-                                                                                }, false, null, 0, 0, 0, false);
+                                                                                }, false, null, 0, 0, 0, false, getString(R.string.google_maps_api_server_key));
                                                                         updateDriverETAText(passengerScreenMode);
                                                                     }
                                                                 }
@@ -6359,7 +6359,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 source = ridePath != null ? ridePath.getDestinationLatLng() : pickupLatLng;
                             }
                             Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
-                                    Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false);
+                                    Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false, getString(R.string.google_maps_api_server_key));
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
                             if (result != null) {
                                 listPath = MapUtils.getLatLngListFromPath(result);
@@ -6407,7 +6407,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 										MarkerAnimation.animateMarkerOnList(driverMarkerInRide, latLngsListForDriverAnimation,
 												new LatLngInterpolator.LinearFixed(), true, map,
 												RIDE_ELAPSED_PATH_COLOR,
-												untrackedPathColor, ASSL.Xscale() * 7f, null);
+												untrackedPathColor, ASSL.Xscale() * 7f, null, getString(R.string.google_maps_api_server_key), false);
 									} else {
                                         MarkerAnimation.clearPolylines();
                                     }

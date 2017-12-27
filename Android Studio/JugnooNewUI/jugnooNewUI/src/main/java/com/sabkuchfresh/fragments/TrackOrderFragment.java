@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -175,12 +177,22 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 			public void onMapReady(GoogleMap googleMap) {
 				TrackOrderFragment.this.googleMap = googleMap;
 				if (googleMap != null) {
+					// Customise the styling of the base map using a JSON object defined
+					// in a raw resource file.
+					boolean success = googleMap.setMapStyle(
+							MapStyleOptions.loadRawResourceStyle(activity, R.raw.map_style_json));
+
+					if (!success) {
+						Log.e(TAG, "Style parsing failed.");
+						return;
+					}
+
 					googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 					googleMap.setMyLocationEnabled(false);
 					googleMap.getUiSettings().setCompassEnabled(false);
 
 					googleMap.addMarker(getMarkerOptionsForResource(pickupLatLng, R.drawable.restaurant_map_marker, 40f, 40f, 0.5f, 0.5f, 0));
-					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 71f, 83f, 0.15f, 1.0f, 0));
+//					googleMap.addMarker(getMarkerOptionsForResource(deliveryLatLng, R.drawable.delivery_map_marker, 71f, 83f, 0.15f, 1.0f, 0));
 
 					googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 						@Override
@@ -400,7 +412,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 							latLngsWayPoints.add(latLngCurr);
 							latLngsWayPoints.add(latLngDriver);
 							latLngsWayPoints.add(deliveryLatLng);
-							Pair<List<LatLng>, String> pair = apiGoogleDirectionWaypoints.setData(latLngsWayPoints, false).syncHit();
+							Pair<List<LatLng>, String> pair = apiGoogleDirectionWaypoints.setData(latLngsWayPoints, false,activity.getString(R.string.google_maps_api_server_key)).syncHit();
 							final List<LatLng> list = pair.first;
 							final String result = pair.second;
 							activity.runOnUiThread(new Runnable() {
@@ -487,20 +499,31 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 											}
 											polylineOptions2.add(deliveryLatLng);
 
+											// show delivery route fixed to 0 for not showing any path
+											showDeliveryRoute = 0;
+
 											//to animate driver between curr and new points
 											if (positionNearNew > positionNearCurr) {
 												List<LatLng> latLngsAnimateDriver = new ArrayList<LatLng>();
-												double distanceToAnimate = 0; LatLng first = list.get(positionNearCurr);
+												double distanceToAnimate = 0;
+												LatLng pointer = list.get(positionNearCurr),
+														source = list.get(positionNearCurr),
+														dest = list.get(positionNearNew);
 												for (int l = positionNearCurr; l <= positionNearNew; l++) {
 													latLngsAnimateDriver.add(list.get(l));
-													distanceToAnimate = distanceToAnimate + MapUtils.distance(first, list.get(l));
-													first = list.get(l);
+													distanceToAnimate = distanceToAnimate + MapUtils.distance(pointer, list.get(l));
+													pointer = list.get(l);
 												}
+												boolean fastDuration = false;
+												double displacement = MapUtils.distance(source, dest);
 												//maximum distance for marker animation on google path should be less than 1.8times displacement between source and destination
-												if(distanceToAnimate > MapUtils.distance(list.get(positionNearCurr), list.get(positionNearNew-1)) * MarkerAnimation.MAX_DISTANCE_FACTOR_GAPI){
+												if(displacement < MarkerAnimation.MIN_DISTANCE
+														|| displacement > MarkerAnimation.MAX_DISTANCE
+														|| distanceToAnimate > displacement * MarkerAnimation.MAX_DISTANCE_FACTOR_GAPI){
 													latLngsAnimateDriver.clear();
-													latLngsAnimateDriver.add(list.get(positionNearCurr));
-													latLngsAnimateDriver.add(list.get(positionNearNew-1));
+													latLngsAnimateDriver.add(source);
+													latLngsAnimateDriver.add(dest);
+													fastDuration = true;
 												}
 
 
@@ -524,7 +547,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 														new LatLngInterpolator.LinearFixed(), animateRoute, googleMap,
 														pathColor,
 														untrackedPathColor,
-														pathWidth, callbackAnim);
+														pathWidth, callbackAnim, getString(R.string.google_maps_api_server_key), fastDuration);
 												latLngsDriverAnim.clear();
 												latLngsDriverAnim.addAll(latLngsAnimateDriver);
 											} else {
@@ -533,7 +556,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 
 											if (showDeliveryRoute == 1 && list.size() > 0) {
-//												polylinePath1 = googleMap.addPolyline(polylineOptions1);
+												polylinePath1 = googleMap.addPolyline(polylineOptions1);
 												polylinePath2 = googleMap.addPolyline(polylineOptions2);
 											}
 										} catch (Exception e) {
@@ -545,6 +568,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 												GoogleDirectionWayPointsResponse googleDirectionWayPointsResponse = gson.fromJson(result, GoogleDirectionWayPointsResponse.class);
 												Log.i("googleDirectionWayPointsResponse", "=" + googleDirectionWayPointsResponse);
 												setEtaText(getEtaFromResponse(latLngDriver, googleDirectionWayPointsResponse));
+
 											} else {
 												long etaLong = 10;
 												try {
@@ -644,13 +668,38 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	}
 
 
+	private Marker etaMarker;
+	private Bitmap etaMarkerBitmap;
+
 	private void setEtaText(long etaLong) {
 		lastEta = etaLong;
 		tvETA.setText(String.valueOf(etaLong) + "\n");
 		SpannableString spannableString = new SpannableString(etaLong > 1 ? "mins" : "min");
 		spannableString.setSpan(new RelativeSizeSpan(0.6f), 0, spannableString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvETA.append(spannableString);
-		tvETA.setVisibility((expanded && etaLong > 0) ? View.VISIBLE : View.GONE);
+		if (expanded && etaLong > 0) {
+			tvETA.setVisibility(View.GONE); //now eta will be shown along drop marker instead
+
+			if (etaMarker == null) {
+				if(googleMap!=null){
+					etaMarker = googleMap.addMarker(getStartPickupLocMarkerOptions(deliveryLatLng, false, String.valueOf(etaLong)));
+
+				}
+			} else {
+				etaMarker.setIcon(BitmapDescriptorFactory
+						.fromBitmap(getEtaIconBitmap(String.valueOf(etaLong))));
+			}
+
+		} else {
+			if (etaMarker != null) {
+				etaMarker.remove();
+				etaMarker = null;
+			}
+			tvETA.setVisibility(View.GONE);
+		}
+//		tvETA.setVisibility((expanded && etaLong > 0) ? View.VISIBLE : View.GONE);
+
+
 	}
 
 	private Handler handler = new Handler();
@@ -702,4 +751,48 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 			tvETA.setVisibility(View.GONE);
 		}
 	}
+	private final float HOME_MARKER_ZINDEX = 2.0f;
+	public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng, boolean inRide,String eta){
+		MarkerOptions markerOptions = new MarkerOptions();
+		markerOptions.title("Pickup location");
+		markerOptions.snippet("");
+		markerOptions.position(latLng);
+		markerOptions.zIndex(HOME_MARKER_ZINDEX);
+
+		markerOptions.icon(BitmapDescriptorFactory
+				.fromBitmap(getEtaIconBitmap(eta)));
+
+	/*	if(inRide){
+			markerOptions.icon(BitmapDescriptorFactory
+					.fromBitmap(CustomMapMarkerCreator
+							.createPinMarkerBitmapStart(getActivity(), assl)));
+		} else{
+			if(Data.autoData.getDropLatLng() != null){
+				markerOptions.icon(BitmapDescriptorFactory
+						.fromBitmap(CustomMapMarkerCreator
+								.getTextAssignBitmap(getActivity(), assl, eta,
+										getResources().getDimensionPixelSize(R.dimen.text_size_24))));
+			} else{
+				markerOptions.icon(BitmapDescriptorFactory
+						.fromBitmap(CustomMapMarkerCreator
+								.getTextBitmap(getActivity(), assl, eta,
+										getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
+			}
+		}*/
+		return markerOptions;
+	}
+
+	private Bitmap getEtaIconBitmap(String eta) {
+		if(etaMarkerBitmap!=null) {
+			etaMarkerBitmap.recycle();
+		}
+
+		etaMarkerBitmap = CustomMapMarkerCreator
+				.getTextBitmap(getActivity(), assl, eta,
+						getResources().getDimensionPixelSize(R.dimen.text_size_24));
+
+		return etaMarkerBitmap;
+
+	}
+
 }

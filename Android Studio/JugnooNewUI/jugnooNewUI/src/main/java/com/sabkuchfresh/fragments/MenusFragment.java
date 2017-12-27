@@ -71,9 +71,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-/**
- * Created by Shankar on 15/11/16.
- */
+
 public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, GAAction{
     private final String TAG = MenusFragment.class.getSimpleName();
 
@@ -306,11 +304,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             public void keyBoardClosed() {
 
                     isKeyboardOpen = false;
-                    if (!iSChildCategoryOpen() && Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                        activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                    }
-                    activity.getMenusCartSelectedLayout().checkForVisibility();
-                    toggleFatafatChatIconVisibility();
+                    activity.getHandler().postDelayed(onKeyBoardCloseRunnable,200);
+
 
             }
         };
@@ -404,6 +399,17 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         });
         return rootView;
     }
+
+    private Runnable onKeyBoardCloseRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!iSChildCategoryOpen() && Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
+            }
+            activity.getMenusCartSelectedLayout().checkForVisibility();
+            toggleFatafatChatIconVisibility();
+        }
+    };
 
     private MenusData getMenusOrDeliveryData() {
         if (activity.getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER || activity.isDeliveryOpenInBackground()) {
@@ -573,7 +579,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     activity.getTopBar().rlSearch.setVisibility(View.GONE);
                     activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
                     try {
-                        activity.getTopBar().etSearch.setSelection(activity.getTopBar().etSearch.getText().toString().length()-1);
+                        if(!activity.getTopBar().etSearch.getText().toString().equals(searchText)){
+                            activity.getTopBar().etSearch.setText(searchText);
+                            activity.getTopBar().etSearch.setSelection(searchText.length());
+                        }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -614,6 +624,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             } else {
                 activity.unRegisterKeyBoardListener();
                 activity.hideMenusCartSelectedLayout();
+                if(onKeyBoardCloseRunnable!=null){
+                    activity.getHandler().removeCallbacks(onKeyBoardCloseRunnable);
+
+                }
 
             }
             try {
@@ -636,8 +650,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onDestroyView() {
         try {
-
-            deliveryHomeAdapter.removeHandler();
+            if(onKeyBoardCloseRunnable!=null) {
+                activity.getHandler().removeCallbacks(onKeyBoardCloseRunnable);
+            }deliveryHomeAdapter.removeHandler();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -691,6 +706,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             Callback<MenusResponse> callback = new Callback<MenusResponse>() {
                 @Override
                 public void success(final MenusResponse menusResponse, Response response) {
+                    boolean shouldRecallSearchAPI = false;
                     DialogPopup.dismissLoadingDialog();
                     lastTimeRefreshed = System.currentTimeMillis();
                     if (typeApi == TYPE_API_MENUS_ADDRESS_CHANGE || typeApi == TYPE_API_MENUS_CATEGORY_CHANGE) {
@@ -728,7 +744,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     swipeRefreshLayout.setRefreshing(false);
                     activity.getTopBar().setPBSearchVisibility(View.GONE);
 
-                    recallSearch(searchTextCurr);
                     relativeLayoutNoMenus.setVisibility(View.GONE);
                     String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
                     try {
@@ -760,6 +775,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 if (scrollToTop && linearLayoutManager != null) {
                                     linearLayoutManager.scrollToPositionWithOffset(0, 0);
                                 }
+                                shouldRecallSearchAPI = true;
 
                             } else {
                                 if (!searchOpened) {
@@ -772,8 +788,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         exception.printStackTrace();
                         retryDialog(DialogErrorType.SERVER_ERROR, latLng, loader, false, scrollToTop, categoryObject, typeApi);
                     }
-
                     isMenusApiInProgress = false;
+                    if(shouldRecallSearchAPI){
+                        recallSearch(searchTextCurr);
+
+                    }
 
                 }
 
@@ -823,7 +842,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     private boolean serviceUnavailable;
-    private boolean setUpServiceUnavailability(MenusResponse menusResponse) {
+    private void setUpServiceUnavailability(MenusResponse menusResponse) {
         relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0 && menusResponse.getServiceUnavailable() == 1) ? View.VISIBLE : View.GONE);
 
         if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
@@ -852,7 +871,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
         }
         activity.setTitleAlignment(false);
-        return serviceUnavailable;
     }
 
     @NonNull
@@ -1064,6 +1082,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             try {
                 Utils.hideSoftKeyboard(activity, activity.getTopBar().etSearch);
             } catch (Exception e) {
+                e.printStackTrace();
             }
 
         } else {

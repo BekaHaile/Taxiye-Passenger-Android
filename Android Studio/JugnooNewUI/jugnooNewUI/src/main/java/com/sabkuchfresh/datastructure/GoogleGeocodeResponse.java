@@ -16,6 +16,12 @@ public class GoogleGeocodeResponse {
 
     @SerializedName("results")
     public List<Results> results;
+    @SerializedName("error_message")
+    private String errorMessage;
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 
     public class Results {
 
