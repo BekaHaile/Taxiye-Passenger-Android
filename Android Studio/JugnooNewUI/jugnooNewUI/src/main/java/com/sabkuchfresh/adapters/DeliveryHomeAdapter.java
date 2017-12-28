@@ -252,11 +252,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         // service unavailable case
-        if(!isPagination && (menusResponse.getServiceUnavailable() == 1 || (vendorsCount == 0 ))){
+        if(!isPagination && (menusResponse.getServiceUnavailable() == 1 || (vendorsCount == 0))){
             int messageResId = Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()) ?
                     R.string.no_delivery_available_your_location : R.string.no_menus_available_your_location;
-            if (activity.getMenusFragment() != null
-                    && !TextUtils.isEmpty(activity.getMenusFragment().getSearchText())) {
+            if (activity.getMenusFragment() != null && activity.getMenusFragment().searchOpened) {
                 messageResId = R.string.oops_no_results_found;
             } else if (activity.isFilterApplied()) {
                 messageResId = R.string.no_menus_available_with_these_filters;
