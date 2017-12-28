@@ -103,7 +103,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	private Activity activity;
 	private boolean expanded;
 	private long lastEta;
-	private float padding = 140f;
+	private float padding = 30f;
 	private boolean tiltState = false;
 
 
@@ -231,7 +231,13 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 					};
 
 					setEtaText(-1);
-					setMapPaddingAndMoveCamera();
+
+					if(expanded){
+						setPaddingZero();
+					}else{
+						setPaddingSome();
+					}
+//					setMapPaddingAndMoveCamera();
 
 
 					if (!TextUtils.isEmpty(driverPhoneNo)) {
@@ -262,6 +268,11 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	public void setMapPaddingAndMoveCamera(){
 		if(googleMap != null && rootHeight > 0) {
 			expanded = !tiltState;
+			if(expanded){
+				padding = 140f;
+			}else{
+				padding = 80f;
+			}
 			googleMap.setPadding(0, 0, 0, expanded ? 0 : (rootHeight - initialHeight));
 
 			try {
@@ -303,7 +314,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 					}
 				}
 
-				int duration = zoomDuration > 0 ? zoomDuration : (!zoomedFirstTime?1000:2000);
+				int duration = zoomDuration > 0 ? zoomDuration : (!zoomedFirstTime?500:500);
 				googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), duration, null);
 			} else {
 				Utils.showToast(activity, getString(R.string.waiting_for_location));
@@ -743,21 +754,32 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 	public void setPaddingZero(){
 		if(googleMap != null) {
+			padding = 140f;
 			expanded = true;
 			googleMap.setPadding(0, 0, 0, 0);
 			tiltState = false;
-			zoomToDriverAndDrop(null, 0);
-			setEtaText(lastEta);
+			zoomToDriverAndDrop(null,0);
+
+//            googleMap.animateCamera(CameraUpdateFactory.scrollBy(0.0f,-initialHeight));
+//			zoomToDriverAndDrop(null,0);
+			/*zoomToDriverAndDrop(null, 0);
+			setEtaText(lastEta);*/
 		}
 	}
 
 	public void setPaddingSome(){
 		if(googleMap != null) {
+			padding = 80f;
 			expanded = false;
-			googleMap.setPadding(0, 0, 0, rootHeight - initialHeight);
+			googleMap.setPadding(0, 0, 0, (rootHeight - initialHeight));
 			tiltState = true;
-			zoomToDriverAndDrop(null, 0);
-			tvETA.setVisibility(View.GONE);
+			zoomToDriverAndDrop(null,0);
+
+//			googleMap.animateCamera(CameraUpdateFactory.scrollBy(0.0f,initialHeight));
+//			zoomToDriverAndDrop(null,0);
+
+			/*zoomToDriverAndDrop(null, 0);
+			tvETA.setVisibility(View.GONE);*/
 		}
 	}
 	private final float HOME_MARKER_ZINDEX = 2.0f;
