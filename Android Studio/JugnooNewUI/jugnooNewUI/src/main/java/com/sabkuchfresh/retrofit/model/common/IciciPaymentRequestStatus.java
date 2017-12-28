@@ -19,8 +19,14 @@ public class IciciPaymentRequestStatus {
     private String error;
     @SerializedName("is_menus")
     private int isMenus;
+    @SerializedName("is_feed")
+    private int isFeed;
     @SerializedName("toast_message")
     private String toastMessage;
+
+    public boolean getIsFeed() {
+        return isFeed==1;
+    }
 
     public String getToastMessage() {
         return toastMessage;
@@ -39,14 +45,17 @@ public class IciciPaymentRequestStatus {
     }
 
     public IciciPaymentOrderStatus getStatus() {
-        return parseStatus(getIsMenus(),status);
+        return parseStatus(getIsMenus(),status, getIsFeed());
 
 
 
 
     }
 
-    public static IciciPaymentOrderStatus parseStatus(boolean isMenus,int status){
+    public static IciciPaymentOrderStatus parseStatus(boolean isMenus, int status, final boolean isFeed){
+
+
+
         if(isMenus){
             if(status==-8)
                 return IciciPaymentOrderStatus.PENDING;
@@ -61,7 +70,19 @@ public class IciciPaymentRequestStatus {
             else
                 return IciciPaymentOrderStatus.PROCESSED;
 
-        }else{
+        } else if(isFeed){
+            if(status==0)
+                return IciciPaymentOrderStatus.PENDING;
+            else if (status==4)
+                return IciciPaymentOrderStatus.CANCELLED;
+            else if(status ==2)
+                return IciciPaymentOrderStatus.FAILURE;
+            else if(status==1)
+                return IciciPaymentOrderStatus.COMPLETED;
+            else
+                return IciciPaymentOrderStatus.PENDING;
+        }
+        else{
             if(status==10)
                 return IciciPaymentOrderStatus.PENDING;
             else if (status==3)

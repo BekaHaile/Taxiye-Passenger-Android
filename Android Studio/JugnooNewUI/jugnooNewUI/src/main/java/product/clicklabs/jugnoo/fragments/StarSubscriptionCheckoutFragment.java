@@ -452,7 +452,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             if(orderStatus!=Constants.NO_VALID_STATUS){
                 //Only if the payment is processing corresponding to that order ID
                 if(getPlaceOrderResponse()!=null && getPlaceOrderResponse().getOrderId()==intent.getIntExtra(Constants.KEY_ORDER_ID,0)) {
-                    onIciciStatusResponse(IciciPaymentRequestStatus.parseStatus(intent.getBooleanExtra(Constants.IS_MENUS_OR_DELIVERY, false), orderStatus),
+                    onIciciStatusResponse(IciciPaymentRequestStatus.parseStatus(intent.getBooleanExtra(Constants.IS_MENUS_OR_DELIVERY, false), orderStatus, isFromFatafatChat),
                             intent.hasExtra(Constants.KEY_MESSAGE) ? intent.getStringExtra(Constants.KEY_MESSAGE) : "");
                 }
 
