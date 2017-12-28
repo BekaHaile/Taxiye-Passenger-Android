@@ -1678,10 +1678,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
                     String clientId; int productType;
 
-                    // if we come from fatafat chat pay, then return feed client id and MENUS product type ( api hosted on menus only )
+                    // if we come from fatafat chat pay, then return feed client id and Feed product type ( api hosted on fatafat )
                     if(isFromFatafatChat){
                         clientId = Config.getFeedClientId();
-                        productType = ProductType.MENUS.getOrdinal();
+                        productType = ProductType.FEED.getOrdinal();
                     }
                     else {
                         clientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
