@@ -1736,21 +1736,6 @@
     <init>(...);
 }
 
-# view AndroidManifest.xml #generated:429
--keep class com.clevertap.android.sdk.FcmMessageListenerService {
-    <init>(...);
-}
-
-# view AndroidManifest.xml #generated:424
--keep class com.clevertap.android.sdk.FcmTokenListenerService {
-    <init>(...);
-}
-
-# view AndroidManifest.xml #generated:439
--keep class com.clevertap.android.sdk.InAppNotificationActivity {
-    <init>(...);
-}
-
 # view res/layout/item_feed_comment.xml #generated:11
 -keep class com.daimajia.swipe.SwipeLayout {
     <init>(...);

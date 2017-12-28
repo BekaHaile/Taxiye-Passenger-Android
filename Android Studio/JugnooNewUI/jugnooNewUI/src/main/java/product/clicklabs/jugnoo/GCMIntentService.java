@@ -28,8 +28,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.clevertap.android.sdk.CleverTapAPI;
-import com.clevertap.android.sdk.NotificationInfo;
 import com.fugu.FuguNotificationConfig;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -390,12 +388,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 					extras.putString(entry.getKey(), entry.getValue());
 				}
 
-				NotificationInfo info = CleverTapAPI.getNotificationInfo(extras);
-				//Logger.logFine("FcmMessageListenerService: "+ info.toString());
-
-				if (info.fromCleverTap) {
-					CleverTapAPI.createNotification(getApplicationContext(), extras);
-				}
 			}
 		} catch (Throwable t) {
 			//Logger.logFine("Error parsing FCM message", t);

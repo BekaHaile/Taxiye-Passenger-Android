@@ -7435,31 +7435,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                             GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
                                                     confirmedScreenOpened = false;
                                                     specialPickupScreenOpened = false;
-                                                    String offerCode = "NA";
-                                                    if (promoCouponSelectedForRide != null) {
-                                                        if (promoCouponSelectedForRide instanceof CouponInfo) {
-                                                            offerCode = ""+((CouponInfo) promoCouponSelectedForRide).title + " "+((CouponInfo) promoCouponSelectedForRide).subtitle;
-                                                        } else if (promoCouponSelectedForRide instanceof PromotionInfo) {
-                                                            offerCode = ""+((PromotionInfo) promoCouponSelectedForRide).title;
-                                                        }
-                                                    } else {
-                                                        offerCode = "NA";
-                                                    }
-
-                                                    //For Clever Tap
-                                                    MyApplication.getInstance().getCleverTapUtils().
-                                                            rideRequested(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType(),
-                                                                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType(),
-                                                                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor(),
-                                                                    offerCode, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
-                                                                    Data.userData.getCity());
-
-                                                    if(!offerCode.equalsIgnoreCase("NA")) {
-                                                        HashMap<String, Object> profileUpdate = new HashMap<>();
-                                                        profileUpdate.put(Events.COUPONS_USED, offerCode);
-                                                        MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
-                                                    }
-
                                                     if(Data.autoData.getPickupPaymentOption() != PaymentOption.CASH.getOrdinal()) {
                                                         Prefs.with(HomeActivity.this).save(SP_LAST_USED_WALLET, Data.autoData.getPickupPaymentOption());
                                                     }

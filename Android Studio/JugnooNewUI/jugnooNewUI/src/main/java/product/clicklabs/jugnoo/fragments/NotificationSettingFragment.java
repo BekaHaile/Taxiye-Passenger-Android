@@ -115,16 +115,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                         try {
                             if (notificationPrefResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 settingAdapter.setResults((ArrayList<NotificationSettingResponseModel.NotificationPrefData>) notificationPrefResponse.getData());
-                                try {
-                                    HashMap<String, Object> profileUpdate = new HashMap<>();
-                                    for(NotificationSettingResponseModel.NotificationPrefData notificationPrefData : notificationPrefResponse.getData()) {
-                                        updateClevertapMap(notificationPrefData, profileUpdate);
-                                        profileUpdate.put(notificationPrefData.getTitle(), notificationPrefData.getStatus());
-                                    }
-                                    MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -202,9 +193,6 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                             if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 settingAdapter.getNotificationPrefDatas().get(position).setStatus(status);
                                 settingAdapter.notifyDataSetChanged();
-                                HashMap<String, Object> profileUpdate = new HashMap<>();
-                                updateClevertapMap(settingAdapter.getNotificationPrefDatas().get(position), profileUpdate);
-                                MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
                                 GAUtils.event(SIDE_MENU, INBOX+SET_PREFERENCES, name+" "+TOGGLED);
                             } else if(!TextUtils.isEmpty(notificationInboxResponse.getMessage())) {
                                 DialogPopup.alertPopup(activity, "", notificationInboxResponse.getMessage());
@@ -257,23 +245,5 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
         updateNotificationPreferenceStatus(datum.getName(), status, position);
     }
 
-    private void updateClevertapMap(NotificationSettingResponseModel.NotificationPrefData notificationPrefData, HashMap<String, Object> profileUpdate){
-        if(notificationPrefData.getName().equalsIgnoreCase(Constants.AUTOS_PUSH)){
-            profileUpdate.put(Events.IS_PUSH_AUTOS_ENABLED, notificationPrefData.getStatus());
-        } else if(notificationPrefData.getName().equalsIgnoreCase(Constants.MEALS_PUSH)){
-            profileUpdate.put(Events.IS_PUSH_MEALS_ENABLED, notificationPrefData.getStatus());
-        } else if(notificationPrefData.getName().equalsIgnoreCase(Constants.FRESH_PUSH)){
-            profileUpdate.put(Events.IS_PUSH_FRESH_ENABLED, notificationPrefData.getStatus());
-        }else if(notificationPrefData.getName().toLowerCase().contains(Constants.KEY_GROCERY)){
-            profileUpdate.put(Events.IS_PUSH_GROCERY_ENABLED, notificationPrefData.getStatus());
-        } else if(notificationPrefData.getName().toLowerCase().contains(Constants.KEY_MENUS)){
-            profileUpdate.put(Events.IS_PUSH_MENUS_ENABLED, notificationPrefData.getStatus());
-        } else if(notificationPrefData.getName().toLowerCase().contains(Constants.KEY_DELIVERY_CUSTOMER)){
-            profileUpdate.put(Events.IS_PUSH_DELIVERY_CUSTOMER_ENABLED, notificationPrefData.getStatus());
-        } else if(notificationPrefData.getName().toLowerCase().contains(Constants.KEY_PAY)){
-            profileUpdate.put(Events.IS_PUSH_PAY_ENABLED, notificationPrefData.getStatus());
-        } else if(notificationPrefData.getName().toLowerCase().contains(Constants.KEY_FEED)){
-            profileUpdate.put(Events.IS_PUSH_FEED_ENABLED, notificationPrefData.getStatus());
-        }
-    }
+
 }
