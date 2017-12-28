@@ -41,13 +41,6 @@ public class PaymentResponse extends FeedCommonResponse{
 		@SerializedName("razorpay_payment_object")
 		@Expose
 		private RazorpayData razorpayData;
-		@SerializedName("icici")
-		@Expose
-		private PlaceOrderResponse.IciciUpi icici;
-
-		public PlaceOrderResponse.IciciUpi getIcici() {
-			return icici;
-		}
 
 		public Integer getEngagementId() {
 			return engagementId;
@@ -125,6 +118,13 @@ public class PaymentResponse extends FeedCommonResponse{
 		@SerializedName("message")
 		@Expose
 		private String message;
+		@SerializedName("icici")
+		@Expose
+		private PlaceOrderResponse.IciciUpi icici;
+
+		public PlaceOrderResponse.IciciUpi getIcici() {
+			return icici;
+		}
 
 		public double getAmount() {
 			return amount;

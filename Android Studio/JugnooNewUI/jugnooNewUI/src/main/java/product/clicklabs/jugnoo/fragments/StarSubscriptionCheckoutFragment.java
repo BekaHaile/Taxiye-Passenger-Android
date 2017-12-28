@@ -452,7 +452,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             if(orderStatus!=Constants.NO_VALID_STATUS){
                 //Only if the payment is processing corresponding to that order ID
                 if(getPlaceOrderResponse()!=null && getPlaceOrderResponse().getOrderId()==intent.getIntExtra(Constants.KEY_ORDER_ID,0)) {
-                    onIciciStatusResponse(IciciPaymentRequestStatus.parseStatus(intent.getBooleanExtra(Constants.IS_MENUS_OR_DELIVERY, false), orderStatus),
+                    onIciciStatusResponse(IciciPaymentRequestStatus.parseStatus(intent.getBooleanExtra(Constants.IS_MENUS_OR_DELIVERY, false), orderStatus, isFromFatafatChat),
                             intent.hasExtra(Constants.KEY_MESSAGE) ? intent.getStringExtra(Constants.KEY_MESSAGE) : "");
                 }
 
@@ -1375,17 +1375,17 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                             fatafatChatOrderPaidSuccess();
                                         } else if(getPaymentOption()==PaymentOption.ICICI_UPI){
 
-                                            if(response.getData().getIcici()!=null){
+                                            if(paymentData.getIcici()!=null){
                                                 // Icici Upi Payment Initiated, prepare the order response and add extra key for fatafat chat
                                                 PlaceOrderResponse placeOrderResponse = new PlaceOrderResponse();
                                                 placeOrderResponse.setAmount(paymentData.getAmount());
                                                 placeOrderResponse.setOrderId(orderId);
-                                                placeOrderResponse.setIcici(response.getData().getIcici());
+                                                placeOrderResponse.setIcici(paymentData.getIcici());
                                                 placeOrderResponse.setPaymentMode(String.valueOf(PaymentOption.ICICI_UPI.getOrdinal()));
                                                 placeOrderResponse.setPayViaFatafatChat(true);
 
                                                 setPlaceOrderResponse(placeOrderResponse);
-                                                onIciciUpiPaymentInitiated(response.getData().getIcici(),String.valueOf(paymentData.getAmount()));
+                                                onIciciUpiPaymentInitiated(paymentData.getIcici(),String.valueOf(paymentData.getAmount()));
                                             }
                                             else {
                                                 //handle success
@@ -1678,10 +1678,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
                     String clientId; int productType;
 
-                    // if we come from fatafat chat pay, then return feed client id and MENUS product type ( api hosted on menus only )
+                    // if we come from fatafat chat pay, then return feed client id and Feed product type ( api hosted on fatafat )
                     if(isFromFatafatChat){
                         clientId = Config.getFeedClientId();
-                        productType = ProductType.MENUS.getOrdinal();
+                        productType = ProductType.FEED.getOrdinal();
                     }
                     else {
                         clientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId());
@@ -1713,6 +1713,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     }
 
     private void onIciciUpiPaymentInitiated(PlaceOrderResponse.IciciUpi icici, String amount) {
+        checkoutRequestPaymentDialog=null;
         currentStatus=null;
         isIciciPaymentRunnableInProgress = true;
         TOTAL_EXPIRY_TIME_ICICI_UPI = icici.getExpirationTimeMillis();
@@ -1741,6 +1742,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
                     Toast.makeText(activity, toastMessage, Toast.LENGTH_SHORT).show();
                     Data.deleteCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED);
+                    slideInitialDelay();
                     break;
                 case SUCCESSFUL:
                 case PROCESSED:
@@ -1753,8 +1755,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
 
                     //handle success
+                    slideInitialDelay();
                     fatafatChatOrderPaidSuccess();
                     Data.deleteCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED);
+
 
                     break;
                 case PENDING:

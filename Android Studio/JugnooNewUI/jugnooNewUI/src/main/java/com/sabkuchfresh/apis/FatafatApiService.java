@@ -8,6 +8,7 @@ import java.util.Map;
 
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -41,4 +42,9 @@ public interface FatafatApiService {
     @FormUrlEncoded
     @POST("/pay_for_order")
     void payForOrder(@FieldMap Map<String, String> params, Callback<PaymentResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/cancel_payment")
+    void cancelPayment(@FieldMap Map<String, String> params,
+                     Callback<SettleUserDebt> callback);
 }

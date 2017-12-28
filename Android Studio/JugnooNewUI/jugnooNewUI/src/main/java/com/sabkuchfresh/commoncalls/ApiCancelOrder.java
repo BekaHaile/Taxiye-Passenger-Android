@@ -95,6 +95,9 @@ public class ApiCancelOrder {
 				new HomeUtil().putDefaultParams(params);
 				if (productType == ProductType.MENUS.getOrdinal() || productType == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
 					RestClient.getMenusApiService().cancelOrder(params, callback);
+				} else if(productType == ProductType.FEED.getOrdinal()) {
+					// if we come from feed, hit fatafat service base ( valid for pay via chat )
+					RestClient.getFatafatApiService().cancelPayment(params,callback);
 				} else {
 					RestClient.getFreshApiService().cancelOrder(params, callback);
 				}
