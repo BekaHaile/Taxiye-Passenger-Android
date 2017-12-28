@@ -21,7 +21,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RazorpayBaseActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -48,7 +47,7 @@ public class FatafatChatPayActivity extends RazorpayBaseActivity implements View
             // check for upi pending, if yes open checkout
             if (extras.containsKey(Constants.KEY_IS_UPI_PENDING) &&
                     Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED) != null) {
-                PlaceOrderResponse placeOrderResponse = Data.getCurrentIciciUpiTransaction(ProductType.FEED.getOrdinal());
+                PlaceOrderResponse placeOrderResponse = Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED);
                 orderId = placeOrderResponse.getOrderId();
                 amount = placeOrderResponse.getAmount();
                 isUPIOrderPending = true;
