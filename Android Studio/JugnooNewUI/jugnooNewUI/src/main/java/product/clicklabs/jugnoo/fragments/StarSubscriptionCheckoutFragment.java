@@ -1375,17 +1375,17 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                                             fatafatChatOrderPaidSuccess();
                                         } else if(getPaymentOption()==PaymentOption.ICICI_UPI){
 
-                                            if(response.getData().getIcici()!=null){
+                                            if(paymentData.getIcici()!=null){
                                                 // Icici Upi Payment Initiated, prepare the order response and add extra key for fatafat chat
                                                 PlaceOrderResponse placeOrderResponse = new PlaceOrderResponse();
                                                 placeOrderResponse.setAmount(paymentData.getAmount());
                                                 placeOrderResponse.setOrderId(orderId);
-                                                placeOrderResponse.setIcici(response.getData().getIcici());
+                                                placeOrderResponse.setIcici(paymentData.getIcici());
                                                 placeOrderResponse.setPaymentMode(String.valueOf(PaymentOption.ICICI_UPI.getOrdinal()));
                                                 placeOrderResponse.setPayViaFatafatChat(true);
 
                                                 setPlaceOrderResponse(placeOrderResponse);
-                                                onIciciUpiPaymentInitiated(response.getData().getIcici(),String.valueOf(paymentData.getAmount()));
+                                                onIciciUpiPaymentInitiated(paymentData.getIcici(),String.valueOf(paymentData.getAmount()));
                                             }
                                             else {
                                                 //handle success
