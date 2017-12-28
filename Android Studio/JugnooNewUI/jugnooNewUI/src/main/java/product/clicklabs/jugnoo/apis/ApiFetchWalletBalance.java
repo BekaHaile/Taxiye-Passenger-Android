@@ -43,7 +43,8 @@ public class ApiFetchWalletBalance {
 		this.callback = callback;
 	}
 
-	public void getBalance(final boolean showDialog) {
+
+	public void getBalance(final boolean showDialog, final boolean isFromFatafatChatPay){
 		try {
 			if (MyApplication.getInstance().isOnline()) {
 
@@ -54,7 +55,7 @@ public class ApiFetchWalletBalance {
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-				params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
+				params.put(Constants.KEY_CLIENT_ID, isFromFatafatChatPay? Config.getFeedClientId():Config.getLastOpenedClientId(activity));
 				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
 				final long startTime = System.currentTimeMillis();
@@ -110,6 +111,10 @@ public class ApiFetchWalletBalance {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void getBalance(final boolean showDialog) {
+		getBalance(showDialog,false);
 	}
 
 	private void retryDialog(DialogErrorType dialogErrorType){
