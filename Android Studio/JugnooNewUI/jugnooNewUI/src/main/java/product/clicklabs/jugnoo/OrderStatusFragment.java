@@ -235,7 +235,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 } else if(newState == BottomSheetBehavior.STATE_EXPANDED) {
                     TrackOrderFragment fragment = getTrackOrderFragment();
                     if(fragment != null){
-                        fragment.setPaddingSome();
+                        fragment.setPaddingSome(false);
                     }
                 }
             }
@@ -250,7 +250,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         rlOrderStatusMapPeek.setBackgroundColor(ContextCompat.getColor(activity, R.color.offer_popup_item_color));
         llShadowPeek = (LinearLayout) rootView.findViewById(R.id.llShadowPeek);
         llShadowPeek.setVisibility(View.GONE);
-        llShadowPeekHeight = activity.getResources().getDimensionPixelSize(R.dimen.dp_172);
+        llShadowPeekHeight = activity.getResources().getDimensionPixelSize(R.dimen.dp_130);
         rlContainer = (RelativeLayout) rootView.findViewById(R.id.rlContainer);
         rlContainer.setVisibility(View.GONE);
         llShadowPeek.setOnClickListener(new View.OnClickListener() {

@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -25,6 +26,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -160,7 +162,9 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 			@Override
 			public void run() {
 				rootHeight = rlMapContainer.getMeasuredHeight();
-				setMapPaddingAndMoveCamera();
+				loadMap();
+
+//				setMapPaddingAndMoveCamera();
 			}
 		});
 
@@ -172,6 +176,21 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		bCallDriver = (LinearLayout) rootView.findViewById(R.id.bCallDriver);
 		bCallDriver.setVisibility(View.GONE);
 
+
+
+		bMyLocation.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				zoomToDriverAndDrop(null, 0);
+			}
+		});
+
+		LocalBroadcastManager.getInstance(activity).registerReceiver(orderUpdateBroadcast, new IntentFilter(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE));
+
+		return rootView;
+	}
+
+	private void loadMap() {
 		((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.googleMap)).getMapAsync(new OnMapReadyCallback() {
 			@Override
 			public void onMapReady(GoogleMap googleMap) {
@@ -232,10 +251,12 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 					setEtaText(-1);
 
-					if(expanded){
-						setPaddingZero();
-					}else{
-						setPaddingSome();
+					if (rootHeight>0) {
+						if(expanded){
+                            setPaddingZero();
+                        }else{
+                            setPaddingSome(true);
+                        }
 					}
 //					setMapPaddingAndMoveCamera();
 
@@ -252,17 +273,6 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 				}
 			}
 		});
-
-		bMyLocation.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				zoomToDriverAndDrop(null, 0);
-			}
-		});
-
-		LocalBroadcastManager.getInstance(activity).registerReceiver(orderUpdateBroadcast, new IntentFilter(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE));
-
-		return rootView;
 	}
 
 	public void setMapPaddingAndMoveCamera(){
@@ -271,7 +281,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 			if(expanded){
 				padding = 140f;
 			}else{
-				padding = 80f;
+				padding = 30f;
 			}
 			googleMap.setPadding(0, 0, 0, expanded ? 0 : (rootHeight - initialHeight));
 
@@ -294,25 +304,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	private void zoomToDriverAndDrop(LatLng latLngDriverAnim, int zoomDuration){
 		try {
 			if (googleMap != null) {
-				LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
-				llbBuilder.include(deliveryLatLng);
-				if(markerDriver != null) {
-					if(latLngDriverAnim == null) {
-						llbBuilder.include(markerDriver.getPosition());
-					}
-				} else {
-					llbBuilder.include(pickupLatLng);
-				}
-
-				if(latLngDriverAnim != null) {
-					llbBuilder.include(latLngDriverAnim);
-				}
-
-				if(polylinePath2 != null) {
-					for (LatLng latLng : polylinePath2.getPoints()) {
-						llbBuilder.include(latLng);
-					}
-				}
+				LatLngBounds.Builder llbBuilder = getLatLongBuilderForZoomLevel(latLngDriverAnim);
 
 				int duration = zoomDuration > 0 ? zoomDuration : (!zoomedFirstTime?500:500);
 				googleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(llbBuilder), (int) (padding * ASSL.minRatio())), duration, null);
@@ -322,6 +314,30 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@NonNull
+	private LatLngBounds.Builder getLatLongBuilderForZoomLevel(LatLng latLngDriverAnim) {
+		LatLngBounds.Builder llbBuilder = new LatLngBounds.Builder();
+		llbBuilder.include(deliveryLatLng);
+		if(markerDriver != null) {
+            if(latLngDriverAnim == null) {
+                llbBuilder.include(markerDriver.getPosition());
+            }
+        } else {
+            llbBuilder.include(pickupLatLng);
+        }
+
+		if(latLngDriverAnim != null) {
+            llbBuilder.include(latLngDriverAnim);
+        }
+
+		if(polylinePath2 != null) {
+            for (LatLng latLng : polylinePath2.getPoints()) {
+                llbBuilder.include(latLng);
+            }
+        }
+		return llbBuilder;
 	}
 
 	@Override
@@ -710,12 +726,12 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 				}
 				if (etaMarker == null) {
 					if(googleMap!=null){
-						etaMarker = googleMap.addMarker(getStartPickupLocMarkerOptions(deliveryLatLng, false,etaLong>0? String.valueOf(etaLong):"--"));
+						etaMarker = googleMap.addMarker(getStartPickupLocMarkerOptions(deliveryLatLng, false,etaLong>0? String.valueOf(etaLong):null));
 
 					}
 				} else {
 					etaMarker.setIcon(BitmapDescriptorFactory
-							.fromBitmap(getEtaIconBitmap(String.valueOf(etaLong))));
+							.fromBitmap(getEtaIconBitmap(etaLong>0? String.valueOf(etaLong):null)));
 				}
 				tvETA.setVisibility(View.GONE);
 			}
@@ -767,13 +783,20 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		}
 	}
 
-	public void setPaddingSome(){
+	public void setPaddingSome(boolean isMapJustInitialised){
 		if(googleMap != null) {
-			padding = 80f;
+			padding = 30f;
 			expanded = false;
 			googleMap.setPadding(0, 0, 0, (rootHeight - initialHeight));
 			tiltState = true;
-			zoomToDriverAndDrop(null,0);
+
+			if(isMapJustInitialised){
+				googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(getMapLatLngBounds(getLatLongBuilderForZoomLevel(null)), (int) (padding * ASSL.minRatio())));
+
+			}else{
+				zoomToDriverAndDrop(null,0);
+
+			}
 
 //			googleMap.animateCamera(CameraUpdateFactory.scrollBy(0.0f,initialHeight));
 //			zoomToDriverAndDrop(null,0);
@@ -802,7 +825,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 		etaMarkerBitmap = CustomMapMarkerCreator
 				.getTextBitmap(getActivity(), assl, eta,
-						getResources().getDimensionPixelSize(R.dimen.text_size_24));
+						getResources().getDimensionPixelSize(R.dimen.text_size_22));
 
 		return etaMarkerBitmap;
 
