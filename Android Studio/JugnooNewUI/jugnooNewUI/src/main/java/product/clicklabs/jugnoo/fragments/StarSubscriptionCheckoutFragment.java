@@ -1742,6 +1742,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
                     Toast.makeText(activity, toastMessage, Toast.LENGTH_SHORT).show();
                     Data.deleteCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED);
+                    slideInitialDelay();
                     break;
                 case SUCCESSFUL:
                 case PROCESSED:
@@ -1754,8 +1755,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
 
                     //handle success
+                    slideInitialDelay();
                     fatafatChatOrderPaidSuccess();
                     Data.deleteCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED);
+
 
                     break;
                 case PENDING:
