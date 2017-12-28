@@ -104,8 +104,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	private View rootView;
 	private Activity activity;
 	private boolean expanded;
-	private long lastEta;
-	private float padding = 30f;
+	private float padding = 50f;
 	private boolean tiltState = false;
 
 
@@ -249,7 +248,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 						}
 					};
 
-					setEtaText(-1);
+					initEtaMarker(-1);
 
 					if (rootHeight>0) {
 						if(expanded){
@@ -281,7 +280,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 			if(expanded){
 				padding = 140f;
 			}else{
-				padding = 30f;
+				padding = 50f;
 			}
 			googleMap.setPadding(0, 0, 0, expanded ? 0 : (rootHeight - initialHeight));
 
@@ -721,21 +720,23 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 			@Override
 			public void run() {
 				if(etaLong>0){
-					lastEta = etaLong;
-
-				}
-				if (etaMarker == null) {
-					if(googleMap!=null){
-						etaMarker = googleMap.addMarker(getStartPickupLocMarkerOptions(deliveryLatLng, false,etaLong>0? String.valueOf(etaLong):null));
-
+					if (etaMarker == null) {
+						initEtaMarker(etaLong);
+					} else {
+						etaMarker.setIcon(BitmapDescriptorFactory
+								.fromBitmap(getEtaIconBitmap(String.valueOf(etaLong))));
 					}
-				} else {
-					etaMarker.setIcon(BitmapDescriptorFactory
-							.fromBitmap(getEtaIconBitmap(etaLong>0? String.valueOf(etaLong):null)));
 				}
-				tvETA.setVisibility(View.GONE);
+
 			}
 		});
+	}
+
+	private void initEtaMarker(long etaLong) {
+		if(googleMap!=null){
+            etaMarker = googleMap.addMarker(getStartPickupLocMarkerOptions(deliveryLatLng, false,etaLong>0?String.valueOf(etaLong):null));
+
+        }
 	}
 
 	private Handler handler = new Handler();
@@ -785,9 +786,9 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 	public void setPaddingSome(boolean isMapJustInitialised){
 		if(googleMap != null) {
-			padding = 30f;
+			padding = 50f;
 			expanded = false;
-			googleMap.setPadding(0, 0, 0, (rootHeight - initialHeight));
+			googleMap.setPadding(15, 15, 15, (rootHeight - initialHeight));
 			tiltState = true;
 
 			if(isMapJustInitialised){
