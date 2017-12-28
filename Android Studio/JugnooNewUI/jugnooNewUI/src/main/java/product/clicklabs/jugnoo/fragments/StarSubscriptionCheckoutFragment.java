@@ -1713,6 +1713,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     }
 
     private void onIciciUpiPaymentInitiated(PlaceOrderResponse.IciciUpi icici, String amount) {
+        checkoutRequestPaymentDialog=null;
         currentStatus=null;
         isIciciPaymentRunnableInProgress = true;
         TOTAL_EXPIRY_TIME_ICICI_UPI = icici.getExpirationTimeMillis();
