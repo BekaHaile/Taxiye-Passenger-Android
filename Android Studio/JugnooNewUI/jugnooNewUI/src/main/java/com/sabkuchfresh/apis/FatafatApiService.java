@@ -44,7 +44,7 @@ public interface FatafatApiService {
     void payForOrder(@FieldMap Map<String, String> params, Callback<PaymentResponse> callback);
 
     @FormUrlEncoded
-    @POST("/cancel_order")
-    void cancelOrder(@FieldMap Map<String, String> params,
+    @POST("/cancel_payment")
+    void cancelPayment(@FieldMap Map<String, String> params,
                      Callback<SettleUserDebt> callback);
 }
