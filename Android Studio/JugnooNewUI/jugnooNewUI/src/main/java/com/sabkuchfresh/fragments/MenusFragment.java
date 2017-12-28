@@ -578,6 +578,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 if(searchOpened){
                     activity.getTopBar().rlSearch.setVisibility(View.GONE);
                     activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
+                    activity.getTopBar().getLlTopBarDeliveryAddress().setVisibility(View.GONE);
+
                     try {
                         if(!activity.getTopBar().etSearch.getText().toString().equals(searchText)){
                             activity.getTopBar().etSearch.setText(searchText);

@@ -248,7 +248,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 						}
 					};
 
-					initEtaMarker(-1);
+					initEtaMarker(null,null);
 
 					if (rootHeight>0) {
 						if(expanded){
@@ -611,9 +611,22 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 											activity.getString(R.string.google_maps_api_server_key));
 									JSONObject jObjDM = new JSONObject(new String(((TypedByteArray)responseDM.getBody()).getBytes()));
 									if(jObjDM.getString("status").equals("OK")){
-										long minutes = (long) (jObjDM.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("duration").getDouble("value") / 60);
-										Log.v("distanceMatrix api", "eta = "+minutes);
-										setEtaText(minutes);
+										String durationText =  (jObjDM.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("duration").getString("text") );
+										String durations[] = durationText.split(" ");
+										if(destination.length()>1){
+											setEtaText(durations[0],durations[1]);
+										}else{
+											long minutes =  (jObjDM.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("duration").getLong("text") );
+											if(minutes>1){
+												minutes = minutes/60;
+											}
+											setEtaText(String.valueOf(minutes),"min");
+
+										}
+
+
+
+
 									} else {
 										throw new Exception();
 									}
@@ -621,13 +634,13 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 //									Log.i("googleDirectionWayPointsResponse", "=" + googleDirectionWayPointsResponse);
 //									setEtaText(getEtaFromResponse(latLngDriver, googleDirectionWayPointsResponse));
 								} else {
-									long etaLong = 10;
+								/*	long etaLong = 10;
 									try {
 										etaLong = Long.getLong(eta);
 									} catch (Exception e) {
 										e.printStackTrace();
-									}
-									setEtaText(etaLong);
+									}*/
+									setEtaText(null,null);
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -715,16 +728,16 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	private Marker etaMarker;
 	private Bitmap etaMarkerBitmap;
 
-	private void setEtaText(final long etaLong) {
+	private void setEtaText(final String value, final String suffix) {
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if(etaLong>0){
+				if(value!=null){
 					if (etaMarker == null) {
-						initEtaMarker(etaLong);
+						initEtaMarker(value,suffix);
 					} else {
 						etaMarker.setIcon(BitmapDescriptorFactory
-								.fromBitmap(getEtaIconBitmap(String.valueOf(etaLong))));
+								.fromBitmap(getEtaIconBitmap(value,suffix)));
 					}
 				}
 
@@ -732,9 +745,9 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		});
 	}
 
-	private void initEtaMarker(long etaLong) {
+	private void initEtaMarker(String  value, String suffix) {
 		if(googleMap!=null){
-            etaMarker = googleMap.addMarker(getStartPickupLocMarkerOptions(deliveryLatLng, false,etaLong>0?String.valueOf(etaLong):null));
+            etaMarker = googleMap.addMarker(getStartPickupLocMarkerOptions(deliveryLatLng, value,suffix));
 
         }
 	}
@@ -807,7 +820,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		}
 	}
 	private final float HOME_MARKER_ZINDEX = 2.0f;
-	public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng, boolean inRide,String eta){
+	public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng, String value,String suffix){
 		MarkerOptions markerOptions = new MarkerOptions();
 		markerOptions.title("Pickup location");
 		markerOptions.snippet("");
@@ -815,18 +828,17 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		markerOptions.zIndex(HOME_MARKER_ZINDEX);
 
 		markerOptions.icon(BitmapDescriptorFactory
-				.fromBitmap(getEtaIconBitmap(eta)));
+				.fromBitmap(getEtaIconBitmap(value,suffix)));
 		return markerOptions;
 	}
 
-	private Bitmap getEtaIconBitmap(String eta) {
+	private Bitmap getEtaIconBitmap(String value,String suffix) {
 		if(etaMarkerBitmap!=null) {
 			etaMarkerBitmap.recycle();
 		}
 
 		etaMarkerBitmap = CustomMapMarkerCreator
-				.getTextBitmap(getActivity(), assl, eta,
-						getResources().getDimensionPixelSize(R.dimen.text_size_22));
+				.getTextBitmap(getActivity(), assl, value,suffix, getResources().getDimensionPixelSize(R.dimen.text_size_22));
 
 		return etaMarkerBitmap;
 
