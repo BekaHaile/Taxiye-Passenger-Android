@@ -66,6 +66,7 @@ public class RestClient {
     }
 
     private static void setLogger(RestAdapter.Builder builder){
+
         RestAdapter.Log fooLog = new RestAdapter.Log() {
             @Override
             public void log(String message) {

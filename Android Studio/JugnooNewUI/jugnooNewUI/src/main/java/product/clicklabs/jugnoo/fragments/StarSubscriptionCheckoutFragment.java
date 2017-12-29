@@ -148,6 +148,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private boolean isUpiPending;
     // amount after jugnoo cash deduction
     private double netPayableAmount;
+    private CardView cvPaymentMethodContainer;
 
 
     public static StarSubscriptionCheckoutFragment newInstance(String subscription, int type){
@@ -237,7 +238,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             edtIciciVpa = (EditText) rootView.findViewById(R.id.edtIciciVpa);
             tvLabelIciciUpi = (TextView) rootView.findViewById(R.id.tv_label_below_edt_icici);
             imageViewIcici = (ImageView) rootView.findViewById(R.id.ivRadioIciciUpi);
-
+            cvPaymentMethodContainer = (CardView)rootView.findViewById(R.id.cvPaymentMethodContainer);
+            cvPaymentMethodContainer.setVisibility(View.GONE);
             tvUPICashback = (TextView) rootView.findViewById(R.id.tvUPICashback);
             tvUPICashback.setTypeface(tvUPICashback.getTypeface(), Typeface.ITALIC);
 
@@ -292,6 +294,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             rlUPI.setOnClickListener(onClickListenerPaymentOptionSelector);
             rlOtherModesToPay.setOnClickListener(onClickListenerPaymentOptionSelector);
             relativeLayoutIcici.setOnClickListener(onClickListenerPaymentOptionSelector);
+            linearLayoutWalletContainer.removeAllViews();
 
             paySlider = new PaySlider(rootView.findViewById(R.id.llPayViewContainer)) {
                 @Override
@@ -406,7 +409,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             listViewOffers.setAdapter(promoCouponsAdapter);
 
 
-            fetchWalletBalance();
             updateCouponsDataView();
 
         } catch (Exception e) {
@@ -424,8 +426,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     @Override
     public void onResume() {
         super.onResume();
-        orderPaymentModes();
-        setPaymentOptionUI();
+        if(apiFetchWalletBalance==null){
+          fetchWalletBalance();
+
+        }else{
+            orderPaymentModes();
+            setPaymentOptionUI();
+
+        }
 
         try {
 
@@ -827,6 +835,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
             if(paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0){
                 linearLayoutWalletContainer.removeAllViews();
+
                 for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
                     if(paymentModeConfigData.getEnabled() == 1) {
                         if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
@@ -862,6 +871,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                         }
                     }
                 }
+                cvPaymentMethodContainer.setVisibility(View.VISIBLE);
             }
 
         } catch (Exception e){
