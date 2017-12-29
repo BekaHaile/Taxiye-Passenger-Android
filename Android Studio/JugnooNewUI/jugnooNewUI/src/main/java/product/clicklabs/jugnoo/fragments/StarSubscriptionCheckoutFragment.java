@@ -426,14 +426,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     @Override
     public void onResume() {
         super.onResume();
-        if(apiFetchWalletBalance==null){
-          fetchWalletBalance();
-
-        }else{
-            orderPaymentModes();
-            setPaymentOptionUI();
-
-        }
+        fetchWalletBalance();
 
         try {
 
