@@ -1,9 +1,11 @@
 package com.sabkuchfresh.fragments;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.analytics.GAAction;
@@ -49,6 +52,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -57,8 +61,10 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.MenusData;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -1141,10 +1147,112 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 }
             },apptype);
         } else if(shouldCheckForFeedOrder){
-            //open fatafat chat pay
-            activity.startActivity(new Intent(activity,FatafatChatPayActivity.class)
-            .putExtra(Constants.KEY_IS_UPI_PENDING,true));
+
+            // open fugu chat and then launch fatafatchatPay, so hit order history to get fugu channel data
+            fetchOrderHistory(activity,Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED).getOrderId());
+
         }
+
+    }
+
+    /**
+     * Fetch order history
+     * @param context calling context
+     * @param orderId the order id
+     */
+    private static void fetchOrderHistory(final Activity context, int orderId){
+
+        try {
+            DialogPopup.showLoadingDialog(context, context.getResources().getString(R.string.loading));
+
+            HashMap<String, String> params = new HashMap<>();
+            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            params.put(Constants.KEY_ORDER_ID, String.valueOf(orderId));
+            params.put(Constants.KEY_PRODUCT_TYPE, String.valueOf(ProductType.FEED.getOrdinal()));
+            params.put(Constants.KEY_CLIENT_ID, Config.getFeedClientId());
+            params.put(Constants.INTERATED, "1");
+
+            Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
+                @Override
+                public void success(HistoryResponse historyResponse, Response response) {
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(context, jObj)) {
+                            int flag = jObj.getInt(Constants.KEY_FLAG);
+                            String message = JSONParser.getServerMessage(jObj);
+                            if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                HistoryResponse.Datum datum = historyResponse.getData().get(0);
+                                //launch fugu and then fatafatChatPay
+                                try {
+                                    if(!TextUtils.isEmpty(datum.getFuguChannelId())){
+                                        FuguConfig.getInstance().openChatByTransactionId(datum.getFuguChannelId()
+                                                ,String.valueOf(Data.getFuguUserData().getUserId()),
+                                                datum.getFuguChannelName(), datum.getFuguTags());
+                                    }else{
+                                        FuguConfig.getInstance().openChat(context, Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    product.clicklabs.jugnoo.utils.Utils.showToast(context, context.getString(R.string.something_went_wrong));
+                                }
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        //open fatafat chat pay
+                                        context.startActivity(new Intent(context,FatafatChatPayActivity.class)
+                                                .putExtra(Constants.KEY_IS_UPI_PENDING,true));
+                                    }
+                                },200);
+
+
+                            } else {
+                                DialogPopup.alertPopup(context, "", message);
+                            }
+                        }
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        retryDialog(context,DialogErrorType.SERVER_ERROR);
+                    }
+                    DialogPopup.dismissLoadingDialog();
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                    DialogPopup.dismissLoadingDialog();
+                    retryDialog(context, DialogErrorType.CONNECTION_LOST);
+                }
+            };
+            new HomeUtil().putDefaultParams(params);
+            RestClient.getFatafatApiService().getCustomOrderHistory(params, callback);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private static void retryDialog(final Activity activity, final DialogErrorType dialogErrorType) {
+        DialogPopup.dialogNoInternet(activity, dialogErrorType,
+                new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                    @Override
+                    public void positiveClick(View view) {
+                        // try again
+                        fetchOrderHistory(activity,Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED).getOrderId());
+
+                    }
+
+                    @Override
+                    public void neutralClick(View view) {
+
+                    }
+
+                    @Override
+                    public void negativeClick(View view) {
+                    }
+                },true);
 
     }
 
