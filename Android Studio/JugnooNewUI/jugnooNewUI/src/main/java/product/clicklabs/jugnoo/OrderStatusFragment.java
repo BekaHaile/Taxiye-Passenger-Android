@@ -105,7 +105,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     public TextView tvStatus0, tvStatus1, tvStatus2, tvStatus3;
     public ImageView ivStatus0, ivStatus1, ivStatus2, ivStatus3;
     public View lineStatus1, lineStatus2, lineStatus3;
-    private View rootView;
+    private View rootView, vDividerPayment;
     private ImageView ivTopShadow;
     private LinearLayout llExtraCharges, llMain;
 
@@ -235,7 +235,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 } else if(newState == BottomSheetBehavior.STATE_EXPANDED) {
                     TrackOrderFragment fragment = getTrackOrderFragment();
                     if(fragment != null){
-                        fragment.setPaddingSome();
+                        fragment.setPaddingSome(false);
                     }
                 }
             }
@@ -250,7 +250,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         rlOrderStatusMapPeek.setBackgroundColor(ContextCompat.getColor(activity, R.color.offer_popup_item_color));
         llShadowPeek = (LinearLayout) rootView.findViewById(R.id.llShadowPeek);
         llShadowPeek.setVisibility(View.GONE);
-        llShadowPeekHeight = activity.getResources().getDimensionPixelSize(R.dimen.dp_172);
+        llShadowPeekHeight = activity.getResources().getDimensionPixelSize(R.dimen.dp_130);
         rlContainer = (RelativeLayout) rootView.findViewById(R.id.rlContainer);
         rlContainer.setVisibility(View.GONE);
         llShadowPeek.setOnClickListener(new View.OnClickListener() {
@@ -281,10 +281,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         tvDelveryPlace.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
         tvDeliveryToVal = (TextView) rootView.findViewById(R.id.tvDeliveryToVal);
         tvDeliveryToVal.setTypeface(Fonts.mavenMedium(activity));
-        tvTotalAmountVal = (TextView) rootView.findViewById(R.id.tvTotalAmountVal);
-        tvAmountPayableVal = (TextView) rootView.findViewById(R.id.tvAmountPayableVal);
-        llFinalAmount = (LinearLayout) rootView.findViewById(R.id.llFinalAmount);
-        llFinalAmount.setVisibility(View.GONE);
+
+
         bNeedHelp = (Button) rootView.findViewById(R.id.bNeedHelp);
         llDeliveryPlace = (LinearLayout) rootView.findViewById(R.id.llDeliveryPlace);
         ivDeliveryPlace = (ImageView) rootView.findViewById(R.id.ivDeliveryPlace);
@@ -328,14 +326,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             ivTopShadow.setVisibility(View.VISIBLE);
         }
 
-        cvPaymentMethod = (CardView) rootView.findViewById(R.id.cvPaymentMethod);
+
         buttonCancelOrder = (Button) rootView.findViewById(R.id.buttonCancelOrder);
         buttonCancelOrder.setTypeface(Fonts.mavenRegular(activity));
         reorderBtn = (Button) rootView.findViewById(R.id.reorderBtn);
         reorderBtn.setTypeface(Fonts.mavenRegular(activity));
         feedbackBtn = (Button) rootView.findViewById(R.id.feedbackBtn);
         feedbackBtn.setTypeface(Fonts.mavenRegular(activity));
-
         cancelfeedbackBtn = (Button) rootView.findViewById(R.id.cancelfeedbackBtn);
         cancelfeedbackBtn.setTypeface(Fonts.mavenRegular(activity));
 
@@ -343,12 +340,12 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         tvItemsQuantityVal.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
         tvTotalAmountValOld = (TextViewStrikeThrough) rootView.findViewById(R.id.tvTotalAmountValOld);
         tvTotalAmountMessage = (TextView) rootView.findViewById(R.id.tvTotalAmountMessage);
-        tvPaymentMethodVal = (TextView) rootView.findViewById(R.id.tvPaymentMethodVal);
-        rlWalletDeducted = (RelativeLayout) rootView.findViewById(R.id.rlWalletDeducted);
         ((TextView) rootView.findViewById(R.id.tvItemSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
         ((TextView) rootView.findViewById(R.id.tvBillSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-        ((TextView) rootView.findViewById(R.id.tvPaymentSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-        llPaymentSummary = (LinearLayout) rootView.findViewById(R.id.llPaymentSummary);
+        tvTotalAmountVal = (TextView) rootView.findViewById(R.id.tvTotalAmountVal);
+
+
+
 
 
         buttonCancelOrder.setOnClickListener(this);
@@ -361,8 +358,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         orderItemsAdapter = new OrderItemsAdapter(activity, subItemsOrders);
         listViewOrder.setAdapter(orderItemsAdapter);
 
+
+
+
         if(productType==ProductType.FEED.getOrdinal()){
             ButterKnife.bind(this,  rootView.findViewById(R.id.layout_feed_order));
+            cvPaymentMethod = (CardView) rootView.findViewById(R.id.cvPaymentMethodFeed);
+            initPaymentMethodViews();
             bNeedHelpFeed.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -384,10 +386,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             tvTaskDetails.setVisibility(View.VISIBLE);
             llAmount.setVisibility(View.GONE);
             llPaidVia.setVisibility(View.GONE);
-            bNeedHelpFeed.setText(R.string.chat_support);
+            bNeedHelpFeed.setText(R.string.chat);
             getFeedOrderData(activity);
             isFeedOrder = true;
         }else{
+            cvPaymentMethod = (CardView) rootView.findViewById(R.id.cvPaymentMethod);
+            initPaymentMethodViews();
+
             rootView.findViewById(R.id.layout_menus_order).setVisibility(View.VISIBLE);
             rootView.findViewById(R.id.layout_feed_order).setVisibility(View.GONE);
             getOrderData(activity);
@@ -414,6 +419,18 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
         return relative;
     }
+
+    private void initPaymentMethodViews() {
+        llPaymentSummary = (LinearLayout) cvPaymentMethod.findViewById(R.id.llPaymentSummary);
+        ((TextView) cvPaymentMethod.findViewById(R.id.tvPaymentSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+        rlWalletDeducted = (RelativeLayout) cvPaymentMethod.findViewById(R.id.rlWalletDeducted);
+        tvPaymentMethodVal = (TextView) cvPaymentMethod.findViewById(R.id.tvPaymentMethodVal);
+        tvAmountPayableVal = (TextView) cvPaymentMethod.findViewById(R.id.tvAmountPayableVal);
+        vDividerPayment = cvPaymentMethod.findViewById(R.id.vDividerPayment);
+        llFinalAmount = (LinearLayout) cvPaymentMethod.findViewById(R.id.llFinalAmount);
+        llFinalAmount.setVisibility(View.GONE);
+    }
+
     public void getFeedOrderData(final Activity activity) {
         try {
             if (MyApplication.getInstance().isOnline()) {
@@ -455,6 +472,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                     }
 
                                     setFeedOrderData(datum1, activity);
+                                    if(datum1.getIsPaid()==1){
+                                        setPaymentModes(datum1);
+                                    }
                                     openTrackOrderFragment();
                                 } else {
                                     retryDialogCancelOrderOrOrderStatusFeed(message, DialogErrorType.SERVER_ERROR);
@@ -1060,75 +1080,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             }
 
 
-            llFinalAmount.removeAllViews();
-            View vDivider = rootView.findViewById(R.id.vDividerPayment);
-            if (datum1.getJugnooDeducted() > 0) {
-                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.jugnoo_cash), datum1.getJugnooDeducted(), false);
-            }
-
-            if (datum1.getWalletDeducted() > 0) {
-                rlWalletDeducted.setVisibility(View.VISIBLE);
-                llPaymentSummary.removeView(rlWalletDeducted);
-                llFinalAmount.addView(rlWalletDeducted);
-                tvAmountPayableVal.setText(activity.getString(R.string.rupees_value_format,
-                        Utils.getMoneyDecimalFormat().format(datum1.getWalletDeducted())));
-                llFinalAmount.setVisibility(View.VISIBLE);
-                vDivider = rootView.findViewById(R.id.vDividerPayment);
-            } else {
-                rlWalletDeducted.setVisibility(View.GONE);
-            }
-
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tvPaymentMethodVal.getLayoutParams();
-            tvPaymentMethodVal.setPadding(0, 0, 0, 0);
-            tvPaymentMethodVal.setText("");
-            tvPaymentMethodVal.setBackgroundResource(R.drawable.background_transparent);
-            if (datum1.getPaymentMode() == PaymentOption.PAYTM.getOrdinal()) {
-                params.setMargins((int) (ASSL.Xscale() * 10f), 0, 0, 0);
-                tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_paytm_small);
-            } else if (datum1.getPaymentMode() == PaymentOption.MOBIKWIK.getOrdinal()) {
-                params.setMargins((int) (ASSL.Xscale() * 25f), 0, 0, 0);
-                tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_mobikwik_small);
-            } else if (datum1.getPaymentMode() == PaymentOption.FREECHARGE.getOrdinal()) {
-                params.setMargins((int) (ASSL.Xscale() * 30f), 0, 0, 0);
-                tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_freecharge_small);
-            } else if (datum1.getPaymentMode() == PaymentOption.JUGNOO_PAY.getOrdinal()) {
-                tvPaymentMethodVal.setText(R.string.jugnoo_pay);
-                params.setMargins((int) (ASSL.Xscale() * 35f), 0, 0, 0);
-            } else if (datum1.getPaymentMode() == PaymentOption.RAZOR_PAY.getOrdinal()) {
-                if (!TextUtils.isEmpty(datum1.getOtherPaymentModeText())) {
-                    tvPaymentMethodVal.setText(datum1.getOtherPaymentModeText());
-                } else {
-                    tvPaymentMethodVal.setText(R.string.other_payment_mode);
-                }
-                params.setMargins((int) (ASSL.Xscale() * 35f), 0, 0, 0);
-            } else if(datum1.getPaymentMode()==PaymentOption.ICICI_UPI.getOrdinal()){
-                params.setMargins((int) (ASSL.Xscale() * 34f), 0, 0, 0);
-                params.height= (int) (ASSL.minRatio() * 35f);
-                params.width= (int) (ASSL.minRatio() * 90f);
-                tvPaymentMethodVal.setBackgroundResource(R.drawable.upi_logo);
-            }
-            tvPaymentMethodVal.setLayoutParams(params);
-
-
-            if (datum1.getPayableAmount() > 0) {
-                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.cash), datum1.getPayableAmount(), false);
-            }
-            if (Utils.compareDouble(datum1.getOrderAdjustment(), 0) != 0) {
-                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.order_adjustment), datum1.getOrderAdjustment(), false);
-            }
-            if (datum1.getRefundAmount() > 0) {
-                vDivider = addFinalAmountView(llFinalAmount, activity.getString(R.string.refund), datum1.getRefundAmount(), false);
-            }
-
-            if (vDivider != null) {
-                vDivider.setVisibility(View.INVISIBLE);
-            }
-
-            if (llFinalAmount.getChildCount() > 0 || datum1.getWalletDeducted() > 0) {
-                cvPaymentMethod.setVisibility(View.VISIBLE);
-            } else {
-                cvPaymentMethod.setVisibility(View.GONE);
-            }
+            setPaymentModes(datum1);
 
             if (datum1.getCancellable() == 1) {
                 orderCancel.setVisibility(View.VISIBLE);
@@ -1186,6 +1138,78 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setPaymentModes(HistoryResponse.Datum datum1) {
+        llFinalAmount.removeAllViews();
+        vDividerPayment = cvPaymentMethod.findViewById(R.id.vDividerPayment);
+        if (datum1.getJugnooDeducted() > 0) {
+            vDividerPayment = addFinalAmountView(llFinalAmount, activity.getString(R.string.jugnoo_cash), datum1.getJugnooDeducted(), false);
+        }
+
+        if (datum1.getWalletDeducted() > 0) {
+            rlWalletDeducted.setVisibility(View.VISIBLE);
+            llPaymentSummary.removeView(rlWalletDeducted);
+            llFinalAmount.addView(rlWalletDeducted);
+            tvAmountPayableVal.setText(activity.getString(R.string.rupees_value_format,
+                    Utils.getMoneyDecimalFormat().format(datum1.getWalletDeducted())));
+            llFinalAmount.setVisibility(View.VISIBLE);
+            vDividerPayment = cvPaymentMethod.findViewById(R.id.vDividerPayment);
+        } else {
+            rlWalletDeducted.setVisibility(View.GONE);
+        }
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tvPaymentMethodVal.getLayoutParams();
+        tvPaymentMethodVal.setPadding(0, 0, 0, 0);
+        tvPaymentMethodVal.setText("");
+        tvPaymentMethodVal.setBackgroundResource(R.drawable.background_transparent);
+        if (datum1.getPaymentMode() == PaymentOption.PAYTM.getOrdinal()) {
+            params.setMargins((int) (ASSL.Xscale() * 10f), 0, 0, 0);
+            tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_paytm_small);
+        } else if (datum1.getPaymentMode() == PaymentOption.MOBIKWIK.getOrdinal()) {
+            params.setMargins((int) (ASSL.Xscale() * 25f), 0, 0, 0);
+            tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_mobikwik_small);
+        } else if (datum1.getPaymentMode() == PaymentOption.FREECHARGE.getOrdinal()) {
+            params.setMargins((int) (ASSL.Xscale() * 30f), 0, 0, 0);
+            tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_freecharge_small);
+        } else if (datum1.getPaymentMode() == PaymentOption.JUGNOO_PAY.getOrdinal()) {
+            tvPaymentMethodVal.setText(R.string.jugnoo_pay);
+            params.setMargins((int) (ASSL.Xscale() * 35f), 0, 0, 0);
+        } else if (datum1.getPaymentMode() == PaymentOption.RAZOR_PAY.getOrdinal()) {
+            if (!TextUtils.isEmpty(datum1.getOtherPaymentModeText())) {
+                tvPaymentMethodVal.setText(datum1.getOtherPaymentModeText());
+            } else {
+                tvPaymentMethodVal.setText(R.string.other_payment_mode);
+            }
+            params.setMargins((int) (ASSL.Xscale() * 35f), 0, 0, 0);
+        } else if(datum1.getPaymentMode()==PaymentOption.ICICI_UPI.getOrdinal()){
+            params.setMargins((int) (ASSL.Xscale() * 34f), 0, 0, 0);
+            params.height= (int) (ASSL.minRatio() * 35f);
+            params.width= (int) (ASSL.minRatio() * 90f);
+            tvPaymentMethodVal.setBackgroundResource(R.drawable.upi_logo);
+        }
+        tvPaymentMethodVal.setLayoutParams(params);
+
+
+        if (datum1.getPayableAmount() > 0) {
+            vDividerPayment = addFinalAmountView(llFinalAmount, activity.getString(R.string.cash), datum1.getPayableAmount(), false);
+        }
+        if (Utils.compareDouble(datum1.getOrderAdjustment(), 0) != 0) {
+            vDividerPayment = addFinalAmountView(llFinalAmount, activity.getString(R.string.order_adjustment), datum1.getOrderAdjustment(), false);
+        }
+        if (datum1.getRefundAmount() > 0) {
+            vDividerPayment = addFinalAmountView(llFinalAmount, activity.getString(R.string.refund), datum1.getRefundAmount(), false);
+        }
+
+        if (vDividerPayment != null) {
+            vDividerPayment.setVisibility(View.INVISIBLE);
+        }
+
+        if (llFinalAmount.getChildCount() > 0 || datum1.getWalletDeducted() > 0) {
+            cvPaymentMethod.setVisibility(View.VISIBLE);
+        } else {
+            cvPaymentMethod.setVisibility(View.GONE);
         }
     }
 

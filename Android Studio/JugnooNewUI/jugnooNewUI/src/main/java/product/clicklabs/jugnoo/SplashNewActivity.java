@@ -63,6 +63,7 @@ import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
 import com.facebook.appevents.AppEventsLogger;
+import com.fugu.FuguConfig;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
@@ -358,6 +359,15 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			}
 
 			Fabric.with(this, new Crashlytics());
+			if(!Prefs.with(this).getBoolean(FUGU_CACHE_CLEARED,false)){
+				try {
+					FuguConfig.clearFuguData(SplashNewActivity.this);
+					Prefs.with(this).save(FUGU_CACHE_CLEARED,true);
+					Log.e("Splash","Fugu Data cleared on startup");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 			Data.setFuguChatBundle(getIntent().getExtras());
 
 			openHomeSwitcher = false;
@@ -1293,14 +1303,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
             Prefs.with(this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 1);
         }
 
-		try{
-			if(!MyApplication.getInstance().getDeviceToken().equalsIgnoreCase("not_found")) {
-				MyApplication.getInstance().getCleverTap().data.pushFcmRegistrationId(MyApplication.getInstance().getDeviceToken(), true);
-				Log.d("Token", "token = "+MyApplication.getInstance().getDeviceToken());
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverDeviceToken,
 				new IntentFilter(INTENT_ACTION_DEVICE_TOKEN_UPDATE));
@@ -1940,7 +1943,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 SplashNewActivity.registerationType = RegisterationType.EMAIL;
                 setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, referralCode));
                 //if(!TextUtils.isEmpty(refreeUserId)) {
-				Log.v("rlClaimGift.getVisibility()", "-->"+rlClaimGift.getVisibility());
                     if (rlClaimGift.getVisibility() != View.VISIBLE) {
                         Log.v("In sendToRegisterThroughSms", "start");
                         rlPromo.setVisibility(View.GONE);

@@ -1756,7 +1756,6 @@ public class JSONParser implements Constants {
     }
 
     public void loginAnalyticEvents(Context context, LoginVia loginVia){
-        loginClevertap(context);
         try {
             GAUtils.setGAUserId(Data.userData.getUserId());
             if(loginVia == LoginVia.EMAIL_OTP
@@ -1770,8 +1769,6 @@ public class JSONParser implements Constants {
                 String walletSelected = Prefs.with(context).getString(SP_WALLET_AT_SIGNUP, "NA");
                 Prefs.with(context).save(SP_WALLET_AT_SIGNUP, "");
 
-                MyApplication.getInstance().getCleverTapUtils().signUp(String.valueOf(loginVia), walletSelected, referralCodeEntered,
-                        String.valueOf(Data.userData.getJugnooBalance()), Data.userData.getCity());
 
             }
             JSONObject map = new JSONObject();
@@ -1785,58 +1782,6 @@ public class JSONParser implements Constants {
     }
 
 
-    private void loginClevertap(Context context){
-        try{
-            // each of the below mentioned fields are optional
-            // if set, these populate demographic information in the Dashboard
-            HashMap<String, Object> profileUpdate = new HashMap<String, Object>();
-            profileUpdate.put(Events.NAME, Data.userData.userName);                  // String
-            profileUpdate.put(Events.USER_ID, Data.userData.getUserId());                    // String or number
-            profileUpdate.put(Events.EMAIL, Data.userData.userEmail);               // Email address of the user
-            profileUpdate.put(Events.PHONE, Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));                     // Phone (without the country code)
-
-            //profileUpdate.put("Photo", Data.userData.userImage);    // URL to the Image
-            profileUpdate.put(Events.SOURCE, getAppSource(context));
-            profileUpdate.put(Events.REFERRAL_CODE, Data.userData.referralCode);
-            profileUpdate.put(Events.JUGNOO_CASH, Data.userData.getJugnooBalance());
-            profileUpdate.put(Events.IS_VERIFIED, "True");
-            profileUpdate.put(Events.REGISTERED_CITY, Data.userData.getCityReg());
-
-//            profileUpdate.put(Events.COUPONS_USED, Data.userData.);
-            try {
-                int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-                profileUpdate.put(Events.OS_VERSION, currentapiVersion);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-//            profileUpdate.put(Events.WALLET, Data.userData.);
-            if(Prefs.with(context).getString(SPLabels.ADD_HOME, "").length()>0) {
-                String data = Prefs.with(context).getString(SPLabels.ADD_HOME, "");
-                JSONObject jsonObject  = new JSONObject(data);
-                profileUpdate.put(Events.HOME, jsonObject.optString("address"));
-            }
-            if(Prefs.with(context).getString(SPLabels.ADD_WORK, "").length()>0) {
-                String data = Prefs.with(context).getString(SPLabels.ADD_WORK, "");
-                JSONObject jsonObject  = new JSONObject(data);
-                profileUpdate.put(Events.WORK, jsonObject.optString("address"));
-            }
-
-            // optional fields. controls whether the user will be sent email, push etc.
-            profileUpdate.put("MSG-email", true);                      // Disable email notifications
-            profileUpdate.put("MSG-push", true);                        // Enable push notifications
-            profileUpdate.put("MSG-sms", true);                        // Disable SMS notifications
-
-            MyApplication.getInstance().getCleverTap().profile.push(profileUpdate);
-
-            MyApplication.getInstance().getCleverTapUtils().setCoupons();
-            MyApplication.getInstance().getCleverTapUtils().setWalletData();
-            // for send location to clevertap
-            MyApplication.getInstance().setLocationToCleverTap();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public static void parseRateAppFlagContent(JSONObject jsonObject){

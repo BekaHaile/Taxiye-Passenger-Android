@@ -252,11 +252,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         // service unavailable case
-        if(!isPagination && (menusResponse.getServiceUnavailable() == 1 || (vendorsCount == 0 ))){
+        if(!isPagination && (menusResponse.getServiceUnavailable() == 1 || (vendorsCount == 0))){
             int messageResId = Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()) ?
                     R.string.no_delivery_available_your_location : R.string.no_menus_available_your_location;
-            if (activity.getMenusFragment() != null
-                    && !TextUtils.isEmpty(activity.getMenusFragment().getSearchText())) {
+            if (activity.getMenusFragment() != null && activity.getMenusFragment().searchOpened) {
                 messageResId = R.string.oops_no_results_found;
             } else if (activity.isFilterApplied()) {
                 messageResId = R.string.no_menus_available_with_these_filters;
@@ -268,24 +267,17 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
          if(!hasMorePages && menusResponse.getServiceUnavailable() != 1) {
 
 
+            boolean isCustomOrderModel = activity.isDeliveryOpenInBackground() && activity.getMenusFragment().chatAvailable;
+             String categoryName = activity.getCategoryOpened()==null?null:activity.getCategoryOpened().getCategoryName();
+             if(categoryName==null){
+                 categoryName=activity.isDeliveryOpenInBackground()?"Stores":"Restaurants";
+             }
+             if(dataToDisplay!=null && dataToDisplay.size()>1){
+                 dataToDisplay.add(new  DeliveryDivider());
+             }
+             dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),categoryName, isCustomOrderModel));
 
-
-            if( activity.isDeliveryOpenInBackground() && activity.getMenusFragment().chatAvailable){
-
-                if(dataToDisplay!=null && dataToDisplay.size()>1){
-                    dataToDisplay.add(new DeliveryDivider());
-                }
-                dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Store", true));
-            }else{
-                if(dataToDisplay!=null && dataToDisplay.size()>1){
-                    dataToDisplay.add(new DeliveryDivider());
-                }
-                dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),activity.getCategoryOpened()!=null?activity.getCategoryOpened().getCategoryName():"Restaurant", false));
-
-            }
-
-
-        }
+         }
 
 
         // notify logic

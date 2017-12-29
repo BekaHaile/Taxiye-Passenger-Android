@@ -743,7 +743,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     private void resetDeliveryViews() {
         labelDeliveryValue.setText(R.string.no_value_delivery_charges);
-        labelDeliveryInfo.setText(R.string.estimated_delivery);
+        labelDeliveryInfo.setText(R.string.estimated_charges);
         anywhereDeliveryChargesDialog = null;
     }
 

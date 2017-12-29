@@ -355,11 +355,6 @@ public class ApiFindADriver {
 			} catch (Exception e) {
 			}
 
-			try {
-				MyApplication.getInstance().getCleverTapUtils().setCoupons();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 
 
 			if(findADriverResponse.getFareStructure() != null) {

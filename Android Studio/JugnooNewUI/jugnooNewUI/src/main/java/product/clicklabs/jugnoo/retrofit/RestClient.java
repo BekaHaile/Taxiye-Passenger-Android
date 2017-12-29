@@ -66,6 +66,7 @@ public class RestClient {
     }
 
     private static void setLogger(RestAdapter.Builder builder){
+
         RestAdapter.Log fooLog = new RestAdapter.Log() {
             @Override
             public void log(String message) {
@@ -140,11 +141,11 @@ public class RestClient {
             };
 
             RestAdapter.Builder builder = new RestAdapter.Builder()
-                    .setEndpoint("http://maps.googleapis.com/maps/api")
+                    .setEndpoint("https://maps.googleapis.com/maps/api")
                     .setClient(new Ok3Client(getOkHttpClient(true)))
-                    .setLog(fooLog)
+//                    .setLog(fooLog)
                     .setLogLevel(RestAdapter.LogLevel.FULL);
-
+            setLogger(builder);
             RestAdapter restAdapter = builder.build();
             GOOGLE_API_SERVICES = restAdapter.create(GoogleAPIServices.class);
         }

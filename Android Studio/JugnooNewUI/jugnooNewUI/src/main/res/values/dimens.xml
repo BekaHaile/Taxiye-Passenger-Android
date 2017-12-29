@@ -883,5 +883,6 @@
     <!-- Fatafat how it works/ tutorial -->
     <dimen name="image_size_fatafat_tutorial">48dp</dimen>
     <dimen name="tv_point_min_size">24dp</dimen>
+    <dimen name="dp_130">130dp</dimen>
 
 </resources>

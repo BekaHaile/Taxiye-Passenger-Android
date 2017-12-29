@@ -326,6 +326,12 @@ public class HistoryResponse {
         private int orderStatusIndex;
         @SerializedName("category")
         private int category;
+        @SerializedName("is_paid")
+        private int isPaid;
+
+        public int getIsPaid() {
+            return isPaid;
+        }
 
         public int getCategory() {
             return category;
