@@ -234,8 +234,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             relativeLayoutMobikwik = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutMobikwik);
             relativeLayoutFreeCharge = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutFreeCharge);
             relativeLayoutIcici = (RelativeLayout) rootView.findViewById(R.id.rlIciciUpi);
-            // initially hide the upi layout
-            relativeLayoutIcici.setVisibility(View.GONE);
             edtIciciVpa = (EditText) rootView.findViewById(R.id.edtIciciVpa);
             tvLabelIciciUpi = (TextView) rootView.findViewById(R.id.tv_label_below_edt_icici);
             imageViewIcici = (ImageView) rootView.findViewById(R.id.ivRadioIciciUpi);
