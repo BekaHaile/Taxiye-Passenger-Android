@@ -149,6 +149,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     // amount after jugnoo cash deduction
     private double netPayableAmount;
     private CardView cvPaymentMethodContainer;
+    private boolean isPaymentOptionSet;
 
 
     public static StarSubscriptionCheckoutFragment newInstance(String subscription, int type){
@@ -775,8 +776,11 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     @Override
                     public void onSuccess() {
                         try {
-//                            setPaymentOption(getPaymentOption());
-                            setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+                            // set default payment option only once
+                            if(!isPaymentOptionSet){
+                             isPaymentOptionSet = true;
+                             setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+                            }
                             orderPaymentModes();
                             setPaymentOptionUI();
                         } catch (Exception e) {
@@ -787,8 +791,11 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     @Override
                     public void onFailure() {
                         try {
-//                            setPaymentOption(getPaymentOption());
-                            setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+                            // set default payment option only once
+                            if(!isPaymentOptionSet){
+                                isPaymentOptionSet = true;
+                                setPaymentOption(MyApplication.getInstance().getWalletCore().getDefaultPaymentOption());
+                            }
                             orderPaymentModes();
                             setPaymentOptionUI();
                         } catch (Exception e) {
@@ -811,10 +818,10 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             }
             // for fatafat chat pay send feed client id
             if(isFromFatafatChat){
-                apiFetchWalletBalance.getBalance(false,true);
+                apiFetchWalletBalance.getBalance(true,true);
             }
             else {
-                apiFetchWalletBalance.getBalance(false);
+                apiFetchWalletBalance.getBalance(true);
             }
 
         } catch (Exception e) {
