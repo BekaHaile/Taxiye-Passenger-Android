@@ -96,16 +96,15 @@ public class AppSwitcher {
 				// to check id Data.userData's key of <offering>_enabled is 1 for the client_id to open
 				if(Data.userData != null){
 					isOnlyFatafatNewEnabled = Data.userData.isOnlyFatafatNewEnabled();
-					if(!isOnlyFatafatNewEnabled
+					if(Data.userData.getIntegratedJugnooEnabled() == 0 || (!isOnlyFatafatNewEnabled
 							&& ((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.userData.getFreshEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.userData.getMealsEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.userData.getMenusEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getPayClientId()) && Data.userData.getPayEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getFeedClientId()) && Data.userData.getFeedEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getProsClientId()) && Data.userData.getProsEnabled() != 1)
-							|| (clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && Data.userData.getDeliveryCustomerEnabled() != 1)
-							|| (Data.userData.getIntegratedJugnooEnabled() == 0))
-							){
+							|| (clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && Data.userData.getDeliveryCustomerEnabled() != 1))
+					)){
 						clientId = Config.getAutosClientId();
 					}
 
