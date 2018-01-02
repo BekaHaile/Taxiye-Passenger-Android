@@ -1,6 +1,9 @@
 package product.clicklabs.jugnoo.home;
 
+import android.app.Activity;
 import android.content.Intent;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -8,6 +11,7 @@ import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 
@@ -16,101 +20,101 @@ import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
  */
 public class DeepLinkAction {
 
-	public void openDeepLink(MenuBar menuBar){
+	public  static void openDeepLink(Activity activity, LatLng latlng){
 		try{
 			if(AppLinkIndex.INVITE_AND_EARN.getOrdinal() == Data.deepLinkIndex){
-				menuBar.menuAdapter.onClickAction(MenuInfoTags.FREE_RIDES.getTag());
+				MenuAdapter.onClickAction(MenuInfoTags.FREE_RIDES.getTag(),0,0,activity,latlng);
 			}
 			else if(AppLinkIndex.JUGNOO_CASH.getOrdinal() == Data.deepLinkIndex){
-				menuBar.menuAdapter.onClickAction(MenuInfoTags.WALLET.getTag());
+				MenuAdapter.onClickAction(MenuInfoTags.WALLET.getTag(),0,0,activity,latlng);
 			}
 			else if(AppLinkIndex.PROMOTIONS.getOrdinal() == Data.deepLinkIndex){
-				menuBar.menuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag());
+				MenuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag(),0,0,activity,latlng);
 			}
 			else if(AppLinkIndex.RIDE_HISTORY.getOrdinal() == Data.deepLinkIndex){
-				menuBar.menuAdapter.onClickAction(MenuInfoTags.HISTORY.getTag(), Data.deepLinkOrderId, Data.deepLinkProductType);
+				MenuAdapter.onClickAction(MenuInfoTags.HISTORY.getTag(), Data.deepLinkOrderId, Data.deepLinkProductType,activity,latlng);
 			}
 			else if(AppLinkIndex.SUPPORT.getOrdinal() == Data.deepLinkIndex){
-				menuBar.menuAdapter.onClickAction(MenuInfoTags.SUPPORT.getTag());
+				MenuAdapter.onClickAction(MenuInfoTags.SUPPORT.getTag(),0,0,activity,latlng);
 			}
 			else if(AppLinkIndex.ABOUT.getOrdinal() == Data.deepLinkIndex){
-				menuBar.menuAdapter.onClickAction(MenuInfoTags.ABOUT.getTag());
+				MenuAdapter.onClickAction(MenuInfoTags.ABOUT.getTag(),0,0,activity,latlng);
 			}
 			else if(AppLinkIndex.ACCOUNT.getOrdinal() == Data.deepLinkIndex){
-				menuBar.menuAdapter.accountClick();
+				MenuAdapter.accountClick(activity);
 			}
 			else if(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == Data.deepLinkIndex){
-				menuBar.menuAdapter.onClickAction(MenuInfoTags.INBOX.getTag());
+				MenuAdapter.onClickAction(MenuInfoTags.INBOX.getTag(),0,0,activity,latlng);
 			}
 			else if(AppLinkIndex.GAME_PAGE.getOrdinal() == Data.deepLinkIndex){
-				menuBar.menuAdapter.onClickAction(MenuInfoTags.GAME.getTag());
+				MenuAdapter.onClickAction(MenuInfoTags.GAME.getTag(),0,0,activity,latlng);
 			}
 			else if(AppLinkIndex.FRESH_PAGE.getOrdinal() == Data.deepLinkIndex){
 				if(Data.userData.getFreshEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
-					menuBar.menuAdapter.onClickAction(MenuInfoTags.FRESH.getTag());
+					MenuAdapter.onClickAction(MenuInfoTags.FRESH.getTag(),0,0,activity,latlng);
 				}
 			}
 			else if(AppLinkIndex.MEAL_PAGE.getOrdinal() == Data.deepLinkIndex){
 				if(Data.userData.getMealsEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
-					menuBar.menuAdapter.onClickAction(MenuInfoTags.MEALS.getTag());
+					MenuAdapter.onClickAction(MenuInfoTags.MEALS.getTag(),0,0,activity,latlng);
 				}
 			}
 			else if(AppLinkIndex.DELIVERY_PAGE.getOrdinal() == Data.deepLinkIndex){
 				if(Data.userData.getDeliveryEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
-					menuBar.menuAdapter.onClickAction(MenuInfoTags.DELIVERY.getTag());
+					MenuAdapter.onClickAction(MenuInfoTags.DELIVERY.getTag(),0,0,activity,latlng);
 				}
 			}
 			else if(AppLinkIndex.AUTO_PAGE.getOrdinal() == Data.deepLinkIndex){
-					menuBar.menuAdapter.onClickAction(MenuInfoTags.GET_A_RIDE.getTag());
+					MenuAdapter.onClickAction(MenuInfoTags.GET_A_RIDE.getTag(),0,0,activity,latlng);
 			}
 			else if(AppLinkIndex.GROCERY_PAGE.getOrdinal() == Data.deepLinkIndex){
 				if(Data.userData.getGroceryEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
-					menuBar.menuAdapter.onClickAction(MenuInfoTags.GROCERY.getTag());
+					MenuAdapter.onClickAction(MenuInfoTags.GROCERY.getTag(),0,0,activity,latlng);
 				}
 			}
 			else if(AppLinkIndex.CHAT_PAGE.getOrdinal() == Data.deepLinkIndex) {
 				if (Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1) {
-					menuBar.openChat();
+					openChat(activity);
 				}
 			}
 			else if(AppLinkIndex.MENUS_PAGE.getOrdinal() == Data.deepLinkIndex){
 				if(Data.userData.getMenusEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
-					menuBar.menuAdapter.onClickAction(MenuInfoTags.MENUS.getTag());
+					MenuAdapter.onClickAction(MenuInfoTags.MENUS.getTag(),0,0,activity,latlng);
 				}
 			}
 			else if(AppLinkIndex.DELIVERY_CUSTOMER_PAGE.getOrdinal() == Data.deepLinkIndex){
 				if(Data.userData.getDeliveryCustomerEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
-					menuBar.menuAdapter.onClickAction(MenuInfoTags.DELIVERY_CUSTOMER.getTag());
+					MenuAdapter.onClickAction(MenuInfoTags.DELIVERY_CUSTOMER.getTag(),0,0,activity,latlng);
 				}
 			}
 			else if(AppLinkIndex.PAY_PAGE.getOrdinal() == Data.deepLinkIndex){
 				if(Data.userData.getPayEnabled() == 1) {
-					menuBar.menuAdapter.onClickAction(MenuInfoTags.PAY.getTag());
+					MenuAdapter.onClickAction(MenuInfoTags.PAY.getTag(),0,0,activity,latlng);
 				}
 			}
 			else if(AppLinkIndex.JUGNOO_STAR.getOrdinal() == Data.deepLinkIndex){
-				menuBar.getActivity().startActivity(new Intent(menuBar.getActivity(), JugnooStarSubscribedActivity.class));
-				menuBar.getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				activity.startActivity(new Intent(activity, JugnooStarSubscribedActivity.class));
+				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 			else if(AppLinkIndex.SUBSCRIPTION_PLAN_OPTION_SCREEN.getOrdinal() == Data.deepLinkIndex){
-				menuBar.menuAdapter.onClickAction(MenuInfoTags.JUGNOO_STAR.getTag());
+				MenuAdapter.onClickAction(MenuInfoTags.JUGNOO_STAR.getTag(),0,0,activity,latlng);
 			}
 			else if(AppLinkIndex.WALLET_TRANSACTIONS.getOrdinal() == Data.deepLinkIndex){
 				Intent intent = new Intent();
-				intent.setClass(menuBar.getActivity(), PaymentActivity.class);
+				intent.setClass(activity, PaymentActivity.class);
 				intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
 				intent.putExtra(Constants.KEY_WALLET_TRANSACTIONS, 1);
-				menuBar.getActivity().startActivity(intent);
-				menuBar.getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
+				activity.startActivity(intent);
+				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 			else if(AppLinkIndex.FEED_PAGE.getOrdinal() == Data.deepLinkIndex){
 				if(Data.userData.getFeedEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
-					menuBar.menuAdapter.onClickAction(MenuInfoTags.FEED.getTag());
+					MenuAdapter.onClickAction(MenuInfoTags.FEED.getTag(),0,0,activity,latlng);
 				}
 			}
 			else if(AppLinkIndex.PROS_PAGE.getOrdinal() == Data.deepLinkIndex){
 				if(Data.userData.getProsEnabled() == 1 || Data.userData.isOnlyFatafatNewEnabled()) {
-					menuBar.menuAdapter.onClickAction(MenuInfoTags.PROS.getTag());
+					MenuAdapter.onClickAction(MenuInfoTags.PROS.getTag(),0,0,activity,latlng);
 				}
 			}
 
@@ -118,6 +122,13 @@ public class DeepLinkAction {
 			e.printStackTrace();
 		}
 		Data.deepLinkIndex = -1;
+	}
+
+	public static void openChat(Activity activity){
+		if(activity instanceof  HomeActivity){
+			((HomeActivity)activity).openChatScreen();
+
+		}
 	}
 
 }

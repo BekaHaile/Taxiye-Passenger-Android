@@ -170,9 +170,7 @@ public class MenuBar {
 		activity.startActivity(new Intent(activity, AccountActivity.class));
 		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
-	public void openChat(){
-		((HomeActivity)activity).openChatScreen();
-	}
+
 
 	private void setActivityNames(){
 		try {
@@ -227,4 +225,7 @@ public class MenuBar {
 		return activity;
 	}
 
+	public DrawerLayout getDrawerLayout() {
+		return drawerLayout;
+	}
 }

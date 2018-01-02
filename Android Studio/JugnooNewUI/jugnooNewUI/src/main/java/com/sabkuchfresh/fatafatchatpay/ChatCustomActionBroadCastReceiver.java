@@ -8,7 +8,10 @@ import com.google.gson.Gson;
 import com.sabkuchfresh.datastructure.FuguCustomActionModel;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
+import product.clicklabs.jugnoo.home.DeepLinkAction;
+import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 
 /**
  * Created by cl-macmini-01 on 12/21/17.
@@ -16,20 +19,22 @@ import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
 
     final String ACTION_NATIVE_ACTIVITY = "NATIVE_ACTIVITY";
+    private Gson  gson = new Gson();
 
     @Override
     public void onReceive(final Context context, final Intent intent) {
 
         // handle incoming fugu broadcast
         String payload = intent.getStringExtra(Constants.FUGU_CUSTOM_ACTION_PAYLOAD);
-        FuguCustomActionModel customActionModel = new Gson().fromJson(payload, FuguCustomActionModel.class);
+        FuguCustomActionModel customActionModel = gson.fromJson(payload, FuguCustomActionModel.class);
 
         if (customActionModel != null) {
+            int linkIndex = Integer.parseInt(customActionModel.getReference());
+
             if (customActionModel.getActionType().equalsIgnoreCase(ACTION_NATIVE_ACTIVITY)) {
 
                 // get link index
                 try {
-                    int linkIndex = Integer.parseInt(customActionModel.getReference());
                     if (linkIndex == AppLinkIndex.FATAFAT_PAY_VIA_CHAT.getOrdinal()) {
                         // open fatafat chat pay passing in orderId and amount
                         if (customActionModel.getOrderId() != 0 && customActionModel.getAmount() != 0) {
