@@ -4385,6 +4385,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         super.onResume();
 
         try {
+            Data.setLastActivityOnForeground(HomeActivity.this);
 
             switchAppOfClientId(this, getCurrentPlaceLatLng());
 

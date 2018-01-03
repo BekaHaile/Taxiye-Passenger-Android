@@ -1105,6 +1105,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     protected void onResume() {
         super.onResume();
         try {
+            Data.setLastActivityOnForeground(FreshActivity.this);
             isLocationChangeCheckedAfterResume = false;
             isTimeAutomatic();
             HomeActivity.switchAppOfClientId(this, getSelectedLatLng());

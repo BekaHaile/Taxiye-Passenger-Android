@@ -12,6 +12,7 @@ import com.fugu.FuguColorConfig;
 import com.fugu.FuguConfig;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 import org.json.JSONArray;
@@ -705,23 +706,20 @@ public class Data {
         return indiaCentre;
     }
 
-    public JSONObject setUpFuguCustomData() throws JSONException {
 
-        JSONObject jsonObject = new JSONObject();
-        JSONArray deepLinksFuguShouldHandle = new JSONArray();
-        deepLinksFuguShouldHandle.put(AppLinkIndex.WALLET_TRANSACTIONS.getOrdinal());
-        deepLinksFuguShouldHandle.put(AppLinkIndex.JUGNOO_STAR.getOrdinal());
-        deepLinksFuguShouldHandle.put(AppLinkIndex.SUBSCRIPTION_PLAN_OPTION_SCREEN.getOrdinal());
-        deepLinksFuguShouldHandle.put(AppLinkIndex.NOTIFICATION_CENTER.getOrdinal());
-        deepLinksFuguShouldHandle.put(AppLinkIndex.ACCOUNT.getOrdinal());
-        deepLinksFuguShouldHandle.put(AppLinkIndex.ABOUT.getOrdinal());
-        deepLinksFuguShouldHandle.put(AppLinkIndex.PROMOTIONS.getOrdinal());
-        deepLinksFuguShouldHandle.put(AppLinkIndex.JUGNOO_CASH.getOrdinal());
-        deepLinksFuguShouldHandle.put(AppLinkIndex.INVITE_AND_EARN.getOrdinal());
-        jsonObject.put("broadcast_deep_links", deepLinksFuguShouldHandle);
-//        jsonObject.put("deep_link_req_code",Constants.FUGU_CUSTOM_REQUEST_CODE);
-        jsonObject.put("deep_link_res_code",Constants.FUGU_CUSTOM_RESULT_CODE);
-        return jsonObject;
+
+
+    private static final String JUGNOO_LAST_ACTIVITY_OPEN = "jugnoo_last_activity_open";
+    public static void setLastActivityOnForeground(Activity activity){
+        Prefs.with(activity).save(JUGNOO_LAST_ACTIVITY_OPEN,activity.getClass().getName());
+    }
+
+    public static Class getLastActivityOnForeground(Context context) throws Exception {
+        String lastActivityOpen = Prefs.with(context).getString(JUGNOO_LAST_ACTIVITY_OPEN,null);
+
+            return Class.forName(lastActivityOpen);
+
+
 
     }
 

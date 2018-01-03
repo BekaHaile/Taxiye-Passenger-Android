@@ -16,6 +16,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
@@ -115,10 +116,20 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
 
         } else */
         if(deeplink!=-1){
-            Intent intent = new Intent(context,FreshActivity.class);
-            intent.putExtras(extras);
-            intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP|FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            try {
+                Class lastActivityOpenForeground = Data.getLastActivityOnForeground(context);
+                if(!lastActivityOpenForeground.getName().equals(MyApplication.class.getName())){
+                    Intent intent = new Intent(context,lastActivityOpenForeground);
+                    intent.putExtras(extras);
+                    intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP|FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+
 
         }
     }
