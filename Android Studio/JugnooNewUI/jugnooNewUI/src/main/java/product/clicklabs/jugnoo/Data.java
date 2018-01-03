@@ -716,11 +716,7 @@ public class Data {
 
     public static Class getLastActivityOnForeground(Context context) throws Exception {
         String lastActivityOpen = Prefs.with(context).getString(JUGNOO_LAST_ACTIVITY_OPEN,null);
-
             return Class.forName(lastActivityOpen);
-
-
-
     }
 
 

@@ -185,6 +185,7 @@ import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -194,6 +195,7 @@ import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.MenuBar;
+import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
@@ -5696,7 +5698,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         try {
-            android.util.Log.e(TAG, "onNewIntent: " );
+
+            if(intent.getExtras()!=null && intent.getExtras().containsKey(Constants.FUGU_CUSTOM_ACTION_PAYLOAD)){
+                Log.i(TAG, "onNewIntent: Fugu Broadcast received" );
+                String payload = intent.getStringExtra(Constants.FUGU_CUSTOM_ACTION_PAYLOAD);
+                FuguCustomActionModel customActionModel = gson.fromJson(payload, FuguCustomActionModel.class);
+                if(customActionModel.getDeepIndex()!=null && customActionModel.getDeepIndex()!=-1){
+                    Data.deepLinkIndex = customActionModel.getDeepIndex();
+                    if(customActionModel.getDeepIndex()==AppLinkIndex.RIDE_HISTORY.getOrdinal()){
+                        Data.deepLinkOrderId = customActionModel.getOrderId();
+                        Data.deepLinkProductType = ProductType.FEED.getOrdinal();
+                    }
+                    DeepLinkAction.openDeepLink(this,getSelectedLatLng());
+                }
+
+
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

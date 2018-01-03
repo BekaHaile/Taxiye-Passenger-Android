@@ -92,6 +92,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.datastructure.FuguCustomActionModel;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.TransactionUtils;
@@ -496,6 +497,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private RelativeLayout relativeLayoutContainer;
     private FrameLayout coordinatorLayout;
     private FuguNotificationConfig fuguNotificationConfig  = new FuguNotificationConfig();;
+    Gson gson = new Gson();
 
 
     @SuppressLint("NewApi")
@@ -1016,7 +1018,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textVieGetFareEstimateConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Gson gson = new Gson();
                 Intent intent = new Intent(HomeActivity.this, FareEstimateActivity.class);
                 intent.putExtra(Constants.KEY_REGION, gson.toJson(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), Region.class));
                 intent.putExtra(Constants.KEY_COUPON_SELECTED, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
@@ -4376,6 +4377,26 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(intent.hasExtra(Constants.KEY_EVENT)
                 && intent.getStringExtra(Constants.KEY_EVENT).equalsIgnoreCase(Constants.KEY_RIDE_ACCEPTED)){
             GAUtils.event(RIDES, HOME, RIDE_ACCEPTED_PUSH+CLICKED);
+        }
+        try {
+
+            if(intent.getExtras()!=null && intent.getExtras().containsKey(Constants.FUGU_CUSTOM_ACTION_PAYLOAD)){
+                Log.i(TAG, "onNewIntent: Fugu Broadcast received" );
+                String payload = intent.getStringExtra(Constants.FUGU_CUSTOM_ACTION_PAYLOAD);
+                FuguCustomActionModel customActionModel = gson.fromJson(payload, FuguCustomActionModel.class);
+                if(customActionModel.getDeepIndex()!=null && customActionModel.getDeepIndex()!=-1){
+                    Data.deepLinkIndex = customActionModel.getDeepIndex();
+                    if(customActionModel.getDeepIndex()==AppLinkIndex.RIDE_HISTORY.getOrdinal()){
+                        Data.deepLinkOrderId = customActionModel.getOrderId();
+                        Data.deepLinkProductType = ProductType.FEED.getOrdinal();
+                    }
+                    DeepLinkAction.openDeepLink(this,getCurrentPlaceLatLng());
+                }
+
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

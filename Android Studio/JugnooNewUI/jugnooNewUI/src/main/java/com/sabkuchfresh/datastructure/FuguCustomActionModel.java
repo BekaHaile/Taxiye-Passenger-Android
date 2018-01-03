@@ -20,6 +20,9 @@ public class FuguCustomActionModel {
     @SerializedName("total_amount")
     private double amount;
 
+    @SerializedName("deepindex")
+    private Integer deepIndex;
+
     public double getAmount() {
         return amount;
     }
@@ -34,5 +37,9 @@ public class FuguCustomActionModel {
 
     public int getOrderId() {
         return orderId;
+    }
+
+    public Integer getDeepIndex() {
+        return deepIndex;
     }
 }

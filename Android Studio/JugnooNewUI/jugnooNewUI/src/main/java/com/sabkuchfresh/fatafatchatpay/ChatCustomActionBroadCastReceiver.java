@@ -1,6 +1,5 @@
 package com.sabkuchfresh.fatafatchatpay;
 
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +7,6 @@ import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.sabkuchfresh.datastructure.FuguCustomActionModel;
-import com.sabkuchfresh.home.FreshActivity;
 
 import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
@@ -17,12 +15,9 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.NotificationCenterActivity;
-import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
-import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
+import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 
@@ -59,10 +54,10 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
                             payIntent.putExtra(Constants.KEY_AMOUNT, customActionModel.getAmount());
                             payIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(payIntent);
-                        }else{
-                            handleDeepLink(linkIndex,context,intent.getExtras(),customActionModel);
                         }
 
+                    }else if(customActionModel.getDeepIndex()!=null && customActionModel.getDeepIndex()!=-1){
+                        handleDeepLink(customActionModel.getDeepIndex(),context,intent.getExtras(),customActionModel);
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
@@ -76,37 +71,46 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
 
 
 
-        if (AppLinkIndex.WALLET_TRANSACTIONS.getOrdinal() == deeplink) {
+        if(AppLinkIndex.INVITE_AND_EARN.getOrdinal()==deeplink){
+            Intent intent = new Intent(context, ShareActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
+            context.startActivity(intent);
+        }
+        else if (AppLinkIndex.WALLET_TRANSACTIONS.getOrdinal() == deeplink) {
             Intent intent = new Intent();
             intent.setClass(context, PaymentActivity.class);
             intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
             intent.putExtra(Constants.KEY_WALLET_TRANSACTIONS, 1);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         } else if (AppLinkIndex.JUGNOO_STAR.getOrdinal() == deeplink) {
-            context.startActivity(new Intent(context, JugnooStarSubscribedActivity.class));
+            context.startActivity(new Intent(context, JugnooStarSubscribedActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         } else if (AppLinkIndex.SUBSCRIPTION_PLAN_OPTION_SCREEN.getOrdinal() == deeplink) {
             if ((Data.userData.getSubscriptionData().getSubscribedUser() != null && Data.userData.getSubscriptionData().getSubscribedUser() == 1)
                     || Data.userData.isSubscriptionActive()) {
-                context.startActivity(new Intent(context, JugnooStarSubscribedActivity.class));
+                context.startActivity(new Intent(context, JugnooStarSubscribedActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             } else {
-                context.startActivity(new Intent(context, JugnooStarActivity.class));
+                context.startActivity(new Intent(context, JugnooStarActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             }
-        } else if (AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == deeplink) {
-            context.startActivity(new Intent(context, NotificationCenterActivity.class));
         } else if (AppLinkIndex.ACCOUNT.getOrdinal() == deeplink) {
-            context.startActivity(new Intent(context, AccountActivity.class));
+            context.startActivity(new Intent(context, AccountActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 
         } else if (AppLinkIndex.ABOUT.getOrdinal() == deeplink) {
-            context.startActivity(new Intent(context, AboutActivity.class));
+            context.startActivity(new Intent(context, AboutActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 
         } else if (AppLinkIndex.PROMOTIONS.getOrdinal() == deeplink) {
-            context.startActivity(new Intent(context, PromotionActivity.class));
+            context.startActivity(new Intent(context, PromotionActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
 
         } else if (AppLinkIndex.JUGNOO_CASH.getOrdinal() == deeplink) {
             Intent intent = new Intent(context, PaymentActivity.class);
             intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
-        } /*else if (AppLinkIndex.RIDE_HISTORY.getOrdinal() == deeplink) {
+        } /*
+        else if (AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == deeplink) {
+            context.startActivity(new Intent(context, NotificationCenterActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }else if (AppLinkIndex.RIDE_HISTORY.getOrdinal() == deeplink) {
             Intent intent = new Intent(context, RideTransactionsActivity.class);
             if(customActionModel.getOrderId()!=0) {
                 intent.putExtra(Constants.KEY_ORDER_ID, customActionModel.getOrderId());
@@ -115,7 +119,7 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
             context.startActivity(intent);
 
         } else */
-        if(deeplink!=-1){
+        else  if(deeplink!=-1){
             try {
                 Class lastActivityOpenForeground = Data.getLastActivityOnForeground(context);
                 if(!lastActivityOpenForeground.getName().equals(MyApplication.class.getName())){
