@@ -1071,19 +1071,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                     getFreshCheckoutMergedFragment().razorpayServiceCallback(null);
                                 }
                                 break;
-                            case "FUGU_CUSTOM_ACTION_SELECTED":
-                                // handle incoming fugu broadcast
-                                String payload = intent.getStringExtra(Constants.FUGU_CUSTOM_ACTION_PAYLOAD);
-                                FuguCustomActionModel customActionModel = gson.fromJson(payload, FuguCustomActionModel.class);
-
-                                if (customActionModel != null) {
-                                    Data.deepLinkIndex = Integer.parseInt(customActionModel.getReference());
-                                    DeepLinkAction.openDeepLink(FreshActivity.this,getSelectedLatLng());
-                                }
-
-
-                                break;
-
                         }
 
                     } catch (Exception e) {
@@ -4017,6 +4004,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
+            if(resultCode==Constants.FUGU_CUSTOM_RESULT_CODE){
+
+
+                return;
+            }
+
             if (requestCode == PaySDKUtils.REQUEST_CODE_SEND_MONEY && resultCode == Activity.RESULT_OK && data != null) {
                 MessageRequest messageRequest = getPaySDKUtils().parseSendMoneyData(data);
                 getFreshCheckoutMergedFragment().apiPlaceOrderPayCallback(messageRequest);
