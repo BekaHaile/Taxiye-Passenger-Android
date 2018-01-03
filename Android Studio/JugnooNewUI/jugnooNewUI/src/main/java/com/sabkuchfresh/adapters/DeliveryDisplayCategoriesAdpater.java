@@ -14,6 +14,7 @@ import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,6 +54,7 @@ public class DeliveryDisplayCategoriesAdpater extends RecyclerView.Adapter<Recyc
 				cachedList.add(elements.get(i));
 				elements.remove(elements.get(i));
 			}
+			Collections.reverse(cachedList);
 			elements.add(new MenusResponse.Category(CATEGORY_SEE_ALL));
 			isCategoriesCollapsed = true;
 

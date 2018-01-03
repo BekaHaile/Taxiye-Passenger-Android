@@ -4671,8 +4671,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 break;
             case Config.FEED_CLIENT_ID:
                 getOfferingData=Data.getFeedData()==null;
-
                 break;
+
             default:
                 return;
         }
@@ -5709,6 +5709,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         Data.deepLinkOrderId = customActionModel.getOrderId();
                         Data.deepLinkProductType = ProductType.FEED.getOrdinal();
                     }
+
+                    MenuAdapter.closeDrawerIfOpen(this);
                     DeepLinkAction.openDeepLink(this,getSelectedLatLng());
                 }
 

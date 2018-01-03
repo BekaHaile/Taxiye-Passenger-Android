@@ -114,6 +114,7 @@ public class AppSwitcher {
 									|| clientId.equalsIgnoreCase(Config.getMealsClientId())
 									|| clientId.equalsIgnoreCase(Config.getMenusClientId())
 									|| clientId.equalsIgnoreCase(Config.getFeedClientId())
+									|| clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId())
 									|| clientId.equalsIgnoreCase(Config.getProsClientId()))){
 						Prefs.with(activity).save(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, clientId);
 						clientId = Config.getDeliveryCustomerClientId();
@@ -409,6 +410,14 @@ public class AppSwitcher {
 							new ApiUpdateClientId().updateClientId(clientId, latLng);
 							Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 						}
+					} else if(activity instanceof FreshActivity
+							&& clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))
+							&& isOnlyFatafatNewEnabled
+							&& !"".equalsIgnoreCase(Prefs.with(activity).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, ""))){
+							Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
+							broadcastIntent.putExtra(Constants.KEY_FLAG, Constants.OPEN_APP_CLIENT_ID);
+							broadcastIntent.putExtra(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, ""));
+							LocalBroadcastManager.getInstance(activity).sendBroadcast(broadcastIntent);
 					}
 				}
 			} else {

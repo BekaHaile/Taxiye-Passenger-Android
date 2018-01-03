@@ -4390,6 +4390,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         Data.deepLinkOrderId = customActionModel.getOrderId();
                         Data.deepLinkProductType = ProductType.FEED.getOrdinal();
                     }
+                    MenuAdapter.closeDrawerIfOpen(this);
                     DeepLinkAction.openDeepLink(this,getCurrentPlaceLatLng());
                 }
 

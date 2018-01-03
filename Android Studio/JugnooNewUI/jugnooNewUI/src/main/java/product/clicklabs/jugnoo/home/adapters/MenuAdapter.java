@@ -650,7 +650,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         }, 200);
     }
 
-    private static void closeDrawerIfOpen(Activity activity) {
+    public static void closeDrawerIfOpen(Activity activity) {
         if(activity instanceof FreshActivity){
             ((FreshActivity) activity).getMenuBar().getDrawerLayout().closeDrawer(GravityCompat.START);
         }else if(activity instanceof HomeActivity){
