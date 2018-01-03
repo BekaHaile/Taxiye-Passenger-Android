@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.google.gson.Gson;
 import com.sabkuchfresh.datastructure.FuguCustomActionModel;
@@ -55,7 +56,7 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
                             payIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(payIntent);
                         }else{
-                            handleDeepLink(linkIndex,context);
+                            handleDeepLink(linkIndex,context,intent.getExtras());
                         }
 
                     }
@@ -67,39 +68,45 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
         }
     }
 
-    public void handleDeepLink(int deeplink, Context activity) {
+    public void handleDeepLink(int deeplink, Context context,Bundle extras) {
+
+       
 
         if (AppLinkIndex.WALLET_TRANSACTIONS.getOrdinal() == deeplink) {
             Intent intent = new Intent();
-            intent.setClass(activity, PaymentActivity.class);
+            intent.setClass(context, PaymentActivity.class);
             intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
             intent.putExtra(Constants.KEY_WALLET_TRANSACTIONS, 1);
-            activity.startActivity(intent);
+            context.startActivity(intent);
         } else if (AppLinkIndex.JUGNOO_STAR.getOrdinal() == deeplink) {
-            activity.startActivity(new Intent(activity, JugnooStarSubscribedActivity.class));
+            context.startActivity(new Intent(context, JugnooStarSubscribedActivity.class));
         } else if (AppLinkIndex.SUBSCRIPTION_PLAN_OPTION_SCREEN.getOrdinal() == deeplink) {
             if ((Data.userData.getSubscriptionData().getSubscribedUser() != null && Data.userData.getSubscriptionData().getSubscribedUser() == 1)
                     || Data.userData.isSubscriptionActive()) {
-                activity.startActivity(new Intent(activity, JugnooStarSubscribedActivity.class));
+                context.startActivity(new Intent(context, JugnooStarSubscribedActivity.class));
             } else {
-                activity.startActivity(new Intent(activity, JugnooStarActivity.class));
+                context.startActivity(new Intent(context, JugnooStarActivity.class));
             }
         } else if (AppLinkIndex.NOTIFICATION_CENTER.getOrdinal() == deeplink) {
-            activity.startActivity(new Intent(activity, NotificationCenterActivity.class));
+            context.startActivity(new Intent(context, NotificationCenterActivity.class));
         } else if (AppLinkIndex.ACCOUNT.getOrdinal() == deeplink) {
-            activity.startActivity(new Intent(activity, AccountActivity.class));
+            context.startActivity(new Intent(context, AccountActivity.class));
 
         } else if (AppLinkIndex.ABOUT.getOrdinal() == deeplink) {
-            activity.startActivity(new Intent(activity, AboutActivity.class));
+            context.startActivity(new Intent(context, AboutActivity.class));
 
         } else if (AppLinkIndex.PROMOTIONS.getOrdinal() == deeplink) {
-            activity.startActivity(new Intent(activity, PromotionActivity.class));
+            context.startActivity(new Intent(context, PromotionActivity.class));
 
         } else if (AppLinkIndex.JUGNOO_CASH.getOrdinal() == deeplink) {
-            Intent intent = new Intent(activity, PaymentActivity.class);
+            Intent intent = new Intent(context, PaymentActivity.class);
             intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
-            activity.startActivity(intent);
+            context.startActivity(intent);
         } else if(deeplink!=-1){
+            Intent intent = new Intent(context,FreshActivity.class);
+            intent.putExtras(extras);
+            intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP|FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
 
         }
     }

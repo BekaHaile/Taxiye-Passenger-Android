@@ -5690,4 +5690,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         v.startAnimation(a);
     }
 
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        try {
+            android.util.Log.e(TAG, "onNewIntent: " );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
