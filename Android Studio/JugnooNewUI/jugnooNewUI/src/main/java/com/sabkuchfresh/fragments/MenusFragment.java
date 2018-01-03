@@ -63,6 +63,7 @@ import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -1034,7 +1035,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                activity.getMenuBar().menuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag());
+                                MenuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag(),activity,activity.getSelectedLatLng());
                             }
                         });
                 Data.userData.setPromoSuccess(1);

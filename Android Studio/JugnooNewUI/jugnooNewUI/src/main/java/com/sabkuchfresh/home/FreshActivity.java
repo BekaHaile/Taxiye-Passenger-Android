@@ -47,7 +47,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
@@ -83,6 +82,7 @@ import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
+import com.sabkuchfresh.datastructure.FuguCustomActionModel;
 import com.sabkuchfresh.dialogs.FreshSortDialog;
 import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedChangeCityFragment;
@@ -185,6 +185,7 @@ import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -194,6 +195,7 @@ import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.MenuBar;
+import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
@@ -212,7 +214,6 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
-import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -532,7 +533,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, getIntentFiler());
 
             openPushDialog();
-            deepLinkAction.openDeepLink(menuBar);
+            deepLinkAction.openDeepLink(FreshActivity.this, getSelectedLatLng());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1052,7 +1053,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                             LocalBroadcastManager.getInstance(FreshActivity.this).sendBroadcast(intent1);
 
                                     } else if (Constants.OPEN_DEEP_INDEX == flag) {
-                                        deepLinkAction.openDeepLink(menuBar);
+                                        deepLinkAction.openDeepLink(FreshActivity.this, getSelectedLatLng());
                                     } else if (Constants.OPEN_APP_CLIENT_ID == flag && intent.hasExtra(Constants.KEY_CLIENT_ID)) {
                                         final String clientId = intent.getStringExtra(Constants.KEY_CLIENT_ID);
                                         if(!Config.getLastOpenedClientId(FreshActivity.this).equalsIgnoreCase(clientId)){
@@ -1072,7 +1073,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                     getFreshCheckoutMergedFragment().razorpayServiceCallback(null);
                                 }
                                 break;
-
                         }
 
                     } catch (Exception e) {
@@ -1107,9 +1107,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     protected void onResume() {
         super.onResume();
         try {
+            Data.setLastActivityOnForeground(FreshActivity.this);
             isLocationChangeCheckedAfterResume = false;
             isTimeAutomatic();
-            HomeActivity.switchAppOfClientId(this, getCurrentPlaceLatLng());
+            HomeActivity.switchAppOfClientId(this, getSelectedLatLng());
 
 
             if (!HomeActivity.checkIfUserDataNull(this)) {
@@ -2778,9 +2779,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         mContactNo = vendorMenuResponse.getSupportContact();
     }
 
-    public LatLng getCurrentPlaceLatLng() {
-        return getSelectedLatLng();
-    }
 
     public TransactionUtils getTransactionUtils() {
         if (transactionUtils == null) {
@@ -3183,7 +3181,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             public void onButtonClicked(int deepIndex, String url) {
                 if ("".equalsIgnoreCase(url)) {
                     Data.deepLinkIndex = deepIndex;
-                    deepLinkAction.openDeepLink(menuBar);
+                    deepLinkAction.openDeepLink(FreshActivity.this, getSelectedLatLng());
                 } else {
                     Utils.openUrl(FreshActivity.this, url);
                 }
@@ -3206,7 +3204,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void openDeepIndex(){
         if(deepLinkAction != null && menuBar != null) {
-            deepLinkAction.openDeepLink(menuBar);
+            deepLinkAction.openDeepLink(FreshActivity.this, getSelectedLatLng());
         }
     }
 
@@ -4009,6 +4007,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
+            if(resultCode==Constants.FUGU_CUSTOM_RESULT_CODE){
+
+
+                return;
+            }
+
             if (requestCode == PaySDKUtils.REQUEST_CODE_SEND_MONEY && resultCode == Activity.RESULT_OK && data != null) {
                 MessageRequest messageRequest = getPaySDKUtils().parseSendMoneyData(data);
                 getFreshCheckoutMergedFragment().apiPlaceOrderPayCallback(messageRequest);
@@ -4305,6 +4309,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         if(getTopFragment() instanceof AnywhereHomeFragment){
             ((AnywhereHomeFragment)getTopFragment()).showFatafatTutorial();
         }
+    }
+
+    public LatLng getCurrentPlaceLatLng() {
+        return getSelectedLatLng();
     }
 
 
@@ -5685,4 +5693,29 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         v.startAnimation(a);
     }
 
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        try {
+
+            if(intent.getExtras()!=null && intent.getExtras().containsKey(Constants.FUGU_CUSTOM_ACTION_PAYLOAD)){
+                Log.i(TAG, "onNewIntent: Fugu Broadcast received" );
+                String payload = intent.getStringExtra(Constants.FUGU_CUSTOM_ACTION_PAYLOAD);
+                FuguCustomActionModel customActionModel = gson.fromJson(payload, FuguCustomActionModel.class);
+                if(customActionModel.getDeepIndex()!=null && customActionModel.getDeepIndex()!=-1){
+                    Data.deepLinkIndex = customActionModel.getDeepIndex();
+                    if(customActionModel.getDeepIndex()==AppLinkIndex.RIDE_HISTORY.getOrdinal()){
+                        Data.deepLinkOrderId = customActionModel.getOrderId();
+                        Data.deepLinkProductType = ProductType.FEED.getOrdinal();
+                    }
+                    DeepLinkAction.openDeepLink(this,getSelectedLatLng());
+                }
+
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

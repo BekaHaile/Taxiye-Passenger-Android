@@ -92,6 +92,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.datastructure.FuguCustomActionModel;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.TransactionUtils;
@@ -123,7 +124,6 @@ import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.DeleteCacheIntentService;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.GCMIntentService;
 import product.clicklabs.jugnoo.JSONParser;
@@ -170,6 +170,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyDisableDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
+import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
@@ -496,6 +497,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private RelativeLayout relativeLayoutContainer;
     private FrameLayout coordinatorLayout;
     private FuguNotificationConfig fuguNotificationConfig  = new FuguNotificationConfig();;
+    Gson gson = new Gson();
 
 
     @SuppressLint("NewApi")
@@ -1002,7 +1004,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         GAUtils.event(RIDES, HOME, OFFERS+BAR+CLICKED);
 					} else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
 						Data.deepLinkIndex = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex();
-                        deepLinkAction.openDeepLink(menuBar);
+                        deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
                         GAUtils.event(RIDES, HOME, OFFERS+BAR+CLICKED);
 					}
                 } catch (Exception e) {
@@ -1016,7 +1018,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textVieGetFareEstimateConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Gson gson = new Gson();
                 Intent intent = new Intent(HomeActivity.this, FareEstimateActivity.class);
                 intent.putExtra(Constants.KEY_REGION, gson.toJson(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), Region.class));
                 intent.putExtra(Constants.KEY_COUPON_SELECTED, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
@@ -1339,7 +1340,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 try {
                     Data.deepLinkIndex = Data.autoData.getRideStartInviteTextDeepIndexV2();
-                    deepLinkAction.openDeepLink(menuBar);
+                    deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
                     GAUtils.event(RIDES, RIDE+IN_PROGRESS, Constants.REFERRAL+CLICKED);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -3587,7 +3588,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         new OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                menuBar.menuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag());
+                                MenuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag(),0,0,HomeActivity.this,getCurrentPlaceLatLng());
                             }
                         });
                 Data.userData.setPromoSuccess(1);
@@ -4377,6 +4378,26 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 && intent.getStringExtra(Constants.KEY_EVENT).equalsIgnoreCase(Constants.KEY_RIDE_ACCEPTED)){
             GAUtils.event(RIDES, HOME, RIDE_ACCEPTED_PUSH+CLICKED);
         }
+        try {
+
+            if(intent.getExtras()!=null && intent.getExtras().containsKey(Constants.FUGU_CUSTOM_ACTION_PAYLOAD)){
+                Log.i(TAG, "onNewIntent: Fugu Broadcast received" );
+                String payload = intent.getStringExtra(Constants.FUGU_CUSTOM_ACTION_PAYLOAD);
+                FuguCustomActionModel customActionModel = gson.fromJson(payload, FuguCustomActionModel.class);
+                if(customActionModel.getDeepIndex()!=null && customActionModel.getDeepIndex()!=-1){
+                    Data.deepLinkIndex = customActionModel.getDeepIndex();
+                    if(customActionModel.getDeepIndex()==AppLinkIndex.RIDE_HISTORY.getOrdinal()){
+                        Data.deepLinkOrderId = customActionModel.getOrderId();
+                        Data.deepLinkProductType = ProductType.FEED.getOrdinal();
+                    }
+                    DeepLinkAction.openDeepLink(this,getCurrentPlaceLatLng());
+                }
+
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     boolean ignoreTimeCheckFetchWalletBalance = true;
@@ -4385,6 +4406,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         super.onResume();
 
         try {
+            Data.setLastActivityOnForeground(HomeActivity.this);
 
             switchAppOfClientId(this, getCurrentPlaceLatLng());
 
@@ -4516,7 +4538,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 && !Prefs.with(this).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "").equalsIgnoreCase("")){ //or deeplink to other client id
             Data.deepLinkIndex = AppLinkIndex.DELIVERY_CUSTOMER_PAGE.getOrdinal();
         }
-        deepLinkAction.openDeepLink(menuBar);
+        deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
         performDeepLinkForLatLngRequest();
     }
 
@@ -8228,7 +8250,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onButtonClicked(int deepIndex, String url) {
                 if("".equalsIgnoreCase(url)) {
                     Data.deepLinkIndex = deepIndex;
-                    deepLinkAction.openDeepLink(menuBar);
+                    deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
                 } else{
                     Utils.openUrl(HomeActivity.this, url);
                 }
@@ -9669,7 +9691,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     public void openNotification() {
-        menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag());
+        menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag(),0,0,HomeActivity.this,getCurrentPlaceLatLng());
     }
 
     private BroadcastReceiver pushBroadcastReceiver = new BroadcastReceiver() {
@@ -9735,7 +9757,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 tvChatCount.setVisibility(View.VISIBLE);
                                 tvChatCount.setText(String.valueOf(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 1)));
                             } else if (Constants.OPEN_DEEP_INDEX == flag) {
-                                deepLinkAction.openDeepLink(menuBar);
+                                deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
                             }
                         }
                     } catch (Exception e) {
@@ -9869,5 +9891,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             return 1000;
         }
         return MAP_ANIMATE_DURATION;
+    }
+
+    public MenuBar getMenuBar() {
+        return menuBar;
     }
 }

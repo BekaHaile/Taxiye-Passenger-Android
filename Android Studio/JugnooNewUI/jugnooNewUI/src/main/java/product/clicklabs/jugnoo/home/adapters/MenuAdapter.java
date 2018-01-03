@@ -263,7 +263,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         try {
                             int pos = (int)v.getTag();
                             String tag = menuList.get(pos).getTag();
-                            onClickAction(tag);
+                            onClickAction(tag,activity,getLatLng());
                             if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(tag)){
                                 GAUtils.event(SIDE_MENU, FREE_GIFT+CLICKED, "");
                             } else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(tag)){
@@ -336,7 +336,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             holder.linearLayoutSubAutos.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickAction(MenuInfoTags.GET_A_RIDE.getTag());
+                    onClickAction(MenuInfoTags.GET_A_RIDE.getTag(),activity,getLatLng());
                     holder.imageViewArrow.setRotation(270);
                   //  holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, RIDES);
@@ -346,7 +346,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             holder.linearLayoutSubFresh.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickAction(MenuInfoTags.FRESH.getTag());
+                    onClickAction(MenuInfoTags.FRESH.getTag(),activity,getLatLng());
                     holder.imageViewArrow.setRotation(270);
                  //   holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, FRESH);
@@ -356,7 +356,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             holder.linearLayoutSubMeals.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickAction(MenuInfoTags.MEALS.getTag());
+                    onClickAction(MenuInfoTags.MEALS.getTag(),activity,getLatLng());
                 //    holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     holder.imageViewArrow.setRotation(270);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, MEALS);
@@ -367,7 +367,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             holder.linearLayoutSubGrocery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickAction(MenuInfoTags.GROCERY.getTag());
+                    onClickAction(MenuInfoTags.GROCERY.getTag(),activity,getLatLng());
                     holder.imageViewArrow.setRotation(270);
                 //    holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, FRESH);
@@ -377,7 +377,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             holder.linearLayoutSubMenus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickAction(MenuInfoTags.MENUS.getTag());
+                    onClickAction(MenuInfoTags.MENUS.getTag(),activity,getLatLng());
                     holder.imageViewArrow.setRotation(270);
                  //   holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, GAAction.MENUS);
@@ -387,7 +387,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             holder.linearlayoutDeliveryCustomer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickAction(MenuInfoTags.DELIVERY_CUSTOMER.getTag());
+                    onClickAction(MenuInfoTags.DELIVERY_CUSTOMER.getTag(),activity,getLatLng());
                     holder.imageViewArrow.setRotation(270);
                  //   holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, GACategory.DELIVERY_CUSTOMER);
@@ -397,7 +397,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             holder.linearLayoutSubPay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickAction(MenuInfoTags.PAY.getTag());
+                    onClickAction(MenuInfoTags.PAY.getTag(),activity,getLatLng());
                     holder.imageViewArrow.setRotation(270);
                   //  holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     GAUtils.event(JUGNOO, PAY+HOME, LEFT_MENU_ICON+CLICKED);
@@ -408,7 +408,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             holder.linearLayoutSubFeed.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickAction(MenuInfoTags.FEED.getTag());
+                    onClickAction(MenuInfoTags.FEED.getTag(),activity,getLatLng());
                  //   holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     holder.imageViewArrow.setRotation(270);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, FEED);
@@ -418,7 +418,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             holder.linearLayoutSubPros.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onClickAction(MenuInfoTags.PROS.getTag());
+                    onClickAction(MenuInfoTags.PROS.getTag(),activity,getLatLng());
                     //    holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     holder.imageViewArrow.setRotation(270);
                     GAUtils.event(SIDE_MENU, CATEGORY+CLICKED, PROS);
@@ -433,7 +433,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         if(activity instanceof HomeActivity){
             latLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
         } else if(activity instanceof FreshActivity){
-            latLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
+            latLng = ((FreshActivity)activity).getSelectedLatLng();
         } else if(activity instanceof MainActivity){
             latLng = ((MainActivity)activity).getCurrentPlaceLatLng();
         } else if(activity instanceof HomeSwitcherActivity){
@@ -488,57 +488,24 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         return TYPE_ITEM;
     }
 
-    public void onClickAction(final String tag){
-        onClickAction(tag, 0, 0);
+    public static void onClickAction(final String tag,Activity activity,LatLng latLng){
+        onClickAction(tag, 0, 0,activity,latLng);
     }
 
-    public void onClickAction(final String tag, final int orderId, final int productType){
+    public static void onClickAction(final String tag, final int orderId, final int productType, final Activity activity, final LatLng  latLng){
         try {
             if(MenuInfoTags.GAME.getTag().equalsIgnoreCase(tag)){
                 if (Data.userData.getGamePredictEnable() == 1) {
                     Intent intent = new Intent(activity, T20Activity.class);
                     activity.startActivity(intent);
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    Bundle bundle = new Bundle();
-                    String gameName = "";
-                    for(MenuInfo menuInfo : menuList){
-                        if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.GAME.getTag())){
-                            gameName = menuInfo.getName();
-                            break;
-                        }
-                    }
-                    gameName = gameName.replaceAll("\\W", "_");
+
                 }
             } else if((MenuInfoTags.GET_A_RIDE.getTag().equalsIgnoreCase(tag))) {
-                drawerLayout.closeDrawer(GravityCompat.START);
-                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), getLatLng(), false);
+                closeDrawerIfOpen(activity);
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), latLng, false);
             } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(tag)){
-                if(activity instanceof HomeActivity) {
-//                    if(1 == Data.freshAvailable) {
-//                        if (((HomeActivity) activity).map != null
-//                                && ((HomeActivity)activity).mapStateListener != null
-//                                && ((HomeActivity)activity).mapStateListener.isMapSettled()) {
-//                            Data.latitude = ((HomeActivity) activity).map.getCameraPosition().target.latitude;
-//                            Data.longitude = ((HomeActivity) activity).map.getCameraPosition().target.longitude;
-//                        }
-//                        try {
-//                            if(!Data.userData.getFatafatUrlLink().trim().equalsIgnoreCase("")) {
-//                                Log.v("fatafat url link", "---> " + Data.userData.getFatafatUrlLink());
-//                                activity.startActivity(new Intent(activity, WebActivity.class));
-//                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-//                            } else{
-//                                CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
-//                            }
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                            CustomAppLauncher.launchApp(activity, AccessTokenGenerator.FATAFAT_FRESH_PACKAGE);
-//                        }
-//                        NudgeClient.trackEventUserId(activity, FlurryEventNames.NUDGE_JUGNOO_FRESH_CLICKED, null);
-//                        Bundle bundle = new Bundle();
-//                        MyApplication.getInstance().logEvent(FirebaseEvents.INFORMATIVE+"_"+FirebaseEvents.MENU+"_"+FirebaseEvents.FRESH, bundle);
-//                        FlurryEventLogger.eventGA(Constants.REVENUE+Constants.SLASH+Constants.ACTIVATION+Constants.SLASH+Constants.RETENTION, "Home Screen", "fresh");
-//                    }
-                }
+
             }
             else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(tag)){
                 Intent intent = new Intent(activity, ShareActivity.class);
@@ -561,7 +528,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 if(activity instanceof HomeActivity){
                     currLatLng = ((HomeActivity)activity).getCurrentPlaceLatLng();
                 } else if(activity instanceof FreshActivity){
-                    currLatLng = ((FreshActivity)activity).getCurrentPlaceLatLng();
+                    currLatLng = ((FreshActivity)activity).getSelectedLatLng();
                 }
 
                 if(currLatLng != null){
@@ -572,7 +539,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
             }else if(MenuInfoTags.OFFERS.getTag().equalsIgnoreCase(tag)) {
-                LatLng currLatLng = getLatLng();
+                LatLng currLatLng = latLng;
 
                 if (currLatLng != null) {
                     Data.latitude = currLatLng.latitude;
@@ -587,7 +554,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                             new Utils.AlertCallBackWithButtonsInterface() {
                                 @Override
                                 public void positiveClick(View v) {
-                                    onClickAction(tag);
+                                    onClickAction(tag,orderId,productType,activity,latLng);
                                 }
 
                                 @Override
@@ -637,28 +604,28 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
             }
             else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
-                openOffering(Config.getFreshClientId());
+                openOffering(Config.getFreshClientId(), activity,latLng);
             }
             else if(MenuInfoTags.MEALS.getTag().equalsIgnoreCase(tag)){
-                openOffering(Config.getMealsClientId());
+                openOffering(Config.getMealsClientId(), activity,latLng);
             }
             else if(MenuInfoTags.GROCERY.getTag().equalsIgnoreCase(tag)){
-                openOffering(Config.getGroceryClientId());
+                openOffering(Config.getGroceryClientId(), activity,latLng);
             }
             else if(MenuInfoTags.MENUS.getTag().equalsIgnoreCase(tag)){
-                openOffering(Config.getMenusClientId());
+                openOffering(Config.getMenusClientId(), activity,latLng);
             }
             else if(MenuInfoTags.DELIVERY_CUSTOMER.getTag().equalsIgnoreCase(tag)){
-                openOffering(Config.getDeliveryCustomerClientId());
+                openOffering(Config.getDeliveryCustomerClientId(), activity,latLng);
             }
             else if(MenuInfoTags.PAY.getTag().equalsIgnoreCase(tag)){
-                openOffering(Config.getPayClientId());
+                openOffering(Config.getPayClientId(), activity,latLng);
             }
             else if(MenuInfoTags.FEED.getTag().equalsIgnoreCase(tag)){
-                openOffering(Config.getFeedClientId());
+                openOffering(Config.getFeedClientId(), activity,latLng);
             }
             else if(MenuInfoTags.PROS.getTag().equalsIgnoreCase(tag)){
-                openOffering(Config.getProsClientId());
+                openOffering(Config.getProsClientId(), activity,latLng);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -672,17 +639,26 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         }
         return handler;
     }
-    private void openOffering(final String clientId){
-        drawerLayout.closeDrawer(GravityCompat.START);
-        getHandler().postDelayed(new Runnable() {
+    private static void openOffering(final String clientId, final Activity activity, final LatLng latLng){
+        closeDrawerIfOpen(activity);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                MyApplication.getInstance().getAppSwitcher().switchApp(activity, clientId, getLatLng(), false);
+                MyApplication.getInstance().getAppSwitcher().switchApp(activity, clientId, latLng, false);
             }
         }, 200);
     }
 
-    public void accountClick(){
+    private static void closeDrawerIfOpen(Activity activity) {
+        if(activity instanceof FreshActivity){
+            ((FreshActivity) activity).getMenuBar().getDrawerLayout().closeDrawer(GravityCompat.START);
+        }else if(activity instanceof HomeActivity){
+            ((HomeActivity) activity).getMenuBar().getDrawerLayout().closeDrawer(GravityCompat.START);
+        }
+    }
+
+    public static void accountClick(Activity activity){
         activity.startActivity(new Intent(activity, AccountActivity.class));
         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }

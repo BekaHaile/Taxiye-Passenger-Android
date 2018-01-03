@@ -755,8 +755,8 @@ public class JSONParser implements Constants {
             }
         } catch (Exception e){
             e.printStackTrace();
-        }
     }
+        }
 
 
     public String parseAccessTokenLoginData(Context context, String response, LoginResponse loginResponse,

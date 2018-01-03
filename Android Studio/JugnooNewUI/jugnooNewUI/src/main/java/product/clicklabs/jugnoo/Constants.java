@@ -834,5 +834,7 @@ public interface Constants {
     // fugu custom action
     String FUGU_CUSTOM_ACTION_PAYLOAD = "FUGU_CUSTOM_ACTION_PAYLOAD";
     String FUGU_CACHE_CLEARED = "FUGU_CACHE_CLEARED";//since data model was changed in fugu after jugnoo version 358 we had to ensure the old caches are cleared as it created conflict and ANR
+    String FUGU_CUSTOM_REQUEST_CODE = "product.clicklabs.jugnoo.CUSTOM_DATA_REQUEST_CODE";
+    int FUGU_CUSTOM_RESULT_CODE = 0x1010 ;
 
 }

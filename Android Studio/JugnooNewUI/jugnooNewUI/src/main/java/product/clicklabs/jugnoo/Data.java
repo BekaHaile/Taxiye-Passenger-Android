@@ -12,7 +12,12 @@ import com.fugu.FuguColorConfig;
 import com.fugu.FuguConfig;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
+import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -700,5 +705,19 @@ public class Data {
         }
         return indiaCentre;
     }
+
+
+
+
+    private static final String JUGNOO_LAST_ACTIVITY_OPEN = "jugnoo_last_activity_open";
+    public static void setLastActivityOnForeground(Activity activity){
+        Prefs.with(activity).save(JUGNOO_LAST_ACTIVITY_OPEN,activity.getClass().getName());
+    }
+
+    public static Class getLastActivityOnForeground(Context context) throws Exception {
+        String lastActivityOpen = Prefs.with(context).getString(JUGNOO_LAST_ACTIVITY_OPEN,null);
+            return Class.forName(lastActivityOpen);
+    }
+
 
 }
