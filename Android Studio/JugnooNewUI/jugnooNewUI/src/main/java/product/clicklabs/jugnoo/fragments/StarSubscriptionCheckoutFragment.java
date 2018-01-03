@@ -391,7 +391,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 paySlider.sliderText.setText(R.string.swipe_right_to_pay);
                 llRideInfo.setVisibility(View.GONE);
                 textViewPaymentVia.setText(R.string.choose_payment_method);
-                llFatafatChatPay.setVisibility(View.VISIBLE);
 
                 // initiate upi flow if payment is pending
                 if(isUpiPending){
