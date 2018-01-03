@@ -17,7 +17,10 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.NotificationCenterActivity;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
+import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
@@ -56,7 +59,7 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
                             payIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             context.startActivity(payIntent);
                         }else{
-                            handleDeepLink(linkIndex,context,intent.getExtras());
+                            handleDeepLink(linkIndex,context,intent.getExtras(),customActionModel);
                         }
 
                     }
@@ -68,9 +71,9 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
         }
     }
 
-    public void handleDeepLink(int deeplink, Context context,Bundle extras) {
+    public void handleDeepLink(int deeplink, Context context,Bundle extras,FuguCustomActionModel customActionModel) {
 
-       
+
 
         if (AppLinkIndex.WALLET_TRANSACTIONS.getOrdinal() == deeplink) {
             Intent intent = new Intent();
@@ -102,7 +105,16 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
             Intent intent = new Intent(context, PaymentActivity.class);
             intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
             context.startActivity(intent);
-        } else if(deeplink!=-1){
+        } /*else if (AppLinkIndex.RIDE_HISTORY.getOrdinal() == deeplink) {
+            Intent intent = new Intent(context, RideTransactionsActivity.class);
+            if(customActionModel.getOrderId()!=0) {
+                intent.putExtra(Constants.KEY_ORDER_ID, customActionModel.getOrderId());
+                intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.FEED);
+            }
+            context.startActivity(intent);
+
+        } else */
+        if(deeplink!=-1){
             Intent intent = new Intent(context,FreshActivity.class);
             intent.putExtras(extras);
             intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP|FLAG_ACTIVITY_SINGLE_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
