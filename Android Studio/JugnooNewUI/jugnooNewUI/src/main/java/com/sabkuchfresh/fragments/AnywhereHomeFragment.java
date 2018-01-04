@@ -19,6 +19,7 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -101,6 +102,16 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     @Bind(R.id.rlDeliveryCharge)
     RelativeLayout rlDeliveryCharge;
     AnywhereDeliveryChargesDialog anywhereDeliveryChargesDialog;
+    @Bind(R.id.tv_promo_label)
+    TextView tvPromoLabel;
+    @Bind(R.id.edtPromo)
+    EditText edtPromo;
+    @Bind(R.id.tv_apply)
+    Button tvApplyPromo;
+    @Bind(R.id.tv_promo_error)
+    TextView tvPromoError;
+    @Bind(R.id.cv_promo)
+    CardView cvPromo;
     private ForegroundColorSpan textHintColorSpan;
 
     // TODO: 28/11/17 Slider stuck on fatafat error
@@ -126,6 +137,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private String selectedTime;
     private TimePickerFragment timePickerFragment;
     private FatafatTutorialDialog mFatafatTutorialDialog;
+    private DynamicDeliveryResponse.ReferalCode currentPromoApplied;
     private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -281,8 +293,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         };
         switchDeliveryTime.setOnCheckedChangeListener(switchListenerTime);
         switchDeliveryTime.setChecked(true);
-        fetchDynamicDeliveryCharges(false,false);
-
+        fetchDynamicDeliveryCharges(false, false);
+//        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN|WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        tvPromoLabel.setVisibility(Data.getFeedData().showPromoBox()?View.VISIBLE:View.GONE);
+        cvPromo.setVisibility(Data.getFeedData().showPromoBox()?View.VISIBLE:View.GONE);
+        tvPromoError.setVisibility(View.GONE);
         return rootView;
     }
 
@@ -295,6 +310,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+//        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         ButterKnife.unbind(this);
     }
 
@@ -356,7 +372,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     }
 
-    @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st, R.id.rlDeliveryCharge})
+    @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st, R.id.rlDeliveryCharge,R.id.tv_apply})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.cv_pickup_address:
@@ -390,10 +406,16 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                 if (anywhereDeliveryChargesDialog != null) {
                     anywhereDeliveryChargesDialog.show();
+                } else {
+                    fetchDynamicDeliveryCharges(true, true);
                 }
-                else {
-                    fetchDynamicDeliveryCharges(true,true);
+                break;
+            case R.id.tv_apply:
+                if(shouldSendPromoCodeParams()  )
+                {
+                    fetchDynamicDeliveryCharges(false,true);
                 }
+
                 break;
         }
     }
@@ -405,13 +427,14 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
             activity.fragmentUISetup(this);
         } else {
+//            activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             activity.unRegisterKeyBoardListener();
         }
     }
 
     public void setRequestedAddress(SearchResult searchResult) {
         setAddress(!isPickUpAddressRequested, searchResult);
-        fetchDynamicDeliveryCharges(false,false);
+        fetchDynamicDeliveryCharges(false, false);
 
     }
 
@@ -501,6 +524,9 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         params.put(Constants.KEY_TO_LONGITUDE, String.valueOf(deliveryAddress.getLongitude()));
         params.put(Constants.KEY_IS_IMMEDIATE, isAsapSelected ? "1" : "0");
         params.put(Constants.KEY_USER_IDENTIFIER, String.valueOf(Data.userData.userIdentifier));
+        if(currentPromoApplied!=null){
+            params.put(Constants.PROMO_CODE, String.valueOf(currentPromoApplied.getId()));
+        }
 
         String finalDateTime = null;
         if (!isAsapSelected) {
@@ -564,17 +590,16 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                             }, 1000);
 
 
-
                             if (orderAnywhereResponse != null && !TextUtils.isEmpty(orderAnywhereResponse.getFuguChannelId())) {
 
                                 // start ride transaction with indication to start fugu chat
                                 Intent intent = new Intent(activity, RideTransactionsActivity.class);
-                                intent.putExtra(Constants.KEY_ORDER_ID,orderAnywhereResponse.getOrderId());
+                                intent.putExtra(Constants.KEY_ORDER_ID, orderAnywhereResponse.getOrderId());
                                 intent.putExtra(Constants.KEY_PRODUCT_TYPE, ProductType.FEED.getOrdinal());
-                                intent.putExtra(Constants.KEY_FUGU_CHANNEL_ID,orderAnywhereResponse.getFuguChannelId());
-                                intent.putExtra(Constants.KEY_FUGU_CHANNEL_NAME,orderAnywhereResponse.getFuguChannelName());
-                                intent.putStringArrayListExtra(Constants.KEY_FUGU_TAGS,orderAnywhereResponse.getFuguTags());
-                                intent.putExtra(Constants.KEY_MESSAGE,fuguMessage);
+                                intent.putExtra(Constants.KEY_FUGU_CHANNEL_ID, orderAnywhereResponse.getFuguChannelId());
+                                intent.putExtra(Constants.KEY_FUGU_CHANNEL_NAME, orderAnywhereResponse.getFuguChannelName());
+                                intent.putStringArrayListExtra(Constants.KEY_FUGU_TAGS, orderAnywhereResponse.getFuguTags());
+                                intent.putExtra(Constants.KEY_MESSAGE, fuguMessage);
 
                                 activity.startActivity(intent);
                                 activity.overridePendingTransition(R.anim.hold, R.anim.hold);
@@ -646,7 +671,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     /**
      * Calculates and shows the delivery charges
      * @param showFareBreakUp whether to show fare breakup after calculation
-     * @param showLoader whether to show loader
+     * @param showLoader      whether to show loader
      */
     private void fetchDynamicDeliveryCharges(final boolean showFareBreakUp, final boolean showLoader) {
 
@@ -664,6 +689,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             params.put(Constants.KEY_TO_LATITUDE, String.valueOf(deliveryAddress.getLatitude()));
             params.put(Constants.KEY_TO_LONGITUDE, String.valueOf(deliveryAddress.getLongitude()));
 
+
+
+            if(shouldSendPromoCodeParams() )
+            {
+                params.put(Constants.PROMO_CODE,currentPromoApplied==null?edtPromo.getText().toString().trim():"");
+            }
 
             new ApiCommon<DynamicDeliveryResponse>(activity).showLoader(showLoader).execute(params, ApiName.ANYWHERE_DYNAMIC_DELIVERY,
                     new APICommonCallback<DynamicDeliveryResponse>() {
@@ -700,13 +731,16 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                         }
                                     }, dynamicDeliveryResponse.getDeliveryCharges().getPopupData(), dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges(), dynamicDeliveryResponse.getDeliveryCharges().getTandC());
 
-                                    if(showFareBreakUp && activity!=null && !activity.isFinishing()){
+                                    if (showFareBreakUp && activity != null && !activity.isFinishing()) {
                                         anywhereDeliveryChargesDialog.show();
                                     }
+
 
                                 } else {
                                     resetDeliveryViews();
                                 }
+
+                                setPromoView(dynamicDeliveryResponse.getReferalCode());
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -731,14 +765,45 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                         }
                     });
-        }else{
-            if(showLoader){
-                Utils.showToast(activity,getString(R.string.add_delivery_address));
+        } else {
+            if (showLoader) {
+                Utils.showToast(activity, getString(R.string.add_delivery_address));
 
             }
 
         }
 
+    }
+
+    private boolean shouldSendPromoCodeParams() {
+        return (currentPromoApplied==null && edtPromo.getText().toString().trim().length()>0 && tvPromoError.getVisibility()!= View.VISIBLE) /*applyCase */|| currentPromoApplied!=null  /*removecase*/;
+    }
+
+    private void setPromoView(DynamicDeliveryResponse.ReferalCode referalCode) {
+        if(referalCode!=null){
+            tvPromoError.setText(referalCode.getMessage());
+            tvPromoError.setVisibility(View.VISIBLE);
+            if(referalCode.isError() || referalCode.getId()==null){
+                currentPromoApplied = null;
+                edtPromo.setEnabled(true);
+                tvPromoError.setTextColor(ContextCompat.getColor(activity,R.color.red_dark));
+                tvApplyPromo.setText(R.string.label_apply);
+            }else{
+                currentPromoApplied = referalCode;
+                edtPromo.setText(referalCode.getReferalName());
+                tvPromoError.setTextColor(ContextCompat.getColor(activity,R.color.green_light));
+                tvApplyPromo.setText(R.string.label_remove);
+                edtPromo.setEnabled(false);
+            }
+
+        }else{
+            currentPromoApplied = null;
+            edtPromo.setEnabled(true);
+            edtPromo.setText(null);
+            tvPromoError.setVisibility(View.GONE);
+
+
+        }
     }
 
     private void resetDeliveryViews() {
@@ -752,10 +817,9 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
      */
     public void showFatafatTutorial() {
 
-        if(mFatafatTutorialDialog!=null){
+        if (mFatafatTutorialDialog != null) {
             mFatafatTutorialDialog.showDialog();
-        }
-        else {
+        } else {
             if (Data.getFeedData().getFatafatTutorialData() != null &&
                     Data.getFeedData().getFatafatTutorialData().size() != 0) {
                 mFatafatTutorialDialog = new FatafatTutorialDialog(activity, Data.getFeedData().getFatafatTutorialData());

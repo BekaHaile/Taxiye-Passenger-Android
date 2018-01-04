@@ -16,6 +16,13 @@ public class DynamicDeliveryResponse extends FeedCommonResponse {
     @SerializedName("delivery_charges")
     private DeliveryCharges deliveryCharges;
 
+    @SerializedName("referal_code")
+    private ReferalCode referalCode;
+
+
+    public ReferalCode getReferalCode() {
+        return referalCode;
+    }
 
     public DeliveryCharges getDeliveryCharges() {
         return deliveryCharges;
@@ -56,6 +63,36 @@ public class DynamicDeliveryResponse extends FeedCommonResponse {
 
         public double getEstimatedCharges() {
             return estimatedCharges;
+        }
+    }
+
+    public class ReferalCode{
+        @SerializedName("referal_name")
+        private String referalName;
+
+        @SerializedName("referal_id")
+        private Integer id;
+
+        @SerializedName("message")
+        private String message;
+
+        @SerializedName("is_error")
+        private int isError;
+
+        public String getReferalName() {
+            return referalName;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public boolean isError(){
+            return isError==1;
         }
     }
 }

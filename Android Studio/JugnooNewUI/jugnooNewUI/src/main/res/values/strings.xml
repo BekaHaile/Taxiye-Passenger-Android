@@ -1431,8 +1431,9 @@
     <string name="your_location">Your Location</string>
 
     <string name="title_fatafat_home_page">All Stores</string>
-
-
+    <string name="label_promo">Promo Code</string>
+    <string name="label_remove">REMOVE</string>
+    <string name="label_apply">Apply</string>
 
 
 </resources>

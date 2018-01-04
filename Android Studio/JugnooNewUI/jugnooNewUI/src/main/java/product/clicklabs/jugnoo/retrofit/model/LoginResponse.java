@@ -592,7 +592,11 @@ public class LoginResponse {
 		public void setCountNotificationPollingInterval(int countNotificationPollingInterval) {
 			this.countNotificationPollingInterval = countNotificationPollingInterval;
 		}
-	}
+
+		public boolean showPromoBox() {
+			return true;
+		}
+    }
 
 	public class Pay{
 		@SerializedName("promotions")

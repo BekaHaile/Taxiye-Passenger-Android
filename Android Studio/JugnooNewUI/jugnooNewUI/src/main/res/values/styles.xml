@@ -871,4 +871,10 @@
         <item name="android:background">@drawable/bg_white_layer_shadow</item>
     </style>
 
+    <style name="EditText.Fatafat.Theme" parent="TransparentTheme">
+    <item name="colorControlNormal">#c5c5c5</item>
+    <item name="colorControlActivated">#c5c5c5</item>
+    <item name="colorControlHighlight">#c5c5c5</item>
+</style>
+
 </resources>
