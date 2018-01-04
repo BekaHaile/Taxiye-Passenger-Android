@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,6 +49,16 @@ public class FetchFeedbackResponse {
 	private int hasAlreadyRated;
 	@SerializedName("review_count")
 	private long reviewCount;
+	@SerializedName("user_review")
+	private Review userReview;
+
+	public Review getUserReview() {
+		return userReview;
+	}
+
+	public void setUserReview(final Review userReview) {
+		this.userReview = userReview;
+	}
 
 	public Integer getFlag() {
 		return flag;

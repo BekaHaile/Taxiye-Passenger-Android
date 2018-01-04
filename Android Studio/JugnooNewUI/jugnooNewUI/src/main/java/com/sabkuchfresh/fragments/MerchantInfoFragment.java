@@ -144,11 +144,20 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     TextView tvMerchantPhone;
     @Bind(R.id.tvOutOfRadiusFatafatBanner)
     TextView tvOutOfRadiusFatafatBanner;
+    @Bind(R.id.llMyReview)
+    LinearLayout llMyReview;
+    @Bind(R.id.llRatingStars)
+    LinearLayout llRatingStars;
+    @Bind(R.id.tvRating)
+    TextView tvRating;
 
     private View rootView;
     private FreshActivity activity;
     private RestaurantReviewsAdapter reviewsAdapter;
     private int restaurantId;
+
+    // holds current user review
+    private FetchFeedbackResponse.Review mUserReview;
 
     public MerchantInfoFragment() {
     }
@@ -284,6 +293,9 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         if (activity.getMenuProductsResponse() != null)
             setPhotos(activity.getMenuProductsResponse().getReviewImages());
 
+        // my rating
+        llMyReview.setVisibility(View.GONE);
+
         return rootView;
     }
     private Runnable enableRatingBarRunnable = new Runnable() {
@@ -311,8 +323,11 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     userHasReviewed = 1;
                     setRatingUI();
                     fetchFeedback();
+                }else if (activity.getVendorOpened().isUserJustEditedReview() && userHasReviewed ==1){
+                    activity.getVendorOpened().setUserJustEditedReview(false);
+                    // refresh rating
+                    fetchFeedback();
                 }
-
 
                 activity.tvCollapRestaurantDeliveryTime.setVisibility(View.GONE);
                 activity.tvCollapRestaurantName.setVisibility(View.GONE);
@@ -489,7 +504,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     }
 
     @OnClick({/*R.id.llChatNow,*/ R.id.tvMerchantPhone, R.id.bOrderOnline, R.id.llSeeAll, R.id.tvMerchantAddress,
-            R.id.tvSubmitReview, R.id.llOffer, R.id.tvReviewCount})
+            R.id.tvSubmitReview, R.id.llOffer, R.id.tvReviewCount, R.id.llEditReview})
     public void onViewClicked(View view) {
         try {
             switch (view.getId()) {
@@ -569,6 +584,13 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 case R.id.tvReviewCount:
                     activity.openRestaurantReviewsListFragment();
                     break;
+
+                case R.id.llEditReview:
+                    if(mUserReview!=null) {
+                        activity.setCurrentReview(mUserReview);
+                        activity.openRestaurantAddReviewFragment(true, 0.0f);
+                    }
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -614,6 +636,18 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         }
 
 
+                        // user review
+                        if(fetchFeedbackResponse.getUserReview()!=null && userHasReviewed==1 &&
+                                fetchFeedbackResponse.getUserReview().getRating()!=0.0){
+                            mUserReview = fetchFeedbackResponse.getUserReview();
+                            double rating = mUserReview.getRating();
+                            activity.setRestaurantRatingStarsToLL(llRatingStars, tvRating,
+                                    rating, R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey
+                                    , null, 0);
+                        }
+
+
+
                     }
                 }
 
@@ -638,7 +672,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     private void setRatingUI() {
         tvRateRestaurant.setVisibility(userHasReviewed == 1 ? View.GONE : View.VISIBLE);
         ratingBarReview.setVisibility(userHasReviewed == 1 ? View.GONE : View.VISIBLE);
-        vAddReviewSep.setVisibility(userHasReviewed == 1 ? View.GONE : View.VISIBLE);
+        vAddReviewSep.setVisibility(View.VISIBLE);
+        llMyReview.setVisibility(userHasReviewed == 1? View.VISIBLE : View.GONE);
     }
 
 

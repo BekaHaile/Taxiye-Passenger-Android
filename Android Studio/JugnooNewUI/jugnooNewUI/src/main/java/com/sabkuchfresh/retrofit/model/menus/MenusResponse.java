@@ -375,6 +375,16 @@ public class MenusResponse {
 		@SerializedName("out_of_radius_strip")
 		private boolean outOfRadiusStrip;
 
+		private boolean userJustEditedReview;
+
+		public boolean isUserJustEditedReview() {
+			return userJustEditedReview;
+		}
+
+		public void setUserJustEditedReview(final boolean userJustEditedReview) {
+			this.userJustEditedReview = userJustEditedReview;
+		}
+
 		public boolean isOutOfRadiusStrip() {
 			return outOfRadiusStrip;
 		}

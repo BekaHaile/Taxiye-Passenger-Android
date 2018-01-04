@@ -340,7 +340,6 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
     private void loadDataIfEditingFeedback() {
         if (activity.getCurrentReview() != null){
-
             if(!TextUtils.isEmpty(activity.getCurrentReview().getReviewDesc()))
                etFeedback.setText(activity.getCurrentReview().getReviewDesc());
 
@@ -658,11 +657,13 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
                                 }
 
-
-
-
-
                                 activity.getVendorOpened().setHasRated(true);
+
+                                // if we come from editing the review, set the editing flag in vendor
+                                if(activity.getCurrentReview() != null){
+                                    activity.getVendorOpened().setUserJustEditedReview(true);
+                                }
+
                                 activity.performBackPressed(false);
                                 Utils.showToast(activity, activity.getString(R.string.thanks_for_your_valuable_feedback));
                                 RestaurantReviewsListFragment frag = activity.getRestaurantReviewsListFragment();
