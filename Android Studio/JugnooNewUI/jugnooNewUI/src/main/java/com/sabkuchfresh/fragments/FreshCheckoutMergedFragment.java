@@ -1463,6 +1463,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     } else if (activity.getSelectedPromoCoupon() instanceof PromotionInfo) {
                         params.put(Constants.KEY_ORDER_OFFER_ID, String.valueOf(activity.getSelectedPromoCoupon().getId()));
                     }
+                    if(activity.getSelectedPromoCoupon().showPromoBox()){
+                        params.put(Constants.KEY_REFFERAL_CODE,activity.getSelectedPromoCoupon().getPromoName());
+                    }
                     params.put(Constants.KEY_MASTER_COUPON, String.valueOf(activity.getSelectedPromoCoupon().getMasterCoupon()));
                     GAUtils.event(activity.getGaCategory(), CHECKOUT + OFFER + SELECTED, activity.getSelectedPromoCoupon().getTitle());
                 }
@@ -2279,7 +2282,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
 
-    public void getCheckoutDataAPI(SubscriptionData.Subscription subscription, final boolean showMealsMismatchPopup) {
+    public void getCheckoutDataAPI(SubscriptionData.Subscription subscription, final boolean showMealsMismatchPopup,String promoText) {
         try {
             if (MyApplication.getInstance().isOnline()) {
 
@@ -2302,6 +2305,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                 params.put(Constants.KEY_CURRENT_LATITUDE, String.valueOf(Data.latitude));
                 params.put(Constants.KEY_CURRENT_LONGITUDE, String.valueOf(Data.longitude));
+                if(promoText==null && getSelectedCoupon()!=null && getSelectedCoupon().showPromoBox()){
+                    promoText = getSelectedCoupon().getPromoName();
+                }
+
+                if(promoText!=null){
+                    params.put(Constants.KEY_REFFERAL_CODE,promoText);
+
+                }
+
+
 
 
                 if (isMenusOrDeliveryOpen()) {
@@ -2340,6 +2353,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                 Log.i(TAG, "getAllProducts params=" + params.toString());
 
+                final String finalPromoText = promoText;
                 Callback<UserCheckoutResponse> callback = new Callback<UserCheckoutResponse>() {
                     @Override
                     public void success(UserCheckoutResponse userCheckoutResponse, Response response) {
@@ -2528,7 +2542,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            retryDialog(DialogErrorType.SERVER_ERROR);
+                            retryDialog(DialogErrorType.SERVER_ERROR, finalPromoText);
                         }
                         if (finalLoaderShown) {
                             DialogPopup.dismissLoadingDialog();
@@ -2542,7 +2556,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         if (finalLoaderShown) {
                             DialogPopup.dismissLoadingDialog();
                         }
-                        retryDialog(DialogErrorType.CONNECTION_LOST);
+                        retryDialog(DialogErrorType.CONNECTION_LOST, finalPromoText);
                     }
                 };
                 new HomeUtil().putDefaultParams(params);
@@ -2552,14 +2566,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     RestClient.getFreshApiService().userCheckoutData(params, callback);
                 }
             } else {
-                retryDialog(DialogErrorType.NO_NET);
+                retryDialog(DialogErrorType.NO_NET, promoText);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
-
+    public void getCheckoutDataAPI(SubscriptionData.Subscription subscription, final boolean showMealsMismatchPopup){
+        getCheckoutDataAPI(subscription,showMealsMismatchPopup,null);
+    }
 
     private void updateDeliverySlot(UserCheckoutResponse.DeliveryInfo deliveryInfo) {
         if (deliveryInfo != null) {
@@ -2583,13 +2599,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
     }
 
-    private void retryDialog(DialogErrorType dialogErrorType) {
+    private void retryDialog(DialogErrorType dialogErrorType, final String promoText) {
         DialogPopup.dialogNoInternet(activity,
                 dialogErrorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        getCheckoutDataAPI(selectedSubscription, false);
+                        getCheckoutDataAPI(selectedSubscription, false,promoText);
                     }
 
                     @Override
@@ -2963,6 +2979,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             promoCoupon = promoCoupons.get(position);
         } else {
             promoCoupon = noSelectionCoupon;
+            activity.setSelectedPromoCoupon(promoCoupon);
         }
         boolean offerApplied = false;
         if (promoCoupon.getIsValid() == 0) {
@@ -2972,7 +2989,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
             DialogPopup.alertPopup(activity, "", message);
         } else {
-            if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity, activity.getPaymentOption().getOrdinal(), promoCoupon)) {
+           if (MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity, activity.getPaymentOption().getOrdinal(), promoCoupon)) {
                 activity.setSelectedPromoCoupon(promoCoupon);
                 offerApplied = true;
             }
@@ -2985,6 +3002,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         return offerApplied;
     }
 
+    @Override
+    public void applyPromoCoupon(String text) {
+        getCheckoutDataAPI(selectedSubscription,false,text);
+    }
+
+    @Override
+    public NonScrollListView getListView() {
+        return listViewOffers;
+    }
 
 
     private int noOfItemsInCart;

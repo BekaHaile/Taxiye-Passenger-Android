@@ -23,7 +23,12 @@ public abstract class PromoCoupon implements Serializable {
 	public abstract String getInvalidMessage();
 	public abstract String getExpiryDate();
 	public abstract ArrayList<Integer> getAllowedVehicles();
-
+	public abstract boolean showPromoBox();
+	public abstract String messageToDisplay();
+	public abstract boolean isPromoApplied();
+	public  abstract void setIsPromoApplied(boolean isPromoApplied);
+	public  abstract void setMessageToDisplay(String messageToDisplay);
+	public abstract String getPromoName();
 	private int repeatedCount;
 
 	public boolean matchPromoCoupon(PromoCoupon c2) {

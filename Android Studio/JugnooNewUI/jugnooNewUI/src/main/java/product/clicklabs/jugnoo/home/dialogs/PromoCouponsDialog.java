@@ -32,6 +32,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.NonScrollListView;
 
 /**
  * Created by shankar on 5/2/16.
@@ -143,6 +144,16 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 					} else {
 						return false;
 					}
+				}
+
+				@Override
+				public void applyPromoCoupon(String text) {
+
+				}
+
+				@Override
+				public NonScrollListView getListView() {
+					return null;
 				}
 			});
 

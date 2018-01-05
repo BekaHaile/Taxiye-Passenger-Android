@@ -68,6 +68,54 @@ public class CouponInfo extends PromoCoupon implements Serializable{
 	@SerializedName("coupon_id")
 	@Expose
 	private Integer couponId;
+
+	@SerializedName("show_promo_box")
+	@Expose
+	private int showPromoBox;
+	@SerializedName("message_to_display")
+	@Expose
+	private String messageToDisplay;
+	@SerializedName("is_promo_applied")
+	@Expose
+	private int isPromoApplied;@SerializedName("promo_name")
+	@Expose
+	private String promoName;
+
+	@Override
+	public String getPromoName() {
+		return promoName;
+	}
+
+
+
+	@Override
+	public boolean showPromoBox(){
+		return showPromoBox ==1;
+	}
+
+	@Override
+	public boolean isPromoApplied(){
+		return isPromoApplied ==1;
+	}
+
+
+
+	@Override
+	public String messageToDisplay(){
+		return messageToDisplay;
+	}
+
+	@Override
+	public void setIsPromoApplied(boolean isPromoApplied) {
+		this.isPromoApplied = isPromoApplied?1:0;
+	}
+
+	@Override
+	public void setMessageToDisplay(String messageToDisplay) {
+		this.messageToDisplay = messageToDisplay;
+	}
+
+
 	private boolean checkWithCouponId = false;
 
 	public CouponInfo(int id, String title, String subtitle, String description, String expiryDate){
@@ -278,4 +326,6 @@ public class CouponInfo extends PromoCoupon implements Serializable{
 	public ArrayList<Integer> getAllowedVehicles() {
 		return allowedVehicles;
 	}
+
+
 }

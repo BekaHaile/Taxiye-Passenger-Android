@@ -837,4 +837,6 @@ public interface Constants {
     String FUGU_CUSTOM_REQUEST_CODE = "product.clicklabs.jugnoo.CUSTOM_DATA_REQUEST_CODE";
     int FUGU_CUSTOM_RESULT_CODE = 0x1010 ;
 
+    String KEY_REFFERAL_CODE = "refferal_code";
+    String KEY_PROMO_CODE = "promo_code";
 }

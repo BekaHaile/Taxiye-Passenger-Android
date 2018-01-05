@@ -693,7 +693,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32px"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/textViewOffers"
@@ -714,7 +714,7 @@
                     android:layout_marginBottom="8px"
                     android:layout_marginLeft="20px"
                     android:layout_marginRight="20px"
-                    android:layout_marginTop="10px"
+                    android:layout_marginTop="15px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
 
@@ -724,10 +724,11 @@
                         android:layout_height="wrap_content"
                         android:divider="@color/transparent"
                         android:dividerHeight="0dp"
-                        android:splitMotionEvents="false"></product.clicklabs.jugnoo.utils.NonScrollListView>
+                        android:splitMotionEvents="false"/>
 
 
                 </android.support.v7.widget.CardView>
+
 
             </LinearLayout>
 

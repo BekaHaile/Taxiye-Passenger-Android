@@ -5,7 +5,6 @@ import com.sabkuchfresh.feed.models.FeedCommonResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Parminder Saini on 10/10/17.
@@ -16,11 +15,11 @@ public class DynamicDeliveryResponse extends FeedCommonResponse {
     @SerializedName("delivery_charges")
     private DeliveryCharges deliveryCharges;
 
-    @SerializedName("referal_code")
-    private ReferalCode referalCode;
+    @SerializedName("discount")
+    private ArrayList<ReferalCode> referalCode;
 
 
-    public ReferalCode getReferalCode() {
+    public ArrayList<ReferalCode>  getReferalCode() {
         return referalCode;
     }
 
@@ -67,17 +66,17 @@ public class DynamicDeliveryResponse extends FeedCommonResponse {
     }
 
     public class ReferalCode{
-        @SerializedName("referal_name")
+        @SerializedName("promo_name")
         private String referalName;
 
-        @SerializedName("referal_id")
+        @SerializedName("promo_id")
         private Integer id;
 
-        @SerializedName("message")
+        @SerializedName("message_to_display")
         private String message;
 
-        @SerializedName("is_error")
-        private int isError;
+        @SerializedName("is_promo_applied")
+        private int isPromoApplied;
 
         public String getReferalName() {
             return referalName;
@@ -91,8 +90,16 @@ public class DynamicDeliveryResponse extends FeedCommonResponse {
             return message;
         }
 
-        public boolean isError(){
-            return isError==1;
+        public boolean isPromoApplied(){
+            return isPromoApplied ==1;
+        }
+
+        public void setIsPromoApplied(int isPromoApplied) {
+            this.isPromoApplied = isPromoApplied;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
         }
     }
 }

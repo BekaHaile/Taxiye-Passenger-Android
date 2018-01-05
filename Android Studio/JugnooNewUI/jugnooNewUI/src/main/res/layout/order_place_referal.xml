@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rvPromo"
+    android:layout_width="match_parent"
+    android:paddingLeft="15dp"
+    android:paddingRight="10dp"
+    android:paddingTop="5dp"
+    android:layout_height="wrap_content"
+    android:gravity="left"
+    android:background="@drawable/bg_transparent_menu_item_selector"
+    >
+
+
+    <EditText
+        android:id="@+id/edtPromo"
+        android:textColorHint="@color/text_color_hint_anywhere"
+        android:textColor="@color/text_color"
+        android:textSize="17sp"
+        android:hint="@string/enter_code"
+        android:gravity="left|center"
+        android:minHeight="40dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="15dp"
+        app:typekitFont="@string/maven"
+        android:focusableInTouchMode="true"
+        android:maxLines="1"
+        android:theme="@style/EditText.Fatafat.Theme"
+        android:layout_toLeftOf="@+id/tv_apply"
+        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <Button
+        android:id="@+id/tv_apply"
+        android:gravity="center"
+        android:layout_alignTop="@id/edtPromo"
+        android:text="@string/apply"
+        android:textAllCaps="true"
+        android:minHeight="40dp"
+        android:textSize="17sp"
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true"
+        app:typekitFont="@string/maven"
+        android:background="@drawable/button_theme"
+        android:layout_alignParentRight="true"
+        android:textColor="@android:color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_promo_error"
+        android:paddingLeft="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="0dp"
+        android:textColor="@color/red_dark"
+        android:textSize="15sp"
+        android:text="Seems like an error!"
+        android:layout_below="@+id/edtPromo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>

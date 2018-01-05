@@ -10,10 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SwitchCompat;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
@@ -26,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -112,6 +115,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     TextView tvPromoError;
     @Bind(R.id.cv_promo)
     CardView cvPromo;
+    @Bind(R.id.sv_anywhere)
+    ScrollView svAnywhere;
     private ForegroundColorSpan textHintColorSpan;
 
     // TODO: 28/11/17 Slider stuck on fatafat error
@@ -159,6 +164,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             }
         }
     };
+    private boolean promoBoxEnabled;
 
     public boolean isPickUpAddressRequested() {
         return isPickUpAddressRequested;
@@ -223,6 +229,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             public void keyboardOpened() {
                 if (!activity.isDeliveryOpenInBackground()) {
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
+
+
+                }
+                if (edtPromo.hasFocus()) {
+                   svAnywhere.fullScroll(ScrollView.FOCUS_DOWN);
                 }
             }
 
@@ -293,10 +304,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         };
         switchDeliveryTime.setOnCheckedChangeListener(switchListenerTime);
         switchDeliveryTime.setChecked(true);
-        fetchDynamicDeliveryCharges(false, false);
-//        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN|WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        tvPromoLabel.setVisibility(Data.getFeedData().showPromoBox()?View.VISIBLE:View.GONE);
-        cvPromo.setVisibility(Data.getFeedData().showPromoBox()?View.VISIBLE:View.GONE);
+        fetchDynamicDeliveryCharges(false, false, false);
+        tvPromoLabel.setVisibility(Data.getFeedData().showPromoBox() ? View.VISIBLE : View.GONE);
+        cvPromo.setVisibility(Data.getFeedData().showPromoBox() ? View.VISIBLE : View.GONE);
+        promoBoxEnabled = Data.getFeedData().showPromoBox();
+        edtPromo.addTextChangedListener(new PromoTextWatcher(tvPromoError, edtPromo));
         tvPromoError.setVisibility(View.GONE);
         return rootView;
     }
@@ -372,7 +384,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     }
 
-    @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st, R.id.rlDeliveryCharge,R.id.tv_apply})
+    @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st, R.id.rlDeliveryCharge, R.id.tv_apply})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.cv_pickup_address:
@@ -407,14 +419,15 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 if (anywhereDeliveryChargesDialog != null) {
                     anywhereDeliveryChargesDialog.show();
                 } else {
-                    fetchDynamicDeliveryCharges(true, true);
+                    fetchDynamicDeliveryCharges(true, true, false);
                 }
                 break;
             case R.id.tv_apply:
-                if(shouldSendPromoCodeParams()  )
-                {
-                    fetchDynamicDeliveryCharges(false,true);
+                if (currentPromoApplied != null || (edtPromo.getText().toString().trim().length() > 0 && tvPromoError.getVisibility() != View.VISIBLE)) {
+                    fetchDynamicDeliveryCharges(false, true, true);
+
                 }
+
 
                 break;
         }
@@ -434,7 +447,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     public void setRequestedAddress(SearchResult searchResult) {
         setAddress(!isPickUpAddressRequested, searchResult);
-        fetchDynamicDeliveryCharges(false, false);
+        fetchDynamicDeliveryCharges(false, false, false);
 
     }
 
@@ -524,8 +537,9 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         params.put(Constants.KEY_TO_LONGITUDE, String.valueOf(deliveryAddress.getLongitude()));
         params.put(Constants.KEY_IS_IMMEDIATE, isAsapSelected ? "1" : "0");
         params.put(Constants.KEY_USER_IDENTIFIER, String.valueOf(Data.userData.userIdentifier));
-        if(currentPromoApplied!=null){
-            params.put(Constants.PROMO_CODE, String.valueOf(currentPromoApplied.getId()));
+        if (currentPromoApplied != null) {
+            params.put(Constants.KEY_REFERRAL_CODE, String.valueOf(currentPromoApplied.getReferalName()));
+            params.put(Constants.KEY_ORDER_OFFER_ID, String.valueOf(currentPromoApplied.getId()));
         }
 
         String finalDateTime = null;
@@ -670,10 +684,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     /**
      * Calculates and shows the delivery charges
+     *
      * @param showFareBreakUp whether to show fare breakup after calculation
      * @param showLoader      whether to show loader
+     * @param applyPromoApi
      */
-    private void fetchDynamicDeliveryCharges(final boolean showFareBreakUp, final boolean showLoader) {
+    private void fetchDynamicDeliveryCharges(final boolean showFareBreakUp, final boolean showLoader, boolean applyPromoApi) {
 
         if (deliveryAddress != null) {
             final HashMap<String, String> params = new HashMap<>();
@@ -690,17 +706,24 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             params.put(Constants.KEY_TO_LONGITUDE, String.valueOf(deliveryAddress.getLongitude()));
 
 
-
-            if(shouldSendPromoCodeParams() )
-            {
-                params.put(Constants.PROMO_CODE,currentPromoApplied==null?edtPromo.getText().toString().trim():"");
+            String promoName = null;
+            if (applyPromoApi) {
+                if (currentPromoApplied == null) {
+                    promoName = edtPromo.getText().toString().trim();
+                }
+            } else if (currentPromoApplied != null) {
+                promoName = currentPromoApplied.getReferalName();
             }
+            if (promoName != null) {
+                params.put(Constants.KEY_PROMO_CODE, promoName);
+
+            }
+
 
             new ApiCommon<DynamicDeliveryResponse>(activity).showLoader(showLoader).execute(params, ApiName.ANYWHERE_DYNAMIC_DELIVERY,
                     new APICommonCallback<DynamicDeliveryResponse>() {
                         @Override
                         public boolean onNotConnected() {
-                            resetDeliveryViews();
                             // we return false if showLoader is true otherwise true
                             return !showLoader;
 
@@ -710,7 +733,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                         public boolean onException(Exception e) {
                             resetDeliveryViews();
                             e.printStackTrace();
-                            return !showLoader;
+                            return false;
 
                         }
 
@@ -740,7 +763,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                     resetDeliveryViews();
                                 }
 
-                                setPromoView(dynamicDeliveryResponse.getReferalCode());
+                                if (dynamicDeliveryResponse.getReferalCode() != null && dynamicDeliveryResponse.getReferalCode().size() > 0) {
+                                    setPromoView(dynamicDeliveryResponse.getReferalCode().get(0));
+
+                                } else {
+                                    setPromoView(null);
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -750,13 +778,14 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                         @Override
                         public boolean onError(DynamicDeliveryResponse dynamicDeliveryResponse, String message, int flag) {
                             resetDeliveryViews();
-                            return !showLoader;
+                            setPromoView(null);
+                            return false;
                         }
 
 
                         @Override
                         public boolean onFailure(RetrofitError error) {
-                            resetDeliveryViews();
+
                             return !showLoader;
                         }
 
@@ -776,33 +805,38 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     }
 
     private boolean shouldSendPromoCodeParams() {
-        return (currentPromoApplied==null && edtPromo.getText().toString().trim().length()>0 && tvPromoError.getVisibility()!= View.VISIBLE) /*applyCase */|| currentPromoApplied!=null  /*removecase*/;
+        return (currentPromoApplied == null && edtPromo.getText().toString().trim().length() > 0) /*removecase*/;
     }
 
     private void setPromoView(DynamicDeliveryResponse.ReferalCode referalCode) {
-        if(referalCode!=null){
-            tvPromoError.setText(referalCode.getMessage());
-            tvPromoError.setVisibility(View.VISIBLE);
-            if(referalCode.isError() || referalCode.getId()==null){
+        if (promoBoxEnabled) {
+            if (referalCode != null) {
+
+                if (referalCode.isPromoApplied()) {
+                    currentPromoApplied = referalCode;
+                    edtPromo.setText(referalCode.getReferalName());
+                    tvPromoError.setTextColor(ContextCompat.getColor(activity, R.color.text_green_color));
+                    tvApplyPromo.setText(R.string.label_remove);
+                    edtPromo.setEnabled(false);
+
+                } else {
+                    currentPromoApplied = null;
+                    edtPromo.setEnabled(true);
+                    tvPromoError.setTextColor(ContextCompat.getColor(activity, R.color.red_dark));
+                    tvApplyPromo.setText(R.string.label_apply);
+                }
+                tvPromoError.setText(referalCode.getMessage());
+                tvPromoError.setVisibility(referalCode.getMessage() == null ? View.GONE : View.VISIBLE);
+
+            } else {
                 currentPromoApplied = null;
                 edtPromo.setEnabled(true);
-                tvPromoError.setTextColor(ContextCompat.getColor(activity,R.color.red_dark));
+                edtPromo.setText(null);
+                tvPromoError.setVisibility(View.GONE);
                 tvApplyPromo.setText(R.string.label_apply);
-            }else{
-                currentPromoApplied = referalCode;
-                edtPromo.setText(referalCode.getReferalName());
-                tvPromoError.setTextColor(ContextCompat.getColor(activity,R.color.green_light));
-                tvApplyPromo.setText(R.string.label_remove);
-                edtPromo.setEnabled(false);
+
+
             }
-
-        }else{
-            currentPromoApplied = null;
-            edtPromo.setEnabled(true);
-            edtPromo.setText(null);
-            tvPromoError.setVisibility(View.GONE);
-
-
         }
     }
 
@@ -825,6 +859,34 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 mFatafatTutorialDialog = new FatafatTutorialDialog(activity, Data.getFeedData().getFatafatTutorialData());
                 mFatafatTutorialDialog.showDialog();
             }
+        }
+    }
+
+    private class PromoTextWatcher implements TextWatcher {
+        private TextView textView;
+        private EditText editText;
+
+        public PromoTextWatcher(TextView textView, EditText editText) {
+            this.textView = textView;
+            this.editText = editText;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (textView.getVisibility() == View.VISIBLE) {
+                textView.setVisibility(View.GONE);
+            }
+
         }
     }
 }
