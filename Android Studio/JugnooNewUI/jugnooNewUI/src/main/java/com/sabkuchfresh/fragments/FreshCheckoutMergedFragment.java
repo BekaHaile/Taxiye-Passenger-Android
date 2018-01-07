@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -706,6 +707,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
         setSlideInitial();
         toggleChatAvailability(false);
+
         return rootView;
     }
 
@@ -2108,6 +2110,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
         promoCoupons.clear();
         ArrayList<PromoCoupon> promoCouponsList = Data.userData.getCoupons(productType, activity);
+        if(promoCouponsList!=null){
+            for(PromoCoupon promo:promoCouponsList){
+                if(promo.showPromoBox()){
+                    promoCouponsList.remove(promo);
+                    promoCouponsList.add(promo);
+                    break;
+                }
+            }
+        }
+
         if (applicablePaymentMode == ApplicablePaymentMode.CASH.getOrdinal()) {
             for (PromoCoupon promoCoupon : promoCouponsList) {
                 if (MyApplication.getInstance().getWalletCore().couponOfWhichWallet(promoCoupon) == PaymentOption.CASH.getOrdinal()) {
@@ -2424,6 +2436,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                                 && !TextUtils.isEmpty(userCheckoutResponse.getRestaurantInfo().getAddress())) {
                                             updateDeliveryFromView(userCheckoutResponse.getRestaurantInfo().getAddress());
                                         }
+
+
 
 
                                         if (type == AppConstant.ApplicationType.MEALS) {

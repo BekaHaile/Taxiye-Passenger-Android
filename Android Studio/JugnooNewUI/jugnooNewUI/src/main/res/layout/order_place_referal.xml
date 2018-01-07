@@ -24,7 +24,7 @@
         android:paddingLeft="10dp"
         android:paddingBottom="15dp"
         app:typekitFont="@string/maven"
-        android:textAllCaps="true"
+        android:inputType="textCapCharacters"
         android:focusableInTouchMode="true"
         android:maxLines="1"
         android:theme="@style/EditText.Fatafat.Theme"
