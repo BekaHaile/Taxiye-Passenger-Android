@@ -718,7 +718,7 @@
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
 
-                    <product.clicklabs.jugnoo.utils.NonScrollListView
+                    <android.support.v7.widget.RecyclerView
                         android:id="@+id/listViewOffers"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

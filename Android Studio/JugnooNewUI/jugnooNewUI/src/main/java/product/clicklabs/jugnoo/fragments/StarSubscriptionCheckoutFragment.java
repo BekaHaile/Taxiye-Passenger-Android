@@ -1055,10 +1055,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
     }
 
-    @Override
-    public NonScrollListView getListView() {
-        return null;
-    }
+
 
     private void apiPurchaseSubscription() {
         if (MyApplication.getInstance().isOnline()) {

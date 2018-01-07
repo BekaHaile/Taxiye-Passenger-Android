@@ -120,6 +120,7 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
+import product.clicklabs.jugnoo.home.adapters.PromoCouponsRecyclerAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -176,8 +177,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private TextView tvOtherModesToPay, tvUPI;
 
     private LinearLayout linearLayoutOffers;
-    private NonScrollListView listViewOffers;
-    private PromoCouponsAdapter promoCouponsAdapter;
+    private RecyclerView listViewOffers;
+    private PromoCouponsRecyclerAdapter promoCouponsAdapter;
 
     private EditText editTextDeliveryInstructions;
 
@@ -487,8 +488,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         tvUPI = (TextView) rootView.findViewById(R.id.tvUPI);
 
         linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
-        listViewOffers = (NonScrollListView) rootView.findViewById(R.id.listViewOffers);
-        promoCouponsAdapter = new PromoCouponsAdapter(activity, R.layout.list_item_fresh_promo_coupon, promoCoupons, this);
+        listViewOffers = (RecyclerView) rootView.findViewById(R.id.listViewOffers);
+        listViewOffers.setNestedScrollingEnabled(false);
+        listViewOffers.setLayoutManager(new LinearLayoutManager(activity));
+        promoCouponsAdapter = new PromoCouponsRecyclerAdapter(activity, R.layout.list_item_fresh_promo_coupon, promoCoupons, this,listViewOffers);
         listViewOffers.setAdapter(promoCouponsAdapter);
 
 
@@ -3007,10 +3010,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         getCheckoutDataAPI(selectedSubscription,false,text);
     }
 
-    @Override
-    public NonScrollListView getListView() {
-        return listViewOffers;
-    }
+
 
 
     private int noOfItemsInCart;

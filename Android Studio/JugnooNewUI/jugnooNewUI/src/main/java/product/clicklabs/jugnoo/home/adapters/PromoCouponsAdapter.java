@@ -266,7 +266,7 @@ public class PromoCouponsAdapter extends BaseAdapter {
 		boolean setSelectedCoupon(int position);
 
 		void applyPromoCoupon(String text);
-		NonScrollListView getListView();
+
 	}
 
 

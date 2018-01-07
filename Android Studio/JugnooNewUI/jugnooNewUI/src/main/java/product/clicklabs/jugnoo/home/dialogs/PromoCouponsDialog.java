@@ -151,10 +151,6 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 
 				}
 
-				@Override
-				public NonScrollListView getListView() {
-					return null;
-				}
 			});
 
 			/*LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) listViewPromoCoupons.getLayoutParams();
