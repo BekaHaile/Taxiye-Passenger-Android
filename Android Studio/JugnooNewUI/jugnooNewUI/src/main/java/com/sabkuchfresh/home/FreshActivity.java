@@ -3086,7 +3086,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         Prefs.with(this).remove(appType== AppConstant.ApplicationType.MENUS?Constants.CART_STATUS_REORDER_ID:Constants.CART_STATUS_REORDER_ID_CUSTOMER_DELIVERY);
         Paper.book().delete(appType==AppConstant.ApplicationType.MENUS?DB_MENUS_CART:DB_DELIVERY_CUSTOMER_CART);
-        createAppCart(Prefs.with(this).getString(appType== AppConstant.ApplicationType.MENUS?Config.getMenusClientId():Config.getDeliveryCustomerClientId(),Config.getDeliveryCustomerClientId()));
+        createAppCart(appType== AppConstant.ApplicationType.MENUS?Config.getMenusClientId():Config.getDeliveryCustomerClientId());
         updateItemListFromSPDB();
     }
 
