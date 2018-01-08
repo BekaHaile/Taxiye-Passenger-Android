@@ -183,9 +183,14 @@ public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 							showRemoveCouponPopup(null);
 						}else{
 							String input = referalViewHolder.editText.getText().toString().trim();
-							if(input.length()>0 && (referalViewHolder).tvError.getVisibility()!=View.VISIBLE){
-								callback.applyPromoCoupon(input);
+							if(input.length()>0 ){
+								if((referalViewHolder).tvError.getVisibility()!=View.VISIBLE){
+									callback.applyPromoCoupon(input);
 
+								}
+
+							}else{
+								Utils.showToast(activity, activity.getString(R.string.please_enter_code));
 							}
 
 						}

@@ -1438,6 +1438,7 @@
     <string name="label_remove">REMOVE</string>
     <string name="label_apply">Apply</string>
     <string name="remove_popup_message">Are you sure you want to remove the applied promo code?</string>
+    <string name="please_enter_code">Please enter code</string>
 
 
 </resources>

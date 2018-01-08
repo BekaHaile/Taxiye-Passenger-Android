@@ -114,6 +114,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     Button tvApplyPromo;
     @Bind(R.id.tv_promo_error)
     TextView tvPromoError;
+    @Bind(R.id.rvPromo)
+    RelativeLayout relativeLayout;
     @Bind(R.id.cv_promo)
     CardView cvPromo;
     @Bind(R.id.sv_anywhere)
@@ -425,11 +427,17 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 }
                 break;
             case R.id.tv_apply:
+
                 if(currentPromoApplied!=null){
                     showRemoveCouponPopup();
-                } else if ((edtPromo.getText().toString().trim().length() > 0 && tvPromoError.getVisibility() != View.VISIBLE)) {
-                    fetchDynamicDeliveryCharges(false, true, true);
-
+                } else {
+                    if (edtPromo.getText().toString().trim().length() > 0) {
+                        if (tvPromoError.getVisibility() != View.VISIBLE) {
+                            fetchDynamicDeliveryCharges(false, true, true);
+                        }
+                    } else {
+                        Utils.showToast(activity, activity.getString(R.string.please_enter_code));
+                    }
                 }
 
 
@@ -893,6 +901,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
         }
     }
+
     public void showRemoveCouponPopup(){
         DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", activity.getString(R.string.remove_popup_message),
                 activity.getString(R.string.yes),
@@ -901,16 +910,17 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     @Override
                     public void onClick(View v) {
 
+                        fetchDynamicDeliveryCharges(false, true, true);
+
                     }
                 },
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fetchDynamicDeliveryCharges(false, true, true);
-
 
                     }
                 }, true, false);
     }
+
 
 }

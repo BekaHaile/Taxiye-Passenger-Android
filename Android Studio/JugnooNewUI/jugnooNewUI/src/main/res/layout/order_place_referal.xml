@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rvPromo"
     android:layout_width="match_parent"
-    android:paddingLeft="15dp"
+    android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="5dp"
     android:layout_height="wrap_content"
@@ -21,7 +21,6 @@
         android:hint="@string/enter_code"
         android:gravity="left|center"
         android:minHeight="40dp"
-        android:paddingLeft="10dp"
         android:paddingBottom="16dp"
         app:typekitFont="@string/maven"
         android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
@@ -38,10 +37,10 @@
     <Button
         android:id="@+id/tv_apply"
         android:gravity="center"
-        android:layout_alignTop="@id/edtPromo"
+        android:layout_alignBottom="@id/edtPromo"
         android:text="@string/apply"
         android:textAllCaps="true"
-        android:minHeight="40dp"
+        android:layout_marginBottom="7dp"
         android:textSize="17sp"
         android:layout_marginLeft="10dp"
         android:layout_centerVertical="true"
@@ -50,11 +49,10 @@
         android:layout_alignParentRight="true"
         android:textColor="@android:color/white"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="30dp" />
 
     <TextView
         android:id="@+id/tv_promo_error"
-        android:paddingLeft="10dp"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="0dp"
         android:textColor="@color/red_dark"
