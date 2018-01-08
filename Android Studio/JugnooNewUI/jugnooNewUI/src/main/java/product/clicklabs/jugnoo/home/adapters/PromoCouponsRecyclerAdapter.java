@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.ItemListener;
+import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -159,8 +161,13 @@ public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 						if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)){
 							callback.setSelectedCoupon(-1);
 						} else {
-							callback.setSelectedCoupon(positionInList);
-							callback.onCouponSelected();
+
+							if(callback.getSelectedCoupon()!=null && callback.getSelectedCoupon().showPromoBox()){
+								showRemoveCouponPopup(positionInList);
+							}else{
+								applyCouponfromPosition(positionInList);
+							}
+
 						}
 						notifyDataSetChanged();
 					} catch (Exception e) {
@@ -173,11 +180,7 @@ public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 						ReferalViewHolder referalViewHolder = (ReferalViewHolder) viewHolder;
 						PromoCoupon coupon = offerList.get(positionInList);
 						if(coupon.isPromoApplied()){
-							callback.setSelectedCoupon(-1);
-							coupon.setIsPromoApplied(false);
-							coupon.setMessageToDisplay(null);
-							referalViewHolder.editText.setText(null);
-							notifyDataSetChanged();
+							showRemoveCouponPopup(null);
 						}else{
 							String input = referalViewHolder.editText.getText().toString().trim();
 							if(input.length()>0 && (referalViewHolder).tvError.getVisibility()!=View.VISIBLE){
@@ -196,6 +199,16 @@ public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 
 		}
 
+	}
+
+	private void applyCouponfromPosition(int positionInList) {
+		callback.setSelectedCoupon(positionInList);
+		callback.onCouponSelected();
+	}
+
+	private void removePromoCoupon() {
+		callback.setSelectedCoupon(-1);
+		notifyDataSetChanged();
 	}
 
 
@@ -239,6 +252,7 @@ public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 			editText = (EditText) itemView.findViewById(R.id.edtPromo);
 			btnApply = (Button) itemView.findViewById(R.id.tv_apply);
 			tvError = (TextView) itemView.findViewById(R.id.tv_promo_error);
+			Utils.addCapitaliseFilterToEditText(editText);
 			editText.addTextChangedListener(new PromoTextWatcher(tvError));
 			btnApply.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -268,7 +282,7 @@ public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 				if(referralCode.isPromoApplied()){
 					referralCode.setIsPromoApplied(false);
 					referralCode.setMessageToDisplay(null);
-
+					viewHolderReferal.editText.setText(null);
 				}
 				viewHolderReferal.editText.setEnabled(true);
 				viewHolderReferal.tvError.setVisibility(View.VISIBLE);
@@ -321,5 +335,29 @@ public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 
 		}
 	}
+
+	public void showRemoveCouponPopup(final Integer couponPositionToApplyAfterRemoval){
+		DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", activity.getString(R.string.remove_popup_message),
+				activity.getString(R.string.yes),
+				activity.getString(R.string.no),
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						removePromoCoupon();
+						if(couponPositionToApplyAfterRemoval!=null){
+							applyCouponfromPosition(couponPositionToApplyAfterRemoval);
+						}
+
+					}
+				},
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+
+
+					}
+				}, true, false);
+	}
+
 
 }

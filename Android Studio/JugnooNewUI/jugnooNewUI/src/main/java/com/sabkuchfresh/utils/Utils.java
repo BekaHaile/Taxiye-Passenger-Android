@@ -25,6 +25,7 @@ import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Base64;
 import android.util.DisplayMetrics;
@@ -914,6 +915,14 @@ public class Utils {
 	public static void openMapsDirections(Context context, LatLng source){
 		product.clicklabs.jugnoo.utils.Utils.openMapsDirections(context, source);
 	}
+
+    public static void addCapitaliseFilterToEditText(EditText editText){
+        InputFilter[] editFilters = editText.getFilters();
+        InputFilter[] newFilters = new InputFilter[editFilters.length + 1];
+        System.arraycopy(editFilters, 0, newFilters, 0, editFilters.length);
+        newFilters[editFilters.length] = new InputFilter.AllCaps();
+        editText.setFilters(newFilters);
+    }
 
 }
 

@@ -310,6 +310,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         promoBoxEnabled = Data.getFeedData().showPromoBox();
         edtPromo.addTextChangedListener(new PromoTextWatcher(tvPromoError, edtPromo));
         tvPromoError.setVisibility(View.GONE);
+        Utils.addCapitaliseFilterToEditText(edtPromo);
         return rootView;
     }
 
