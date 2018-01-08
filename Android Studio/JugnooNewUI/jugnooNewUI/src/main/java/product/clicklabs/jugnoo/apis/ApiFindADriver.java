@@ -9,7 +9,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -172,7 +171,12 @@ public class ApiFindADriver {
 			} else {
 				Data.autoData.setFarAwayCity(findADriverResponse.getFarAwayCity());
 			}
-			Data.autoData.setIsRazorpayEnabled(findADriverResponse.getIsRazorpayEnabled());
+
+			// using -1 as razorPayEnables does not come in getUserCurrentStatus api which uses this
+			// same function to parse response
+			if (findADriverResponse.getIsRazorpayEnabled()!=-1) {
+				Data.autoData.setIsRazorpayEnabled(findADriverResponse.getIsRazorpayEnabled());
+			}
 
 			Data.autoData.setCampaigns(findADriverResponse.getCampaigns());
 
