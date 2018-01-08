@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
-import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
 import com.sabkuchfresh.home.FreshActivity;
@@ -390,7 +389,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 
                 String discountOfferDisplay = getDiscountOfferDisplay();
-                if(discountInfo!=null  && showDiscountedPrices && discountOfferDisplay!=null){
+                if(discountInfo!=null  && showDiscountedPrices && discountOfferDisplay!=null
+                        && (!subItem.getActualPrice().equals(subItem.getPrice()))){
                     mHolder.tvDiscountedPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
                             Utils.getMoneyDecimalFormatWithoutFloat().format(subItem.getActualPrice())));
                     mHolder.textPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
