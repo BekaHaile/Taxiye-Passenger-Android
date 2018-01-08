@@ -62,6 +62,7 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
@@ -424,7 +425,9 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 }
                 break;
             case R.id.tv_apply:
-                if (currentPromoApplied != null || (edtPromo.getText().toString().trim().length() > 0 && tvPromoError.getVisibility() != View.VISIBLE)) {
+                if(currentPromoApplied!=null){
+                    showRemoveCouponPopup();
+                } else if ((edtPromo.getText().toString().trim().length() > 0 && tvPromoError.getVisibility() != View.VISIBLE)) {
                     fetchDynamicDeliveryCharges(false, true, true);
 
                 }
@@ -539,7 +542,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         params.put(Constants.KEY_IS_IMMEDIATE, isAsapSelected ? "1" : "0");
         params.put(Constants.KEY_USER_IDENTIFIER, String.valueOf(Data.userData.userIdentifier));
         if (currentPromoApplied != null) {
-            params.put(Constants.KEY_REFERRAL_CODE, String.valueOf(currentPromoApplied.getReferalName()));
+            params.put(Constants.PROMO_CODE, String.valueOf(currentPromoApplied.getReferalName()));
             params.put(Constants.KEY_ORDER_OFFER_ID, String.valueOf(currentPromoApplied.getId()));
         }
 
@@ -890,4 +893,24 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
         }
     }
+    public void showRemoveCouponPopup(){
+        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", activity.getString(R.string.remove_popup_message),
+                activity.getString(R.string.yes),
+                activity.getString(R.string.no),
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                },
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        fetchDynamicDeliveryCharges(false, true, true);
+
+
+                    }
+                }, true, false);
+    }
+
 }

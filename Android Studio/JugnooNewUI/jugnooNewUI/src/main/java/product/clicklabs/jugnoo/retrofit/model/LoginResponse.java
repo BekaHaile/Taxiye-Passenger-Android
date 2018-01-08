@@ -12,11 +12,11 @@ import java.util.List;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.MealsData;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.datastructure.SignupTutorial;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
-import product.clicklabs.jugnoo.datastructure.SignupTutorial;
 
 /**
  * Created by shankar on 1/5/16.
@@ -445,6 +445,9 @@ public class LoginResponse {
         @SerializedName("has_handle")
         private int hasHandle;
 
+		@SerializedName("show_promo_box")
+		private int showPromoBox;
+
 		@SerializedName("count_notification_polling_interval")
 		@Expose
 		private Integer countNotificationPollingInterval;
@@ -594,7 +597,7 @@ public class LoginResponse {
 		}
 
 		public boolean showPromoBox() {
-			return true;
+			return showPromoBox==1;
 		}
     }
 
