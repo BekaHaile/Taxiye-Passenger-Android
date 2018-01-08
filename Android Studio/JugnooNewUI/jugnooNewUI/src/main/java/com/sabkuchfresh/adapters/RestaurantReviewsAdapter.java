@@ -68,6 +68,19 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		try {
 			FetchFeedbackResponse.Review review = restaurantReviews.get(position);
 
+			// decide whether to show reviews footer ( when reviews < ratings )
+			// and show only on all reviews screen ( viewOnly = false )
+			if((position == getItemCount()-1) && !viewOnly &&
+					getItemCount() < callback.getVendor().getReviewCount() ){
+				int missingReviews = (int) callback.getVendor().getReviewCount() - getItemCount();
+				holder.tvReviewFooter.setVisibility(View.VISIBLE);
+				holder.tvReviewFooter.setText(String.format(activity.getString(R.string.more_reviews_not_shown_text)
+				,String.valueOf(missingReviews)));
+			}
+			else {
+				holder.tvReviewFooter.setVisibility(View.GONE);
+			}
+
 			holder.tvNameCap.setText(!TextUtils.isEmpty(review.getUserName()) ? review.getUserName().substring(0, 1).toUpperCase() : "");
 			if (!TextUtils.isEmpty(review.getUserImage())) {
 				holder.ivImage.setVisibility(View.VISIBLE);
@@ -407,6 +420,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		public RelativeLayout rlRestaurantReply;
 		public TextView tvRestName, tvRestReply, tvReplyDateTime;
 		public ImageView ivRestImage;
+		TextView tvReviewFooter;
 
 		public ViewHolderReview(View itemView) {
 			super(itemView);
@@ -434,6 +448,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			tvRestReply = (TextView) itemView.findViewById(R.id.tvRestReply);
 			tvReplyDateTime = (TextView) itemView.findViewById(R.id.tvReplyDateTime);
 			ivRestImage = (ImageView) itemView.findViewById(R.id.ivRestImage);
+			tvReviewFooter = (TextView) itemView.findViewById(R.id.tvReviewFooter);
 		}
 	}
 

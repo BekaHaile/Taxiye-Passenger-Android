@@ -237,9 +237,9 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewDetails.setText(R.string.created_at_colon);
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(orderHistory.getCreatedAt())));
 
-                if(orderHistory.getDeliveryCharges()!=0){
+                if(orderHistory.getAmount()!=0){
                     holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
-                            Utils.getMoneyDecimalFormat().format(orderHistory.getDeliveryCharges())));
+                            Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
                 }
                 else {
                     holder.textViewAmount.setText("");

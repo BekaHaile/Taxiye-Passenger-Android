@@ -1363,6 +1363,9 @@
     <string name="ongoing_orders">Ongoing Orders</string>
 
     <string name="you_have_already_reviewed_format">You have already reviewed %s</string>
+    <string name="more_reviews_not_shown_text">%s reviews are not shown here as the reviewers only posted rating without describing their experience.</string>
+    <string name="you_reviewed_this_place">You reviewed this place</string>
+    <string name="btn_edit_review">Edit Review</string>
 
     <string name="chat_is_not_enabled_format">Chat is not available for %s</string>
     <string name="select_tags">Select Tags</string>
