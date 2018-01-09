@@ -41,6 +41,10 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
+	public List<Category> getCategories() {
+		return categories;
+	}
+
 	public void setCategories(List<Category> categories){
 		if(this.categories == null){
 			this.categories = new ArrayList<>();
@@ -53,7 +57,7 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 		notifyDataSetChanged();
 	}
 
-	public void filterCategoriesAccIsVeg(List<Category> categories){
+	public int filterCategoriesAccIsVeg(List<Category> categories, int previousCatId){
 		int isVegToggle = Prefs.with(context).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
 		if(this.categories == null){
 			this.categories = new ArrayList<>();
@@ -62,6 +66,7 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 		for(int i=0; i<categories.size(); i++){
 			categories.get(i).setCategoryPos(i);
 		}
+		int i = 0, position = -1;
 		for(Category category : categories){
 			int vegItemsCount = 0;
 			if(category.getSubcategories() != null){
@@ -82,9 +87,14 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 			category.setVegItemsCount(vegItemsCount);
 			if(isVegToggle == 0 || vegItemsCount > 0){
 				this.categories.add(category);
+				if(category.getCategoryId().equals(previousCatId)){
+					position = i;
+				}
+				i++;
 			}
 		}
 		notifyDataSetChanged();
+		return position;
 	}
 
 	public int getCategoryPosition(int categoryId){
