@@ -15,7 +15,6 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -53,7 +52,7 @@ public class ApiFareEstimate {
                 if (sourceLatLng != null && destLatLng != null) {
                     DialogPopup.showLoadingDialog(context, "Loading...");
                     RestClient.getGoogleApiService().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
-                            destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false, context.getString(R.string.google_maps_api_server_key),new retrofit.Callback<SettleUserDebt>() {
+                            destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false, new retrofit.Callback<SettleUserDebt>() {
                                 @Override
                                 public void success(SettleUserDebt settleUserDebt, Response response) {
                                     try {

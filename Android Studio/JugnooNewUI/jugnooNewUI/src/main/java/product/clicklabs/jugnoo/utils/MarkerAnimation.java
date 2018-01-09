@@ -230,7 +230,7 @@ public class MarkerAnimation {
                 stopCurrentAsync = false;
                 if(list == null || list.size() == 0) {
                     Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
-                            destination.latitude + "," + destination.longitude, false, "driving", false,apiKey);
+                            destination.latitude + "," + destination.longitude, false, "driving", false);
                     return new String(((TypedByteArray) response.getBody()).getBytes());
                 } else {
                     LatLng first = list.get(0);

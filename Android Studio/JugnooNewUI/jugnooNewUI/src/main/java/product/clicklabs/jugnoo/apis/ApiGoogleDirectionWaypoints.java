@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import retrofit.client.Response;
@@ -81,7 +80,7 @@ public class ApiGoogleDirectionWaypoints extends AsyncTask<String, Integer, Stri
 	@Override
 	protected String doInBackground(String... params) {
 		try {
-			Response response = RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination, strWaypoints,serverApiKey);
+			Response response = RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination, strWaypoints);
 			return new String(((TypedByteArray)response.getBody()).getBytes());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -105,7 +104,7 @@ public class ApiGoogleDirectionWaypoints extends AsyncTask<String, Integer, Stri
 		List<LatLng> list = new ArrayList<>();
 		String s = null;
 		try {
-			Response response = RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination, strWaypoints,serverApiKey);
+			Response response = RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination, strWaypoints);
 			s = new String(((TypedByteArray)response.getBody()).getBytes());
 			list = MapUtils.getLatLngListFromPath(s);
 		} catch (Exception e) {

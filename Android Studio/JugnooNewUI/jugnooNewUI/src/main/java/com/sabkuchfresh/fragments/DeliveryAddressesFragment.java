@@ -736,7 +736,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
             params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
             params.put("language", Locale.getDefault().getCountry());
             params.put("sensor", "false");
-            params.put("key", activity.getString(R.string.google_maps_api_server_key));
+//            params.put("key", activity.getString(R.string.google_maps_api_server_key));
 
 
             RestClient.getGoogleApiService().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {

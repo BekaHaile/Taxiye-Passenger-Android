@@ -5550,7 +5550,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 textView.setHint(R.string.getting_address);
                 RestClient.getGoogleApiService().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                        "en", false, getString(R.string.google_maps_api_server_key),new Callback<SettleUserDebt>() {
+                        "en", false, new Callback<SettleUserDebt>() {
                             @Override
                             public void success(SettleUserDebt settleUserDebt, Response response) {
                                 try {
@@ -6382,7 +6382,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 source = ridePath != null ? ridePath.getDestinationLatLng() : pickupLatLng;
                             }
                             Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
-                                    Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false, getString(R.string.google_maps_api_server_key));
+                                    Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false);
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
                             if (result != null) {
                                 listPath = MapUtils.getLatLngListFromPath(result);

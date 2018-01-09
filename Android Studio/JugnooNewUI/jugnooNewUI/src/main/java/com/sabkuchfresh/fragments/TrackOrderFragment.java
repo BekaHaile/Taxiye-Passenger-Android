@@ -14,10 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -607,8 +603,8 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 									String origin = latLngDriver.latitude + "," + latLngDriver.longitude;
 									String destination = deliveryLatLng.latitude + "," + deliveryLatLng.longitude;
 									Response responseDM = RestClient.getGoogleApiService().getDistanceMatrix(origin,
-											destination, "EN", false, false,
-											activity.getString(R.string.google_maps_api_server_key));
+											destination, "EN", false, false
+									);
 									JSONObject jObjDM = new JSONObject(new String(((TypedByteArray)responseDM.getBody()).getBytes()));
 									if(jObjDM.getString("status").equals("OK")){
 										String durationText =  (jObjDM.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("duration").getString("text") );

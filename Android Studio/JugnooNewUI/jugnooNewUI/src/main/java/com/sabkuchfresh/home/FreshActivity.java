@@ -3794,7 +3794,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             DialogPopup.showLoadingDialog(this, "Loading...");
             RestClient.getGoogleApiService().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                    "en", false,getString(R.string.google_maps_api_server_key), new Callback<SettleUserDebt>() {
+                    "en", false, new Callback<SettleUserDebt>() {
                         @Override
                         public void success(SettleUserDebt settleUserDebt, Response response) {
                             try {
