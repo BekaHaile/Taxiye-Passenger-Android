@@ -34,7 +34,7 @@ public class FindADriverResponse {
     private Integer priorityTipCategory;
     @SerializedName("is_razorpay_enabled")
     @Expose
-    private int isRazorpayEnabled;
+    private int isRazorpayEnabled = -1;
     @SerializedName("far_away_city")
     @Expose
     private String farAwayCity;

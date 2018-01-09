@@ -222,7 +222,14 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 
 	private void updateGetRideButton(){
 		try {
-			if(Data.userData.getMealsEnabled() == 0 && Data.userData.getFreshEnabled() == 0 && Data.userData.getDeliveryEnabled() == 0){
+			if(Data.userData.getMealsEnabled() == 0
+					&& Data.userData.getFreshEnabled() == 0
+					&& Data.userData.getDeliveryEnabled() == 0
+					&& Data.userData.getGroceryEnabled() == 0
+					&& Data.userData.getMenusEnabled() == 0
+					&& Data.userData.getDeliveryCustomerEnabled() == 0
+					&& Data.userData.getFeedEnabled() == 0
+					&& Data.userData.getProsEnabled() == 0){
 				buttonGetRide.setVisibility(View.VISIBLE);
 			} else{
 				buttonGetRide.setVisibility(View.GONE);

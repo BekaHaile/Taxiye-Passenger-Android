@@ -1,38 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:drawable/list_selector_background"
                 android:splitMotionEvents="false">
 
 
-    <TextView
-        android:id="@+id/tv_offer_title"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/rlOffer"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/ib_arrow"
-        android:layout_toRightOf="@+id/ib_arrow"
-        android:layout_toLeftOf="@+id/tvSwitchVegToggle"
-        android:layout_toStartOf="@+id/tvSwitchVegToggle"
-        android:background="?android:attr/selectableItemBackground"
-        android:gravity="center|left"
         android:minHeight="42dp"
-        android:paddingLeft="20px"
-        android:paddingRight="20px"
-        android:paddingTop="5px"
-        android:text=""
-        android:textColor="@color/text_color_grey_menus"
-        android:textSize="30px"
-        android:layout_alignWithParentIfMissing="true"
-        />
+        android:layout_toEndOf="@+id/ib_arrow"
+        android:layout_toRightOf="@+id/ib_arrow">
+
+
+        <TextView
+            android:id="@+id/tv_offer_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center|left"
+            android:paddingLeft="20px"
+            android:paddingRight="20px"
+            android:maxLines="3"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:ellipsize="marquee"
+            android:layout_toLeftOf="@+id/tvSwitchVegToggle"
+            android:layout_toStartOf="@id/tvSwitchVegToggle"
+            android:layout_centerVertical="true"
+            android:paddingTop="@dimen/px_20"
+            android:paddingBottom="@dimen/px_20"
+            tools:text="jkhjkhjkhjkhjkhjkjkhjkhjkhjkhjkhjkhjk"
+            android:textColor="@color/text_color_grey_menus"
+            android:textSize="30px"
+            android:layout_alignWithParentIfMissing="true"
+            />
+
+
+        <TextView
+            android:id="@+id/tvSwitchVegToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/switchVegToggle"
+            android:layout_alignTop="@+id/switchVegToggle"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:layout_toLeftOf="@+id/switchVegToggle"
+            android:gravity="center"
+            android:text="@string/veg_only"
+            android:layout_centerVertical="true"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/sp_11"
+            app:typekitFont="@string/maven_r"
+            android:visibility="gone"
+            android:tag="@string/dont_touch_me"
+
+            />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switchVegToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_centerVertical="true"
+            android:theme="@style/ThemeSwitchAlternate"
+            android:visibility="gone"
+            android:tag="@string/dont_touch_me"
+            />
+
+    </RelativeLayout>
+
+
+
     <!--"?android:attr/selectableItemBackground"-->
 
     <ImageButton
         android:id="@id/ib_arrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/tv_offer_title"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_marginTop="20px"
         android:background="?android:attr/selectableItemBackground"
         android:paddingLeft="20px"
@@ -47,7 +100,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_below="@id/tv_offer_title"
+        android:layout_below="@id/rlOffer"
         android:layout_marginBottom="26px"
         android:background="@color/stroke_light_grey_alpha"
         android:visibility="gone"/>
@@ -65,40 +118,10 @@
         android:textColor="@color/text_color_grey_menus"
         android:textSize="26px"
         android:visibility="gone"
+        tools:text="dskfjhdklfgjhdlkgjdfklgjldfkgjfklgjfklgjkljkljkllkjklj"
         app:typekitFont="maven"/>
 
 
-    <TextView
-        android:id="@+id/tvSwitchVegToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/switchVegToggle"
-        android:layout_alignTop="@+id/switchVegToggle"
-        android:layout_marginRight="@dimen/dp_5"
-        android:layout_marginLeft="@dimen/dp_5"
-        android:layout_toLeftOf="@+id/switchVegToggle"
-        android:gravity="center"
-        android:text="@string/veg_only"
-        android:textColor="@color/text_color"
-        android:textSize="@dimen/sp_11"
-        app:typekitFont="@string/maven_r"
-        android:visibility="gone"
-        android:tag="@string/dont_touch_me"
-
-        />
-
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/switchVegToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/dp_8"
-        android:layout_marginRight="@dimen/dp_5"
-        android:layout_marginTop="@dimen/dp_8"
-        android:theme="@style/ThemeSwitchAlternate"
-        android:visibility="gone"
-        android:tag="@string/dont_touch_me"
-        />
 
 
 </RelativeLayout>

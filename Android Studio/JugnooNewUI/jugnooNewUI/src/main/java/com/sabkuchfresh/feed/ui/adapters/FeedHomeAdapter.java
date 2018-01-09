@@ -623,8 +623,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             int yearPosted, yearCurrent, currentMonth, postedMonth, currentDate, postedDate, postedHour, currentHour, postedMin, currentMin;
             yearPosted = feedPostedCal.get(Calendar.YEAR);
             yearCurrent = currentDateCal.get(Calendar.YEAR);
-            currentMonth = currentDateCal.get(Calendar.MONTH);
-            postedMonth = feedPostedCal.get(Calendar.MONTH);
+            currentMonth = currentDateCal.get(Calendar.MONTH) + 1;
+            postedMonth = feedPostedCal.get(Calendar.MONTH) +1;
             currentDate = currentDateCal.get(Calendar.DATE);
             postedDate = feedPostedCal.get(Calendar.DATE);
 
@@ -641,7 +641,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 
             if (yearPosted != yearCurrent) {
-                diff = currentMonth + (11 - postedMonth);
+                diff = currentMonth + (12 - postedMonth);
                 if (postedDate > currentDate) diff--;
             } else {
 
