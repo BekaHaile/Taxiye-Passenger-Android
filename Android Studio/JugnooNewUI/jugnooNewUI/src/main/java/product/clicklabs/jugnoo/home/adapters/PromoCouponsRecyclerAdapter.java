@@ -258,13 +258,14 @@ public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 			btnApply = (Button) itemView.findViewById(R.id.tv_apply);
 			tvError = (TextView) itemView.findViewById(R.id.tv_promo_error);
 			Utils.addCapitaliseFilterToEditText(editText);
-			editText.addTextChangedListener(new PromoTextWatcher(tvError));
 			btnApply.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					itemListener.onClickItem(v,itemView);
 				}
 			});
+			editText.addTextChangedListener(new PromoTextWatcher(tvError,btnApply));
+
 		}
 	}
 
@@ -316,8 +317,10 @@ public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 	}
 	private class PromoTextWatcher implements  TextWatcher{
 		private TextView textView;
-		PromoTextWatcher(TextView textView) {
+		private Button buttonApply;
+		PromoTextWatcher(TextView textView,Button buttonApply) {
 			this.textView = textView;
+			this.buttonApply = buttonApply;
 
 		}
 
@@ -336,6 +339,14 @@ public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 			if(textView.getVisibility()==View.VISIBLE){
 				textView.setVisibility(View.GONE);
 
+			}
+
+			if(s.length()==0 && buttonApply.isEnabled()){
+				buttonApply.setEnabled(false);
+			}else{
+				if(!buttonApply.isEnabled()){
+					buttonApply.setEnabled(true);
+				}
 			}
 
 		}

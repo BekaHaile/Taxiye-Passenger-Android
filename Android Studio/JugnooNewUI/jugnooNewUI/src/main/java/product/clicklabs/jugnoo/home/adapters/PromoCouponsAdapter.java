@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -255,7 +256,8 @@ public class PromoCouponsAdapter extends BaseAdapter {
 			editText = (EditText) itemView.findViewById(R.id.edtPromo);
 			btnApply = (Button) itemView.findViewById(R.id.tv_apply);
 			tvError = (TextView) itemView.findViewById(R.id.tv_promo_error);
-			editText.addTextChangedListener(new PromoTextWatcher(tvError,editText));
+			editText.addTextChangedListener(new PromoTextWatcher(tvError,btnApply));
+
 		}
 	}
 
@@ -310,10 +312,10 @@ public class PromoCouponsAdapter extends BaseAdapter {
 	}
 	private class PromoTextWatcher implements  TextWatcher{
 		private TextView textView;
-		private EditText editText;
-		public PromoTextWatcher(TextView textView,EditText editText) {
+		private Button button;
+		public PromoTextWatcher(TextView textView,Button editText) {
 			this.textView = textView;
-			this.editText = editText;
+			this.button = editText;
 		}
 
 		@Override
@@ -329,10 +331,18 @@ public class PromoCouponsAdapter extends BaseAdapter {
 		@Override
 		public void afterTextChanged(Editable s) {
 			if(textView.getVisibility()==View.VISIBLE){
-				if(offerList!=null && offerItemPosition<offerList.size()){
+				if(offerList!=null && offerItemPosition<offerList.size() && offerList.get(offerItemPosition).showPromoBox()){
 					offerList.get(offerItemPosition).setMessageToDisplay(null);
 					notifyDataSetChanged();
 
+				}
+			}
+
+			if(s.length()==0 && button.isEnabled()){
+				button.setEnabled(false);
+			}else{
+				if(!button.isEnabled()){
+					button.setEnabled(true);
 				}
 			}
 

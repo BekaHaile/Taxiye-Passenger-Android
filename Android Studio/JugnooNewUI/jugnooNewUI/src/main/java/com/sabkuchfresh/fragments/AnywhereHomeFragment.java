@@ -120,6 +120,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     CardView cvPromo;
     @Bind(R.id.sv_anywhere)
     ScrollView svAnywhere;
+
     private ForegroundColorSpan textHintColorSpan;
 
     // TODO: 28/11/17 Slider stuck on fatafat error
@@ -236,7 +237,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                 }
                 if (edtPromo.hasFocus()) {
-                   svAnywhere.fullScroll(ScrollView.FOCUS_DOWN);
+                    svAnywhere.fullScroll(ScrollView.FOCUS_DOWN);
                 }
             }
 
@@ -428,7 +429,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 break;
             case R.id.tv_apply:
 
-                if(currentPromoApplied!=null){
+                if (currentPromoApplied != null) {
                     showRemoveCouponPopup();
                 } else {
                     if (edtPromo.getText().toString().trim().length() > 0) {
@@ -898,11 +899,16 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             if (textView.getVisibility() == View.VISIBLE) {
                 textView.setVisibility(View.GONE);
             }
+            if (s.length() == 0 && currentPromoApplied == null) {
+                tvApplyPromo.setEnabled(false);
+            } else {
+                tvApplyPromo.setEnabled(true);
+            }
 
         }
     }
 
-    public void showRemoveCouponPopup(){
+    public void showRemoveCouponPopup() {
         DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", activity.getString(R.string.remove_popup_message),
                 activity.getString(R.string.yes),
                 activity.getString(R.string.no),
