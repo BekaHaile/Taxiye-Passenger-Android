@@ -169,26 +169,26 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 
 		try {
 			tvReferralCodeValue.setText(Data.userData.referralCode);
-			textViewDesc.setText(Data.userData.getReferralMessages().referralShortMessage+ " Details");
-
-			SpannableString ss = new SpannableString(Data.userData.getReferralMessages().referralShortMessage+"\n Details");
-			ClickableSpan clickableSpan = new ClickableSpan() {
-				@Override
-				public void onClick(View textView) {
-					try {
-						boolean html = Utils.DetectHtml.isHtml(Data.userData.getReferralMessages().referralMoreInfoMessage);
-						DialogPopup.alertPopupLeftOriented(activity, "",
-								Data.userData.getReferralMessages().referralMoreInfoMessage, true, true, html);
-						GAUtils.event(SIDE_MENU, FREE_GIFT, GAAction.DETAILS+CLICKED);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			};
-			ss.setSpan(clickableSpan, (textViewDesc.getText().length() - 6), textViewDesc.getText().length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-			textViewDesc.setText(ss);
-			textViewDesc.setMovementMethod(LinkMovementMethod.getInstance());
+//			textViewDesc.setText(Data.userData.getReferralMessages().referralShortMessage+ " Details");
+//
+//			SpannableString ss = new SpannableString(Data.userData.getReferralMessages().referralShortMessage+"\n Details");
+//			ClickableSpan clickableSpan = new ClickableSpan() {
+//				@Override
+//				public void onClick(View textView) {
+//					try {
+//						boolean html = Utils.DetectHtml.isHtml(Data.userData.getReferralMessages().referralMoreInfoMessage);
+//						DialogPopup.alertPopupLeftOriented(activity, "",
+//								Data.userData.getReferralMessages().referralMoreInfoMessage, true, true, html);
+//						GAUtils.event(SIDE_MENU, FREE_GIFT, GAAction.DETAILS+CLICKED);
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			};
+//			ss.setSpan(clickableSpan, (textViewDesc.getText().length() - 6), textViewDesc.getText().length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+////			textViewDesc.setText(ss);
+//			textViewDesc.setMovementMethod(LinkMovementMethod.getInstance());
 
 			if(!"".equalsIgnoreCase(Data.userData.getInviteEarnScreenImage())){
 				Picasso.with(activity).load(Data.userData.getInviteEarnScreenImage())

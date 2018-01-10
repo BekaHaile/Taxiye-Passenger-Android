@@ -604,9 +604,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			rlPhoneLogin = (RelativeLayout) findViewById(R.id.rlPhoneLogin);
 			btnPhoneLogin = (Button) findViewById(R.id.btnPhoneLogin);
 
-			((TextView)findViewById(R.id.tvJugnooTaxiS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
+			/*((TextView)findViewById(R.id.tvJugnooTaxiS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 			((TextView)findViewById(R.id.tvJugnooTaxiLS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
-			((TextView)findViewById(R.id.tvJugnooTaxiP)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
+			((TextView)findViewById(R.id.tvJugnooTaxiP)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);*/
 
 			root.setOnClickListener(onClickListenerKeybordHide);
 

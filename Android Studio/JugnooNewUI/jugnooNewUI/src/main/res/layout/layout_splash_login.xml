@@ -4,11 +4,11 @@
     android:id="@+id/linearLayoutLogin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@color/white"
     android:orientation="vertical"
-    android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
 
     <ImageView
@@ -23,10 +23,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:animateLayoutChanges="true">
 
         <ImageView
             android:layout_width="match_parent"
@@ -47,11 +47,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/welcome_to_jugnoo"
-                android:textSize="@dimen/text_size_42"
-                android:textColor="@color/text_color"
                 android:layout_gravity="center_horizontal"
-                app:typekitFont="maven"/>
+                android:text="@string/welcome_to_jugnoo"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_42"
+                app:typekitFont="maven" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -64,31 +64,31 @@
                     android:id="@+id/buttonFacebookLogin"
                     android:layout_width="268px"
                     android:layout_height="@dimen/splash_button_height"
-                    android:gravity="center_horizontal"
-                    android:background="@drawable/capsule_login_button_selector">
+                    android:background="@drawable/capsule_login_button_selector"
+                    android:gravity="center_horizontal">
 
                     <Button
                         android:id="@+id/bFacebook"
                         android:layout_width="@dimen/px_40"
                         android:layout_height="@dimen/px_40"
+                        android:layout_centerVertical="true"
                         android:background="@drawable/ic_f"
                         android:clickable="false"
                         android:duplicateParentState="true"
                         android:textAllCaps="true"
-                        android:layout_centerVertical="true"
                         android:textColor="@drawable/text_color_white_alpha_selector"
                         android:textSize="@dimen/text_size_34" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/nl_login_facebook"
-                        android:textColor="#3b5998"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/px_20"
-                        android:textSize="@dimen/text_size_32"
                         android:layout_toRightOf="@+id/bFacebook"
-                        app:typekitFont="maven"/>
+                        android:text="@string/nl_login_facebook"
+                        android:textColor="#3b5998"
+                        android:textSize="@dimen/text_size_32"
+                        app:typekitFont="maven" />
 
                 </RelativeLayout>
 
@@ -97,17 +97,17 @@
                     android:layout_width="268px"
                     android:layout_height="@dimen/splash_button_height"
                     android:layout_marginLeft="@dimen/px_20"
-                    android:gravity="center_horizontal"
-                    android:background="@drawable/capsule_login_button_selector">
+                    android:background="@drawable/capsule_login_button_selector"
+                    android:gravity="center_horizontal">
 
                     <Button
                         android:id="@+id/bGoogle"
                         android:layout_width="@dimen/px_40"
                         android:layout_height="@dimen/px_40"
+                        android:layout_centerVertical="true"
                         android:background="@drawable/ic_g"
                         android:clickable="false"
                         android:duplicateParentState="true"
-                        android:layout_centerVertical="true"
                         android:textAllCaps="true"
                         android:textColor="@drawable/text_color_white_alpha_selector"
                         android:textSize="@dimen/text_size_34" />
@@ -115,45 +115,15 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/nl_login_google"
-                        android:textColor="@color/text_color"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/px_20"
-                        android:textSize="@dimen/text_size_32"
                         android:layout_toRightOf="@+id/bGoogle"
-                        app:typekitFont="maven"/>
+                        android:text="@string/nl_login_google"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_32"
+                        app:typekitFont="maven" />
 
                 </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/px_60"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/px_50"
-                    android:layout_height="2px"
-                    android:layout_marginRight="25px"
-                    android:src="@color/grey_light" />
-
-                <TextView
-                    android:id="@+id/textViewLoginOr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/or_login_with"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_26" />
-
-                <ImageView
-                    android:layout_width="@dimen/px_50"
-                    android:layout_height="2px"
-                    android:layout_marginLeft="20px"
-                    android:src="@color/grey_light" />
 
             </LinearLayout>
 
@@ -170,33 +140,40 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
+                    <Spinner
+                        android:id="@+id/spinner6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="88px" />
+
                     <ImageView
                         android:id="@+id/imageViewEmail"
                         android:layout_width="@dimen/px_30"
                         android:layout_height="@dimen/px_30"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="36px"
+                        android:layout_alignTop="@+id/textViewEmailRequired"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginRight="15dp"
                         android:src="@drawable/ic_phone"
-                        android:tag="mhar" />
+                        android:tag="mhar"
+                        android:visibility="invisible" />
 
                     <AutoCompleteTextView
                         android:id="@+id/editTextEmail"
                         android:layout_width="match_parent"
                         android:layout_height="88px"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="10px"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="88px"
                         android:layout_toLeftOf="@+id/textViewEmailRequired"
-                        android:layout_toRightOf="@+id/imageViewEmail"
+                        android:layout_toStartOf="@+id/textViewEmailRequired"
                         android:background="#0000"
                         android:completionThreshold="1"
+                        android:ellipsize="end"
                         android:gravity="center_vertical"
                         android:hint="@string/phone_number"
                         android:inputType="number"
+                        android:maxLength="9"
+                        android:maxLines="1"
                         android:paddingLeft="20px"
                         android:paddingRight="20px"
-                        android:maxLines="1"
-                        android:maxLength="10"
-                        android:ellipsize="end"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@null"
@@ -273,6 +250,36 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/px_60"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/px_50"
+                    android:layout_height="2px"
+                    android:layout_marginRight="25px"
+                    android:src="@color/grey_light" />
+
+                <TextView
+                    android:id="@+id/textViewLoginOr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/or_login_with"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_26" />
+
+                <ImageView
+                    android:layout_width="@dimen/px_50"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="20px"
+                    android:src="@color/grey_light" />
+
+            </LinearLayout>
+
             <Button
                 android:id="@+id/buttonEmailLogin"
                 android:layout_width="@dimen/splash_button_width"
@@ -292,10 +299,10 @@
                 android:layout_height="70px"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:visibility="gone"
                 android:text="@string/forgot_password"
                 android:textColor="@color/services_name_txt_color"
-                android:textSize="@dimen/text_size_26" />
+                android:textSize="@dimen/text_size_26"
+                android:visibility="gone" />
         </LinearLayout>
 
     </RelativeLayout>

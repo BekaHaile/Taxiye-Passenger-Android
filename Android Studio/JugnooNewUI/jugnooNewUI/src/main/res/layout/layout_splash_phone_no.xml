@@ -18,24 +18,22 @@
         android:id="@+id/ivLogoP"
         android:layout_width="81dp"
         android:layout_height="81dp"
-        android:src="@drawable/ic_taxi_logo"
-        android:tag="@string/dont_touch_me"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="@dimen/px_240"
+        android:src="@mipmap/ic_launcher"
+        android:tag="mwar" />
 
     <TextView
-        android:id="@+id/tvJugnooTaxiP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:text="@string/jugnoo_taxi"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        android:layout_below="@+id/ivLogoP"
+        android:layout_below="@id/ivLogoP"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:tag="@string/dont_touch_me"
-        />
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:text="@string/app_name"
+        android:textColor="@color/yellow_auto"
+        android:textSize="@dimen/text_size_54"
+        android:visibility="visible" />
 
     <RelativeLayout
         android:id="@+id/rlPhone"
@@ -52,7 +50,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="36px"
             android:src="@drawable/ic_phone"
-            android:tag="mhar" />
+            android:tag="mhar"
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/editTextPhoneNumber"

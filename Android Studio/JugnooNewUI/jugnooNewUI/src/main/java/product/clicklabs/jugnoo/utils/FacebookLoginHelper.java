@@ -181,7 +181,7 @@ public class FacebookLoginHelper {
     public void appInviteDialog(){
         String appLinkUrl, previewImageUrl;
 
-        appLinkUrl = "https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo";
+        appLinkUrl = "https://play.google.com/store/apps/details?id=product.clicklabs.jingo";
         previewImageUrl = "http://graph.facebook.com/717496164959213/picture?width=160&height=160";
 
         if (AppInviteDialog.canShow()) {

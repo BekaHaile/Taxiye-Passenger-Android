@@ -190,8 +190,6 @@
     <color name="green_rupee">#1fbd2a</color>
 
 
-
-
     <color name="color_auto_border">#f06f3b</color>
     <color name="color_meals_border">#ba5a62</color>
     <color name="color_fresh_border">#b8e986</color>
@@ -213,7 +211,7 @@
     <color name="dull_background">#eeeeee</color>
     <color name="dull_line">#eaeaea</color>
     <color name="text_color_grey_menus">#595968</color>
-    <color name="color_orange_menus"> #ff834e</color>
+    <color name="color_orange_menus">#ff834e</color>
 
 
     <color name="orange_rides_fab_pressed">#eb693f</color>
@@ -237,12 +235,12 @@
 
     <color name="feed_grey_text">#595968</color>
     <color name="feed_color_accent">#ef6692</color>
-  <color name="feed_grey_text_heading">#474655</color>
+    <color name="feed_grey_text_heading">#474655</color>
     <color name="feed_grey_hint_color">#a4a4a4</color>
-  <color name="feed_grey_text_secondary">#9b9b9b</color>
-  <color name="feed_grey_background">#eaeaea</color>
-  <color name="feed_grey_background_light">#f7f7f7</color>
-  <color name="feed_color_orange">#ff834e</color>
+    <color name="feed_grey_text_secondary">#9b9b9b</color>
+    <color name="feed_grey_background">#eaeaea</color>
+    <color name="feed_grey_background_light">#f7f7f7</color>
+    <color name="feed_color_orange">#ff834e</color>
     <color name="green_delivery_stores">#8dcf61</color>
     <color name="green_delivery_stores_alpha">#B38dcf61</color>
     <color name="feed_grey_black">#d8dbe1</color>
@@ -264,6 +262,8 @@
     <color name="purple_tweet_dark">#693bb4</color>
     <color name="yellow_email">#ffae50</color>
     <color name="yellow_email_dark">#ef9e40</color>
+    <color name="yellow_auto">#ffb04c</color>
+
     <color name="green_whatsapp">#57bb63</color>
     <color name="green_whatsapp_dark">#47ab53</color>
     <color name="pale_orange">#fffcf2</color>

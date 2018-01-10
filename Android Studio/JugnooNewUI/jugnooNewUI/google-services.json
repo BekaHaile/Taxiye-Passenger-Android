@@ -8,6 +8,97 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:506849624961:android:6e9a6bc57127f7d5",
+        "android_client_info": {
+          "package_name": "com.driver.jugnoopros"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506849624961-vp4q01upn142gibmd1hnqhkhavg3b2ds.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.driver.jugnoopros",
+            "certificate_hash": "87914682838fc8e70369b102dd89fd8eea9e4009"
+          }
+        },
+        {
+          "client_id": "506849624961-r6ton4i56ebicl1ejq5lq49702u6n5me.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "506849624961-c9bbl632kfgtvqcq2b55rubibcnpnfhg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbpzWmfGnHu8SLjREnCxR2lVk2hxbGmWU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "506849624961-giflemb7tksa8etpghifg542cqpj4ftk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.clicklabs.jugnoo",
+                "app_store_id": "882391317"
+              }
+            },
+            {
+              "client_id": "506849624961-r6ton4i56ebicl1ejq5lq49702u6n5me.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506849624961:android:48de014b43489d81",
+        "android_client_info": {
+          "package_name": "izorp.d5m99.og1mr"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506849624961-r6ton4i56ebicl1ejq5lq49702u6n5me.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "506849624961-c9bbl632kfgtvqcq2b55rubibcnpnfhg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbpzWmfGnHu8SLjREnCxR2lVk2hxbGmWU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:506849624961:android:5a3d82fd9622e124",
         "android_client_info": {
           "package_name": "product.clicklabs.jugnoo"
@@ -182,167 +273,6 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:506849624961:android:0f1243e5d9114d43",
-        "android_client_info": {
-          "package_name": "talov.btlzi.q4yxb"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "506849624961-r6ton4i56ebicl1ejq5lq49702u6n5me.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "506849624961-c9bbl632kfgtvqcq2b55rubibcnpnfhg.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAbpzWmfGnHu8SLjREnCxR2lVk2hxbGmWU"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:506849624961:android:48de014b43489d81",
-        "android_client_info": {
-          "package_name": "izorp.d5m99.og1mr"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "506849624961-r6ton4i56ebicl1ejq5lq49702u6n5me.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "506849624961-c9bbl632kfgtvqcq2b55rubibcnpnfhg.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAbpzWmfGnHu8SLjREnCxR2lVk2hxbGmWU"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:506849624961:android:f0f1347d8a97df97",
-        "android_client_info": {
-          "package_name": "ylvzv.ms64.wl1c"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "506849624961-r6ton4i56ebicl1ejq5lq49702u6n5me.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "506849624961-c9bbl632kfgtvqcq2b55rubibcnpnfhg.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAbpzWmfGnHu8SLjREnCxR2lVk2hxbGmWU"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:506849624961:android:6e9a6bc57127f7d5",
-        "android_client_info": {
-          "package_name": "com.driver.jugnoopros"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "506849624961-vp4q01upn142gibmd1hnqhkhavg3b2ds.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.driver.jugnoopros",
-            "certificate_hash": "87914682838fc8e70369b102dd89fd8eea9e4009"
-          }
-        },
-        {
-          "client_id": "506849624961-r6ton4i56ebicl1ejq5lq49702u6n5me.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "506849624961-c9bbl632kfgtvqcq2b55rubibcnpnfhg.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAbpzWmfGnHu8SLjREnCxR2lVk2hxbGmWU"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "506849624961-r6ton4i56ebicl1ejq5lq49702u6n5me.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "506849624961-giflemb7tksa8etpghifg542cqpj4ftk.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.clicklabs.jugnoo",
-                "app_store_id": "882391317"
-              }
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:506849624961:android:c285dbad470f6ab5",
         "android_client_info": {
           "package_name": "product.clicklabs.jugnoo.driver.ads"
@@ -414,18 +344,123 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "506849624961-r6ton4i56ebicl1ejq5lq49702u6n5me.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
               "client_id": "506849624961-giflemb7tksa8etpghifg542cqpj4ftk.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.clicklabs.jugnoo",
                 "app_store_id": "882391317"
               }
+            },
+            {
+              "client_id": "506849624961-r6ton4i56ebicl1ejq5lq49702u6n5me.apps.googleusercontent.com",
+              "client_type": 3
             }
           ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506849624961:android:66ba4cae46d449a0",
+        "android_client_info": {
+          "package_name": "production.jingos.customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506849624961-r6ton4i56ebicl1ejq5lq49702u6n5me.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "506849624961-c9bbl632kfgtvqcq2b55rubibcnpnfhg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbpzWmfGnHu8SLjREnCxR2lVk2hxbGmWU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506849624961:android:0f1243e5d9114d43",
+        "android_client_info": {
+          "package_name": "talov.btlzi.q4yxb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506849624961-r6ton4i56ebicl1ejq5lq49702u6n5me.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "506849624961-c9bbl632kfgtvqcq2b55rubibcnpnfhg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbpzWmfGnHu8SLjREnCxR2lVk2hxbGmWU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506849624961:android:f0f1347d8a97df97",
+        "android_client_info": {
+          "package_name": "ylvzv.ms64.wl1c"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506849624961-r6ton4i56ebicl1ejq5lq49702u6n5me.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "506849624961-c9bbl632kfgtvqcq2b55rubibcnpnfhg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbpzWmfGnHu8SLjREnCxR2lVk2hxbGmWU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

@@ -229,8 +229,8 @@ public class ReferralActions  {
                 public void onBranchLinkCreated(String link) {
                     genericShareDialog(activity, callbackManager,
                             Data.userData.getReferralMessages().referralEmailSubject,
-                            Data.userData.getReferralMessages().referralSharingMessage + "\n" + link,
-                            link);
+                            Data.userData.getReferralMessages().referralSharingMessage + "\n" + "",
+                            "");
                 }
 
                 @Override
