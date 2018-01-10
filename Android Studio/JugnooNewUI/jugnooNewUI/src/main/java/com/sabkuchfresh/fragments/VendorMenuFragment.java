@@ -314,8 +314,15 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
             try {
                 if(event.isVegToggle){
-					menusCategoryFragmentsAdapter.filterCategoriesAccIsVeg(activity.getMenuProductsResponse().getCategories());
-				}
+                    // fix for category switching bug when previous category is a complete non-veg category
+                    // now we return to the last selected category on toggle
+                    int previousCatId = menusCategoryFragmentsAdapter.getCategories().get(viewPager.getCurrentItem()).getCategoryId();
+					int currentPos = menusCategoryFragmentsAdapter.filterCategoriesAccIsVeg(activity.getMenuProductsResponse().getCategories(), previousCatId);
+                    tabs.notifyDataSetChanged();
+                    if(currentPos > -1) {
+                        viewPager.setCurrentItem(currentPos);
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -371,7 +378,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     ivShadowAboveTab.setVisibility(View.VISIBLE);
                     ivShadowBelowTab.setVisibility(View.VISIBLE);
 
-                    menusCategoryFragmentsAdapter.filterCategoriesAccIsVeg(activity.getMenuProductsResponse().getCategories());
+                    menusCategoryFragmentsAdapter.filterCategoriesAccIsVeg(activity.getMenuProductsResponse().getCategories(), -1);
                     tabs.setViewPager(viewPager);
                     viewPager.setCurrentItem(Data.tabLinkIndex);
                     Data.tabLinkIndex = 0;

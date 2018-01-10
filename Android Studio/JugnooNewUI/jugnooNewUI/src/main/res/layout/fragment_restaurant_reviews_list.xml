@@ -12,7 +12,7 @@
         android:id="@+id/rlRatingCount"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50"
-        android:background="@color/white"
+        android:background="@android:color/white"
         >
 
         <LinearLayout
@@ -52,7 +52,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_8"
+            android:layout_height="@dimen/dp_2"
             android:background="@color/feed_grey_black"
             android:layout_alignParentBottom="true"
             />
@@ -106,8 +106,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_7"
-        android:background="@drawable/shadow_down_new"
+        android:layout_height="@dimen/dp_2"
+        android:background="@color/feed_grey_black"
         />
 
 
@@ -115,6 +115,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_7"
         android:background="@drawable/shadow_up_new"
+        android:layout_alignParentBottom="true"
         android:layout_above="@+id/bAddReview"
         />
     <Button
