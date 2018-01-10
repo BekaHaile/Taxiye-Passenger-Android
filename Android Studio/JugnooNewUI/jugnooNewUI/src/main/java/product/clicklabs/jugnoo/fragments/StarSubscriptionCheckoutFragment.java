@@ -395,6 +395,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 // initiate upi flow if payment is pending
                 if(isUpiPending){
                     setPlaceOrderResponse(Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED));
+                    if(jugnooVpaHandle==null){
+                        jugnooVpaHandle = getPlaceOrderResponse().getIcici().getJugnooVpa();
+                    }
                     onIciciUpiPaymentInitiated(Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED).getIcici(),
                             String.valueOf(Data.getCurrentIciciUpiTransaction(AppConstant.ApplicationType.FEED).getAmount()));
                 }
