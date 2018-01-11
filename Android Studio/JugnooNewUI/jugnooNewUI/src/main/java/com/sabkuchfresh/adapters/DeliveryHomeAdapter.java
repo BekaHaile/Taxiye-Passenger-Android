@@ -193,6 +193,28 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         }
 
+        // vendors calculation
+        int vendorsCount = 0;
+        if(menusResponse.getVendors() != null){
+            vendorsCount = menusResponse.getVendors().size();
+        }
+
+
+        // promotional banner or strip
+        if(!isPagination && vendorsCount > 0){
+            if(menusResponse.getShowBanner()){
+                if(menusResponse.getBannerInfos() != null && menusResponse.getBannerInfos().size() > 0){
+                    dataToDisplay.add(new BannerInfosModel(menusResponse.getBannerInfos()));
+                    // add a divider
+                    DeliveryDivider deliveryDivider = new DeliveryDivider();
+                    dataToDisplay.add(deliveryDivider);
+                }
+            } else if(menusResponse.getStripInfo() != null && !TextUtils.isEmpty(menusResponse.getStripInfo().getText())){
+                activity.setCurrentDeliveryStripToMinOrder();
+//                dataToDisplay.add(menusResponse.getStripInfo());
+            }
+        }
+
         // recent orders
         if(!isPagination && menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0 && !activity.getMenusFragment().searchOpened){
             ordersExpanded = false;
@@ -217,24 +239,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dataToDisplay.add(deliveryDivider);
         }
 
-        // vendors calculation
-        int vendorsCount = 0;
-        if(menusResponse.getVendors() != null){
-            vendorsCount = menusResponse.getVendors().size();
-        }
 
-
-        // promotional banner or strip
-        if(!isPagination && vendorsCount > 0){
-            if(menusResponse.getShowBanner()){
-                if(menusResponse.getBannerInfos() != null && menusResponse.getBannerInfos().size() > 0){
-                    dataToDisplay.add(new BannerInfosModel(menusResponse.getBannerInfos()));
-                }
-            } else if(menusResponse.getStripInfo() != null && !TextUtils.isEmpty(menusResponse.getStripInfo().getText())){
-                activity.setCurrentDeliveryStripToMinOrder();
-//                dataToDisplay.add(menusResponse.getStripInfo());
-            }
-        }
 
 
         //vendors Assignment
