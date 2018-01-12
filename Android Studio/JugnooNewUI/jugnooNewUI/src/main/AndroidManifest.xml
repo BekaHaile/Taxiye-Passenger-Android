@@ -301,7 +301,8 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.sabkuchfresh.fatafatchatpay.ChatCustomActionBroadCastReceiver">
+        <receiver android:name="com.sabkuchfresh.fatafatchatpay.ChatCustomActionBroadCastReceiver"
+            android:exported="false">
             <intent-filter>
                 <action android:name="FUGU_CUSTOM_ACTION_SELECTED"/>
             </intent-filter>
