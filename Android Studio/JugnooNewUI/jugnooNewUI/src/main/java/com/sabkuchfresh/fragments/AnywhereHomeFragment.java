@@ -236,7 +236,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
 
                 }
-                if (edtPromo.hasFocus()) {
+                if (getView()!=null && edtPromo.hasFocus()) {
                     svAnywhere.fullScroll(ScrollView.FOCUS_DOWN);
                 }
             }
@@ -327,6 +327,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        activity.unRegisterKeyBoardListener();
 //        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         ButterKnife.unbind(this);
     }
