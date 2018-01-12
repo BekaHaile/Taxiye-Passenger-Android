@@ -106,7 +106,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int NEW_VIEW_ORDER_ITEM = 14;
     private static final int ITEM_BANNER_FATAFAT_RESTAURANTS = 15;
     private CategoriesData categoriesData;
-    private ArrayList<Object> collapsedRecentOrdersData;
+    private ArrayList<Object> collapsedRecentOrdersData = new ArrayList<>();
     private int posFromWhichOrdersStart;
 
     private static final int RECENT_ORDERS_TO_SHOW = 2;
@@ -121,6 +121,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         BW_FILTER = new ColorMatrixColorFilter(BW_MATRIX);
 
     }
+
+    private BannerInfosModel mBannerInfosModel;
+    private DeliveryDivider mBannerDivider;
+    private int mBannerPositionInList =-1;
 
 
 
@@ -162,6 +166,17 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private boolean isFatafatBannerInserted;
     public void setList(MenusResponse menusResponse, boolean isPagination, boolean hasMorePages) {
 
+        if(collapsedRecentOrdersData.size()!=0 && menusResponse.getRecentOrders().size()==0){
+            // order have been cleared, clear them locally also
+            collapsedRecentOrdersData.clear();
+        }
+
+        // clear local banner object if the latest coming from response is null
+        if(mBannerInfosModel!=null && !(menusResponse.getBannerInfos() != null
+                && menusResponse.getBannerInfos().size() > 0)){
+            mBannerInfosModel = null;
+        }
+
         // for stopping scrolling to form layout editText in case of less vendors
         if(activity.getMenusFragment() != null && !activity.getMenusFragment().getSearchOpened()) {
             recyclerView.requestFocus();
@@ -177,6 +192,13 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         final int sizeListBeforeAdding = dataToDisplay.size();
 
+        // vendors calculation
+        int vendorsCount = 0;
+        if(menusResponse.getVendors() != null){
+            vendorsCount = menusResponse.getVendors().size();
+        }
+
+
         if(isPagination){
             showPaginationProgressBar(false,false);
         }else{
@@ -188,32 +210,29 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     dataToDisplay.add(categoriesData);
 
                 }
-            }
 
-
-        }
-
-        // vendors calculation
-        int vendorsCount = 0;
-        if(menusResponse.getVendors() != null){
-            vendorsCount = menusResponse.getVendors().size();
-        }
-
-
-        // promotional banner or strip
-        if(!isPagination && vendorsCount > 0){
-            if(menusResponse.getShowBanner()){
-                if(menusResponse.getBannerInfos() != null && menusResponse.getBannerInfos().size() > 0){
-                    dataToDisplay.add(new BannerInfosModel(menusResponse.getBannerInfos()));
-                    // add a divider
-                    DeliveryDivider deliveryDivider = new DeliveryDivider();
-                    dataToDisplay.add(deliveryDivider);
-                }
-            } else if(menusResponse.getStripInfo() != null && !TextUtils.isEmpty(menusResponse.getStripInfo().getText())){
-                activity.setCurrentDeliveryStripToMinOrder();
+                // promotional banner or strip
+                if(!isPagination && vendorsCount > 0){
+                    if(menusResponse.getShowBanner()){
+                        if(menusResponse.getBannerInfos() != null && menusResponse.getBannerInfos().size() > 0){
+                            mBannerInfosModel = new BannerInfosModel(menusResponse.getBannerInfos());
+                            dataToDisplay.add(mBannerInfosModel);
+                            mBannerPositionInList = dataToDisplay.size()-1;
+                            // add a divider
+                            mBannerDivider = new DeliveryDivider();
+                            dataToDisplay.add(mBannerDivider);
+                        }
+                    } else if(menusResponse.getStripInfo() != null && !TextUtils.isEmpty(menusResponse.getStripInfo().getText())){
+                        activity.setCurrentDeliveryStripToMinOrder();
 //                dataToDisplay.add(menusResponse.getStripInfo());
+                    }
+                }
             }
+
+
         }
+
+
 
         // recent orders
         if(!isPagination && menusResponse.getRecentOrders() != null && menusResponse.getRecentOrders().size()>0 && !activity.getMenusFragment().searchOpened){
@@ -313,6 +332,22 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
+    /**
+     * Toggles banner visibility
+     * @param hide whether the banner should be hidden
+     */
+    private void toggleBannerVisibility(boolean hide){
+
+        if(hide && mBannerInfosModel!=null){
+            dataToDisplay.remove(mBannerInfosModel);
+            dataToDisplay.remove(mBannerDivider);
+        }
+        else if(!hide && mBannerInfosModel!=null) {
+            dataToDisplay.add(mBannerPositionInList,mBannerInfosModel);
+            dataToDisplay.add(mBannerPositionInList+1,mBannerDivider);
+        }
+    }
+
     public void hideCateogiresBar(boolean hide){
 
         try {
@@ -326,6 +361,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     dataToDisplay.remove(categoriesData);
 
                 }
+
+                // toggle banner visibility
+                toggleBannerVisibility(hide);
+
                 if(collapsedRecentOrdersData!=null && collapsedRecentOrdersData.size()>0){
                     dataToDisplay.removeAll(collapsedRecentOrdersData);
 
@@ -336,6 +375,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     dataToDisplay.add(1,categoriesData);
 
                 }
+
+                // toggle banner visibility
+                toggleBannerVisibility(hide);
+
                 if(collapsedRecentOrdersData!=null){
                     dataToDisplay.addAll(posFromWhichOrdersStart,collapsedRecentOrdersData);
                 }

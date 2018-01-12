@@ -1119,6 +1119,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             if(doChangesWithAdapter){
                 previousVendors = deliveryHomeAdapter.getDataToDisplay();
                 deliveryHomeAdapter.hideCateogiresBar(true);
+
             }
         }
     }
