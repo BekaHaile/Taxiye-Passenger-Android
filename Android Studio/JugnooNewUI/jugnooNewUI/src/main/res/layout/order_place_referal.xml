@@ -39,6 +39,7 @@
         android:gravity="center"
         android:layout_alignBottom="@id/edtPromo"
         android:text="@string/apply"
+        android:enabled="false"
         android:textAllCaps="true"
         android:layout_marginBottom="7dp"
         android:textSize="17sp"

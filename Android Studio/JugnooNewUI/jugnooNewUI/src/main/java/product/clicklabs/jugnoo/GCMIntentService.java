@@ -546,8 +546,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						notificationManager(this, title, logMessage, playSound);
 
 					} else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag
-							|| PushFlags.PROS_STATUS_SILENT.getOrdinal() == flag) {
-						if (jObj.has("client_id")) {
+							|| PushFlags.PROS_STATUS_SILENT.getOrdinal() == flag || PushFlags.SHOW_NOTIFICATION_WITH_DEEPLINK.getOrdinal()==flag) {
+						if (jObj.has("client_id") && PushFlags.SHOW_NOTIFICATION_WITH_DEEPLINK.getOrdinal()!=flag) {
 							String clientId = jObj.getString("client_id");
 							if (AccessTokenGenerator.MEALS_CLIENT_ID.equalsIgnoreCase(clientId)) {
 								notificationManagerCustomIDAnotherApp(this, title, message1, PROMOTION_NOTIFICATION_ID,
@@ -562,8 +562,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 								notificationManagerCustomIDAnotherApp(this, title, message1, PROMOTION_NOTIFICATION_ID,
 										AccessTokenGenerator.AUTOS_PACKAGE, playSound);
 							}
-						}
-						else {
+						} else {
 							String picture = jObj.optString(KEY_PICTURE, "");
 							int campaignId = jObj.optInt(Constants.KEY_CAMPAIGN_ID, 0);
 							int postId = jObj.optInt(Constants.KEY_POST_ID, -1);
@@ -609,34 +608,37 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 								}
 							}
 
+                            if(PushFlags.SHOW_NOTIFICATION_WITH_DEEPLINK.getOrdinal()!=flag){
+                                // for sending broadcast to FreshActivity for tab index action
+                                Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
+                                // if push content has post_id and deepindex 22(FEED) only then hit this broadcast
+                                if(deepindex == AppLinkIndex.FEED_PAGE.getOrdinal() && postId != -1){
+                                    broadcastIntent.putExtra(Constants.KEY_POST_ID, postId);
+                                    broadcastIntent.putExtra(Constants.KEY_POST_NOTIFICATION_ID, postNotificationId);
+                                }
+                                else if(deepindex == AppLinkIndex.MENUS_PAGE.getOrdinal() && restaurantId > 0 && feedbackId > 0){
+                                    broadcastIntent.putExtra(Constants.KEY_RESTAURANT_ID, restaurantId);
+                                    broadcastIntent.putExtra(Constants.KEY_FEEDBACK_ID, feedbackId);
+                                }
+                                else if (deepindex == AppLinkIndex.PROS_PAGE.getOrdinal() && jobId > 0){
+                                    if(isFeedbackPending == 1) {
+                                        Prefs.with(this).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, jobId);
+                                    }
 
-							// for sending broadcast to FreshActivity for tab index action
-							Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
-							// if push content has post_id and deepindex 22(FEED) only then hit this broadcast
-							if(deepindex == AppLinkIndex.FEED_PAGE.getOrdinal() && postId != -1){
-								broadcastIntent.putExtra(Constants.KEY_POST_ID, postId);
-								broadcastIntent.putExtra(Constants.KEY_POST_NOTIFICATION_ID, postNotificationId);
-							}
-							else if(deepindex == AppLinkIndex.MENUS_PAGE.getOrdinal() && restaurantId > 0 && feedbackId > 0){
-								broadcastIntent.putExtra(Constants.KEY_RESTAURANT_ID, restaurantId);
-								broadcastIntent.putExtra(Constants.KEY_FEEDBACK_ID, feedbackId);
-							}
-							else if (deepindex == AppLinkIndex.PROS_PAGE.getOrdinal() && jobId > 0){
-								if(isFeedbackPending == 1) {
-									Prefs.with(this).save(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, jobId);
-								}
+                                    broadcastIntent.putExtra(Constants.KEY_JOB_ID, jobId);
+                                    broadcastIntent.putExtra(Constants.KEY_IS_FEEDBACK_PENDING, isFeedbackPending);
+                                }
+                                else if("".equalsIgnoreCase(url)){
+                                    deepindex = showDialog == 1 ? -1 : deepindex;
+                                    broadcastIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
+                                    broadcastIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
+                                }
+                                broadcastIntent.putExtra(Constants.KEY_DEEPINDEX, deepindex);
+                                broadcastIntent.putExtra(Constants.KEY_FLAG, flag);
 
-								broadcastIntent.putExtra(Constants.KEY_JOB_ID, jobId);
-								broadcastIntent.putExtra(Constants.KEY_IS_FEEDBACK_PENDING, isFeedbackPending);
-							}
-							else if("".equalsIgnoreCase(url)){
-								deepindex = showDialog == 1 ? -1 : deepindex;
-								broadcastIntent.putExtra(Constants.KEY_PUSH_CLICKED, "1");
-								broadcastIntent.putExtra(Constants.KEY_TAB_INDEX, tabIndex);
-							}
-							broadcastIntent.putExtra(Constants.KEY_DEEPINDEX, deepindex);
-							broadcastIntent.putExtra(Constants.KEY_FLAG, flag);
-							LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
+                                LocalBroadcastManager.getInstance(this).sendBroadcast(broadcastIntent);
+                            }
+
 
 
 							// updating last push received time
@@ -827,7 +829,14 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						intent.putExtra(Constants.KEY_FLAG, flag);
 						intent.putExtra(Constants.KEY_MESSAGE, message);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-					}
+					} else if(PushFlags.SHOW_NOTIFICATION_WITH_DEEPLINK.getOrdinal()==flag){
+                        String clientId = jObj.optString(KEY_CLIENT_ID, "");
+                        String phoneNo = jObj.optString(KEY_PHONE_NO, "");
+                        message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
+                        notificationManager(this, title, message1, playSound);
+
+
+                    }
 
 					incrementPushCounter(jObj, flag);
 
