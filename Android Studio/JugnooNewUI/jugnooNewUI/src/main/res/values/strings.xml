@@ -1424,6 +1424,8 @@
     <string name="fatafat_banner_sub_heading">Your location is outside store\'s delivery area but you can get it through Fatafat</string>
     <string name="estimated_delivery_charges">Estimated Delivery Charges</string>
     <string name="estimated_charges">Estimated Charges</string>
+    <string name="upload_photo">Upload Photo</string>
+    <string name="tap_to_upload_photo">Tap here to upload a photo for your order</string>
 
     
     <!-- Fatafat how it works -->

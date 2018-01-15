@@ -1,14 +1,19 @@
 package com.sabkuchfresh.fragments;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -25,6 +30,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,6 +39,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.fugu.FuguConfig;
+import com.picker.image.model.ImageEntry;
+import com.picker.image.util.Picker;
+import com.sabkuchfresh.adapters.FatafatImageAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -48,6 +57,7 @@ import com.sabkuchfresh.retrofit.model.feed.DynamicDeliveryResponse;
 import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
 import com.sabkuchfresh.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -61,12 +71,15 @@ import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.model.FatafatUploadImageInfo;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.RetrofitError;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Parminder Saini on 09/10/17.
@@ -120,6 +133,16 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     CardView cvPromo;
     @Bind(R.id.sv_anywhere)
     ScrollView svAnywhere;
+    @Bind(R.id.llUploadImages)
+    LinearLayout llUploadImages;
+    @Bind(R.id.cvImages)
+    CardView cvImages;
+    @Bind(R.id.rvImages)
+    RecyclerView rvImages;
+    @Bind(R.id.ivUploadImage)
+    ImageView ivUploadImage;
+    @Bind(R.id.svImages)
+    HorizontalScrollView svImages;
 
     private ForegroundColorSpan textHintColorSpan;
 
@@ -169,6 +192,13 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         }
     };
     private boolean promoBoxEnabled;
+
+    private String[] permissionsRequest;
+    private static final int REQUEST_CODE_SELECT_IMAGES=99;
+    private Picker picker;
+    private ArrayList<Object> objectList = new ArrayList<>();
+    private FatafatImageAdapter fatafatImageAdapter;
+    private int maxNoImages;
 
     public boolean isPickUpAddressRequested() {
         return isPickUpAddressRequested;
@@ -315,6 +345,24 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         edtPromo.addTextChangedListener(new PromoTextWatcher(tvPromoError, edtPromo));
         tvPromoError.setVisibility(View.GONE);
         Utils.addCapitaliseFilterToEditText(edtPromo);
+
+        // decide whether to show upload image layout
+        if(Data.getFeedData()!=null && Data.getFeedData().getFatafatUploadImageInfo()!=null){
+            FatafatUploadImageInfo fatafatUploadImageInfo = Data.getFeedData().getFatafatUploadImageInfo();
+            if(fatafatUploadImageInfo.getShowImageBox()==1){
+                llUploadImages.setVisibility(View.VISIBLE);
+                maxNoImages = fatafatUploadImageInfo.getImageLimit();
+                cvImages.setVisibility(View.GONE);
+                rvImages.setNestedScrollingEnabled(false);
+            }
+            else {
+                llUploadImages.setVisibility(View.GONE);
+            }
+        }
+        else {
+            llUploadImages.setVisibility(View.GONE);
+        }
+
         return rootView;
     }
 
@@ -390,7 +438,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     }
 
-    @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st, R.id.rlDeliveryCharge, R.id.tv_apply})
+    @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st, R.id.rlDeliveryCharge, R.id.tv_apply,
+    R.id.llUploadImages,R.id.ivUploadImage})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.cv_pickup_address:
@@ -444,7 +493,113 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
 
                 break;
+
+            case R.id.ivUploadImage:
+            case R.id.llUploadImages:
+
+                pickImages();
+
+                break;
         }
+    }
+
+    /**
+     * Allows image selection
+     */
+    private void pickImages() {
+
+        if(PermissionChecker.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED ||
+                PermissionChecker.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED)
+        {
+            if (permissionsRequest==null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                permissionsRequest = new String[2];
+                permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
+                permissionsRequest[1]=Manifest.permission.READ_EXTERNAL_STORAGE;
+            } else {
+                permissionsRequest = new String[1];
+                permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
+            }
+        }
+
+            (AnywhereHomeFragment.this).requestPermissions(permissionsRequest, 20);
+            return;
+        }
+
+        int alreadyPresent = objectList == null ? 0 : objectList.size();
+        if(picker==null){
+            picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
+        }
+
+        picker.setLimit(maxNoImages -alreadyPresent);
+        picker.startActivity(AnywhereHomeFragment.this,activity,REQUEST_CODE_SELECT_IMAGES);
+
+    }
+
+    private void setImageAdapter(final ArrayList<Object> objectList) {
+
+        if (objectList == null || objectList.size() == 0) {
+            cvImages.setVisibility(View.GONE);
+            llUploadImages.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if (fatafatImageAdapter == null) {
+            fatafatImageAdapter = new FatafatImageAdapter(activity, objectList, new FatafatImageAdapter.Callback() {
+                @Override
+                public void onImageClick(Object object) {
+                    //View full Image
+                }
+
+                @Override
+                public void onDelete(Object object) {
+                    objectList.remove(object);
+                    ivUploadImage.setEnabled(objectList.size()<maxNoImages);
+                    if(objectList.size()==0){
+                        cvImages.setVisibility(View.GONE);
+                        fatafatImageAdapter=null;
+                        llUploadImages.setVisibility(View.VISIBLE);
+                    }
+                }
+            }, rvImages);
+            rvImages.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
+            rvImages.setAdapter(fatafatImageAdapter);
+        } else {
+            fatafatImageAdapter.setList(objectList);
+        }
+
+        ivUploadImage.setEnabled(objectList.size()<maxNoImages);
+
+        if(objectList.size()>0){
+            svImages.post(new Runnable() {
+                @Override
+                public void run() {
+                    svImages.fullScroll(View.FOCUS_RIGHT);
+                }
+            });
+
+        }
+
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode== REQUEST_CODE_SELECT_IMAGES && resultCode==RESULT_OK){
+            if(data!=null && data.getSerializableExtra("imagesList")!=null)
+            {
+                ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
+                if (images != null && images.size() != 0) {
+                    objectList.addAll(images);
+                    llUploadImages.setVisibility(View.GONE);
+                    cvImages.setVisibility(View.VISIBLE);
+                    setImageAdapter(objectList);
+                }
+            }
+        }
+
     }
 
     @Override
