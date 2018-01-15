@@ -458,6 +458,13 @@ public class LoginResponse {
 		@SerializedName("how_it_works")
 		private ArrayList<FatafatTutorialData> fatafatTutorialData;
 
+		@SerializedName("upload_image_info")
+		private FatafatUploadImageInfo fatafatUploadImageInfo;
+
+		public FatafatUploadImageInfo getFatafatUploadImageInfo() {
+			return fatafatUploadImageInfo;
+		}
+
 		public ArrayList<FatafatTutorialData> getFatafatTutorialData() {
 			return fatafatTutorialData;
 		}
