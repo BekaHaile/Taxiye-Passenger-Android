@@ -526,10 +526,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                         activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }
-                    if(!toggleFatafatChatIconVisibility()){
-                        activity.rlfabViewFatafat.setVisibility(View.GONE);
 
-                    }
                 }else{
                     activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
                     activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
@@ -538,7 +535,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                     activity.setMenusFilterVisibility(View.VISIBLE);
                     activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
+                }
+
+                if(!toggleFatafatChatIconVisibility()){
                     activity.rlfabViewFatafat.setVisibility(View.GONE);
+
                 }
             }
         }
@@ -1395,7 +1396,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     public boolean toggleFatafatChatIconVisibility(){
-        if(isFatfatChatIconEnabledFromServer && activity.getAppType()==AppConstant.ApplicationType.DELIVERY_CUSTOMER && !iSChildCategoryOpen() && chatAvailable){
+        if(isFatfatChatIconEnabledFromServer && activity.getAppType()==AppConstant.ApplicationType.DELIVERY_CUSTOMER  && chatAvailable){
             activity.rlfabViewFatafat.setVisibility(View.VISIBLE);
             return true;
         }
