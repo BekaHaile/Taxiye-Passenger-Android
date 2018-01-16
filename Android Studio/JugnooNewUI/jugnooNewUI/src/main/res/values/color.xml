@@ -320,6 +320,7 @@
 
     <color name="text_color_heading_fatafat">#32323f</color>
     <color name="text_color_heading_fatafat_80">#CC32323f</color>
+    <color name="color_off_white">#fbfbfb</color>
 
 
 </resources>

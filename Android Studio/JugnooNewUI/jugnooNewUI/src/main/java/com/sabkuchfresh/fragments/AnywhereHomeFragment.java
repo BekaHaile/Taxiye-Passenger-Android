@@ -55,6 +55,7 @@ import com.sabkuchfresh.pros.utils.DatePickerFragment;
 import com.sabkuchfresh.pros.utils.TimePickerFragment;
 import com.sabkuchfresh.retrofit.model.feed.DynamicDeliveryResponse;
 import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
+import com.sabkuchfresh.utils.ImageCompression;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
@@ -79,6 +80,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.RetrofitError;
 import retrofit.mime.MultipartTypedOutput;
+import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
 import static android.app.Activity.RESULT_OK;
@@ -198,9 +200,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private String[] permissionsRequest;
     private static final int REQUEST_CODE_SELECT_IMAGES=99;
     private Picker picker;
-    private ArrayList<Object> objectList = new ArrayList<>();
+    private ArrayList<Object> imageObjectList = new ArrayList<>();
     private FatafatImageAdapter fatafatImageAdapter;
     private int maxNoImages;
+    private ImageCompression imageCompressionTask;
 
     public boolean isPickUpAddressRequested() {
         return isPickUpAddressRequested;
@@ -232,7 +235,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             @Override
             public void onPayClick() {
                 try {
-                    String taskDetails = edtTaskDescription.getText().toString().trim();
+                    final String taskDetails = edtTaskDescription.getText().toString().trim();
                     if (taskDetails.length() == 0) {
                         Utils.showToast(activity, activity.getString(R.string.please_enter_some_desc));
                         throw new Exception();
@@ -250,7 +253,57 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                             throw new Exception();
                         }
                     }
-                    placeOrderApi(taskDetails);
+
+
+                    // if we have images to upload attach them with params
+                    if(imageObjectList!=null && imageObjectList.size()>0){
+
+                        final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
+
+                        //Compress Images if any new added
+                        ArrayList<String> imageEntries =null;
+                        for(Object image:imageObjectList){
+                            if(image instanceof ImageEntry){
+                                if(imageEntries==null)
+                                    imageEntries= new ArrayList<>();
+
+                                imageEntries.add(((ImageEntry) image).path);
+                            }
+                        }
+
+                        if(imageEntries!=null){
+                            //upload feedback with new Images
+                            imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
+                                @Override
+                                public void processFinish(ImageCompression.CompressedImageModel[] output) {
+
+                                    if(output!=null){
+                                        for(ImageCompression.CompressedImageModel file:output)
+                                        {
+                                            if(file!=null){
+                                                multipartTypedOutput.addPart(Constants.KEY_ORDER_IMAGES,new TypedFile("image/*",file.getFile()));
+                                            }
+                                        }
+
+                                    }
+                                    //place order with images
+                                    placeOrderApi(taskDetails,multipartTypedOutput);
+                                }
+
+                                @Override
+                                public  void onError(){
+                                    DialogPopup.dismissLoadingDialog();
+
+                                }
+                            },activity);
+                            imageCompressionTask.execute(imageEntries.toArray(new String[imageEntries.size()]));
+                        }
+
+                    }
+                    else {
+                        placeOrderApi(taskDetails, new MultipartTypedOutput());
+                    }
+
                     GAUtils.event(activity.getGaCategory(), HOME, ORDER_PLACED);
                 } catch (Exception e) {
                     paySlider.setSlideInitial();
@@ -528,7 +581,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             return;
         }
 
-        int alreadyPresent = objectList == null ? 0 : objectList.size();
+        int alreadyPresent = imageObjectList == null ? 0 : imageObjectList.size();
         if(picker==null){
             picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
         }
@@ -556,7 +609,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 @Override
                 public void onDelete(Object object) {
                     objectList.remove(object);
-                    ivUploadImage.setEnabled(objectList.size()<maxNoImages);
+                    ivUploadImage.setVisibility(objectList.size()<maxNoImages?View.VISIBLE:View.GONE);
                     if(objectList.size()==0){
                         cvImages.setVisibility(View.GONE);
                         fatafatImageAdapter=null;
@@ -570,7 +623,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             fatafatImageAdapter.setList(objectList);
         }
 
-        ivUploadImage.setEnabled(objectList.size()<maxNoImages);
+        ivUploadImage.setVisibility(objectList.size()<maxNoImages?View.VISIBLE:View.GONE);
 
         if(objectList.size()>0){
             svImages.post(new Runnable() {
@@ -594,10 +647,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             {
                 ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
                 if (images != null && images.size() != 0) {
-                    objectList.addAll(images);
+                    imageObjectList.addAll(images);
                     llUploadImages.setVisibility(View.GONE);
                     cvImages.setVisibility(View.VISIBLE);
-                    setImageAdapter(objectList);
+                    setImageAdapter(imageObjectList);
                 }
             }
         }
@@ -683,12 +736,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     }
 
 
-    public void placeOrderApi(final String taskDetails) {
+    public void placeOrderApi(final String taskDetails, final MultipartTypedOutput params) {
 
         if (paySlider.isSliderInIntialStage())
             paySlider.fullAnimate();
 
-        final MultipartTypedOutput params = new MultipartTypedOutput();
         params.addPart("details", new TypedString(taskDetails));
         if (pickUpAddress != null) {
             params.addPart(Constants.KEY_FROM_ADDRESS, new TypedString(pickUpAddress.getAddress()));

@@ -632,6 +632,7 @@ public interface Constants {
 
 
     String KEY_REVIEW_IMAGES="review_images";
+    String KEY_ORDER_IMAGES="order_images";
     String KEY_IMAGES = "images";
     String KEY_REVIEW = "review";
     String SP_RESTAURANT_ID_TO_DEEP_LINK = "sp_restaurant_id_to_deep_link";
