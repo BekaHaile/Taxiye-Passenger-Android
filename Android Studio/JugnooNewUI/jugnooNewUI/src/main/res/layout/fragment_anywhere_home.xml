@@ -160,7 +160,7 @@
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@+id/rvImages"
                         android:layout_toRightOf="@+id/rvImages"
-                        android:paddingTop="@dimen/dp_6">
+                        android:paddingTop="4.5dp">
 
                         <ImageView
                             android:id="@+id/ivUploadImage"
