@@ -497,12 +497,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			//buttonLogin.startAnimation(scale);
 
 
-			String[] emails = MyApplication.getInstance().getDatabase().getEmails();
+
 			ArrayAdapter<String> adapter;
-			if (emails == null) {
-				emails = new String[]{};
-			}
-			adapter = new ArrayAdapter<>(this, R.layout.dropdown_textview, emails);
+
+			adapter = new ArrayAdapter<>(this, R.layout.dropdown_textview, new String[0]);
 			adapter.setDropDownViewResource(R.layout.dropdown_textview);
 
 			editTextPhoneNumber = (EditText) findViewById(R.id.editTextPhoneNumber);
@@ -2918,7 +2916,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									signUpBy = "email";
 									Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER, jObj.optString("knowlarity_missed_call_number", ""));
-									MyApplication.getInstance().getDatabase().insertEmail(phoneNumber);
 
 									otpScreenIntentAlongDataSet(1, LinkedWalletStatus.NO_WALLET.getOrdinal(), phoneNumber);
 								}
@@ -3069,7 +3066,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
 									}
-									MyApplication.getInstance().getDatabase().insertEmail(emailId);
 									if (missedCallDialog != null) {
 										missedCallDialog.dismiss();
 									}
@@ -3196,7 +3192,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 											loginResponse, LoginVia.FACEBOOK, new LatLng(Data.loginLatitude, Data.loginLongitude));
 
 
-									MyApplication.getInstance().getDatabase().insertEmail(Data.facebookUserData.userEmail);
 								}
 								DialogPopup.showLoadingDialog(activity, "Loading...");
 							} else {
@@ -3309,7 +3304,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 											loginResponse, LoginVia.GOOGLE, new LatLng(Data.loginLatitude, Data.loginLongitude));
 									loginDataFetched = true;
 
-									MyApplication.getInstance().getDatabase().insertEmail(Data.googleSignInAccount.getEmail());
 								}
 								DialogPopup.showLoadingDialog(activity, "Loading...");
 							}
@@ -4173,8 +4167,6 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                 if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
                                     new JSONParser().parseAccessTokenLoginData(activity, jsonString,
                                             loginResponse, LoginVia.EMAIL_OTP, new LatLng(Data.loginLatitude, Data.loginLongitude));
-                                    MyApplication.getInstance().getDatabase().insertEmail(email);
-                                    MyApplication.getInstance().getDatabase().close();
                                     loginDataFetched = true;
                                 }
 								DialogPopup.showLoadingDialog(activity, "Loading...");
