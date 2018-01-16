@@ -969,7 +969,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public static String showDeliveryStringWithTime(MenusResponse.Vendor vendor) {
         if(vendor.getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE || vendor.getOrderMode() == Constants.ORDER_MODE_CHAT || vendor.getOutOfRadius()==1){
             if(!TextUtils.isEmpty(vendor.getOpensAt()) && !TextUtils.isEmpty(vendor.getCloseIn())
-                    && !"00:00:00".equals(vendor.getOpensAt()) && !"00:00:00".equals(vendor.getCloseIn())) {
+                    && (!"00:00:00".equals(vendor.getOpensAt()) || !"00:00:00".equals(vendor.getCloseIn()))) {
                 return DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt(), false) + "-" + DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn(), false);
             } else {
                 return "";

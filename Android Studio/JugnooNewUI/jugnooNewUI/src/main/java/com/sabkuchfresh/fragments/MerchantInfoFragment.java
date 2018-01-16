@@ -150,6 +150,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     LinearLayout llRatingStars;
     @Bind(R.id.tvRating)
     TextView tvRating;
+    @Bind(R.id.divider_below_details)
+    View dividerBelowDetails;
 
     private View rootView;
     private FreshActivity activity;
@@ -399,9 +401,11 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         || activity.getVendorOpened().getOutOfRadius()==1) {
                     layoutOrderDetails.setVisibility(View.GONE);
                     bOrderOnline.setVisibility(View.GONE);
+                    dividerBelowDetails.setVisibility(View.GONE);
                 } else {
                     layoutOrderDetails.setVisibility(View.VISIBLE);
                     bOrderOnline.setVisibility(View.VISIBLE);
+                    dividerBelowDetails.setVisibility(View.VISIBLE);
                     tvDeliversIn.setText(DeliveryHomeAdapter.showDeliveryStringWithTime(activity.getVendorOpened()));
                     tvMinOrderAmt.setText(activity.getString(R.string.rupee_format,
                             product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(activity.getVendorOpened().getMinimumOrderAmount())));
