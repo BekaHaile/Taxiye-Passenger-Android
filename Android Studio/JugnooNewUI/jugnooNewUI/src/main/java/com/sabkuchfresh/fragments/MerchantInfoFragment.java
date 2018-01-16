@@ -400,12 +400,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 if (activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE || activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_CHAT
                         || activity.getVendorOpened().getOutOfRadius()==1) {
                     layoutOrderDetails.setVisibility(View.GONE);
-                    bOrderOnline.setVisibility(View.GONE);
-                    dividerBelowDetails.setVisibility(View.GONE);
                 } else {
                     layoutOrderDetails.setVisibility(View.VISIBLE);
-                    bOrderOnline.setVisibility(View.VISIBLE);
-                    dividerBelowDetails.setVisibility(View.VISIBLE);
                     tvDeliversIn.setText(DeliveryHomeAdapter.showDeliveryStringWithTime(activity.getVendorOpened()));
                     tvMinOrderAmt.setText(activity.getString(R.string.rupee_format,
                             product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(activity.getVendorOpened().getMinimumOrderAmount())));
@@ -440,6 +436,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 bOrderOnline.setBackgroundResource((activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0) ?
                         R.drawable.capsule_grey_dark_bg : R.drawable.capsule_theme_color_selector);
                 bOrderOnline.setVisibility(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE ? View.GONE : View.VISIBLE);
+                dividerBelowDetails.setVisibility(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE ? View.GONE : View.VISIBLE);
                 bOrderOnline.setText(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_CHAT || activity.getVendorOpened().getOutOfRadius()==1 ? R.string.action_order_via_fatafat : R.string.order_online);
 
                 // decide whether to show out of radius strip
