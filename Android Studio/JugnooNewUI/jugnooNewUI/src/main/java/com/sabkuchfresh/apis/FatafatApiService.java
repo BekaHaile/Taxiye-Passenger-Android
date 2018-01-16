@@ -10,20 +10,21 @@ import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
+import retrofit.http.Body;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.QueryMap;
+import retrofit.mime.MultipartTypedOutput;
 
 /**
  * Created by shankar on 4/7/16.
  */
 public interface FatafatApiService {
 
-    @FormUrlEncoded
     @POST("/place_order")
-    void anywherePlaceOrder(@FieldMap Map<String, String> params,
+    void anywherePlaceOrder(@Body MultipartTypedOutput params,
                             Callback<OrderAnywhereResponse> callback);
 
     @FormUrlEncoded

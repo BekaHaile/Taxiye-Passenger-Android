@@ -78,6 +78,8 @@ import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.RetrofitError;
+import retrofit.mime.MultipartTypedOutput;
+import retrofit.mime.TypedString;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -686,35 +688,35 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         if (paySlider.isSliderInIntialStage())
             paySlider.fullAnimate();
 
-        final HashMap<String, String> params = new HashMap<>();
-        params.put("details", taskDetails);
+        final MultipartTypedOutput params = new MultipartTypedOutput();
+        params.addPart("details", new TypedString(taskDetails));
         if (pickUpAddress != null) {
-            params.put(Constants.KEY_FROM_ADDRESS, pickUpAddress.getAddress());
-            params.put(Constants.KEY_FROM_LATITUDE, String.valueOf(pickUpAddress.getLatitude()));
-            params.put(Constants.KEY_FROM_LONGITUDE, String.valueOf(pickUpAddress.getLongitude()));
+            params.addPart(Constants.KEY_FROM_ADDRESS, new TypedString(pickUpAddress.getAddress()));
+            params.addPart(Constants.KEY_FROM_LATITUDE, new TypedString(String.valueOf(pickUpAddress.getLatitude())));
+            params.addPart(Constants.KEY_FROM_LONGITUDE, new TypedString(String.valueOf(pickUpAddress.getLongitude())));
         } else {
-            params.put(Constants.KEY_FROM_ADDRESS, "Anywhere");
-            params.put(Constants.KEY_FROM_LATITUDE, "0");
-            params.put(Constants.KEY_FROM_LONGITUDE, "0");
+            params.addPart(Constants.KEY_FROM_ADDRESS, new TypedString("Anywhere"));
+            params.addPart(Constants.KEY_FROM_LATITUDE, new TypedString("0"));
+            params.addPart(Constants.KEY_FROM_LONGITUDE, new TypedString("0"));
         }
         if (isOrderViaCheckoutFragment) {
-            params.put(Constants.CATEGORY, "1");
+            params.addPart(Constants.CATEGORY, new TypedString("1"));
         }
 
-        params.put(Constants.KEY_TO_ADDRESS, deliveryAddress.getAddress());
-        params.put(Constants.KEY_TO_LATITUDE, String.valueOf(deliveryAddress.getLatitude()));
-        params.put(Constants.KEY_TO_LONGITUDE, String.valueOf(deliveryAddress.getLongitude()));
-        params.put(Constants.KEY_IS_IMMEDIATE, isAsapSelected ? "1" : "0");
-        params.put(Constants.KEY_USER_IDENTIFIER, String.valueOf(Data.userData.userIdentifier));
+        params.addPart(Constants.KEY_TO_ADDRESS, new TypedString(deliveryAddress.getAddress()));
+        params.addPart(Constants.KEY_TO_LATITUDE, new TypedString(String.valueOf(deliveryAddress.getLatitude())));
+        params.addPart(Constants.KEY_TO_LONGITUDE, new TypedString(String.valueOf(deliveryAddress.getLongitude())));
+        params.addPart(Constants.KEY_IS_IMMEDIATE, new TypedString(isAsapSelected ? "1" : "0"));
+        params.addPart(Constants.KEY_USER_IDENTIFIER, new TypedString(String.valueOf(Data.userData.userIdentifier)));
         if (currentPromoApplied != null) {
-            params.put(Constants.PROMO_CODE, String.valueOf(currentPromoApplied.getReferalName()));
-            params.put(Constants.KEY_ORDER_OFFER_ID, String.valueOf(currentPromoApplied.getId()));
+            params.addPart(Constants.PROMO_CODE, new TypedString(String.valueOf(currentPromoApplied.getReferalName())));
+            params.addPart(Constants.KEY_ORDER_OFFER_ID, new TypedString(String.valueOf(currentPromoApplied.getId())));
         }
 
         String finalDateTime = null;
         if (!isAsapSelected) {
             finalDateTime = getFormattedDateTime(selectedDate, selectedTime, true);
-            params.put(Constants.KEY_DELIVERY_TIME, DateOperations.localToUTC(finalDateTime));
+            params.addPart(Constants.KEY_DELIVERY_TIME, new TypedString(DateOperations.localToUTC(finalDateTime)));
         }
 
         final String finalDateTime1 = finalDateTime;

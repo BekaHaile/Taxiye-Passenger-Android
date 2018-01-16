@@ -22,6 +22,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.MultipartTypedOutput;
+import retrofit.mime.TypedString;
 
 /**
  * Created by Parminder Singh on 3/27/17.
@@ -93,11 +94,21 @@ public class ApiCommon<T extends FeedCommonResponse> {
         if(this.params==null){
             this.params = new HashMap<>();
         }
-        hitAPI();
+        hitAPI(false);
+    }
+
+    public void  execute(MultipartTypedOutput params, @NonNull ApiName apiName, APICommonCallback<T> apiCommonCallback) {
+        this.apiCommonCallback = apiCommonCallback;
+        if(multipartTypedOutput==null){
+            multipartTypedOutput = new MultipartTypedOutput();
+        }
+        this.multipartTypedOutput = params;
+        this.apiName = apiName;
+        hitAPI(true);
     }
 
 
-    private void hitAPI() {
+    private void hitAPI(boolean isMultiPartRequest) {
 
 
         if (!MyApplication.getInstance().isOnline()) {
@@ -157,11 +168,21 @@ public class ApiCommon<T extends FeedCommonResponse> {
             };
         }
 
-        new HomeUtil().putDefaultParams(params);
+        if(isMultiPartRequest){
+            new HomeUtil().putDefaultParamsMultipart(multipartTypedOutput);
+        }
+        else {
+            new HomeUtil().putDefaultParams(params);
+        }
 
 
         if(putAccessToken){
-            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            if(isMultiPartRequest){
+                multipartTypedOutput.addPart(Constants.KEY_ACCESS_TOKEN, new TypedString(Data.userData.accessToken));
+            }
+            else {
+              params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            }
         }
 
 
@@ -199,7 +220,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 RestClient.getMenusApiService().userCategoryLogs(params, callback);
                 break;
             case ANYWHERE_PLACE_ORDER:
-                RestClient.getFatafatApiService().anywherePlaceOrder(params, callback);
+                RestClient.getFatafatApiService().anywherePlaceOrder(multipartTypedOutput, callback);
                 break;
             case ANYWHERE_DYNAMIC_DELIVERY:
                 RestClient.getFatafatApiService().dynamicDeliveryCharges(params, callback);
@@ -226,7 +247,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        hitAPI();
+                        if(multipartTypedOutput!=null){
+                            hitAPI(true);
+                        }
+                        else {
+                            hitAPI(false);
+                        }
                     }
 
                     @Override
