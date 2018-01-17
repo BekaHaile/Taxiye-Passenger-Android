@@ -746,8 +746,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 												loginResponse, LoginVia.FACEBOOK_OTP,
 												new LatLng(Data.loginLatitude, Data.loginLongitude));
 										loginDataFetched = true;
-										MyApplication.getInstance().getDatabase().insertEmail(facebookRegisterData.fbUserEmail);
-										MyApplication.getInstance().getDatabase().close();
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 									String error = jObj.getString("error");
@@ -849,7 +847,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 												loginResponse, LoginVia.GOOGLE_OTP,
 												new LatLng(Data.loginLatitude, Data.loginLongitude));
 										loginDataFetched = true;
-										MyApplication.getInstance().getDatabase().insertEmail(googleRegisterData.email);
 										MyApplication.getInstance().getDatabase().close();
 									}
 								} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
@@ -1244,7 +1241,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									goToLoginOrOnboarding(jObj, responseStr, loginResponse, LoginVia.EMAIL);
-									MyApplication.getInstance().getDatabase().insertEmail(emailId);
 									DialogPopup.showLoadingDialog(activity, "Loading...");
 									DialogPopup.dismissLoadingDialog();
 								}
@@ -1349,7 +1345,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									goToLoginOrOnboarding(jObj, responseStr, loginResponse, LoginVia.FACEBOOK);
 
-									MyApplication.getInstance().getDatabase().insertEmail(Data.facebookUserData.userEmail);
 									DialogPopup.showLoadingDialog(activity, "Loading...");
 									DialogPopup.dismissLoadingDialog();
 								}
@@ -1453,7 +1448,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
 									goToLoginOrOnboarding(jObj, responseStr, loginResponse, LoginVia.GOOGLE);
 
-									MyApplication.getInstance().getDatabase().insertEmail(Data.googleSignInAccount.getEmail());
 									DialogPopup.showLoadingDialog(activity, "Loading...");
 									DialogPopup.dismissLoadingDialog();
 								}
