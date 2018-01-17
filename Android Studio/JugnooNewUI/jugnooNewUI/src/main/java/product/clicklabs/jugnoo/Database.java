@@ -65,7 +65,7 @@ public class Database {																	// class for handling database related a
 	
 	private static void createAllTables(SQLiteDatabase database){
 		// table_email_suggestions
-					database.execSQL(" DROP TABLE " + TABLE_EMAILS + ";");
+					database.execSQL(" DROP TABLE IF EXISTS " + TABLE_EMAILS + ";");
 
 					// table_previous_latlng
 					database.execSQL(" CREATE TABLE IF NOT EXISTS " + TABLE_PREVIOUS_PATH + " (" 
