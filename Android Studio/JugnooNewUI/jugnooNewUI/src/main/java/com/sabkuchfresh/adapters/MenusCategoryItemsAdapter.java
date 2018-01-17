@@ -427,6 +427,9 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         return subItems == null ? 0 : subItems.size() + categoriesCount() + (isVendorMenuFragment ?1:1);
     }
 
+    public int getItemsSize(){
+       return subItems == null ? 0 : subItems.size() + categoriesCount();
+    }
 
     class MainViewHolder extends RecyclerView.ViewHolder {
 
