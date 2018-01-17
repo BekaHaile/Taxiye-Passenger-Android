@@ -262,13 +262,13 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 			super.onPostExecute(s);
 			try {
 				menusCategoryItemsAdapter.setList(itemsInSearch, true, categoriesSearched);
-				if(menusCategoryItemsAdapter.getItemCount() > 0){
+				if(menusCategoryItemsAdapter.getItemsSize() > 0){
 					textViewPlaceholder.setVisibility(View.GONE);
 				} else{
 					textViewPlaceholder.setVisibility(View.VISIBLE);
 				}
 
-				if(menusCategoryItemsAdapter.getItemCount() == 0) {
+				if(menusCategoryItemsAdapter.getItemsSize() == 0) {
 					GAUtils.event(activity.getGaCategory(), SEARCH + NOT_FOUND, token);
 				}
 			} catch (Exception e) {
