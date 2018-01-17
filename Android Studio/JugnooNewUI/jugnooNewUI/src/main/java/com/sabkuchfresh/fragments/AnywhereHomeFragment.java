@@ -137,8 +137,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     CardView cvPromo;
     @Bind(R.id.sv_anywhere)
     ScrollView svAnywhere;
-    @Bind(R.id.llUploadImages)
-    LinearLayout llUploadImages;
+    @Bind(R.id.cvUploadImages)
+    CardView cvUploadImages;
     @Bind(R.id.cvImages)
     CardView cvImages;
     @Bind(R.id.rvImages)
@@ -405,17 +405,17 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         if(Data.getFeedData()!=null && Data.getFeedData().getFatafatUploadImageInfo()!=null){
             FatafatUploadImageInfo fatafatUploadImageInfo = Data.getFeedData().getFatafatUploadImageInfo();
             if(fatafatUploadImageInfo.getShowImageBox()==1){
-                llUploadImages.setVisibility(View.VISIBLE);
+                cvUploadImages.setVisibility(View.VISIBLE);
                 maxNoImages = fatafatUploadImageInfo.getImageLimit();
                 cvImages.setVisibility(View.GONE);
                 rvImages.setNestedScrollingEnabled(false);
             }
             else {
-                llUploadImages.setVisibility(View.GONE);
+                cvUploadImages.setVisibility(View.GONE);
             }
         }
         else {
-            llUploadImages.setVisibility(View.GONE);
+            cvUploadImages.setVisibility(View.GONE);
             cvImages.setVisibility(View.GONE);
         }
 
@@ -494,7 +494,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     }
 
     @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st, R.id.rlDeliveryCharge, R.id.tv_apply,
-    R.id.llUploadImages,R.id.ivUploadImage})
+    R.id.cvUploadImages,R.id.ivUploadImage})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.cv_pickup_address:
@@ -550,7 +550,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 break;
 
             case R.id.ivUploadImage:
-            case R.id.llUploadImages:
+            case R.id.cvUploadImages:
 
                 pickImages();
 
@@ -595,7 +595,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
         if (objectList == null || objectList.size() == 0) {
             cvImages.setVisibility(View.GONE);
-            llUploadImages.setVisibility(View.VISIBLE);
+            cvUploadImages.setVisibility(View.VISIBLE);
             return;
         }
 
@@ -613,7 +613,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     if(objectList.size()==0){
                         cvImages.setVisibility(View.GONE);
                         fatafatImageAdapter=null;
-                        llUploadImages.setVisibility(View.VISIBLE);
+                        cvUploadImages.setVisibility(View.VISIBLE);
                     }
                 }
             }, rvImages);
@@ -648,7 +648,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
                 if (images != null && images.size() != 0) {
                     imageObjectList.addAll(images);
-                    llUploadImages.setVisibility(View.GONE);
+                    cvUploadImages.setVisibility(View.GONE);
                     cvImages.setVisibility(View.VISIBLE);
                     setImageAdapter(imageObjectList);
                 }

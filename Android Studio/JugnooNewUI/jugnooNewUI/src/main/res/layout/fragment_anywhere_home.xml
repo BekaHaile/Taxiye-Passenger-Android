@@ -71,8 +71,8 @@
 
 
 
-            <LinearLayout
-                android:id="@+id/llUploadImages"
+            <android.support.v7.widget.CardView
+                android:id="@+id/cvUploadImages"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/dp_50"
@@ -80,9 +80,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
-                android:orientation="horizontal"
-                android:gravity="start|center_vertical"
-                android:background="@drawable/bg_grey_with_depth">
+                app:cardBackgroundColor="@color/menu_item_selector_color_F7"
+                app:cardCornerRadius="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -130,7 +129,7 @@
 
 
 
-            </LinearLayout>
+            </android.support.v7.widget.CardView>
 
 
             <android.support.v7.widget.CardView
