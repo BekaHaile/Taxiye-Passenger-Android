@@ -244,7 +244,11 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 						}
 					};
 
-					initEtaMarker(null,null);
+					try {
+						initEtaMarker(null,null);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 
 					if (rootHeight>0) {
 						if(expanded){
@@ -728,13 +732,17 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		activity.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if(value!=null){
-					if (etaMarker == null) {
-						initEtaMarker(value,suffix);
-					} else {
-						etaMarker.setIcon(BitmapDescriptorFactory
-								.fromBitmap(getEtaIconBitmap(value,suffix)));
-					}
+				try {
+					if(value!=null){
+                        if (etaMarker == null) {
+                            initEtaMarker(value,suffix);
+                        } else {
+                            etaMarker.setIcon(BitmapDescriptorFactory
+                                    .fromBitmap(getEtaIconBitmap(value,suffix)));
+                        }
+                    }
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 
 			}

@@ -2744,6 +2744,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     protected void onDestroy() {
         startService(new Intent(this, DeleteCacheIntentService.class));
         try {
+            if(handler!=null){
+                handler.removeCallbacks(null);
+
+            }
             mBus.unregister(this);
         } catch (Exception e) {
             e.printStackTrace();
