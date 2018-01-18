@@ -927,7 +927,7 @@ public class UserData {
 	}
 
 	public int getAutosEnabled() {
-		return deliveryCustomerEnabled;
+		return autosEnabled;
 	}
 
 	public void setMenusEnabled(int menusEnabled) {

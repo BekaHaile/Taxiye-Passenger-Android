@@ -82,8 +82,7 @@ public class FABViewTest implements GACategory, GAAction {
         try {
 
             try {
-                if(Data.userData.isOnlyFatafatNewEnabled()
-                        && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
+                if(Data.userData.isOnlyFatafatNewEnabled() && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                     fabtoggleModeOn = true;
 
                 }
@@ -314,12 +313,7 @@ public class FABViewTest implements GACategory, GAAction {
                     && Data.userData.getProsEnabled() == 0 && Data.userData.getDeliveryCustomerEnabled()==0
                     && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                 relativeLayoutFABTest.setVisibility(View.GONE);
-            }else if((Data.userData.getDeliveryCustomerEnabled() == 1) && (Data.userData.getMealsEnabled() == 0)
-                    && (Data.userData.getGroceryEnabled() == 0)
-                    && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
-                    && (Data.userData.getFeedEnabled() == 0)
-                    && Data.userData.getProsEnabled() == 0 && Data.userData.getFreshEnabled()==0
-                    && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
+            }else if(Data.userData.isOnlyFatafatNewEnabled() && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                 if(!fabtoggleModeOn){
                     fabtoggleModeOn = true;
                     setUIInital();
@@ -330,6 +324,15 @@ public class FABViewTest implements GACategory, GAAction {
 
             } else {
                 relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                if (Data.userData.getAutosEnabled() != 1) {
+                    fabAutosTest.setVisibility(View.GONE);
+                } else {
+                    if(isOpened) {
+                        fabAutosTest.setVisibility(View.VISIBLE);
+                    }
+                }
+
+
                 if (Data.userData.getFreshEnabled() != 1) {
                     fabFreshTest.setVisibility(View.GONE);
                 } else {
@@ -396,6 +399,9 @@ public class FABViewTest implements GACategory, GAAction {
 
     private void setButtonsVisibilityOnOpen(){
         try {
+            if (Data.userData.getAutosEnabled() == 1) {
+                fabAutosTest.setVisibility(View.VISIBLE);
+            }
             if (Data.userData.getFreshEnabled() == 1) {
                 fabFreshTest.setVisibility(View.VISIBLE);
             }
