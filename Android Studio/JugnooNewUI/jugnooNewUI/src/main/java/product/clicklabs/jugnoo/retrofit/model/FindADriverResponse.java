@@ -84,6 +84,9 @@ public class FindADriverResponse {
     @SerializedName("feed_enabled")
     @Expose
     private Integer feedEnabled = 0;
+    @SerializedName("autos_enabled")
+    @Expose
+    private Integer autosEnabled = 0;
     @SerializedName("pros_enabled")
     @Expose
     private Integer prosEnabled = 0;
@@ -580,5 +583,9 @@ public class FindADriverResponse {
 
     public void setIsRazorpayEnabled(int isRazorpayEnabled) {
         this.isRazorpayEnabled = isRazorpayEnabled;
+    }
+
+    public Integer getAutosEnabled() {
+        return autosEnabled;
     }
 }

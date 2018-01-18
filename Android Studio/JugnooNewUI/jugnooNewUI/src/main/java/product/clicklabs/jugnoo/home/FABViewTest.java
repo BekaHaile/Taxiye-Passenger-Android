@@ -244,6 +244,8 @@ public class FABViewTest implements GACategory, GAAction {
                 menuLabelsRightTest.setMenuButtonColorPressed(ContextCompat.getColor(activity,R.color.orange_rides_fab_pressed));
                 menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity,R.color.orange_rides_fab_pressed));
             }
+
+            hideToggleJeanieIfOfferingNotAvailable();
         }else{
             menuLabelsRightTest.setMenuIcon(ContextCompat.getDrawable(activity,R.drawable.ic_fab_jeanie));
             menuLabelsRightTest.setMenuButtonColorNormal(activity.getResources().getColor(R.color.white));
@@ -693,6 +695,19 @@ public class FABViewTest implements GACategory, GAAction {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public void hideToggleJeanieIfOfferingNotAvailable(){
+        if(fabtoggleModeOn){
+            if(activity instanceof FreshActivity){
+                menuLabelsRightTest.setVisibility(Data.userData.getAutosEnabled()==1?View.VISIBLE:View.GONE);
+
+            }else{
+                menuLabelsRightTest.setVisibility(Data.userData.getDeliveryCustomerEnabled()==1?View.VISIBLE:View.GONE);
+
+            }
         }
     }
 

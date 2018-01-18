@@ -402,6 +402,11 @@ public class ApiFindADriver {
 				}
 			}
 
+			if(findADriverResponse.getAutosEnabled()!= null) {
+				Data.userData.setAutosEnabled(findADriverResponse.getAutosEnabled());
+			}
+
+
 			if(findADriverResponse.getFreshEnabled() != null) {
 				Data.userData.setFreshEnabled(findADriverResponse.getFreshEnabled());
 			}

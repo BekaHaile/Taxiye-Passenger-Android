@@ -60,7 +60,7 @@ public class UserData {
 	private double freeChargeBalance = -1;
 
 	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, deliveryCustomerEnabled,
-			inviteFriendButton, payEnabled, feedEnabled, prosEnabled;
+			inviteFriendButton, payEnabled, feedEnabled, prosEnabled,autosEnabled;
 
 	private ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
 	private int currentCity = 1;
@@ -112,7 +112,7 @@ public class UserData {
 					int payEnabled, int feedEnabled, int prosEnabled,int deliveryCustomerEnabled,
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
-					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding){
+					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding,int autosEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -171,6 +171,7 @@ public class UserData {
 		this.mobikwikEnabled = mobikwikEnabled;
 		this.freeChargeEnabled = freeChargeEnabled;
 
+		this.autosEnabled = autosEnabled;
 		this.mealsEnabled = mealsEnabled;
 		this.freshEnabled = freshEnabled;
 		this.groceryEnabled = groceryEnabled;
@@ -921,7 +922,11 @@ public class UserData {
 	public int getMenusEnabled() {
 		return menusEnabled;
 	}
-   public int getDeliveryCustomerEnabled() {
+    public int getDeliveryCustomerEnabled() {
+		return deliveryCustomerEnabled;
+	}
+
+	public int getAutosEnabled() {
 		return deliveryCustomerEnabled;
 	}
 
@@ -1078,6 +1083,10 @@ public class UserData {
 
 	public void setDeliveryCustomerEnabled(Integer deliveryCustomerEnabled) {
 		this.deliveryCustomerEnabled = deliveryCustomerEnabled;
+	}
+
+	public void setAutosEnabled(Integer autosEnabled) {
+		this.autosEnabled = autosEnabled;
 	}
 
 	public boolean isOnlyFatafatNewEnabled(){

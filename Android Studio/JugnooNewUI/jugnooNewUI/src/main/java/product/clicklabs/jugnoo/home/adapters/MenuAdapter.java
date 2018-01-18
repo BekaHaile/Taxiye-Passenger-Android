@@ -666,7 +666,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private void setSubCategories(ViewHeaderHolder holder){
         try {
             if(Data.userData.getIntegratedJugnooEnabled() == 1) {
-                if (Data.userData.getFreshEnabled() == 0
+                if (Data.userData.getAutosEnabled() == 0 && Data.userData.getFreshEnabled() == 0
                         && Data.userData.getMealsEnabled() == 0
                         && Data.userData.getDeliveryEnabled() == 0
                         && Data.userData.getGroceryEnabled() == 0
@@ -680,6 +680,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 } else {
                     holder.linearLayoutCategories.setVisibility(View.GONE);
                    holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
+                    if (Data.userData.getAutosEnabled() == 1) {
+                        holder.linearLayoutSubAutos.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.linearLayoutSubAutos.setVisibility(View.GONE);
+                    }
+
                     if (Data.userData.getFreshEnabled() == 1) {
                         holder.linearLayoutSubFresh.setVisibility(View.VISIBLE);
                     } else {
