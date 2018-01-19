@@ -13,9 +13,10 @@ import java.util.List;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.retrofit.FetchOfferingsVisibilityResponse;
 
 
-public class FindADriverResponse {
+public class FindADriverResponse  extends FetchOfferingsVisibilityResponse.FetchOfferingsVisibilityData{
 
     @SerializedName("flag")
     @Expose

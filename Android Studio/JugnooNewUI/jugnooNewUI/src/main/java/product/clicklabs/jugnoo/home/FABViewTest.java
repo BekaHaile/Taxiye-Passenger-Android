@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.retrofit.FetchOfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -227,7 +228,7 @@ public class FABViewTest implements GACategory, GAAction {
 
     private void setUIInital() {
         if(fabtoggleModeOn){
-
+            menuLabelsRightTest.setFABToggleModeOn(true);
            boolean wasMenuOpen =  menuLabelsRightTest.close(true,true);
             if(activity instanceof HomeActivity && wasMenuOpen){
                 ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
@@ -248,6 +249,7 @@ public class FABViewTest implements GACategory, GAAction {
 
             hideToggleJeanieIfOfferingNotAvailable();
         }else{
+            menuLabelsRightTest.setFABToggleModeOn(false);
             menuLabelsRightTest.setMenuIcon(ContextCompat.getDrawable(activity,R.drawable.ic_fab_jeanie));
             menuLabelsRightTest.setMenuButtonColorNormal(activity.getResources().getColor(R.color.white));
             menuLabelsRightTest.setMenuButtonColorPressed(activity.getResources().getColor(R.color.grey_light));
@@ -761,6 +763,7 @@ public class FABViewTest implements GACategory, GAAction {
 
     public void triggerStateChangeFunction(FetchOfferingsVisibilityResponse.FetchOfferingsVisibilityData offeringsVisibilityData){
         if(!isSameState(offeringsVisibilityData)){
+            ApiFindADriver.parseResponseForOfferingsEnabled(offeringsVisibilityData);
             setFABButtons();
         }
     }

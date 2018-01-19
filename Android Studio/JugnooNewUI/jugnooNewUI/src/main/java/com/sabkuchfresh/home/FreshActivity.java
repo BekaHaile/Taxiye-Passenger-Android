@@ -627,7 +627,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
         rlfabViewFatafat.setVisibility(View.GONE);
-        new OfferingsVisibilityController(this,getSelectedLatLng());
     }
 
     /**
@@ -3871,6 +3870,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     }
 
+    private OfferingsVisibilityController offeringsVisibilityController ;
     public void setAddressAndFetchOfferingData(int appType) {
         try {
             setAddressTextToLocationPlaceHolder();
@@ -3890,6 +3890,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else if (appType == AppConstant.ApplicationType.PROS && getProsHomeFragment() != null) {
                     getProsHomeFragment().getSuperCategoriesAPI(true);
                 }
+                if(offeringsVisibilityController==null){
+                    offeringsVisibilityController=  new OfferingsVisibilityController(this,getSelectedLatLng(),fabViewTest);
+                }
+                offeringsVisibilityController.fetchOfferingsCorrespondingToCurrentAddress(getSelectedLatLng());
+
             }
         } catch (Exception e) {
             e.printStackTrace();

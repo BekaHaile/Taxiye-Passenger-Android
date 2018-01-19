@@ -19,7 +19,7 @@ public class FetchOfferingsVisibilityResponse extends FeedCommonResponse {
         return data;
     }
 
-    public class FetchOfferingsVisibilityData {
+    public static class FetchOfferingsVisibilityData {
 
         @SerializedName("fresh_enabled")
         @Expose
