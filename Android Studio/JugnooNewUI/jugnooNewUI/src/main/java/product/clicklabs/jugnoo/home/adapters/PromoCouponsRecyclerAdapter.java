@@ -143,7 +143,7 @@ public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
 		if(positionInList!=RecyclerView.NO_POSITION){
 
 			switch (viewClicked.getId()){
-				case R.id.textViewTandC:
+				case R.id.textViewTNC:
 					try {
 						PromoCoupon promoCoupon = offerList.get(positionInList);
 						if (promoCoupon instanceof CouponInfo) {
