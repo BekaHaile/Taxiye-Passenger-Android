@@ -627,6 +627,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
         rlfabViewFatafat.setVisibility(View.GONE);
+        new OfferingsVisibilityController(this,getSelectedLatLng());
     }
 
     /**
