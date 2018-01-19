@@ -86,7 +86,7 @@ public class FindADriverResponse {
     private Integer feedEnabled = 0;
     @SerializedName("autos_enabled")
     @Expose
-    private Integer autosEnabled = 0;
+    private Integer autosEnabled ;
     @SerializedName("pros_enabled")
     @Expose
     private Integer prosEnabled = 0;
