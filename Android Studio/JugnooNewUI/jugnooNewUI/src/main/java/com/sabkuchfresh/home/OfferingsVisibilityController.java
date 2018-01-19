@@ -12,6 +12,7 @@ import com.sabkuchfresh.feed.ui.api.ApiName;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.retrofit.FetchOfferingsVisibilityResponse;
 import retrofit.RetrofitError;
 
@@ -25,19 +26,23 @@ public class OfferingsVisibilityController {
     private LatLng currentOfferingsLatLng;//The location of offerings according to which offerings are displayed as in app currently.
     private LatLng lastRequestedLatLng;//Last requested LatLng while current api in progress.
     private boolean isApiInProgress;
+    private FABViewTest fabViewTest;
 
 
 
-    public OfferingsVisibilityController(Activity activity,@NonNull LatLng latLng){
+    public OfferingsVisibilityController(Activity activity, @NonNull LatLng latLng, @NonNull FABViewTest fabViewTest){
         this.activity = activity;
+        this.fabViewTest = fabViewTest;
         this.currentOfferingsLatLng=latLng;
         requestParams = new HashMap<>();
 
     }
 
 
+
+
     public void fetchOfferingsCorrespondingToCurrentAddress(final LatLng changedLatLng){
-        //return if new latlng are null or they are same as the current latlng
+        //return if new latLng are null or they are same as the current latlng
         if(changedLatLng==null || currentOfferingsLatLng.equals(changedLatLng)){
             return;
 
@@ -68,6 +73,13 @@ public class OfferingsVisibilityController {
                    public void onSuccess(FetchOfferingsVisibilityResponse fetchOfferingsVisibilityResponse, String message, int flag) {
                        isApiInProgress = false;
                        currentOfferingsLatLng = changedLatLng;
+                       if(fabViewTest!=null){
+                           fabViewTest.triggerStateChangeFunction(fetchOfferingsVisibilityResponse.getData());
+
+                       }
+                       if(!currentOfferingsLatLng.equals(lastRequestedLatLng)){
+                           fetchOfferingsCorrespondingToCurrentAddress(lastRequestedLatLng);
+                       }
                    }
 
                    @Override

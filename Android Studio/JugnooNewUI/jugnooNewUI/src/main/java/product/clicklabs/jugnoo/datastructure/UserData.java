@@ -1089,7 +1089,7 @@ public class UserData {
 		this.autosEnabled = autosEnabled;
 	}
 
-	public boolean isOnlyFatafatNewEnabled(){
+	public boolean isRidesAndFatafatEnabled(){
 		return getDeliveryCustomerEnabled() == 1
 				&& getMealsEnabled() == 0
 				&& getFreshEnabled() == 0
@@ -1097,7 +1097,7 @@ public class UserData {
 				&& getMenusEnabled() == 0
 				&& getPayEnabled() == 0
 				&& getFeedEnabled() == 0
-				&& getProsEnabled() == 0;
+				&& getProsEnabled() == 0 && getAutosEnabled()==1;
 	}
 
 }

@@ -244,8 +244,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 else {
                     holder.textViewAmount.setText("");
                 }
-                holder.imageViewProductType.setImageResource(Data.userData.isOnlyFatafatNewEnabled()?R.drawable.ic_delivery_customer:R.drawable.ic_anywhere_fab);
-                holder.imageViewProductType.setBackgroundResource(Data.userData.isOnlyFatafatNewEnabled()?R.drawable.circle_green_delivery_customer_fab:R.drawable.circle_feed_grey_fab);
+                holder.imageViewProductType.setImageResource(Data.userData.isRidesAndFatafatEnabled()?R.drawable.ic_delivery_customer:R.drawable.ic_anywhere_fab);
+                holder.imageViewProductType.setBackgroundResource(Data.userData.isRidesAndFatafatEnabled()?R.drawable.circle_green_delivery_customer_fab:R.drawable.circle_feed_grey_fab);
 
                 holder.relativeLayoutTo.setVisibility(View.VISIBLE);
             }

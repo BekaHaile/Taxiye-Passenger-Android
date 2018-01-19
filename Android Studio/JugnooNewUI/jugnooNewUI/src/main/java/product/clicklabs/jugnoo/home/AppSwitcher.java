@@ -95,7 +95,7 @@ public class AppSwitcher {
 				boolean noOfferingEnabledForHomeScreen = false, isOnlyFatafatNewEnabled = false;
 				// to check id Data.userData's key of <offering>_enabled is 1 for the client_id to open
 				if(Data.userData != null){
-					isOnlyFatafatNewEnabled = Data.userData.isOnlyFatafatNewEnabled();
+					isOnlyFatafatNewEnabled = Data.userData.isRidesAndFatafatEnabled();
 					if(Data.userData.getIntegratedJugnooEnabled() == 0 || (!isOnlyFatafatNewEnabled
 							&& ((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.userData.getFreshEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.userData.getMealsEnabled() != 1)
