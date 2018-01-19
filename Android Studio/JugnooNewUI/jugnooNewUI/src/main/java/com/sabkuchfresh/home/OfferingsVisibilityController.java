@@ -23,50 +23,62 @@ public class OfferingsVisibilityController {
     private HashMap<String,String> requestParams;
     private Activity activity;
     private LatLng currentOfferingsLatLng;//The location of offerings according to which offerings are displayed as in app currently.
-    private ApiCommon<FetchOfferingsVisibilityResponse> apiCommon;
+    private LatLng lastRequestedLatLng;//Last requested LatLng while current api in progress.
+    private boolean isApiInProgress;
 
 
 
     public OfferingsVisibilityController(Activity activity,@NonNull LatLng latLng){
+        this.activity = activity;
         this.currentOfferingsLatLng=latLng;
         requestParams = new HashMap<>();
-        apiCommon =  new ApiCommon<FetchOfferingsVisibilityResponse>(activity).showLoader(false);
 
     }
 
 
-    public void fetchOfferingsCorrespondingToCurrentAddress(LatLng changedLatLng){
+    public void fetchOfferingsCorrespondingToCurrentAddress(final LatLng changedLatLng){
         //return if new latlng are null or they are same as the current latlng
         if(changedLatLng==null || currentOfferingsLatLng.equals(changedLatLng)){
             return;
 
         }
+
+        lastRequestedLatLng= changedLatLng;
+        if(isApiInProgress){
+            return;
+        }
+
         requestParams.put(Constants.KEY_LATITUDE,String.valueOf(changedLatLng.latitude));
         requestParams.put(Constants.KEY_LONGITUDE,String.valueOf(changedLatLng.longitude));
-        apiCommon.execute(requestParams, ApiName.OFFERING_VISBILITY_API
+        new ApiCommon<FetchOfferingsVisibilityResponse>(activity).execute(requestParams, ApiName.OFFERING_VISBILITY_API
                , new APICommonCallback<FetchOfferingsVisibilityResponse>() {
                    @Override
                    public boolean onNotConnected() {
+                       isApiInProgress = false;
                        return true;
                    }
 
                    @Override
                    public boolean onException(Exception e) {
+                       isApiInProgress = false;
                        return true;
                    }
 
                    @Override
                    public void onSuccess(FetchOfferingsVisibilityResponse fetchOfferingsVisibilityResponse, String message, int flag) {
-
+                       isApiInProgress = false;
+                       currentOfferingsLatLng = changedLatLng;
                    }
 
                    @Override
                    public boolean onError(FetchOfferingsVisibilityResponse fetchOfferingsVisibilityResponse, String message, int flag) {
+                       isApiInProgress = false;
                        return true;
                    }
 
                    @Override
                    public boolean onFailure(RetrofitError error) {
+                       isApiInProgress = false;
                        return true;
                    }
 
