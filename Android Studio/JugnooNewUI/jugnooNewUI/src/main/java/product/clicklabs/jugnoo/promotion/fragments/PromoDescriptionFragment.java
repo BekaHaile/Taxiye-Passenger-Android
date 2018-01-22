@@ -155,7 +155,7 @@ public class PromoDescriptionFragment extends Fragment {
 			}, 500);
 		}
 		  /*   if() Data.userData != null
-				&& Data.userData.isOnlyFatafatNewEnabled()
+				&& Data.userData.isRidesAndFatafatEnabled()
 
 		Prefs.with(getActivity()).save(Constants.OPEN_PROMO_DEEPLINK_CLIENT_ID,clientId);*/
 		MyApplication.getInstance().getAppSwitcher().switchApp((PromotionActivity) context, clientId,

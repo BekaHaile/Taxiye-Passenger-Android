@@ -14,6 +14,7 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.retrofit.FetchOfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
@@ -402,42 +403,15 @@ public class ApiFindADriver {
 				}
 			}
 
-			if(findADriverResponse.getFreshEnabled() != null) {
-				Data.userData.setFreshEnabled(findADriverResponse.getFreshEnabled());
-			}
-			if(findADriverResponse.getMealsEnabled() != null) {
-				Data.userData.setMealsEnabled(findADriverResponse.getMealsEnabled());
-			}
-			if(findADriverResponse.getDeliveryEnabled() != null) {
-				Data.userData.setDeliveryEnabled(findADriverResponse.getDeliveryEnabled());
-			}
-			if(findADriverResponse.getGroceryEnabled() != null) {
-				Data.userData.setGroceryEnabled(findADriverResponse.getGroceryEnabled());
-			}
-			if(findADriverResponse.getMenusEnabled() != null) {
-				Data.userData.setMenusEnabled(findADriverResponse.getMenusEnabled());
-			}
-			if(findADriverResponse.getDeliveryCustomerEnabled() != null) {
-				Data.userData.setDeliveryCustomerEnabled(findADriverResponse.getDeliveryCustomerEnabled());
-			}
-			if(findADriverResponse.getPayEnabled() != null) {
-				Data.userData.setPayEnabled(findADriverResponse.getPayEnabled());
-			}
-			if(findADriverResponse.getIntegratedJugnooEnabled() != null){
-				Data.userData.setIntegratedJugnooEnabled(findADriverResponse.getIntegratedJugnooEnabled());
-			}
-			if(!TextUtils.isEmpty(findADriverResponse.getGamePredictUrl())) {
-				Data.userData.setGamePredictUrl(findADriverResponse.getGamePredictUrl());
-			}
 			if(findADriverResponse.getTopupCardEnabled() != null){
 				Data.userData.setTopupCardEnabled(findADriverResponse.getTopupCardEnabled());
 			}
-			if(findADriverResponse.getFeedEnabled() != null) {
-				Data.userData.setFeedEnabled(findADriverResponse.getFeedEnabled());
+
+			if(!TextUtils.isEmpty(findADriverResponse.getGamePredictUrl())) {
+				Data.userData.setGamePredictUrl(findADriverResponse.getGamePredictUrl());
 			}
-			if(findADriverResponse.getProsEnabled() != null) {
-				Data.userData.setProsEnabled(findADriverResponse.getProsEnabled());
-			}
+
+			parseResponseForOfferingsEnabled(findADriverResponse);
 
 		} catch (Exception exception) {
 			exception.printStackTrace();
@@ -450,6 +424,45 @@ public class ApiFindADriver {
 				Data.userData.getPointsOfInterestAddresses().addAll(findADriverResponse.getPointsOfInterestAddresses());
 			}
 		} catch (Exception e){}
+	}
+
+	public  static void parseResponseForOfferingsEnabled(FetchOfferingsVisibilityResponse.FetchOfferingsVisibilityData findADriverResponse) {
+		if(findADriverResponse.getAutosEnabled()!= null) {
+            Data.userData.setAutosEnabled(findADriverResponse.getAutosEnabled());
+        }
+
+		if(findADriverResponse.getFreshEnabled() != null) {
+            Data.userData.setFreshEnabled(findADriverResponse.getFreshEnabled());
+        }
+		if(findADriverResponse.getMealsEnabled() != null) {
+            Data.userData.setMealsEnabled(findADriverResponse.getMealsEnabled());
+        }
+		if(findADriverResponse.getDeliveryEnabled() != null) {
+            Data.userData.setDeliveryEnabled(findADriverResponse.getDeliveryEnabled());
+        }
+		if(findADriverResponse.getGroceryEnabled() != null) {
+            Data.userData.setGroceryEnabled(findADriverResponse.getGroceryEnabled());
+        }
+		if(findADriverResponse.getMenusEnabled() != null) {
+            Data.userData.setMenusEnabled(findADriverResponse.getMenusEnabled());
+        }
+		if(findADriverResponse.getDeliveryCustomerEnabled() != null) {
+            Data.userData.setDeliveryCustomerEnabled(findADriverResponse.getDeliveryCustomerEnabled());
+        }
+		if(findADriverResponse.getPayEnabled() != null) {
+            Data.userData.setPayEnabled(findADriverResponse.getPayEnabled());
+        }
+		if(findADriverResponse.getIntegratedJugnooEnabled() != null){
+            Data.userData.setIntegratedJugnooEnabled(findADriverResponse.getIntegratedJugnooEnabled());
+        }
+
+
+		if(findADriverResponse.getFeedEnabled() != null) {
+            Data.userData.setFeedEnabled(findADriverResponse.getFeedEnabled());
+        }
+		if(findADriverResponse.getProsEnabled() != null) {
+            Data.userData.setProsEnabled(findADriverResponse.getProsEnabled());
+        }
 	}
 
 	public boolean findADriverNeeded(LatLng pickupLatLng){

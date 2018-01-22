@@ -214,6 +214,7 @@ public class JSONParser implements Constants {
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
         int freeChargeEnabled = userData.optInt(KEY_FREECHARGE_ENABLED, 0);
 
+        int autosEnabled = userData.optInt(KEY_AUTOS_ENABLED, 1);
         int mealsEnabled = userData.optInt(KEY_MEALS_ENABLED, 0);
         int freshEnabled = userData.optInt(KEY_FRESH_ENABLED, 0);
         int deliveryEnabled = userData.optInt(KEY_DELIVERY_ENABLED, 0);
@@ -249,7 +250,7 @@ public class JSONParser implements Constants {
                 mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled, feedEnabled, prosEnabled,
                 deliveryCustomerEnabled,inviteFriendButton, defaultClientId, integratedJugnooEnabled,
                 topupCardEnabled, showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled, showJeanieHelpText,
-                showOfferDialog, showTutorial, signupOnboarding);
+                showOfferDialog, showTutorial, signupOnboarding,autosEnabled);
 
         Data.userData.setSubscriptionData(loginUserData.getSubscriptionData());
         Data.userData.setShowJugnooStarInAcccount(loginUserData.getShowJugnooStarInAccount());

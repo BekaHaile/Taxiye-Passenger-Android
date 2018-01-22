@@ -60,7 +60,7 @@ public class UserData {
 	private double freeChargeBalance = -1;
 
 	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, deliveryCustomerEnabled,
-			inviteFriendButton, payEnabled, feedEnabled, prosEnabled;
+			inviteFriendButton, payEnabled, feedEnabled, prosEnabled,autosEnabled;
 
 	private ArrayList<EmergencyContact> emergencyContactsList = new ArrayList<>();
 	private int currentCity = 1;
@@ -112,7 +112,7 @@ public class UserData {
 					int payEnabled, int feedEnabled, int prosEnabled,int deliveryCustomerEnabled,
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
-					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding){
+					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding,int autosEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -171,6 +171,7 @@ public class UserData {
 		this.mobikwikEnabled = mobikwikEnabled;
 		this.freeChargeEnabled = freeChargeEnabled;
 
+		this.autosEnabled = autosEnabled;
 		this.mealsEnabled = mealsEnabled;
 		this.freshEnabled = freshEnabled;
 		this.groceryEnabled = groceryEnabled;
@@ -921,8 +922,12 @@ public class UserData {
 	public int getMenusEnabled() {
 		return menusEnabled;
 	}
-   public int getDeliveryCustomerEnabled() {
+    public int getDeliveryCustomerEnabled() {
 		return deliveryCustomerEnabled;
+	}
+
+	public int getAutosEnabled() {
+		return autosEnabled;
 	}
 
 	public void setMenusEnabled(int menusEnabled) {
@@ -1080,7 +1085,11 @@ public class UserData {
 		this.deliveryCustomerEnabled = deliveryCustomerEnabled;
 	}
 
-	public boolean isOnlyFatafatNewEnabled(){
+	public void setAutosEnabled(Integer autosEnabled) {
+		this.autosEnabled = autosEnabled;
+	}
+
+	public boolean isRidesAndFatafatEnabled(){
 		return getDeliveryCustomerEnabled() == 1
 				&& getMealsEnabled() == 0
 				&& getFreshEnabled() == 0
@@ -1088,7 +1097,7 @@ public class UserData {
 				&& getMenusEnabled() == 0
 				&& getPayEnabled() == 0
 				&& getFeedEnabled() == 0
-				&& getProsEnabled() == 0;
+				&& getProsEnabled() == 0 && getAutosEnabled()==1;
 	}
 
 }

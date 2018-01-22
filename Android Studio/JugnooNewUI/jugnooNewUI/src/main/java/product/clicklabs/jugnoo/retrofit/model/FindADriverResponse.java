@@ -13,9 +13,10 @@ import java.util.List;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.retrofit.FetchOfferingsVisibilityResponse;
 
 
-public class FindADriverResponse {
+public class FindADriverResponse  extends FetchOfferingsVisibilityResponse.FetchOfferingsVisibilityData{
 
     @SerializedName("flag")
     @Expose
@@ -60,36 +61,6 @@ public class FindADriverResponse {
     @SerializedName("city_id")
     @Expose
     private Integer cityId;
-    @SerializedName("fresh_enabled")
-    @Expose
-    private Integer freshEnabled = 0;
-    @SerializedName("meals_enabled")
-    @Expose
-    private Integer mealsEnabled = 0;
-    @SerializedName("delivery_enabled")
-    @Expose
-    private Integer deliveryEnabled = 0;
-    @SerializedName("grocery_enabled")
-    @Expose
-    private Integer groceryEnabled = 0;
-    @SerializedName("menus_enabled")
-    @Expose
-    private Integer menusEnabled = 0;
-    @SerializedName("delivery_customer_enabled")
-    @Expose
-    private Integer deliveryCustomerEnabled = 0;
-    @SerializedName("pay_enabled")
-    @Expose
-    private Integer payEnabled = 0;
-    @SerializedName("feed_enabled")
-    @Expose
-    private Integer feedEnabled = 0;
-    @SerializedName("pros_enabled")
-    @Expose
-    private Integer prosEnabled = 0;
-    @SerializedName("integrated_jugnoo_enabled")
-    @Expose
-    private Integer integratedJugnooEnabled;
     @SerializedName("game_predict_url")
     @Expose
     private String gamePredictUrl = "";
@@ -407,49 +378,6 @@ public class FindADriverResponse {
         this.cityId = cityId;
     }
 
-    public Integer getDeliveryEnabled() {
-        return deliveryEnabled;
-    }
-
-    public void setDeliveryEnabled(Integer deliveryEnabled) {
-        this.deliveryEnabled = deliveryEnabled;
-    }
-
-    public Integer getFreshEnabled() {
-        return freshEnabled;
-    }
-
-    public void setFreshEnabled(Integer freshEnabled) {
-        this.freshEnabled = freshEnabled;
-    }
-
-    public Integer getMealsEnabled() {
-        return mealsEnabled;
-    }
-
-    public void setMealsEnabled(Integer mealsEnabled) {
-        this.mealsEnabled = mealsEnabled;
-    }
-
-    public Integer getGroceryEnabled() {
-        return groceryEnabled;
-    }
-
-    public void setGroceryEnabled(Integer groceryEnabled) {
-        this.groceryEnabled = groceryEnabled;
-    }
-
-    public Integer getMenusEnabled() {
-        return menusEnabled;
-    }
-    public Integer getDeliveryCustomerEnabled() {
-        return deliveryCustomerEnabled;
-    }
-
-    public void setMenusEnabled(Integer menusEnabled) {
-        this.menusEnabled = menusEnabled;
-    }
-
     public String getGamePredictUrl() {
         return gamePredictUrl;
     }
@@ -458,13 +386,7 @@ public class FindADriverResponse {
         this.gamePredictUrl = gamePredictUrl;
     }
 
-    public Integer getIntegratedJugnooEnabled() {
-        return integratedJugnooEnabled;
-    }
 
-    public void setIntegratedJugnooEnabled(Integer integratedJugnooEnabled) {
-        this.integratedJugnooEnabled = integratedJugnooEnabled;
-    }
 
     public List<PromotionInfo> getGroceryPromotions() {
         return groceryPromotions;
@@ -522,13 +444,6 @@ public class FindADriverResponse {
         this.deliveryCustomerCoupons = deliveryCustomerCoupons;
     }
 
-    public Integer getPayEnabled() {
-        return payEnabled;
-    }
-
-    public void setPayEnabled(Integer payEnabled) {
-        this.payEnabled = payEnabled;
-    }
 
     public List<PromotionInfo> getPayPromotions() {
         return payPromotions;
@@ -555,24 +470,7 @@ public class FindADriverResponse {
         this.pointsOfInterestAddresses = pointsOfInterestAddresses;
     }
 
-    public Integer getFeedEnabled() {
-        if(feedEnabled == null){
-            feedEnabled = 0;
-        }
-        return feedEnabled;
-    }
 
-    public void setFeedEnabled(Integer feedEnabled) {
-        this.feedEnabled = feedEnabled;
-    }
-
-    public Integer getProsEnabled() {
-        return prosEnabled;
-    }
-
-    public void setProsEnabled(Integer prosEnabled) {
-        this.prosEnabled = prosEnabled;
-    }
 
     public int getIsRazorpayEnabled() {
         return isRazorpayEnabled;
@@ -581,4 +479,6 @@ public class FindADriverResponse {
     public void setIsRazorpayEnabled(int isRazorpayEnabled) {
         this.isRazorpayEnabled = isRazorpayEnabled;
     }
+
+
 }

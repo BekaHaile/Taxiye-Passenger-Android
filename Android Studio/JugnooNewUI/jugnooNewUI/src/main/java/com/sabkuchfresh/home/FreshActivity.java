@@ -651,7 +651,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             if(fromOncreate
                     && Data.userData != null
-                    && Data.userData.isOnlyFatafatNewEnabled()
+                    && Data.userData.isRidesAndFatafatEnabled()
                     && (checkForReorderMenus(false) //either reorder case
                         ||!Prefs.with(this).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "").equalsIgnoreCase(""))){ //or deeplink to other client id
                 Config.setLastOpenedClientId(this, Config.getDeliveryCustomerClientId());
@@ -1016,11 +1016,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                                             .putExtra(Constants.KEY_ORDER_ID,intent.getIntExtra(Constants.KEY_ORDER_ID,0)));
                                         }
 
-                                        if(Data.userData.isOnlyFatafatNewEnabled() && isDeliveryOpenInBackground()){
+                                        if(Data.userData.isRidesAndFatafatEnabled() && isDeliveryOpenInBackground()){
                                             if(getMenusFragment()!=null) {
                                                 ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false, null, MenusFragment.TYPE_API_MENUS_ADDRESS_CHANGE);
                                             }
-                                        }if (!Data.userData.isOnlyFatafatNewEnabled() && fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus()) {
+                                        }if (!Data.userData.isRidesAndFatafatEnabled() && fragment instanceof MealFragment && FreshActivity.this.hasWindowFocus()) {
                                             ((MealFragment) fragment).getAllProducts(true, getSelectedLatLng());
                                         }
                                             Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
@@ -3870,6 +3870,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     }
 
+    private OfferingsVisibilityController offeringsVisibilityController ;
     public void setAddressAndFetchOfferingData(int appType) {
         try {
             setAddressTextToLocationPlaceHolder();
@@ -3889,6 +3890,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else if (appType == AppConstant.ApplicationType.PROS && getProsHomeFragment() != null) {
                     getProsHomeFragment().getSuperCategoriesAPI(true);
                 }
+                if(offeringsVisibilityController==null){
+                    offeringsVisibilityController=  new OfferingsVisibilityController(this,getSelectedLatLng(),fabViewTest,menuBar);
+                }
+                offeringsVisibilityController.fetchOfferingsCorrespondingToCurrentAddress(getSelectedLatLng());
+
             }
         } catch (Exception e) {
             e.printStackTrace();
