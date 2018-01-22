@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.utils.DateOperations;
 
 /**
@@ -78,6 +79,14 @@ public class MenusResponse {
 	@SerializedName("is_open_merchant_info")
 	@Expose
 	private int isOpenMerchantInfo;
+
+	@SerializedName("region_data")
+	@Expose
+	private OfferingsVisibilityResponse.OfferingsVisibilityData offeringsVisibilityData ;
+
+	public OfferingsVisibilityResponse.OfferingsVisibilityData getOfferingsVisibilityData() {
+		return offeringsVisibilityData;
+	}
 
 	public int getChatAvailable() {
 		return chatAvailable;

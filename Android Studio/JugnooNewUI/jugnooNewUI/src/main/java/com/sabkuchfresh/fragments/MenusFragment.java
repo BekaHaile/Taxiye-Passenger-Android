@@ -749,6 +749,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                         setUpUIforCategoriesOpened(activity.getCategoryOpened());
                         setSearcHintText();
+                        activity.setOfferingsVisibility(menusResponse.getOfferingsVisibilityData());
 
                     }
 

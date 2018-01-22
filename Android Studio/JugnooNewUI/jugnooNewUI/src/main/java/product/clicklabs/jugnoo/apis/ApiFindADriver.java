@@ -14,7 +14,7 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.Region;
-import product.clicklabs.jugnoo.retrofit.FetchOfferingsVisibilityResponse;
+import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
@@ -426,7 +426,7 @@ public class ApiFindADriver {
 		} catch (Exception e){}
 	}
 
-	public  static void parseResponseForOfferingsEnabled(FetchOfferingsVisibilityResponse.FetchOfferingsVisibilityData findADriverResponse) {
+	public  static void parseResponseForOfferingsEnabled(OfferingsVisibilityResponse.OfferingsVisibilityData findADriverResponse) {
 		if(findADriverResponse.getAutosEnabled()!= null) {
             Data.userData.setAutosEnabled(findADriverResponse.getAutosEnabled());
         }

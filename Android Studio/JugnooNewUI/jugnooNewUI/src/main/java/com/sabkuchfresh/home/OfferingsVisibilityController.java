@@ -2,7 +2,6 @@ package com.sabkuchfresh.home;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
@@ -14,7 +13,7 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.home.MenuBar;
-import product.clicklabs.jugnoo.retrofit.FetchOfferingsVisibilityResponse;
+import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 import retrofit.RetrofitError;
 
 /**
@@ -29,6 +28,7 @@ public class OfferingsVisibilityController {
     private boolean isApiInProgress;
     private FABViewTest fabViewTest;
     private MenuBar menuBar;
+
 
 
 
@@ -58,8 +58,8 @@ public class OfferingsVisibilityController {
 
         requestParams.put(Constants.KEY_LATITUDE,String.valueOf(changedLatLng.latitude));
         requestParams.put(Constants.KEY_LONGITUDE,String.valueOf(changedLatLng.longitude));
-        new ApiCommon<FetchOfferingsVisibilityResponse>(activity).execute(requestParams, ApiName.OFFERING_VISBILITY_API
-               , new APICommonCallback<FetchOfferingsVisibilityResponse>() {
+        new ApiCommon<OfferingsVisibilityResponse>(activity).execute(requestParams, ApiName.OFFERING_VISBILITY_API
+               , new APICommonCallback<OfferingsVisibilityResponse>() {
                    @Override
                    public boolean onNotConnected() {
                        isApiInProgress = false;
@@ -73,14 +73,11 @@ public class OfferingsVisibilityController {
                    }
 
                    @Override
-                   public void onSuccess(FetchOfferingsVisibilityResponse fetchOfferingsVisibilityResponse, String message, int flag) {
+                   public void onSuccess(OfferingsVisibilityResponse fetchOfferingsVisibilityResponse, String message, int flag) {
                        isApiInProgress = false;
                        currentOfferingsLatLng = changedLatLng;
-                       if(fabViewTest!=null){
-                           boolean isStateChanged = fabViewTest.triggerStateChangeFunction(fetchOfferingsVisibilityResponse.getData());
-                           if(isStateChanged && menuBar!=null && menuBar.getMenuAdapter()!=null){
-                               menuBar.getMenuAdapter().notifyDataSetChanged();
-                           }
+                       if(activity instanceof FreshActivity){
+                           ((FreshActivity)activity).setOfferingsVisibility(fetchOfferingsVisibilityResponse.getData());
                        }
 
 
@@ -90,7 +87,7 @@ public class OfferingsVisibilityController {
                    }
 
                    @Override
-                   public boolean onError(FetchOfferingsVisibilityResponse fetchOfferingsVisibilityResponse, String message, int flag) {
+                   public boolean onError(OfferingsVisibilityResponse fetchOfferingsVisibilityResponse, String message, int flag) {
                        isApiInProgress = false;
                        return true;
                    }

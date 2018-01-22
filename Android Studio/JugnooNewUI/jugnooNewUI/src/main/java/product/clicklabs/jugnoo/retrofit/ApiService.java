@@ -590,6 +590,6 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/fetch_offering_availability")
     void fetchOfferingsVisibility(@FieldMap Map<String, String> params,
-                                Callback<FetchOfferingsVisibilityResponse> callback);
+                                Callback<OfferingsVisibilityResponse> callback);
 
 }

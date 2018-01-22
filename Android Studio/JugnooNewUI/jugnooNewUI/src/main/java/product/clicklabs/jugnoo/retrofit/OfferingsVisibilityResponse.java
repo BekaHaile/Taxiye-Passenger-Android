@@ -9,17 +9,17 @@ import com.sabkuchfresh.feed.models.FeedCommonResponse;
  * Created by Parminder Saini on 19/01/18.
  */
 
-public class FetchOfferingsVisibilityResponse extends FeedCommonResponse {
+public class OfferingsVisibilityResponse extends FeedCommonResponse {
 
 
     @SerializedName("data")
-    private FetchOfferingsVisibilityData data;
+    private OfferingsVisibilityData data;
 
-    public FetchOfferingsVisibilityData getData() {
+    public OfferingsVisibilityData getData() {
         return data;
     }
 
-    public static class FetchOfferingsVisibilityData {
+    public static class OfferingsVisibilityData {
 
         @SerializedName("fresh_enabled")
         @Expose
@@ -47,7 +47,7 @@ public class FetchOfferingsVisibilityResponse extends FeedCommonResponse {
         private int feedEnabled ;
         @SerializedName("autos_enabled")
         @Expose
-        private Integer autosEnabled ;
+        private int autosEnabled ;
         @SerializedName("pros_enabled")
         @Expose
         private int prosEnabled ;
@@ -89,7 +89,7 @@ public class FetchOfferingsVisibilityResponse extends FeedCommonResponse {
         }
 
         public Integer getAutosEnabled() {
-            return autosEnabled==null?1:autosEnabled;
+            return autosEnabled;
         }
 
         public Integer getProsEnabled() {

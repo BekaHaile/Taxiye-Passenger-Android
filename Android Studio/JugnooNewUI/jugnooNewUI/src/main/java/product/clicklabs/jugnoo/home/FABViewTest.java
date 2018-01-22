@@ -22,7 +22,6 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
-import com.sabkuchfresh.home.OfferingsVisibilityController;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -30,7 +29,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
-import product.clicklabs.jugnoo.retrofit.FetchOfferingsVisibilityResponse;
+import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -727,41 +726,49 @@ public class FABViewTest implements GACategory, GAAction {
         }
     }
     private int getNoOfOfferingsEnabled(){
+
+
+        return noOfOfferingsEnabled(Data.userData.getDeliveryCustomerEnabled(),
+                Data.userData.getAutosEnabled(),
+                Data.userData.getFreshEnabled(),
+                Data.userData.getMealsEnabled(),
+                Data.userData.getDeliveryEnabled(),
+                Data.userData.getGroceryEnabled(),
+                Data.userData.getMenusEnabled(),
+                Data.userData.getPayEnabled(),
+                Data.userData.getFeedEnabled(),
+                Data.userData.getProsEnabled());
+    }
+
+
+    private int noOfOfferingsEnabled(Integer... offeringFlag){
         int noOfOfferings = 0;
-        if(Data.userData.getFreshEnabled() == 1)noOfOfferings++;
-        if(Data.userData.getMealsEnabled() == 1)noOfOfferings++;
-        if(Data.userData.getDeliveryEnabled() == 1)noOfOfferings++;
-        if(Data.userData.getGroceryEnabled() == 1)noOfOfferings++;
-        if(Data.userData.getMenusEnabled() == 1)noOfOfferings++;
-        if(Data.userData.getPayEnabled() == 1)noOfOfferings++;
-        if(Data.userData.getFeedEnabled() == 1)noOfOfferings++;
-        if(Data.userData.getProsEnabled() == 1)noOfOfferings++;
-        if(Data.userData.getDeliveryCustomerEnabled() == 1)noOfOfferings++;
-        if(Data.userData.getAutosEnabled() == 1)noOfOfferings++;
-
+        for(int offeringState:offeringFlag){
+            if(offeringState==1){
+                noOfOfferings++;
+            }
+        }
         return noOfOfferings;
+    }
 
+
+
+    private boolean isSameState(OfferingsVisibilityResponse.OfferingsVisibilityData offeringsVisibilityData){
+        return Data.userData.getDeliveryCustomerEnabled() == offeringsVisibilityData.getDeliveryCustomerEnabled() &&
+                Data.userData.getAutosEnabled() == offeringsVisibilityData.getAutosEnabled() &&
+                Data.userData.getFreshEnabled() == offeringsVisibilityData.getFreshEnabled() &&
+                Data.userData.getMealsEnabled() == offeringsVisibilityData.getMealsEnabled() &&
+                Data.userData.getDeliveryEnabled() == offeringsVisibilityData.getDeliveryEnabled() &&
+                Data.userData.getGroceryEnabled() == offeringsVisibilityData.getGroceryEnabled() &&
+                Data.userData.getMenusEnabled() == offeringsVisibilityData.getMenusEnabled() &&
+                Data.userData.getPayEnabled() == offeringsVisibilityData.getPayEnabled() &&
+                Data.userData.getFeedEnabled() == offeringsVisibilityData.getFeedEnabled() &&
+                Data.userData.getProsEnabled() == offeringsVisibilityData.getProsEnabled() &&
+                Data.userData.getIntegratedJugnooEnabled() == offeringsVisibilityData.getIntegratedJugnooEnabled();
 
     }
 
-    private boolean isSameState(FetchOfferingsVisibilityResponse.FetchOfferingsVisibilityData offeringsVisibilityData){
-        boolean isSameState = true;
-        if(Data.userData.getFreshEnabled()!=offeringsVisibilityData.getFreshEnabled())isSameState = false;
-        if(Data.userData.getMealsEnabled()!=offeringsVisibilityData.getMealsEnabled())isSameState = false;
-        if(Data.userData.getDeliveryEnabled() != offeringsVisibilityData.getDeliveryEnabled())isSameState = false;
-        if(Data.userData.getGroceryEnabled() !=offeringsVisibilityData.getGroceryEnabled())isSameState=false;
-        if(Data.userData.getMenusEnabled() != offeringsVisibilityData.getMenusEnabled())isSameState = false;
-        if(Data.userData.getPayEnabled() != offeringsVisibilityData.getPayEnabled())isSameState = false;
-        if(Data.userData.getFeedEnabled() != offeringsVisibilityData.getFeedEnabled())isSameState = false;
-        if(Data.userData.getProsEnabled() != offeringsVisibilityData.getProsEnabled())isSameState = false;
-        if(Data.userData.getDeliveryCustomerEnabled() != offeringsVisibilityData.getDeliveryCustomerEnabled())isSameState = false;
-        if(Data.userData.getAutosEnabled() != offeringsVisibilityData.getAutosEnabled())isSameState = false;
-        if(Data.userData.getIntegratedJugnooEnabled() != offeringsVisibilityData.getIntegratedJugnooEnabled())isSameState = false;
-
-        return isSameState;
-    }
-
-    public boolean triggerStateChangeFunction(FetchOfferingsVisibilityResponse.FetchOfferingsVisibilityData offeringsVisibilityData){
+    public boolean triggerStateChangeFunction(OfferingsVisibilityResponse.OfferingsVisibilityData offeringsVisibilityData){
         if(!isSameState(offeringsVisibilityData)){
             ApiFindADriver.parseResponseForOfferingsEnabled(offeringsVisibilityData);
             setFABButtons();

@@ -199,6 +199,7 @@ import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
+import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
@@ -3874,6 +3875,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setAddressAndFetchOfferingData(int appType) {
         try {
             setAddressTextToLocationPlaceHolder();
+            boolean checkForOfferingsVisibility = true;
             if (getFreshCheckoutMergedFragment() == null && getFeedbackFragment() == null && getProsCheckoutFragment() == null) {
                 if (appType == AppConstant.ApplicationType.FRESH && getFreshHomeFragment() != null) {
                     getFreshHomeFragment().getSuperCategoriesAPI(true);
@@ -3881,19 +3883,20 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     getMealFragment().getAllProducts(true, getSelectedLatLng());
                 } else if (appType == AppConstant.ApplicationType.GROCERY && getGroceryFragment() != null) {
                     getGroceryFragment().getAllProducts(true, getSelectedLatLng());
-                } else if ((appType == AppConstant.ApplicationType.MENUS || appType == AppConstant.ApplicationType.DELIVERY_CUSTOMER)
-                        && getMenusFragment() != null) {
-
+                } else if ((appType == AppConstant.ApplicationType.MENUS || appType == AppConstant.ApplicationType.DELIVERY_CUSTOMER) && getMenusFragment() != null) {
+                    checkForOfferingsVisibility = false; //in this case the offering visibility object is returned in menus api
                     getMenusFragment().getAllMenus(true, getSelectedLatLng(), false, null, MenusFragment.TYPE_API_MENUS_ADDRESS_CHANGE);
                 } else if (appType == AppConstant.ApplicationType.FEED && getFeedHomeFragment() != null) {
                     getFeedHomeFragment().fetchFeedsApi(true, true, true);
                 } else if (appType == AppConstant.ApplicationType.PROS && getProsHomeFragment() != null) {
                     getProsHomeFragment().getSuperCategoriesAPI(true);
                 }
-                if(offeringsVisibilityController==null){
-                    offeringsVisibilityController=  new OfferingsVisibilityController(this,getSelectedLatLng(),fabViewTest,menuBar);
+                if (checkForOfferingsVisibility) {
+                    if(offeringsVisibilityController==null){
+                        offeringsVisibilityController=  new OfferingsVisibilityController(this,getSelectedLatLng(),fabViewTest,menuBar);
+                    }
+                    offeringsVisibilityController.fetchOfferingsCorrespondingToCurrentAddress(getSelectedLatLng());
                 }
-                offeringsVisibilityController.fetchOfferingsCorrespondingToCurrentAddress(getSelectedLatLng());
 
             }
         } catch (Exception e) {
@@ -5728,6 +5731,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void setOfferingsVisibility(OfferingsVisibilityResponse.OfferingsVisibilityData offeringsVisibility){
+
+        if(offeringsVisibility!=null && fabViewTest!=null){
+            boolean isStateChanged = fabViewTest.triggerStateChangeFunction(offeringsVisibility);
+            if(isStateChanged && menuBar!=null && menuBar.getMenuAdapter()!=null){
+                menuBar.getMenuAdapter().notifyDataSetChanged();
+            }
         }
     }
 }
