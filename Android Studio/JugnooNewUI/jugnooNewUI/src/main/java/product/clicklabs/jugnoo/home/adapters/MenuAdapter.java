@@ -698,11 +698,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         holder.linearLayoutSubMeals.setVisibility(View.GONE);
                     }
 
-                    if(Data.userData.getGroceryEnabled() == 1){
+                  /*  if(Data.userData.getGroceryEnabled() == 1){
                         holder.linearLayoutSubGrocery.setVisibility(View.VISIBLE);
                     } else {
                         holder.linearLayoutSubGrocery.setVisibility(View.GONE);
-                    }
+                    }*/
 
                     if(Data.userData.getMenusEnabled() == 1){
                         holder.linearLayoutSubMenus.setVisibility(View.VISIBLE);
