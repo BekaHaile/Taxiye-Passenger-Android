@@ -96,7 +96,10 @@ public class AppSwitcher {
 				// to check id Data.userData's key of <offering>_enabled is 1 for the client_id to open
 				if(Data.userData != null){
 					isOnlyFatafatNewEnabled = Data.userData.isRidesAndFatafatEnabled();
-					if(Data.userData.getIntegratedJugnooEnabled() == 0 || (!isOnlyFatafatNewEnabled
+
+				/*
+					 //commented because rides may not be available at every location & rather keep the user at the same offering, than switching to rides
+				if(Data.userData.getIntegratedJugnooEnabled() == 0 || (!isOnlyFatafatNewEnabled
 							&& ((clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.userData.getFreshEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.userData.getMealsEnabled() != 1)
 							|| (clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.userData.getMenusEnabled() != 1)
@@ -106,7 +109,7 @@ public class AppSwitcher {
 							|| (clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && Data.userData.getDeliveryCustomerEnabled() != 1))
 					)){
 						clientId = Config.getAutosClientId();
-					}
+					}*/
 
 					//if only delivery customer enabled and client id to open is other than that
 					if(isOnlyFatafatNewEnabled
