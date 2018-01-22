@@ -23,37 +23,37 @@ public class FetchOfferingsVisibilityResponse extends FeedCommonResponse {
 
         @SerializedName("fresh_enabled")
         @Expose
-        private Integer freshEnabled = 0;
+        private int freshEnabled  ;
         @SerializedName("meals_enabled")
         @Expose
-        private Integer mealsEnabled = 0;
+        private int mealsEnabled ;
         @SerializedName("delivery_enabled")
         @Expose
-        private Integer deliveryEnabled = 0;
+        private int deliveryEnabled ;
         @SerializedName("grocery_enabled")
         @Expose
-        private Integer groceryEnabled = 0;
+        private int groceryEnabled ;
         @SerializedName("menus_enabled")
         @Expose
-        private Integer menusEnabled = 0;
+        private int menusEnabled ;
         @SerializedName("delivery_customer_enabled")
         @Expose
-        private Integer deliveryCustomerEnabled = 0;
+        private int deliveryCustomerEnabled ;
         @SerializedName("pay_enabled")
         @Expose
-        private Integer payEnabled = 0;
+        private int payEnabled;
         @SerializedName("feed_enabled")
         @Expose
-        private Integer feedEnabled = 0;
+        private int feedEnabled ;
         @SerializedName("autos_enabled")
         @Expose
         private Integer autosEnabled ;
         @SerializedName("pros_enabled")
         @Expose
-        private Integer prosEnabled = 0;
+        private int prosEnabled ;
         @SerializedName("integrated_jugnoo_enabled")
         @Expose
-        private Integer integratedJugnooEnabled;
+        private int integratedJugnooEnabled;
 
 
         public Integer getFreshEnabled() {
@@ -89,7 +89,7 @@ public class FetchOfferingsVisibilityResponse extends FeedCommonResponse {
         }
 
         public Integer getAutosEnabled() {
-            return autosEnabled;
+            return autosEnabled==null?1:autosEnabled;
         }
 
         public Integer getProsEnabled() {
