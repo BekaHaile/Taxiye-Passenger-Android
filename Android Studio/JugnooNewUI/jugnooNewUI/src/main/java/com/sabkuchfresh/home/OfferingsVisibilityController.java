@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.home.FABViewTest;
+import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.retrofit.FetchOfferingsVisibilityResponse;
 import retrofit.RetrofitError;
 
@@ -27,13 +28,15 @@ public class OfferingsVisibilityController {
     private LatLng lastRequestedLatLng;//Last requested LatLng while current api in progress.
     private boolean isApiInProgress;
     private FABViewTest fabViewTest;
+    private MenuBar menuBar;
 
 
 
-    public OfferingsVisibilityController(Activity activity, @NonNull LatLng latLng, @NonNull FABViewTest fabViewTest){
+    public OfferingsVisibilityController(Activity activity, @NonNull LatLng latLng, @NonNull FABViewTest fabViewTest, MenuBar menuBar){
         this.activity = activity;
         this.fabViewTest = fabViewTest;
         this.currentOfferingsLatLng=latLng;
+        this.menuBar = menuBar;
         requestParams = new HashMap<>();
 
     }
@@ -74,9 +77,13 @@ public class OfferingsVisibilityController {
                        isApiInProgress = false;
                        currentOfferingsLatLng = changedLatLng;
                        if(fabViewTest!=null){
-                           fabViewTest.triggerStateChangeFunction(fetchOfferingsVisibilityResponse.getData());
-
+                           boolean isStateChanged = fabViewTest.triggerStateChangeFunction(fetchOfferingsVisibilityResponse.getData());
+                           if(isStateChanged && menuBar!=null && menuBar.getMenuAdapter()!=null){
+                               menuBar.getMenuAdapter().notifyDataSetChanged();
+                           }
                        }
+
+
                        if(!currentOfferingsLatLng.equals(lastRequestedLatLng)){
                            fetchOfferingsCorrespondingToCurrentAddress(lastRequestedLatLng);
                        }

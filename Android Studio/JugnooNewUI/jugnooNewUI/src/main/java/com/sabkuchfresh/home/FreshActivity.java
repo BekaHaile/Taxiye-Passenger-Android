@@ -3891,7 +3891,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     getProsHomeFragment().getSuperCategoriesAPI(true);
                 }
                 if(offeringsVisibilityController==null){
-                    offeringsVisibilityController=  new OfferingsVisibilityController(this,getSelectedLatLng(),fabViewTest);
+                    offeringsVisibilityController=  new OfferingsVisibilityController(this,getSelectedLatLng(),fabViewTest,menuBar);
                 }
                 offeringsVisibilityController.fetchOfferingsCorrespondingToCurrentAddress(getSelectedLatLng());
 

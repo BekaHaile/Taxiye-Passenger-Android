@@ -761,10 +761,12 @@ public class FABViewTest implements GACategory, GAAction {
         return isSameState;
     }
 
-    public void triggerStateChangeFunction(FetchOfferingsVisibilityResponse.FetchOfferingsVisibilityData offeringsVisibilityData){
+    public boolean triggerStateChangeFunction(FetchOfferingsVisibilityResponse.FetchOfferingsVisibilityData offeringsVisibilityData){
         if(!isSameState(offeringsVisibilityData)){
             ApiFindADriver.parseResponseForOfferingsEnabled(offeringsVisibilityData);
             setFABButtons();
+            return true;
         }
+        return false;
     }
 }
