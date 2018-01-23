@@ -394,9 +394,9 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         switchDeliveryTime.setOnCheckedChangeListener(switchListenerTime);
         switchDeliveryTime.setChecked(true);
         fetchDynamicDeliveryCharges(false, false, false);
-        tvPromoLabel.setVisibility(Data.getFeedData().showPromoBox() ? View.VISIBLE : View.GONE);
-        cvPromo.setVisibility(Data.getFeedData().showPromoBox() ? View.VISIBLE : View.GONE);
-        promoBoxEnabled = Data.getFeedData().showPromoBox();
+        tvPromoLabel.setVisibility(Data.getFeedData()!=null && Data.getFeedData().showPromoBox() ? View.VISIBLE : View.GONE);
+        cvPromo.setVisibility(Data.getFeedData()!=null && Data.getFeedData().showPromoBox() ? View.VISIBLE : View.GONE);
+        promoBoxEnabled =    Data.getFeedData()!=null && Data.getFeedData().showPromoBox();
         edtPromo.addTextChangedListener(new PromoTextWatcher(tvPromoError, edtPromo));
         tvPromoError.setVisibility(View.GONE);
         Utils.addCapitaliseFilterToEditText(edtPromo);

@@ -4668,26 +4668,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
     public void switchOffering(final String lastClientId){
 
-
-
-
-        boolean getOfferingData = false;
-        switch (lastClientId){
-            case Config.MEALS_CLIENT_ID:
-               getOfferingData=Data.getMealsData()==null;
-                break;
-            case Config.FRESH_CLIENT_ID:
-                getOfferingData=Data.getFreshData()==null;
-
-                break;
-            case Config.FEED_CLIENT_ID:
-                getOfferingData=Data.getFeedData()==null;
-                break;
-
-            default:
-                return;
-        }
-        if(getOfferingData){
+        if(!isLoginDataAvailable(lastClientId)){
             ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
                 @Override
                 public void noNet() {
@@ -4696,11 +4677,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 @Override
                 public void success(String clientId) {
-                    rlfabViewFatafat.setVisibility(View.GONE);
-                    fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
-                    saveAppCart();
-                    Prefs.with(FreshActivity.this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
-                    setOfferingData(lastClientId,false);
+
+                    if (isLoginDataAvailable(lastClientId)) {
+                        rlfabViewFatafat.setVisibility(View.GONE);
+                        fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
+                        saveAppCart();
+                        Prefs.with(FreshActivity.this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
+                        setOfferingData(lastClientId,false);
+                    }
                 }
 
                 @Override
@@ -4731,6 +4715,20 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
 
 
+    }
+
+    public boolean isLoginDataAvailable(String lastClientId){
+
+        switch (lastClientId){
+            case Config.MEALS_CLIENT_ID:
+               return  Data.getMealsData()!=null;
+            case Config.FRESH_CLIENT_ID:
+                return  Data.getFreshData()!=null;
+            case Config.FEED_CLIENT_ID:
+                return  Data.getFeedData()!=null;
+            default:
+                return  false;
+        }
     }
 
     private void onStateChanged(AppBarLayout appBarLayout, State expanded) {
