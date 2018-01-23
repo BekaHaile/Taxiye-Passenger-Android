@@ -613,8 +613,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 }*/
 
 
-                final boolean refreshCartFinal = activity.isRefreshCart()
-                        || MapUtils.distance(currentMenusLatLngData, activity.getSelectedLatLng()) > 10 ;
+                final boolean refreshCartFinal = activity.isRefreshCart() ||
+                        // if  activity.getDeliveryAddressesFragment()!=null then the bus has already posted for address changed and the api has been called
+                        //so we do not need to call the api again in that case
+                        ( activity.getDeliveryAddressesFragment()==null && MapUtils.distance(currentMenusLatLngData, activity.getSelectedLatLng()) > 10) ;
 
                     activity.getHandler().postDelayed(new Runnable() {
                     @Override
@@ -747,6 +749,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                         setUpUIforCategoriesOpened(activity.getCategoryOpened());
                         setSearcHintText();
+                        activity.setOfferingsVisibility(menusResponse.getOfferingsVisibilityData());
 
                     }
 

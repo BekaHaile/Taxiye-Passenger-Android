@@ -127,7 +127,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
         try {
             lastClientId = Config.getLastOpenedClientId(activity);
-            if(activity.isDeliveryOpenInBackground() && Data.userData.isOnlyFatafatNewEnabled() && lastClientId.equals(Config.FEED_CLIENT_ID)){
+            if(activity.isDeliveryOpenInBackground() && Data.userData.isRidesAndFatafatEnabled() && lastClientId.equals(Config.FEED_CLIENT_ID)){
                 Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getDeliveryCustomerClientId());
                 lastClientId = Config.getDeliveryCustomerClientId();
             }

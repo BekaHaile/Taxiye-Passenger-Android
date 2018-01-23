@@ -27,7 +27,9 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -82,8 +84,7 @@ public class FABViewTest implements GACategory, GAAction {
         try {
 
             try {
-                if(Data.userData.isOnlyFatafatNewEnabled()
-                        && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
+                if(Data.userData.isRidesAndFatafatEnabled() && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                     fabtoggleModeOn = true;
 
                 }
@@ -226,7 +227,7 @@ public class FABViewTest implements GACategory, GAAction {
 
     private void setUIInital() {
         if(fabtoggleModeOn){
-
+            menuLabelsRightTest.setFABToggleModeOn(true);
            boolean wasMenuOpen =  menuLabelsRightTest.close(true,true);
             if(activity instanceof HomeActivity && wasMenuOpen){
                 ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
@@ -244,7 +245,10 @@ public class FABViewTest implements GACategory, GAAction {
                 menuLabelsRightTest.setMenuButtonColorPressed(ContextCompat.getColor(activity,R.color.orange_rides_fab_pressed));
                 menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity,R.color.orange_rides_fab_pressed));
             }
+
+            hideToggleJeanieIfOfferingNotAvailable();
         }else{
+            menuLabelsRightTest.setFABToggleModeOn(false);
             menuLabelsRightTest.setMenuIcon(ContextCompat.getDrawable(activity,R.drawable.ic_fab_jeanie));
             menuLabelsRightTest.setMenuButtonColorNormal(activity.getResources().getColor(R.color.white));
             menuLabelsRightTest.setMenuButtonColorPressed(activity.getResources().getColor(R.color.grey_light));
@@ -305,20 +309,10 @@ public class FABViewTest implements GACategory, GAAction {
 
     public void setFABButtons(){
         try {
-            if((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0)
-                    && (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
-                    && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
-                    && (Data.userData.getFeedEnabled() == 0)
-                    && Data.userData.getProsEnabled() == 0 && Data.userData.getDeliveryCustomerEnabled()==0
-                    && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
+            if(getNoOfOfferingsEnabled()<=1 ||  (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 0) || Data.userData.getIntegratedJugnooEnabled()==0){
                 relativeLayoutFABTest.setVisibility(View.GONE);
-            }else if((Data.userData.getDeliveryCustomerEnabled() == 1) && (Data.userData.getMealsEnabled() == 0)
-                    && (Data.userData.getGroceryEnabled() == 0)
-                    && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
-                    && (Data.userData.getFeedEnabled() == 0)
-                    && Data.userData.getProsEnabled() == 0 && Data.userData.getFreshEnabled()==0
-                    && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
-                if(!fabtoggleModeOn){
+            }else if(Data.userData.isRidesAndFatafatEnabled() && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
+                if(!isFabtoggleModeOn()){
                     fabtoggleModeOn = true;
                     setUIInital();
                 }
@@ -327,7 +321,15 @@ public class FABViewTest implements GACategory, GAAction {
 
 
             } else {
-                relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                if (Data.userData.getAutosEnabled() != 1) {
+                    fabAutosTest.setVisibility(View.GONE);
+                } else {
+                    if(isOpened) {
+                        fabAutosTest.setVisibility(View.VISIBLE);
+                    }
+                }
+
+
                 if (Data.userData.getFreshEnabled() != 1) {
                     fabFreshTest.setVisibility(View.GONE);
                 } else {
@@ -383,7 +385,15 @@ public class FABViewTest implements GACategory, GAAction {
                     }
                 }
 
+                relativeLayoutFABTest.setVisibility(View.VISIBLE);
+
                 setRlGenieHelpVisibility();
+
+                if(isFabtoggleModeOn()){
+                    fabtoggleModeOn = false;
+                    setUIInital();
+
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -394,6 +404,9 @@ public class FABViewTest implements GACategory, GAAction {
 
     private void setButtonsVisibilityOnOpen(){
         try {
+            if (Data.userData.getAutosEnabled() == 1) {
+                fabAutosTest.setVisibility(View.VISIBLE);
+            }
             if (Data.userData.getFreshEnabled() == 1) {
                 fabFreshTest.setVisibility(View.VISIBLE);
             }
@@ -542,13 +555,17 @@ public class FABViewTest implements GACategory, GAAction {
     }
 
     public void setRlGenieHelpVisibility(){
-        if(Data.userData.getShowJeanieHelpText() == 1
-                && Prefs.with(activity).getInt(Constants.SP_SHOW_GEANIE_HELP, 0) == 0
-                && !Data.isJeanieShownInSession()){
-            handler.postDelayed(runnableJeanieHelpShow, 2000);
-        } else {
-            rlGenieHelp.setVisibility(View.GONE);
-            handler.removeCallbacks(runnableJeanieHelpShow);
+        try {
+            if(Data.userData.getShowJeanieHelpText() == 1
+                    && Prefs.with(activity).getInt(Constants.SP_SHOW_GEANIE_HELP, 0) == 0
+                    && !Data.isJeanieShownInSession()){
+                handler.postDelayed(runnableJeanieHelpShow, 2000);
+            } else {
+                rlGenieHelp.setVisibility(View.GONE);
+                handler.removeCallbacks(runnableJeanieHelpShow);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -696,4 +713,67 @@ public class FABViewTest implements GACategory, GAAction {
         }
     }
 
+
+    public void hideToggleJeanieIfOfferingNotAvailable(){
+        if(fabtoggleModeOn){
+            if(activity instanceof FreshActivity){
+                menuLabelsRightTest.setVisibility(Data.userData.getAutosEnabled()==1?View.VISIBLE:View.GONE);
+
+            }else{
+                menuLabelsRightTest.setVisibility(Data.userData.getDeliveryCustomerEnabled()==1?View.VISIBLE:View.GONE);
+
+            }
+        }
+    }
+    private int getNoOfOfferingsEnabled(){
+
+
+        return noOfOfferingsEnabled(Data.userData.getDeliveryCustomerEnabled(),
+                Data.userData.getAutosEnabled(),
+                Data.userData.getFreshEnabled(),
+                Data.userData.getMealsEnabled(),
+                Data.userData.getDeliveryEnabled(),
+                Data.userData.getGroceryEnabled(),
+                Data.userData.getMenusEnabled(),
+                Data.userData.getPayEnabled(),
+                Data.userData.getFeedEnabled(),
+                Data.userData.getProsEnabled());
+    }
+
+
+    private int noOfOfferingsEnabled(Integer... offeringFlag){
+        int noOfOfferings = 0;
+        for(int offeringState:offeringFlag){
+            if(offeringState==1){
+                noOfOfferings++;
+            }
+        }
+        return noOfOfferings;
+    }
+
+
+
+    private boolean isSameState(OfferingsVisibilityResponse.OfferingsVisibilityData offeringsVisibilityData){
+        return Data.userData.getDeliveryCustomerEnabled() == offeringsVisibilityData.getDeliveryCustomerEnabled() &&
+                Data.userData.getAutosEnabled() == offeringsVisibilityData.getAutosEnabled() &&
+                Data.userData.getFreshEnabled() == offeringsVisibilityData.getFreshEnabled() &&
+                Data.userData.getMealsEnabled() == offeringsVisibilityData.getMealsEnabled() &&
+                Data.userData.getDeliveryEnabled() == offeringsVisibilityData.getDeliveryEnabled() &&
+                Data.userData.getGroceryEnabled() == offeringsVisibilityData.getGroceryEnabled() &&
+                Data.userData.getMenusEnabled() == offeringsVisibilityData.getMenusEnabled() &&
+                Data.userData.getPayEnabled() == offeringsVisibilityData.getPayEnabled() &&
+                Data.userData.getFeedEnabled() == offeringsVisibilityData.getFeedEnabled() &&
+                Data.userData.getProsEnabled() == offeringsVisibilityData.getProsEnabled() &&
+                Data.userData.getIntegratedJugnooEnabled() == offeringsVisibilityData.getIntegratedJugnooEnabled();
+
+    }
+
+    public boolean triggerStateChangeFunction(OfferingsVisibilityResponse.OfferingsVisibilityData offeringsVisibilityData){
+        if(!isSameState(offeringsVisibilityData)){
+            ApiFindADriver.parseResponseForOfferingsEnabled(offeringsVisibilityData);
+            setFABButtons();
+            return true;
+        }
+        return false;
+    }
 }

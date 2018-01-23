@@ -173,7 +173,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
             new HomeUtil().putDefaultParamsMultipart(multipartTypedOutput);
         }
         else {
-            new HomeUtil().putDefaultParams(params);
+            HomeUtil.addDefaultParams(params);
         }
 
 
@@ -234,6 +234,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 break;
             case FEED_PAY_FOR_ORDER:
                 RestClient.getFatafatApiService().payForOrder(params,callback);
+                break;
+            case OFFERING_VISBILITY_API:
+                RestClient.getApiService().fetchOfferingsVisibility(params,callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");

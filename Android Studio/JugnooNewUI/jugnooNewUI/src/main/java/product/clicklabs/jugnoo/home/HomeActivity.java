@@ -4535,7 +4535,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void performDeeplink() {
-        if(Data.userData != null && Data.userData.isOnlyFatafatNewEnabled()
+        if(Data.userData != null && Data.userData.isRidesAndFatafatEnabled()
                 && !Prefs.with(this).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "").equalsIgnoreCase("")){ //or deeplink to other client id
             Data.deepLinkIndex = AppLinkIndex.DELIVERY_CUSTOMER_PAGE.getOrdinal();
         }

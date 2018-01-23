@@ -587,4 +587,9 @@ public interface ApiService {
                                Callback<PaymentResponse> callback);
 
 
+    @FormUrlEncoded
+    @POST("/fetch_offering_availability")
+    void fetchOfferingsVisibility(@FieldMap Map<String, String> params,
+                                Callback<OfferingsVisibilityResponse> callback);
+
 }
