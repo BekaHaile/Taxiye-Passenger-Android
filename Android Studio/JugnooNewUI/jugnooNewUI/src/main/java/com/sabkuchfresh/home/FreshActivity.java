@@ -5741,4 +5741,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         }
     }
+
+    public String currentOpenClientIdForFab(){
+        if(isDeliveryOpenInBackground())return Config.DELIVERY_CUSTOMER_CLIENT_ID;
+        return  Config.getLastOpenedClientId(this);
+
+    }
 }

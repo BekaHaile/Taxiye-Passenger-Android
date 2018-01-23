@@ -23,6 +23,10 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -43,6 +47,7 @@ public class FABViewTest implements GACategory, GAAction {
     Activity activity;
     private RelativeLayout relativeLayoutFABTest;
     private boolean fabtoggleModeOn;
+    private ToggleModeData currentToggleData;
 
     public boolean isFabtoggleModeOn() {
         return fabtoggleModeOn;
@@ -83,18 +88,8 @@ public class FABViewTest implements GACategory, GAAction {
     private void initComponent(){
         try {
 
-            try {
-                if(Data.userData.isRidesAndFatafatEnabled() && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
-                    fabtoggleModeOn = true;
-
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
             relativeLayoutFABTest = (RelativeLayout) view;
             menuLabelsRightTest = (FloatingActionMenu) view.findViewById(R.id.menu_labels_right_Test);
-            menuLabelsRightTest.setFABToggleModeOn(fabtoggleModeOn);
             fabMealsTest = (FloatingActionButton) view.findViewById(R.id.fabMealsTest);
             fabFreshTest = (FloatingActionButton) view.findViewById(R.id.fabFreshTest);
             fabAutosTest = (FloatingActionButton) view.findViewById(R.id.fabAutosTest);
@@ -141,6 +136,10 @@ public class FABViewTest implements GACategory, GAAction {
                 try {
                     if(fabtoggleModeOn){
 
+                            if(currentToggleData==null){
+                                return;
+                            }
+
                         try {
                             if(Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0){
                                 Data.latitude = Data.autoData.getLastRefreshLatLng().latitude;
@@ -158,18 +157,9 @@ public class FABViewTest implements GACategory, GAAction {
                         latLng = ((MainActivity)activity).getCurrentPlaceLatLng();
                     }
                     final LatLng finalLatLng = latLng;
-                        String selectedOffering;
-                            if(activity instanceof HomeActivity){
-                                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getDeliveryCustomerClientId(), finalLatLng, false);
+                    MyApplication.getInstance().getAppSwitcher().switchApp(activity, currentToggleData.getClientId(), finalLatLng, false);
 
-                                selectedOffering = GACategory.DELIVERY_CUSTOMER;
-                            }else{
-                                MyApplication.getInstance().getAppSwitcher().switchApp(activity, Config.getAutosClientId(), finalLatLng, false);
-
-                                selectedOffering = RIDES;
-                            }
-
-                        GAUtils.event(JUGNOO, GENIE+OPEN, selectedOffering+SELECTED);
+                        GAUtils.event(JUGNOO, GENIE+OPEN, getOffering(currentToggleData.getClientId())+SELECTED);
 
                         return;
                     }
@@ -185,7 +175,7 @@ public class FABViewTest implements GACategory, GAAction {
                         Prefs.with(activity).save(Constants.SP_SHOW_GEANIE_HELP, 1);
                         setRlGenieHelpVisibility();
                         Utils.hideSoftKeyboard(activity, relativeLayoutFABTest);
-                        GAUtils.event(JUGNOO, getOffering()+HOME, GENIE+OPENED);
+                        GAUtils.event(JUGNOO, getOffering(null)+HOME, GENIE+OPENED);
                         GAUtils.trackScreenView(GENIE_OPEN_SCREEN);
                     } else {
                         isOpened = false;
@@ -195,7 +185,7 @@ public class FABViewTest implements GACategory, GAAction {
                         }
                         ivJeanieHelp.setVisibility(View.GONE);
                         tvGenieExpandMessage.setVisibility(View.GONE);
-                        GAUtils.event(JUGNOO, getOffering()+HOME, GENIE+CLOSED);
+                        GAUtils.event(JUGNOO, getOffering(null)+HOME, GENIE+CLOSED);
                     }
                     try {
                         if(activity instanceof HomeActivity) {
@@ -220,34 +210,46 @@ public class FABViewTest implements GACategory, GAAction {
         });
 
 
-        setUIInital();
+        setFABButtons();
 
 
     }
 
-    private void setUIInital() {
-        if(fabtoggleModeOn){
+    private void setUIInital(boolean toggleModeOn,String clientIdToShowOnToggle) {
+        if(toggleModeOn && clientIdToShowOnToggle!=null){
+            fabtoggleModeOn = true;
             menuLabelsRightTest.setFABToggleModeOn(true);
            boolean wasMenuOpen =  menuLabelsRightTest.close(true,true);
             if(activity instanceof HomeActivity && wasMenuOpen){
                 ((HomeActivity) activity).getViewSlidingExtra().setVisibility(View.GONE);
 
             }
-            if(activity instanceof HomeActivity){
+
+
+            currentToggleData = getListToggleModeData().get(clientIdToShowOnToggle);
+            menuLabelsRightTest.setMenuIcon(ContextCompat.getDrawable(activity, currentToggleData.getIcon()));
+            menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity, currentToggleData.getColor()));
+            menuLabelsRightTest.setMenuButtonColorPressed(ContextCompat.getColor(activity, currentToggleData.getColorPressed()));
+            menuLabelsRightTest.setMenuButtonColorRipple(ContextCompat.getColor(activity, currentToggleData.getColorPressed()));
+
+
+
+         /*   if(activity instanceof HomeActivity){
                 menuLabelsRightTest.setMenuIcon(ContextCompat.getDrawable(activity, R.drawable.ic_delivery_customer));
                 menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity,R.color.green_delivery_customer_fab));
                 menuLabelsRightTest.setMenuButtonColorPressed(ContextCompat.getColor(activity,R.color.green_delivery_customer_fab_pressed));
                 menuLabelsRightTest.setMenuButtonColorRipple(ContextCompat.getColor(activity,R.color.green_delivery_customer_fab_pressed));
             }else{
-
                 menuLabelsRightTest.setMenuIcon(ContextCompat.getDrawable(activity,R.drawable.ic_rides));
                 menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity,R.color.theme_color));
                 menuLabelsRightTest.setMenuButtonColorPressed(ContextCompat.getColor(activity,R.color.orange_rides_fab_pressed));
                 menuLabelsRightTest.setMenuButtonColorNormal(ContextCompat.getColor(activity,R.color.orange_rides_fab_pressed));
             }
 
-            hideToggleJeanieIfOfferingNotAvailable();
+            hideToggleJeanieIfOfferingNotAvailable();*/
         }else{
+            currentToggleData = null;
+            fabtoggleModeOn = false;
             menuLabelsRightTest.setFABToggleModeOn(false);
             menuLabelsRightTest.setMenuIcon(ContextCompat.getDrawable(activity,R.drawable.ic_fab_jeanie));
             menuLabelsRightTest.setMenuButtonColorNormal(activity.getResources().getColor(R.color.white));
@@ -309,7 +311,8 @@ public class FABViewTest implements GACategory, GAAction {
 
     public void setFABButtons(){
         try {
-            int noOfOfferingsEnabled = getNoOfOfferingsEnabled();
+            List<String> offeringsEnabled = getClientIdOfEnabledOffering();
+            int noOfOfferingsEnabled = offeringsEnabled.size();
             if(noOfOfferingsEnabled==0 ||  (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 0) || Data.userData.getIntegratedJugnooEnabled()==0){
                 setRelativeLayoutFABTestVisibility(View.GONE);
             }else if(noOfOfferingsEnabled<=2){
@@ -321,35 +324,32 @@ public class FABViewTest implements GACategory, GAAction {
                     }else if( activity instanceof MainActivity){
                         fabVisibility = Data.userData.getPayEnabled()==1?View.GONE:View.VISIBLE;
                     } else if(activity instanceof FreshActivity){
-                        fabVisibility = Data.userData.getAutosEnabled()==1||Data.userData.getPayEnabled()==1?View.VISIBLE:View.GONE;
+                        fabVisibility = Data.userData.getAutosEnabled()==1||Data.userData.getPayEnabled()==1 || !((FreshActivity)activity).currentOpenClientIdForFab().equals(offeringsEnabled.get(0))
+                                    ?View.VISIBLE:View.GONE;
                     }
                     if(fabVisibility == View.VISIBLE){
-                        fabtoggleModeOn = true;
-                        setUIInital();
+                        setUIInital(true,offeringsEnabled.get(0));
                         setRelativeLayoutFABTestVisibility(View.VISIBLE);
                     }else{
-                        fabtoggleModeOn = false;
-                        setUIInital();
                         setRelativeLayoutFABTestVisibility(View.GONE);
                     }
                 }else {
                     boolean showToggle = false;
+                    String clientIdOfferingToShowOnToggle = null;
                     if(activity instanceof HomeActivity){
                         showToggle = Data.userData.getAutosEnabled()==1;
+                        if(showToggle)clientIdOfferingToShowOnToggle = offeringsEnabled.get(0).equals(Config.getAutosClientId())?offeringsEnabled.get(1):offeringsEnabled.get(0);
                     } else if( activity instanceof MainActivity){
                         showToggle = Data.userData.getPayEnabled()==1;
+                        if(showToggle)clientIdOfferingToShowOnToggle = offeringsEnabled.get(0).equals(Config.getPayClientId())?offeringsEnabled.get(1):offeringsEnabled.get(0);
                     }else if(activity instanceof FreshActivity){
-                        showToggle = !(Data.userData.getAutosEnabled()==1&&Data.userData.getPayEnabled()==1);
+                        String currentOpenClientId = ((FreshActivity)activity).currentOpenClientIdForFab();
+                        showToggle = currentOpenClientId.equals(offeringsEnabled.get(0)) || currentOpenClientId.equals(offeringsEnabled.get(1));
+                        if(showToggle)clientIdOfferingToShowOnToggle = offeringsEnabled.get(0).equals(currentOpenClientId)?offeringsEnabled.get(1):offeringsEnabled.get(0);
+
                     }
 
-                    if(showToggle){
-                        fabtoggleModeOn = true;
-                        setUIInital();
-                    }else{
-                        fabtoggleModeOn = false;
-                        setUIInital();
-                    }
-
+                    setUIInital(showToggle,clientIdOfferingToShowOnToggle);
                     setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
 
@@ -424,8 +424,7 @@ public class FABViewTest implements GACategory, GAAction {
                 setRlGenieHelpVisibility();
 
                 if(isFabtoggleModeOn()){
-                    fabtoggleModeOn = false;
-                    setUIInital();
+                    setUIInital(false,Config.getAutosClientId());
                 }
                 setRelativeLayoutFABTestVisibility(View.VISIBLE);
 
@@ -674,7 +673,7 @@ public class FABViewTest implements GACategory, GAAction {
     }
 
     public void showTutorial(){
-        if(Data.userData != null && Data.userData.getShowTutorial() == 1 && !isFabtoggleModeOn()) {
+        if(Data.userData != null && Data.userData.getShowTutorial() == 1 && !risFabtoggleModeOn()) {
             menuLabelsRightTest.open(true);
             Animation animation = new AlphaAnimation(0f, 1f);
             animation.setDuration(1000);
@@ -686,23 +685,24 @@ public class FABViewTest implements GACategory, GAAction {
     }
 
     private String clientId;
-    private String getOffering() {
+    private String getOffering(String specificClientId) {
         if (clientId == null) {
             clientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
         }
-        if (clientId.equalsIgnoreCase(Config.getFreshClientId())) {
+        String clientIdToCheck  = specificClientId==null?clientId:specificClientId;
+        if (clientIdToCheck.equalsIgnoreCase(Config.getFreshClientId())) {
             return FRESH;
-        } else if (clientId.equalsIgnoreCase(Config.getMealsClientId())) {
+        } else if (clientIdToCheck.equalsIgnoreCase(Config.getMealsClientId())) {
             return MEALS;
-        } else if (clientId.equalsIgnoreCase(Config.getMenusClientId())) {
+        } else if (clientIdToCheck.equalsIgnoreCase(Config.getMenusClientId())) {
             return GACategory.MENUS;
-        }else if (clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId())) {
+        }else if (clientIdToCheck.equalsIgnoreCase(Config.getDeliveryCustomerClientId())) {
             return GACategory.DELIVERY_CUSTOMER;
-        } else if (clientId.equalsIgnoreCase(Config.getPayClientId())) {
+        } else if (clientIdToCheck.equalsIgnoreCase(Config.getPayClientId())) {
             return PAY;
-        } else if (clientId.equalsIgnoreCase(Config.getFeedClientId())) {
+        } else if (clientIdToCheck.equalsIgnoreCase(Config.getFeedClientId())) {
             return FEED;
-        }  else if (clientId.equalsIgnoreCase(Config.getProsClientId())) {
+        }  else if (clientIdToCheck.equalsIgnoreCase(Config.getProsClientId())) {
             return PROS;
         } else {
             return RIDES;
@@ -745,17 +745,7 @@ public class FABViewTest implements GACategory, GAAction {
     }
 
 
-    public void hideToggleJeanieIfOfferingNotAvailable(){
-        if(fabtoggleModeOn){
-            if(activity instanceof FreshActivity){
-                menuLabelsRightTest.setVisibility(Data.userData.getAutosEnabled()==1?View.VISIBLE:View.GONE);
 
-            }else{
-                menuLabelsRightTest.setVisibility(Data.userData.getDeliveryCustomerEnabled()==1?View.VISIBLE:View.GONE);
-
-            }
-        }
-    }
     private int getNoOfOfferingsEnabled(){
 
 
@@ -807,4 +797,104 @@ public class FABViewTest implements GACategory, GAAction {
         }
         return false;
     }
+
+
+    /**
+     *
+     * It is used in case of toggle mode on
+     *
+     */
+
+    private List<String> getClientIdOfEnabledOffering(){
+        List<String> configs = new ArrayList<>();
+
+        if(Data.userData.getDeliveryCustomerEnabled()==1)
+            configs.add(Config.DELIVERY_CUSTOMER_CLIENT_ID);
+        if(Data.userData.getMenusEnabled()==1)
+            configs.add(Config.MENUS_CLIENT_ID);
+        if(Data.userData.getMealsEnabled()==1)
+            configs.add(Config.MEALS_CLIENT_ID);
+        if(Data.userData.getFreshEnabled()==1)
+            configs.add(Config.FRESH_CLIENT_ID);
+        if(Data.userData.getFeedEnabled()==1)
+            configs.add(Config.FEED_CLIENT_ID);
+        if(Data.userData.getProsEnabled()==1)
+            configs.add(Config.PROS_CLIENT_ID);
+
+        if(Data.userData.getGroceryEnabled()==1)
+            configs.add(Config.GROCERY_CLIENT_ID);
+        if(Data.userData.getDeliveryEnabled()==1)
+            configs.add(Config.DELIVERY_CLIENT_ID);
+
+        if(Data.userData.getAutosEnabled()==1)
+            configs.add(Config.AUTOS_CLIENT_ID);
+        if(Data.userData.getPayEnabled()==1)
+            configs.add(Config.PAY_CLIENT_ID);
+
+
+        return configs;
+
+
+
+
+    }
+
+
+
+    private static HashMap<String,ToggleModeData> listToggleModeData ;
+
+    public class ToggleModeData{
+        private String clientId;
+        private int icon;
+        private int color;
+        private int colorPressed;
+
+        ToggleModeData(String clientId, int icon, int color, int colorPressed) {
+            this.clientId = clientId;
+            this.icon = icon;
+            this.color = color;
+            this.colorPressed = colorPressed;
+        }
+
+        public String getClientId() {
+            return clientId;
+        }
+
+        public int getIcon() {
+            return icon;
+        }
+
+        public int getColor() {
+            return color;
+        }
+
+        public int getColorPressed() {
+            return colorPressed;
+        }
+    }
+
+    private void initOfferingsList(){
+         listToggleModeData = new HashMap<>();
+        listToggleModeData.put(Config.getAutosClientId(),new ToggleModeData(Config.getAutosClientId(), R.drawable.ic_rides,R.color.theme_color,R.color.orange_rides_fab_pressed));
+        listToggleModeData.put(Config.getDeliveryCustomerClientId(),new ToggleModeData(Config.getAutosClientId(),R.drawable.ic_delivery_customer,R.color.green_delivery_customer_fab,R.color.green_delivery_customer_fab));
+        listToggleModeData.put(Config.getMealsClientId(),new ToggleModeData(Config.getMealsClientId(),R.drawable.ic_meals,R.color.pink_meals_fab,R.color.pink_meals_fab_pressed));
+        listToggleModeData.put(Config.getFreshClientId(),new ToggleModeData(Config.getFreshClientId(),R.drawable.ic_groceries_new_vector,R.color.green_fresh_fab,R.color.green_fresh_fab_pressed));
+        listToggleModeData.put(Config.getMenusClientId(),new ToggleModeData(Config.getMenusClientId(),R.drawable.ic_menus,R.color.purple_menus_fab,R.color.purple_menus_fab_pressed));
+        listToggleModeData.put(Config.getPayClientId(),new ToggleModeData(Config.getPayClientId(),R.drawable.ic_pay,R.color.yellow_pay_fab,R.color.yellow_pay_fab_pressed));
+        listToggleModeData.put(Config.getFeedClientId(),new ToggleModeData(Config.getFeedClientId(),R.drawable.ic_anywhere_fab,R.color.grey_feed_fab,R.color.grey_feed_fab_pressed));
+        listToggleModeData.put(Config.getProsClientId(),new ToggleModeData(Config.getProsClientId(),R.drawable.ic_pros,R.color.orange_pros_fab,R.color.orange_pros_fab_pressed));
+        //not used now in project,fallback cases written just in case
+        listToggleModeData.put(Config.getGroceryClientId(),new ToggleModeData(Config.getGroceryClientId(),R.drawable.ic_groceries_new_vector,R.color.green_fresh_fab,R.color.green_fresh_fab_pressed));
+        listToggleModeData.put(Config.getDeliveryClientId(),new ToggleModeData(Config.getDeliveryClientId(),R.drawable.ic_rides,R.color.theme_color,R.color.orange_rides_fab_pressed));
+
+    }
+
+    public  HashMap<String, ToggleModeData> getListToggleModeData() {
+        if(listToggleModeData==null){
+            initOfferingsList();
+        }
+
+        return listToggleModeData;
+    }
+
 }

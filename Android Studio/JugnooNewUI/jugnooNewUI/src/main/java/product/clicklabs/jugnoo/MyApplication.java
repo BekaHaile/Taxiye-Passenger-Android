@@ -37,6 +37,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.AppSwitcher;
+import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
@@ -426,5 +427,8 @@ public class MyApplication extends Application {
 		}
 		return homeUtil;
 	}
+
+
+
 
 }
