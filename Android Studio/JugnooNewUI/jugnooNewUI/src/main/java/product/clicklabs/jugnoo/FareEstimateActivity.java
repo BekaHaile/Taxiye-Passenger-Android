@@ -34,7 +34,6 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiFareEstimate;
-import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
@@ -203,7 +202,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
             @Override
             public void onClick(View v) {
-                performBackPressed();
+                onBackPressed();
             }
         });
 
@@ -369,7 +368,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
                 @Override
                 public void onNoRetry() {
-                    performBackPressed();
+                    onBackPressed();
                 }
 
                 @Override
@@ -407,6 +406,14 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
     @Override
     public void onBackPressed() {
+        // pass the selected search string back along with a flag to avoid perform the get a ride action
+        if (searchResultGlobal != null) {
+            Intent intent = new Intent();
+            String str = (new Gson()).toJson(searchResultGlobal);
+            intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
+            intent.putExtra(Constants.KEY_AVOID_RIDE_ACTION,true);
+            setResult(RESULT_OK, intent);
+        }
         performBackPressed();
     }
 

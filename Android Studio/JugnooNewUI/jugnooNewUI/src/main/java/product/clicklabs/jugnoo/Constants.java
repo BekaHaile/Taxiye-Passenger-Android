@@ -371,6 +371,7 @@ public interface Constants {
     String KEY_CONVENIENCE_CHARGE = "convenience_charge";
     String KEY_SEARCH_RESULT = "search_result";
     String SP_DRIVER_BEARING = "driver_bearing";
+    String KEY_AVOID_RIDE_ACTION = "avoid_ride_action";
 
     String KEY_FREECHARGE = "freecharge";
     String KEY_FREECHARGE_BALANCE = "freecharge_balance";
