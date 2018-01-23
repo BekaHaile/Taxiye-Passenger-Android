@@ -309,15 +309,50 @@ public class FABViewTest implements GACategory, GAAction {
 
     public void setFABButtons(){
         try {
-            if(getNoOfOfferingsEnabled()<=1 ||  (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 0) || Data.userData.getIntegratedJugnooEnabled()==0){
+            int noOfOfferingsEnabled = getNoOfOfferingsEnabled();
+            if(noOfOfferingsEnabled==0 ||  (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 0) || Data.userData.getIntegratedJugnooEnabled()==0){
                 setRelativeLayoutFABTestVisibility(View.GONE);
-            }else if(Data.userData.isRidesAndFatafatEnabled() && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
-                if(!isFabtoggleModeOn()){
-                    fabtoggleModeOn = true;
-                    setUIInital();
+            }else if(noOfOfferingsEnabled<=2){
+
+                if(noOfOfferingsEnabled==1){
+                    int fabVisibility = View.GONE;
+                    if (activity instanceof HomeActivity){
+                        fabVisibility = Data.userData.getAutosEnabled()==1?View.GONE:View.VISIBLE;
+                    }else if( activity instanceof MainActivity){
+                        fabVisibility = Data.userData.getPayEnabled()==1?View.GONE:View.VISIBLE;
+                    } else if(activity instanceof FreshActivity){
+                        fabVisibility = Data.userData.getAutosEnabled()==1||Data.userData.getPayEnabled()==1?View.VISIBLE:View.GONE;
+                    }
+                    if(fabVisibility == View.VISIBLE){
+                        fabtoggleModeOn = true;
+                        setUIInital();
+                        setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                    }else{
+                        fabtoggleModeOn = false;
+                        setUIInital();
+                        setRelativeLayoutFABTestVisibility(View.GONE);
+                    }
+                }else {
+                    boolean showToggle = false;
+                    if(activity instanceof HomeActivity){
+                        showToggle = Data.userData.getAutosEnabled()==1;
+                    } else if( activity instanceof MainActivity){
+                        showToggle = Data.userData.getPayEnabled()==1;
+                    }else if(activity instanceof FreshActivity){
+                        showToggle = !(Data.userData.getAutosEnabled()==1&&Data.userData.getPayEnabled()==1);
+                    }
+
+                    if(showToggle){
+                        fabtoggleModeOn = true;
+                        setUIInital();
+                    }else{
+                        fabtoggleModeOn = false;
+                        setUIInital();
+                    }
+
+                    setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
 
-                setRelativeLayoutFABTestVisibility(View.VISIBLE);
 
 
             } else {
@@ -385,15 +420,15 @@ public class FABViewTest implements GACategory, GAAction {
                     }
                 }
 
-                setRelativeLayoutFABTestVisibility(View.VISIBLE);
 
                 setRlGenieHelpVisibility();
 
                 if(isFabtoggleModeOn()){
                     fabtoggleModeOn = false;
                     setUIInital();
-
                 }
+                setRelativeLayoutFABTestVisibility(View.VISIBLE);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
