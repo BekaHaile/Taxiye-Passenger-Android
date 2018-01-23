@@ -639,7 +639,7 @@ public class FABViewTest implements GACategory, GAAction {
     }
 
     public void showTutorial(){
-        if(Data.userData != null && Data.userData.getShowTutorial() == 1) {
+        if(Data.userData != null && Data.userData.getShowTutorial() == 1 && !isFabtoggleModeOn()) {
             menuLabelsRightTest.open(true);
             Animation animation = new AlphaAnimation(0f, 1f);
             animation.setDuration(1000);
