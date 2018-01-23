@@ -210,7 +210,7 @@ public class FABViewTest implements GACategory, GAAction {
         });
 
 
-        setFABButtons();
+        setFABButtons(false);
 
 
     }
@@ -309,12 +309,14 @@ public class FABViewTest implements GACategory, GAAction {
         menuLabelsRightTest.setIconToggleAnimatorSet(set);
     }
 
-    public void setFABButtons(){
+    public int setFABButtons(boolean getVisibilityOfFab){
         try {
             List<String> offeringsEnabled = getClientIdOfEnabledOffering();
             int noOfOfferingsEnabled = offeringsEnabled.size();
             if(noOfOfferingsEnabled==0 ||  (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 0) || Data.userData.getIntegratedJugnooEnabled()==0){
+                if(getVisibilityOfFab) return  View.GONE;
                 setRelativeLayoutFABTestVisibility(View.GONE);
+
             }else if(noOfOfferingsEnabled<=2){
 
                 if(noOfOfferingsEnabled==1){
@@ -327,6 +329,11 @@ public class FABViewTest implements GACategory, GAAction {
                         fabVisibility = Data.userData.getAutosEnabled()==1||Data.userData.getPayEnabled()==1 || !((FreshActivity)activity).currentOpenClientIdForFab().equals(offeringsEnabled.get(0))
                                     ?View.VISIBLE:View.GONE;
                     }
+                    //fab may or may not be visible depending upon current offering opening, however if visible it would be always in toggle mode
+                    if(getVisibilityOfFab)return  fabVisibility;
+
+
+
                     if(fabVisibility == View.VISIBLE){
                         setUIInital(true,offeringsEnabled.get(0));
                         setRelativeLayoutFABTestVisibility(View.VISIBLE);
@@ -334,6 +341,9 @@ public class FABViewTest implements GACategory, GAAction {
                         setRelativeLayoutFABTestVisibility(View.GONE);
                     }
                 }else {
+                    if(getVisibilityOfFab)return  View.VISIBLE; //fab would always be visible depending in either toggle or jeanie mode
+
+
                     boolean showToggle = false;
                     String clientIdOfferingToShowOnToggle = null;
                     if(activity instanceof HomeActivity){
@@ -356,6 +366,8 @@ public class FABViewTest implements GACategory, GAAction {
 
 
             } else {
+
+                if(getVisibilityOfFab)return  View.VISIBLE;//fab would always be visible in jeanie mode;
                 if (Data.userData.getAutosEnabled() != 1) {
                     fabAutosTest.setVisibility(View.GONE);
                 } else {
@@ -422,16 +434,16 @@ public class FABViewTest implements GACategory, GAAction {
 
 
                 setRlGenieHelpVisibility();
-
-                if(isFabtoggleModeOn()){
-                    setUIInital(false,Config.getAutosClientId());
-                }
+                setUIInital(false,Config.getAutosClientId());
                 setRelativeLayoutFABTestVisibility(View.VISIBLE);
 
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return View.VISIBLE;
+
     }
 
     private Handler handler = new Handler();
@@ -619,10 +631,12 @@ public class FABViewTest implements GACategory, GAAction {
 
     public void setRelativeLayoutFABTestVisibility(int visibility){
         try {
-            if(visibility == View.VISIBLE && Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 && Data.userData.getIntegratedJugnooEnabled() == 1){
+            if(visibility==View.VISIBLE && setFABButtons(true)==View.VISIBLE){
                 relativeLayoutFABTest.setVisibility(View.VISIBLE);
-            } else {
+
+            }else if(visibility==View.GONE){
                 relativeLayoutFABTest.setVisibility(View.GONE);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -673,7 +687,7 @@ public class FABViewTest implements GACategory, GAAction {
     }
 
     public void showTutorial(){
-        if(Data.userData != null && Data.userData.getShowTutorial() == 1 && !risFabtoggleModeOn()) {
+        if(Data.userData != null && Data.userData.getShowTutorial() == 1 && getNoOfOfferingsEnabled()>2) {
             menuLabelsRightTest.open(true);
             Animation animation = new AlphaAnimation(0f, 1f);
             animation.setDuration(1000);
@@ -792,7 +806,7 @@ public class FABViewTest implements GACategory, GAAction {
     public boolean triggerStateChangeFunction(OfferingsVisibilityResponse.OfferingsVisibilityData offeringsVisibilityData){
         if(!isSameState(offeringsVisibilityData)){
             ApiFindADriver.parseResponseForOfferingsEnabled(offeringsVisibilityData);
-            setFABButtons();
+            setFABButtons(false);
             return true;
         }
         return false;
@@ -876,7 +890,7 @@ public class FABViewTest implements GACategory, GAAction {
     private void initOfferingsList(){
          listToggleModeData = new HashMap<>();
         listToggleModeData.put(Config.getAutosClientId(),new ToggleModeData(Config.getAutosClientId(), R.drawable.ic_rides,R.color.theme_color,R.color.orange_rides_fab_pressed));
-        listToggleModeData.put(Config.getDeliveryCustomerClientId(),new ToggleModeData(Config.getAutosClientId(),R.drawable.ic_delivery_customer,R.color.green_delivery_customer_fab,R.color.green_delivery_customer_fab));
+        listToggleModeData.put(Config.getDeliveryCustomerClientId(),new ToggleModeData(Config.getDeliveryCustomerClientId(),R.drawable.ic_delivery_customer,R.color.green_delivery_customer_fab,R.color.green_delivery_customer_fab));
         listToggleModeData.put(Config.getMealsClientId(),new ToggleModeData(Config.getMealsClientId(),R.drawable.ic_meals,R.color.pink_meals_fab,R.color.pink_meals_fab_pressed));
         listToggleModeData.put(Config.getFreshClientId(),new ToggleModeData(Config.getFreshClientId(),R.drawable.ic_groceries_new_vector,R.color.green_fresh_fab,R.color.green_fresh_fab_pressed));
         listToggleModeData.put(Config.getMenusClientId(),new ToggleModeData(Config.getMenusClientId(),R.drawable.ic_menus,R.color.purple_menus_fab,R.color.purple_menus_fab_pressed));

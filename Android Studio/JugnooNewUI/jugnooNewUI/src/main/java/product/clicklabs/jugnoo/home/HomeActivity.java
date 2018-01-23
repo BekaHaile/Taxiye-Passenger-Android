@@ -5166,7 +5166,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             || ((passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
                             || passengerScreenMode == PassengerScreenMode.P_IN_RIDE) && relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE)) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                        fabViewTest.setFABButtons();
+                        fabViewTest.setFABButtons(false);
                     }
                 }
             } else {

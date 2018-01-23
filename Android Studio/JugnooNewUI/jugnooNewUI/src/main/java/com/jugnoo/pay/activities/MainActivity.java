@@ -249,7 +249,7 @@ public class MainActivity extends BaseActivity {
             if(Prefs.with(this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
                     Data.userData.getIntegratedJugnooEnabled() == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                    fabViewTest.setFABButtons();
+                    fabViewTest.setFABButtons(false);
             } else{
                 fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
             }

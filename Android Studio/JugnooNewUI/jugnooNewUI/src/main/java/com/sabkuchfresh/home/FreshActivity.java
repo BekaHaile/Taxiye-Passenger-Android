@@ -1151,7 +1151,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             ) {
                         if(!fabViewTest.isFabtoggleModeOn()){
                             fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                            fabViewTest.setFABButtons();
+                            fabViewTest.setFABButtons(false);
                         }
 
                     }
