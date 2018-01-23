@@ -1811,6 +1811,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
             try {
+
+
+                if(getIntent().hasExtra(Constants.KEY_LATITUDE) && getIntent().hasExtra(Constants.KEY_LONGITUDE)){
+                    double latitude = getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude);
+                    double longitude = getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude);
+                    LatLng latLngInIntent = new LatLng(latitude, longitude);
+                    if(MapUtils.distance(new LatLng(Data.latitude, Data.longitude), latLngInIntent) > 200){
+                        zoomedToMyLocation = true;
+                        Data.latitude = latitude;
+                        Data.longitude = longitude;
+                        Data.autoData.setPickupLatLng(latLngInIntent);
+                        mapTouched = true;
+                    }
+                }
+
                 if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
 						|| (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
 					map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.getIndiaCentre(), 5));
