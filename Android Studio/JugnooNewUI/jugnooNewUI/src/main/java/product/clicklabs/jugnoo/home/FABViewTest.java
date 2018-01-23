@@ -41,7 +41,7 @@ import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
  */
 public class FABViewTest implements GACategory, GAAction {
     Activity activity;
-    public RelativeLayout relativeLayoutFABTest;
+    private RelativeLayout relativeLayoutFABTest;
     private boolean fabtoggleModeOn;
 
     public boolean isFabtoggleModeOn() {
@@ -53,13 +53,13 @@ public class FABViewTest implements GACategory, GAAction {
     }
 
     public FloatingActionMenu menuLabelsRightTest;
-    public FloatingActionButton fabMealsTest;
-    public FloatingActionButton fabFreshTest;
-    public FloatingActionButton fabAutosTest;
-    public FloatingActionButton fabMenusTest;
-    public FloatingActionButton fabPayTest;
-    public FloatingActionButton fabFeedTest;
-    public FloatingActionButton fabProsTest;
+    private FloatingActionButton fabMealsTest;
+    private FloatingActionButton fabFreshTest;
+    private FloatingActionButton fabAutosTest;
+    private FloatingActionButton fabMenusTest;
+    private FloatingActionButton fabPayTest;
+    private FloatingActionButton fabFeedTest;
+    private FloatingActionButton fabProsTest;
     private FloatingActionButton fabDeliveryCustomer;
 
     public View view;
@@ -310,14 +310,14 @@ public class FABViewTest implements GACategory, GAAction {
     public void setFABButtons(){
         try {
             if(getNoOfOfferingsEnabled()<=1 ||  (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 0) || Data.userData.getIntegratedJugnooEnabled()==0){
-                relativeLayoutFABTest.setVisibility(View.GONE);
+                setRelativeLayoutFABTestVisibility(View.GONE);
             }else if(Data.userData.isRidesAndFatafatEnabled() && (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1)){
                 if(!isFabtoggleModeOn()){
                     fabtoggleModeOn = true;
                     setUIInital();
                 }
 
-                relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                setRelativeLayoutFABTestVisibility(View.VISIBLE);
 
 
             } else {
@@ -385,7 +385,7 @@ public class FABViewTest implements GACategory, GAAction {
                     }
                 }
 
-                relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                setRelativeLayoutFABTestVisibility(View.VISIBLE);
 
                 setRlGenieHelpVisibility();
 
@@ -585,9 +585,7 @@ public class FABViewTest implements GACategory, GAAction {
 
     public void setRelativeLayoutFABTestVisibility(int visibility){
         try {
-            if(visibility == View.VISIBLE
-                    && Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1
-                    && Data.userData.getIntegratedJugnooEnabled() == 1){
+            if(visibility == View.VISIBLE && Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 && Data.userData.getIntegratedJugnooEnabled() == 1){
                 relativeLayoutFABTest.setVisibility(View.VISIBLE);
             } else {
                 relativeLayoutFABTest.setVisibility(View.GONE);
@@ -595,9 +593,7 @@ public class FABViewTest implements GACategory, GAAction {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(visibility != View.VISIBLE){
-//            hideJeanieHelpInSession();
-        }
+
     }
 
     public void hideJeanieHelpInSession(){

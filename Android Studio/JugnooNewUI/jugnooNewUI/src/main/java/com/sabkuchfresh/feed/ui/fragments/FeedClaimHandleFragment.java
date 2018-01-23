@@ -133,13 +133,13 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
                     sv.fullScroll(View.FOCUS_DOWN);
 
                 }
-                activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.GONE);
+                activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
                 activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             }
 
             @Override
             public void keyBoardClosed() {
-                activity.getFabViewTest().relativeLayoutFABTest.setVisibility(View.VISIBLE);
+                activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
 
 

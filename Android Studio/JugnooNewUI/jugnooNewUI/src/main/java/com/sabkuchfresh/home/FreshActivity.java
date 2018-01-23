@@ -2039,13 +2039,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
             fabViewTest.getMenuLabelsRightTest().setAlpha((((appBarLayout.getTotalScrollRange() ) - (-verticalOffset)) * 1.0f) / (appBarLayout.getTotalScrollRange()));
             if (verticalOffset == -appBarLayout.getTotalScrollRange()) {
-                if (fabViewTest.relativeLayoutFABTest.getVisibility() == View.VISIBLE) {
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
-                }
+                fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
+
             } else {
-                if (fabViewTest.relativeLayoutFABTest.getVisibility() == View.GONE) {
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.VISIBLE);
-                }
+                fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
+
 
 
             }
@@ -4699,7 +4697,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 @Override
                 public void success(String clientId) {
                     rlfabViewFatafat.setVisibility(View.GONE);
-                    fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
+                    fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                     saveAppCart();
                     Prefs.with(FreshActivity.this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
                     setOfferingData(lastClientId,false);
@@ -4726,7 +4724,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         }else{
             rlfabViewFatafat.setVisibility(View.GONE);
-            fabViewTest.relativeLayoutFABTest.setVisibility(View.GONE);
+            fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
             saveAppCart();
             Prefs.with(this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
             setOfferingData(lastClientId,false);
