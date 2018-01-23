@@ -46,11 +46,11 @@ import product.clicklabs.jugnoo.widgets.FAB.FloatingActionMenu;
 public class FABViewTest implements GACategory, GAAction {
     Activity activity;
     private RelativeLayout relativeLayoutFABTest;
-    private boolean fabtoggleModeOn;
+    private Boolean fabtoggleModeOn;
     private ToggleModeData currentToggleData;
 
     public boolean isFabtoggleModeOn() {
-        return fabtoggleModeOn;
+        return fabtoggleModeOn!=null && fabtoggleModeOn;
     }
 
     public FloatingActionMenu getMenuLabelsRightTest(FloatingActionMenu menuLabelsRightTest) {
@@ -134,7 +134,7 @@ public class FABViewTest implements GACategory, GAAction {
             @Override
             public void onMenuToggle(boolean opened) {
                 try {
-                    if(fabtoggleModeOn){
+                    if(isFabtoggleModeOn()){
 
                             if(currentToggleData==null){
                                 return;
@@ -434,7 +434,10 @@ public class FABViewTest implements GACategory, GAAction {
 
 
                 setRlGenieHelpVisibility();
-                setUIInital(false,Config.getAutosClientId());
+                if(fabtoggleModeOn==null || fabtoggleModeOn){
+                    setUIInital(false,Config.getAutosClientId());
+
+                }
                 setRelativeLayoutFABTestVisibility(View.VISIBLE);
 
             }
