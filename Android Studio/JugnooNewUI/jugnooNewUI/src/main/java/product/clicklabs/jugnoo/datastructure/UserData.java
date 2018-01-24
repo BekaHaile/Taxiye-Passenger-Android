@@ -1090,14 +1090,7 @@ public class UserData {
 	}
 
 	public boolean isRidesAndFatafatEnabled(){
-		return getDeliveryCustomerEnabled() == 1
-				&& getMealsEnabled() == 0
-				&& getFreshEnabled() == 0
-				&& getGroceryEnabled() == 0
-				&& getMenusEnabled() == 0
-				&& getPayEnabled() == 0
-				&& getFeedEnabled() == 0
-				&& getProsEnabled() == 0 && getAutosEnabled()==1;
+		return getDeliveryCustomerEnabled() == 1;
 	}
 
 }

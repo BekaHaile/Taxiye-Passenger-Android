@@ -660,7 +660,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
 
-            if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
+             if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
                 Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
 
             } else  if (lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
@@ -3889,7 +3889,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else if (appType == AppConstant.ApplicationType.PROS && getProsHomeFragment() != null) {
                     getProsHomeFragment().getSuperCategoriesAPI(true);
                 }
-                if (checkForOfferingsVisibility) {
+                if (checkForOfferingsVisibility && !isDeliveryOpenInBackground()) {
+                    // no need to refresh if delivery customer is open because jeanie is only shown at home page
                     if(offeringsVisibilityController==null){
                         offeringsVisibilityController=  new OfferingsVisibilityController(this,getSelectedLatLng(),fabViewTest,menuBar);
                     }

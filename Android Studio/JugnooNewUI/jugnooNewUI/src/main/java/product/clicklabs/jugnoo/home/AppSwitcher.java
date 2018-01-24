@@ -91,7 +91,6 @@ public class AppSwitcher {
 					//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				}
 
-
 				boolean noOfferingEnabledForHomeScreen = false, isOnlyFatafatNewEnabled = false;
 				// to check id Data.userData's key of <offering>_enabled is 1 for the client_id to open
 				if(Data.userData != null){
@@ -385,9 +384,8 @@ public class AppSwitcher {
 							Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 						}
 					}
-				else if (activity instanceof FreshActivity
-							&& !clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))) {
-						if(isOnlyFatafatNewEnabled){
+				else if (activity instanceof FreshActivity && !clientId.equalsIgnoreCase(((FreshActivity)activity).currentOpenClientIdForFab())) {
+						if(isOnlyFatafatNewEnabled && ((FreshActivity)activity).currentOpenClientIdForFab().equals(Config.getDeliveryCustomerClientId())){
 							Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
 							broadcastIntent.putExtra(Constants.KEY_FLAG, Constants.OPEN_APP_CLIENT_ID);
 							broadcastIntent.putExtra(Constants.KEY_CLIENT_ID, clientId);
@@ -409,12 +407,11 @@ public class AppSwitcher {
 							activity.startActivity(intent);
 							activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 							ActivityCompat.finishAffinity(activity);
-
 							new ApiUpdateClientId().updateClientId(clientId, latLng);
 							Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 						}
 					} else if(activity instanceof FreshActivity
-							&& clientId.equalsIgnoreCase(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()))
+							&& clientId.equalsIgnoreCase(((FreshActivity)activity).currentOpenClientIdForFab())
 							&& isOnlyFatafatNewEnabled
 							&& !"".equalsIgnoreCase(Prefs.with(activity).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, ""))){
 							Intent broadcastIntent = new Intent(Data.LOCAL_BROADCAST);
