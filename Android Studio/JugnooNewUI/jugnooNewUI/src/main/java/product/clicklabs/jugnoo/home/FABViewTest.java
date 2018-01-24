@@ -359,6 +359,10 @@ public class FABViewTest implements GACategory, GAAction {
 
                     }
 
+                    if(!showToggle){
+                        setJeanieModeFabVisibility();
+                    }
+
                     setUIInital(showToggle,clientIdOfferingToShowOnToggle);
                     setRelativeLayoutFABTestVisibility(View.VISIBLE);
                 }
@@ -368,69 +372,7 @@ public class FABViewTest implements GACategory, GAAction {
             } else {
 
                 if(getVisibilityOfFab)return  View.VISIBLE;//fab would always be visible in jeanie mode;
-                if (Data.userData.getAutosEnabled() != 1) {
-                    fabAutosTest.setVisibility(View.GONE);
-                } else {
-                    if(isOpened) {
-                        fabAutosTest.setVisibility(View.VISIBLE);
-                    }
-                }
-
-
-                if (Data.userData.getFreshEnabled() != 1) {
-                    fabFreshTest.setVisibility(View.GONE);
-                } else {
-                    if(isOpened) {
-                        fabFreshTest.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                if (Data.userData.getMealsEnabled() != 1) {
-                    fabMealsTest.setVisibility(View.GONE);
-                } else {
-                    if(isOpened) {
-                        fabMealsTest.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                if(Data.userData.getMenusEnabled() != 1){
-                    fabMenusTest.setVisibility(View.GONE);
-                } else {
-                    if(isOpened) {
-                        fabMenusTest.setVisibility(View.VISIBLE);
-                    }
-                }
-                if(Data.userData.getDeliveryCustomerEnabled() != 1){
-                    fabDeliveryCustomer.setVisibility(View.GONE);
-                } else {
-                    if(isOpened) {
-                        fabDeliveryCustomer.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                if(Data.userData.getPayEnabled() != 1){
-                    fabPayTest.setVisibility(View.GONE);
-                } else {
-                    if(isOpened) {
-                        fabPayTest.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                if (Data.userData.getFeedEnabled() != 1) {
-                    fabFeedTest.setVisibility(View.GONE);
-                } else {
-                    if(isOpened) {
-                        fabFeedTest.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                if (Data.userData.getProsEnabled() != 1) {
-                    fabProsTest.setVisibility(View.GONE);
-                } else {
-                    if(isOpened) {
-                        fabProsTest.setVisibility(View.VISIBLE);
-                    }
-                }
+                setJeanieModeFabVisibility();
 
 
                 setRlGenieHelpVisibility();
@@ -447,6 +389,72 @@ public class FABViewTest implements GACategory, GAAction {
 
         return View.VISIBLE;
 
+    }
+
+    private void setJeanieModeFabVisibility() {
+        if (Data.userData.getAutosEnabled() != 1) {
+            fabAutosTest.setVisibility(View.GONE);
+        } else {
+            if(isOpened) {
+                fabAutosTest.setVisibility(View.VISIBLE);
+            }
+        }
+
+
+        if (Data.userData.getFreshEnabled() != 1) {
+            fabFreshTest.setVisibility(View.GONE);
+        } else {
+            if(isOpened) {
+                fabFreshTest.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (Data.userData.getMealsEnabled() != 1) {
+            fabMealsTest.setVisibility(View.GONE);
+        } else {
+            if(isOpened) {
+                fabMealsTest.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if(Data.userData.getMenusEnabled() != 1){
+            fabMenusTest.setVisibility(View.GONE);
+        } else {
+            if(isOpened) {
+                fabMenusTest.setVisibility(View.VISIBLE);
+            }
+        }
+        if(Data.userData.getDeliveryCustomerEnabled() != 1){
+            fabDeliveryCustomer.setVisibility(View.GONE);
+        } else {
+            if(isOpened) {
+                fabDeliveryCustomer.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if(Data.userData.getPayEnabled() != 1){
+            fabPayTest.setVisibility(View.GONE);
+        } else {
+            if(isOpened) {
+                fabPayTest.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (Data.userData.getFeedEnabled() != 1) {
+            fabFeedTest.setVisibility(View.GONE);
+        } else {
+            if(isOpened) {
+                fabFeedTest.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (Data.userData.getProsEnabled() != 1) {
+            fabProsTest.setVisibility(View.GONE);
+        } else {
+            if(isOpened) {
+                fabProsTest.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private Handler handler = new Handler();
