@@ -4403,6 +4403,13 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	private void goToLoginUsingPhone(String previousLoginPhone){
 		if(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1){
 			phoneNoToFillInInHouseLogin = previousLoginPhone;
+			if(phoneNoToFillInInHouseLogin==null || phoneNoToFillInInHouseLogin.trim().length()==0){
+ 				phoneNoToFillInInHouseLogin = 	OwnerInfo.OwnerPhone(this);
+			}
+			if(phoneNoToFillInInHouseLogin==null){
+				phoneNoToFillInInHouseLogin="";
+			}
+
 			changeUIState(State.SPLASH_LOGIN_PHONE_NO);
 		} else {
 			PhoneNumber phoneNumber = null;

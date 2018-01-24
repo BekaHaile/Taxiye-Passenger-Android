@@ -4,8 +4,10 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.telephony.TelephonyManager;
 
 /**
  * Created by ankit on 25/10/16.
@@ -71,6 +73,59 @@ public class OwnerInfo {
                 pCur.close();
             }
         return name;
+        }
+
+
+        public static String OwnerPhone(Activity MainActivity) {
+            String id = null;
+            String phone = null;
+
+            try {
+                TelephonyManager tMgr = (TelephonyManager)MainActivity.getSystemService(Context.TELEPHONY_SERVICE);
+                phone= tMgr.getLine1Number();
+            } catch (Exception e) {
+                e.printStackTrace();
+                phone = null;
+            }
+
+      /*      if(phone==null || phone.trim().length()==0){
+
+                ContentResolver cr = MainActivity.getContentResolver();
+                Cursor emailCur = cr.query(
+                        ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
+                        ContactsContract.CommonDataKinds.Email.DATA + " = ?",
+                        new String[] { accountName }, null);
+                while (emailCur.moveToNext()) {
+                    id = emailCur
+                            .getString(emailCur
+                                    .getColumnIndex(ContactsContract.CommonDataKinds.Email.CONTACT_ID));
+
+                    phone = emailCur.getString(emailCur
+                            .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                }
+
+                emailCur.close();
+                if (id != null) {
+                    // get the phone number
+                    Cursor pCur = cr.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID
+                                    + " = ?", new String[] { id }, null);
+                    while (pCur.moveToNext()) {
+                        phone = pCur
+                                .getString(pCur
+                                        .getColumnIndex(ContactsContract.PhoneLookup.NUMBER));
+                        Log.v("Got contacts", "phone" + phone);
+                    }
+                    pCur.close();
+                }
+
+
+            }
+          */
+
+            return phone;
         }
 
     }
