@@ -4740,7 +4740,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             saveLastDestinations(searchResult);
                         }
                         slidingBottomPanel.getImageViewExtraForSliding().performClick();
-                        imageViewRideNow.performClick();
+                        // check if we need to avoid the action click
+                        if(data.getExtras()!=null && !data.getExtras().containsKey(Constants.KEY_AVOID_RIDE_ACTION)) {
+                            imageViewRideNow.performClick();
+                        }
                         activityResumed = false;
                     } catch (Exception e) {
                         e.printStackTrace();
