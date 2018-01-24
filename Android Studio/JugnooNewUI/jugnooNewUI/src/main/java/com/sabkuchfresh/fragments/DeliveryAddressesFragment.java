@@ -64,6 +64,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
@@ -552,11 +553,11 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     }
 
     private void showProgressWheelDeliveryPin() {
-     /*   if(activity instanceof AddPlaceActivity && ((AddPlaceActivity) activity).getTopFragment() instanceof DeliveryAddressesFragment
+        if(activity instanceof AddPlaceActivity && ((AddPlaceActivity) activity).getTopFragment() instanceof DeliveryAddressesFragment
                 || (activity instanceof FreshActivity && ((FreshActivity) activity).getTopFragment() instanceof DeliveryAddressesFragment)){
+            progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
 
-        }*/
-        progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -906,6 +907,17 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         if(activity instanceof FreshActivity) {
             if(((FreshActivity) activity).getAnywhereHomeFragment()!=null){
                 ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(searchResult);
+
+
+                if(((FreshActivity) activity).currentOpenClientIdForFab().equals(Config.FEED_CLIENT_ID)){
+                    //If feed is opened as a Seperate offering
+                    ((FreshActivity)activity).setSelectedAddress(address);
+                    ((FreshActivity)activity).setSelectedLatLng(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)));
+                    ((FreshActivity)activity).setSelectedAddressId(addressId);
+                    ((FreshActivity)activity).setSelectedAddressType(type);
+                    mBus.post(new AddressAdded(true));
+                }
+
             }else{
                 ((FreshActivity)activity).setSelectedAddress(address);
                 ((FreshActivity)activity).setSelectedLatLng(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)));

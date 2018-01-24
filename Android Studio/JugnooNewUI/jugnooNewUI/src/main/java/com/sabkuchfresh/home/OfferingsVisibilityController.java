@@ -46,7 +46,7 @@ public class OfferingsVisibilityController {
 
     public void fetchOfferingsCorrespondingToCurrentAddress(final LatLng changedLatLng){
         //return if new latLng are null or they are same as the current latlng
-        if(changedLatLng==null || currentOfferingsLatLng.equals(changedLatLng)){
+        if(changedLatLng==null /*|| currentOfferingsLatLng.equals(changedLatLng)*/){
             return;
 
         }
