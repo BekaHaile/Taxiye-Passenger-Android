@@ -1442,5 +1442,15 @@
     <string name="remove_popup_message">Are you sure you want to remove the applied promo code?</string>
     <string name="please_enter_code">Please enter code</string>
 
+    <!-- Suggest Store -->
+    <string name="txt_business_name">Business Name</string>
+    <string name="hint_business_name">Enter business name</string>
+    <string name="hint_select_address">Select Address</string>
+    <string name="txt_category">Category</string>
+    <string name="txt_timings">Timings</string>
+    <string name="txt_notes">Notes</string>
+    <string name="hint_enter_notes">Enter Notes</string>
+    <string name="txt_suggest_store">Suggest Store</string>
+
 
 </resources>

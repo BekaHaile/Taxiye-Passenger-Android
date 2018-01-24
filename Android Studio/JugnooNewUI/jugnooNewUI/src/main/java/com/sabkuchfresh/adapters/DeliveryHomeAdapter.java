@@ -1117,6 +1117,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     GAUtils.event(GACategory.FATAFAT3, GAAction.CUSTOM_ORDER, GAAction.LABEL_ORDER_VIA_FATAFAT);
                     activity.switchOffering(Config.getFeedClientId());
                     break;
+
+                case R.id.tvSuggestStore:
+                    activity.addSuggestStoreFragment();
+                    break;
             }
         }
     }
@@ -2000,17 +2004,25 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private class ViewHolderCustomOrder extends RecyclerView.ViewHolder {
 
-        private TextView tVCustomText;
+        private TextView tVCustomText, tvSuggestStore;
         private Button btnCustomOrder;
         public ViewHolderCustomOrder(final View view, final ItemListener itemListener) {
             super(view);
             btnCustomOrder= (Button) view.findViewById(R.id.bOrderViaFatafat);
             tVCustomText= (TextView) view.findViewById(R.id.tvCustomText);
+            tvSuggestStore= (TextView) view.findViewById(R.id.tvSuggestStore);
+            tvSuggestStore.setTypeface(tvSuggestStore.getTypeface(),Typeface.BOLD);
             tVCustomText.setTypeface(tVCustomText.getTypeface(),Typeface.BOLD);
             btnCustomOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     itemListener.onClickItem(btnCustomOrder,view);
+                }
+            });
+            tvSuggestStore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    itemListener.onClickItem(tvSuggestStore,view);
                 }
             });
 

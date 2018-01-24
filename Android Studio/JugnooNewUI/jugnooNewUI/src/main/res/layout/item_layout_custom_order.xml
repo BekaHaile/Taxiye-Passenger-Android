@@ -51,4 +51,19 @@
         android:textSize="@dimen/sp_16"
         app:typekitFont="@string/maven" />
 
+
+    <TextView
+        android:id="@+id/tvSuggestStore"
+        app:typekitFont="@string/maven"
+        android:text="@string/txt_suggest_store"
+        android:gravity="center"
+        android:textSize="@dimen/sp_14"
+        android:padding="@dimen/dp_10"
+        android:textColor="@color/theme_color"
+        android:theme="@style/GreyHighlight"
+        android:background="?attr/selectableItemBackground"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>
