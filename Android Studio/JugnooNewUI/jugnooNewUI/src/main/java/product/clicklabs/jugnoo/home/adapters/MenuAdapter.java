@@ -641,6 +641,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     }
     private static void openOffering(final String clientId, final Activity activity, final LatLng latLng){
         closeDrawerIfOpen(activity);
+        if(clientId.equals(Config.DELIVERY_CUSTOMER_CLIENT_ID) && activity instanceof FreshActivity &&
+                ((FreshActivity)activity).currentOpenClientIdForFab().equals(Config.DELIVERY_CUSTOMER_CLIENT_ID)){
+            return;
+        }
+
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
