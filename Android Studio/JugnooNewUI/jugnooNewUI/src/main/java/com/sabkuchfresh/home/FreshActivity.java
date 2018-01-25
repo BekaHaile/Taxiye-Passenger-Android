@@ -1089,13 +1089,21 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void switchOfferingViaClientId(final String clientId) {
         clearFragmentStackTillLast();
+
         handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				if(clientId.equalsIgnoreCase(Config.getMenusClientId())
 						&& getMenusFragment() != null){
-					getMenusFragment().switchCategory(new MenusResponse.Category(Constants.CATEGORY_ID_RESTAURANTS, Constants.CATEGORY_RESTAURANTS_NAME));
-				} else {
+
+				    if(getMenusFragment().isMenusApiInProgress() || getMenusResponse()==null){
+                        getMenusFragment().setPendingCategoryAPI(new MenusResponse.Category(Constants.CATEGORY_ID_RESTAURANTS, Constants.CATEGORY_RESTAURANTS_NAME));
+                    }else{
+                        getMenusFragment().switchCategory(new MenusResponse.Category(Constants.CATEGORY_ID_RESTAURANTS, Constants.CATEGORY_RESTAURANTS_NAME));
+
+                    }
+
+                } else {
 					switchOffering(clientId);
 				}
 			}

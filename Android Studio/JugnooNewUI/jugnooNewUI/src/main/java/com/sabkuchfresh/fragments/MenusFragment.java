@@ -793,16 +793,29 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                                 }
                             }
+
+
+
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
                         retryDialog(DialogErrorType.SERVER_ERROR, latLng, loader, false, scrollToTop, categoryObject, typeApi);
                     }
                     isMenusApiInProgress = false;
-                    if(shouldRecallSearchAPI){
-                        recallSearch(searchTextCurr);
-
+                    if(noOfCategories==1){
+                        //only one category exists no need to hit again
+                        pendingCategoryApi=null;
                     }
+                    if(pendingCategoryApi!=null){
+                         MenusResponse.Category category = new MenusResponse.Category(pendingCategoryApi.getId(),pendingCategoryApi.getCategoryName());
+                         pendingCategoryApi=null;
+                         switchCategory(category);
+
+
+                    }else if(shouldRecallSearchAPI){
+                         recallSearch(searchTextCurr);
+
+                     }
 
                 }
 
@@ -1402,5 +1415,14 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             return true;
         }
         return false;
+    }
+
+    public boolean isMenusApiInProgress() {
+        return isMenusApiInProgress;
+    }
+
+    private MenusResponse.Category pendingCategoryApi;
+    public void setPendingCategoryAPI(MenusResponse.Category category) {
+        this.pendingCategoryApi = category;
     }
 }
