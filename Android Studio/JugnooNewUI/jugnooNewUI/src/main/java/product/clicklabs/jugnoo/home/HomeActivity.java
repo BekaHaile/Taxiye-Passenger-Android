@@ -498,6 +498,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private FrameLayout coordinatorLayout;
     private FuguNotificationConfig fuguNotificationConfig  = new FuguNotificationConfig();;
     Gson gson = new Gson();
+    private boolean addressPopulatedFromDifferentOffering;
 
 
     @SuppressLint("NewApi")
@@ -1823,6 +1824,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         Data.longitude = longitude;
                         Data.autoData.setPickupLatLng(latLngInIntent);
                         mapTouched = true;
+                        addressPopulatedFromDifferentOffering = true;
                     }
                 }
 
@@ -1982,7 +1984,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							refresh = true;
 						}
                         if(!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation() && !specialPickupSelected) {
-							if (refresh && mapTouched) {
+							if ((refresh && mapTouched) || addressPopulatedFromDifferentOffering) {
+                                addressPopulatedFromDifferentOffering = false;
 								callMapTouchedRefreshDrivers();
 							}
 							if (!zoomedForSearch && map != null && !(isSpecialPickupScreenOpened() && !refresh)) {
