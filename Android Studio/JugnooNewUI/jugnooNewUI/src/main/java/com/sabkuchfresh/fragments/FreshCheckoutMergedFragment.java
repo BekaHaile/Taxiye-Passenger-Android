@@ -150,6 +150,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private RelativeLayout linearLayoutRoot;
 
     private RelativeLayout relativeLayoutCartTop;
+    private CardView cvNoAvailableOffers, cvOffersAvailable;
     private NonScrollListView listViewCharges;
     private CheckoutChargesAdapter chargesAdapter;
     private TextView textViewCartItems, textViewCartTotalUndiscount;
@@ -187,7 +188,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private LinearLayout linearLayoutMain;
     private TextView textViewScroll;
 
-    private TextView textViewDeliveryInstructionsText;
+    private TextView textViewDeliveryInstructionsText, tvNoAvailableOffers;
 
     private CardView cvStarSavings, cvBecomeStar;
     private TextView tvStarSavingsValue;
@@ -500,8 +501,20 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         listViewOffers = (RecyclerView) rootView.findViewById(R.id.listViewOffers);
         listViewOffers.setNestedScrollingEnabled(false);
         listViewOffers.setLayoutManager(new LinearLayoutManager(activity));
-        promoCouponsAdapter = new PromoCouponsRecyclerAdapter(activity, R.layout.list_item_fresh_promo_coupon, promoCoupons, this,listViewOffers);
-        listViewOffers.setAdapter(promoCouponsAdapter);
+
+        tvNoAvailableOffers = rootView.findViewById(R.id.tvNoAvailableOffers);
+        //cvOffersAvailable = rootView.findViewById(R.id.cvOffersAvailable);
+
+
+        if(promoCoupons.size()>0){
+            tvNoAvailableOffers.setVisibility(View.GONE);
+            listViewOffers.setVisibility(View.VISIBLE);
+            promoCouponsAdapter = new PromoCouponsRecyclerAdapter(activity, R.layout.list_item_fresh_promo_coupon, promoCoupons, this,listViewOffers);
+            listViewOffers.setAdapter(promoCouponsAdapter);
+        }else{
+            tvNoAvailableOffers.setVisibility(View.VISIBLE);
+            listViewOffers.setVisibility(View.GONE);
+        }
 
 
         scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
@@ -716,7 +729,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
         setSlideInitial();
         toggleChatAvailability(false);
-
         return rootView;
     }
 
