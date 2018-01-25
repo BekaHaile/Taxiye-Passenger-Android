@@ -750,6 +750,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 addFreshHomeFragment(fromOncreate);
             }
 
+            if(!lastClientId.equalsIgnoreCase(Config.getMenusClientId()) && !lastClientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId())){
+                Prefs.with(this).save(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "");
+            }
 
             int dpAsPixels = (int) (marginBottom * scale + 0.5f);
 
