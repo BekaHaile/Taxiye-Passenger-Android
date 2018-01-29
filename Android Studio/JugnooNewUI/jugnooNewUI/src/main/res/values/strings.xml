@@ -1451,6 +1451,12 @@
     <string name="txt_notes">Notes</string>
     <string name="hint_enter_notes">Enter Notes</string>
     <string name="txt_suggest_store">Suggest Store</string>
+    <string name="hint_timings">Enter Timings</string>
+    <string name="add_store">Add Store</string>
+    <string name="swipe_right_to_add">Swipe right to add</string>
+    <string name="please_enter_business_name">Please enter business name</string>
+    <string name="please_select_a_store_address">Please select a store address</string>
+    <string name="please_add_phone_number">Please add a phone number</string>
 
 
 </resources>

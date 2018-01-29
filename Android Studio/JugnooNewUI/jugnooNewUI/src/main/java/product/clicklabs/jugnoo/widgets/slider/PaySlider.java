@@ -50,6 +50,17 @@ public abstract class PaySlider {
         paramsF = (RelativeLayout.LayoutParams) tvSlide.getLayoutParams();
     }
 
+    public PaySlider(View view,String buttonText, String sliderMessage){
+        llPayViewContainer = (LinearLayout) view;
+        ButterKnife.bind(this,view);
+        llPayViewContainer.setVisibility(View.VISIBLE);
+        rlSliderContainer.setVisibility(View.VISIBLE);
+        tvSlide.setText(buttonText);
+        sliderText.setText(sliderMessage);
+        setUpPayBar();
+        paramsF = (RelativeLayout.LayoutParams) tvSlide.getLayoutParams();
+    }
+
     private void setUpPayBar() {
         tvSlide.setOnTouchListener(new View.OnTouchListener() {
             @Override

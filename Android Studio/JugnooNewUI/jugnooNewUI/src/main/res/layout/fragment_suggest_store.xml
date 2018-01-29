@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/menu_item_selector_color_F7"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/svSuggestStore"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/menu_item_selector_color_F7"
             android:fillViewport="true">
 
     <LinearLayout
@@ -83,6 +91,7 @@
             android:layout_marginTop="@dimen/dp_5"
             app:cardBackgroundColor="@android:color/white"
             app:cardCornerRadius="@dimen/dp_2">
+
 
 
             <TextView
@@ -222,7 +231,7 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:gravity="start|center_vertical"
-                android:hint="@string/hint_business_name"
+                android:hint="@string/hint_timings"
                 android:inputType="textMultiLine|textCapSentences"
                 android:minHeight="@dimen/dp_50"
                 android:padding="@dimen/dp_10"
@@ -409,3 +418,9 @@
     </LinearLayout>
 
 </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shadow_new_height"
+        android:background="@drawable/shadow_down_new" />
+</RelativeLayout>
