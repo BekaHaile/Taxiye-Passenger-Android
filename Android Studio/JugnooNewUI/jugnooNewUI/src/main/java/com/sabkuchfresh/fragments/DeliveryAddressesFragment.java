@@ -918,6 +918,9 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     mBus.post(new AddressAdded(true));
                 }
 
+            } else if(((FreshActivity) activity).getSuggestAStoreFragment()!=null){
+                ((FreshActivity) activity).getSuggestAStoreFragment().setAddress(searchResult);
+
             }else{
                 ((FreshActivity)activity).setSelectedAddress(address);
                 ((FreshActivity)activity).setSelectedLatLng(new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude)));

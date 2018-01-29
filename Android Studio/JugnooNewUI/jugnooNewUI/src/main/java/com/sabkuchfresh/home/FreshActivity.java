@@ -1321,6 +1321,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public AnywhereHomeFragment getAnywhereHomeFragment() {
         return (AnywhereHomeFragment) getSupportFragmentManager().findFragmentByTag(AnywhereHomeFragment.class.getName());
     }
+    public SuggestStoreFragment getSuggestAStoreFragment() {
+        return (SuggestStoreFragment) getSupportFragmentManager().findFragmentByTag(SuggestStoreFragment.class.getName());
+    }
 
 
     public RestaurantImageFragment getRestaurantImageFragment() {

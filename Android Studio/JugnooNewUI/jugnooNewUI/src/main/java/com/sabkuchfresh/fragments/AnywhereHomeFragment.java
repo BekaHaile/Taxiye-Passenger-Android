@@ -414,8 +414,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 cvUploadImages.setVisibility(View.GONE);
                 cvImages.setVisibility(View.GONE);
             }
-        }
-        else {
+        } else {
             cvUploadImages.setVisibility(View.GONE);
             cvImages.setVisibility(View.GONE);
         }

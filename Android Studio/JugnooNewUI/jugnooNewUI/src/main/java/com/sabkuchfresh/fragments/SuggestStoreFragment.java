@@ -1,19 +1,23 @@
 package com.sabkuchfresh.fragments;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -21,23 +25,33 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.picker.image.model.ImageEntry;
+import com.picker.image.util.Picker;
+import com.sabkuchfresh.adapters.FatafatImageAdapter;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.ImageCompression;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.retrofit.model.FatafatUploadImageInfo;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by cl-macmini-01 on 1/23/18.
@@ -71,6 +85,8 @@ public class SuggestStoreFragment extends Fragment {
     ScrollView svSuggestStore;
     @Bind(R.id.llMain)
     LinearLayout llMain;
+    @Bind(R.id.svImages)
+    HorizontalScrollView svImages;
 
     private FreshActivity activity;
     private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
@@ -78,7 +94,11 @@ public class SuggestStoreFragment extends Fragment {
     private ArrayList<Object> imageObjectList = new ArrayList<>();
     private ImageCompression imageCompressionTask;
     private SearchResult searchResult;
-
+    public static final int REQUEST_CODE_SELECT_IMAGES= 100;
+    private String[] permissionsRequest;
+    private Picker picker;
+    private int maxNoImages = 2;
+    private MenusResponse.Category selectedCategory ;
 
 
     @Nullable
@@ -113,11 +133,32 @@ public class SuggestStoreFragment extends Fragment {
         // register for keyboard event
         activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
 
-        /*final String[] str = {"Report 1", "Report 2", "Report 3", "Report 4", "Report 5"};
+        final List<MenusResponse.Category> categories = activity.getMenusResponse().getCategories();
+        ArrayAdapter<MenusResponse.Category> categoriesAdapter = new ArrayAdapter<MenusResponse.Category>(activity, R.layout.item_spinner_category, categories) {
 
-        ArrayAdapter<String> categoriesAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_item, str);
-        categoriesAdapter.setDropDownViewResource(android.R.layout.simple_expandable_list_item_1);
-        spCategory.setAdapter(categoriesAdapter);*/
+
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+
+                View view = super.getView(position, convertView, parent);
+                ((TextView) view).setText(categories.get(position).getCategoryName());
+                return view;
+
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+                View view = super.getDropDownView(position, convertView, parent);
+                ((TextView) view).setText(categories.get(position).getCategoryName());
+                return view;
+
+            }
+        };
+//        Utils.setMaxHeightToDropDown(spCategory,activity.getResources().getDimensionPixelSize(R.dimen.dp_200));
+        spCategory.setAdapter(categoriesAdapter);
         paySlider = new PaySlider(activity.llPayViewContainer, activity.getString(R.string.add_store), activity.getString(R.string.swipe_right_to_add)) {
             @Override
             public void onPayClick() {
@@ -137,55 +178,61 @@ public class SuggestStoreFragment extends Fragment {
                         throw new Exception();
                     }
 
+                    if(selectedCategory==null){
+                        Utils.showToast(activity, activity.getString(R.string.please_select_a_category));
+                        throw new Exception();
+                    }
 
+
+
+
+                    DialogPopup.showLoadingDialog(activity,activity.getString(R.string.loading));
 
                     // if we have images to upload attach them with params
-                    if(imageObjectList!=null && imageObjectList.size()>0){
+                    if (imageObjectList != null && imageObjectList.size() > 0) {
 
                         final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
 
                         //Compress Images if any new added
-                        ArrayList<String> imageEntries =null;
-                        for(Object image:imageObjectList){
-                            if(image instanceof ImageEntry){
-                                if(imageEntries==null)
-                                    imageEntries= new ArrayList<>();
+                        ArrayList<String> imageEntries = null;
+                        for (Object image : imageObjectList) {
+                            if (image instanceof ImageEntry) {
+                                if (imageEntries == null)
+                                    imageEntries = new ArrayList<>();
 
                                 imageEntries.add(((ImageEntry) image).path);
                             }
                         }
 
-                        if(imageEntries!=null){
+                        if (imageEntries != null) {
                             //upload feedback with new Images
                             imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
                                 @Override
                                 public void processFinish(ImageCompression.CompressedImageModel[] output) {
 
-                                    if(output!=null){
-                                        for(ImageCompression.CompressedImageModel file:output)
-                                        {
-                                            if(file!=null){
-                                                multipartTypedOutput.addPart(Constants.KEY_ORDER_IMAGES,new TypedFile("image/*",file.getFile()));
+                                    if (output != null) {
+                                        for (ImageCompression.CompressedImageModel file : output) {
+                                            if (file != null) {
+                                                multipartTypedOutput.addPart(Constants.KEY_ORDER_IMAGES, new TypedFile("image/*", file.getFile()));
                                             }
                                         }
 
                                     }
                                     //place order with images
-                                    placeOrderApi(businessName,multipartTypedOutput);
+                                    placeOrderApi(multipartTypedOutput);
                                 }
 
                                 @Override
-                                public  void onError(){
+                                public void onError() {
                                     DialogPopup.dismissLoadingDialog();
 
                                 }
-                            },activity);
+                            }, activity);
                             imageCompressionTask.execute(imageEntries.toArray(new String[imageEntries.size()]));
                         }
 
-                    }
-                    else {
-                        placeOrderApi(businessName, new MultipartTypedOutput());
+                    } else {
+                        placeOrderApi(new MultipartTypedOutput());
                     }
 
 //                    GAUtils.event(activity.getGaCategory(), HOME, ORDER_PLACED);
@@ -195,10 +242,28 @@ public class SuggestStoreFragment extends Fragment {
             }
         };
 
+        // decide whether to show upload image layout
+       /* if(Data.getDeliveryCustomerData()!=null && Data.getDeliveryCustomerData().getFatafatUploadImageInfo()!=null){
+            FatafatUploadImageInfo fatafatUploadImageInfo = Data.getFeedData().getFatafatUploadImageInfo();
+            if(fatafatUploadImageInfo.getShowImageBox()==1){
+                cvUploadImages.setVisibility(View.VISIBLE);
+                maxNoImages = fatafatUploadImageInfo.getImageLimit();
+                cvImages.setVisibility(View.GONE);
+                rvImages.setNestedScrollingEnabled(false);
+            }
+            else {
+                cvUploadImages.setVisibility(View.GONE);
+                cvImages.setVisibility(View.GONE);
+            }
+        } else {
+            cvUploadImages.setVisibility(View.GONE);
+            cvImages.setVisibility(View.GONE);
+        }*/
+
         return rootView;
     }
 
-    private void setAddress(SearchResult searchResult) {
+    public void setAddress(SearchResult searchResult) {
 
 
         this.searchResult = searchResult;
@@ -206,7 +271,36 @@ public class SuggestStoreFragment extends Fragment {
 
     }
 
-    private void placeOrderApi(String taskDetails, MultipartTypedOutput multipartTypedOutput) {
+    private void placeOrderApi(MultipartTypedOutput multipartTypedOutput) {
+
+        multipartTypedOutput.addPart("restaurant_name",new TypedString(edtBusinessName.getText().toString()));
+        multipartTypedOutput.addPart("restaurant_phone",new TypedString(edtPhone.getText().toString()));
+        if(searchResult!=null){
+            multipartTypedOutput.addPart("restaurant_address",new TypedString(tvAddress.getText().toString()));
+            multipartTypedOutput.addPart("latitude",new TypedString(String.valueOf(searchResult.getLatitude())));
+            multipartTypedOutput.addPart("longitude",new TypedString(String.valueOf(searchResult.getLongitude())));
+        }
+
+        if(selectedCategory!=null){
+            multipartTypedOutput.addPart("merchant_category_id",new TypedString(String.valueOf(selectedCategory.getId())));
+
+        }
+        String timings = edtTimings.getText().toString().trim();
+        if(timings.length()>0){
+            multipartTypedOutput.addPart("timings",new TypedString(timings));
+        }
+
+        String notes = edtNotes.getText().toString().trim();
+        if(timings.length()>0){
+            multipartTypedOutput.addPart("notes",new TypedString(notes));
+        }
+
+
+
+
+
+
+
 
     }
 
@@ -216,5 +310,136 @@ public class SuggestStoreFragment extends Fragment {
         activity = (FreshActivity) context;
     }
 
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+    }
+
+    @OnClick({R.id.tvAddress, R.id.cvUploadImages})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.tvAddress:
+
+                activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer(), false);
+
+                break;
+            case R.id.cvUploadImages:
+                pickImages();
+                break;
+        }
+    }
+
+
+
+
+
+
+
+
+    /***
+     * Images Functionality
+     *
+     */
+
+    /**
+     * Allows image selection
+     */
+    private void pickImages() {
+
+        if(PermissionChecker.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED ||
+                PermissionChecker.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED)
+        {
+            if (permissionsRequest ==null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    permissionsRequest = new String[2];
+                    permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
+                    permissionsRequest[1]=Manifest.permission.READ_EXTERNAL_STORAGE;
+                } else {
+                    permissionsRequest = new String[1];
+                    permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
+                }
+            }
+
+            (SuggestStoreFragment.this).requestPermissions(permissionsRequest, 20);
+            return;
+        }
+
+        int alreadyPresent = imageObjectList == null ? 0 : imageObjectList.size();
+        if(picker ==null){
+            picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
+        }
+
+        picker.setLimit(maxNoImages -alreadyPresent);
+        picker.startActivity(SuggestStoreFragment.this,activity, REQUEST_CODE_SELECT_IMAGES);
+
+    }
+
+    private void setImageAdapter(final ArrayList<Object> objectList) {
+
+        if (objectList == null || objectList.size() == 0) {
+            cvImages.setVisibility(View.GONE);
+            cvUploadImages.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        if (fatafatImageAdapter == null) {
+            fatafatImageAdapter = new FatafatImageAdapter(activity, objectList, new FatafatImageAdapter.Callback() {
+                @Override
+                public void onImageClick(Object object) {
+                    //View full Image
+                }
+
+                @Override
+                public void onDelete(Object object) {
+                    objectList.remove(object);
+                    ivUploadImage.setVisibility(objectList.size()< maxNoImages ?View.VISIBLE:View.GONE);
+                    if(objectList.size()==0){
+                        cvImages.setVisibility(View.GONE);
+                        fatafatImageAdapter=null;
+                        cvUploadImages.setVisibility(View.VISIBLE);
+                    }
+                }
+            }, rvImages);
+            rvImages.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
+            rvImages.setAdapter(fatafatImageAdapter);
+        } else {
+            fatafatImageAdapter.setList(objectList);
+        }
+
+        ivUploadImage.setVisibility(objectList.size()< maxNoImages ?View.VISIBLE:View.GONE);
+
+        if(objectList.size()>0){
+            svImages.post(new Runnable() {
+                @Override
+                public void run() {
+                    svImages.fullScroll(View.FOCUS_RIGHT);
+                }
+            });
+
+        }
+
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode== REQUEST_CODE_SELECT_IMAGES && resultCode==RESULT_OK){
+            if(data!=null && data.getSerializableExtra("imagesList")!=null)
+            {
+                ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
+                if (images != null && images.size() != 0) {
+                    imageObjectList.addAll(images);
+                    cvUploadImages.setVisibility(View.GONE);
+                    cvImages.setVisibility(View.VISIBLE);
+                    setImageAdapter(imageObjectList);
+                }
+            }
+        }
+
+    }
 
 }

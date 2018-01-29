@@ -1457,6 +1457,7 @@
     <string name="please_enter_business_name">Please enter business name</string>
     <string name="please_select_a_store_address">Please select a store address</string>
     <string name="please_add_phone_number">Please add a phone number</string>
+    <string name="please_select_a_category">Please selected a category</string>
 
 
 </resources>

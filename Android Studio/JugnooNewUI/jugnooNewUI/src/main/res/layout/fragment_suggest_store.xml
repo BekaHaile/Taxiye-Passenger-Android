@@ -143,14 +143,14 @@
             <android.support.v7.widget.AppCompatSpinner
                 android:id="@+id/spCategory"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_50"
+                android:layout_height="wrap_content"
                 android:gravity="start|center_vertical"
                 android:padding="@dimen/dp_10"
                 android:spinnerMode="dropdown"
+
                 android:textColor="@color/text_color"
                 android:textColorHint="@color/text_color_hint_anywhere"
                 android:textSize="@dimen/sp_14"
-                android:theme="@style/GreyHighlight"
                 app:typekitFont="@string/maven"/>
 
         </android.support.v7.widget.CardView>

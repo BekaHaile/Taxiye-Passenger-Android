@@ -48,6 +48,7 @@
                     >
 
                     <RelativeLayout
+                        android:id="@+id/rlAddressLabels"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/px_20"
@@ -158,6 +159,7 @@
                     </RelativeLayout>
 
                     <EditText
+
                         android:id="@+id/editTextLabel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
