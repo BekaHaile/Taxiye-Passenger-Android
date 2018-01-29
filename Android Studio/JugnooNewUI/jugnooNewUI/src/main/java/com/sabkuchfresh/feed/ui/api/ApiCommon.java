@@ -112,6 +112,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
 
         if (!MyApplication.getInstance().isOnline()) {
+            apiCommonCallback.onFinish();
             if (!apiCommonCallback.onNotConnected()) {
                 retryDialog(DialogErrorType.NO_NET);
                 return;
@@ -134,15 +135,18 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
                     try {
                         if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                            apiCommonCallback.onFinish();
 							apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
 
 						} else {
+                            apiCommonCallback.onFinish();
 							if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag())) {
 								DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage());
 							}
 						}
                     } catch (Exception e) {
                         e.printStackTrace();
+                        apiCommonCallback.onFinish();
                         if (!apiCommonCallback.onException(e)) {
                             retryDialog(DialogErrorType.CONNECTION_LOST);
                         }
@@ -160,7 +164,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                     if(isCancelled())
                         return;
                     error.printStackTrace();
+                    apiCommonCallback.onFinish();
                     if (!apiCommonCallback.onFailure(error)) {
+
                         retryDialog(DialogErrorType.CONNECTION_LOST);
                     }
 
@@ -237,6 +243,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 break;
             case OFFERING_VISBILITY_API:
                 RestClient.getApiService().fetchOfferingsVisibility(params,callback);
+                break;
+            case SUGGEST_A_STORE:
+                RestClient.getMenusApiService().suggestStore(multipartTypedOutput,callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");

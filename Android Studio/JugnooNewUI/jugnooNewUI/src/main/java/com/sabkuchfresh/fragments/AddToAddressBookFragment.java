@@ -621,6 +621,8 @@ public class AddToAddressBookFragment extends Fragment {
                 FreshActivity freshActivity = (FreshActivity) activity;
                 if(freshActivity.getAnywhereHomeFragment() != null){
                     freshActivity.getAnywhereHomeFragment().setRequestedAddress(searchResult);
+                }else if(freshActivity.getSuggestAStoreFragment() != null){
+                    freshActivity.getSuggestAStoreFragment().setAddress(searchResult);
                 }else{
                     freshActivity.setSelectedAddressId(searchResultId);
                     freshActivity.setSelectedAddressType(label);
@@ -640,15 +642,21 @@ public class AddToAddressBookFragment extends Fragment {
             }
 
 
-            if(activity instanceof AddPlaceActivity) {
-                ((AddPlaceActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
-            } else if(activity instanceof FreshActivity) {
-                if(label.length() > 0) {
-                    ((FreshActivity) activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
-                } else{
-                    if(deliveryAddressesFragment != null) {
-                        activity.getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            if (showAddressLabels) {
+                if(activity instanceof AddPlaceActivity) {
+                    ((AddPlaceActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
+                } else if(activity instanceof FreshActivity) {
+                    if(label.length() > 0) {
+                        ((FreshActivity) activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
+                    } else{
+                        if(deliveryAddressesFragment != null) {
+                            activity.getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        }
                     }
+                }
+            }else{
+                if(deliveryAddressesFragment != null) {
+                    activity.getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 }
             }
 

@@ -2,10 +2,14 @@ package product.clicklabs.jugnoo.datastructure;
 
 import com.sabkuchfresh.datastructure.PopupData;
 import com.sabkuchfresh.retrofit.model.Store;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by shankar on 8/17/16.
@@ -23,8 +27,11 @@ public class MenusData {
 	private int isFatafatEnabled;
 	private JSONArray negativeFeedbackReasons;
 	private JSONArray positiveFeedbackReasons;
+	private List<MenusResponse.Category> merchantCategoriesList = new ArrayList<>();
 	private String restaurantName;
 	private int merchantCategoryId;
+	private int addStoreImages;
+	private int showAddStore;
 
 	public JSONArray getPositiveFeedbackReasons() {
 		return positiveFeedbackReasons;
@@ -32,7 +39,7 @@ public class MenusData {
 
 	public MenusData(String question, String orderId, int questionType, int pendingFeedback, ArrayList<Store> stores, PopupData popupData, double amount, String feedbackDeliveryDate,
 					 int feedbackViewType, int isFatafatEnabled, String rideEndGoodFeedbackText, JSONArray negativeFeedbackReasons, JSONArray positiveFeedbackReasons,
-					 String restaurantName, int category) {
+					 String restaurantName, int category,int addStoreImages,int showAddStore,JSONArray merchantCategories) {
 		this.question = question;
 		this.orderId = orderId;
 		this.questionType = questionType;
@@ -48,6 +55,20 @@ public class MenusData {
 		this.positiveFeedbackReasons = positiveFeedbackReasons;
 		this.restaurantName = restaurantName;
 		this.merchantCategoryId = category;
+		this.addStoreImages = addStoreImages;
+		this.showAddStore = showAddStore;
+		if(merchantCategories!=null){
+			for(int i = 0;i<merchantCategories.length();i++){
+				try {
+					JSONObject jsonObject = (JSONObject) merchantCategories.getJSONObject(i);
+					merchantCategoriesList.add(i,new MenusResponse.Category(jsonObject.optInt("id",0),jsonObject.optString("category",null)));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+
+		}
 	}
 
 	public int getMerchantCategoryId() {
@@ -164,5 +185,17 @@ public class MenusData {
 
 	public void setRestaurantName(String restaurantName) {
 		this.restaurantName = restaurantName;
+	}
+
+	public int getAddStoreImages() {
+		return addStoreImages;
+	}
+
+	public boolean getShowAddStore() {
+		return showAddStore==1;
+	}
+
+	public List<MenusResponse.Category> getMerchantCategoriesList() {
+		return merchantCategoriesList;
 	}
 }

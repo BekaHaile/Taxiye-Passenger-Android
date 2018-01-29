@@ -1790,17 +1790,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 visMinOrder = setMinOrderAmountText(fragment);
             }else if(fragment instanceof SuggestStoreFragment){
                 topBar.getLlSearchCart().setLayoutTransition(null);
-                topBar.imageViewMenu.setVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);
-                topBar.imageViewBack.setVisibility(isDeliveryOpenInBackground()?View.VISIBLE:View.GONE);
-                drawerLayout.setDrawerLockMode(isDeliveryOpenInBackground()?DrawerLayout.LOCK_MODE_LOCKED_CLOSED:DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(Data.getFeedName(this));
-
-                if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                    fabViewTest.setRelativeLayoutFABTestVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);
-                }
+                fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 llSearchCartVis = View.GONE;
                 llPayViewContainerVis = View.VISIBLE;
+                visMinOrder = View.GONE;
+
             }
             else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment ||
                     fragment instanceof FeedClaimHandleFragment) {

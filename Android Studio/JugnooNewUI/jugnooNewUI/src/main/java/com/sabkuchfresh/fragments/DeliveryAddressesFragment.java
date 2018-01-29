@@ -232,74 +232,84 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
         listViewSavedLocations = (NonScrollListView) rootView.findViewById(R.id.listViewSavedLocations);
 
-        if(activity instanceof FreshActivity) {
-            scrollViewSuggestions.setVisibility(View.VISIBLE);
-            try {
-                savedPlacesAdapter = new SavedPlacesAdapter(activity, homeUtil.getSavedPlacesWithHomeWork(activity), new SavedPlacesAdapter.Callback() {
-                    @Override
-                    public void onItemClick(SearchResult searchResult) {
-                        savedAddressSelected(searchResult);
-                    }
+        if(activity instanceof FreshActivity ) {
 
-                    @Override
-                    public void onDeleteClick(SearchResult searchResult) {
-                    }
-                }, true, true, false);
-                listViewSavedLocations.setAdapter(savedPlacesAdapter);
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            if(((FreshActivity) activity).getSuggestAStoreFragment()!=null){
+                listViewRecentAddresses.setVisibility(View.GONE);
+                listViewSavedLocations.setVisibility(View.GONE);
+                scrollViewSuggestions.setVisibility(View.GONE);
+            }else{
+                scrollViewSuggestions.setVisibility(View.VISIBLE);
+                try {
+                    savedPlacesAdapter = new SavedPlacesAdapter(activity, homeUtil.getSavedPlacesWithHomeWork(activity), new SavedPlacesAdapter.Callback() {
+                        @Override
+                        public void onItemClick(SearchResult searchResult) {
+                            savedAddressSelected(searchResult);
+                        }
 
-            try {
-                listViewSavedLocations.setVisibility(View.VISIBLE);
-                listViewRecentAddresses.setVisibility(View.VISIBLE);
-                savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
-					@Override
-					public void onItemClick(SearchResult searchResult) {
+                        @Override
+                        public void onDeleteClick(SearchResult searchResult) {
+                        }
+                    }, true, true, false);
+                    listViewSavedLocations.setAdapter(savedPlacesAdapter);
 
-					    if(canProceedWithUnsavedAddressMode){
-                            if(activity instanceof  FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment() != null){
-                                ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(searchResult);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-                            }else{
-                                onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                        searchResult.getAddress(), searchResult.getId(), searchResult.getName(),searchResult);
-                                if(activity instanceof FreshActivity) {
-                                    GAUtils.event(((FreshActivity) activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES + SELECTED);
+                try {
+                    listViewSavedLocations.setVisibility(View.VISIBLE);
+                    listViewRecentAddresses.setVisibility(View.VISIBLE);
+                    savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
+                        @Override
+                        public void onItemClick(SearchResult searchResult) {
+
+                            if(canProceedWithUnsavedAddressMode){
+                                if(activity instanceof  FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment() != null){
+                                    ((FreshActivity) activity).getAnywhereHomeFragment().setRequestedAddress(searchResult);
+
+                                }else{
+                                    onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
+                                            searchResult.getAddress(), searchResult.getId(), searchResult.getName(),searchResult);
+                                    if(activity instanceof FreshActivity) {
+                                        GAUtils.event(((FreshActivity) activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES + SELECTED);
+                                    }
+                                }
+                                if(activity instanceof FreshActivity){
+                                    ((FreshActivity) activity).getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName()
+                                            , FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                                }
+
+                            }
+                            else {
+                                if(searchResult.getIsConfirmed() == 1){
+                                    onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
+                                            searchResult.getAddress(), searchResult.getId(), searchResult.getName(),searchResult);
+                                    if(activity instanceof FreshActivity) {
+                                        GAUtils.event(((FreshActivity) activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES + SELECTED);
+                                    }
+                                } else {
+                                    goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false, false);
                                 }
                             }
-                            if(activity instanceof FreshActivity){
-                                ((FreshActivity) activity).getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName()
-                                        , FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                            }
-
-                        }
-                        else {
-                            if(searchResult.getIsConfirmed() == 1){
-                                onAddressSelected(String.valueOf(searchResult.getLatitude()), String.valueOf(searchResult.getLongitude()),
-                                        searchResult.getAddress(), searchResult.getId(), searchResult.getName(),searchResult);
-                                if(activity instanceof FreshActivity) {
-                                    GAUtils.event(((FreshActivity) activity).getGaCategory(), DELIVERY_ADDRESS, SUGGESTED_PLACES + SELECTED);
-                                }
-                            } else {
-                                goToPredefinedSearchResultConfirmation(searchResult, Constants.REQUEST_CODE_ADD_NEW_LOCATION, false, false);
-                            }
-                        }
                         }
 
 
-					@Override
-					public void onDeleteClick(SearchResult searchResult) {
-					}
-				}, true, true, false);
+                        @Override
+                        public void onDeleteClick(SearchResult searchResult) {
+                        }
+                    }, true, true, false);
 
-                listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
-            } catch (Exception e) {
-                e.printStackTrace();
+                    listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
-        }
-        else if(activity instanceof AddPlaceActivity){
+
+
+        } else if(activity instanceof AddPlaceActivity){
             listViewRecentAddresses.setVisibility(View.GONE);
             listViewSavedLocations.setVisibility(View.GONE);
             scrollViewSuggestions.setVisibility(View.GONE);

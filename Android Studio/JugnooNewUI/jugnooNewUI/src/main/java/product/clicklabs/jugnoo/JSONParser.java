@@ -574,6 +574,11 @@ public class JSONParser implements Constants {
             String rideEndGoodFeedbackText = jData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
             JSONArray negativeFeedbackReasons = jData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
             JSONArray positiveFeedbackReasons = jData.optJSONArray(KEY_POSITIVE_FEEDBACK_REASONS);
+            JSONArray merchantCategories = null;
+            if(jData.has(MERCHANT_CATEGORIES)){
+                merchantCategories = jData.optJSONArray(MERCHANT_CATEGORIES);
+
+            }
 
             PopupData popupData = null;
             try {
@@ -615,7 +620,7 @@ public class JSONParser implements Constants {
 
             Data.setMenusData(new MenusData(question, orderId, questionType, pendingFeedback, stores, popupData,
                     amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText,
-                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName, 0));
+                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName, 0,0,0,merchantCategories));
 
             try {
                 if(Data.getMenusData().getPromoCoupons() == null){
@@ -642,6 +647,13 @@ public class JSONParser implements Constants {
             String question = jData.optString(KEY_QUESTION, "");
             int questionType = jData.optInt(KEY_QUESTION_TYPE, 0);
             int category = jData.optInt(KEY_MERCHANT_CATEGORY_ID, 0);
+            int addStoreImagesLimit = jData.optInt(ADD_STORE_IMAGES_LIMIT, 0);
+            int showAddStore = jData.optInt(SHOW_ADD_STORE, 0);
+            JSONArray merchantCategories = null;
+            if(jData.has(MERCHANT_CATEGORIES)){
+                 merchantCategories = jData.optJSONArray(MERCHANT_CATEGORIES);
+
+            }
             int pendingFeedback = jData.optInt(KEY_PENDING_FEEDBACK, 0);
             double amount = jData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
             String feedbackDeliveryDate = jData.optString(KEY_FEEDBACK_DATE, "");
@@ -691,7 +703,7 @@ public class JSONParser implements Constants {
 
             Data.setDeliveryCustomerData(new MenusData(question, orderId, questionType, pendingFeedback, stores, popupData,
                     amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText,
-                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName,category));
+                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName,category,addStoreImagesLimit,showAddStore,merchantCategories));
 
             try {
                 if(Data.getDeliveryCustomerData().getPromoCoupons() == null){

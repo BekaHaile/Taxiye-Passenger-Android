@@ -27,6 +27,10 @@ import android.widget.TextView;
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.Picker;
 import com.sabkuchfresh.adapters.FatafatImageAdapter;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.ImageCompression;
@@ -47,6 +51,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
+import retrofit.RetrofitError;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
@@ -99,6 +104,7 @@ public class SuggestStoreFragment extends Fragment {
     private Picker picker;
     private int maxNoImages = 2;
     private MenusResponse.Category selectedCategory ;
+    private FatafatImageAdapter fatafatImageAdapter;
 
 
     @Nullable
@@ -112,29 +118,35 @@ public class SuggestStoreFragment extends Fragment {
 
             @Override
             public void keyboardOpened() {
-                if (!activity.isDeliveryOpenInBackground()) {
-                    activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
+                if (activity.getTopFragment() instanceof SuggestStoreFragment) {
+                    if (!activity.isDeliveryOpenInBackground()) {
+                        activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
+                    }
+                    activity.llPayViewContainer.setVisibility(View.GONE);
                 }
-                activity.llPayViewContainer.setVisibility(View.GONE);
 
             }
 
             @Override
             public void keyBoardClosed() {
-                if (!activity.isDeliveryOpenInBackground()) {
-                    if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                        activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                if(activity.getTopFragment() instanceof SuggestStoreFragment){
+                    if (!activity.isDeliveryOpenInBackground()) {
+                        if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
+                            activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
+                        }
                     }
+                    activity.llPayViewContainer.setVisibility(View.VISIBLE);
                 }
-                activity.llPayViewContainer.setVisibility(View.VISIBLE);
+
 
             }
         };
         // register for keyboard event
         activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
 
-        final List<MenusResponse.Category> categories = activity.getMenusResponse().getCategories();
-        ArrayAdapter<MenusResponse.Category> categoriesAdapter = new ArrayAdapter<MenusResponse.Category>(activity, R.layout.item_spinner_category, categories) {
+        final List<MenusResponse.Category> categories = activity.isDeliveryOpenInBackground()?Data.getDeliveryCustomerData().getMerchantCategoriesList():
+                Data.getMenusData().getMerchantCategoriesList();
+        ArrayAdapter<MenusResponse.Category> categoriesAdapter = new ArrayAdapter<MenusResponse.Category>(activity, R.layout.item_spinner_category,categories) {
 
 
             @NonNull
@@ -173,12 +185,12 @@ public class SuggestStoreFragment extends Fragment {
                         throw new Exception();
                     }
 
-                    if (edtBusinessName.getText().toString().trim().length() == 0) {
+                    if (searchResult==null) {
                         Utils.showToast(activity, activity.getString(R.string.please_select_a_store_address));
                         throw new Exception();
                     }
 
-                    if(selectedCategory==null){
+                    if(spCategory.getSelectedItem()==null || !(spCategory.getSelectedItem() instanceof MenusResponse.Category)){
                         Utils.showToast(activity, activity.getString(R.string.please_select_a_category));
                         throw new Exception();
                     }
@@ -186,7 +198,6 @@ public class SuggestStoreFragment extends Fragment {
 
 
 
-                    DialogPopup.showLoadingDialog(activity,activity.getString(R.string.loading));
 
                     // if we have images to upload attach them with params
                     if (imageObjectList != null && imageObjectList.size() > 0) {
@@ -213,7 +224,7 @@ public class SuggestStoreFragment extends Fragment {
                                     if (output != null) {
                                         for (ImageCompression.CompressedImageModel file : output) {
                                             if (file != null) {
-                                                multipartTypedOutput.addPart(Constants.KEY_ORDER_IMAGES, new TypedFile("image/*", file.getFile()));
+                                                multipartTypedOutput.addPart(Constants.KEY_IMAGES, new TypedFile("image/*", file.getFile()));
                                             }
                                         }
 
@@ -243,22 +254,16 @@ public class SuggestStoreFragment extends Fragment {
         };
 
         // decide whether to show upload image layout
-       /* if(Data.getDeliveryCustomerData()!=null && Data.getDeliveryCustomerData().getFatafatUploadImageInfo()!=null){
-            FatafatUploadImageInfo fatafatUploadImageInfo = Data.getFeedData().getFatafatUploadImageInfo();
-            if(fatafatUploadImageInfo.getShowImageBox()==1){
-                cvUploadImages.setVisibility(View.VISIBLE);
-                maxNoImages = fatafatUploadImageInfo.getImageLimit();
-                cvImages.setVisibility(View.GONE);
-                rvImages.setNestedScrollingEnabled(false);
-            }
-            else {
-                cvUploadImages.setVisibility(View.GONE);
-                cvImages.setVisibility(View.GONE);
-            }
+        if(Data.getDeliveryCustomerData()!=null && Data.getDeliveryCustomerData().getAddStoreImages()>0){
+            cvUploadImages.setVisibility(View.VISIBLE);
+            maxNoImages = Data.getDeliveryCustomerData().getAddStoreImages();
+            cvImages.setVisibility(View.GONE);
+            rvImages.setNestedScrollingEnabled(false);
         } else {
             cvUploadImages.setVisibility(View.GONE);
             cvImages.setVisibility(View.GONE);
-        }*/
+        }
+
 
         return rootView;
     }
@@ -281,9 +286,10 @@ public class SuggestStoreFragment extends Fragment {
             multipartTypedOutput.addPart("longitude",new TypedString(String.valueOf(searchResult.getLongitude())));
         }
 
-        if(selectedCategory!=null){
-            multipartTypedOutput.addPart("merchant_category_id",new TypedString(String.valueOf(selectedCategory.getId())));
-
+        if(spCategory.getSelectedItem()!=null && spCategory.getSelectedItem() instanceof MenusResponse.Category){
+            multipartTypedOutput.addPart("merchant_category_id",new TypedString(String.valueOf(((MenusResponse.Category) spCategory.getSelectedItem()).getId())));
+        }else{
+            return;
         }
         String timings = edtTimings.getText().toString().trim();
         if(timings.length()>0){
@@ -297,7 +303,44 @@ public class SuggestStoreFragment extends Fragment {
 
 
 
+        new ApiCommon<>(activity).showLoader(true).execute(multipartTypedOutput, ApiName.SUGGEST_A_STORE, new APICommonCallback<FeedCommonResponse>() {
+            @Override
+            public boolean onNotConnected() {
+                return false;
+            }
 
+            @Override
+            public boolean onException(Exception e) {
+                return false;
+            }
+
+            @Override
+            public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                Utils.showToast(activity,message);
+                activity.performBackPressed(false);
+
+            }
+
+            @Override
+            public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                return false;
+            }
+
+            @Override
+            public boolean onFailure(RetrofitError error) {
+                return false;
+            }
+
+            @Override
+            public void onNegativeClick() {
+
+            }
+
+            @Override
+            public void onFinish() {
+                activity.getHandler().postDelayed(resetSliderRunnable,500);
+            }
+        });
 
 
 
@@ -317,28 +360,33 @@ public class SuggestStoreFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.tvAddress, R.id.cvUploadImages})
+
+
+    @OnClick({R.id.tvAddress, R.id.llUploadImages, R.id.ivUploadImage})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tvAddress:
-
                 activity.getTransactionUtils().openDeliveryAddressFragment(activity, activity.getRelativeLayoutContainer(), false);
-
                 break;
-            case R.id.cvUploadImages:
+            case R.id.ivUploadImage:
+            case R.id.llUploadImages:
                 pickImages();
+                break;
+            default:
                 break;
         }
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        if(!hidden){
+            activity.fragmentUISetup(this);
+        }
+        super.onHiddenChanged(hidden);
+    }
 
 
-
-
-
-
-
-    /***
+/***
      * Images Functionality
      *
      */
@@ -397,7 +445,7 @@ public class SuggestStoreFragment extends Fragment {
                     ivUploadImage.setVisibility(objectList.size()< maxNoImages ?View.VISIBLE:View.GONE);
                     if(objectList.size()==0){
                         cvImages.setVisibility(View.GONE);
-                        fatafatImageAdapter=null;
+                        fatafatImageAdapter =null;
                         cvUploadImages.setVisibility(View.VISIBLE);
                     }
                 }
@@ -442,4 +490,10 @@ public class SuggestStoreFragment extends Fragment {
 
     }
 
+    private Runnable resetSliderRunnable = new Runnable() {
+        @Override
+        public void run() {
+            paySlider.setSlideInitial();
+        }
+    };
 }

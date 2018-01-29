@@ -2025,6 +2025,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     itemListener.onClickItem(tvSuggestStore,view);
                 }
             });
+            tvSuggestStore.setVisibility(Data.getDeliveryCustomerData().getShowAddStore()?View.VISIBLE:View.GONE);
 
 
         }
