@@ -115,6 +115,7 @@ import com.sabkuchfresh.fragments.NewFeedbackFragment;
 import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
+import com.sabkuchfresh.fragments.SuggestStoreFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsCheckoutFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsHomeFragment;
@@ -1320,6 +1321,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public AnywhereHomeFragment getAnywhereHomeFragment() {
         return (AnywhereHomeFragment) getSupportFragmentManager().findFragmentByTag(AnywhereHomeFragment.class.getName());
     }
+    public SuggestStoreFragment getSuggestAStoreFragment() {
+        return (SuggestStoreFragment) getSupportFragmentManager().findFragmentByTag(SuggestStoreFragment.class.getName());
+    }
 
 
     public RestaurantImageFragment getRestaurantImageFragment() {
@@ -1784,6 +1788,18 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 llSearchCartVis = View.GONE;
                 llPayViewContainerVis = View.VISIBLE;
                 visMinOrder = setMinOrderAmountText(fragment);
+            }else if(fragment instanceof SuggestStoreFragment){
+                topBar.getLlSearchCart().setLayoutTransition(null);
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(Data.getFeedName(this));
+                fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
+                llSearchCartVis = View.GONE;
+                llPayViewContainerVis = View.VISIBLE;
+                visMinOrder = View.GONE;
+
             }
             else if (fragment instanceof FeedHomeFragment || fragment instanceof FeedReserveSpotFragment || fragment instanceof FeedSpotReservedSharingFragment ||
                     fragment instanceof FeedClaimHandleFragment) {
@@ -1911,7 +1927,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             } else if (fragment instanceof MenusFragment
                     || fragment instanceof FreshHomeFragment
                     || fragment instanceof MealFragment
-                    || fragment instanceof AnywhereHomeFragment){
+                    || fragment instanceof AnywhereHomeFragment
+                    || fragment instanceof SuggestStoreFragment){
                 setTitleAlignment(false);
             }
 
@@ -2495,6 +2512,20 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 .add(relativeLayoutContainer.getId(), new ProsHomeFragment(),
                         ProsHomeFragment.class.getName())
                 .addToBackStack(ProsHomeFragment.class.getName())
+                .commitAllowingStateLoss();
+    }
+
+    /**
+     * Adds suggest store fragment
+     */
+    public void addSuggestStoreFragment(){
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                .add(relativeLayoutContainer.getId(),  new SuggestStoreFragment(),
+                        SuggestStoreFragment.class.getName())
+                .addToBackStack(SuggestStoreFragment.class.getName())
+                .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                 .commitAllowingStateLoss();
     }
 

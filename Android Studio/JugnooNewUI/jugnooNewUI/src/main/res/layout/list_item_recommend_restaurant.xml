@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayoutSuggestRestaurant"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/dp_12"
-    android:paddingRight="@dimen/dp_12"
-    android:paddingBottom="@dimen/dp_40"
+    android:paddingTop="@dimen/padding_custom_order_root_layout"
+    android:paddingLeft="@dimen/padding_custom_order_root_layout"
+    android:paddingRight="@dimen/padding_custom_order_root_layout"
+    android:paddingBottom="@dimen/padding_bottom_delivery_home_page"
     android:background="@color/white">
 
     <View
@@ -108,8 +110,8 @@
         android:textSize="@dimen/sp_17"
         android:background="@drawable/capsule_theme_color_selector"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/dp_60"
-        android:layout_marginBottom="@dimen/dp_60"
+        android:layout_marginTop="@dimen/dp_20"
+        android:layout_marginBottom="@dimen/dp_15"
         />
 
 

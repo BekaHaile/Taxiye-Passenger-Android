@@ -72,6 +72,8 @@ public class AddToAddressBookFragment extends Fragment {
     private TextView textViewAddress;
     private EditText editTextLabel, editTextFlatNumber, editTextLandmark;
     private Button bConfirm;
+    private RelativeLayout rlAddressLabels;
+    private boolean showAddressLabels;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,7 +92,11 @@ public class AddToAddressBookFragment extends Fragment {
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         initComponents();
-
+        showAddressLabels = !(activity instanceof FreshActivity && ((FreshActivity) activity).getSuggestAStoreFragment()!=null);
+        if(!showAddressLabels){
+            rlAddressLabels.setVisibility(View.GONE);
+            editTextLabel.setVisibility(View.GONE);
+        }
         return rootView;
     }
 
@@ -128,6 +134,7 @@ public class AddToAddressBookFragment extends Fragment {
 
     private void initComponents() {
         editTextLabel = (EditText) rootView.findViewById(R.id.editTextLabel);
+        rlAddressLabels = (RelativeLayout) rootView.findViewById(R.id.rlAddressLabels);
         textViewAddress = (TextView) rootView.findViewById(R.id.textViewAddress);
         editTextFlatNumber = (EditText) rootView.findViewById(R.id.editTextFlatNumber);
         editTextLandmark = (EditText) rootView.findViewById(R.id.editTextLandmark);
@@ -335,12 +342,14 @@ public class AddToAddressBookFragment extends Fragment {
         relativeLayoutTypeWork.setVisibility(View.VISIBLE);
         relativeLayoutTypeOther.setVisibility(View.VISIBLE);
         editTextLabel.setVisibility(View.GONE);
-        if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
-            label = activity.getString(R.string.home);
-        } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
-            label = activity.getString(R.string.work);
-        } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION){
-            editTextLabel.setVisibility(View.VISIBLE);
+        if (showAddressLabels) {
+            if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
+                label = activity.getString(R.string.home);
+            } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
+                label = activity.getString(R.string.work);
+            } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION){
+                editTextLabel.setVisibility(View.VISIBLE);
+            }
         }
         lastLabel = label;
         setAddressTypeUI(label);
@@ -390,18 +399,20 @@ public class AddToAddressBookFragment extends Fragment {
 
     private boolean fieldsAreFilled() {
 
-        if(editTextLabel.getText().toString().trim().length() == 0){
-            if(activity instanceof FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment() != null && ((FreshActivity)activity).getAnywhereHomeFragment().isPickUpAddressRequested()){
-                return true;
-            }
+        if (showAddressLabels) {
+            if(editTextLabel.getText().toString().trim().length() == 0){
+                if(activity instanceof FreshActivity && ((FreshActivity)activity).getAnywhereHomeFragment() != null && ((FreshActivity)activity).getAnywhereHomeFragment().isPickUpAddressRequested()){
+                    return true;
+                }
 
-            editTextLabel.requestFocus();
-            if(editTextLabel.getVisibility() == View.GONE){
-                editTextLabel.setVisibility(View.VISIBLE);
-            }
-            editTextLabel.setError("Required field");
+                editTextLabel.requestFocus();
+                if(editTextLabel.getVisibility() == View.GONE){
+                    editTextLabel.setVisibility(View.VISIBLE);
+                }
+                editTextLabel.setError("Required field");
 
-            return false;
+                return false;
+            }
         }
         if(editTextFlatNumber.getText().toString().trim().length() == 0){
             editTextFlatNumber.requestFocus();
@@ -610,6 +621,8 @@ public class AddToAddressBookFragment extends Fragment {
                 FreshActivity freshActivity = (FreshActivity) activity;
                 if(freshActivity.getAnywhereHomeFragment() != null){
                     freshActivity.getAnywhereHomeFragment().setRequestedAddress(searchResult);
+                }else if(freshActivity.getSuggestAStoreFragment() != null){
+                    freshActivity.getSuggestAStoreFragment().setAddress(searchResult);
                 }else{
                     freshActivity.setSelectedAddressId(searchResultId);
                     freshActivity.setSelectedAddressType(label);
@@ -629,15 +642,21 @@ public class AddToAddressBookFragment extends Fragment {
             }
 
 
-            if(activity instanceof AddPlaceActivity) {
-                ((AddPlaceActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
-            } else if(activity instanceof FreshActivity) {
-                if(label.length() > 0) {
-                    ((FreshActivity) activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
-                } else{
-                    if(deliveryAddressesFragment != null) {
-                        activity.getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            if (showAddressLabels) {
+                if(activity instanceof AddPlaceActivity) {
+                    ((AddPlaceActivity)activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
+                } else if(activity instanceof FreshActivity) {
+                    if(label.length() > 0) {
+                        ((FreshActivity) activity).hitApiAddHomeWorkAddress(searchResult, false, otherId, editThisAddress, placeRequestCode);
+                    } else{
+                        if(deliveryAddressesFragment != null) {
+                            activity.getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                        }
                     }
+                }
+            }else{
+                if(deliveryAddressesFragment != null) {
+                    activity.getSupportFragmentManager().popBackStack(DeliveryAddressesFragment.class.getName(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 }
             }
 

@@ -105,6 +105,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int ITEM_CUSTOM_ORDER = 13;
     private static final int NEW_VIEW_ORDER_ITEM = 14;
     private static final int ITEM_BANNER_FATAFAT_RESTAURANTS = 15;
+    private static final int ITEM_ADD_STORE = 16;
     private CategoriesData categoriesData;
     private ArrayList<Object> collapsedRecentOrdersData = new ArrayList<>();
     private int posFromWhichOrdersStart;
@@ -125,7 +126,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private BannerInfosModel mBannerInfosModel;
     private DeliveryDivider mBannerDivider;
     private int mBannerPositionInList =-1;
-
+    private FormAddRestaurantModel formAddRestaurantModel;
 
 
     public DeliveryHomeAdapter(FreshActivity activity, Callback callback, RecyclerView recyclerView, ArrayList<String> possibleStatus, ArrayList<String> possibleMealsStatus,ArrayList<String> possibleFatafatStatus) {
@@ -288,18 +289,36 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         // no more pages case
-         if(!hasMorePages && menusResponse.getServiceUnavailable() != 1) {
+         if(!hasMorePages) {
 
 
-            boolean isCustomOrderModel = activity.isDeliveryOpenInBackground() && activity.getMenusFragment().chatAvailable;
-             String categoryName = activity.getCategoryOpened()==null?null:activity.getCategoryOpened().getCategoryName();
-             if(categoryName==null){
-                 categoryName=activity.isDeliveryOpenInBackground()?"Stores":"Restaurants";
+             boolean showAddStoreLayout = activity.isDeliveryOpenInBackground()&&Data.getDeliveryCustomerData()!=null && Data.getDeliveryCustomerData().getShowAddStore();
+
+             if(menusResponse.getServiceUnavailable()!=1){
+                 boolean isCustomOrderModel = activity.isDeliveryOpenInBackground() && activity.getMenusFragment().chatAvailable;
+                 String categoryName = activity.getCategoryOpened()==null?null:activity.getCategoryOpened().getCategoryName();
+                 if(categoryName==null){
+                     categoryName=activity.isDeliveryOpenInBackground()?"Stores":"Restaurants";
+                 }
+
+                 if(isCustomOrderModel || !showAddStoreLayout){//Don't show suggest store with restaurant form model if showAddStore is enabled by back end.
+                     if(dataToDisplay!=null && dataToDisplay.size()>1){
+                         dataToDisplay.add(new  DeliveryDivider());
+                     }
+                     formAddRestaurantModel = FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),categoryName, isCustomOrderModel,!showAddStoreLayout);
+                     dataToDisplay.add(formAddRestaurantModel);
+
+                 }
+            }
+
+             if(showAddStoreLayout) {
+                 if(dataToDisplay!=null && dataToDisplay.size()>1){
+                     dataToDisplay.add(new  DeliveryDivider());
+
+                 }
+                 dataToDisplay.add(AddStoreModel.getInstance());
              }
-             if(dataToDisplay!=null && dataToDisplay.size()>1){
-                 dataToDisplay.add(new  DeliveryDivider());
-             }
-             dataToDisplay.add(FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),categoryName, isCustomOrderModel));
+
 
          }
 
@@ -479,6 +498,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case ITEM_CUSTOM_ORDER :
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout_custom_order, parent, false);
                 return new ViewHolderCustomOrder(v, this);
+            case ITEM_ADD_STORE :
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout_custom_order, parent, false);
+                return new AddStoreViewHolder(v, this);
             case BLANK_LAYOUT :
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_footer, parent, false);
                 return new ProgressBarViewHolder(v);
@@ -837,17 +859,26 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.textViewNoMenus.setText(((NoVendorModel)dataToDisplay.get(position)).getMessage());
         }else if (mholder instanceof ViewHolderRestaurantForm) {
             ViewHolderRestaurantForm titleHolder = (ViewHolderRestaurantForm) mholder;
-            titleHolder.etRestaurantName.setText(getFormItemModel().getRestaurantName());
-            titleHolder.etLocality.setText(getFormItemModel().getLocality());
-            titleHolder.etTelephone.setText(getFormItemModel().getTelephone());
+            FormAddRestaurantModel formAddRestaurantModel = (FormAddRestaurantModel) dataToDisplay.get(position);
+            titleHolder.etRestaurantName.setText(formAddRestaurantModel.getRestaurantName());
+            titleHolder.etLocality.setText(formAddRestaurantModel.getLocality());
+            titleHolder.etTelephone.setText(formAddRestaurantModel.getTelephone());
             titleHolder.tvCouldNotFind.setText(activity.getString(R.string.could_not_find_favorite_restaurant_format, getFormItemModel().getCategoryName()));
             titleHolder.etRestaurantName.setHint(activity.getString(R.string.restaurant_name_star_format, getFormItemModel().getCategoryName()));
             titleHolder.etRestaurantName.clearFocus();
             titleHolder.etLocality.clearFocus();
             titleHolder.etTelephone.clearFocus();
+            setPaddingIfLastElement(titleHolder.rootLayoutSuggestRestaurant, formAddRestaurantModel);
+
         }else if (mholder instanceof ViewHolderCustomOrder) {
             ViewHolderCustomOrder titleHolder = (ViewHolderCustomOrder) mholder;
-            titleHolder.tVCustomText.setText(activity.getString(R.string.could_not_find_favorite_restaurant_format, getFormItemModel().getCategoryName()));
+            if(dataToDisplay.get(position) instanceof FormAddRestaurantModel){
+                FormAddRestaurantModel formAddRestaurantModel = (FormAddRestaurantModel) dataToDisplay.get(position);
+                titleHolder.tVCustomText.setText(activity.getString(R.string.could_not_find_favorite_restaurant_format, formAddRestaurantModel.getCategoryName()));
+                setPaddingIfLastElement(titleHolder.rootLayoutCustomOrder, formAddRestaurantModel);
+            }
+
+
 
            /* titleHolder.etRestaurantName.setText(getFormItemModel().getRestaurantName());
             titleHolder.etLocality.setText(getFormItemModel().getLocality());
@@ -858,6 +889,12 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             titleHolder.etLocality.clearFocus();
             titleHolder.etTelephone.clearFocus();*/
         }
+    }
+
+    private void setPaddingIfLastElement(View rootLayout, FormAddRestaurantModel formAddRestaurantModel) {
+        int normalPadding =  activity.getResources().getDimensionPixelSize(R.dimen.padding_custom_order_root_layout);
+        int paddingBottom = formAddRestaurantModel.isIncludePaddingAtBottom()?activity.getResources().getDimensionPixelSize(R.dimen.padding_bottom_delivery_home_page):normalPadding;
+        rootLayout.setPadding(normalPadding,normalPadding,normalPadding,paddingBottom);
     }
 
     private void setHolderMethod(ViewOrderStatus statusHolder, RecentOrder recentOrder) {
@@ -1034,6 +1071,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return ((FormAddRestaurantModel)object).isCustomOrderModel?ITEM_CUSTOM_ORDER:FORM_ITEM;
 
         }
+        if (object instanceof AddStoreModel) {
+            return  ITEM_ADD_STORE;
+
+        }
 
 
         if(object instanceof BlankFooterModel)
@@ -1114,9 +1155,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     callback.apiRecommendRestaurant(getFormItemModel().getCategoryId(), getFormItemModel().getRestaurantName(),getFormItemModel().getLocality(),getFormItemModel().getTelephone());
                     break;
                 case R.id.bOrderViaFatafat:
-                    GAUtils.event(GACategory.FATAFAT3, GAAction.CUSTOM_ORDER, GAAction.LABEL_ORDER_VIA_FATAFAT);
-                    activity.switchOffering(Config.getFeedClientId());
+                    RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(parentView);
+                    if(viewHolder instanceof AddStoreViewHolder){
+                        activity.addSuggestStoreFragment();
+                    }else{
+                        GAUtils.event(GACategory.FATAFAT3, GAAction.CUSTOM_ORDER, GAAction.LABEL_ORDER_VIA_FATAFAT);
+                        activity.switchOffering(Config.getFeedClientId());
+                    }
                     break;
+
             }
         }
     }
@@ -1147,10 +1194,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public void resetForm() {
+        try {
             if(getFormItemModel()!=null){
                 getFormItemModel().clearStrings();
-                notifyItemChanged(dataToDisplay.size()-1);
+                notifyItemChanged(dataToDisplay.indexOf(formAddRestaurantModel));
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -1464,9 +1515,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView tvCouldNotFind, tvRecommend;
         EditText etRestaurantName, etLocality, etTelephone;
         Button bSubmit,bOrderViaFatafat;
+        View rootLayoutSuggestRestaurant;
 
         ViewHolderRestaurantForm(final View itemView, final ItemListener itemListener) {
             super(itemView);
+            rootLayoutSuggestRestaurant=itemView.findViewById(R.id.rootLayoutSuggestRestaurant);
             tvCouldNotFind = (TextView) itemView.findViewById(R.id.tvCouldNotFind);
             tvCouldNotFind.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
             tvRecommend = (TextView) itemView.findViewById(R.id.tvRecommend);
@@ -1618,15 +1671,17 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         private String categoryName;
         private int categoryId;
         private boolean isCustomOrderModel;
+        private boolean includePaddingAtBottom;
 
         private FormAddRestaurantModel() {
         }
-        public static FormAddRestaurantModel getInstance(int categoryId, String categoryName, boolean isCustomOrderModel){
+        public static FormAddRestaurantModel getInstance(int categoryId, String categoryName, boolean isCustomOrderModel,boolean includePaddingAtBottom){
             if(formAddRestaurantModel ==null)
                 formAddRestaurantModel = new FormAddRestaurantModel();
             formAddRestaurantModel.setCategoryName(categoryName);
             formAddRestaurantModel.setCategoryId(categoryId);
             formAddRestaurantModel.setCustomOrderModel(isCustomOrderModel);
+            formAddRestaurantModel.setIncludePaddingAtBottom(includePaddingAtBottom);
             return formAddRestaurantModel;
         }
 
@@ -1682,6 +1737,22 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public boolean isCustomOrderModel() {
             return isCustomOrderModel;
+        }
+
+        public boolean isIncludePaddingAtBottom() {
+            return includePaddingAtBottom;
+        }
+
+        public void setIncludePaddingAtBottom(boolean includePaddingAtBottom) {
+            this.includePaddingAtBottom = includePaddingAtBottom;
+        }
+    }
+
+    private static class AddStoreModel{
+        private static AddStoreModel addStoreModel;
+        public static AddStoreModel getInstance() {
+            if(addStoreModel==null) addStoreModel = new AddStoreModel();
+            return addStoreModel;
         }
     }
 
@@ -1920,14 +1991,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
     public FormAddRestaurantModel getFormItemModel(){
-        if(dataToDisplay==null || dataToDisplay.size()==0){
-            return null;
-        }
 
-        if(dataToDisplay.get(dataToDisplay.size()-1) instanceof FormAddRestaurantModel){
-            return (FormAddRestaurantModel) dataToDisplay.get(dataToDisplay.size()-1);
-        }
-        return null;
+        return formAddRestaurantModel;
+
+
+
 
 
     }
@@ -2000,13 +2068,18 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private class ViewHolderCustomOrder extends RecyclerView.ViewHolder {
 
-        private TextView tVCustomText;
+        private TextView tVCustomText, tvlabelDescription;
+        View rootLayoutCustomOrder;
         private Button btnCustomOrder;
         public ViewHolderCustomOrder(final View view, final ItemListener itemListener) {
             super(view);
             btnCustomOrder= (Button) view.findViewById(R.id.bOrderViaFatafat);
+            rootLayoutCustomOrder=  view.findViewById(R.id.rootLayoutCustomOrder);
             tVCustomText= (TextView) view.findViewById(R.id.tvCustomText);
+            tvlabelDescription= (TextView) view.findViewById(R.id.label_description);
             tVCustomText.setTypeface(tVCustomText.getTypeface(),Typeface.BOLD);
+            btnCustomOrder.setTypeface(btnCustomOrder.getTypeface(),Typeface.BOLD);
+
             btnCustomOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -2015,8 +2088,44 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
 
 
+
+
+
+        }
+
+        public TextView gettVCustomText() {
+            return tVCustomText;
+        }
+
+        public Button getBtnCustomOrder() {
+            return btnCustomOrder;
+        }
+
+        public TextView getTvlabelDescription() {
+            return tvlabelDescription;
         }
     }
+
+    private class AddStoreViewHolder extends ViewHolderCustomOrder{
+
+        public AddStoreViewHolder(final View view, final ItemListener itemListener) {
+            super(view, itemListener);
+            getTvlabelDescription().setVisibility(View.GONE);
+            gettVCustomText().setText(R.string.label_add_store_text);
+            getBtnCustomOrder().setText(R.string.btn_text_suggest_store);
+            getBtnCustomOrder().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    itemListener.onClickItem(v,view);
+
+                }
+            });
+
+
+        }
+    }
+
 
     private class OutOfRadiusBanner {
     }

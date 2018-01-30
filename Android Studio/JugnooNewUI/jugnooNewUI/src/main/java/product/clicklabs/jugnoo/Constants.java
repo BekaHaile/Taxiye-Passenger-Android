@@ -803,6 +803,9 @@ public interface Constants {
     String KEY_ORDER_MODE = "order_mode";
     String KEY_LOCATE_MODE = "locate_mode";
     String KEY_MERCHANT_CATEGORY_ID = "merchant_category_id";
+    String ADD_STORE_IMAGES_LIMIT = "add_store_images_limit";
+    String SHOW_ADD_STORE = "show_add_store";
+    String MERCHANT_CATEGORIES = "merchant_categories";
     String KEY_NOT_SEND_MENU = "not_send_menu";
     String KEY_FUGU_CHANNEL_ID = "fugu_channel_id";
     String KEY_FUGU_CHANNEL_NAME = "fugu_channel_name";

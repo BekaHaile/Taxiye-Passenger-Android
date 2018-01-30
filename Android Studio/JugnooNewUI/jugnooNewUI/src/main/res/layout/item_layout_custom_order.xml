@@ -2,8 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:paddingTop="10dp"
-    android:paddingBottom="120dp"
+    android:paddingTop="@dimen/padding_custom_order_root_layout"
+    android:paddingRight="@dimen/padding_custom_order_root_layout"
+    android:paddingLeft="@dimen/padding_custom_order_root_layout"
+    android:id="@+id/rootLayoutCustomOrder"
+    android:paddingBottom="@dimen/padding_bottom_delivery_home_page"
     android:background="@android:color/white"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -25,10 +28,12 @@
 
 
     <TextView
+        android:id="@+id/label_description"
         app:typekitFont="@string/maven"
+        android:visibility="visible"
         android:text="@string/label_custom_order"
         android:gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:textSize="14.5sp"
         android:textColor="@color/text_color_light"
         android:layout_gravity="center"
@@ -43,12 +48,13 @@
         android:layout_height="@dimen/dp_50"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="@dimen/dp_15"
-        android:layout_marginTop="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_20"
         android:background="@drawable/capsule_theme_color_selector"
         android:text="@string/action_create_custom_order"
         android:textAllCaps="true"
         android:textColor="@android:color/white"
         android:textSize="@dimen/sp_16"
         app:typekitFont="@string/maven" />
+
 
 </LinearLayout>

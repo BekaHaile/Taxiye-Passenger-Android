@@ -8,21 +8,23 @@ import retrofit.RetrofitError;
  * Created by Parminder Singh on 3/28/17.
  */
 
-public interface APICommonCallback<T extends FeedCommonResponse> {
+public abstract class APICommonCallback<T extends FeedCommonResponse> {
 
-    boolean onNotConnected();
+    public abstract boolean onNotConnected();
 
-    boolean onException(Exception e);
-
-
-    void  onSuccess(T t,String message,int flag);
-
-    boolean onError(T t,String message,int flag);
-
-    boolean onFailure(RetrofitError error);
+    public abstract boolean onException(Exception e);
 
 
-    void onNegativeClick();
+    public abstract void onSuccess(T t, String message, int flag);
+
+    public abstract boolean onError(T t, String message, int flag);
+
+    public abstract boolean onFailure(RetrofitError error);
 
 
+    public abstract void onNegativeClick();
+
+
+    public void onFinish() {
+    }
 }

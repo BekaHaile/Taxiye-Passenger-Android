@@ -105,6 +105,11 @@ public interface MenusApiService {
 	void suggestRestaurant(@FieldMap Map<String, String> params,
 								  Callback<SettleUserDebt> callback);
 
+
+	@POST("/v1/customer/suggest_restaurant")
+	void suggestStore(@Body MultipartTypedOutput params,
+								  Callback<FeedCommonResponse> callback);
+
 	@FormUrlEncoded
 	@POST("/v1/restaurant/fetch_feedbacks")
 	void restaurantFetchFeedbacks(@FieldMap Map<String, String> params,
