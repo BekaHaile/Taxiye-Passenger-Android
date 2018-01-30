@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/menu_item_selector_color_F7"
+    android:layout_marginBottom="@dimen/height_pay_slider"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
@@ -421,6 +422,9 @@
     </LinearLayout>
 
 </ScrollView>
+
+
+
 
     <View
         android:layout_width="match_parent"

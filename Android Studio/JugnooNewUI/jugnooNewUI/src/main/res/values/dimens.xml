@@ -886,5 +886,6 @@
     <dimen name="dp_130">130dp</dimen>
     <dimen name="padding_bottom_delivery_home_page">120dp</dimen>
     <dimen name="padding_custom_order_root_layout">10dp</dimen>
+    <dimen name="height_pay_slider">54dp</dimen>
 
 </resources>
