@@ -9,6 +9,7 @@ import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -66,6 +67,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class SuggestStoreFragment extends Fragment {
 
+    public static final int ID_SELECT_CATEGORY = -1;
     @Bind(R.id.edtBusinessName)
     EditText edtBusinessName;
     @Bind(R.id.tvAddress)
@@ -106,8 +108,7 @@ public class SuggestStoreFragment extends Fragment {
     private Picker picker;
     private int maxNoImages ;
     private FatafatImageAdapter fatafatImageAdapter;
-    private MenusResponse.Category categorySelected ;
-
+    private List<MenusResponse.Category> categories;
 
 
     @Nullable
@@ -147,17 +148,31 @@ public class SuggestStoreFragment extends Fragment {
         // register for keyboard event
         activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
 
-        final List<MenusResponse.Category> categories = activity.isDeliveryOpenInBackground()?Data.getDeliveryCustomerData().getMerchantCategoriesList():
-                Data.getMenusData().getMerchantCategoriesList();
-        ArrayAdapter<MenusResponse.Category> categoriesAdapter = new ArrayAdapter<MenusResponse.Category>(activity, R.layout.item_spinner_category,categories) {
 
+        categories = new ArrayList<>();
+        categories.add(0,new MenusResponse.Category(ID_SELECT_CATEGORY, getString(R.string.hint_spinner_add_store)));
+       List<MenusResponse.Category> merchantCategories = activity.isDeliveryOpenInBackground()? Data.getDeliveryCustomerData().getMerchantCategoriesList():
+                Data.getMenusData().getMerchantCategoriesList();
+
+       if(merchantCategories!=null){
+           categories.addAll(merchantCategories);
+       }
+        ArrayAdapter<MenusResponse.Category> categoriesAdapter = new ArrayAdapter<MenusResponse.Category>(activity, R.layout.item_spinner_category, categories) {
+
+
+            @Override
+            public boolean isEnabled(int position) {
+                return position!=0;
+            }
 
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
 
+
                 View view = super.getView(position, convertView, parent);
+                ((TextView) view).setTextColor(ContextCompat.getColor(activity,position==0?R.color.text_color_hint_anywhere:R.color.text_color));
                 ((TextView) view).setText(categories.get(position).getCategoryName());
 
                 return view;
@@ -168,6 +183,7 @@ public class SuggestStoreFragment extends Fragment {
             public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
                 View view = super.getDropDownView(position, convertView, parent);
+                ((TextView) view).setTextColor(ContextCompat.getColor(activity,position==0?R.color.text_color_hint_anywhere:R.color.text_color));
                 ((TextView) view).setText(categories.get(position).getCategoryName());
                 return view;
 
@@ -177,12 +193,8 @@ public class SuggestStoreFragment extends Fragment {
         };
 //        Utils.setMaxHeightToDropDown(spCategory,activity.getResources().getDimensionPixelSize(R.dimen.dp_200));
         spCategory.setAdapter(categoriesAdapter);
-       /* spCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                categorySelected = (MenusResponse.Category) spCategory.getSelectedItem();
-            }
-        });*/
+
+
         paySlider = new PaySlider(activity.llPayViewContainer, activity.getString(R.string.add_store), activity.getString(R.string.swipe_right_to_add)) {
             @Override
             public void onPayClick() {
@@ -198,17 +210,18 @@ public class SuggestStoreFragment extends Fragment {
                         throw new Exception();
                     }
 
+                    if(spCategory.getSelectedItem()==null || !(spCategory.getSelectedItem() instanceof MenusResponse.Category) || ((MenusResponse.Category) spCategory.getSelectedItem()).getId()==ID_SELECT_CATEGORY){
+                        Utils.showToast(activity, activity.getString(R.string.please_select_a_category));
+                        throw new Exception();
+                    }
 
-                    if (edtPhone.getText().toString().trim().length() == 0) {
+                    if (edtPhone.getText().toString().trim().length() < 10) {
                         Utils.showToast(activity, activity.getString(R.string.please_add_phone_number));
                         throw new Exception();
                     }
 
 
-                    if(spCategory.getSelectedItem()==null || !(spCategory.getSelectedItem() instanceof MenusResponse.Category)){
-                        Utils.showToast(activity, activity.getString(R.string.please_select_a_category));
-                        throw new Exception();
-                    }
+
 
 
 
