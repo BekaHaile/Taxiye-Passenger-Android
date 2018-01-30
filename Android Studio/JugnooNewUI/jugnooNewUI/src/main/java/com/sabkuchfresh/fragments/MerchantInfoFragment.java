@@ -531,7 +531,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         }
 
                         GAUtils.event(GACategory.FATAFAT3, GAAction.RESTAURANT_DETAIL, GAAction.LABEL_ORDER_VIA_FATAFAT);
-                        activity.setOrderViaChatData(new FreshActivity.OrderViaChatData(activity.getVendorOpened().getLatLng(), activity.getVendorOpened().getAddress(), activity.getVendorOpened().getName()));
+                        activity.setOrderViaChatData(new FreshActivity.OrderViaChatData(activity.getVendorOpened().getLatLng(), activity.getVendorOpened().getAddress(), activity.getVendorOpened().getName(), activity.getVendorOpened().getRestaurantId()));
                         activity.switchOffering(Config.getFeedClientId());
                         return;
                     }

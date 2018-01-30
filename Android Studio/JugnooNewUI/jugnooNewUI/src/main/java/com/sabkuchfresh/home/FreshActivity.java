@@ -4344,22 +4344,25 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         private String destinationAddress;
         private String restaurantName;
         private String cartText;
+        private int restaurantId;
 
         public String getCartText() {
             return cartText;
         }
 
-        public OrderViaChatData(LatLng destinationlatLng, String destinationAddress, String restaurantName, String cartText) {
+        public OrderViaChatData(LatLng destinationlatLng, String destinationAddress, String restaurantName, String cartText,int restaurantId) {
             this.destinationlatLng = destinationlatLng;
             this.destinationAddress = destinationAddress;
             this.restaurantName = restaurantName;
             this.cartText = cartText;
+            this.restaurantId = restaurantId;
         }
 
-        public OrderViaChatData(LatLng destinationlatLng, String destinationAddress, String restaurantName) {
+        public OrderViaChatData(LatLng destinationlatLng, String destinationAddress, String restaurantName,int restaurantId) {
             this.destinationlatLng = destinationlatLng;
             this.destinationAddress = destinationAddress;
             this.restaurantName = restaurantName;
+            this.restaurantId = restaurantId;
         }
 
 
@@ -4382,6 +4385,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         public String getRestaurantName() {
             return restaurantName;
+        }
+
+        public int getRestaurantId() {
+            return restaurantId;
         }
     }
     private OrderViaChatData orderViaChat ;

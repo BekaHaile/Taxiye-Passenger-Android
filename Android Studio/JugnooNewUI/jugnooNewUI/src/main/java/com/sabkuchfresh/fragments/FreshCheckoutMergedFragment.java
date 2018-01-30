@@ -3781,7 +3781,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
 
-        activity.setOrderViaChatData(new FreshActivity.OrderViaChatData(activity.getVendorOpened().getLatLng(), activity.getVendorOpened().getAddress(), activity.getVendorOpened().getName(),cartString));
+        activity.setOrderViaChatData(new FreshActivity.OrderViaChatData(activity.getVendorOpened().getLatLng(), activity.getVendorOpened().getAddress(), activity.getVendorOpened().getName(),cartString,activity.getVendorOpened().getRestaurantId()));
         activity.switchOffering(Config.getFeedClientId());
     }
 }

@@ -204,6 +204,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private FatafatImageAdapter fatafatImageAdapter;
     private int maxNoImages;
     private ImageCompression imageCompressionTask;
+    private FreshActivity.OrderViaChatData orderViaChatData;
 
     public boolean isPickUpAddressRequested() {
         return isPickUpAddressRequested;
@@ -342,7 +343,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
 
         if (activity.getOrderViaChat() != null) {
-            FreshActivity.OrderViaChatData orderViaChatData = activity.getOrderViaChat();
+            orderViaChatData = activity.getOrderViaChat();
 
             if (orderViaChatData.getCartText() != null) {
                 isOrderViaCheckoutFragment = true;
@@ -752,8 +753,9 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             params.addPart(Constants.KEY_FROM_LATITUDE, new TypedString("0"));
             params.addPart(Constants.KEY_FROM_LONGITUDE, new TypedString("0"));
         }
-        if (isOrderViaCheckoutFragment) {
+        if (isOrderViaCheckoutFragment || isOrderViaRestaurantDetail) {
             params.addPart(Constants.CATEGORY, new TypedString("1"));
+            if(orderViaChatData!=null)params.addPart(Constants.KEY_RESTAURANT_ID,new TypedString(String.valueOf(orderViaChatData.getRestaurantId())));
         }
 
         params.addPart(Constants.KEY_TO_ADDRESS, new TypedString(deliveryAddress.getAddress()));
