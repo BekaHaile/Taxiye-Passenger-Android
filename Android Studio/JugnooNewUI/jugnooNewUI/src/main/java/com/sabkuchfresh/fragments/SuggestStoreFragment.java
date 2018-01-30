@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.MenuRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -102,9 +104,10 @@ public class SuggestStoreFragment extends Fragment {
     public static final int REQUEST_CODE_SELECT_IMAGES= 100;
     private String[] permissionsRequest;
     private Picker picker;
-    private int maxNoImages = 2;
-    private MenusResponse.Category selectedCategory ;
+    private int maxNoImages ;
     private FatafatImageAdapter fatafatImageAdapter;
+    private MenusResponse.Category categorySelected ;
+
 
 
     @Nullable
@@ -156,6 +159,7 @@ public class SuggestStoreFragment extends Fragment {
 
                 View view = super.getView(position, convertView, parent);
                 ((TextView) view).setText(categories.get(position).getCategoryName());
+
                 return view;
 
             }
@@ -168,9 +172,17 @@ public class SuggestStoreFragment extends Fragment {
                 return view;
 
             }
+
+
         };
 //        Utils.setMaxHeightToDropDown(spCategory,activity.getResources().getDimensionPixelSize(R.dimen.dp_200));
         spCategory.setAdapter(categoriesAdapter);
+       /* spCategory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                categorySelected = (MenusResponse.Category) spCategory.getSelectedItem();
+            }
+        });*/
         paySlider = new PaySlider(activity.llPayViewContainer, activity.getString(R.string.add_store), activity.getString(R.string.swipe_right_to_add)) {
             @Override
             public void onPayClick() {
