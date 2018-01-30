@@ -26,6 +26,7 @@ import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.Spanned;
 import android.util.Base64;
 import android.util.DisplayMetrics;
@@ -925,6 +926,8 @@ public class Utils {
         newFilters[editFilters.length] = new InputFilter.AllCaps();
         editText.setFilters(newFilters);
     }
+
+
     public static void setMaxHeightToDropDown(View spinner,int height){
         try {
             Field popup = Spinner.class.getDeclaredField("mPopup");

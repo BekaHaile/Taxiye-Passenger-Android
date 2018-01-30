@@ -180,15 +180,18 @@ public class SuggestStoreFragment extends Fragment {
                         Utils.showToast(activity, activity.getString(R.string.please_enter_business_name));
                         throw new Exception();
                     }
-                    if (edtPhone.getText().toString().trim().length() == 0) {
-                        Utils.showToast(activity, activity.getString(R.string.please_add_phone_number));
-                        throw new Exception();
-                    }
 
                     if (searchResult==null) {
                         Utils.showToast(activity, activity.getString(R.string.please_select_a_store_address));
                         throw new Exception();
                     }
+
+
+                    if (edtPhone.getText().toString().trim().length() == 0) {
+                        Utils.showToast(activity, activity.getString(R.string.please_add_phone_number));
+                        throw new Exception();
+                    }
+
 
                     if(spCategory.getSelectedItem()==null || !(spCategory.getSelectedItem() instanceof MenusResponse.Category)){
                         Utils.showToast(activity, activity.getString(R.string.please_select_a_category));
