@@ -101,6 +101,7 @@
                 android:background="?attr/selectableItemBackground"
                 android:gravity="start|center_vertical"
                 android:hint="@string/hint_select_address"
+                android:drawableRight="@drawable/ic_arrow_grey"
                 android:minHeight="@dimen/dp_50"
                 android:padding="@dimen/dp_10"
                 android:textColor="@color/text_color"

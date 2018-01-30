@@ -1450,7 +1450,7 @@
     <string name="txt_category">Category</string>
     <string name="txt_timings">Timings</string>
     <string name="txt_notes">Notes</string>
-    <string name="hint_enter_notes">Enter Notes</string>
+    <string name="hint_enter_notes">Enter notes</string>
     <string name="txt_suggest_store">Suggest Store</string>
     <string name="hint_timings">Enter opening and closing time</string>
     <string name="add_store">Add Store</string>

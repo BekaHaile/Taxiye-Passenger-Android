@@ -297,15 +297,21 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
              if(categoryName==null){
                  categoryName=activity.isDeliveryOpenInBackground()?"Stores":"Restaurants";
              }
-             if(dataToDisplay!=null && dataToDisplay.size()>1){
-                 dataToDisplay.add(new  DeliveryDivider());
-             }
 
              boolean showAddStoreLayout = activity.isDeliveryOpenInBackground()&&Data.getDeliveryCustomerData()!=null && Data.getDeliveryCustomerData().getShowAddStore();
-             formAddRestaurantModel = FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),categoryName, isCustomOrderModel,!showAddStoreLayout);
-             dataToDisplay.add(formAddRestaurantModel);
+             if(isCustomOrderModel || !showAddStoreLayout){//Don't show suggest store with restaurant form model if showAddStore is enabled by back end.
+                 if(dataToDisplay!=null && dataToDisplay.size()>1){
+                     dataToDisplay.add(new  DeliveryDivider());
+                 }
+                 formAddRestaurantModel = FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),categoryName, isCustomOrderModel,!showAddStoreLayout);
+                 dataToDisplay.add(formAddRestaurantModel);
+
+             }
              if(showAddStoreLayout) {
-                 dataToDisplay.add(new  DeliveryDivider());
+                 if(dataToDisplay!=null && dataToDisplay.size()>1){
+                     dataToDisplay.add(new  DeliveryDivider());
+
+                 }
                  dataToDisplay.add(AddStoreModel.getInstance());
              }
 
@@ -2068,6 +2074,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tVCustomText= (TextView) view.findViewById(R.id.tvCustomText);
             tvlabelDescription= (TextView) view.findViewById(R.id.label_description);
             tVCustomText.setTypeface(tVCustomText.getTypeface(),Typeface.BOLD);
+            btnCustomOrder.setTypeface(btnCustomOrder.getTypeface(),Typeface.BOLD);
+
             btnCustomOrder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
