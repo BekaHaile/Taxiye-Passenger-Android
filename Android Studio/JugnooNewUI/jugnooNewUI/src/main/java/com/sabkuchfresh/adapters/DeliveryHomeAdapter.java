@@ -289,24 +289,28 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         // no more pages case
-         if(!hasMorePages && menusResponse.getServiceUnavailable() != 1) {
+         if(!hasMorePages) {
 
-
-            boolean isCustomOrderModel = activity.isDeliveryOpenInBackground() && activity.getMenusFragment().chatAvailable;
-             String categoryName = activity.getCategoryOpened()==null?null:activity.getCategoryOpened().getCategoryName();
-             if(categoryName==null){
-                 categoryName=activity.isDeliveryOpenInBackground()?"Stores":"Restaurants";
-             }
 
              boolean showAddStoreLayout = activity.isDeliveryOpenInBackground()&&Data.getDeliveryCustomerData()!=null && Data.getDeliveryCustomerData().getShowAddStore();
-             if(isCustomOrderModel || !showAddStoreLayout){//Don't show suggest store with restaurant form model if showAddStore is enabled by back end.
-                 if(dataToDisplay!=null && dataToDisplay.size()>1){
-                     dataToDisplay.add(new  DeliveryDivider());
-                 }
-                 formAddRestaurantModel = FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),categoryName, isCustomOrderModel,!showAddStoreLayout);
-                 dataToDisplay.add(formAddRestaurantModel);
 
-             }
+             if(menusResponse.getServiceUnavailable()!=1){
+                 boolean isCustomOrderModel = activity.isDeliveryOpenInBackground() && activity.getMenusFragment().chatAvailable;
+                 String categoryName = activity.getCategoryOpened()==null?null:activity.getCategoryOpened().getCategoryName();
+                 if(categoryName==null){
+                     categoryName=activity.isDeliveryOpenInBackground()?"Stores":"Restaurants";
+                 }
+
+                 if(isCustomOrderModel || !showAddStoreLayout){//Don't show suggest store with restaurant form model if showAddStore is enabled by back end.
+                     if(dataToDisplay!=null && dataToDisplay.size()>1){
+                         dataToDisplay.add(new  DeliveryDivider());
+                     }
+                     formAddRestaurantModel = FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),categoryName, isCustomOrderModel,!showAddStoreLayout);
+                     dataToDisplay.add(formAddRestaurantModel);
+
+                 }
+            }
+
              if(showAddStoreLayout) {
                  if(dataToDisplay!=null && dataToDisplay.size()>1){
                      dataToDisplay.add(new  DeliveryDivider());
