@@ -376,6 +376,13 @@ public class SuggestStoreFragment extends Fragment {
     public void onHiddenChanged(boolean hidden) {
         if(!hidden){
             activity.fragmentUISetup(this);
+            if(getView()!=null){
+                spCategory.setEnabled(true);
+            }
+        }else{
+            if(getView()!=null){
+                spCategory.setEnabled(false);
+            }
         }
         super.onHiddenChanged(hidden);
     }

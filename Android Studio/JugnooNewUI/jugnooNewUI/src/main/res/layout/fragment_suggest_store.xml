@@ -22,6 +22,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="@dimen/dp_70"
+        android:splitMotionEvents="false"
+
         android:paddingTop="@dimen/dp_10">
 
         <TextView
