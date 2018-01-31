@@ -143,6 +143,7 @@ public class Data {
             feedData = null;
             prosData = null;
             DeliveryData = null;
+            deepLinkReferralCode = "";
 
             facebookUserData = null;
             previousAccountInfoList = new ArrayList<PreviousAccountInfo>();

@@ -2848,6 +2848,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getAutosClientId());
 			params.put("login_type", "0");
+			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -3135,6 +3138,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getAutosClientId());
+			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -3244,6 +3250,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getAutosClientId());
+			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -4135,6 +4144,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
             params.put("longitude", "" + Data.loginLongitude);
             params.put("client_id", Config.getAutosClientId());
             params.put("otp", otp);
+			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
+			}
 
             if (Utils.isDeviceRooted()) {
                 params.put("device_rooted", "1");

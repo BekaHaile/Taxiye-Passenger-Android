@@ -519,6 +519,9 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				params.put("login_otp", otp);
 				params.put("login_type", "0");
 				params.put("reg_wallet_type", String.valueOf(linkedWallet));
+				if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+					params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
+				}
 
 				if(Utils.isDeviceRooted()){
 					params.put("device_rooted", "1");
@@ -616,6 +619,9 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getAutosClientId());
 			params.put("login_type", "0");
+			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -706,6 +712,9 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
                 params.put("client_id", Config.getAutosClientId());
                 params.put("login_otp", otp);
 				params.put("reg_wallet_type", String.valueOf(linkedWallet));
+				if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+					params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
+				}
 
 				if(Utils.isDeviceRooted()){
 					params.put("device_rooted", "1");
@@ -806,6 +815,9 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				params.put("client_id", Config.getAutosClientId());
 				params.put("login_otp", otp);
 				params.put("reg_wallet_type", String.valueOf(linkedWallet));
+				if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+					params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
+				}
 
 				if(Utils.isDeviceRooted()){
 					params.put("device_rooted", "1");
@@ -1192,6 +1204,9 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getAutosClientId());
+			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -1299,6 +1314,9 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getAutosClientId());
+			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
@@ -1398,6 +1416,9 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			params.put("latitude", "" + Data.loginLatitude);
 			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getAutosClientId());
+			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
+			}
 
 			if (Utils.isDeviceRooted()) {
 				params.put("device_rooted", "1");
