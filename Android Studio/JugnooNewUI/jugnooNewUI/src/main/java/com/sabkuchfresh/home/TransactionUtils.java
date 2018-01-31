@@ -27,6 +27,7 @@ import com.sabkuchfresh.fragments.NewFeedbackFragment;
 import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
+import com.sabkuchfresh.fragments.SuggestStoreFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.pros.models.ProsCatalogueData;
 import com.sabkuchfresh.pros.models.ProsProductData;
@@ -466,6 +467,19 @@ public class TransactionUtils {
                     .add(container.getId(), ProsOrderStatusFragment.newInstance(jobId, productType),
                             ProsOrderStatusFragment.class.getName())
                     .addToBackStack(ProsOrderStatusFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+    public void addSuggestStoreFragment(FragmentActivity activity,View relativeLayoutContainer){
+        if (!checkIfFragmentAdded(activity, FreshFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                    .add(relativeLayoutContainer.getId(), new SuggestStoreFragment(),
+                            SuggestStoreFragment.class.getName())
+                    .addToBackStack(SuggestStoreFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();

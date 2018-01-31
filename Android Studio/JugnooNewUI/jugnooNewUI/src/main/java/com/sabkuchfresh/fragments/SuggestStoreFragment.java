@@ -99,7 +99,6 @@ public class SuggestStoreFragment extends Fragment {
     HorizontalScrollView svImages;
 
     private FreshActivity activity;
-    private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
     private PaySlider paySlider;
     private ArrayList<Object> imageObjectList = new ArrayList<>();
     private ImageCompression imageCompressionTask;
