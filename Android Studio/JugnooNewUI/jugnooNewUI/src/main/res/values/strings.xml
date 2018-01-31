@@ -1463,7 +1463,8 @@
     <string name="phone_number_add_store">PHONE NO.</string>
     <string name="add_photos">Add Photos</string>
     <string name="upload_a_photo">Upload photos</string>
-    <string name="label_add_store_text">Can\'t find the store you\'re looking for?</string>
+    <string name="label_add_store_text"><b>Suggest a missing store to Jugnoo</b></string>
+    <string name="label_add_store_text_oh_snap"><b>Suggest a store to Jugnoo</b></string>
     <string name="btn_text_suggest_store">Suggest a missing store</string>
     <string name="hint_spinner_add_store">- Select Category -</string>
     <string name="store_address">Store\'s Address</string>

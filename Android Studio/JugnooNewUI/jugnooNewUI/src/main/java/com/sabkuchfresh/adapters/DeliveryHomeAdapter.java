@@ -499,7 +499,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout_custom_order, parent, false);
                 return new ViewHolderCustomOrder(v, this);
             case ITEM_ADD_STORE :
-                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_layout_custom_order, parent, false);
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_add_store, parent, false);
                 return new AddStoreViewHolder(v, this);
             case BLANK_LAYOUT :
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_footer, parent, false);
@@ -1155,13 +1155,12 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     callback.apiRecommendRestaurant(getFormItemModel().getCategoryId(), getFormItemModel().getRestaurantName(),getFormItemModel().getLocality(),getFormItemModel().getTelephone());
                     break;
                 case R.id.bOrderViaFatafat:
-                    RecyclerView.ViewHolder viewHolder = recyclerView.getChildViewHolder(parentView);
-                    if(viewHolder instanceof AddStoreViewHolder){
-                        activity.addSuggestStoreFragment();
-                    }else{
-                        GAUtils.event(GACategory.FATAFAT3, GAAction.CUSTOM_ORDER, GAAction.LABEL_ORDER_VIA_FATAFAT);
-                        activity.switchOffering(Config.getFeedClientId());
-                    }
+                    GAUtils.event(GACategory.FATAFAT3, GAAction.CUSTOM_ORDER, GAAction.LABEL_ORDER_VIA_FATAFAT);
+                    activity.switchOffering(Config.getFeedClientId());
+                    break;
+                case R.id.tv_add_store:
+                    activity.addSuggestStoreFragment();
+
                     break;
 
             }
@@ -2106,14 +2105,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    private class AddStoreViewHolder extends ViewHolderCustomOrder{
+    private class AddStoreViewHolder extends RecyclerView.ViewHolder{
 
         public AddStoreViewHolder(final View view, final ItemListener itemListener) {
-            super(view, itemListener);
-            getTvlabelDescription().setVisibility(View.GONE);
-            gettVCustomText().setText(R.string.label_add_store_text);
-            getBtnCustomOrder().setText(R.string.btn_text_suggest_store);
-            getBtnCustomOrder().setOnClickListener(new View.OnClickListener() {
+            super(view);
+            view.findViewById(R.id.divider_bottom).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.seperator_below_add_store).setVisibility(View.VISIBLE);
+            TextView textView = (TextView) view.findViewById(R.id.tv_add_store);
+            textView.setText(R.string.label_add_store_text);
+            textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
