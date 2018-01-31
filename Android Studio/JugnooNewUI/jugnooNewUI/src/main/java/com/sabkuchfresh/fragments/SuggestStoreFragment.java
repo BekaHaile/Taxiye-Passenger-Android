@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -98,7 +99,6 @@ public class SuggestStoreFragment extends Fragment {
     HorizontalScrollView svImages;
 
     private FreshActivity activity;
-    private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
     private PaySlider paySlider;
     private ArrayList<Object> imageObjectList = new ArrayList<>();
     private ImageCompression imageCompressionTask;
@@ -117,38 +117,6 @@ public class SuggestStoreFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_suggest_store, container, false);
         activity.fragmentUISetup(this);
         ButterKnife.bind(this, rootView);
-
-        mKeyBoardStateHandler = new KeyboardLayoutListener.KeyBoardStateHandler() {
-
-            @Override
-            public void keyboardOpened() {
-                if (activity.getTopFragment() instanceof SuggestStoreFragment) {
-                    if (!activity.isDeliveryOpenInBackground()) {
-                        activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.GONE);
-                    }
-                    activity.llPayViewContainer.setVisibility(View.GONE);
-                }
-
-            }
-
-            @Override
-            public void keyBoardClosed() {
-                if(activity.getTopFragment() instanceof SuggestStoreFragment){
-                    if (!activity.isDeliveryOpenInBackground()) {
-                        if (Prefs.with(activity).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
-                            activity.getFabViewTest().setRelativeLayoutFABTestVisibility(View.VISIBLE);
-                        }
-                    }
-                    activity.llPayViewContainer.setVisibility(View.VISIBLE);
-                }
-
-
-            }
-        };
-        // register for keyboard event
-        activity.registerForKeyBoardEvent(mKeyBoardStateHandler);
-
-
         categories = new ArrayList<>();
         categories.add(0,new MenusResponse.Category(ID_SELECT_CATEGORY, getString(R.string.hint_spinner_add_store)));
        List<MenusResponse.Category> merchantCategories = activity.isDeliveryOpenInBackground()? Data.getDeliveryCustomerData().getMerchantCategoriesList():
@@ -193,15 +161,13 @@ public class SuggestStoreFragment extends Fragment {
         };
 //        Utils.setMaxHeightToDropDown(spCategory,activity.getResources().getDimensionPixelSize(R.dimen.dp_200));
         spCategory.setAdapter(categoriesAdapter);
-
-
         paySlider = new PaySlider(activity.llPayViewContainer, activity.getString(R.string.add_store), activity.getString(R.string.swipe_right_to_add)) {
             @Override
             public void onPayClick() {
                 try {
                     final String businessName = edtBusinessName.getText().toString().trim();
                     if (businessName.length() == 0) {
-                        Utils.showToast(activity, activity.getString(R.string.please_enter_business_name));
+                        Utils.showToast(activity, activity.getString(R.string.please_enter_store_name));
                         throw new Exception();
                     }
 
@@ -409,6 +375,13 @@ public class SuggestStoreFragment extends Fragment {
     public void onHiddenChanged(boolean hidden) {
         if(!hidden){
             activity.fragmentUISetup(this);
+            if(getView()!=null){
+                spCategory.setEnabled(true);
+            }
+        }else{
+            if(getView()!=null){
+                spCategory.setEnabled(false);
+            }
         }
         super.onHiddenChanged(hidden);
     }

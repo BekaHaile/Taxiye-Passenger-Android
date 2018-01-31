@@ -1794,7 +1794,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(Data.getFeedName(this));
+                topBar.title.setText(R.string.title_suggest_store);
                 fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 llSearchCartVis = View.GONE;
                 llPayViewContainerVis = View.VISIBLE;
@@ -2515,20 +2515,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 .commitAllowingStateLoss();
     }
 
-    /**
-     * Adds suggest store fragment
-     */
-    public void addSuggestStoreFragment(){
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                .add(relativeLayoutContainer.getId(),  new SuggestStoreFragment(),
-                        SuggestStoreFragment.class.getName())
-                .addToBackStack(SuggestStoreFragment.class.getName())
-                .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                .commitAllowingStateLoss();
-    }
 
+    public void addSuggestStoreFragment(){
+            getTransactionUtils().addSuggestStoreFragment(FreshActivity.this,relativeLayoutContainer);
+    }
 
     /**
      * Method used to open feedback screen

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/menu_item_selector_color_F7"
+    android:layout_marginBottom="@dimen/height_pay_slider"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
@@ -21,6 +22,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingBottom="@dimen/dp_70"
+        android:splitMotionEvents="false"
         android:paddingTop="@dimen/dp_10">
 
         <TextView
@@ -30,7 +32,7 @@
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginRight="@dimen/dp_10"
             android:layout_marginStart="@dimen/dp_15"
-            android:text="@string/txt_business_name"
+            android:text="@string/txt_store_name"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
             app:typekitFont="@string/maven_r"/>
@@ -55,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:gravity="start|center_vertical"
-                android:hint="@string/hint_business_name"
+                android:hint="@string/hint_store_name"
                 android:inputType="textMultiLine|textCapSentences"
                 android:minHeight="@dimen/dp_50"
                 android:padding="@dimen/dp_10"
@@ -74,7 +76,7 @@
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginRight="@dimen/dp_10"
             android:layout_marginStart="@dimen/dp_15"
-            android:text="@string/address"
+            android:text="@string/store_address"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
             app:typekitFont="@string/maven_r"/>
@@ -188,7 +190,7 @@
                 android:layout_height="@dimen/dp_50"
                 android:background="@null"
                 android:gravity="start|center_vertical"
-                android:hint="@string/enter_phone_number"
+                android:hint="@string/enter_store_phone_number"
                 android:inputType="phone"
                 android:maxLines="1"
                 android:padding="@dimen/dp_10"
@@ -331,7 +333,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/add_photos"
+                        android:text="@string/upload_a_photo"
                         android:textColor="@color/lightBlackTxtColor"
                         android:textSize="@dimen/sp_16"
                         app:typekitFont="@string/maven"/>
@@ -421,6 +423,9 @@
     </LinearLayout>
 
 </ScrollView>
+
+
+
 
     <View
         android:layout_width="match_parent"

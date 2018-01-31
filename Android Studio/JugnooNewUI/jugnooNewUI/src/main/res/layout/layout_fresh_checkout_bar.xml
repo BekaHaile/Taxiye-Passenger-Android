@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_54"
+        android:layout_height="@dimen/height_pay_slider"
         android:background="@drawable/bg_theme_color_selector">
 
         <TextView

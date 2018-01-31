@@ -1444,27 +1444,31 @@
     <string name="please_enter_code">Please enter code</string>
 
     <!-- Suggest Store -->
-    <string name="txt_business_name">Business Name</string>
-    <string name="hint_business_name">Enter business name</string>
+    <string name="txt_store_name">Store Name</string>
+    <string name="hint_store_name">Enter Store name</string>
     <string name="hint_select_address">Select address</string>
     <string name="txt_category">Category</string>
-    <string name="txt_timings">Timings</string>
-    <string name="txt_notes">Notes</string>
-    <string name="hint_enter_notes">Enter notes</string>
+    <string name="txt_timings">Store timings</string>
+    <string name="txt_notes">Additional notes</string>
+    <string name="hint_enter_notes">Provide any additional information</string>
     <string name="txt_suggest_store">Suggest Store</string>
     <string name="hint_timings">Enter opening and closing time</string>
     <string name="add_store">Add Store</string>
     <string name="swipe_right_to_add">Swipe right to add</string>
-    <string name="please_enter_business_name">Please enter business name</string>
-    <string name="please_select_a_store_address">Please select a store address</string>
+    <string name="please_enter_store_name">Please enter store name</string>
+    <string name="please_select_a_store_address">Please select the store\'s address</string>
     <string name="please_add_phone_number">Please enter a valid phone number</string>
     <string name="please_select_a_category">Please select a category</string>
-    <string name="tap_to_upload_photo_store">Upload a photo taken at this place</string>
+    <string name="tap_to_upload_photo_store">Add photos of store front or menu</string>
     <string name="phone_number_add_store">PHONE NO.</string>
     <string name="add_photos">Add Photos</string>
+    <string name="upload_a_photo">Upload photos</string>
     <string name="label_add_store_text">Can\'t find the store you\'re looking for?</string>
     <string name="btn_text_suggest_store">Suggest a missing store</string>
     <string name="hint_spinner_add_store">- Select Category -</string>
+    <string name="store_address">Store\'s Address</string>
+    <string name="enter_store_phone_number">Enter store\'s phone number</string>
+    <string name="title_suggest_store">SUGGEST A STORE</string>
 
 
 </resources>
