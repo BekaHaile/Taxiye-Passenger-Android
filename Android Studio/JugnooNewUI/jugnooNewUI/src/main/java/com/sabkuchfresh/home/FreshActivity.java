@@ -2517,9 +2517,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
     public void addSuggestStoreFragment(){
-        if(transactionUtils!=null){
-            transactionUtils.addSuggestStoreFragment(this,relativeLayoutContainer);
-        }
+            getTransactionUtils().addSuggestStoreFragment(FreshActivity.this,relativeLayoutContainer);
     }
 
     /**

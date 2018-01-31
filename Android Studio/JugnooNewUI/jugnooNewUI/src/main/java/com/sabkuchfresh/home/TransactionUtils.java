@@ -474,7 +474,7 @@ public class TransactionUtils {
     }
 
     public void addSuggestStoreFragment(FragmentActivity activity,View relativeLayoutContainer){
-        if (!checkIfFragmentAdded(activity, FreshFragment.class.getName())) {
+        if (!activity.isFinishing() && !checkIfFragmentAdded(activity, SuggestStoreFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
                     .add(relativeLayoutContainer.getId(), new SuggestStoreFragment(),

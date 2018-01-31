@@ -23,7 +23,6 @@
         android:layout_height="match_parent"
         android:tag="@string/dont_touch_me">
 
-        <include layout="@layout/layout_offering_not_available" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
@@ -43,6 +42,8 @@
             </android.support.v7.widget.RecyclerView>
 
         </android.support.v4.widget.SwipeRefreshLayout>
+        <include layout="@layout/layout_offering_not_available" />
+
 
     </RelativeLayout>
 
