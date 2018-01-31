@@ -1794,7 +1794,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.imageViewBack.setVisibility(View.VISIBLE);
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(Data.getFeedName(this));
+                topBar.title.setText(R.string.title_suggest_store);
                 fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 llSearchCartVis = View.GONE;
                 llPayViewContainerVis = View.VISIBLE;

@@ -167,7 +167,7 @@ public class SuggestStoreFragment extends Fragment {
                 try {
                     final String businessName = edtBusinessName.getText().toString().trim();
                     if (businessName.length() == 0) {
-                        Utils.showToast(activity, activity.getString(R.string.please_enter_business_name));
+                        Utils.showToast(activity, activity.getString(R.string.please_enter_store_name));
                         throw new Exception();
                     }
 
