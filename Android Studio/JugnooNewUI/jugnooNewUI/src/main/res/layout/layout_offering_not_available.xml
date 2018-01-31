@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_menus_nothing_found"
-    android:visibility="gone"
+    android:visibility="visible"
     android:tag="@string/dont_touch_me">
 
     <ImageView
@@ -54,22 +54,11 @@
         android:tag="mwar" />
 
 
-    <Button
-        android:id="@+id/btnSuggestStore"
-        android:layout_width="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:layout_height="@dimen/dp_50"
-        android:layout_marginBottom="@dimen/dp_30"
-        android:layout_marginTop="@dimen/dp_20"
-        android:background="@drawable/capsule_theme_color_selector"
-        android:text="@string/btn_text_suggest_store"
-        android:textAllCaps="true"
-        android:visibility="gone"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/sp_16"
-        android:layout_centerHorizontal="true"
+
+    <include
         android:layout_alignParentBottom="true"
-        app:typekitFont="@string/maven" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/item_add_store"/>
 
 </RelativeLayout>

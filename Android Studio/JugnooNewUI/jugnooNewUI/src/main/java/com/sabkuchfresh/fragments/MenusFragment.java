@@ -116,7 +116,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private ValueAnimator openAnim;
     private ValueAnimator closeAnim;
     private int widthFatafatChatIconText;
-    private Button btnSuggestStore;
+    private TextView tvSuggestStore;
 
     public MenusResponse.StripInfo getCurrentStripInfo() {
         return currentStripInfo;
@@ -167,12 +167,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         rlMainContainer = (RelativeLayout) rootView.findViewById(R.id.rlMainContainer);
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
-        btnSuggestStore = (Button) relativeLayoutNoMenus.findViewById(R.id.btnSuggestStore);
-        btnSuggestStore.setTypeface(btnSuggestStore.getTypeface(),Typeface.BOLD);
-        btnSuggestStore.setOnClickListener(new View.OnClickListener() {
+        tvSuggestStore = (TextView) relativeLayoutNoMenus.findViewById(R.id.tv_add_store);
+        tvSuggestStore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 activity.addSuggestStoreFragment();
             }
         });
@@ -880,7 +878,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         relativeLayoutNoMenus.setVisibility((menusResponse.getRecentOrders().size() == 0 && menusResponse.getServiceUnavailable() == 1) ? View.VISIBLE : View.GONE);
 
         if (relativeLayoutNoMenus.getVisibility() == View.VISIBLE) {
-            btnSuggestStore.setVisibility(Data.getDeliveryCustomerData()!=null && Data.getDeliveryCustomerData().getShowAddStore()?View.VISIBLE:View.GONE);
+            tvSuggestStore.setVisibility(Data.getDeliveryCustomerData()!=null && Data.getDeliveryCustomerData().getShowAddStore()?View.VISIBLE:View.GONE);
             activity.getTopBar().getLlSearchCartContainer().setVisibility(View.VISIBLE);
             activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
             activity.llCheckoutBarSetVisibilityDirect(View.GONE);

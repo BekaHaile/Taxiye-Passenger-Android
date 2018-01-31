@@ -129,6 +129,7 @@
     <color name="text_color_less_light">#9d9d9d</color>
     <color name="text_color_dark">#494958</color>
     <color name="text_color">#595968</color>
+    <color name="add_store_bg">#F4F4F4</color>
     <color name="grey_icon_color">#595968</color>
     <color name="text_color_dark_1">#2d3a5c</color>
     <color name="theme_green_color">#5DC647</color>
