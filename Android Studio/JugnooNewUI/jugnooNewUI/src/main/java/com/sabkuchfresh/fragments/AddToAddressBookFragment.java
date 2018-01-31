@@ -536,82 +536,93 @@ public class AddToAddressBookFragment extends Fragment {
             String label = "";
 
             if(activity instanceof FreshActivity) {
-                ((FreshActivity) activity).setSelectedAddress(localAddress);
-                ((FreshActivity)activity).setSelectedLatLng(new LatLng(current_latitude, current_longitude));
-                ((FreshActivity)activity).setSelectedAddressId(0);
-                ((FreshActivity)activity).setSelectedAddressType("");
+
 
                 FreshActivity freshActivity = (FreshActivity) activity;
                 deliveryAddressesFragment = freshActivity.getDeliveryAddressesFragment();
-                editThisAddress = freshActivity.isEditThisAddress();
 
-                if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.home))){
-                    placeRequestCode = Constants.REQUEST_CODE_ADD_HOME;
-                } else if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.work))){
-                    placeRequestCode = Constants.REQUEST_CODE_ADD_WORK;
-                } else{
-                    placeRequestCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
-                }
-                freshActivity.setPlaceRequestCode(placeRequestCode);
 
-                if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
-                    label = Constants.TYPE_HOME;
-                } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
-                    label = Constants.TYPE_WORK;
-                } else {
-                    label = editTextLabel.getText().toString().trim();
-                }
-                if (freshActivity.isEditThisAddress() && freshActivity.getSearchResult() != null) {
-                    searchResultId = freshActivity.getSearchResult().getId();
-                    ((FreshActivity)activity).setSelectedAddressId(searchResultId);
-                    ((FreshActivity)activity).setSelectedAddressType(label);
-                    placeId = freshActivity.getSearchResult().getPlaceId();
+                if (showAddressLabels) {
+                    ((FreshActivity) activity).setSelectedAddress(localAddress);
+                    ((FreshActivity)activity).setSelectedLatLng(new LatLng(current_latitude, current_longitude));
+                    ((FreshActivity)activity).setSelectedAddressId(0);
+                    ((FreshActivity)activity).setSelectedAddressType("");
+
+
+                    editThisAddress = freshActivity.isEditThisAddress();
+
+                    if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.home))){
+                        placeRequestCode = Constants.REQUEST_CODE_ADD_HOME;
+                    } else if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.work))){
+                        placeRequestCode = Constants.REQUEST_CODE_ADD_WORK;
+                    } else{
+                        placeRequestCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
+                    }
+                    freshActivity.setPlaceRequestCode(placeRequestCode);
+
+                    if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
+                        label = Constants.TYPE_HOME;
+                    } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
+                        label = Constants.TYPE_WORK;
+                    } else {
+                        label = editTextLabel.getText().toString().trim();
+                    }
+                    if (freshActivity.isEditThisAddress() && freshActivity.getSearchResult() != null) {
+                        searchResultId = freshActivity.getSearchResult().getId();
+                        ((FreshActivity)activity).setSelectedAddressId(searchResultId);
+                        ((FreshActivity)activity).setSelectedAddressType(label);
+                        placeId = freshActivity.getSearchResult().getPlaceId();
+                    }
                 }
 
             }
             else if(activity instanceof AddPlaceActivity){
                 AddPlaceActivity addPlaceActivity = (AddPlaceActivity) activity;
                 deliveryAddressesFragment = addPlaceActivity.getDeliveryAddressesFragment();
-                editThisAddress = addPlaceActivity.isEditThisAddress();
-                if (addPlaceActivity.isEditThisAddress() && addPlaceActivity.getSearchResult() != null) {
-                    searchResultId = addPlaceActivity.getSearchResult().getId();
-                    placeId = addPlaceActivity.getSearchResult().getPlaceId();
+                if (showAddressLabels) {
+                    editThisAddress = addPlaceActivity.isEditThisAddress();
+                    if (addPlaceActivity.isEditThisAddress() && addPlaceActivity.getSearchResult() != null) {
+                        searchResultId = addPlaceActivity.getSearchResult().getId();
+                        placeId = addPlaceActivity.getSearchResult().getPlaceId();
+                    }
+                    if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.home))){
+                        placeRequestCode = Constants.REQUEST_CODE_ADD_HOME;
+                    } else if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.work))){
+                        placeRequestCode = Constants.REQUEST_CODE_ADD_WORK;
+                    } else{
+                        placeRequestCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
+                    }
+                    addPlaceActivity.setPlaceRequestCode(placeRequestCode);
                 }
-                if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.home))){
-                    placeRequestCode = Constants.REQUEST_CODE_ADD_HOME;
-                } else if(editTextLabel.getText().toString().equalsIgnoreCase(activity.getString(R.string.work))){
-                    placeRequestCode = Constants.REQUEST_CODE_ADD_WORK;
-                } else{
-                    placeRequestCode = Constants.REQUEST_CODE_ADD_NEW_LOCATION;
-                }
-                addPlaceActivity.setPlaceRequestCode(placeRequestCode);
             }
 
 
-            if(deleteOtherId > 0 || newId > 0){
-                otherId = deleteOtherId;
-                searchResultId = newId;
-                if(activity instanceof FreshActivity) {
-                    if(((FreshActivity)activity).getSearchResult() != null) {
-                        ((FreshActivity) activity).getSearchResult().setId(searchResultId);
+            if (showAddressLabels) {
+                if(deleteOtherId > 0 || newId > 0){
+                    otherId = deleteOtherId;
+                    searchResultId = newId;
+                    if(activity instanceof FreshActivity) {
+                        if(((FreshActivity)activity).getSearchResult() != null) {
+                            ((FreshActivity) activity).getSearchResult().setId(searchResultId);
+                        }
+                        ((FreshActivity)activity).setSelectedAddressId(searchResultId);
+                    } else if(activity instanceof AddPlaceActivity){
+                        if(((AddPlaceActivity)activity).getSearchResult() != null) {
+                            ((AddPlaceActivity) activity).getSearchResult().setId(searchResultId);
+                        }
                     }
-                    ((FreshActivity)activity).setSelectedAddressId(searchResultId);
-                } else if(activity instanceof AddPlaceActivity){
-                    if(((AddPlaceActivity)activity).getSearchResult() != null) {
-                        ((AddPlaceActivity) activity).getSearchResult().setId(searchResultId);
-                    }
+
+                } else {
+                    otherId = getOtherMatchedId(placeRequestCode, localAddress, searchResultId);
                 }
 
-            } else {
-                otherId = getOtherMatchedId(placeRequestCode, localAddress, searchResultId);
-            }
-
-            if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
-                label = Utils.firstCharCapital(Constants.TYPE_HOME);
-            } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
-                label = Utils.firstCharCapital(Constants.TYPE_WORK);
-            } else {
-                label = editTextLabel.getText().toString().trim();
+                if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
+                    label = Utils.firstCharCapital(Constants.TYPE_HOME);
+                } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
+                    label = Utils.firstCharCapital(Constants.TYPE_WORK);
+                } else {
+                    label = editTextLabel.getText().toString().trim();
+                }
             }
 
             SearchResult searchResult = new SearchResult(label, localAddress, placeId, current_latitude, current_longitude);
