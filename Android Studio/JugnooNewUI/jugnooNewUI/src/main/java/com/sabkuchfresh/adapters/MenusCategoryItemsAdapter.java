@@ -11,6 +11,8 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,7 @@ import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.Subcategory;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -230,7 +233,6 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
             mHolder.textViewAboutItemDescription.setTag(position);
             int visibilityDesc;
-            RelativeLayout.LayoutParams paramsSep = (RelativeLayout.LayoutParams) mHolder.saperatorImage.getLayoutParams();
             if(!TextUtils.isEmpty(item.getItemDetails())){
                 if(item.getItemDetails().length() > 80){
                     SpannableStringBuilder ssb;
@@ -249,13 +251,10 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     mHolder.textViewAboutItemDescription.append(ssb);
                 }
                 visibilityDesc = View.VISIBLE;
-                paramsSep.addRule(RelativeLayout.BELOW, mHolder.textViewAboutItemDescription.getId());
             } else {
                 visibilityDesc = View.GONE;
-                paramsSep.addRule(RelativeLayout.BELOW, mHolder.textViewItemCategoryName.getId());
             }
             mHolder.textViewAboutItemDescription.setVisibility(visibilityDesc);
-            mHolder.saperatorImage.setLayoutParams(paramsSep);
             if(!isVendorMenuFragment){
                 mHolder.saperatorImage.setVisibility(position==subItems.size()-1?View.INVISIBLE:View.VISIBLE);
 
@@ -293,6 +292,27 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
                 mHolder.relativeLayoutItem.setBackgroundColor(ContextCompat.getColor(context, R.color.menu_item_selector_color_F7));
             }
+            try {
+                if(!TextUtils.isEmpty(item.getItemImage())){
+					mHolder.ivItemImage.setVisibility(View.VISIBLE);
+					Picasso.with(context).load(item.getItemImage())
+							.placeholder(R.drawable.ic_fresh_item_placeholder)
+							.fit()
+							.centerCrop()
+							.error(R.drawable.ic_fresh_item_placeholder)
+							.into(mHolder.ivItemImage);
+				} else {
+					mHolder.ivItemImage.setVisibility(View.GONE);
+				}
+            } catch (Exception e) {
+                e.printStackTrace();
+                mHolder.ivItemImage.setVisibility(View.GONE);
+            }
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
+            params.setMargins((mHolder.ivItemImage.getVisibility() == View.VISIBLE ?
+                    context.getResources().getDimensionPixelSize(R.dimen.dp_6) : context.getResources().getDimensionPixelSize(R.dimen.dp_14)),
+                    params.topMargin, params.rightMargin, params.bottomMargin);
+            mHolder.imageViewFoodType.setLayoutParams(params);
 
 
             mHolder.imageViewMinus.setTag(position);
@@ -435,13 +455,14 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
         public RelativeLayout relativeLayoutItem;
         public LinearLayout linearLayoutQuantitySelector;
-        private ImageView imageViewFoodType, imageViewMinus, imageViewPlus, saperatorImage;
+        private ImageView ivItemImage, imageViewFoodType, imageViewMinus, imageViewPlus, saperatorImage;
         public TextView textViewItemCategoryName, textViewAboutItemDescription, textViewQuantity;
 
         public MainViewHolder(View itemView, Context context) {
             super(itemView);
             relativeLayoutItem = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutItem);
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
+            ivItemImage = (ImageView) itemView.findViewById(R.id.ivItemImage);
             imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
@@ -572,8 +593,10 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void setItemNameToTextView(Item item, TextView textView){
         final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
+        final RelativeSizeSpan rss = new RelativeSizeSpan(1.2f);
         final SpannableStringBuilder sb = new SpannableStringBuilder(item.getItemName());
         sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sb.setSpan(rss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         textView.setText(sb);
         textView.append("\n");
@@ -581,6 +604,24 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             textView.append(item.getDisplayPrice());
         } else {
             textView.append(context.getString(R.string.rupees_value_format, com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(item.getPrice())));
+        }
+
+        if(item.getOldPrice() != null && !item.getOldPrice().equals(item.getPrice())){
+            final StrikethroughSpan sts = new StrikethroughSpan();
+            final ForegroundColorSpan fcs = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.theme_color));
+            final SpannableStringBuilder sbst = new SpannableStringBuilder(context.getString(R.string.rupees_value_format,
+                    com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(item.getOldPrice())));
+            sbst.setSpan(sts, 0, sbst.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            sbst.setSpan(fcs, 0, sbst.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            textView.append("  ");
+            textView.append(sbst);
+        }
+        if(!TextUtils.isEmpty(item.getOfferText())){
+            final ForegroundColorSpan fcs = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.theme_color));
+            final SpannableStringBuilder sbfcs = new SpannableStringBuilder(item.getOfferText());
+            sbfcs.setSpan(fcs, 0, sbfcs.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            textView.append("  ");
+            textView.append(sbfcs);
         }
     }
 

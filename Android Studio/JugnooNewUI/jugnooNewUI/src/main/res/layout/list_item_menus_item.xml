@@ -7,62 +7,81 @@
     android:soundEffectsEnabled="false"
     >
 
-    <ImageView
-        android:id="@+id/imageViewFoodType"
-        android:layout_width="40px"
-        android:layout_height="40px"
-        android:layout_marginLeft="@dimen/px_30"
-        android:layout_marginRight="@dimen/px_18"
-        android:layout_marginTop="@dimen/px_30"
-        android:src="@drawable/veg"
-        android:tag="mwar"
-        />
-
-    <TextView
-        android:id="@+id/textViewItemCategoryName"
+    <RelativeLayout
+        android:id="@+id/rlInner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10px"
-        android:layout_toLeftOf="@+id/linearLayoutQuantitySelector"
-        android:lineSpacingExtra="2px"
-        android:layout_marginTop="@dimen/px_24"
-        android:text="Margherita \nPizza"
-        android:textColor="@color/lightBlackTxtColor"
-        android:textSize="@dimen/px_32"
-        android:layout_toRightOf="@id/imageViewFoodType"
-        />
+        android:layout_height="wrap_content">
 
-    <include
-        layout="@layout/layout_item_quantity_selector"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/px_20"
-        android:layout_marginTop="@dimen/px_20"
-        />
+        <ImageView
+            android:id="@+id/ivItemImage"
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="14dp"
+            android:tag="@string/dont_touch_me"
+            android:layout_alignParentTop="true"
+            android:visibility="visible"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewFoodType"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="@dimen/dp_7"
+            android:layout_marginRight="@dimen/dp_7"
+            android:layout_marginTop="@dimen/dp_14"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/veg"
+            android:tag="@string/dont_touch_me"
+            android:layout_toRightOf="@+id/ivItemImage"
+            />
+
+        <TextView
+            android:id="@+id/textViewItemCategoryName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10px"
+            android:layout_marginTop="@dimen/px_20"
+            android:layout_toLeftOf="@+id/linearLayoutQuantitySelector"
+            android:layout_toRightOf="@id/imageViewFoodType"
+            android:lineSpacingExtra="2px"
+            android:text="Margherita \nPizza"
+            android:textColor="@color/lightBlackTxtColor"
+            android:textSize="@dimen/px_28"
+            />
+
+        <include
+            layout="@layout/layout_item_quantity_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/px_20"
+            android:layout_marginTop="@dimen/px_20"
+            />
 
 
-    <TextView
-        android:id="@+id/textViewAboutItemDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewItemCategoryName"
-        android:layout_marginRight="20px"
-        android:layout_marginTop="5px"
-        android:layout_toRightOf="@id/imageViewFoodType"
-        android:text="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
-        android:textColor="@color/color_menu_item_desc"
-        android:textSize="24px"
-        />
+        <TextView
+            android:id="@+id/textViewAboutItemDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textViewItemCategoryName"
+            android:layout_marginRight="20px"
+            android:layout_marginTop="5px"
+            android:layout_toRightOf="@id/imageViewFoodType"
+            android:text="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+            android:textColor="@color/color_menu_item_desc"
+            android:textSize="24px"
+            />
+    </RelativeLayout>
 
     <ImageView
         android:id="@+id/saperatorImage"
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_below="@id/textViewAboutItemDescription"
+        android:layout_below="@id/rlInner"
         android:layout_marginLeft="25px"
         android:layout_marginRight="25px"
-        android:layout_marginTop="@dimen/px_24"
+        android:layout_marginTop="25px"
         android:background="@color/grey_light_more_alpha"
         android:visibility="visible"
         />

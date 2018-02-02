@@ -59,6 +59,15 @@ public class Item {
 	@SerializedName("itemPos")
 	@Expose
 	private Integer itemPos;
+	@SerializedName("old_price")
+	@Expose
+	private Double oldPrice;
+	@SerializedName("offer_text")
+	@Expose
+	private String offerText;
+	@SerializedName("item_image")
+	@Expose
+	private String itemImage;
 	@SerializedName("itemSelectedList")
 	@Expose
 	private List<ItemSelected> itemSelectedList;
@@ -294,5 +303,29 @@ public class Item {
 			}
 			itemSelected.setCustomizeText(sb.toString());
 		}
+	}
+
+	public Double getOldPrice() {
+		return oldPrice;
+	}
+
+	public void setOldPrice(Double oldPrice) {
+		this.oldPrice = oldPrice;
+	}
+
+	public String getOfferText() {
+		return offerText;
+	}
+
+	public void setOfferText(String offerText) {
+		this.offerText = offerText;
+	}
+
+	public String getItemImage() {
+		return itemImage;
+	}
+
+	public void setItemImage(String itemImage) {
+		this.itemImage = itemImage;
 	}
 }
