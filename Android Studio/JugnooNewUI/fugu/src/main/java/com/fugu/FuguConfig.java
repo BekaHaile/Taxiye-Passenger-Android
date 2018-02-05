@@ -18,7 +18,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.fugu.activity.FuguBaseActivity;
-import com.fugu.activity.FuguChannelsActivity;
+import com.fugu.activity.FuguChannelsActivityNew;
 import com.fugu.activity.FuguChatActivity;
 import com.fugu.apis.ApiPutUserDetails;
 import com.fugu.constant.FuguAppConstant;
@@ -119,6 +119,10 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
 
     public void setColorConfig(FuguColorConfig fuguColorConfig) {
         CommonData.setColorConfig(fuguColorConfig);
+    }
+
+    public void setFontConfig(FuguFontConfig fuguFontConfig) {
+        CommonData.setFontConfig(fuguFontConfig);
     }
 
     private void setFuguConfig(@NonNull int appType, @NonNull String appKey, Activity activity, String environment, CaptureUserData userData, String resellerToken, int referenceId) {
@@ -250,13 +254,15 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
                 @Override
                 public void onSuccess() {
                     if (CommonData.getConversationList().size() == 0) {
-                        caseOne(title);
+                        //caseOne(title);
+                        caseElse(title);
                     } else if (CommonData.getConversationList() != null && CommonData.getConversationList().size() == 1) {
                         FuguLog.e("Case 2", "case 2");
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                caseTwo(title);
+                                //caseTwo(title);
+                                caseElse(title);
                             }
                         }, 1000);
                     } else {
@@ -273,7 +279,8 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    caseTwo(title);
+                    //caseTwo(title);
+                    caseElse(title);
                 }
             }, 1000);
         } else {
@@ -296,7 +303,7 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
 
     private void caseElse(String title) {
         FuguLog.e("Case else", "case else");
-        Intent conversationsIntent = new Intent(activity.getApplicationContext(), FuguChannelsActivity.class);
+        Intent conversationsIntent = new Intent(activity.getApplicationContext(), FuguChannelsActivityNew.class);
         conversationsIntent.putExtra("userData", userData);
         conversationsIntent.putExtra("title", title);
         conversationsIntent.putExtra("appVersion", getAppVersion());

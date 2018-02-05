@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.fugu.R;
 import com.fugu.activity.FuguChatActivity;
+import com.fugu.database.CommonData;
 import com.fugu.model.ActionButtonModel;
 
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ public class CustomActionButtonsAdapter extends RecyclerView.Adapter<CustomActio
         ActionButtonViewHolder(final View itemView) {
             super(itemView);
             btnAction = itemView.findViewById(R.id.btnAction);
+            btnAction.setTypeface(CommonData.getFontConfig().getNormalTextTypeFace(mContext.getApplicationContext()));
             btnAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {

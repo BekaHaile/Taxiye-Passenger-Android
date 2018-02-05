@@ -7,6 +7,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.net.Uri;
@@ -34,11 +35,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.fugu.FuguColorConfig;
 import com.fugu.FuguConfig;
+import com.fugu.FuguFontConfig;
 import com.fugu.R;
 import com.fugu.activity.FuguChatActivity;
 import com.fugu.constant.FuguAppConstant;
@@ -74,6 +73,7 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Activity activity;
     private FuguConversation fuguConversation;
     private FuguChatActivity fuguChatActivity;
+    private FuguFontConfig fuguFontConfig;
 
     @NonNull
     private List<ListItem> fuguItems = Collections.emptyList();
@@ -85,6 +85,7 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.fuguConversation = fuguConversation;
         removeDefaultMsgTime();
         fuguColorConfig = CommonData.getColorConfig();
+        fuguFontConfig = CommonData.getFontConfig();
     }
 
     public void setOnRetryListener(OnRetryListener OnRetryListener) {
@@ -905,6 +906,12 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             vwActionButtonDivider = itemView.findViewById(R.id.vwActionButtonDivider);
             tvActionTitleDescription = itemView.findViewById(R.id.tvActionDescription);
             llTextualContent = itemView.findViewById(R.id.llTextualContent);
+
+            Typeface typeface = fuguFontConfig.getNormalTextTypeFace(activity.getApplicationContext());
+            tvUserName.setTypeface(typeface); tvMsg.setTypeface(typeface); tvTime.setTypeface(typeface);
+            tvFileName.setTypeface(typeface); tvExtension.setTypeface(typeface); tvActionTitle.setTypeface(typeface);
+            tvActionTitleDescription.setTypeface(typeface);
+
         }
     }
 
@@ -951,6 +958,11 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             fuguLlFileDetails = itemView.findViewById(R.id.llFileDetails);
             fuguTvFileSize = itemView.findViewById(R.id.tvFileSize);
             fuguTvExtension = itemView.findViewById(R.id.tvExtension);
+
+            Typeface typeface = fuguFontConfig.getNormalTextTypeFace(activity.getApplicationContext());
+            fuguTvMsg.setTypeface(typeface); fuguTvTime.setTypeface(typeface); tvCancel.setTypeface(typeface);
+            tvTryAgain.setTypeface(typeface); fuguTvFileName.setTypeface(typeface); fuguTvFileSize.setTypeface(typeface);
+            fuguTvExtension.setTypeface(typeface); fuguBtnRetry.setTypeface(typeface);
         }
     }
 
@@ -960,6 +972,8 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         DateViewHolder(View itemView) {
             super(itemView);
             tvDate = itemView.findViewById(R.id.tvDate);
+            Typeface typeface = fuguFontConfig.getNormalTextTypeFace(activity.getApplicationContext());
+            tvDate.setTypeface(typeface);
         }
 
     }

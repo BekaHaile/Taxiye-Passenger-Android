@@ -195,8 +195,10 @@ public class FuguBaseActivity extends AppCompatActivity implements FuguAppConsta
 
             toolbar.setTitleTextColor(CommonData.getColorConfig().getFuguActionBarText());
 
-            ((TextView) toolbar.findViewById(R.id.tv_toolbar_name)).setText(title);
-            ((TextView) toolbar.findViewById(R.id.tv_toolbar_name)).setTextColor(CommonData.getColorConfig().getFuguActionBarText());
+            TextView tvTitle = (TextView) toolbar.findViewById(R.id.tv_toolbar_name);
+            tvTitle.setText(title);
+            tvTitle.setTextColor(CommonData.getColorConfig().getFuguActionBarText());
+            tvTitle.setTypeface(CommonData.getFontConfig().getHeaderTitleTypeFace(this.getApplicationContext()));
         }
         return getSupportActionBar();
     }

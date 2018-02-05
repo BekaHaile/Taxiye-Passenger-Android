@@ -43,6 +43,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/FuguTheme" />
 
+        <activity
+            android:name=".activity.FuguChannelsActivityNew"
+            android:screenOrientation="portrait"
+            android:theme="@style/FuguTheme" />
+
         <service
             android:name="com.fugu.service.FuguPushIntentService"
             android:exported="false" />

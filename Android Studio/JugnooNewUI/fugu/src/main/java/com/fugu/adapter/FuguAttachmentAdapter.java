@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.fugu.R;
 import com.fugu.constant.FuguAppConstant;
+import com.fugu.database.CommonData;
 import com.fugu.model.FuguAttachmentModel;
 
 import java.util.ArrayList;
@@ -88,6 +89,7 @@ public class FuguAttachmentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public AttachmentViewHolder(View itemView) {
             super(itemView);
             tvAttachmentType = (TextView) itemView.findViewById(R.id.tvAttachmentType);
+            tvAttachmentType.setTypeface(CommonData.getFontConfig().getNormalTextTypeFace(context.getApplicationContext()));
             viewDivider = itemView.findViewById(R.id.viewDivider);
         }
     }

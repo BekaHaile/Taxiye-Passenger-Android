@@ -16,4 +16,5 @@ public interface PaperDbConstant {
     String PAPER_APP_SECRET_KEY = "fugu_app_secret_key";
     String PAPER_APP_TYPE = "fugu_app_type";
     String PAPER_COLOR_CONFIG = "fugu_color_config";
+    String PAPER_FONT_CONFIG = "fugu_font_config";
 }

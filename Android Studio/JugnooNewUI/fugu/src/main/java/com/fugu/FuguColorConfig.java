@@ -1,14 +1,9 @@
 package com.fugu;
 
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
-import android.os.Build;
-import android.support.v4.content.ContextCompat;
-
-import com.fugu.activity.FuguBaseActivity;
 
 /**
  * Created by bhavya on 01/08/17.
@@ -58,6 +53,9 @@ public class FuguColorConfig {
 
     public int getFuguTextColorPrimary() {
         return Color.parseColor(fuguTextColorPrimary);
+    }
+    public int getFuguTextColorSecondary() {
+        return Color.parseColor(fuguTextColorSecondary);
     }
 
     public int getFuguChannelDateText() {
@@ -122,6 +120,7 @@ public class FuguColorConfig {
     private String fuguSecondaryTextMsgFromName = "#627de3";
 
     private String fuguTextColorPrimary = "#2c2333";
+    private String fuguTextColorSecondary = "#2c2333";
     private String fuguChannelDateText = "#88838c";
     private String fuguChatBg = "#f8f9ff";
     private String fuguBorderColor = "#dce0e6";
@@ -190,6 +189,11 @@ public class FuguColorConfig {
 
         public Builder fuguTextColorPrimary(String fuguTextColorPrimary) {
             fuguColorConfig.fuguTextColorPrimary = fuguTextColorPrimary;
+            return this;
+        }
+
+        public Builder fuguTextColorSecondary(String fuguTextColorSecondary) {
+            fuguColorConfig.fuguTextColorSecondary = fuguTextColorSecondary;
             return this;
         }
 

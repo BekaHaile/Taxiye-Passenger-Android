@@ -1,8 +1,6 @@
 package com.fugu.retrofit;
 
 
-import com.fugu.BuildConfig;
-import com.fugu.FuguConfig;
 import com.fugu.database.CommonData;
 
 import java.util.concurrent.TimeUnit;
@@ -57,8 +55,8 @@ public class RestClient {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         // set your desired log level
         //logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
-        logging.setLevel(HttpLoggingInterceptor.Level.NONE);
-//        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        //logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(30, TimeUnit.SECONDS);
 

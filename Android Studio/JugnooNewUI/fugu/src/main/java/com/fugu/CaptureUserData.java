@@ -28,7 +28,11 @@ public class CaptureUserData implements Parcelable {
     private String country = "";
     private String zipCode = "";
     private HashMap<String, String> custom_attributes = new HashMap<>();
+    private String channelInfoJson;
 
+    public String getChannelInfoJson() {
+        return channelInfoJson;
+    }
 
     public HashMap<String, String> getCustom_attributes() {
         return custom_attributes;
@@ -178,6 +182,11 @@ public class CaptureUserData implements Parcelable {
             return this;
         }
 
+        public Builder channelInfoJson(String channelInfoJson) {
+            captureUserData.channelInfoJson = channelInfoJson;
+            return this;
+        }
+
         public CaptureUserData build() {
             return captureUserData;
         }
@@ -199,7 +208,7 @@ public class CaptureUserData implements Parcelable {
             this.captureUserData = in.readParcelable(CaptureUserData.class.getClassLoader());
         }
 
-        public final Parcelable.Creator<Builder> CREATOR = new Parcelable.Creator<Builder>() {
+        public final Creator<Builder> CREATOR = new Creator<Builder>() {
             @Override
             public Builder createFromParcel(Parcel source) {
                 return new Builder(source);
@@ -237,6 +246,7 @@ public class CaptureUserData implements Parcelable {
         dest.writeString(this.country);
         dest.writeString(this.zipCode);
         dest.writeSerializable(this.custom_attributes);
+        dest.writeString(channelInfoJson);
     }
 
     protected CaptureUserData(Parcel in) {
@@ -255,6 +265,7 @@ public class CaptureUserData implements Parcelable {
         this.country = in.readString();
         this.zipCode = in.readString();
         this.custom_attributes = (HashMap<String, String>) in.readSerializable();
+        this.channelInfoJson = in.readString();
     }
 
     public static final Creator<CaptureUserData> CREATOR = new Creator<CaptureUserData>() {

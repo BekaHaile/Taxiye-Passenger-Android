@@ -22,7 +22,7 @@ public class ChatRelativeLayout extends RelativeLayout {
 
     private TypedArray typedArray;
 
-    private RelativeLayout.LayoutParams parentLayoutParams, childLayoutParams;
+    private LayoutParams parentLayoutParams, childLayoutParams;
     private int parentWidth, childWidth;
     private int parentHeight, childHeight;
 

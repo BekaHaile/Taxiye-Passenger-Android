@@ -9,7 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.fugu.BuildConfig;
-import com.fugu.activity.FuguChannelsActivity;
+import com.fugu.activity.FuguChannelsActivityNew;
 import com.fugu.activity.FuguChatActivity;
 import com.fugu.adapter.EventItem;
 import com.fugu.adapter.ListItem;
@@ -60,7 +60,8 @@ public class FuguNetworkStateReceiver extends BroadcastReceiver implements FuguA
         Paper.init(context);
         int status = NetworkUtil.getConnectivityStatusString(context);
         try {
-            FuguChannelsActivity.changeStatus(status);
+            //FuguChannelsActivity.changeStatus(status);
+            FuguChannelsActivityNew.changeStatus(status);
         } catch (Exception e) {
 
         }

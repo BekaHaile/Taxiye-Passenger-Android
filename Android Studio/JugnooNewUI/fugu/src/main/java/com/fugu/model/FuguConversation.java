@@ -1,7 +1,9 @@
 package com.fugu.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fugu.datastructure.ChannelStatus;
-import com.google.gson.JsonArray;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
  * bhavya.rattan@click-labs.com
  */
 
-public class FuguConversation {
+public class FuguConversation implements Parcelable, Cloneable {
 
     @SerializedName("channel_id")
     @Expose
@@ -28,6 +30,67 @@ public class FuguConversation {
     @SerializedName("last_sent_by_full_name")
     @Expose
     private String last_sent_by_full_name;
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    protected FuguConversation(Parcel in) {
+        if (in.readByte() == 0) {
+            channelId = null;
+        } else {
+            channelId = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            labelId = null;
+        } else {
+            labelId = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            userId = null;
+        } else {
+            userId = in.readLong();
+        }
+        enUserId = in.readString();
+        last_sent_by_full_name = in.readString();
+        message = in.readString();
+        dateTime = in.readString();
+        label = in.readString();
+        status = in.readInt();
+        channelStatus = in.readInt();
+        channelImage = in.readString();
+        isOpenChat = in.readByte() != 0;
+        channelName = in.readString();
+        transactionId = in.readString();
+        message_type = in.readInt();
+        if (in.readByte() == 0) {
+            last_sent_by_id = null;
+        } else {
+            last_sent_by_id = in.readLong();
+        }
+        isTimeSet = in.readInt();
+        userName = in.readString();
+        last_message_status = in.readInt();
+        defaultMessage = in.readString();
+        default_message = in.readString();
+        businessName = in.readString();
+        unreadCount = in.readInt();
+        startChannelsActivity = in.readByte() != 0;
+        chatType = in.readInt();
+    }
+
+    public static final Creator<FuguConversation> CREATOR = new Creator<FuguConversation>() {
+        @Override
+        public FuguConversation createFromParcel(Parcel in) {
+            return new FuguConversation(in);
+        }
+
+        @Override
+        public FuguConversation[] newArray(int size) {
+            return new FuguConversation[size];
+        }
+    };
 
     public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
@@ -57,9 +120,9 @@ public class FuguConversation {
     @SerializedName("custom_label")
     @Expose
     private String channelName = null;
-    @SerializedName("tags")
+   /* @SerializedName("tags")
     @Expose
-    private JsonArray tags = null;
+    private JsonArray tags = null;*/
     @SerializedName("transaction_id")
     @Expose
     private String transactionId;
@@ -139,6 +202,17 @@ public class FuguConversation {
     @SerializedName("startChannelsActivity")
     @Expose
     private boolean startChannelsActivity = false;
+
+    @SerializedName("chat_type")
+    private int chatType;
+
+    public int getChatType() {
+        return chatType;
+    }
+
+    public void setChatType(final int chatType) {
+        this.chatType = chatType;
+    }
 
     public String getChannelImage() {
         return channelImage;
@@ -226,14 +300,14 @@ public class FuguConversation {
         this.channelName = channelName;
     }
 
-    public JsonArray getTags() {
+    /*public JsonArray getTags() {
         return tags;
     }
 
     public void setTags(JsonArray tags) {
         this.tags = tags;
     }
-
+*/
     public String getTransactionId() {
         return transactionId;
     }
@@ -305,5 +379,59 @@ public class FuguConversation {
 
     public void setMessage_type(int message_type) {
         this.message_type = message_type;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(final Parcel dest, final int flags) {
+        if (channelId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(channelId);
+        }
+        if (labelId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(labelId);
+        }
+        if (userId == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(userId);
+        }
+        dest.writeString(enUserId);
+        dest.writeString(last_sent_by_full_name);
+        dest.writeString(message);
+        dest.writeString(dateTime);
+        dest.writeString(label);
+        dest.writeInt(status);
+        dest.writeInt(channelStatus);
+        dest.writeString(channelImage);
+        dest.writeByte((byte) (isOpenChat ? 1 : 0));
+        dest.writeString(channelName);
+        dest.writeString(transactionId);
+        dest.writeInt(message_type);
+        if (last_sent_by_id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(last_sent_by_id);
+        }
+        dest.writeInt(isTimeSet);
+        dest.writeString(userName);
+        dest.writeInt(last_message_status);
+        dest.writeString(defaultMessage);
+        dest.writeString(default_message);
+        dest.writeString(businessName);
+        dest.writeInt(unreadCount);
+        dest.writeByte((byte) (startChannelsActivity ? 1 : 0));
+        dest.writeInt(chatType);
     }
 }

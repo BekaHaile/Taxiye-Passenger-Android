@@ -642,6 +642,7 @@ public interface Constants {
     String KEY_SHOW_JEANIE_HELP_TEXT = "show_jeanie_help_text";
     String KEY_SHOW_OFFER_DIALOG = "show_offer_dialog";
     String KEY_SHOW_TUTORIAL = "show_tutorial";
+    String KEY_CHAT_INFO = "chat_info";
 
     int OPEN_DEEP_INDEX = 122112;
     int OPEN_APP_CLIENT_ID = 122114;

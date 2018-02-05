@@ -7,7 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.fugu.FuguFontConfig;
 import com.fugu.R;
+import com.fugu.database.CommonData;
 import com.fugu.model.DescriptionObject;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class CustomActionDescriptionAdapter extends RecyclerView.Adapter<CustomA
 
     private LayoutInflater mLayoutInflater;
     private ArrayList<DescriptionObject> mDescriptionList = new ArrayList<>();
+    private Context mContext;
 
     /**
      * Constructor
@@ -28,6 +31,7 @@ public class CustomActionDescriptionAdapter extends RecyclerView.Adapter<CustomA
      * @param description the description list to show
      */
     public CustomActionDescriptionAdapter(Context context, ArrayList<DescriptionObject> description) {
+        mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
         mDescriptionList = description;
     }
@@ -62,6 +66,10 @@ public class CustomActionDescriptionAdapter extends RecyclerView.Adapter<CustomA
             super(itemView);
             tvHeader = itemView.findViewById(R.id.tvHeader);
             tvContent= itemView.findViewById(R.id.tvContent);
+            FuguFontConfig fuguFontConfig = CommonData.getFontConfig();
+            tvHeader.setTypeface(fuguFontConfig.getNormalTextTypeFace(mContext.getApplicationContext()));
+            tvContent.setTypeface(fuguFontConfig.getNormalTextTypeFace(mContext.getApplicationContext()));
         }
+
     }
 }

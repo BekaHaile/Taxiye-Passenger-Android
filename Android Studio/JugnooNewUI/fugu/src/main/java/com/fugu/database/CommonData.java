@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 
 import com.fugu.FuguColorConfig;
+import com.fugu.FuguFontConfig;
 import com.fugu.adapter.ListItem;
 import com.fugu.model.FuguConversation;
 import com.fugu.model.FuguDeviceDetails;
@@ -21,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -44,6 +44,7 @@ public final class CommonData implements PaperDbConstant {
     public static TreeMap<Long, FuguGetMessageResponse> GET_LABEL_ID_RESPONSE_MAP = new TreeMap<>();
     public static TreeMap<Long, TreeMap<String, ListItem>> UNSENT_MESSAGE_MAP = new TreeMap<>();
     public static FuguColorConfig COLOR_CONFIG = new FuguColorConfig();
+    public static FuguFontConfig FONT_CONFIG = new FuguFontConfig();
     public static String isNewChatKey = "IS_NEW_CHAT";
     public static String providerKey = "PROVIDER_KEY";
     public static String pushKey = "PUSH_KEY";
@@ -286,6 +287,16 @@ public final class CommonData implements PaperDbConstant {
     }
 
     /**
+     * Save PAPER_FONT_CONFIG
+     *
+     * @param fuguFontConfig font config
+     */
+    public static void setFontConfig(FuguFontConfig fuguFontConfig) {
+        CommonData.FONT_CONFIG = fuguFontConfig;
+        Paper.book().write(PAPER_FONT_CONFIG, fuguFontConfig);
+    }
+
+    /**
      * Gets PAPER_COLOR_CONFIG
      *
      * @return the fuguColorConfig
@@ -295,6 +306,18 @@ public final class CommonData implements PaperDbConstant {
         if (COLOR_CONFIG == null)
             COLOR_CONFIG = Paper.book().read(PAPER_COLOR_CONFIG, null);
         return COLOR_CONFIG;
+    }
+
+    /**
+     * Gets PAPER_FONT_CONFIG
+     *
+     * @return the fuguFontConfig
+     */
+
+    public static FuguFontConfig getFontConfig() {
+        if (FONT_CONFIG == null)
+            FONT_CONFIG = Paper.book().read(PAPER_FONT_CONFIG, null);
+        return FONT_CONFIG;
     }
 
     /**

@@ -10,14 +10,10 @@ import android.text.TextUtils;
 import com.fugu.CaptureUserData;
 import com.fugu.FuguColorConfig;
 import com.fugu.FuguConfig;
+import com.fugu.FuguFontConfig;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
-import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -568,6 +564,7 @@ public class Data {
                 .city(userData.getCity())
                 .latitude(Data.loginLatitude)
                 .longitude(Data.loginLongitude)
+                .channelInfoJson(userData.getFuguChannelInfoJson())
                 .build();
 
 
@@ -595,6 +592,7 @@ public class Data {
                 .fuguSecondaryTextMsgYou(FuguColorConfigStrings.FUGU_SECONDARY_TEXT_MSG_YOU)
                 .fuguSecondaryTextMsgFrom(FuguColorConfigStrings.FUGU_SECONDARY_TEXT_MSG_FROM)
                 .fuguTextColorPrimary(FuguColorConfigStrings.FUGU_TEXT_COLOR_PRIMARY)
+                .fuguTextColorSecondary(FuguColorConfigStrings.FUGU_TEXT_COLOR_SECONDARY)
                 .fuguChannelDateText(FuguColorConfigStrings.FUGU_CHANNEL_DATE_TEXT)
                 .fuguChatBg(FuguColorConfigStrings.FUGU_CHAT_BG)
                 .fuguBorderColor(FuguColorConfigStrings.FUGU_BORDER_COLOR)
@@ -609,6 +607,13 @@ public class Data {
                 .build();
 
         FuguConfig.getInstance().setColorConfig(fuguColorConfig);
+
+        FuguFontConfig fuguFontConfig = new FuguFontConfig.Builder()
+                .setNormaTextFontPath("fonts/maven_pro_regular.otf")
+                .setHeaderTitleFontPath("fonts/avenir_next_demi.otf")
+                .build();
+
+        FuguConfig.getInstance().setFontConfig(fuguFontConfig);
 
 
     }

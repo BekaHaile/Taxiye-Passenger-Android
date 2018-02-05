@@ -17,7 +17,7 @@ public interface FuguColorConfigStrings {
     String FUGU_SECONDARY_TEXT_MSG_FROM = "#595968";
 
     String FUGU_TEXT_COLOR_PRIMARY = "#595968";
-    String FUGU_CHANNEL_DATE_TEXT = "#AAAAAA";
+    String FUGU_CHANNEL_DATE_TEXT = "#71717A";
     String FUGU_CHAT_BG = "#FFFFFF";
     String FUGU_BORDER_COLOR = "#DEDEDE";
     String FUGU_CHAT_DATE_TEXT = "#51445C";
@@ -27,4 +27,5 @@ public interface FuguColorConfigStrings {
     String FUGU_TYPE_MESSAGE_HINT = "#8E8E8E";
     String FUGU_TYPE_MESSAGE_TEXT = "#2C2333";
     String FUGU_CHANNEL_BG = "#FFFFFF";
+    String FUGU_TEXT_COLOR_SECONDARY="#86868E";
 }

@@ -44,7 +44,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fugu.BuildConfig;
 import com.fugu.FuguConfig;
 import com.fugu.R;
 import com.fugu.adapter.FuguAttachmentAdapter;
@@ -159,6 +158,7 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
             });
 
             TextView btnCancel = (TextView) dialog.findViewById(R.id.btnCancel);
+            btnCancel.setTypeface(CommonData.getFontConfig().getNormalTextTypeFace(activity.getApplicationContext()));
 
             btnCancel.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -184,7 +184,7 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
         FuguLog.e(TAG, "startCamera");
 
         /** Code to check whether the Location Permission is Granted */
-        String[] permissionsRequired = new String[]{android.Manifest.permission.CAMERA,
+        String[] permissionsRequired = new String[]{Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         /*  Check if the Permission for the Camera was Granted  */
@@ -246,7 +246,7 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
      * @param type The FileType
      * @return directory corresponding to the FileType
      */
-    private File getDirectory(FuguAppConstant.FileType type) {
+    private File getDirectory(FileType type) {
 
         try {
             String strFolder = Environment.getExternalStorageDirectory()
@@ -840,14 +840,14 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
         String fileName = CommonData.getUserDetails().getData().getBusinessName().replaceAll(" ", "").replaceAll("'s", "") + "_" + timeStamp + ".jpg";
 
 //        String path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), fileName).getAbsolutePath();
-        String path = new File(getDirectory(FuguAppConstant.FileType.IMAGE_FILE), fileName).getAbsolutePath();
+        String path = new File(getDirectory(FileType.IMAGE_FILE), fileName).getAbsolutePath();
 
         convertBitmapToFile(bitmap, path);
 
         return path;
     }
 
-    public FuguFileDetails saveFile(Uri uri, FuguAppConstant.FileType type) {
+    public FuguFileDetails saveFile(Uri uri, FileType type) {
         FuguLog.e(TAG, "saveFile");
 
         FuguFileDetails fuguFileDetails = new FuguFileDetails();

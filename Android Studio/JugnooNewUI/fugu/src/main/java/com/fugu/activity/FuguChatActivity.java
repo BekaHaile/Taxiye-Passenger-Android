@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -233,6 +234,11 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
         animSlideDown = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.fugu_slide_down_time);
         animSlideDown.setAnimationListener(this);
+
+        Typeface typeface = CommonData.getFontConfig().getNormalTextTypeFace(this.getApplicationContext());
+        tvDateLabel.setTypeface(typeface); tvClosed.setTypeface(typeface); tvNoInternet.setTypeface(typeface);
+        etMsg.setTypeface(typeface); tvStatus.setTypeface(typeface);
+
 
     }
 
@@ -1982,8 +1988,10 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
             mClient.publish("/" + String.valueOf(channelId), prepareMessageJson(CHANNEL_UNSUBSCRIBED));
         }
 
-        FuguChannelsActivity.isRefresh = true;
-        FuguChannelsActivity.readChannelId = channelId;
+        //FuguChannelsActivity.isRefresh = true;
+        //FuguChannelsActivity.readChannelId = channelId;
+        FuguChannelsActivityNew.isRefresh = true;
+        FuguChannelsActivityNew.readChannelId = channelId;
 
         Intent intent = new Intent();
         if (fuguMessageList.size() > 0) {

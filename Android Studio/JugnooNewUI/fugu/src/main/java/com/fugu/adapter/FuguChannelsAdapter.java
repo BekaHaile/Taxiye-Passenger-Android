@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.fugu.FuguColorConfig;
 import com.fugu.FuguConfig;
+import com.fugu.FuguFontConfig;
 import com.fugu.R;
 import com.fugu.database.CommonData;
 import com.fugu.datastructure.ChannelStatus;
@@ -85,7 +86,7 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             channelViewHolder.tvChannelName.setText(currentChannelItem.getLabel());
             channelViewHolder.tvChannelName.setTextColor(fuguColorConfig.getFuguTextColorPrimary());
-            channelViewHolder.tvMessage.setTextColor(fuguColorConfig.getFuguTextColorPrimary());
+            channelViewHolder.tvMessage.setTextColor(fuguColorConfig.getFuguTextColorSecondary());
             channelViewHolder.viewDivider.setBackgroundColor(fuguColorConfig.getFuguBorderColor());
             if (TextUtils.isEmpty(currentChannelItem.getMessage())) {
                 if (!TextUtils.isEmpty(currentChannelItem.getLast_sent_by_full_name())) {
@@ -192,8 +193,8 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 //            }
 
             if (currentChannelItem.getUnreadCount() > 0) {
-                channelViewHolder.tvChannelName.setTypeface(Typeface.DEFAULT_BOLD);
-                channelViewHolder.tvMessage.setTypeface(Typeface.DEFAULT_BOLD);
+                channelViewHolder.tvChannelName.setTypeface(channelViewHolder.tvChannelName.getTypeface(),Typeface.BOLD);
+                channelViewHolder.tvMessage.setTypeface(channelViewHolder.tvMessage.getTypeface(),Typeface.BOLD);
                 channelViewHolder.circularTvMessageCount.setVisibility(View.VISIBLE);
                 //            channelViewHolder.circularTvMessageCount.setSolidColor(FuguConfig.getInstance().getThemeColor());
                 //            channelViewHolder.circularTvMessageCount.setStrokeWidth(0);
@@ -202,8 +203,8 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 channelViewHolder.tvDate.setTextColor(fuguColorConfig.getFuguTextColorPrimary());
 
             } else {
-                channelViewHolder.tvChannelName.setTypeface(Typeface.DEFAULT);
-                channelViewHolder.tvMessage.setTypeface(Typeface.DEFAULT);
+                channelViewHolder.tvChannelName.setTypeface(channelViewHolder.tvChannelName.getTypeface(),Typeface.NORMAL);
+                channelViewHolder.tvMessage.setTypeface(channelViewHolder.tvMessage.getTypeface(),Typeface.NORMAL);
                 channelViewHolder.circularTvMessageCount.setVisibility(View.GONE);
                 channelViewHolder.tvDate.setTextColor(fuguColorConfig.getFuguChannelDateText());
             }
@@ -309,6 +310,13 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             circularTvMessageCount = itemView.findViewById(R.id.circularTvMessageCount);
             viewDivider = itemView.findViewById(R.id.viewDivider);
             vClosed = itemView.findViewById(R.id.vClosed);
+
+            FuguFontConfig fuguFontConfig = CommonData.getFontConfig();
+            tvChannelName.setTypeface(fuguFontConfig.getNormalTextTypeFace(activity.getApplicationContext()));
+            tvMessage.setTypeface(fuguFontConfig.getNormalTextTypeFace(activity.getApplicationContext()));
+            tvDate.setTypeface(fuguFontConfig.getNormalTextTypeFace(activity.getApplicationContext()));
+            circularTvMessageCount.setTypeface(fuguFontConfig.getNormalTextTypeFace(activity.getApplicationContext()));
+
         }
     }
 

@@ -26,12 +26,14 @@
     <color name="fugu_white_50">#33ffffff</color>
     <color name="fugu_blur_black">#20000000</color>
     <color name="fugu_action_divider_color">#979797</color>
+    <color name="fugu_divider_light">#f5f5f5</color>
 
 
     <!--> unread message counter text and background colors<!-->
     <color name="white">#FFFFFF</color>
     <color name="red">#dd171e</color>
     <color name="orange">#FFFF00</color>
+    <color name="fugu_jugnoo_orange">#FD7945</color>
     <!-->End Here<!-->
 
     <color name="fugu_transparent">#44949494</color>
