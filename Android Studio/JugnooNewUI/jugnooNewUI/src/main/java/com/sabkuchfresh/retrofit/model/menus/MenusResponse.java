@@ -418,8 +418,8 @@ public class MenusResponse {
 			return orderMode;
 		}
 
-		public int getPayMode() {
-			return payMode;
+		public boolean getPayModeEnabled() {
+			return payMode==1;
 		}
 
 		public String getNext_slot_time() {
