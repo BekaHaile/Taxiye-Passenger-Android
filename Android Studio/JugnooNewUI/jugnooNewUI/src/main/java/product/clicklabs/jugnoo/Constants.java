@@ -73,6 +73,8 @@ public interface Constants {
     String KEY_ERROR = "error";
 
     String KEY_ACCESS_TOKEN = "access_token";
+    String KEY_UPDATE_CONTACTS="update_contacts";
+    String KEY_CONTACTS_LIST="contacts_list";
     String KEY_ENGAGEMENT_ID = "engagement_id";
     String KEY_EMAIL = "email";
     String KEY_USER_NAME = "user_name";
@@ -288,6 +290,7 @@ public interface Constants {
     String KEY_REFER_ALL_TITLE_LOGIN = "refer_all_title_login";
     String KEY_USER_RESPONSE = "user_response";
     String KEY_IS_LOGIN_POPUP = "is_login_popup";
+    String KEY_COMING_FROM_NEW_CONVERSATION= "coming_from_new_conversation";
 
     String KEY_FRESH_ORDER_ID = "order_id";
 

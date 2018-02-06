@@ -250,6 +250,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case CREATE_CHAT:
                 RestClient.getFatafatApiService().createChat(params,callback);
                 break;
+            case FETCH_CONTACTS:
+                RestClient.getFatafatApiService().fetchContacts(params,callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

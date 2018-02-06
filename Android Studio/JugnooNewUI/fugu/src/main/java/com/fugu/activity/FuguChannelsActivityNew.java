@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -68,7 +69,7 @@ import java.util.ListIterator;
  * Created by cl-macmini-01 on 1/31/18.
  */
 
-public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private static final int NOT_CONNECTED = 0;
     private static final int CONNECTED_TO_INTERNET = 1;
@@ -250,6 +251,9 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
         tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this,R.color.fugu_jugnoo_orange));
         tabLayout.setTabTextColors(fuguColorConfig.getFuguActionBarText(),ContextCompat.getColor(this,android.R.color.black));
         viewPagerChannels = (ViewPager) findViewById(R.id.vwPagerChannels);
+
+        FloatingActionButton btnNewChat = (FloatingActionButton)findViewById(R.id.btnNewChat);
+        btnNewChat.setOnClickListener(this);
     }
 
     /**
@@ -546,6 +550,16 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(Uri.parse(FUGU_WEBSITE_URL));
             startActivity(i);
+        }
+        else if(v.getId() == R.id.btnNewChat){
+            //send a broadcast to listening parent app
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("action_type","OPEN_NEW_CHAT");
+            Intent intent = new Intent();
+            intent.putExtra(FUGU_CUSTOM_ACTION_PAYLOAD, jsonObject.toString());
+            intent.setAction(FUGU_CUSTOM_ACTION_SELECTED);
+            sendBroadcast(intent);
+
         }
     }
 

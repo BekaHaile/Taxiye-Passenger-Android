@@ -1,6 +1,7 @@
 package com.fugu.adapter;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,7 @@ public class CustomActionDescriptionAdapter extends RecyclerView.Adapter<CustomA
 
     @Override
     public DescriptionViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        View main = mLayoutInflater.inflate(R.layout.list_item_description,parent,false);
+        View main = mLayoutInflater.inflate(R.layout.list_item_description, parent, false);
         return new DescriptionViewHolder(main);
     }
 
@@ -60,15 +61,16 @@ public class CustomActionDescriptionAdapter extends RecyclerView.Adapter<CustomA
      */
     class DescriptionViewHolder extends RecyclerView.ViewHolder {
 
-        TextView tvHeader,tvContent;
+        TextView tvHeader, tvContent;
 
         public DescriptionViewHolder(final View itemView) {
             super(itemView);
             tvHeader = itemView.findViewById(R.id.tvHeader);
-            tvContent= itemView.findViewById(R.id.tvContent);
+            tvContent = itemView.findViewById(R.id.tvContent);
             FuguFontConfig fuguFontConfig = CommonData.getFontConfig();
             tvHeader.setTypeface(fuguFontConfig.getNormalTextTypeFace(mContext.getApplicationContext()));
-            tvContent.setTypeface(fuguFontConfig.getNormalTextTypeFace(mContext.getApplicationContext()));
+            tvContent.setTypeface(fuguFontConfig.getNormalTextTypeFace(mContext.getApplicationContext())
+                    , Typeface.BOLD);
         }
 
     }

@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.fugu.FuguNotificationConfig;
 import com.fugu.R;
@@ -46,6 +48,7 @@ public class FuguChannelsFragment extends Fragment implements Animation.Animatio
     private String businessName = "Anonymous";
     private FuguChannelsActivityNew mActivity;
     private RecyclerView rvChannels;
+    private LinearLayout llNoConversations;
 
     /**
      * Creates instance of FuguChanneFragment
@@ -87,6 +90,11 @@ public class FuguChannelsFragment extends Fragment implements Animation.Animatio
      */
     private void initViews(final View view) {
         rvChannels = (RecyclerView) view.findViewById(R.id.rvChannels);
+        llNoConversations = (LinearLayout) view.findViewById(R.id.llNoConversations);
+        llNoConversations.setVisibility(View.GONE);
+        TextView tvNoConversation = llNoConversations.findViewById(R.id.tvNoConversation);
+        tvNoConversation.setTypeface(CommonData.getFontConfig().getNormalTextTypeFace(mActivity.getApplicationContext()));
+        tvNoConversation.setTextColor(CommonData.getColorConfig().getFuguTextColorPrimary());
         FuguPutUserDetailsResponse.Data userData = CommonData.getUserDetails().getData();
         businessName = userData.getBusinessName();
         userId = userData.getUserId();
@@ -237,7 +245,7 @@ public class FuguChannelsFragment extends Fragment implements Animation.Animatio
      */
     public void setConversationList(final ArrayList<FuguConversation> conversationList) {
         fuguConversationList = new ArrayList<>();
-        for(FuguConversation conversation:conversationList){
+        for (FuguConversation conversation : conversationList) {
             try {
                 fuguConversationList.add((FuguConversation) conversation.clone());
             } catch (CloneNotSupportedException e) {
@@ -248,6 +256,20 @@ public class FuguChannelsFragment extends Fragment implements Animation.Animatio
             fuguChannelsAdapter.updateList(fuguConversationList);
         } else {
             setRecyclerViewData();
+        }
+        checkForEmptyView();
+    }
+
+    /**
+     * Decides whether to show empty view or not
+     */
+    private void checkForEmptyView() {
+        if (fuguConversationList.size() > 0) {
+            rvChannels.setVisibility(View.VISIBLE);
+            llNoConversations.setVisibility(View.GONE);
+        } else {
+            rvChannels.setVisibility(View.GONE);
+            llNoConversations.setVisibility(View.VISIBLE);
         }
     }
 
@@ -268,6 +290,7 @@ public class FuguChannelsFragment extends Fragment implements Animation.Animatio
         LinearLayoutManager layoutManager = new LinearLayoutManager(mActivity);
         rvChannels.setLayoutManager(layoutManager);
         rvChannels.setAdapter(fuguChannelsAdapter);
+        checkForEmptyView();
     }
 
 }

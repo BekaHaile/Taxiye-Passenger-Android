@@ -9,6 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="40dp"/>
+        android:paddingBottom="@dimen/fugu_tab_padding_bottom_padding"/>
+
+    <include
+        android:id="@+id/llNoConversations"
+        layout="@layout/layout_no_conversations"
+        android:visibility="gone"/>
 
 </FrameLayout>

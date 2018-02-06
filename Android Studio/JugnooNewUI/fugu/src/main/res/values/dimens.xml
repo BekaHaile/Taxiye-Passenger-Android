@@ -53,6 +53,7 @@
     <dimen name="fugu_padding_8">7dp</dimen>
     <dimen name="fugu_padding_4">4dp</dimen>
     <dimen name="fugu_padding_7">7dp</dimen>
+    <dimen name="fugu_tab_padding_bottom_padding">200dp</dimen>
 
     <!-- Fugu custom action -->
     <dimen name="fugu_custom_action_image_height">150dp</dimen>

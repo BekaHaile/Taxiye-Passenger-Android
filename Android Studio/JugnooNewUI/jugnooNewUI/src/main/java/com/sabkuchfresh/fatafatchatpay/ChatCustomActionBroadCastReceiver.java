@@ -30,6 +30,7 @@ import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
 
     final String ACTION_NATIVE_ACTIVITY = "NATIVE_ACTIVITY";
+    final String ACTION_OPEN_NEW_CHAT= "OPEN_NEW_CHAT";
     private Gson  gson = new Gson();
 
     @Override
@@ -40,8 +41,11 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
         FuguCustomActionModel customActionModel = gson.fromJson(payload, FuguCustomActionModel.class);
 
         if (customActionModel != null) {
-            int linkIndex = Integer.parseInt(customActionModel.getReference());
 
+            int linkIndex = 0;
+            if(customActionModel.getReference()!=null) {
+                linkIndex = Integer.parseInt(customActionModel.getReference());
+            }
             if (customActionModel.getActionType().equalsIgnoreCase(ACTION_NATIVE_ACTIVITY)) {
 
                 // get link index
@@ -63,6 +67,12 @@ public class ChatCustomActionBroadCastReceiver extends BroadcastReceiver {
                     e.printStackTrace();
                 }
 
+            }
+            else if(customActionModel.getActionType().equalsIgnoreCase(ACTION_OPEN_NEW_CHAT)){
+                // start new conversation
+                Intent newChatIntent = new Intent(context,NewConversationActivity.class);
+                newChatIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(newChatIntent);
             }
         }
     }

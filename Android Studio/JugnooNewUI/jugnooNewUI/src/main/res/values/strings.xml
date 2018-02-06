@@ -1344,7 +1344,7 @@
     <string name="change_order">Change</string>
     <string name="min_order_checkout">Please add more items to your cart to reach minimum order amount of \u20B9%s.</string>
     <string name="label_cancel_edit_order">Click on cancel to edit your order</string>
-    <string name="fugu_support_title">Support</string>
+    <string name="fugu_support_title">CHAT</string>
     <string name="error_no_rating">Please select a rating</string>
     <string name="all">All</string>
     <string name="can_be_used_format">Can be used %s times</string>
@@ -1472,5 +1472,8 @@
     <string name="enter_store_phone_number">Enter store\'s phone number</string>
     <string name="title_suggest_store">SUGGEST A STORE</string>
 
+    <!-- Jugnoo Connections -->
+    <string name="txt_jugnoo_connections">Your jugnoo connections</string>
+    <string name="txt_new_message">New Message</string>
 
 </resources>

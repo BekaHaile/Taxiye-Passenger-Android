@@ -42,4 +42,5 @@
     <color name="fugu_connecting">#FFA500</color>
     <color name="fugu_not_connected">#FF0000</color>
     <color name="fugu_connected">#00FF00</color>
+    <color name="fugu_new_chat_color">#353542</color>
 </resources>

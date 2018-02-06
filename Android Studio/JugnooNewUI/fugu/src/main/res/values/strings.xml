@@ -35,4 +35,5 @@
     <string name="fugu_file_path">file path</string>
     <string name="could_not_read_from_source">Could not read from source</string>
     <string name="fugu_text_all">All</string>
+    <string name="fugu_no_conversations">No Conversations, Yet</string>
 </resources>

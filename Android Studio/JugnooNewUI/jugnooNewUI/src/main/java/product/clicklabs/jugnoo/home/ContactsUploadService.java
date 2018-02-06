@@ -7,9 +7,14 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,6 +39,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import retrofit.mime.TypedInput;
 
 /**
  * Created by socomo on 11/19/15.
@@ -45,6 +51,13 @@ public class ContactsUploadService extends IntentService {
     private ArrayDeque<ContactSyncEntry> mSyncQueue;
     private String accessToken = "", sessionId = "", engagementId = "";
     private String isLoginPopup = "0";
+    private ArrayList<ContactBean> allContactList = new ArrayList<>();
+
+    // whether we come from NewConversation ContactSync page
+    private static boolean isFromNewConversation;
+
+    // batch size counter
+    private static int batchSizeCounter;
 
     public ContactsUploadService() {
         this("Contact Upload Service");
@@ -60,11 +73,19 @@ public class ContactsUploadService extends IntentService {
     protected void onHandleIntent(Intent intent) {
 
         try {
+
+            if(intent.hasExtra(Constants.KEY_COMING_FROM_NEW_CONVERSATION)){
+                isFromNewConversation = true;
+                UPLOAD_BATCH_SIZE = 500;
+            }
+
             if(intent.hasExtra("access_token")){
 				accessToken = intent.getExtras().get("access_token").toString();
-				sessionId = intent.getExtras().get("session_id").toString();
-				engagementId = intent.getExtras().get("engagement_id").toString();
-				isLoginPopup = intent.getStringExtra(Constants.KEY_IS_LOGIN_POPUP);
+				if(!isFromNewConversation) {
+                    sessionId = intent.getExtras().get("session_id").toString();
+                    engagementId = intent.getExtras().get("engagement_id").toString();
+                    isLoginPopup = intent.getStringExtra(Constants.KEY_IS_LOGIN_POPUP);
+                }
 			}
 
             Log.v("intent values are ","--> "+accessToken+", "+sessionId+", "+engagementId);
@@ -119,7 +140,7 @@ public class ContactsUploadService extends IntentService {
 
     private void newQueueUpSyncs() {
         try {
-            ArrayList<ContactBean> contactList = new ArrayList<ContactBean>();
+            allContactList = new ArrayList<ContactBean>();
             ContentResolver cr = getContentResolver();
             Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                     null, null, null, null);
@@ -150,7 +171,7 @@ public class ContactsUploadService extends IntentService {
                             contactBean.setPhone(phone);
                             contactBean.setEmail(email);
                             if (phone != null && (phone.length() >= 10)) {
-                                contactList.add(contactBean);
+                                allContactList.add(contactBean);
                             }
                         }
                         pCur.close();
@@ -197,13 +218,13 @@ public class ContactsUploadService extends IntentService {
             emailCur.close();*/
 
 
-            Log.v("size is ", "---> " + contactList.size());
+            Log.v("size is ", "---> " + allContactList.size());
             /*for(int i=0; i<contactList.size(); i++){
                 Log.v("name ", contactList.get(i).getName().toString()+", Phone "+contactList.get(i).getPhone().toString()
                 +", Email "+contactList.get(i).getEmail().toString());
             }*/
 
-            loadList(contactList);
+            loadList(allContactList);
 
             //getContactDetails();
         } catch (Exception e) {
@@ -230,8 +251,10 @@ public class ContactsUploadService extends IntentService {
 
         final ArrayList<ContactBean> newList = new ArrayList<ContactBean>(set);
         Log.v("newList size", "--->" + newList.size());
-        UPLOAD_BATCH_SIZE = newList.size(); // here I set size of upload batch. right now its full length
 
+        if(!isFromNewConversation){
+            UPLOAD_BATCH_SIZE = newList.size(); // here I set size of upload batch. right now its full length
+        }
         ContactSyncEntry syncEntry = null;
         for(int i=0; i<newList.size(); i++){
             Log.v("name ", newList.get(i).getName().toString()+", Phone "+newList.get(i).getPhone().toString()+", Email "+newList.get(i).getEmail().toString());
@@ -269,21 +292,29 @@ public class ContactsUploadService extends IntentService {
         }
 
         if (completedSync) {
+            doneWithSync();
             Log.d(TAG, "SYNCED");
         }
     }
 
     private void doneWithSync() {
         Log.d(TAG, "STOP SERVICE");
-        sendBroadcast(new Intent(Constants.ACTION_LOADING_COMPLETE));
+        Intent intent = new Intent(Constants.ACTION_LOADING_COMPLETE);
+        if(isFromNewConversation){
+            // send the contacts list also in intent
+            intent.putParcelableArrayListExtra(Constants.KEY_CONTACTS_LIST,allContactList);
+        }
+        sendBroadcast(intent);
         stopSelf();
     }
 
     private void syncQueue() {
+        batchSizeCounter = 0;
         Log.d(TAG, "Pending Syncs: %d " + (mSyncQueue != null ? mSyncQueue.size() : 0));
         if (mSyncQueue != null && !mSyncQueue.isEmpty()) {
             try {
             for (ContactSyncEntry currentSyncEntry : mSyncQueue) {
+                batchSizeCounter++;
                 //currentSyncEntry.setSynced(true);
                 Log.d(TAG, "Numbers to sync: %d "+ currentSyncEntry.numbersToSync.size());
 
@@ -321,8 +352,14 @@ public class ContactsUploadService extends IntentService {
                             + ", Email " + contactsList.get(i).getEmail().toString());
                 }*/
 
+                if(contactsList.size()<10 && !isFromNewConversation){
+                    Log.e("soryy ","Your contacts are less than 10");
+                    Utils.notificationManager(ContactsUploadService.this, getApplicationContext().getResources().getString(R.string.upload_contact_less_contacts), 44);
+                    doneWithSync();
+                    return;
+                }
 
-                if(contactsList.size() > 10) {
+               // if(contactsList.size() > 10) {
                     JSONArray jsonArray = new JSONArray();
 
                     for (int i = 0; i < contactsList.size(); i++) {
@@ -352,15 +389,21 @@ public class ContactsUploadService extends IntentService {
 
 
                     // Call Api
-                    uploadContactsApi(jsonStr, currentSyncEntry);
+                    if(isFromNewConversation){
+                        // send normal array
+                        uploadContactsApi(jsonArray.toString(),currentSyncEntry);
+                    }
+                    else {
+                        uploadContactsApi(jsonStr, currentSyncEntry);
+                    }
                     //doneWithSync();
                 }
-                else{
-                    Log.e("soryy ","Your contacts are less than 10");
-                    Utils.notificationManager(ContactsUploadService.this, getApplicationContext().getResources().getString(R.string.upload_contact_less_contacts), 44);
-                    doneWithSync();
-                }
-            }
+               // else{
+               //     Log.e("soryy ","Your contacts are less than 10");
+               //     Utils.notificationManager(ContactsUploadService.this, getApplicationContext().getResources().getString(R.string.upload_contact_less_contacts), 44);
+               //     doneWithSync();
+              //  }
+          //  }
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -372,13 +415,17 @@ public class ContactsUploadService extends IntentService {
         if (MyApplication.getInstance().isOnline()) {
 
             //DialogPopup.showLoadingDialog(this, "Loading...");
-            params.put("access_token", accessToken);
-            params.put("session_id", sessionId);
-            params.put("engagement_id", engagementId);
-            if("1".equalsIgnoreCase(isLoginPopup)){
-                params.put(Constants.KEY_IS_LOGIN_POPUP, "1");
+
+            if(!isFromNewConversation){
+                params.put("access_token", accessToken);
+                params.put("session_id", sessionId);
+                params.put("engagement_id", engagementId);
+                if("1".equalsIgnoreCase(isLoginPopup)){
+                    params.put(Constants.KEY_IS_LOGIN_POPUP, "1");
+                }
+                Log.i("access_token and session_id", accessToken+", "+sessionId+", "+engagementId);
+
             }
-            Log.i("access_token and session_id", accessToken+", "+sessionId+", "+engagementId);
 
             try {
                 if (requestParam != null) {
@@ -391,7 +438,35 @@ public class ContactsUploadService extends IntentService {
             Log.i("params request_dup_registration", "=" + params);
 
             new HomeUtil().putDefaultParams(params);
-            Response response = RestClient.getApiService().referAllContactsSync(params);
+            Response response = null;
+
+            if(isFromNewConversation){
+                // we need to send a json request body
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty(Constants.KEY_ACCESS_TOKEN,accessToken);
+                if(batchSizeCounter>1){
+                    jsonObject.addProperty(Constants.KEY_UPDATE_CONTACTS,1);
+                }
+                else {
+                    jsonObject.addProperty(Constants.KEY_UPDATE_CONTACTS,0);
+                }
+                JsonParser jsonParser = new JsonParser();
+                JsonElement jsonElement = jsonParser.parse(requestParam);
+                jsonObject.add(Constants.KEY_CONTACTS_LIST,jsonElement);
+
+                TypedInput typedInput=null;
+                try {
+                    typedInput = new TypedByteArray("application/json",jsonObject.toString().getBytes("UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                if(typedInput!=null){
+                    response = RestClient.getFatafatApiService().validateContacts(typedInput);
+                }
+            }
+            else {
+                response = RestClient.getApiService().referAllContactsSync(params);
+            }
             if(response != null){
                 try {
                     String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
@@ -401,12 +476,16 @@ public class ContactsUploadService extends IntentService {
 						JSONObject jObj = new JSONObject(responseStr);
 						int flag = jObj.getInt("flag");
 						String message = JSONParser.getServerMessage(jObj);
-						if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-							Data.autoData.setReferAllStatus(1);
-						}
-						else{
-							Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
-						}
+
+						if(!isFromNewConversation){
+                            if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                                Data.autoData.setReferAllStatus(1);
+                            }
+                            else{
+                                Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+                            }
+                        }
+
 					}  catch (Exception exception) {
 						exception.printStackTrace();
 						//DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
@@ -414,15 +493,21 @@ public class ContactsUploadService extends IntentService {
                     //DialogPopup.dismissLoadingDialog();
                     currentSyncEntry.setSynced(true);
                     checkIfAllSynced();
-                    doneWithSync();
+                    //doneWithSync();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
-                    doneWithSync();
+                    if(!isFromNewConversation){
+                        Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+                    }
+                    checkIfAllSynced();
+                    //doneWithSync();
                 }
             } else{
-                Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
-                doneWithSync();
+                if(!isFromNewConversation){
+                    Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+                }
+                checkIfAllSynced();
+                //doneWithSync();
             }
         }
     }
