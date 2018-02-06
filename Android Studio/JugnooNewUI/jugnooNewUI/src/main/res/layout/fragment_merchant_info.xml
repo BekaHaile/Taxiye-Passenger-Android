@@ -388,7 +388,7 @@
                         android:id="@+id/ivPay"
                         android:layout_width="@dimen/dp_32"
                         android:layout_height="@dimen/dp_32"
-                        android:src="@drawable/bg_merchant_info_locate_selector"
+                        android:src="@drawable/bg_merchant_info_pay"
                         />
 
                     <TextView
