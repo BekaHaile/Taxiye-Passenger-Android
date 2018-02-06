@@ -48,6 +48,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
     private RecyclerView rvConnections;
     private BroadcastReceiver contactSyncReceiver;
     private ArrayList<ContactBean> allContactsList = new ArrayList<>();
+    private ArrayList<UserContactObject> allJugnooContacts = new ArrayList<>();
     private UserContactAdapter mUserContactAdapter;
 
     @Override
@@ -216,6 +217,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
 
             }
         }
+        allJugnooContacts = jugnooContacts;
 
         if(mUserContactAdapter!=null){
             mUserContactAdapter.updateContacts(jugnooContacts);
@@ -234,7 +236,25 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
-
+      // filter list based on phone number and name
+      if(!s.toString().trim().isEmpty()){
+          ArrayList<UserContactObject> filteredList = new ArrayList<>();
+          for(UserContactObject contactObject:allJugnooContacts){
+              if(contactObject.getUserName().toLowerCase().contains(s.toString().trim()) ||
+                      contactObject.getPhoneNumber().contains(s.toString().trim())){
+                  filteredList.add(contactObject);
+              }
+          }
+          if(mUserContactAdapter!=null){
+              mUserContactAdapter.updateContacts(filteredList);
+          }
+      }
+      else {
+          // set all
+          if(allJugnooContacts.size()>0){
+              mUserContactAdapter.updateContacts(allJugnooContacts);
+          }
+      }
     }
 
     @Override
