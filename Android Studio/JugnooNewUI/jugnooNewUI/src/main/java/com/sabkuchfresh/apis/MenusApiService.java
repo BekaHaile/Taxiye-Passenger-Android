@@ -110,6 +110,8 @@ public interface MenusApiService {
 	void suggestStore(@Body MultipartTypedOutput params,
 								  Callback<FeedCommonResponse> callback);
 
+
+
 	@FormUrlEncoded
 	@POST("/v1/restaurant/fetch_feedbacks")
 	void restaurantFetchFeedbacks(@FieldMap Map<String, String> params,

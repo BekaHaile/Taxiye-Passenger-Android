@@ -247,6 +247,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case SUGGEST_A_STORE:
                 RestClient.getMenusApiService().suggestStore(multipartTypedOutput,callback);
                 break;
+            case CREATE_CHAT:
+                RestClient.getFatafatApiService().createChat(params,callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

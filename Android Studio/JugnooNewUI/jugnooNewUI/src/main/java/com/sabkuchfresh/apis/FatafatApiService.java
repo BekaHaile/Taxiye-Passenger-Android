@@ -6,6 +6,7 @@ import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
 
 import java.util.Map;
 
+import product.clicklabs.jugnoo.retrofit.CreateChatResponse;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -48,4 +49,8 @@ public interface FatafatApiService {
     @POST("/cancel_payment")
     void cancelPayment(@FieldMap Map<String, String> params,
                      Callback<SettleUserDebt> callback);
+    @FormUrlEncoded
+    @POST("/chat/create_chat")
+    void createChat(@FieldMap Map<String, String> params,
+                     Callback<CreateChatResponse> callback);
 }

@@ -845,4 +845,5 @@ public interface Constants {
 
     String KEY_REFFERAL_CODE = "refferal_code";
     String KEY_PROMO_CODE = "promo_code";
+    String PAYER_USER_IDENTIFIER = "payer_user_identifier";
 }

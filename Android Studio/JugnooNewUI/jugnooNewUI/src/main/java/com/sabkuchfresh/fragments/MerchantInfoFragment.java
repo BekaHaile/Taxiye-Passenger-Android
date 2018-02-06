@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.fugu.FuguConfig;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.adapters.RestaurantReviewImagesAdapter;
 import com.sabkuchfresh.adapters.RestaurantReviewsAdapter;
@@ -63,6 +64,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.CreateChatResponse;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -521,6 +523,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
             switch (view.getId()) {
                 case R.id.llChatNow:
                     if (activity.getVendorOpened().isChatModeEnabled()) {
+
+                        initiateMerchantChat();
 //                        sendUserClickEvent(Constants.KEY_CHAT_MODE);
                     } else {
                         Utils.showToast(activity, activity.getString(R.string.chat_is_not_enabled_format, activity.getVendorOpened().getName()));
@@ -980,5 +984,72 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
             layoutPhotos.setVisibility(View.GONE);
         }
 
+    }
+
+    private CreateChatResponse fuguMerchantData;
+    private boolean isAPIInProgress;
+    public void initiateMerchantChat(){
+        if(fuguMerchantData ==null){
+
+
+            HashMap<String,String> params = new HashMap<>();
+            params.put(Constants.PAYER_USER_IDENTIFIER,Data.userData.userIdentifier);
+            params.put(Constants.KEY_RESTAURANT_ID,String.valueOf(activity.getVendorOpened().getRestaurantId()));
+            new ApiCommon<CreateChatResponse>(activity).execute(params, ApiName.CREATE_CHAT, new APICommonCallback<CreateChatResponse>() {
+                @Override
+                public boolean onNotConnected() {
+                    return false;
+                }
+
+                @Override
+                public boolean onException(Exception e) {
+                    return false;
+                }
+
+                @Override
+                public void onSuccess(CreateChatResponse createChatResponse, String message, int flag) {
+
+                    fuguMerchantData = createChatResponse;
+                    openMerchantChat();
+                }
+
+                @Override
+                public boolean onError(CreateChatResponse createChatResponse, String message, int flag) {
+                    return false;
+                }
+
+                @Override
+                public boolean onFailure(RetrofitError error) {
+                    return false;
+                }
+
+                @Override
+                public void onNegativeClick() {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    super.onFinish();
+
+                }
+            });
+
+        }else{
+            openMerchantChat();
+        }
+
+
+
+
+
+
+    }
+
+    private void openMerchantChat() {
+        if(fuguMerchantData!=null && !TextUtils.isEmpty(fuguMerchantData.getChannelId())&&fuguMerchantData.getFuguData()!=null){
+            FuguConfig.getInstance().openChatByTransactionId(fuguMerchantData.getChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
+                    fuguMerchantData.getFuguData().getChannelName(), fuguMerchantData.getFuguData().getFuguTags());
+        }
     }
 }
