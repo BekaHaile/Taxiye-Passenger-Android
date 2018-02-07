@@ -102,6 +102,10 @@ public class FuguColorConfig {
         return Color.parseColor(fuguChannelItemBgPressed);
     }
 
+    public int getFuguChannelItemBgSelected() {
+        return Color.parseColor(fuguChannelItemBgSelected);
+    }
+
     public int getFuguChannelItemBg() {
         return Color.parseColor(fuguChannelItemBg);
     }
@@ -133,6 +137,7 @@ public class FuguColorConfig {
     private String fuguChannelBg = "#ffffff";
     private String fuguChannelItemBg = "#ffffff";
     private String fuguChannelItemBgPressed = "#ffd2d1d1";
+    private String fuguChannelItemBgSelected = "#f7f7f7";
 
     public static class Builder {
         private FuguColorConfig fuguColorConfig = new FuguColorConfig();
@@ -252,6 +257,11 @@ public class FuguColorConfig {
             return this;
         }
 
+        public Builder fuguChannelItemBgSelected(String fuguChannelItemBgSelected) {
+            fuguColorConfig.fuguChannelItemBgSelected = fuguChannelItemBgSelected;
+            return this;
+        }
+
         public Builder fuguChannelItemBg(String fuguChannelItemBg) {
             fuguColorConfig.fuguChannelItemBg = fuguChannelItemBg;
             return this;
@@ -268,6 +278,16 @@ public class FuguColorConfig {
         // res.setExitFadeDuration(400);
         //res.setAlpha(230);
         res.addState(new int[]{android.R.attr.state_pressed}, roundedBackground(0, colorPressed, false));
+        res.addState(new int[]{}, roundedBackground(0, color, false));
+        return res;
+    }
+
+    public static StateListDrawable makeSelector(int color, int colorPressed, int colorSelected) {
+        StateListDrawable res = new StateListDrawable();
+        // res.setExitFadeDuration(400);
+        //res.setAlpha(230);
+        res.addState(new int[]{android.R.attr.state_pressed}, roundedBackground(0, colorPressed, false));
+        res.addState(new int[]{android.R.attr.state_selected}, roundedBackground(0, colorSelected, false));
         res.addState(new int[]{}, roundedBackground(0, color, false));
         return res;
     }

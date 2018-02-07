@@ -4,9 +4,4 @@
     <corners android:radius="10dp" />
     <solid android:color="@color/fugu_jugnoo_orange" />
 
-    <stroke
-        android:width="@dimen/fugu_border_width"
-        android:color="@color/fugu_border_color" />
-
-
 </shape>

@@ -18,7 +18,7 @@
     <string name="fugu_retry">Retry</string>
     <string name="fugu_empty" translatable="false"></string>
     <string name="fugu_attachment">Attachment Image</string>
-    <string name="fugu_send_message"> Send a message...</string>
+    <string name="fugu_send_message"> Type a message...</string>
     <string name="fugu_cancel">Cancel</string>
     <string name="fugu_file_not_found">Sorry this file is no longer available on your device</string>
     <string name="fugu_support">Support</string>

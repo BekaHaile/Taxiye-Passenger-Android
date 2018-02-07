@@ -101,7 +101,7 @@
 
             <TextView
                 android:id="@+id/circularTvMessageCount"
-                android:layout_width="wrap_content"
+                android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/tvDate"
@@ -110,9 +110,8 @@
                 android:background="@drawable/bg_unread_count"
                 android:gravity="center"
                 android:minWidth="30dp"
-                android:paddingLeft="@dimen/fugu_padding_5"
-                android:paddingRight="@dimen/fugu_padding_5"
                 android:text="69"
+                android:maxLines="1"
                 android:textColor="@color/white"
                 android:textSize="@dimen/fugu_text_size_tiny"
                 android:visibility="gone" />

@@ -196,6 +196,7 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 channelViewHolder.tvChannelName.setTypeface(channelViewHolder.tvChannelName.getTypeface(),Typeface.BOLD);
                 channelViewHolder.tvMessage.setTypeface(channelViewHolder.tvMessage.getTypeface(),Typeface.BOLD);
                 channelViewHolder.circularTvMessageCount.setVisibility(View.VISIBLE);
+                channelViewHolder.rlRoot.setSelected(true);
                 //            channelViewHolder.circularTvMessageCount.setSolidColor(FuguConfig.getInstance().getThemeColor());
                 //            channelViewHolder.circularTvMessageCount.setStrokeWidth(0);
                 channelViewHolder.circularTvMessageCount.setText(String.valueOf(currentChannelItem.getUnreadCount()));
@@ -206,6 +207,7 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 channelViewHolder.tvChannelName.setTypeface(channelViewHolder.tvChannelName.getTypeface(),Typeface.NORMAL);
                 channelViewHolder.tvMessage.setTypeface(channelViewHolder.tvMessage.getTypeface(),Typeface.NORMAL);
                 channelViewHolder.circularTvMessageCount.setVisibility(View.GONE);
+                channelViewHolder.rlRoot.setSelected(false);
                 channelViewHolder.tvDate.setTextColor(fuguColorConfig.getFuguChannelDateText());
             }
 
@@ -253,7 +255,8 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
 
             channelViewHolder.rlRoot.setBackgroundDrawable(FuguColorConfig
-                    .makeSelector(fuguColorConfig.getFuguChannelItemBg(), fuguColorConfig.getFuguChannelItemBgPressed()));
+                    .makeSelector(fuguColorConfig.getFuguChannelItemBg(), fuguColorConfig.getFuguChannelItemBgPressed(),
+                            fuguColorConfig.getFuguChannelItemBgSelected()));
 
             channelViewHolder.rlRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
