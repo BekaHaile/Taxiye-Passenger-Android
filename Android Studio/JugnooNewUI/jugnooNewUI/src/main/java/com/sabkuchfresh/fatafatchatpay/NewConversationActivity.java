@@ -28,6 +28,8 @@ import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
@@ -221,6 +223,14 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
 
             }
         }
+
+        Collections.sort(jugnooContacts, new Comparator<UserContactObject>() {
+            @Override
+            public int compare(final UserContactObject o1, final UserContactObject o2) {
+                return o1.getUserName().compareToIgnoreCase(o2.getUserName());
+            }
+        });
+
         allJugnooContacts = jugnooContacts;
 
         if (mUserContactAdapter != null) {
@@ -303,7 +313,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
                             }
                             // indicate to fugu that a new peer chat is created ( so we can refresh the chat
                             // activity when we resume it )
-                            FuguConfig.getInstance().setNewPeerChatCreated(true);
+                            FuguConfig.getInstance().setNewPeerChatCreated();
                             finish();
 
                         }

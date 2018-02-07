@@ -244,8 +244,8 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
         return fuguConfig;
     }
 
-    public void setNewPeerChatCreated(boolean isNewPeerChatCreated){
-        CommonData.setNewPeerChatCreated(isNewPeerChatCreated);
+    public void setNewPeerChatCreated(){
+        CommonData.setNewPeerChatCreated(true);
     }
 
     public void setHomeUpIndicatorDrawableId(int homeUpIndicatorDrawableId) {
