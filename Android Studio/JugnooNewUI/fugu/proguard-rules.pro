@@ -50,6 +50,12 @@
  -keep class com.fugu.FuguColorConfig* {
     *;
  }
+
+ -keep class com.fugu.FuguFontConfig{ *; }
+  -keep class com.fugu.FuguFontConfig* {
+     *;
+  }
+
 -keep class com.fugu.FuguNotificationConfig{ *; }
 -keep class com.fugu.model.** { *; }
 
