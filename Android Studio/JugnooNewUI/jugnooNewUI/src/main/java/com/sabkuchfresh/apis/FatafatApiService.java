@@ -1,5 +1,6 @@
 package com.sabkuchfresh.apis;
 
+import com.sabkuchfresh.feed.models.ContactResponseModel;
 import com.sabkuchfresh.feed.models.FetchOrderStatusResponse;
 import com.sabkuchfresh.retrofit.model.feed.DynamicDeliveryResponse;
 import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
@@ -11,6 +12,7 @@ import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
+import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
@@ -18,6 +20,7 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.QueryMap;
 import retrofit.mime.MultipartTypedOutput;
+import retrofit.mime.TypedInput;
 
 /**
  * Created by shankar on 4/7/16.
@@ -49,8 +52,18 @@ public interface FatafatApiService {
     @POST("/cancel_payment")
     void cancelPayment(@FieldMap Map<String, String> params,
                      Callback<SettleUserDebt> callback);
+
     @FormUrlEncoded
     @POST("/chat/create_chat")
     void createChat(@FieldMap Map<String, String> params,
                      Callback<CreateChatResponse> callback);
+
+
+    @POST("/chat/validate_contacts")
+    Response validateContacts(@Body TypedInput body);
+
+    @FormUrlEncoded
+    @POST("/chat/fetch_contacts")
+    void fetchContacts(@FieldMap Map<String, String> params, Callback<ContactResponseModel> callback);
+
 }

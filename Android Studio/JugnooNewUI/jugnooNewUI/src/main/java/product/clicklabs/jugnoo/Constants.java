@@ -73,6 +73,8 @@ public interface Constants {
     String KEY_ERROR = "error";
 
     String KEY_ACCESS_TOKEN = "access_token";
+    String KEY_UPDATE_CONTACTS="update_contacts";
+    String KEY_CONTACTS_LIST="contacts_list";
     String KEY_ENGAGEMENT_ID = "engagement_id";
     String KEY_EMAIL = "email";
     String KEY_USER_NAME = "user_name";
@@ -227,6 +229,7 @@ public interface Constants {
     String KEY_ONE_SHOT = "one_shot";
     String KEY_EMERGENCY_LOC = "emergency_loc";
     String SP_CURRENT_ENGAGEMENT_ID = "current_engagement_id";
+    String SP_CONTACTS_SYNCED="contacts_syned";
 
     String KEY_URL = "url";
     String SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
@@ -288,6 +291,7 @@ public interface Constants {
     String KEY_REFER_ALL_TITLE_LOGIN = "refer_all_title_login";
     String KEY_USER_RESPONSE = "user_response";
     String KEY_IS_LOGIN_POPUP = "is_login_popup";
+    String KEY_COMING_FROM_NEW_CONVERSATION= "coming_from_new_conversation";
 
     String KEY_FRESH_ORDER_ID = "order_id";
 
@@ -642,6 +646,7 @@ public interface Constants {
     String KEY_SHOW_JEANIE_HELP_TEXT = "show_jeanie_help_text";
     String KEY_SHOW_OFFER_DIALOG = "show_offer_dialog";
     String KEY_SHOW_TUTORIAL = "show_tutorial";
+    String KEY_CHAT_INFO = "chat_info";
 
     int OPEN_DEEP_INDEX = 122112;
     int OPEN_APP_CLIENT_ID = 122114;
@@ -846,4 +851,5 @@ public interface Constants {
     String KEY_REFFERAL_CODE = "refferal_code";
     String KEY_PROMO_CODE = "promo_code";
     String PAYER_USER_IDENTIFIER = "payer_user_identifier";
+    String PAYEE_PHONE_NUMBER="payee_phone_no";
 }

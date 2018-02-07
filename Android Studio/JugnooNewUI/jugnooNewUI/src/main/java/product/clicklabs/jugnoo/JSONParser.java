@@ -266,6 +266,11 @@ public class JSONParser implements Constants {
         Data.userData.setExpandJeanie(loginUserData.getExpandJeanie());
         Data.userData.setExpandedGenieText(loginUserData.getExpandedGenieText());
 
+        // Chat info objects needed for fugu tabs
+        if(userData.optJSONArray(KEY_CHAT_INFO)!=null){
+            Data.userData.setFuguChannelInfoJson(userData.optJSONArray(KEY_CHAT_INFO).toString());
+        }
+
         SplashNewActivity.openHomeSwitcher = loginUserData.getShowHome() == 1 && Data.deepLinkIndex == -1;
 
         MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(userData.optJSONObject(KEY_WALLET_BALANCE));

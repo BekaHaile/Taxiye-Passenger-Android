@@ -92,7 +92,15 @@ public class UserData {
 	private String expandedGenieText;
 	private String upiHandle;
 	private int showJugnooStarInAcccount;
+	private String fuguChannelInfoJson;
 
+	public String getFuguChannelInfoJson() {
+		return fuguChannelInfoJson;
+	}
+
+	public void setFuguChannelInfoJson(final String fuguChannelInfoJson) {
+		this.fuguChannelInfoJson = fuguChannelInfoJson;
+	}
 
 	public UserData(String userIdentifier, String accessToken, String authKey, String userName, String userEmail, int emailVerificationStatus,
 					String userImage, String referralCode, String phoneNo, double jugnooBalance,
@@ -109,10 +117,10 @@ public class UserData {
 					String fatafatUrlLink,
 					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled,
-					int payEnabled, int feedEnabled, int prosEnabled,int deliveryCustomerEnabled,
+					int payEnabled, int feedEnabled, int prosEnabled, int deliveryCustomerEnabled,
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
-					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding,int autosEnabled){
+					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding, int autosEnabled){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;

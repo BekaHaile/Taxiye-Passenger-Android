@@ -127,6 +127,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 @Override
                 public void success(T feedCommonResponse, Response response) {
                   setInProgress(false);
+
                     if(showLoader) {
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -249,6 +250,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 break;
             case CREATE_CHAT:
                 RestClient.getFatafatApiService().createChat(params,callback);
+                break;
+            case FETCH_CONTACTS:
+                RestClient.getFatafatApiService().fetchContacts(params,callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
