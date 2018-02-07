@@ -1048,8 +1048,10 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
     private void openMerchantChat() {
         if(fuguMerchantData!=null && !TextUtils.isEmpty(fuguMerchantData.getChannelId())&&fuguMerchantData.getFuguData()!=null){
-            FuguConfig.getInstance().openChatByTransactionId(fuguMerchantData.getChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-                    fuguMerchantData.getFuguData().getChannelName(), fuguMerchantData.getFuguData().getFuguTags());
+            /*FuguConfig.getInstance().openChatByTransactionId(fuguMerchantData.getChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
+                    fuguMerchantData.getFuguData().getChannelName(), fuguMerchantData.getFuguData().getFuguTags());*/
+            FuguConfig.getInstance().openDirectChat(activity,
+                    Long.parseLong(fuguMerchantData.getChannelId()));
         }
     }
 }

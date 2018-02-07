@@ -50,6 +50,7 @@ public final class CommonData implements PaperDbConstant {
     public static String pushKey = "PUSH_KEY";
     public static String pushChannelKey = "PUSH_CHANNEL_KEY";
     public static String isAppOpenKey = "isAppOpen";
+    public static String newPeerChatCreated = "FUGU_NEW_PEER_CHAT_CREATED";
     public static TreeMap<Long, ArrayList<ListItem>> FUGU_MESSAGE_LIST = new TreeMap<>();
     public static final String clearFuguDataKey = "clearFuguData";
 
@@ -426,6 +427,14 @@ public final class CommonData implements PaperDbConstant {
 
     public static boolean getIsNewChat() {
         return Paper.book().read(isNewChatKey);
+    }
+
+    public static void setNewPeerChatCreated(boolean isNewPeerChatCreated) {
+        Paper.book().write(newPeerChatCreated, isNewPeerChatCreated);
+    }
+
+    public static boolean getNewPeerChatCreated() {
+        return Paper.book().read(newPeerChatCreated,false);
     }
 
     public static void setProvider(String provider) {

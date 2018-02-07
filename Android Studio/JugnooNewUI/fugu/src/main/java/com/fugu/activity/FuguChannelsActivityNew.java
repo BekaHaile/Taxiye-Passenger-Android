@@ -185,6 +185,12 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
             }
 
         }
+
+        // check we have a new peer chat, if yes we have to refresh ourselves
+        if(CommonData.getNewPeerChatCreated()){
+            getConversations();
+            CommonData.setNewPeerChatCreated(false);
+        }
     }
 
     @Override

@@ -270,7 +270,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
      * @param adapterPosition the position of the clicked contact
      */
     public void onContactSelected(final int adapterPosition) {
-        UserContactObject userContactObject = mUserContactAdapter.getJugnooContacts().get(adapterPosition);
+        final UserContactObject userContactObject = mUserContactAdapter.getJugnooContacts().get(adapterPosition);
 
         //create new chat
         HashMap<String, String> params = new HashMap<>();
@@ -297,11 +297,15 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
                         if (!NewConversationActivity.this.isFinishing()) {
                             if (createChatResponse != null && !TextUtils.isEmpty(createChatResponse.getChannelId())
                                     && createChatResponse.getFuguData() != null) {
-                                FuguConfig.getInstance().openChatByTransactionId(createChatResponse.getChannelId(),
-                                        String.valueOf(Data.getFuguUserData().getUserId()),
-                                        createChatResponse.getFuguData().getChannelName(),
-                                        createChatResponse.getFuguData().getFuguTags());
+
+                                FuguConfig.getInstance().openDirectChat(NewConversationActivity.this,
+                                        Long.parseLong(createChatResponse.getChannelId()));
                             }
+                            // indicate to fugu that a new peer chat is created ( so we can refresh the chat
+                            // activity when we resume it )
+                            FuguConfig.getInstance().setNewPeerChatCreated(true);
+                            finish();
+
                         }
                     }
 

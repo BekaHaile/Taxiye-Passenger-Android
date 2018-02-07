@@ -244,6 +244,10 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
         return fuguConfig;
     }
 
+    public void setNewPeerChatCreated(boolean isNewPeerChatCreated){
+        CommonData.setNewPeerChatCreated(isNewPeerChatCreated);
+    }
+
     public void setHomeUpIndicatorDrawableId(int homeUpIndicatorDrawableId) {
         FuguConfig.getInstance().homeUpIndicatorDrawableId = homeUpIndicatorDrawableId;
     }
@@ -372,6 +376,45 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
 
 
     }
+
+
+    public void openDirectChat(final Activity activity, final Long messageChannelId) {
+
+        if (FuguConfig.getInstance().getUserData() == null || userData.getUserId().compareTo(-1l) == 0) {
+            FuguLog.v("In openChat before FuguChatActivity", "userData null");
+            new ApiPutUserDetails(activity, new ApiPutUserDetails.Callback() {
+                @Override
+                public void onSuccess() {
+                    Intent chatIntent = new Intent(activity.getApplicationContext(), FuguChatActivity.class);
+                    FuguConversation conversation = new FuguConversation();
+                    conversation.setChannelId(messageChannelId);
+                    conversation.setOpenChat(true);
+                    conversation.setUserName(StringUtil.toCamelCase(FuguConfig.getInstance().getUserData().getFullName()));
+                    conversation.setUserId(FuguConfig.getInstance().getUserData().getUserId());
+                    conversation.setEnUserId(FuguConfig.getInstance().getUserData().getEnUserId());
+                    chatIntent.putExtra(FuguAppConstant.CONVERSATION, new Gson().toJson(conversation, FuguConversation.class));
+                    activity.startActivity(chatIntent);
+                }
+
+                @Override
+                public void onFailure() {
+
+                }
+            }).sendUserDetails(FuguConfig.getInstance().getmResellerToken(), FuguConfig.getInstance().getmReferenceId());
+        } else {
+            Intent chatIntent = new Intent(activity.getApplicationContext(), FuguChatActivity.class);
+            FuguConversation conversation = new FuguConversation();
+            conversation.setChannelId(messageChannelId);
+            conversation.setOpenChat(true);
+            conversation.setUserName(StringUtil.toCamelCase(FuguConfig.getInstance().getUserData().getFullName()));
+            conversation.setUserId(FuguConfig.getInstance().getUserData().getUserId());
+            conversation.setEnUserId(FuguConfig.getInstance().getUserData().getEnUserId());
+            chatIntent.putExtra(FuguAppConstant.CONVERSATION, new Gson().toJson(conversation, FuguConversation.class));
+            activity.startActivity(chatIntent);
+        }
+
+    }
+
 
     /**
      * To send default message
