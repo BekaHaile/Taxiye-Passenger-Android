@@ -10,11 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.sabkuchfresh.datastructure.UserContactObject;
+import com.sabkuchfresh.fatafatchatpay.NewConversationActivity;
 
 import java.util.ArrayList;
 
@@ -113,10 +115,11 @@ public class UserContactAdapter extends RecyclerView.Adapter<UserContactAdapter.
         return mContacts;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvPersonPhone, tvPersonName, tvPersonInitial;
         ImageView ivPersonImage;
+        RelativeLayout rlMainContainer;
 
         public ViewHolder(final View itemView) {
             super(itemView);
@@ -124,6 +127,13 @@ public class UserContactAdapter extends RecyclerView.Adapter<UserContactAdapter.
             tvPersonName = (TextView) itemView.findViewById(R.id.tvPersonName);
             tvPersonInitial = (TextView) itemView.findViewById(R.id.tvPersonInitial);
             ivPersonImage = (ImageView) itemView.findViewById(R.id.ivPersonImage);
+            rlMainContainer =(RelativeLayout)itemView.findViewById(R.id.rlMainContainer);
+            rlMainContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    ((NewConversationActivity)mContext).onContactSelected(getAdapterPosition());
+                }
+            });
         }
     }
 }

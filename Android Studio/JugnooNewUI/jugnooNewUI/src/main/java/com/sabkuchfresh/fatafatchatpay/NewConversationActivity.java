@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.fugu.FuguConfig;
 import com.sabkuchfresh.adapters.UserContactAdapter;
 import com.sabkuchfresh.datastructure.UserContactObject;
 import com.sabkuchfresh.feed.models.ContactResponseModel;
@@ -32,6 +34,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.ContactsUploadService;
+import product.clicklabs.jugnoo.retrofit.CreateChatResponse;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -66,7 +69,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
      * Init views
      */
     private void initViews() {
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         TextView tvTitle = (TextView) toolbar.findViewById(R.id.tvTitle);
@@ -74,9 +77,9 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
         tvTitle.setText(getResources().getString(R.string.txt_new_message));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back_selector);
-        etSearchConnections = (EditText)findViewById(R.id.etSearchConnections);
-        imgBtnSync=(ImageButton)findViewById(R.id.imgBtnSync);
-        rvConnections = (RecyclerView)findViewById(R.id.rvConnections);
+        etSearchConnections = (EditText) findViewById(R.id.etSearchConnections);
+        imgBtnSync = (ImageButton) findViewById(R.id.imgBtnSync);
+        rvConnections = (RecyclerView) findViewById(R.id.rvConnections);
         rvConnections.setLayoutManager(new LinearLayoutManager(this));
 
         etSearchConnections.addTextChangedListener(this);
@@ -94,7 +97,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
                 try {
                     if (intent.getAction().equals(Constants.ACTION_LOADING_COMPLETE)) {
                         allContactsList = intent.getParcelableArrayListExtra(Constants.KEY_CONTACTS_LIST);
-                        if(!NewConversationActivity.this.isFinishing()){
+                        if (!NewConversationActivity.this.isFinishing()) {
                             DialogPopup.dismissLoadingDialog();
                             //fetch contacts from api
                             fetchContacts();
@@ -115,7 +118,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(contactSyncReceiver!=null){
+        if (contactSyncReceiver != null) {
             unregisterReceiver(contactSyncReceiver);
         }
     }
@@ -123,10 +126,10 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
     /**
      * Fetched jugnoo contacts from server
      */
-    private void fetchContacts(){
+    private void fetchContacts() {
 
-        HashMap<String,String> params = new HashMap<>();
-        params.put(Constants.KEY_ACCESS_TOKEN,Data.userData.accessToken);
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
         new ApiCommon<ContactResponseModel>(this).showLoader(true).execute(params, ApiName.FETCH_CONTACTS,
                 new APICommonCallback<ContactResponseModel>() {
@@ -142,8 +145,8 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
 
                     @Override
                     public void onSuccess(final ContactResponseModel contactResponseModel, final String message, final int flag) {
-                        if(!NewConversationActivity.this.isFinishing()){
-                            if(contactResponseModel.getContacts()!=null && contactResponseModel.getContacts().size()>0){
+                        if (!NewConversationActivity.this.isFinishing()) {
+                            if (contactResponseModel.getContacts() != null && contactResponseModel.getContacts().size() > 0) {
                                 renderContacts(contactResponseModel.getContacts());
                             }
                         }
@@ -170,12 +173,12 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
     /**
      * Sync contacts
      */
-    private void syncContacts(){
-        DialogPopup.showLoadingDialog(this,"");
+    private void syncContacts() {
+        DialogPopup.showLoadingDialog(this, "");
         // start the contact upload sync in background
         Intent syncContactsIntent = new Intent(this, ContactsUploadService.class);
         syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-        syncContactsIntent.putExtra(Constants.KEY_COMING_FROM_NEW_CONVERSATION,true);
+        syncContactsIntent.putExtra(Constants.KEY_COMING_FROM_NEW_CONVERSATION, true);
         startService(syncContactsIntent);
     }
 
@@ -191,27 +194,28 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onClick(final View v) {
-        if(v.getId()==R.id.imgBtnSync){
+        if (v.getId() == R.id.imgBtnSync) {
             syncContacts();
         }
     }
 
     /**
      * Render contacts
+     *
      * @param jugnooContacts jugnoo contacts
      */
-    private void renderContacts(ArrayList<UserContactObject> jugnooContacts){
+    private void renderContacts(ArrayList<UserContactObject> jugnooContacts) {
         // get name of the contacts from the all contacts list
-        for(ContactBean contactBean:allContactsList){
-            for (UserContactObject jugnooContact:jugnooContacts){
+        for (ContactBean contactBean : allContactsList) {
+            for (UserContactObject jugnooContact : jugnooContacts) {
                 String jugnooPhone = jugnooContact.getPhoneNumber();
                 // full comparison
-                if(jugnooPhone.equals(contactBean.getPhone())){
+                if (jugnooPhone.equals(contactBean.getPhone())) {
                     jugnooContact.setUserName(contactBean.getName());
                 }
                 // last 10 digit comparison( server appends +91 )
-                else if(jugnooPhone.length()>=10 && jugnooPhone.substring(jugnooContact.getPhoneNumber().length()-10)
-                        .equals(contactBean.getPhone())){
+                else if (jugnooPhone.length() >= 10 && jugnooPhone.substring(jugnooContact.getPhoneNumber().length() - 10)
+                        .equals(contactBean.getPhone())) {
                     jugnooContact.setUserName(contactBean.getName());
                 }
 
@@ -219,11 +223,10 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
         }
         allJugnooContacts = jugnooContacts;
 
-        if(mUserContactAdapter!=null){
+        if (mUserContactAdapter != null) {
             mUserContactAdapter.updateContacts(jugnooContacts);
-        }
-        else {
-            mUserContactAdapter = new UserContactAdapter(this,jugnooContacts);
+        } else {
+            mUserContactAdapter = new UserContactAdapter(this, jugnooContacts);
             rvConnections.setAdapter(mUserContactAdapter);
         }
     }
@@ -236,30 +239,93 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
 
     @Override
     public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
-      // filter list based on phone number and name
-      if(!s.toString().trim().isEmpty()){
-          ArrayList<UserContactObject> filteredList = new ArrayList<>();
-          for(UserContactObject contactObject:allJugnooContacts){
-              if(contactObject.getUserName().toLowerCase().contains(s.toString().trim()) ||
-                      contactObject.getPhoneNumber().contains(s.toString().trim())){
-                  filteredList.add(contactObject);
-              }
-          }
-          if(mUserContactAdapter!=null){
-              mUserContactAdapter.updateContacts(filteredList);
-          }
-      }
-      else {
-          // set all
-          if(allJugnooContacts.size()>0){
-              mUserContactAdapter.updateContacts(allJugnooContacts);
-          }
-      }
+        // filter list based on phone number and name
+        if (!s.toString().trim().isEmpty()) {
+            ArrayList<UserContactObject> filteredList = new ArrayList<>();
+            for (UserContactObject contactObject : allJugnooContacts) {
+                if (contactObject.getUserName().toLowerCase().contains(s.toString().trim()) ||
+                        contactObject.getPhoneNumber().contains(s.toString().trim())) {
+                    filteredList.add(contactObject);
+                }
+            }
+            if (mUserContactAdapter != null) {
+                mUserContactAdapter.updateContacts(filteredList);
+            }
+        } else {
+            // set all
+            if (allJugnooContacts.size() > 0) {
+                mUserContactAdapter.updateContacts(allJugnooContacts);
+            }
+        }
     }
 
     @Override
     public void afterTextChanged(final Editable s) {
 
+    }
+
+    /**
+     * Contact clicked from contacts list
+     *
+     * @param adapterPosition the position of the clicked contact
+     */
+    public void onContactSelected(final int adapterPosition) {
+        UserContactObject userContactObject = mUserContactAdapter.getJugnooContacts().get(adapterPosition);
+
+        //create new chat
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+        params.put(Constants.PAYER_USER_IDENTIFIER, Data.userData.userIdentifier);
+        params.put(Constants.PAYEE_PHONE_NUMBER, userContactObject.getPhoneNumber());
+
+        new ApiCommon<CreateChatResponse>(this).showLoader(true).execute(params, ApiName.CREATE_CHAT
+                , new APICommonCallback<CreateChatResponse>() {
+                    @Override
+                    public boolean onNotConnected() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onException(Exception e) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSuccess(CreateChatResponse createChatResponse, String message, int flag) {
+
+                        // open chat
+                        if (!NewConversationActivity.this.isFinishing()) {
+                            if (createChatResponse != null && !TextUtils.isEmpty(createChatResponse.getChannelId())
+                                    && createChatResponse.getFuguData() != null) {
+                                FuguConfig.getInstance().openChatByTransactionId(createChatResponse.getChannelId(),
+                                        String.valueOf(Data.getFuguUserData().getUserId()),
+                                        createChatResponse.getFuguData().getChannelName(),
+                                        createChatResponse.getFuguData().getFuguTags());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public boolean onError(CreateChatResponse createChatResponse, String message, int flag) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onFailure(RetrofitError error) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onNegativeClick() {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+
+                    }
+                });
     }
 }
 
