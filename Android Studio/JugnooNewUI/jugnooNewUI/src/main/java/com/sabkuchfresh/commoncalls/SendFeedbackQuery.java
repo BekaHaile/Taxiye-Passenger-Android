@@ -35,7 +35,7 @@ public class SendFeedbackQuery {
 
     public void sendQuery(final int orderId, final int restaurantId, final ProductType productType, final int rating, final String ratingType,
                           final String comments, final String reviewDesc,
-                          final Activity activity, final FeedbackResultListener feedbackResultListener) {
+                          final Activity activity, final FeedbackResultListener feedbackResultListener, final boolean isFeedOrder) {
         try {
             if (MyApplication.getInstance().isOnline()) {
                 if (orderId > 0) {
@@ -96,18 +96,23 @@ public class SendFeedbackQuery {
                     @Override
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
-                        retryDialog(DialogErrorType.CONNECTION_LOST, productType, activity, orderId, restaurantId, rating, ratingType, comments, reviewDesc, feedbackResultListener);
+                        retryDialog(DialogErrorType.CONNECTION_LOST, productType, activity, orderId, restaurantId, rating, ratingType, comments, reviewDesc, feedbackResultListener,isFeedOrder);
                     }
                 };
                 new HomeUtil().putDefaultParams(params);
-                if (productType == ProductType.MENUS || productType == ProductType.DELIVERY_CUSTOMER) {
+
+                if(isFeedOrder){
+
+                    RestClient.getFatafatApiService().orderFeedback(params,callback);
+                }
+                else if (productType == ProductType.MENUS || productType == ProductType.DELIVERY_CUSTOMER) {
                     RestClient.getMenusApiService().orderFeedback(params, callback);
                 } else {
                     RestClient.getFreshApiService().orderFeedback(params, callback);
                 }
 
             } else {
-                retryDialog(DialogErrorType.NO_NET, productType, activity, orderId, restaurantId, rating, ratingType, comments, reviewDesc, feedbackResultListener);
+                retryDialog(DialogErrorType.NO_NET, productType, activity, orderId, restaurantId, rating, ratingType, comments, reviewDesc, feedbackResultListener,isFeedOrder);
             }
         } catch (Exception e) {
             DialogPopup.dismissLoadingDialog();
@@ -118,12 +123,12 @@ public class SendFeedbackQuery {
 
     private void retryDialog(DialogErrorType errorType, final ProductType productType, final Activity activity,
                              final int orderId, final int restaurantId, final int rating, final String ratingType,
-                             final String negativeReasons, final String reviewDesc, final FeedbackResultListener feedbackResultListener) {
+                             final String negativeReasons, final String reviewDesc, final FeedbackResultListener feedbackResultListener, final boolean isFeedOrder) {
         DialogPopup.dialogNoInternet(activity, errorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        sendQuery(orderId, restaurantId, productType, rating, ratingType, negativeReasons, reviewDesc, activity, feedbackResultListener);
+                        sendQuery(orderId, restaurantId, productType, rating, ratingType, negativeReasons, reviewDesc, activity, feedbackResultListener, isFeedOrder);
                     }
 
                     @Override

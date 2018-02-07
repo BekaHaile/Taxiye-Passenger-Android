@@ -2,6 +2,7 @@ package com.sabkuchfresh.apis;
 
 import com.sabkuchfresh.feed.models.ContactResponseModel;
 import com.sabkuchfresh.feed.models.FetchOrderStatusResponse;
+import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.feed.DynamicDeliveryResponse;
 import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
 
@@ -65,5 +66,11 @@ public interface FatafatApiService {
     @FormUrlEncoded
     @POST("/chat/fetch_contacts")
     void fetchContacts(@FieldMap Map<String, String> params, Callback<ContactResponseModel> callback);
+
+
+    @FormUrlEncoded
+    @POST("/submit_feedback")
+    void orderFeedback(@FieldMap Map<String, String> params,
+                       Callback<OrderHistoryResponse> callback);
 
 }

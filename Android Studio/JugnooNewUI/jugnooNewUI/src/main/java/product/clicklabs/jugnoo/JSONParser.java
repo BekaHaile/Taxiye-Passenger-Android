@@ -625,7 +625,7 @@ public class JSONParser implements Constants {
 
             Data.setMenusData(new MenusData(question, orderId, questionType, pendingFeedback, stores, popupData,
                     amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText,
-                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName, 0,0,0,merchantCategories));
+                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName, 0,0,0,merchantCategories,false));
 
             try {
                 if(Data.getMenusData().getPromoCoupons() == null){
@@ -667,7 +667,7 @@ public class JSONParser implements Constants {
             String rideEndGoodFeedbackText = jData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
             JSONArray negativeFeedbackReasons = jData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
             JSONArray positiveFeedbackReasons = jData.optJSONArray(KEY_POSITIVE_FEEDBACK_REASONS);
-
+            boolean isFeedOrderFeedback = jData.optBoolean(KEY_IS_FEED_ORDER_FEEDBACK,false);
             PopupData popupData = null;
             try {
                 if (jData.has("popup_data")) {
@@ -708,7 +708,7 @@ public class JSONParser implements Constants {
 
             Data.setDeliveryCustomerData(new MenusData(question, orderId, questionType, pendingFeedback, stores, popupData,
                     amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText,
-                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName,category,addStoreImagesLimit,showAddStore,merchantCategories));
+                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName,category,addStoreImagesLimit,showAddStore,merchantCategories,isFeedOrderFeedback));
 
             try {
                 if(Data.getDeliveryCustomerData().getPromoCoupons() == null){
@@ -799,11 +799,34 @@ public class JSONParser implements Constants {
         parseFreshData(context, jFreshObject, loginResponse.getFresh());
         parseMealsData(context, jMealsObject, loginResponse.getMeals());
         parseGroceryData(context, jGroceryObject, loginResponse.getGrocery());
+        parseFeedData(context, jFeedObject, loginResponse.getFeed());
         parseMenusData(context, jMenusObject, loginResponse.getMenus());
+
+
+        if(jDeliveryCustomerObject!=null && jDeliveryCustomerObject.optInt(KEY_PENDING_FEEDBACK,0)!=1
+                &&   jFeedObject!=null && jFeedObject.optInt(KEY_PENDING_FEEDBACK,0)==1){
+
+            jDeliveryCustomerObject.put(KEY_NEGATIVE_FEEDBACK_REASONS,jFeedObject.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS));
+            jDeliveryCustomerObject.put(KEY_POSITIVE_FEEDBACK_REASONS,jFeedObject.optJSONArray(KEY_POSITIVE_FEEDBACK_REASONS));
+            jDeliveryCustomerObject.put(KEY_PENDING_FEEDBACK,jFeedObject.optInt(KEY_PENDING_FEEDBACK));
+            jDeliveryCustomerObject.put(KEY_FEEDBACK_ORDER_ID,jFeedObject.optString(KEY_FEEDBACK_ORDER_ID));
+            jDeliveryCustomerObject.put(KEY_FEEDBACK_DATE,jFeedObject.optString(KEY_FEEDBACK_DATE));
+            jDeliveryCustomerObject.put(KEY_FEEDBACK_VIEW_TYPE,jFeedObject.optInt(KEY_FEEDBACK_VIEW_TYPE));
+            jDeliveryCustomerObject.put(KEY_RIDE_END_GOOD_FEEDBACK_TEXT,jFeedObject.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT));
+            jDeliveryCustomerObject.put(KEY_FEEDBACK_AMOUNT,jFeedObject.optDouble(KEY_FEEDBACK_AMOUNT,0));
+
+            //
+            jDeliveryCustomerObject.put(KEY_IS_FEED_ORDER_FEEDBACK,true);
+
+
+
+        }else if(jDeliveryCustomerObject!=null){
+            jDeliveryCustomerObject.put(KEY_IS_FEED_ORDER_FEEDBACK,false);
+
+        }
         parseDeliveryCustomerData(context, jDeliveryCustomerObject, loginResponse.getDeliveryCustomer());
         parsePayData(context, jPayObject, loginResponse.getPay());
         parseDeliveryData(loginResponse.getDelivery());
-        parseFeedData(context, jFeedObject, loginResponse.getFeed());
         parseProsData(context, loginResponse.getPros());
 
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);

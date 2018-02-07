@@ -32,6 +32,7 @@ public class MenusData {
 	private int merchantCategoryId;
 	private int addStoreImages;
 	private int showAddStore;
+	private boolean isFeedOrder;
 
 	public JSONArray getPositiveFeedbackReasons() {
 		return positiveFeedbackReasons;
@@ -39,7 +40,7 @@ public class MenusData {
 
 	public MenusData(String question, String orderId, int questionType, int pendingFeedback, ArrayList<Store> stores, PopupData popupData, double amount, String feedbackDeliveryDate,
 					 int feedbackViewType, int isFatafatEnabled, String rideEndGoodFeedbackText, JSONArray negativeFeedbackReasons, JSONArray positiveFeedbackReasons,
-					 String restaurantName, int category,int addStoreImages,int showAddStore,JSONArray merchantCategories) {
+					 String restaurantName, int category,int addStoreImages,int showAddStore,JSONArray merchantCategories,boolean isFeedOrder) {
 		this.question = question;
 		this.orderId = orderId;
 		this.questionType = questionType;
@@ -57,6 +58,7 @@ public class MenusData {
 		this.merchantCategoryId = category;
 		this.addStoreImages = addStoreImages;
 		this.showAddStore = showAddStore;
+		this.isFeedOrder = isFeedOrder;
 		if(merchantCategories!=null){
 			for(int i = 0;i<merchantCategories.length();i++){
 				try {
@@ -197,5 +199,9 @@ public class MenusData {
 
 	public List<MenusResponse.Category> getMerchantCategoriesList() {
 		return merchantCategoriesList;
+	}
+
+	public boolean isFeedOrder() {
+		return isFeedOrder;
 	}
 }
