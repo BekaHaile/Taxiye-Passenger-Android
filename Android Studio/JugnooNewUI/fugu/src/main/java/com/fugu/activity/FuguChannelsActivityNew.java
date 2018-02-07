@@ -258,8 +258,32 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
         tabLayout.setTabTextColors(fuguColorConfig.getFuguActionBarText(),ContextCompat.getColor(this,android.R.color.black));
         viewPagerChannels = (ViewPager) findViewById(R.id.vwPagerChannels);
 
+        viewPagerChannels.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(final int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(final int state) {
+                enableDisableSwipeRefresh( state == ViewPager.SCROLL_STATE_IDLE );
+            }
+        });
+
         FloatingActionButton btnNewChat = (FloatingActionButton)findViewById(R.id.btnNewChat);
         btnNewChat.setOnClickListener(this);
+    }
+
+
+    private void enableDisableSwipeRefresh(boolean enable) {
+        if (swipeRefresh != null) {
+            swipeRefresh.setEnabled(enable);
+        }
     }
 
     /**

@@ -477,17 +477,25 @@ public class ContactsUploadService extends IntentService {
 						int flag = jObj.getInt("flag");
 						String message = JSONParser.getServerMessage(jObj);
 
-						if(!isFromNewConversation){
                             if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
-                                Data.autoData.setReferAllStatus(1);
+
+                                if(!isFromNewConversation) {
+                                    Data.autoData.setReferAllStatus(1);
+                                }
                             }
                             else{
-                                Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+                                if(!isFromNewConversation) {
+                                    Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
+                                }
+                                doneWithSync();
+                                return;
                             }
-                        }
+
 
 					}  catch (Exception exception) {
 						exception.printStackTrace();
+						doneWithSync();
+						return;
 						//DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
 					}
                     //DialogPopup.dismissLoadingDialog();
@@ -499,16 +507,17 @@ public class ContactsUploadService extends IntentService {
                     if(!isFromNewConversation){
                         Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
                     }
-                    checkIfAllSynced();
-                    //doneWithSync();
+                    doneWithSync();
                 }
             } else{
                 if(!isFromNewConversation){
                     Prefs.with(ContactsUploadService.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
                 }
-                checkIfAllSynced();
-                //doneWithSync();
+                doneWithSync();
             }
+        }
+        else {
+            doneWithSync();
         }
     }
 
