@@ -1473,7 +1473,7 @@
     <string name="title_suggest_store">SUGGEST A STORE</string>
 
     <!-- Jugnoo Connections -->
-    <string name="txt_jugnoo_connections">Your jugnoo connections</string>
+    <string name="txt_jugnoo_connections">Your Jugnoo Connections</string>
     <string name="txt_new_message">New Message</string>
 
 </resources>
