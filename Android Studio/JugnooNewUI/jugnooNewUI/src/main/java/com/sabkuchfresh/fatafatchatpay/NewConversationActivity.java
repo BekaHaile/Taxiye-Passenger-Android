@@ -243,7 +243,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
         if (!s.toString().trim().isEmpty()) {
             ArrayList<UserContactObject> filteredList = new ArrayList<>();
             for (UserContactObject contactObject : allJugnooContacts) {
-                if (contactObject.getUserName().toLowerCase().contains(s.toString().trim()) ||
+                if (contactObject.getUserName().toLowerCase().startsWith(s.toString().trim()) ||
                         contactObject.getPhoneNumber().contains(s.toString().trim())) {
                     filteredList.add(contactObject);
                 }
