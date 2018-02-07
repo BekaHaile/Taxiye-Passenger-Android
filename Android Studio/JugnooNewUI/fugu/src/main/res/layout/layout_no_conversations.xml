@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/fugu_margin_30"
         android:text="@string/fugu_no_conversations"
-        android:textAllCaps="true"
+        android:textAllCaps="false"
         android:textSize="@dimen/fugu_text_size_very_large"/>
 
 </LinearLayout>
