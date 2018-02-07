@@ -20,6 +20,7 @@ import com.sabkuchfresh.fatafatchatpay.NewConversationActivity;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 
 /**
@@ -66,7 +67,8 @@ public class UserContactAdapter extends RecyclerView.Adapter<UserContactAdapter.
             holder.tvPersonPhone.setText("");
         }
 
-        if (contactObject.getUserImage() == null || contactObject.getUserImage().isEmpty()) {
+        if (contactObject.getUserImage() == null || contactObject.getUserImage().isEmpty() ||
+                contactObject.getUserImage().equalsIgnoreCase(Constants.DEFAULT_IMAGE_URL)) {
             holder.ivPersonImage.setVisibility(View.GONE);
             holder.tvPersonInitial.setVisibility(View.VISIBLE);
             if (contactObject.getUserName() != null && !contactObject.getUserName().isEmpty()) {
