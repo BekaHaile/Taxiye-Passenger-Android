@@ -2,12 +2,17 @@ package com.sabkuchfresh.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +28,7 @@ import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeOption;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -182,6 +188,27 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                     && (1 == ((FreshActivity)context).getVendorOpened().getIsClosed() || 0 == ((FreshActivity)context).getVendorOpened().getIsAvailable())){
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
             }
+            try {
+                if(!TextUtils.isEmpty(item.getItemImage())){
+                    mHolder.ivItemImage.setVisibility(View.VISIBLE);
+                    Picasso.with(context).load(item.getItemImage())
+                            .placeholder(R.drawable.ic_fresh_item_placeholder)
+                            .fit()
+                            .centerCrop()
+                            .error(R.drawable.ic_fresh_item_placeholder)
+                            .into(mHolder.ivItemImage);
+                } else {
+                    mHolder.ivItemImage.setVisibility(View.GONE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                mHolder.ivItemImage.setVisibility(View.GONE);
+            }
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
+            params.setMargins((mHolder.ivItemImage.getVisibility() == View.VISIBLE ?
+                            context.getResources().getDimensionPixelSize(R.dimen.dp_6) : context.getResources().getDimensionPixelSize(R.dimen.dp_14)),
+                    params.topMargin, params.rightMargin, params.bottomMargin);
+            mHolder.imageViewFoodType.setLayoutParams(params);
 
 
             mHolder.imageViewMinus.setTag(position);
@@ -349,13 +376,14 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
         public RelativeLayout relativeLayoutItem ;
         public LinearLayout linearLayoutQuantitySelector;
-        private ImageView imageViewFoodType, saperatorImage, imageViewMinus, imageViewPlus;
+        private ImageView ivItemImage, imageViewFoodType, saperatorImage, imageViewMinus, imageViewPlus;
         public TextView textViewItemCategoryName, textViewAboutItemDescription, textViewQuantity;
 
         public ViewHolderItem(View itemView, Context context) {
             super(itemView);
             relativeLayoutItem = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutItem);
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
+            ivItemImage = (ImageView) itemView.findViewById(R.id.ivItemImage);
             imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
             saperatorImage = (ImageView) itemView.findViewById(R.id.saperatorImage);
             saperatorImage.setVisibility(View.GONE);
@@ -365,6 +393,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             textViewQuantity = (TextView)itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenMedium(context));
             textViewItemCategoryName = (TextView)itemView.findViewById(R.id.textViewItemCategoryName); textViewItemCategoryName.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
             textViewAboutItemDescription = (TextView)itemView.findViewById(R.id.textViewAboutItemDescription); textViewAboutItemDescription.setTypeface(Fonts.mavenMedium(context));
+            textViewItemCategoryName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         }
     }
 

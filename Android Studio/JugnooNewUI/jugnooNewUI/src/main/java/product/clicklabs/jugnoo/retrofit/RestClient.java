@@ -56,9 +56,9 @@ public class RestClient {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectionPool(connectionPool);
-        builder.readTimeout(15, TimeUnit.SECONDS);
-        builder.connectTimeout(15, TimeUnit.SECONDS);
-        builder.writeTimeout(15, TimeUnit.SECONDS);
+        builder.readTimeout(30, TimeUnit.SECONDS);
+        builder.connectTimeout(30, TimeUnit.SECONDS);
+        builder.writeTimeout(30, TimeUnit.SECONDS);
         builder.retryOnConnectionFailure(retryOnConnectionFailure);
         builder.protocols(protocolList);
 
