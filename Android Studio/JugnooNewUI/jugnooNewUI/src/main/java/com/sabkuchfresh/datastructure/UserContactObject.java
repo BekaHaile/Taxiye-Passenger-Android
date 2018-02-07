@@ -15,7 +15,7 @@ public class UserContactObject {
     private String phoneNumber;
 
     @SerializedName("user_name")
-    private String userName;
+    private String userName="";
 
     public String getUserName() {
         return userName;

@@ -253,14 +253,16 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
         for (ContactBean contactBean : allContactsList) {
             for (UserContactObject jugnooContact : jugnooContacts) {
                 String jugnooPhone = jugnooContact.getPhoneNumber();
-                // full comparison
-                if (jugnooPhone.equals(contactBean.getPhone())) {
-                    jugnooContact.setUserName(contactBean.getName());
-                }
-                // last 10 digit comparison( server appends +91 )
-                else if (jugnooPhone.length() >= 10 && jugnooPhone.substring(jugnooContact.getPhoneNumber().length() - 10)
-                        .equals(contactBean.getPhone())) {
-                    jugnooContact.setUserName(contactBean.getName());
+                if(contactBean.getName()!=null) {
+                    // full comparison
+                    if (jugnooPhone.equals(contactBean.getPhone())) {
+                        jugnooContact.setUserName(contactBean.getName());
+                    }
+                    // last 10 digit comparison( server appends +91 )
+                    else if (jugnooPhone.length() >= 10 && jugnooPhone.substring(jugnooContact.getPhoneNumber().length() - 10)
+                            .equals(contactBean.getPhone())) {
+                        jugnooContact.setUserName(contactBean.getName());
+                    }
                 }
 
             }
