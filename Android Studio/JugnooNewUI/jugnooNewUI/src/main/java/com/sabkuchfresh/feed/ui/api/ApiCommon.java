@@ -127,6 +127,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 @Override
                 public void success(T feedCommonResponse, Response response) {
                   setInProgress(false);
+
                     if(showLoader) {
                         DialogPopup.dismissLoadingDialog();
                     }

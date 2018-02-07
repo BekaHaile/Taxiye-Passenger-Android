@@ -76,7 +76,7 @@ public class ContactsUploadService extends IntentService {
 
             if(intent.hasExtra(Constants.KEY_COMING_FROM_NEW_CONVERSATION)){
                 isFromNewConversation = true;
-                UPLOAD_BATCH_SIZE = 500;
+                UPLOAD_BATCH_SIZE = 100;
             }
 
             if(intent.hasExtra("access_token")){

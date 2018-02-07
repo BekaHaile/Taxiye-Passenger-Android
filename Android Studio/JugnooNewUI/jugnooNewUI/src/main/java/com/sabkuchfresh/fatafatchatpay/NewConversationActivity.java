@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -32,14 +33,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import io.paperdb.Paper;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.PaperDBKeys;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.ContactsUploadService;
 import product.clicklabs.jugnoo.retrofit.CreateChatResponse;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 import retrofit.RetrofitError;
 
 /**
@@ -55,6 +59,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
     private ArrayList<ContactBean> allContactsList = new ArrayList<>();
     private ArrayList<UserContactObject> allJugnooContacts = new ArrayList<>();
     private UserContactAdapter mUserContactAdapter;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -62,10 +67,36 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_new_conversation);
         initViews();
         registerSyncUpdateReceiver();
-        // proceed to sync contacts
-        syncContacts();
 
+        sharedPreferences = getSharedPreferences(Data.SHARED_PREF_NAME, MODE_PRIVATE);
+        boolean areContactsSyncedOneTime = sharedPreferences.getBoolean(Constants.SP_CONTACTS_SYNCED, false);
+
+        // load initial contacts if we have any
+        if (Paper.book().read(PaperDBKeys.DB_JUGNOO_CONTACTS_LIST) != null) {
+            allJugnooContacts = Paper.book().read(PaperDBKeys.DB_JUGNOO_CONTACTS_LIST);
+            if (mUserContactAdapter != null) {
+                mUserContactAdapter.updateContacts(allJugnooContacts);
+            } else {
+                mUserContactAdapter = new UserContactAdapter(this, allJugnooContacts);
+                rvConnections.setAdapter(mUserContactAdapter);
+            }
+
+        }
+        if (!areContactsSyncedOneTime) {
+            // sync
+            syncContacts();
+        } else {
+            allContactsList = Paper.book().read(PaperDBKeys.DB_ALL_CONTACTS_LIST);
+            // user has synced one time , only fetch contacts
+            fetchContacts(false);
+        }
     }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+    }
+
 
     /**
      * Init views
@@ -100,9 +131,18 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
                     if (intent.getAction().equals(Constants.ACTION_LOADING_COMPLETE)) {
                         allContactsList = intent.getParcelableArrayListExtra(Constants.KEY_CONTACTS_LIST);
                         if (!NewConversationActivity.this.isFinishing()) {
+
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Paper.book().write(PaperDBKeys.DB_ALL_CONTACTS_LIST, allContactsList);
+                                }
+                            }).start();
+
                             DialogPopup.dismissLoadingDialog();
+                            sharedPreferences.edit().putBoolean(Constants.SP_CONTACTS_SYNCED, true).commit();
                             //fetch contacts from api
-                            fetchContacts();
+                            fetchContacts(true);
                         }
 
                     }
@@ -127,13 +167,15 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
 
     /**
      * Fetched jugnoo contacts from server
+     *
+     * @param showLoader show loader or not
      */
-    private void fetchContacts() {
+    private void fetchContacts(final boolean showLoader) {
 
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
-        new ApiCommon<ContactResponseModel>(this).showLoader(true).execute(params, ApiName.FETCH_CONTACTS,
+        new ApiCommon<ContactResponseModel>(this).showLoader(showLoader).execute(params, ApiName.FETCH_CONTACTS,
                 new APICommonCallback<ContactResponseModel>() {
                     @Override
                     public boolean onNotConnected() {
@@ -231,6 +273,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
             }
         });
 
+        Paper.book().write(PaperDBKeys.DB_JUGNOO_CONTACTS_LIST, jugnooContacts);
         allJugnooContacts = jugnooContacts;
 
         if (mUserContactAdapter != null) {

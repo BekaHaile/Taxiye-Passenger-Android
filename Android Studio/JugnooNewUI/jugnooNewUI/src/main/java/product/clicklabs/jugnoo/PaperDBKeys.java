@@ -13,4 +13,6 @@ public interface PaperDBKeys {
 	String DB_MENUS_CART = "db_menus_cart";
 	String DB_DELIVERY_CUSTOMER_CART = "db_delivery_customer_cart";
 	String HISTORY_PRODUCT_TYPES = "history_product_types";
+	String DB_JUGNOO_CONTACTS_LIST ="db_jugnoo_contacts_list";
+	String DB_ALL_CONTACTS_LIST="db_all_contacts_list";
 }

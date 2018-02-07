@@ -229,6 +229,7 @@ public interface Constants {
     String KEY_ONE_SHOT = "one_shot";
     String KEY_EMERGENCY_LOC = "emergency_loc";
     String SP_CURRENT_ENGAGEMENT_ID = "current_engagement_id";
+    String SP_CONTACTS_SYNCED="contacts_syned";
 
     String KEY_URL = "url";
     String SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
