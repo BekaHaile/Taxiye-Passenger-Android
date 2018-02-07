@@ -105,7 +105,7 @@
             <LinearLayout
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="@dimen/dp_20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -150,6 +150,7 @@
 
             <TextView
                 android:id="@+id/tvMerchantPhone"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_20"
@@ -351,7 +352,6 @@
                     android:visibility="visible"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_merchant_info_locate"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     >
@@ -379,7 +379,6 @@
                     android:layout_weight="1"
                     android:visibility="gone"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_merchant_info_locate"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
                     >
@@ -406,7 +405,6 @@
                     android:id="@+id/llChatNow"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_merchant_info_locate"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
