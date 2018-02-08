@@ -237,9 +237,9 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 
 			if(reviewImages!=null && reviewImages.size()==1 && reviewImages.get(0).getHeight()!=null && reviewImages.get(0).getHeight()>0)
-			  Glide.with(activity).load(reviewImages.get(position).getUrl()).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(ivReviewImage);
+			  Glide.with(activity).load(reviewImages.get(position).getUrl()).placeholder(R.drawable.ic_fresh_item_placeholder).error(R.drawable.ic_fresh_item_placeholder).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(ivReviewImage);
 			else
-				Glide.with(activity).load(reviewImages.get(position).getUrl()).into(ivReviewImage);
+				Glide.with(activity).load(reviewImages.get(position).getUrl()).placeholder(R.drawable.ic_fresh_item_placeholder).error(R.drawable.ic_fresh_item_placeholder).into(ivReviewImage);
 			container.addView(root);
 			return root;
 		}
