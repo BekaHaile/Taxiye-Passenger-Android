@@ -259,8 +259,9 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
                         jugnooContact.setUserName(contactBean.getName());
                     }
                     // last 10 digit comparison( server appends +91 )
-                    else if (jugnooPhone.length() >= 10 && jugnooPhone.substring(jugnooContact.getPhoneNumber().length() - 10)
-                            .equals(contactBean.getPhone())) {
+                    else if (jugnooPhone.length() >= 10 && contactBean.getPhone().length()>=10 &&
+                            jugnooPhone.substring(jugnooContact.getPhoneNumber().length() - 10)
+                                    .equals(contactBean.getPhone().substring(contactBean.getPhone().length()-10))) {
                         jugnooContact.setUserName(contactBean.getName());
                     }
                 }
