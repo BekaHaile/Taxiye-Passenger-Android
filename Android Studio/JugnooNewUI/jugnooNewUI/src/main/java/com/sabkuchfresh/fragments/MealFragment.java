@@ -360,7 +360,6 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     noMealsView.setVisibility(View.GONE);
                                     textViewNothingFound.setText(!TextUtils.isEmpty(productsResponse.getMessage()) ?
                                             productsResponse.getMessage() : getString(R.string.nothing_found_near_you));
-
                                 }
                                 else {
                                     if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
@@ -372,9 +371,13 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     }
                                     if(productsResponse.getCategories() == null || productsResponse.getCategories().size() == 0){
                                         noMealsView.setVisibility(View.VISIBLE);
+                                        recyclerViewCategoryItems.setVisibility(View.GONE);
                                         activity.llCheckoutBarSetVisibilityDirect(View.GONE);
+                                        if(finalProgressDialog != null)
+                                            finalProgressDialog.dismiss();
                                         return;
                                     }
+                                    recyclerViewCategoryItems.setVisibility(View.VISIBLE);
                                     int sortedBy = jObj.optInt(Constants.SORTED_BY);
                                     mealsData.clear();
                                     mealsData.addAll(productsResponse.getCategories().get(0).getSubItems());
