@@ -215,7 +215,6 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
 
             setItemNameToTextView(item, mHolder.textViewItemCategoryName);
-            mHolder.textViewItemCategoryName.setMinimumHeight(((int)(ASSL.Yscale() * 90f)));
 
             int total = item.getTotalQuantity();
             mHolder.textViewQuantity.setText(String.valueOf(total));
@@ -308,11 +307,19 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 e.printStackTrace();
                 mHolder.ivItemImage.setVisibility(View.GONE);
             }
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
+    /*        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
             params.setMargins((mHolder.ivItemImage.getVisibility() == View.VISIBLE ?
                     context.getResources().getDimensionPixelSize(R.dimen.dp_6) : context.getResources().getDimensionPixelSize(R.dimen.dp_14)),
                     params.topMargin, params.rightMargin, params.bottomMargin);
             mHolder.imageViewFoodType.setLayoutParams(params);
+            RelativeLayout.LayoutParams descriptionParams = (RelativeLayout.LayoutParams) mHolder.textViewAboutItemDescription.getLayoutParams();
+           mHolder.textViewAboutItemDescription.setLayoutParams(descriptionParams);
+
+*/
+
+            mHolder.textViewItemCategoryName.setMinimumHeight(((int)(ASSL.Yscale() * 70f)));
+
+
 
 
             mHolder.imageViewMinus.setTag(position);
@@ -593,7 +600,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void setItemNameToTextView(Item item, TextView textView){
         final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-        final RelativeSizeSpan rss = new RelativeSizeSpan(1.2f);
+        final RelativeSizeSpan rss = new RelativeSizeSpan(1.1f);
         final SpannableStringBuilder sb = new SpannableStringBuilder(item.getItemName());
         sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         sb.setSpan(rss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

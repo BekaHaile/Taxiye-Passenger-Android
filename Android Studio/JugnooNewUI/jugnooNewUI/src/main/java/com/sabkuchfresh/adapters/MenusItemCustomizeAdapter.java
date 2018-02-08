@@ -152,7 +152,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             ViewHolderItem mHolder = (ViewHolderItem) holder;
             mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
             mHolder.textViewItemCategoryName.setText(item.getItemName());
-            mHolder.textViewItemCategoryName.setMinimumHeight((int)(Math.min(ASSL.Xscale(), ASSL.Yscale()) * 90f));
+            mHolder.textViewItemCategoryName.setMinimumHeight(((int)(ASSL.Yscale() * 70f)));
 
             int total = itemSelected.getQuantity();
             mHolder.textViewQuantity.setText(String.valueOf(total));
@@ -169,19 +169,19 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
             int gravity, visibilityDesc;
-            RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
+//            RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
             if(!TextUtils.isEmpty(item.getItemDetails())){
-                gravity = Gravity.LEFT;
+//                gravity = Gravity.LEFT;
                 visibilityDesc = View.VISIBLE;
-                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 30f), paramsFT.rightMargin, paramsFT.bottomMargin);
+//                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 30f), paramsFT.rightMargin, paramsFT.bottomMargin);
             } else {
-                gravity = Gravity.CENTER_VERTICAL;
+//                gravity = Gravity.CENTER_VERTICAL;
                 visibilityDesc = View.GONE;
-                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 45f), paramsFT.rightMargin, paramsFT.bottomMargin);
+//                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 45f), paramsFT.rightMargin, paramsFT.bottomMargin);
             }
             mHolder.textViewAboutItemDescription.setVisibility(visibilityDesc);
-            mHolder.textViewItemCategoryName.setGravity(gravity);
-            mHolder.imageViewFoodType.setLayoutParams(paramsFT);
+//            mHolder.textViewItemCategoryName.setGravity(gravity);
+//            mHolder.imageViewFoodType.setLayoutParams(paramsFT);
 
             if(context instanceof FreshActivity
                     && ((FreshActivity)context).getVendorOpened() != null
@@ -204,11 +204,11 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 e.printStackTrace();
                 mHolder.ivItemImage.setVisibility(View.GONE);
             }
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
+           /* RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
             params.setMargins((mHolder.ivItemImage.getVisibility() == View.VISIBLE ?
                             context.getResources().getDimensionPixelSize(R.dimen.dp_6) : context.getResources().getDimensionPixelSize(R.dimen.dp_14)),
                     params.topMargin, params.rightMargin, params.bottomMargin);
-            mHolder.imageViewFoodType.setLayoutParams(params);
+            mHolder.imageViewFoodType.setLayoutParams(params);*/
 
 
             mHolder.imageViewMinus.setTag(position);

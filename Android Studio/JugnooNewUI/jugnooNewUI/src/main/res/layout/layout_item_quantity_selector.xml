@@ -12,9 +12,9 @@
 
     <ImageView
         android:id="@+id/imageViewMinus"
-        android:layout_width="70px"
-        android:layout_height="70px"
-        android:padding="20px"
+        android:layout_width="65px"
+        android:layout_height="65px"
+        android:padding="19px"
         android:src="@drawable/ic_minus_dark_selector"
         android:tag="mwar"
         android:visibility="visible"
@@ -22,7 +22,7 @@
 
     <TextView
         android:id="@+id/textViewQuantity"
-        android:layout_width="70px"
+        android:layout_width="65px"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:singleLine="true"
@@ -34,9 +34,9 @@
 
     <ImageView
         android:id="@+id/imageViewPlus"
-        android:layout_width="70px"
-        android:layout_height="70px"
-        android:padding="20px"
+        android:layout_width="65px"
+        android:layout_height="65px"
+        android:padding="18px"
         android:src="@drawable/ic_plus_dark"
         android:tag="mwar"/>
 
