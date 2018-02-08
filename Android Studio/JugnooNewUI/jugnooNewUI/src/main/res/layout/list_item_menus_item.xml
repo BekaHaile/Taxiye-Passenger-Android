@@ -9,6 +9,7 @@
 
     <RelativeLayout
         android:id="@+id/rlInner"
+        android:paddingLeft="28px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -16,7 +17,7 @@
             android:id="@+id/ivItemImage"
             android:layout_width="108px"
             android:layout_height="108px"
-            android:layout_marginLeft="28px"
+            android:layout_marginRight="14px"
             android:layout_marginTop="@dimen/px_20"
             android:layout_alignParentTop="true"
             android:visibility="visible"
@@ -26,7 +27,6 @@
             android:id="@+id/imageViewFoodType"
             android:layout_width="26px"
             android:layout_height="26px"
-            android:layout_marginLeft="14px"
             android:layout_marginRight="14px"
             android:layout_marginTop="@dimen/px_20"
             android:layout_alignParentTop="true"
