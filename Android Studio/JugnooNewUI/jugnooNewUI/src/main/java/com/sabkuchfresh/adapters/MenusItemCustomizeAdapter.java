@@ -1,5 +1,6 @@
 package com.sabkuchfresh.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItem;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
@@ -43,7 +45,7 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
-    private Context context;
+    private Activity context;
     private Item item;
     private ItemSelected itemSelected;
     private ArrayList<CustomizeOption> customizeOptions;
@@ -53,7 +55,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
     private static final int CUSTOMIZE_ITEM = 1;
     private static final int CUSTOMIZE_OPTION = 2;
 
-    public MenusItemCustomizeAdapter(Context context, Item item, Callback callback) {
+    public MenusItemCustomizeAdapter(Activity context, Item item, Callback callback) {
         this.context = context;
         this.callback = callback;
         customizeOptions = new ArrayList<>();
@@ -247,6 +249,27 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                     } catch (Exception e){}
                 }
             });
+            mHolder.ivItemImage.setTag(position);
+            mHolder.ivItemImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+
+
+
+                        if(item!=null && !TextUtils.isEmpty(item.getItemImage())){
+
+                            ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(0, item.getItemImage());
+                            dialog.show(context.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
 
 
         } else if(holder instanceof ViewHolderCustomizeItem) {

@@ -71,6 +71,13 @@ public class ReviewImagePagerDialog extends DialogFragment {
 	}
 
 
+	public static ReviewImagePagerDialog newInstance(int positionImageClicked, String imageUrl){
+		ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages = new ArrayList<>();
+		reviewImages.add(new FetchFeedbackResponse.ReviewImage(imageUrl,imageUrl));
+		return newInstance(positionImageClicked,reviewImages);
+	}
+
+
 	/*public static ReviewImagePagerDialog newInstance(int positionImageClicked, int likeIsEnabled, int shareIsEnabled, boolean showLikeShare){
 		ReviewImagePagerDialog dialog = new ReviewImagePagerDialog();
 		Bundle bundle = new Bundle();
