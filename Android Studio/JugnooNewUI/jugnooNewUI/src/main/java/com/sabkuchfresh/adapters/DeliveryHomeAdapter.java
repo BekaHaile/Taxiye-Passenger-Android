@@ -1012,9 +1012,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 return "";
             }
         }
+
+        if(!TextUtils.isEmpty(vendor.getDeliveryTimeText()))
+            return vendor.getDeliveryTimeText();
+
         if(vendor.getDeliveryTime()==null){
             return null;
         }
+
+
 
         String deliveryTime = String.valueOf(vendor.getDeliveryTime());
         if (vendor.getMinDeliveryTime() != null) {
