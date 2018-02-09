@@ -186,6 +186,7 @@
                 <TextView
                     android:id="@+id/label_delivers_in"
                     android:layout_alignParentLeft="true"
+                    android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:layout_toLeftOf="@+id/view_center_order"
                     android:layout_width="wrap_content"
@@ -200,6 +201,7 @@
                 <TextView
                     android:id="@+id/tv_delivers_in"
                     android:layout_alignParentLeft="true"
+                    android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:layout_below="@id/label_delivers_in"
                     android:layout_toLeftOf="@id/view_center_order"
@@ -222,6 +224,7 @@
                 <TextView
                     android:id="@+id/label_min_order_amt"
                     android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:layout_toRightOf="@id/view_center_order"
                     android:layout_width="wrap_content"
@@ -235,6 +238,7 @@
                 <TextView
                     android:id="@+id/tv_min_order_amt"
                     android:layout_alignParentRight="true"
+                    android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:layout_below="@id/label_min_order_amt"
                     android:layout_toRightOf="@id/view_center_order"

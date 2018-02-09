@@ -499,6 +499,8 @@ public class MenusResponse {
 			return minimumOrderAmount;
 		}
 
+
+
 		/**
 		 * @param minimumOrderAmount The minimum_order_amount
 		 */

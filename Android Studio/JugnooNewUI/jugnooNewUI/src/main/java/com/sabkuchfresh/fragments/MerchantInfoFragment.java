@@ -157,6 +157,12 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     ImageView ivPay;
     @Bind(R.id.ivChatNow)
     ImageView ivChatNow;
+    @Bind(R.id.label_delivers_in)
+    TextView labelDeliversIn;
+    @Bind(R.id.view_center_order)
+    View viewCenterOrder;
+    @Bind(R.id.label_min_order_amt)
+    TextView labelMinOrderAmt;
 
     private View rootView;
     private FreshActivity activity;
@@ -400,14 +406,34 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 activity.getHandler().postDelayed(timerRunnable, 6000);
 
                 if (activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE || activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_CHAT
-                        || activity.getVendorOpened().getOutOfRadius() == 1) {
+                        || activity.getVendorOpened().getOutOfRadius() == 1 || (TextUtils.isEmpty(activity.getVendorOpened().getDeliveryTimeText()) &&
+                        TextUtils.isEmpty(activity.getVendorOpened().getMinOrderText()))) {
                     layoutOrderDetails.setVisibility(View.GONE);
                 } else {
-                    layoutOrderDetails.setVisibility(View.VISIBLE);
-                    tvDeliversIn.setText(DeliveryHomeAdapter.showDeliveryStringWithTime(activity.getVendorOpened()));
-                    tvMinOrderAmt.setText(activity.getString(R.string.rupee_format,
-                            product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(activity.getVendorOpened().getMinimumOrderAmount())));
 
+
+                    tvDeliversIn.setText(activity.getVendorOpened().getDeliveryTimeText());
+                    tvMinOrderAmt.setText(activity.getVendorOpened().getMinOrderText());
+                    if (TextUtils.isEmpty(activity.getVendorOpened().getDeliveryTimeText()) || TextUtils.isEmpty(activity.getVendorOpened().getMinOrderText())) {
+                        viewCenterOrder.setVisibility(View.GONE);
+
+                        if (TextUtils.isEmpty(activity.getVendorOpened().getMinOrderText())) {
+                            tvDeliversIn.setText(activity.getVendorOpened().getDeliveryTimeText());
+                            labelMinOrderAmt.setVisibility(View.GONE);
+                            tvMinOrderAmt.setVisibility(View.GONE);
+                            removeRule(RelativeLayout.ALIGN_PARENT_LEFT, labelDeliversIn);
+                            removeRule(RelativeLayout.ALIGN_PARENT_LEFT, tvDeliversIn);
+
+                        } else {
+                            labelDeliversIn.setVisibility(View.GONE);
+                            tvDeliversIn.setVisibility(View.GONE);
+                            removeRule(RelativeLayout.ALIGN_PARENT_RIGHT, labelMinOrderAmt);
+                            removeRule(RelativeLayout.ALIGN_PARENT_RIGHT, tvMinOrderAmt);
+                        }
+
+                    }
+
+                    layoutOrderDetails.setVisibility(View.VISIBLE);
                 }
 
                 if (activity.getMenuProductsResponse().getMenusPromotionInfo() != null && activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText() != null) {
@@ -431,12 +457,12 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 fetchFeedback();
 
 
-                ivChatNow.getDrawable().setColorFilter(activity.getVendorOpened().isChatModeEnabled()?null:BW_FILTER);
-                ivPay.getDrawable().setColorFilter(activity.getVendorOpened().getPayModeEnabled()?null:BW_FILTER);
-                if(activity.getVendorOpened().getPayModeEnabled()){
+                ivChatNow.getDrawable().setColorFilter(activity.getVendorOpened().isChatModeEnabled() ? null : BW_FILTER);
+                ivPay.getDrawable().setColorFilter(activity.getVendorOpened().getPayModeEnabled() ? null : BW_FILTER);
+                if (activity.getVendorOpened().getPayModeEnabled()) {
                     llLocate.setVisibility(View.GONE);
                     llPay.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     llLocate.setVisibility(View.VISIBLE);
                     llPay.setVisibility(View.GONE);
                 }
@@ -467,6 +493,18 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+    }
+
+    private void removeRule(int rule, View view) {
+
+
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (layoutParams instanceof RelativeLayout.LayoutParams) {
+            ((RelativeLayout.LayoutParams) layoutParams).addRule(rule, 0);
+            view.setLayoutParams(layoutParams);
+        }
+
+
     }
 
 
@@ -517,7 +555,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     }
 
     @OnClick({R.id.llChatNow, R.id.tvMerchantPhone, R.id.bOrderOnline, R.id.llSeeAll, R.id.tvMerchantAddress,
-            R.id.tvSubmitReview, R.id.llOffer, R.id.tvReviewCount, R.id.llEditReview,R.id.llLocate,R.id.llCall,R.id.llPay})
+            R.id.tvSubmitReview, R.id.llOffer, R.id.tvReviewCount, R.id.llEditReview, R.id.llLocate, R.id.llCall, R.id.llPay})
     public void onViewClicked(View view) {
         try {
             switch (view.getId()) {
@@ -663,7 +701,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
 
                         // user review
-                        if (fetchFeedbackResponse.getUserReview() != null && userHasReviewed == 1 &&  fetchFeedbackResponse.getUserReview().getRating()!=null &&
+                        if (fetchFeedbackResponse.getUserReview() != null && userHasReviewed == 1 && fetchFeedbackResponse.getUserReview().getRating() != null &&
                                 fetchFeedbackResponse.getUserReview().getRating() != 0.0) {
                             mUserReview = fetchFeedbackResponse.getUserReview();
                             double rating = mUserReview.getRating();
@@ -988,13 +1026,14 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
     private CreateChatResponse fuguMerchantData;
     private boolean isAPIInProgress;
-    public void initiateMerchantChat(){
-        if(fuguMerchantData ==null){
+
+    public void initiateMerchantChat() {
+        if (fuguMerchantData == null) {
 
 
-            HashMap<String,String> params = new HashMap<>();
-            params.put(Constants.PAYER_USER_IDENTIFIER,Data.userData.userIdentifier);
-            params.put(Constants.KEY_RESTAURANT_ID,String.valueOf(activity.getVendorOpened().getRestaurantId()));
+            HashMap<String, String> params = new HashMap<>();
+            params.put(Constants.PAYER_USER_IDENTIFIER, Data.userData.userIdentifier);
+            params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(activity.getVendorOpened().getRestaurantId()));
             new ApiCommon<CreateChatResponse>(activity).execute(params, ApiName.CREATE_CHAT, new APICommonCallback<CreateChatResponse>() {
                 @Override
                 public boolean onNotConnected() {
@@ -1035,19 +1074,15 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 }
             });
 
-        }else{
+        } else {
             openMerchantChat();
         }
-
-
-
-
 
 
     }
 
     private void openMerchantChat() {
-        if(fuguMerchantData!=null && !TextUtils.isEmpty(fuguMerchantData.getChannelId())&&fuguMerchantData.getFuguData()!=null){
+        if (fuguMerchantData != null && !TextUtils.isEmpty(fuguMerchantData.getChannelId()) && fuguMerchantData.getFuguData() != null) {
             /*FuguConfig.getInstance().openChatByTransactionId(fuguMerchantData.getChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
                     fuguMerchantData.getFuguData().getChannelName(), fuguMerchantData.getFuguData().getFuguTags());*/
             FuguConfig.getInstance().openDirectChat(activity,
