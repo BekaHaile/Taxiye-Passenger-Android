@@ -187,12 +187,12 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.MEALS);
 
         try {
-            if(Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
+            if(!activity.isDeliveryOpenInBackground() && Data.getMealsData() != null && Data.getMealsData().getPendingFeedback() == 1) {
                 //activity.getTopBar().getLlSearchCart().setVisibility(View.GONE);
                 activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        activity.openFeedback();
+                        activity.openFeedback(Config.getMealsClientId());
                     }
                 }, 300);
             }

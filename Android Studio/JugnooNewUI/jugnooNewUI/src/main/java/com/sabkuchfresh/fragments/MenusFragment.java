@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -233,13 +234,14 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         if(!activity.checkForReorderMenus(true)) {
             // to open pending feedback page
             try {
-                if (getMenusOrDeliveryData() != null && getMenusOrDeliveryData().getPendingFeedback() == 1) {
+                final String pendingFeedbackClientId = pendingFeedbackClientId();
+                if (pendingFeedbackClientId!=null) {
 
                     activity.getHandler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
 
-                            activity.openFeedback();
+                            activity.openFeedback(pendingFeedbackClientId);
                         }
                     }, 300);
                 }else{
@@ -411,6 +413,34 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         });
         return rootView;
+    }
+
+    @Nullable
+    private String pendingFeedbackClientId() {
+
+        if(activity.isDeliveryOpenInBackground()){
+
+            if(Data.getDeliveryCustomerData()!=null && Data.getDeliveryCustomerData().getPendingFeedback()==1){
+                return Config.getDeliveryCustomerClientId();
+            }
+
+            if(Data.getFeedData()!=null && Data.getFeedData().getPendingFeedback()==1){
+                return Config.getFeedClientId();
+            }
+
+            if(Data.getMealsData()!=null && Data.getMealsData().getPendingFeedback()==1){
+                return Config.getMealsClientId();
+            }
+
+            if(Data.getFreshData()!=null && Data.getFreshData().getPendingFeedback()==1){
+                return Config.getFreshClientId();
+            }
+        }else{
+            if(Data.getMenusData()!=null && Data.getMenusData().getPendingFeedback()==1){
+                return Config.getMenusClientId();
+            }
+        }
+        return null;
     }
 
     private Runnable onKeyBoardCloseRunnable = new Runnable() {

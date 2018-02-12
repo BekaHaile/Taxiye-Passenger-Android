@@ -2523,8 +2523,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     /**
      * Method used to open feedback screen
      */
-    public void openFeedback() {
-        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer,Config.getDeliveryCustomerClientId());
+    public void openFeedback(String clientId) {
+        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer,clientId);
     }
 
     public void openAddToAddressBook(Bundle bundle) {

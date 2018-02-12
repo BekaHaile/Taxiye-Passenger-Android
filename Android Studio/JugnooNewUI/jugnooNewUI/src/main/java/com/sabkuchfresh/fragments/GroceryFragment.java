@@ -191,11 +191,11 @@ public class GroceryFragment extends Fragment implements PagerSlidingTabStrip.My
 		activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.GROCERY);
 
         try {
-            if(Data.getGroceryData() != null && Data.getGroceryData().getPendingFeedback() == 1) {
+            if(!activity.isDeliveryOpenInBackground() && Data.getGroceryData() != null && Data.getGroceryData().getPendingFeedback() == 1) {
                 activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        activity.openFeedback();
+                        activity.openFeedback(Config.getGroceryClientId());
                     }
                 }, 300);
 
