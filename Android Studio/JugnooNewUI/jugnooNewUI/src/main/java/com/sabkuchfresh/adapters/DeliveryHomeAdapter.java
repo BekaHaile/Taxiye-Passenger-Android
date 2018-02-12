@@ -594,9 +594,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
                 if(!TextUtils.isEmpty(vendor.getMinOrderText())){
-             /*       mHolder.textViewMinimumOrder.setText(activity.getString(visibilityCloseTime==View.VISIBLE?R.string.minimum_order_rupee_short_format:R.string.minimum_order_rupee_format,
-                            Utils.getMoneyDecimalFormat().format(vendor.getMinOrderText())));*/
-                    mHolder.textViewMinimumOrder.setText(vendor.getMinOrderText());
+                    mHolder.textViewMinimumOrder.setText(activity.getString(visibilityCloseTime==View.VISIBLE?R.string.minimum_order_rupee_short_format:R.string.minimum_order_rupee_format,
+                            Utils.getMoneyDecimalFormat().format(vendor.getMinOrderText())));
                     ((ViewHolderVendor) mholder).textViewMinimumOrder.setVisibility(View.VISIBLE);
                 }else{
                     ((ViewHolderVendor) mholder).textViewMinimumOrder.setVisibility(View.GONE);
