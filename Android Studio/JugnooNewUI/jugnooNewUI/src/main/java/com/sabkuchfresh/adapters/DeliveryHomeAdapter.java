@@ -664,7 +664,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 // line 1 shall always come be it any type
                 String line2=null,deliveryText=null,status=null;
 
-                if(productType == ProductType.MEALS.getOrdinal()){
+                if(productType == ProductType.MEALS.getOrdinal() || productType == ProductType.FRESH.getOrdinal()){
                     line2=recentOrder.getOrderLine2();
                     if ((recentOrder.getOrderStatusText() != null) && (!recentOrder.getOrderStatusText().equalsIgnoreCase(""))) {
                         deliveryText=recentOrder.getOrderStatusText();
