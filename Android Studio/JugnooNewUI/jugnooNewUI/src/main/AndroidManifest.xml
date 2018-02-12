@@ -413,8 +413,7 @@
 
         <activity android:name="com.sabkuchfresh.fatafatchatpay.NewConversationActivity"
                   android:screenOrientation="portrait"
-                  android:theme="@style/TransparentTheme"
-                  android:windowSoftInputMode="stateHidden"/>
+                  android:theme="@style/TransparentTheme"/>
 
 
         <service

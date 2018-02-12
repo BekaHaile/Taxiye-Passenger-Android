@@ -15,7 +15,9 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -43,6 +45,7 @@ import product.clicklabs.jugnoo.retrofit.CreateChatResponse;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 import retrofit.RetrofitError;
 
@@ -81,6 +84,13 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
                 rvConnections.setAdapter(mUserContactAdapter);
             }
 
+            // show keyboard
+            Utils.showSoftKeyboard(this,etSearchConnections);
+
+        }
+        else {
+            // hide
+            Utils.hideSoftKeyboard(this,etSearchConnections);
         }
         if (!areContactsSyncedOneTime) {
             // sync
@@ -90,6 +100,32 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
             // user has synced one time , only fetch contacts
             fetchContacts(false);
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(final MotionEvent event) {
+        View view = getCurrentFocus();
+        try {
+            boolean ret = super.dispatchTouchEvent(event);
+            if (view != null && view instanceof EditText) {
+                View w = getCurrentFocus();
+                int[] scrcoords = new int[2];
+                assert w != null;
+                w.getLocationOnScreen(scrcoords);
+                float x = event.getRawX() + w.getLeft() - scrcoords[0];
+                float y = event.getRawY() + w.getTop() - scrcoords[1];
+                if (event.getAction() == MotionEvent.ACTION_UP
+                        && (x < w.getLeft() || x >= w.getRight()
+                        || y < w.getTop() || y > w.getBottom())) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+                }
+            }
+            return ret;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
