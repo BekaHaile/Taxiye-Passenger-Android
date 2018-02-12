@@ -35,20 +35,22 @@ public class SendFeedbackQuery {
 
     public void sendQuery(final int orderId, final int restaurantId, final ProductType productType, final int rating, final String ratingType,
                           final String comments, final String reviewDesc,
-                          final Activity activity, final FeedbackResultListener feedbackResultListener, final boolean isFeedOrder) {
+                          final Activity activity, final FeedbackResultListener feedbackResultListener, final String clientId) {
         try {
             if (MyApplication.getInstance().isOnline()) {
                 if (orderId > 0) {
-                    if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getFreshClientId())) {
+                    if (clientId.equals(Config.getFreshClientId())) {
                         Data.getFreshData().setPendingFeedback(0);
-                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMealsClientId())) {
+                    } else if (clientId.equals(Config.getMealsClientId())) {
                         Data.getMealsData().setPendingFeedback(0);
-                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getGroceryClientId())) {
+                    } else if (clientId.equals(Config.getGroceryClientId())) {
                         Data.getGroceryData().setPendingFeedback(0);
-                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getMenusClientId())) {
+                    } else if (clientId.equals(Config.getMenusClientId())) {
                         Data.getMenusData().setPendingFeedback(0);
-                    } else if (Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()).equals(Config.getDeliveryCustomerClientId())) {
+                    } else if (clientId.equals(Config.getDeliveryCustomerClientId())) {
                         Data.getDeliveryCustomerData().setPendingFeedback(0);
+                    } else if(clientId.equals(Config.getFeedClientId())){
+                        Data.getFeedData().setPendingFeedback(0);
                     }
                 }
 
@@ -96,23 +98,21 @@ public class SendFeedbackQuery {
                     @Override
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
-                        retryDialog(DialogErrorType.CONNECTION_LOST, productType, activity, orderId, restaurantId, rating, ratingType, comments, reviewDesc, feedbackResultListener,isFeedOrder);
+                        retryDialog(DialogErrorType.CONNECTION_LOST, productType, activity, orderId, restaurantId, rating, ratingType, comments, reviewDesc, feedbackResultListener,clientId);
                     }
                 };
                 new HomeUtil().putDefaultParams(params);
 
-                if(isFeedOrder){
-
+                if(productType==ProductType.FEED){
                     RestClient.getFatafatApiService().orderFeedback(params,callback);
-                }
-                else if (productType == ProductType.MENUS || productType == ProductType.DELIVERY_CUSTOMER) {
+                } else if (productType == ProductType.MENUS || productType == ProductType.DELIVERY_CUSTOMER) {
                     RestClient.getMenusApiService().orderFeedback(params, callback);
                 } else {
                     RestClient.getFreshApiService().orderFeedback(params, callback);
                 }
 
             } else {
-                retryDialog(DialogErrorType.NO_NET, productType, activity, orderId, restaurantId, rating, ratingType, comments, reviewDesc, feedbackResultListener,isFeedOrder);
+                retryDialog(DialogErrorType.NO_NET, productType, activity, orderId, restaurantId, rating, ratingType, comments, reviewDesc, feedbackResultListener,clientId);
             }
         } catch (Exception e) {
             DialogPopup.dismissLoadingDialog();
@@ -123,12 +123,12 @@ public class SendFeedbackQuery {
 
     private void retryDialog(DialogErrorType errorType, final ProductType productType, final Activity activity,
                              final int orderId, final int restaurantId, final int rating, final String ratingType,
-                             final String negativeReasons, final String reviewDesc, final FeedbackResultListener feedbackResultListener, final boolean isFeedOrder) {
+                             final String negativeReasons, final String reviewDesc, final FeedbackResultListener feedbackResultListener, final String clientId) {
         DialogPopup.dialogNoInternet(activity, errorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        sendQuery(orderId, restaurantId, productType, rating, ratingType, negativeReasons, reviewDesc, activity, feedbackResultListener, isFeedOrder);
+                        sendQuery(orderId, restaurantId, productType, rating, ratingType, negativeReasons, reviewDesc, activity, feedbackResultListener, clientId);
                     }
 
                     @Override

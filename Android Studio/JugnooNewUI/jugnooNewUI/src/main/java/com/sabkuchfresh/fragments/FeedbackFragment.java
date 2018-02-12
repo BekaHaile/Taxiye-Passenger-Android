@@ -143,60 +143,73 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             rateApp = Data.userData.getCustomerRateAppFlag();
             rateAppDialogContent = Data.userData.getRateAppDialogContent();
             negativeReasons.clear();
+
+
             if (lastClientId.equals(Config.getFreshClientId())) {
                 viewType = Data.getFreshData().getFeedbackViewType();
                 dateValue = Data.getFreshData().getFeedbackDeliveryDate();
                 orderAmount = Data.getFreshData().getAmount();
                 orderId = Data.getFreshData().getOrderId();
-                activity.getTopBar().title.setText(getResources().getString(R.string.fatafat));
                 endRideGoodFeedbackText = Data.getFreshData().getRideEndGoodFeedbackText();
-                productType = ProductType.FRESH;
                 negativeReasons = Data.getFreshData().getNegativeFeedbackReasons();
+
+
+                productType = ProductType.FRESH;
+                activity.getTopBar().title.setText(getResources().getString(R.string.fatafat));
+
 
             } else if (lastClientId.equals(Config.getMealsClientId())) {
                 viewType = Data.getMealsData().getFeedbackViewType();
                 dateValue = Data.getMealsData().getFeedbackDeliveryDate();
                 orderAmount = Data.getMealsData().getAmount();
                 orderId = Data.getMealsData().getOrderId();
-                activity.getTopBar().title.setText(getResources().getString(R.string.meals));
                 feedbackOrderItems = Data.getMealsData().getFeedbackOrderItems();
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
-                productType = ProductType.MEALS;
                 negativeReasons = Data.getMealsData().getNegativeFeedbackReasons();
+
+                productType = ProductType.MEALS;
+                activity.getTopBar().title.setText(getResources().getString(R.string.meals));
+
             } else if (lastClientId.equals(Config.getGroceryClientId())) {
                 viewType = Data.getGroceryData().getFeedbackViewType();
                 dateValue = Data.getGroceryData().getFeedbackDeliveryDate();
                 orderAmount = Data.getGroceryData().getAmount();
                 orderId = Data.getGroceryData().getOrderId();
-                activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
                 endRideGoodFeedbackText = Data.getGroceryData().getRideEndGoodFeedbackText();
-                productType = ProductType.GROCERY;
                 negativeReasons = Data.getGroceryData().getNegativeFeedbackReasons();
 
-            } else if (lastClientId.equals(Config.getMenusClientId()) || lastClientId.equals(Config.getDeliveryCustomerClientId()) ||
-                    lastClientId.equals(Config.getFeedClientId())) {
+                productType = ProductType.GROCERY;
+                activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
 
 
-                if (lastClientId.equals(Config.getFeedClientId())) {
-                    productType = ProductType.FEED;
-                } else if (lastClientId.equals(Config.getDeliveryCustomerClientId())) {
-                    productType = ProductType.DELIVERY_CUSTOMER;
+            } else if (lastClientId.equals(Config.getMenusClientId())) {
+
+                productType = ProductType.MENUS;
+                if(!TextUtils.isEmpty(Data.getMenusData().getRestaurantName())){
+                    activity.getTopBar().title.setText(Data.getMenusData().getRestaurantName());
                 } else {
-                    productType = ProductType.MENUS;
+                    activity.getTopBar().title.setText(activity.getString(R.string.menus));
                 }
 
-                setTitleForMenusDeliveryOrFeed();
-                viewType = getMenusOrDeliveryData().getFeedbackViewType();
-                dateValue = getMenusOrDeliveryData().getFeedbackDeliveryDate();
-                orderAmount = getMenusOrDeliveryData().getAmount();
-                orderId = getMenusOrDeliveryData().getOrderId();
-                if(getMenusOrDeliveryData() instanceof LoginResponse.DeliveryCustomer){
-                    merchantCategoryId = ((LoginResponse.DeliveryCustomer)getMenusOrDeliveryData()).getMerchantCategoryId();
-                }
+                viewType = Data.getMenusData().getFeedbackViewType();
+                dateValue = Data.getMenusData().getFeedbackDeliveryDate();
+                orderAmount = Data.getMenusData().getAmount();
+                orderId = Data.getMenusData().getOrderId();
+                endRideGoodFeedbackText = Data.getMenusData().getRideEndGoodFeedbackText();
+                negativeReasons = Data.getMenusData().getNegativeFeedbackReasons();
+                positiveReasons = Data.getMenusData().getPositiveFeedbackReasons();
 
-                endRideGoodFeedbackText = getMenusOrDeliveryData().getRideEndGoodFeedbackText();
-                negativeReasons = getMenusOrDeliveryData().getNegativeFeedbackReasons();
-                positiveReasons = getMenusOrDeliveryData().getPositiveFeedbackReasons();
+
+            }else if (lastClientId.equals(Config.getDeliveryCustomerClientId())) {
+                productType = ProductType.DELIVERY_CUSTOMER;
+                if(!TextUtils.isEmpty(Data.getDeliveryCustomerData().getRestaurantName())){
+                    activity.getTopBar().title.setText(Data.getDeliveryCustomerData().getRestaurantName());
+                } else {
+                    activity.getTopBar().title.setText(activity.getString(R.string.delivery_new_name));
+                }
+                merchantCategoryId = Data.getDeliveryCustomerData().getMerchantCategoryId();
+
+              initFeedbackVariables(Data.getDeliveryCustomerData());
 
 
             } else if(lastClientId.equals(Config.getProsClientId())){
@@ -224,21 +237,19 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         return rootView;
     }
 
-    private void setTitleForMenusDeliveryOrFeed() {
-        if(!TextUtils.isEmpty(getMenusOrDeliveryData().getRestaurantName())){
-            activity.getTopBar().title.setText(getMenusOrDeliveryData().getRestaurantName());
-        } else {
-            activity.getTopBar().title.setText(activity.getString(R.string.menus));
-        }
+
+    public <T extends LoginResponse.FeedbackData> void initFeedbackVariables(LoginResponse.FeedbackData feedbackData){
+        viewType = feedbackData.getFeedbackViewType();
+        dateValue =feedbackData.getFeedbackDeliveryDate();
+        orderAmount = feedbackData.getAmount();
+        orderId = feedbackData.getOrderId();
+        endRideGoodFeedbackText = feedbackData.getRideEndGoodFeedbackText();
+        negativeReasons = feedbackData.getNegativeFeedbackReasons();
+        positiveReasons = feedbackData.getPositiveFeedbackReasons();
     }
 
-    private LoginResponse.Menus getMenusOrDeliveryData() {
-        if(lastClientId.equals(Config.getDeliveryCustomerClientId()) || activity.isDeliveryOpenInBackground()){
-            return Data.getDeliveryCustomerData();
-        } else {
-            return Data.getMenusData();
-        }
-    }
+
+
 
     private void setUp() {
 
@@ -387,8 +398,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             });
 
 
-        }
-        else {
+        } else {
             imageviewType.setImageResource(R.drawable.ic_meals_grey);
             ivOffering.setImageResource(R.drawable.ic_meals_grey);
 
@@ -430,14 +440,14 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                     }
                 }
 
-                if (productType != ProductType.MENUS && productType != ProductType.DELIVERY_CUSTOMER) {
+                if (productType != ProductType.MENUS && productType != ProductType.DELIVERY_CUSTOMER && productType!=ProductType.FEED) {
                     comments = comments+((TextUtils.isEmpty(comments) || TextUtils.isEmpty(reviewDescription))?"":", ")+reviewDescription;
                 }
 
                 // api call
                 if(productType == ProductType.PROS){
                     apiProsFeedback((int) ratingBarMenuFeedback.getScore(), comments);
-                } else if (productType != ProductType.MENUS && productType != ProductType.DELIVERY_CUSTOMER) {
+                } else if (productType != ProductType.MENUS && productType != ProductType.DELIVERY_CUSTOMER && productType!=ProductType.FEED) {
                     sendQuery(0, comments);
                 } else {
                     sumbitMenusOrDeliveryFeedback(reviewDescription, comments, (int) ratingBarMenuFeedback.getScore());
@@ -599,12 +609,12 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 Data.getMealsData().setPendingFeedback(0);
             } else if (lastClientId.equals(Config.getGroceryClientId())) {
                 Data.getGroceryData().setPendingFeedback(0);
-            }else if (lastClientId.equals(Config.getMenusClientId()) || lastClientId.equals(Config.getDeliveryCustomerClientId())) {
-                getMenusOrDeliveryData().setPendingFeedback(0);
+            }else if (lastClientId.equals(Config.getMenusClientId())) {
+                Data.getMenusData().setPendingFeedback(0);
+            }else if (lastClientId.equals(Config.getDeliveryCustomerClientId())) {
+                Data.getDeliveryCustomerData().setPendingFeedback(0);
             }else if (lastClientId.equals(Config.getFeedClientId())) {
                 Data.getFeedData().setPendingFeedback(0);
-            }else if(activity.isDeliveryOpenInBackground()) {
-                getMenusOrDeliveryData().setPendingFeedback(0);
             } else {
                 activity.finish();
                 return;
@@ -747,9 +757,21 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 activity.getTopBar().title.setText(getResources().getString(R.string.meals));
             } else if (lastClientId.equals(Config.getGroceryClientId())) {
                 activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
-            } else if(lastClientId.equals(Config.getMenusClientId()) || lastClientId.equals(Config.getDeliveryCustomerClientId())
-                    || lastClientId.equals(Config.getFeedClientId())) {
-                setTitleForMenusDeliveryOrFeed();
+            } else if(lastClientId.equals(Config.getMenusClientId()) ) {
+                if(!TextUtils.isEmpty(Data.getMenusData().getRestaurantName())){
+                    activity.getTopBar().title.setText(Data.getMenusData().getRestaurantName());
+                } else {
+                    activity.getTopBar().title.setText(activity.getString(R.string.menus));
+                }
+            } else if(lastClientId.equals(Config.getDeliveryCustomerClientId()) ) {
+                if(!TextUtils.isEmpty(Data.getMenusData().getRestaurantName())){
+                    activity.getTopBar().title.setText(Data.getMenusData().getRestaurantName());
+                } else {
+                    activity.getTopBar().title.setText(activity.getString(R.string.delivery_new_name));
+                }
+            } else if(lastClientId.equals(Config.getFeedClientId()) ) {
+                activity.getTopBar().title.setText(Data.getFeedData()!=null?Data.getFeedData().getFeedName():activity.getString(R.string.delivery_new_name));
+
             } else if (lastClientId.equals(Config.getProsClientId())){
                 if(orderStatusResponse != null && orderStatusResponse.getData() != null && orderStatusResponse.getData().size() > 0) {
                     ProsOrderStatusResponse.Datum datum = orderStatusResponse.getData().get(0);
@@ -780,9 +802,10 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             Data.getGroceryData().setPendingFeedback(0);
         } else if (lastClientId.equals(Config.getFeedClientId())) {
             Data.getFeedData().setPendingFeedback(0);
-        } else if (lastClientId.equals(Config.getMenusClientId())
-                || lastClientId.equals(Config.getDeliveryCustomerClientId())) {
-            getMenusOrDeliveryData().setPendingFeedback(0);
+        } else if (lastClientId.equals(Config.getMenusClientId())) {
+            Data.getMenusData().setPendingFeedback(0);
+        } else if (lastClientId.equals(Config.getDeliveryCustomerClientId())) {
+            Data.getDeliveryCustomerData().setPendingFeedback(0);
         } else {
             activity.finish();
             return;
@@ -833,7 +856,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
                         }
                     }
-                }, false);
+                }, lastClientId);
     }
 
 
