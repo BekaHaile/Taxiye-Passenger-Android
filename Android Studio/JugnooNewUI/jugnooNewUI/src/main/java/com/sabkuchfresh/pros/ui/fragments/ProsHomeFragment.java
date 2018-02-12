@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.ProductType;
@@ -323,7 +324,7 @@ public class ProsHomeFragment extends Fragment implements SwipeRefreshLayout.OnR
 				activity.getHandler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						activity.openFeedback();
+						activity.openFeedback(Config.getProsClientId());
 					}
 				}, 300);
 				if(finalProgressDialog != null){

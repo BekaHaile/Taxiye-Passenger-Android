@@ -25,11 +25,7 @@ import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.DeliveryData;
-import product.clicklabs.jugnoo.datastructure.FreshData;
-import product.clicklabs.jugnoo.datastructure.GroceryData;
-import product.clicklabs.jugnoo.datastructure.MealsData;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
-import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.datastructure.PayData;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.datastructure.ProductType;
@@ -89,12 +85,12 @@ public class Data {
 
     public static UserData userData;
     public static AutoData autoData;
-    private static FreshData freshData;
-    private static MealsData mealsData;
-    private static GroceryData groceryData;
+    private static LoginResponse.Menus  freshData;
+    private static LoginResponse.Meals mealsData;
+    private static LoginResponse.Menus groceryData;
     private static DeliveryData DeliveryData;
-    private static MenusData menusData;
-    private static MenusData deliveryCustomer;
+    private static LoginResponse.Menus menusData;
+    private static LoginResponse.DeliveryCustomer  deliveryCustomer;
     private static PayData payData;
     private static LoginResponse.Feed feedData;
     private static LoginResponse.Pros prosData;
@@ -452,27 +448,27 @@ public class Data {
     public static int tabLinkIndex = 0;
 
 
-    public static FreshData getFreshData() {
+    public static LoginResponse.Menus getFreshData() {
         return freshData;
     }
 
-    public static void setFreshData(FreshData freshData) {
+    public static void setFreshData(LoginResponse.Menus freshData) {
         Data.freshData = freshData;
     }
 
-    public static GroceryData getGroceryData() {
+    public static LoginResponse.Menus getGroceryData() {
         return groceryData;
     }
 
-    public static void setGroceryData(GroceryData groceryData) {
+    public static void setGroceryData(LoginResponse.Menus groceryData) {
         Data.groceryData = groceryData;
     }
 
-    public static MealsData getMealsData() {
+    public static LoginResponse.Meals getMealsData() {
         return mealsData;
     }
 
-    public static void setMealsData(MealsData mealsData) {
+    public static void setMealsData(LoginResponse.Meals mealsData) {
         Data.mealsData = mealsData;
     }
 
@@ -485,18 +481,18 @@ public class Data {
         DeliveryData = deliveryData;
     }
 
-    public static MenusData getMenusData() {
+    public static LoginResponse.Menus getMenusData() {
         return menusData;
     }
-    public static MenusData getDeliveryCustomerData() {
+    public static LoginResponse.DeliveryCustomer getDeliveryCustomerData() {
         return deliveryCustomer;
     }
 
-    public static void setMenusData(MenusData menusData) {
+    public static void setMenusData(LoginResponse.Menus menusData) {
         Data.menusData = menusData;
     }
 
-    public static void setDeliveryCustomerData(MenusData deliveryCustomerData){
+    public static void setDeliveryCustomerData(LoginResponse.DeliveryCustomer deliveryCustomerData){
         Data.deliveryCustomer = deliveryCustomerData;
     }
 
