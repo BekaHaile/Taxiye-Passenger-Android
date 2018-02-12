@@ -224,11 +224,11 @@ public class TransactionUtils {
         }
     }
 
-    public void openFeedback(FragmentActivity activity, View container) {
+    public void openFeedback(FragmentActivity activity, View container,String clientId) {
         if (!activity.isFinishing() && !checkIfFragmentAdded(activity, FeedbackFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                    .add(container.getId(), new FeedbackFragment(),
+                    .add(container.getId(),  FeedbackFragment.newInstance(clientId),
                             FeedbackFragment.class.getName())
                     .addToBackStack(FeedbackFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

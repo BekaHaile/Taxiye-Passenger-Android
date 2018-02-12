@@ -3,14 +3,19 @@ package product.clicklabs.jugnoo.retrofit.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.datastructure.FatafatTutorialData;
+import com.sabkuchfresh.datastructure.PopupData;
 import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
+import com.sabkuchfresh.retrofit.model.Store;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.MealsData;
+import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SignupTutorial;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
@@ -378,7 +383,7 @@ public class LoginResponse {
 		}
 	}
 
-	public class Feed{
+	public class Feed {
 		@SerializedName("contacts_synced")
 		@Expose
 		private Integer contactsSynced;
@@ -460,6 +465,9 @@ public class LoginResponse {
 
 		@SerializedName("upload_image_info")
 		private FatafatUploadImageInfo fatafatUploadImageInfo;
+
+
+
 
 		public FatafatUploadImageInfo getFatafatUploadImageInfo() {
 			return fatafatUploadImageInfo;
