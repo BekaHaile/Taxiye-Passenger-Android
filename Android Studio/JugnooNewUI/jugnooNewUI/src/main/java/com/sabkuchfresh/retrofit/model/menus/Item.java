@@ -74,6 +74,9 @@ public class Item {
 	@SerializedName("itemSelectedList")
 	@Expose
 	private List<ItemSelected> itemSelectedList;
+	@SerializedName("show_food_type")
+	@Expose
+	private int showFoodType = 1;
 
 	private Boolean expanded = false;
 
@@ -334,5 +337,9 @@ public class Item {
 
 	public String getItemImageCompressed() {
 		return itemImageCompressed;
+	}
+
+	public boolean showFoodType() {
+		return showFoodType==1;
 	}
 }

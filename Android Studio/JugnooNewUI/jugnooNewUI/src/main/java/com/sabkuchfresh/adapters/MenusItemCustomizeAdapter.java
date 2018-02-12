@@ -153,6 +153,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
         if(holder instanceof ViewHolderItem) {
             ViewHolderItem mHolder = (ViewHolderItem) holder;
             mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
+            mHolder.imageViewFoodType.setVisibility(item.showFoodType() ? View.VISIBLE : View.GONE);
             mHolder.textViewItemCategoryName.setText(item.getItemName());
             mHolder.textViewItemCategoryName.setMinimumHeight(((int)(ASSL.Yscale() * 70f)));
 

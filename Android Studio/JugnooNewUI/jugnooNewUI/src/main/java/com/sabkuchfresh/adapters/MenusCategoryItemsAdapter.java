@@ -214,6 +214,8 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             MainViewHolder mHolder = ((MainViewHolder) holder);
             final Item item = subItems.get(position);
 
+
+            mHolder.imageViewFoodType.setVisibility(item.showFoodType() ? View.VISIBLE : View.GONE);
             mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
 
             setItemNameToTextView(item, mHolder.textViewItemCategoryName);
