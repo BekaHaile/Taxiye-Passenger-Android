@@ -1,5 +1,6 @@
 package com.sabkuchfresh.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItem;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
@@ -43,7 +45,7 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
-    private Context context;
+    private Activity context;
     private Item item;
     private ItemSelected itemSelected;
     private ArrayList<CustomizeOption> customizeOptions;
@@ -53,7 +55,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
     private static final int CUSTOMIZE_ITEM = 1;
     private static final int CUSTOMIZE_OPTION = 2;
 
-    public MenusItemCustomizeAdapter(Context context, Item item, Callback callback) {
+    public MenusItemCustomizeAdapter(Activity context, Item item, Callback callback) {
         this.context = context;
         this.callback = callback;
         customizeOptions = new ArrayList<>();
@@ -151,8 +153,9 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
         if(holder instanceof ViewHolderItem) {
             ViewHolderItem mHolder = (ViewHolderItem) holder;
             mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
+            mHolder.imageViewFoodType.setVisibility(item.showFoodType() ? View.VISIBLE : View.GONE);
             mHolder.textViewItemCategoryName.setText(item.getItemName());
-            mHolder.textViewItemCategoryName.setMinimumHeight((int)(Math.min(ASSL.Xscale(), ASSL.Yscale()) * 90f));
+            mHolder.textViewItemCategoryName.setMinimumHeight(((int)(ASSL.Yscale() * 70f)));
 
             int total = itemSelected.getQuantity();
             mHolder.textViewQuantity.setText(String.valueOf(total));
@@ -169,19 +172,19 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
             mHolder.textViewAboutItemDescription.setText(item.getItemDetails());
             int gravity, visibilityDesc;
-            RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
+//            RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
             if(!TextUtils.isEmpty(item.getItemDetails())){
-                gravity = Gravity.LEFT;
+//                gravity = Gravity.LEFT;
                 visibilityDesc = View.VISIBLE;
-                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 30f), paramsFT.rightMargin, paramsFT.bottomMargin);
+//                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 30f), paramsFT.rightMargin, paramsFT.bottomMargin);
             } else {
-                gravity = Gravity.CENTER_VERTICAL;
+//                gravity = Gravity.CENTER_VERTICAL;
                 visibilityDesc = View.GONE;
-                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 45f), paramsFT.rightMargin, paramsFT.bottomMargin);
+//                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 45f), paramsFT.rightMargin, paramsFT.bottomMargin);
             }
             mHolder.textViewAboutItemDescription.setVisibility(visibilityDesc);
-            mHolder.textViewItemCategoryName.setGravity(gravity);
-            mHolder.imageViewFoodType.setLayoutParams(paramsFT);
+//            mHolder.textViewItemCategoryName.setGravity(gravity);
+//            mHolder.imageViewFoodType.setLayoutParams(paramsFT);
 
             if(context instanceof FreshActivity
                     && ((FreshActivity)context).getVendorOpened() != null
@@ -191,7 +194,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             try {
                 if(!TextUtils.isEmpty(item.getItemImage())){
                     mHolder.ivItemImage.setVisibility(View.VISIBLE);
-                    Picasso.with(context).load(item.getItemImage())
+                    Picasso.with(context).load(!TextUtils.isEmpty(item.getItemImageCompressed())?item.getItemImageCompressed():item.getItemImage())
                             .placeholder(R.drawable.ic_fresh_item_placeholder)
                             .fit()
                             .centerCrop()
@@ -204,11 +207,11 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 e.printStackTrace();
                 mHolder.ivItemImage.setVisibility(View.GONE);
             }
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
+           /* RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
             params.setMargins((mHolder.ivItemImage.getVisibility() == View.VISIBLE ?
                             context.getResources().getDimensionPixelSize(R.dimen.dp_6) : context.getResources().getDimensionPixelSize(R.dimen.dp_14)),
                     params.topMargin, params.rightMargin, params.bottomMargin);
-            mHolder.imageViewFoodType.setLayoutParams(params);
+            mHolder.imageViewFoodType.setLayoutParams(params);*/
 
 
             mHolder.imageViewMinus.setTag(position);
@@ -247,6 +250,27 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                     } catch (Exception e){}
                 }
             });
+            mHolder.ivItemImage.setTag(position);
+            mHolder.ivItemImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+
+
+
+                        if(item!=null && !TextUtils.isEmpty(item.getItemImage())){
+
+                            ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(0, item.getItemImage());
+                            dialog.show(context.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
 
 
         } else if(holder instanceof ViewHolderCustomizeItem) {

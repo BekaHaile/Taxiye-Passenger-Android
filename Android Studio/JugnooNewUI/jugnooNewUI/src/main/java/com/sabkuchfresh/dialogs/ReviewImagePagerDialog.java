@@ -71,6 +71,13 @@ public class ReviewImagePagerDialog extends DialogFragment {
 	}
 
 
+	public static ReviewImagePagerDialog newInstance(int positionImageClicked, String imageUrl){
+		ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages = new ArrayList<>();
+		reviewImages.add(new FetchFeedbackResponse.ReviewImage(imageUrl,imageUrl));
+		return newInstance(positionImageClicked,reviewImages);
+	}
+
+
 	/*public static ReviewImagePagerDialog newInstance(int positionImageClicked, int likeIsEnabled, int shareIsEnabled, boolean showLikeShare){
 		ReviewImagePagerDialog dialog = new ReviewImagePagerDialog();
 		Bundle bundle = new Bundle();
@@ -237,9 +244,9 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 
 			if(reviewImages!=null && reviewImages.size()==1 && reviewImages.get(0).getHeight()!=null && reviewImages.get(0).getHeight()>0)
-			  Glide.with(activity).load(reviewImages.get(position).getUrl()).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(ivReviewImage);
+			  Glide.with(activity).load(reviewImages.get(position).getUrl()).placeholder(R.drawable.ic_fresh_item_placeholder).error(R.drawable.ic_fresh_item_placeholder).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(ivReviewImage);
 			else
-				Glide.with(activity).load(reviewImages.get(position).getUrl()).into(ivReviewImage);
+				Glide.with(activity).load(reviewImages.get(position).getUrl()).placeholder(R.drawable.ic_fresh_item_placeholder).error(R.drawable.ic_fresh_item_placeholder).into(ivReviewImage);
 			container.addView(root);
 			return root;
 		}

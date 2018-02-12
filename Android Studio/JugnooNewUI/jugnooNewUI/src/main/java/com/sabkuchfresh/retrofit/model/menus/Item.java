@@ -68,9 +68,15 @@ public class Item {
 	@SerializedName("item_image")
 	@Expose
 	private String itemImage;
+	@SerializedName("item_image_compressed")
+	@Expose
+	private String itemImageCompressed;
 	@SerializedName("itemSelectedList")
 	@Expose
 	private List<ItemSelected> itemSelectedList;
+	@SerializedName("show_food_type")
+	@Expose
+	private int showFoodType = 1;
 
 	private Boolean expanded = false;
 
@@ -327,5 +333,13 @@ public class Item {
 
 	public void setItemImage(String itemImage) {
 		this.itemImage = itemImage;
+	}
+
+	public String getItemImageCompressed() {
+		return itemImageCompressed;
+	}
+
+	public boolean showFoodType() {
+		return showFoodType==1;
 	}
 }

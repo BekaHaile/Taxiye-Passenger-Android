@@ -1,5 +1,6 @@
 package com.sabkuchfresh.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Item;
@@ -48,7 +50,7 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
-    private Context context;
+    private Activity context;
     private List<Item> subItems;
     private int categoryPos;
     private Category category;
@@ -61,7 +63,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     private static final int SEARCHED_CATEGORY_ITEM = 3;
 
     private boolean isVendorMenuFragment;
-    public MenusCategoryItemsAdapter(Context context, int categoryPos, Category category, Callback callback) {
+    public MenusCategoryItemsAdapter(Activity context, int categoryPos, Category category, Callback callback) {
         this.context = context;
         this.callback = callback;
         this.categoryPos = categoryPos;
@@ -117,7 +119,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
 
-    public MenusCategoryItemsAdapter(Context context, ArrayList<Item> items, Callback callback) {
+    public MenusCategoryItemsAdapter(Activity context, ArrayList<Item> items, Callback callback) {
         this.context = context;
         this.callback = callback;
         this.categoryPos = -1;
@@ -210,12 +212,13 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MainViewHolder) {
             MainViewHolder mHolder = ((MainViewHolder) holder);
-            Item item = subItems.get(position);
+            final Item item = subItems.get(position);
 
+
+            mHolder.imageViewFoodType.setVisibility(item.showFoodType() ? View.VISIBLE : View.GONE);
             mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
 
             setItemNameToTextView(item, mHolder.textViewItemCategoryName);
-            mHolder.textViewItemCategoryName.setMinimumHeight(((int)(ASSL.Yscale() * 90f)));
 
             int total = item.getTotalQuantity();
             mHolder.textViewQuantity.setText(String.valueOf(total));
@@ -295,7 +298,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             try {
                 if(!TextUtils.isEmpty(item.getItemImage())){
 					mHolder.ivItemImage.setVisibility(View.VISIBLE);
-					Picasso.with(context).load(item.getItemImage())
+					Picasso.with(context).load(!TextUtils.isEmpty(item.getItemImageCompressed())?item.getItemImageCompressed():item.getItemImage())
 							.placeholder(R.drawable.ic_fresh_item_placeholder)
 							.fit()
 							.centerCrop()
@@ -308,16 +311,46 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 e.printStackTrace();
                 mHolder.ivItemImage.setVisibility(View.GONE);
             }
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
+    /*        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
             params.setMargins((mHolder.ivItemImage.getVisibility() == View.VISIBLE ?
                     context.getResources().getDimensionPixelSize(R.dimen.dp_6) : context.getResources().getDimensionPixelSize(R.dimen.dp_14)),
                     params.topMargin, params.rightMargin, params.bottomMargin);
             mHolder.imageViewFoodType.setLayoutParams(params);
+            RelativeLayout.LayoutParams descriptionParams = (RelativeLayout.LayoutParams) mHolder.textViewAboutItemDescription.getLayoutParams();
+           mHolder.textViewAboutItemDescription.setLayoutParams(descriptionParams);
+
+*/
+
+            mHolder.textViewItemCategoryName.setMinimumHeight(((int)(ASSL.Yscale() * 70f)));
+
+
 
 
             mHolder.imageViewMinus.setTag(position);
             mHolder.imageViewPlus.setTag(position);
             mHolder.relativeLayoutItem.setTag(position);
+            mHolder.ivItemImage.setTag(position);
+            mHolder.ivItemImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        int pos = (int) v.getTag();
+                        Item item1 = subItems.get(pos);
+
+
+                        if(item1!=null && !TextUtils.isEmpty(item1.getItemImage())){
+
+                                ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(0, item1.getItemImage());
+                                dialog.show(context.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            });
+
 
             View.OnClickListener plusClick = new View.OnClickListener() {
                 @Override
@@ -593,7 +626,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     private void setItemNameToTextView(Item item, TextView textView){
         final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-        final RelativeSizeSpan rss = new RelativeSizeSpan(1.2f);
+        final RelativeSizeSpan rss = new RelativeSizeSpan(1.1f);
         final SpannableStringBuilder sb = new SpannableStringBuilder(item.getItemName());
         sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         sb.setSpan(rss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

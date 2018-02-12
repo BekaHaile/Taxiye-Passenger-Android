@@ -590,8 +590,18 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     ((ViewHolderVendor) mholder).textViewDelivery.setText(distance);
 
                 }
-				mHolder.textViewMinimumOrder.setText(activity.getString(visibilityCloseTime==View.VISIBLE?R.string.minimum_order_rupee_short_format:R.string.minimum_order_rupee_format,
-						Utils.getMoneyDecimalFormat().format(vendor.getMinimumOrderAmount())));
+
+
+
+                if(!TextUtils.isEmpty(vendor.getMinOrderText())){
+                    mHolder.textViewMinimumOrder.setText(activity.getString(visibilityCloseTime==View.VISIBLE?R.string.minimum_order_rupee_short_format:R.string.minimum_order_rupee_format,
+                            Utils.getMoneyDecimalFormat().format(vendor.getMinOrderText())));
+                    ((ViewHolderVendor) mholder).textViewMinimumOrder.setVisibility(View.VISIBLE);
+                }else{
+                    ((ViewHolderVendor) mholder).textViewMinimumOrder.setVisibility(View.GONE);
+
+                }
+
 
                 ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
                 if(vendor.getIsClosed()==1 || vendor.getIsAvailable()==0){
@@ -1012,9 +1022,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 return "";
             }
         }
-        if(vendor.getDeliveryTime()==null){
-            return null;
+
+        if(!TextUtils.isEmpty(vendor.getDeliveryTimeText()))
+            return vendor.getDeliveryTimeText();
+
+        return null;
+       /* if(vendor.getDeliveryTime()==null){
+
         }
+
+
 
         String deliveryTime = String.valueOf(vendor.getDeliveryTime());
         if (vendor.getMinDeliveryTime() != null) {
@@ -1022,7 +1039,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
 
-        return deliveryTime + " mins";
+        return deliveryTime + " mins";*/
     }
 
     @Override

@@ -66,14 +66,14 @@ public class RestaurantReviewImagesAdapter extends RecyclerView.Adapter<Restaura
                         .resize((int) (ASSL.minRatio() * 110f), (int) (ASSL.minRatio() * 110f))
                         .centerCrop()
                         .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*5), 0))
-                        .placeholder(R.drawable.ic_fresh_item_placeholder)
+                        .placeholder(R.drawable.ic_fresh_item_placeholder).error(R.drawable.ic_fresh_item_placeholder)
                         .into(holder.ivImage);
             }else{
                 Picasso.with(activity).load(TextUtils.isEmpty(reviewImage.getThumbnail())?reviewImage.getUrl():reviewImage.getThumbnail())
                         .resize((int) (ASSL.minRatio() * 300f), (int) (ASSL.minRatio() * 300f))
                         .centerCrop()
                         .transform(new RoundedCornersTransformation((int)(ASSL.minRatio()*8), 0))
-                        .placeholder(R.drawable.ic_fresh_item_placeholder)
+                        .placeholder(R.drawable.ic_fresh_item_placeholder).error(R.drawable.ic_fresh_item_placeholder)
                         .into(holder.ivImage);
             }
 
