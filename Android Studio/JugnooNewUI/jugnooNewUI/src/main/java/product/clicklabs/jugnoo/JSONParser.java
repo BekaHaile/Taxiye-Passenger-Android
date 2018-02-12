@@ -38,11 +38,7 @@ import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
-import product.clicklabs.jugnoo.datastructure.FreshData;
-import product.clicklabs.jugnoo.datastructure.GroceryData;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
-import product.clicklabs.jugnoo.datastructure.MealsData;
-import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PayData;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -384,352 +380,26 @@ public class JSONParser implements Constants {
         }
     }
 
-    public void parseMealsData(Context context, JSONObject jMealsData, LoginResponse.Meals mealsData) {
+
+    public <T extends LoginResponse.Menus> void setPromoCoupons(T loginData){
         try {
-            int pendingFeedback = jMealsData.optInt(KEY_PENDING_FEEDBACK, 0);
-            String orderId = jMealsData.optString(KEY_FEEDBACK_ORDER_ID, "");
-            double amount = jMealsData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
-            String feedbackDeliveryDate = jMealsData.optString(KEY_FEEDBACK_DATE, "");
-            int feedbackViewType = jMealsData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
-            String rideEndGoodFeedbackText = jMealsData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
-            JSONArray negativeFeedbackReasons = jMealsData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
-            String feedbackOrderItems = jMealsData.optString("feedback_order_items", "");
-
-
-
-            Data.setMealsData(new MealsData(orderId, pendingFeedback, amount, feedbackDeliveryDate, feedbackViewType, rideEndGoodFeedbackText, negativeFeedbackReasons
-            , feedbackOrderItems,mealsData.getOfferStripMeals(),mealsData.getMealsFavouriteFeature()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            if(Data.getMealsData().getPromoCoupons() == null){
-                Data.getMealsData().setPromoCoupons(new ArrayList<PromoCoupon>());
+            if(loginData.getPromoCoupons() == null){
+                Data.getDeliveryCustomerData().setPromoCoupons(new ArrayList<PromoCoupon>());
             } else{
-                Data.getMealsData().getPromoCoupons().clear();
+                loginData.getPromoCoupons().clear();
             }
-            if(mealsData.getPromotions() != null)
-                Data.getMealsData().getPromoCoupons().addAll(mealsData.getPromotions());
-            if(mealsData.getCoupons() != null)
-                Data.getMealsData().getPromoCoupons().addAll(mealsData.getCoupons());
+            if(loginData.getPromotions() != null)
+                Data.getDeliveryCustomerData().getPromoCoupons().addAll(loginData.getPromotions());
+            if(loginData.getCoupons() != null)
+                Data.getDeliveryCustomerData().getPromoCoupons().addAll(loginData.getCoupons());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public void parseFreshData(Context context, JSONObject jFatafatData, LoginResponse.Fresh freshData){
-        try{
-            String orderId = jFatafatData.optString(KEY_FEEDBACK_ORDER_ID, "");
-            String question = jFatafatData.optString(KEY_QUESTION, "");
-            int questionType = jFatafatData.optInt(KEY_QUESTION_TYPE, 0);
-            int pendingFeedback = jFatafatData.optInt(KEY_PENDING_FEEDBACK, 0);
-            double amount = jFatafatData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
-            String feedbackDeliveryDate = jFatafatData.optString(KEY_FEEDBACK_DATE, "");
-            int feedbackViewType = jFatafatData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
-            int isFatafatEnabled = jFatafatData.optInt(KEY_FATAFAT_ENABLED, 1);
-            String rideEndGoodFeedbackText = jFatafatData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
-            JSONArray negativeFeedbackReasons = jFatafatData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
 
-            PopupData popupData = null;
-            try {
-                if (jFatafatData.has("popup_data")) {
-                    popupData = new PopupData();
-                    popupData.popup_id = jFatafatData.getJSONObject("popup_data").optInt("popup_id", 0);
-                    popupData.title_text = jFatafatData.getJSONObject("popup_data").optString("title_text", "");
-                    popupData.desc_text = jFatafatData.getJSONObject("popup_data").optString("desc_text", "");
-                    popupData.image_url = jFatafatData.getJSONObject("popup_data").optString("image_url", "");
-                    popupData.cancel_title = jFatafatData.getJSONObject("popup_data").optString("cancel_title", "");
-                    popupData.ok_title = jFatafatData.getJSONObject("popup_data").optString("ok_title", "OK");
-                    popupData.is_cancellable = jFatafatData.getJSONObject("popup_data").optInt("is_cancellable", 1);
-                    popupData.deep_index = jFatafatData.getJSONObject("popup_data").optInt("deep_index", 0);
-                    popupData.ext_url = jFatafatData.getJSONObject("popup_data").optString("ext_url", "");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            ArrayList<Store> stores = new ArrayList<>();
-            Store store = null;
-            try {
-                if(jFatafatData.has("stores")) {
-                    JSONArray storesArr = jFatafatData.getJSONArray("stores");
-                    for(int i=0;i<storesArr.length();i++) {
-                        JSONObject jsonObject = storesArr.getJSONObject(i);
-                        store = new Store();
-                        store.setStoreId(jsonObject.optInt("store_id"));
-                        store.setTitle(jsonObject.optString("title"));
-                        store.setDescription(jsonObject.optString("description"));
-                        store.setImage(jsonObject.optString("image"));
-                        store.setTextColor(jsonObject.optString("text_color"));
-
-                        stores.add(store);
-
-                    }
-                }
-            } catch (Exception e){ e.printStackTrace(); }
-
-            Data.setFreshData(new FreshData(question, orderId, questionType, pendingFeedback, stores, popupData,
-                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText, negativeFeedbackReasons));
-
-            try {
-                if(Data.getFreshData().getPromoCoupons() == null){
-                    Data.getFreshData().setPromoCoupons(new ArrayList<PromoCoupon>());
-                } else{
-                    Data.getFreshData().getPromoCoupons().clear();
-                }
-                if(freshData.getPromotions() != null)
-                    Data.getFreshData().getPromoCoupons().addAll(freshData.getPromotions());
-                if(freshData.getCoupons() != null)
-                    Data.getFreshData().getPromoCoupons().addAll(freshData.getCoupons());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void parseGroceryData(Context context, JSONObject jGroceryData, LoginResponse.Grocery groceryData){
-        try{
-            String orderId = jGroceryData.optString(KEY_FEEDBACK_ORDER_ID, "");
-            String question = jGroceryData.optString(KEY_QUESTION, "");
-            int questionType = jGroceryData.optInt(KEY_QUESTION_TYPE, 0);
-            int pendingFeedback = jGroceryData.optInt(KEY_PENDING_FEEDBACK, 0);
-            double amount = jGroceryData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
-            String feedbackDeliveryDate = jGroceryData.optString(KEY_FEEDBACK_DATE, "");
-            int feedbackViewType = jGroceryData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
-            int isFatafatEnabled = jGroceryData.optInt(KEY_FATAFAT_ENABLED, 1);
-            String rideEndGoodFeedbackText = jGroceryData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
-            JSONArray negativeFeedbackReasons = jGroceryData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
-
-            PopupData popupData = null;
-            try {
-                if (jGroceryData.has("popup_data")) {
-                    popupData = new PopupData();
-                    popupData.popup_id = jGroceryData.getJSONObject("popup_data").optInt("popup_id", 0);
-                    popupData.title_text = jGroceryData.getJSONObject("popup_data").optString("title_text", "");
-                    popupData.desc_text = jGroceryData.getJSONObject("popup_data").optString("desc_text", "");
-                    popupData.image_url = jGroceryData.getJSONObject("popup_data").optString("image_url", "");
-                    popupData.cancel_title = jGroceryData.getJSONObject("popup_data").optString("cancel_title", "");
-                    popupData.ok_title = jGroceryData.getJSONObject("popup_data").optString("ok_title", "OK");
-                    popupData.is_cancellable = jGroceryData.getJSONObject("popup_data").optInt("is_cancellable", 1);
-                    popupData.deep_index = jGroceryData.getJSONObject("popup_data").optInt("deep_index", 0);
-                    popupData.ext_url = jGroceryData.getJSONObject("popup_data").optString("ext_url", "");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            ArrayList<Store> stores = new ArrayList<>();
-            Store store = null;
-            try {
-                if(jGroceryData.has("stores")) {
-                    JSONArray storesArr = jGroceryData.getJSONArray("stores");
-                    for(int i=0;i<storesArr.length();i++) {
-                        JSONObject jsonObject = storesArr.getJSONObject(i);
-                        store = new Store();
-                        store.setStoreId(jsonObject.optInt("store_id"));
-                        store.setTitle(jsonObject.optString("title"));
-                        store.setDescription(jsonObject.optString("description"));
-                        store.setImage(jsonObject.optString("image"));
-                        store.setTextColor(jsonObject.optString("text_color"));
-
-                        stores.add(store);
-
-                    }
-                }
-            } catch (Exception e){ e.printStackTrace(); }
-
-            Data.setGroceryData(new GroceryData(question, orderId, questionType, pendingFeedback, stores, popupData,
-                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText, negativeFeedbackReasons));
-
-            try {
-                if(Data.getGroceryData().getPromoCoupons() == null){
-                    Data.getGroceryData().setPromoCoupons(new ArrayList<PromoCoupon>());
-                } else{
-                    Data.getGroceryData().getPromoCoupons().clear();
-                }
-                if(groceryData.getPromotions() != null)
-                    Data.getGroceryData().getPromoCoupons().addAll(groceryData.getPromotions());
-                if(groceryData.getCoupons() != null)
-                    Data.getGroceryData().getPromoCoupons().addAll(groceryData.getCoupons());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } catch (Exception e){
-        }
-    }
-
-
-    public void parseMenusData(Context context, JSONObject jData, LoginResponse.Menus menusData){
-        try{
-            String orderId = jData.optString(KEY_FEEDBACK_ORDER_ID, "");
-            String restaurantName = jData.optString(KEY_RESTAURANT_NAME, "");
-            String question = jData.optString(KEY_QUESTION, "");
-            int questionType = jData.optInt(KEY_QUESTION_TYPE, 0);
-            int pendingFeedback = jData.optInt(KEY_PENDING_FEEDBACK, 0);
-            double amount = jData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
-            String feedbackDeliveryDate = jData.optString(KEY_FEEDBACK_DATE, "");
-            int feedbackViewType = jData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
-            int isFatafatEnabled = jData.optInt(KEY_FATAFAT_ENABLED, 1);
-            String rideEndGoodFeedbackText = jData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
-            JSONArray negativeFeedbackReasons = jData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
-            JSONArray positiveFeedbackReasons = jData.optJSONArray(KEY_POSITIVE_FEEDBACK_REASONS);
-            JSONArray merchantCategories = null;
-            if(jData.has(MERCHANT_CATEGORIES)){
-                merchantCategories = jData.optJSONArray(MERCHANT_CATEGORIES);
-
-            }
-
-            PopupData popupData = null;
-            try {
-                if (jData.has("popup_data")) {
-                    popupData = new PopupData();
-                    popupData.popup_id = jData.getJSONObject("popup_data").optInt("popup_id", 0);
-                    popupData.title_text = jData.getJSONObject("popup_data").optString("title_text", "");
-                    popupData.desc_text = jData.getJSONObject("popup_data").optString("desc_text", "");
-                    popupData.image_url = jData.getJSONObject("popup_data").optString("image_url", "");
-                    popupData.cancel_title = jData.getJSONObject("popup_data").optString("cancel_title", "");
-                    popupData.ok_title = jData.getJSONObject("popup_data").optString("ok_title", "OK");
-                    popupData.is_cancellable = jData.getJSONObject("popup_data").optInt("is_cancellable", 1);
-                    popupData.deep_index = jData.getJSONObject("popup_data").optInt("deep_index", 0);
-                    popupData.ext_url = jData.getJSONObject("popup_data").optString("ext_url", "");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            ArrayList<Store> stores = new ArrayList<>();
-            Store store = null;
-            try {
-                if(jData.has("stores")) {
-                    JSONArray storesArr = jData.getJSONArray("stores");
-                    for(int i=0;i<storesArr.length();i++) {
-                        JSONObject jsonObject = storesArr.getJSONObject(i);
-                        store = new Store();
-                        store.setStoreId(jsonObject.optInt("store_id"));
-                        store.setTitle(jsonObject.optString("title"));
-                        store.setDescription(jsonObject.optString("description"));
-                        store.setImage(jsonObject.optString("image"));
-                        store.setTextColor(jsonObject.optString("text_color"));
-
-                        stores.add(store);
-
-                    }
-                }
-            } catch (Exception e){ e.printStackTrace(); }
-
-            Data.setMenusData(new MenusData(question, orderId, questionType, pendingFeedback, stores, popupData,
-                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText,
-                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName, 0,0,0,merchantCategories,false));
-
-            try {
-                if(Data.getMenusData().getPromoCoupons() == null){
-                    Data.getMenusData().setPromoCoupons(new ArrayList<PromoCoupon>());
-                } else{
-                    Data.getMenusData().getPromoCoupons().clear();
-                }
-                if(menusData.getPromotions() != null)
-                    Data.getMenusData().getPromoCoupons().addAll(menusData.getPromotions());
-                if(menusData.getCoupons() != null)
-                    Data.getMenusData().getPromoCoupons().addAll(menusData.getCoupons());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public void parseDeliveryCustomerData(Context context, JSONObject jData, LoginResponse.Menus deliveryCustomerData){
-        try{
-            String orderId = jData.optString(KEY_FEEDBACK_ORDER_ID, "");
-            String restaurantName = jData.optString(KEY_RESTAURANT_NAME, "");
-            String question = jData.optString(KEY_QUESTION, "");
-            int questionType = jData.optInt(KEY_QUESTION_TYPE, 0);
-            int category = jData.optInt(KEY_MERCHANT_CATEGORY_ID, 0);
-            int addStoreImagesLimit = jData.optInt(ADD_STORE_IMAGES_LIMIT, 0);
-            int showAddStore = jData.optInt(SHOW_ADD_STORE, 0);
-            JSONArray merchantCategories = null;
-            if(jData.has(MERCHANT_CATEGORIES)){
-                 merchantCategories = jData.optJSONArray(MERCHANT_CATEGORIES);
-
-            }
-            int pendingFeedback = jData.optInt(KEY_PENDING_FEEDBACK, 0);
-            double amount = jData.optDouble(KEY_FEEDBACK_AMOUNT, 0);
-            String feedbackDeliveryDate = jData.optString(KEY_FEEDBACK_DATE, "");
-            int feedbackViewType = jData.optInt(KEY_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
-            int isFatafatEnabled = jData.optInt(KEY_FATAFAT_ENABLED, 1);
-            String rideEndGoodFeedbackText = jData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
-            JSONArray negativeFeedbackReasons = jData.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS);
-            JSONArray positiveFeedbackReasons = jData.optJSONArray(KEY_POSITIVE_FEEDBACK_REASONS);
-            boolean isFeedOrderFeedback = jData.optBoolean(KEY_IS_FEED_ORDER_FEEDBACK,false);
-            PopupData popupData = null;
-            try {
-                if (jData.has("popup_data")) {
-                    popupData = new PopupData();
-                    popupData.popup_id = jData.getJSONObject("popup_data").optInt("popup_id", 0);
-                    popupData.title_text = jData.getJSONObject("popup_data").optString("title_text", "");
-                    popupData.desc_text = jData.getJSONObject("popup_data").optString("desc_text", "");
-                    popupData.image_url = jData.getJSONObject("popup_data").optString("image_url", "");
-                    popupData.cancel_title = jData.getJSONObject("popup_data").optString("cancel_title", "");
-                    popupData.ok_title = jData.getJSONObject("popup_data").optString("ok_title", "OK");
-                    popupData.is_cancellable = jData.getJSONObject("popup_data").optInt("is_cancellable", 1);
-                    popupData.deep_index = jData.getJSONObject("popup_data").optInt("deep_index", 0);
-                    popupData.ext_url = jData.getJSONObject("popup_data").optString("ext_url", "");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            ArrayList<Store> stores = new ArrayList<>();
-            Store store = null;
-            try {
-                if(jData.has("stores")) {
-                    JSONArray storesArr = jData.getJSONArray("stores");
-                    for(int i=0;i<storesArr.length();i++) {
-                        JSONObject jsonObject = storesArr.getJSONObject(i);
-                        store = new Store();
-                        store.setStoreId(jsonObject.optInt("store_id"));
-                        store.setTitle(jsonObject.optString("title"));
-                        store.setDescription(jsonObject.optString("description"));
-                        store.setImage(jsonObject.optString("image"));
-                        store.setTextColor(jsonObject.optString("text_color"));
-
-                        stores.add(store);
-
-                    }
-                }
-            } catch (Exception e){ e.printStackTrace(); }
-
-            Data.setDeliveryCustomerData(new MenusData(question, orderId, questionType, pendingFeedback, stores, popupData,
-                    amount, feedbackDeliveryDate, feedbackViewType, isFatafatEnabled, rideEndGoodFeedbackText,
-                    negativeFeedbackReasons, positiveFeedbackReasons, restaurantName,category,addStoreImagesLimit,showAddStore,merchantCategories,isFeedOrderFeedback));
-
-            try {
-                if(Data.getDeliveryCustomerData().getPromoCoupons() == null){
-                    Data.getDeliveryCustomerData().setPromoCoupons(new ArrayList<PromoCoupon>());
-                } else{
-                    Data.getDeliveryCustomerData().getPromoCoupons().clear();
-                }
-                if(deliveryCustomerData.getPromotions() != null)
-                    Data.getDeliveryCustomerData().getPromoCoupons().addAll(deliveryCustomerData.getPromotions());
-                if(deliveryCustomerData.getCoupons() != null)
-                    Data.getDeliveryCustomerData().getPromoCoupons().addAll(deliveryCustomerData.getCoupons());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void parsePayData(Context context, JSONObject jPayData, LoginResponse.Pay payData){
+    public void parsePayData(LoginResponse.Pay payData){
         try{
             if(payData != null) {
                 Data.setPayData(new PayData(payData));
@@ -754,7 +424,7 @@ public class JSONParser implements Constants {
         }
     }
 
-    public void parseFeedData(Context context, JSONObject jFeedData, LoginResponse.Feed feedData){
+    public void parseFeedData(LoginResponse.Feed feedData){
         try{
             if(feedData != null) {
                 Data.setFeedData(feedData);
@@ -785,53 +455,40 @@ public class JSONParser implements Constants {
         //Fetching login data
         JSONObject jUserDataObject = jObj.getJSONObject(KEY_USER_DATA);
         JSONObject jAutosObject = jObj.optJSONObject(KEY_AUTOS);
-        JSONObject jFreshObject = jObj.optJSONObject(KEY_FRESH);
-        JSONObject jMealsObject = jObj.optJSONObject(KEY_MEALS);
-        JSONObject jGroceryObject = jObj.optJSONObject(KEY_GROCERY);
-        JSONObject jMenusObject = jObj.optJSONObject(KEY_MENUS);
-        JSONObject jDeliveryCustomerObject = jObj.optJSONObject(KEY_DELIVERY_CUSTOMER);
-        JSONObject jPayObject = jObj.optJSONObject(KEY_PAY);
-        JSONObject jFeedObject = jObj.optJSONObject(KEY_FEED);
-        JSONObject jProsObject = jObj.optJSONObject(KEY_PROS);
-
         parseUserData(context, jUserDataObject, loginResponse.getUserData());
         parseAutoData(context, jAutosObject, loginResponse.getAutos());
-        parseFreshData(context, jFreshObject, loginResponse.getFresh());
-        parseMealsData(context, jMealsObject, loginResponse.getMeals());
-        parseGroceryData(context, jGroceryObject, loginResponse.getGrocery());
-        parseFeedData(context, jFeedObject, loginResponse.getFeed());
-        parseMenusData(context, jMenusObject, loginResponse.getMenus());
 
-
-        if(jDeliveryCustomerObject!=null && jDeliveryCustomerObject.optInt(KEY_PENDING_FEEDBACK,0)!=1
-                &&   jFeedObject!=null && jFeedObject.optInt(KEY_PENDING_FEEDBACK,0)==1){
-
-            jDeliveryCustomerObject.put(KEY_NEGATIVE_FEEDBACK_REASONS,jFeedObject.optJSONArray(KEY_NEGATIVE_FEEDBACK_REASONS));
-            jDeliveryCustomerObject.put(KEY_POSITIVE_FEEDBACK_REASONS,jFeedObject.optJSONArray(KEY_POSITIVE_FEEDBACK_REASONS));
-            jDeliveryCustomerObject.put(KEY_PENDING_FEEDBACK,jFeedObject.optInt(KEY_PENDING_FEEDBACK));
-            jDeliveryCustomerObject.put(KEY_FEEDBACK_ORDER_ID,jFeedObject.optString(KEY_FEEDBACK_ORDER_ID));
-            jDeliveryCustomerObject.put(KEY_FEEDBACK_DATE,jFeedObject.optString(KEY_FEEDBACK_DATE));
-            jDeliveryCustomerObject.put(KEY_FEEDBACK_VIEW_TYPE,jFeedObject.optInt(KEY_FEEDBACK_VIEW_TYPE));
-            jDeliveryCustomerObject.put(KEY_RIDE_END_GOOD_FEEDBACK_TEXT,jFeedObject.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT));
-            jDeliveryCustomerObject.put(KEY_FEEDBACK_AMOUNT,jFeedObject.optDouble(KEY_FEEDBACK_AMOUNT,0));
-
-            //
-            jDeliveryCustomerObject.put(KEY_IS_FEED_ORDER_FEEDBACK,true);
-
-
-
-        }else if(jDeliveryCustomerObject!=null){
-            jDeliveryCustomerObject.put(KEY_IS_FEED_ORDER_FEEDBACK,false);
-
+        if(loginResponse.getMenus()!=null){
+            Data.setMenusData(loginResponse.getMenus());
         }
-        parseDeliveryCustomerData(context, jDeliveryCustomerObject, loginResponse.getDeliveryCustomer());
-        parsePayData(context, jPayObject, loginResponse.getPay());
+        if(loginResponse.getDeliveryCustomer()!=null){
+            Data.setDeliveryCustomerData(loginResponse.getDeliveryCustomer());
+        }
+        if(loginResponse.getMeals()!=null){
+            Data.setMealsData(loginResponse.getMeals());
+        }
+        if(loginResponse.getFresh()!=null){
+            Data.setFreshData(loginResponse.getFresh());
+        }
+        if(loginResponse.getGrocery()!=null){
+            Data.setGroceryData(loginResponse.getGrocery());
+        }
+        if(loginResponse.getFeed() != null) {
+            Data.setFeedData(loginResponse.getFeed());
+        }
+
+
+        setPromoCoupons(Data.getMenusData());
+        setPromoCoupons(Data.getMealsData());
+        setPromoCoupons(Data.getFreshData());
+        setPromoCoupons(Data.getGroceryData());
+        setPromoCoupons(Data.getDeliveryCustomerData());
+
+
+        parsePayData(loginResponse.getPay());
         parseDeliveryData(loginResponse.getDelivery());
         parseProsData(context, loginResponse.getPros());
-
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
-
-
         parseFindDriverResp(loginResponse.getAutos());
 
         //Fetching user current status

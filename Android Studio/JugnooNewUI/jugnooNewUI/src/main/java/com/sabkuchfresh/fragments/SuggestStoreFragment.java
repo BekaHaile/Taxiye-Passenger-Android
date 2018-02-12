@@ -119,8 +119,12 @@ public class SuggestStoreFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         categories = new ArrayList<>();
         categories.add(0,new MenusResponse.Category(ID_SELECT_CATEGORY, getString(R.string.hint_spinner_add_store)));
-       List<MenusResponse.Category> merchantCategories = activity.isDeliveryOpenInBackground()? Data.getDeliveryCustomerData().getMerchantCategoriesList():
-                Data.getMenusData().getMerchantCategoriesList();
+
+        List<MenusResponse.Category> merchantCategories = null  ;
+
+        if(Data.getDeliveryCustomerData()!=null){
+            merchantCategories =  Data.getDeliveryCustomerData().getMerchantCategoriesList();
+        }
 
        if(merchantCategories!=null){
            categories.addAll(merchantCategories);

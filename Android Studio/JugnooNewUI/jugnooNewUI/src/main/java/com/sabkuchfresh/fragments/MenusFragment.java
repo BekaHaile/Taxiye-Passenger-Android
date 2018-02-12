@@ -61,12 +61,12 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
-import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -424,7 +424,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
     };
 
-    private MenusData getMenusOrDeliveryData() {
+    private LoginResponse.Menus getMenusOrDeliveryData() {
         if (activity.getAppType() == AppConstant.ApplicationType.DELIVERY_CUSTOMER || activity.isDeliveryOpenInBackground()) {
             return Data.getDeliveryCustomerData();
         } else {

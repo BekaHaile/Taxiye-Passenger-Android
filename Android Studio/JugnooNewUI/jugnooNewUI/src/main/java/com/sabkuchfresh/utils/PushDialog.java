@@ -40,8 +40,8 @@ public class PushDialog {
 				final int deepindex = popupData.deep_index;
 				String picture = popupData.image_url;
                 final String extrUrl = popupData.ext_url;
-				String buttonText = popupData.ok_title;
-                int isCancellable = popupData.is_cancellable;
+				String buttonText = popupData.getOk_title();
+                int isCancellable = popupData.getIs_cancellable();
 
 				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;

@@ -47,13 +47,13 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
-import product.clicklabs.jugnoo.datastructure.MenusData;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -151,9 +151,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 activity.getTopBar().title.setText(getResources().getString(R.string.fatafat));
                 endRideGoodFeedbackText = Data.getFreshData().getRideEndGoodFeedbackText();
                 productType = ProductType.FRESH;
-                for (int i = 0; i < Data.getFreshData().getNegativeFeedbackReasons().length(); i++) {
-                    negativeReasons.add(new FeedbackReason(Data.getFreshData().getNegativeFeedbackReasons().get(i).toString()));
-                }
+                negativeReasons = Data.getFreshData().getNegativeFeedbackReasons();
 
             } else if (lastClientId.equals(Config.getMealsClientId())) {
                 viewType = Data.getMealsData().getFeedbackViewType();
@@ -164,9 +162,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 feedbackOrderItems = Data.getMealsData().getFeedbackOrderItems();
                 endRideGoodFeedbackText = Data.getMealsData().getRideEndGoodFeedbackText();
                 productType = ProductType.MEALS;
-                for (int i = 0; i < Data.getMealsData().getNegativeFeedbackReasons().length(); i++) {
-                    negativeReasons.add(new FeedbackReason(Data.getMealsData().getNegativeFeedbackReasons().get(i).toString()));
-                }
+                negativeReasons = Data.getMealsData().getNegativeFeedbackReasons();
             } else if (lastClientId.equals(Config.getGroceryClientId())) {
                 viewType = Data.getGroceryData().getFeedbackViewType();
                 dateValue = Data.getGroceryData().getFeedbackDeliveryDate();
@@ -175,9 +171,8 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
                 endRideGoodFeedbackText = Data.getGroceryData().getRideEndGoodFeedbackText();
                 productType = ProductType.GROCERY;
-                for (int i = 0; i < Data.getGroceryData().getNegativeFeedbackReasons().length(); i++) {
-                    negativeReasons.add(new FeedbackReason(Data.getGroceryData().getNegativeFeedbackReasons().get(i).toString()));
-                }
+                negativeReasons = Data.getGroceryData().getNegativeFeedbackReasons();
+
             } else if (lastClientId.equals(Config.getMenusClientId()) || lastClientId.equals(Config.getDeliveryCustomerClientId()) ||
                     lastClientId.equals(Config.getFeedClientId())) {
 
@@ -195,18 +190,14 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 dateValue = getMenusOrDeliveryData().getFeedbackDeliveryDate();
                 orderAmount = getMenusOrDeliveryData().getAmount();
                 orderId = getMenusOrDeliveryData().getOrderId();
-                merchantCategoryId = getMenusOrDeliveryData().getMerchantCategoryId();
+                if(getMenusOrDeliveryData() instanceof LoginResponse.DeliveryCustomer){
+                    merchantCategoryId = ((LoginResponse.DeliveryCustomer)getMenusOrDeliveryData()).getMerchantCategoryId();
+                }
 
                 endRideGoodFeedbackText = getMenusOrDeliveryData().getRideEndGoodFeedbackText();
-                for (int i = 0; i < getMenusOrDeliveryData().getNegativeFeedbackReasons().length(); i++) {
-                    negativeReasons.add(new FeedbackReason(getMenusOrDeliveryData().getNegativeFeedbackReasons().get(i).toString()));
-                }
-                if (getMenusOrDeliveryData().getPositiveFeedbackReasons() != null) {
-                    positiveReasons = new ArrayList<>();
-                    for (int i = 0; i < getMenusOrDeliveryData().getPositiveFeedbackReasons().length(); i++) {
-                        positiveReasons.add(new FeedbackReason(getMenusOrDeliveryData().getPositiveFeedbackReasons().get(i).toString()));
-                    }
-                }
+                negativeReasons = getMenusOrDeliveryData().getNegativeFeedbackReasons();
+                positiveReasons = getMenusOrDeliveryData().getPositiveFeedbackReasons();
+
 
             } else if(lastClientId.equals(Config.getProsClientId())){
                 jobId = Prefs.with(activity).getInt(Constants.SP_PROS_LAST_COMPLETE_JOB_ID, 0);
@@ -234,17 +225,14 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     }
 
     private void setTitleForMenusDeliveryOrFeed() {
-        if(getMenusOrDeliveryData().isFeedOrder()){
-            activity.getTopBar().title.setText(Data.getFeedData()!=null?Data.getFeedData().getFeedName():activity.getString(R.string.delivery_new_name));
-
-        } else  if(!TextUtils.isEmpty(getMenusOrDeliveryData().getRestaurantName())){
+        if(!TextUtils.isEmpty(getMenusOrDeliveryData().getRestaurantName())){
             activity.getTopBar().title.setText(getMenusOrDeliveryData().getRestaurantName());
         } else {
             activity.getTopBar().title.setText(activity.getString(R.string.menus));
         }
     }
 
-    private MenusData getMenusOrDeliveryData() {
+    private LoginResponse.Menus getMenusOrDeliveryData() {
         if(lastClientId.equals(Config.getDeliveryCustomerClientId()) || activity.isDeliveryOpenInBackground()){
             return Data.getDeliveryCustomerData();
         } else {
@@ -845,7 +833,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
                         }
                     }
-                }, getMenusOrDeliveryData()!=null && getMenusOrDeliveryData().isFeedOrder());
+                }, false);
     }
 
 

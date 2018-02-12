@@ -1,5 +1,8 @@
 package product.clicklabs.jugnoo.retrofit.model;
 
+import android.content.Context;
+import android.view.Menu;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.datastructure.FatafatTutorialData;
@@ -7,21 +10,23 @@ import com.sabkuchfresh.datastructure.PopupData;
 import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Store;
-
-import org.json.JSONArray;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.MealsData;
-import product.clicklabs.jugnoo.datastructure.MenusData;
+import product.clicklabs.jugnoo.datastructure.FeedbackReason;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SignupTutorial;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 
 /**
  * Created by shankar on 1/5/16.
@@ -51,11 +56,11 @@ public class LoginResponse {
 		this.pros = pros;
 	}
 
-	public Menus getDeliveryCustomer() {
+	public DeliveryCustomer getDeliveryCustomer() {
 		return deliveryCustomer;
 	}
 
-	public void setDeliveryCustomer(Menus deliveryCustomer) {
+	public void setDeliveryCustomer(DeliveryCustomer deliveryCustomer) {
 		this.deliveryCustomer = deliveryCustomer;
 	}
 
@@ -129,19 +134,19 @@ public class LoginResponse {
 	private UserData userData;
 	@SerializedName("fresh")
 	@Expose
-	private Fresh fresh;
+	private Menus fresh;
 	@SerializedName("meals")
 	@Expose
 	private Meals meals;
 	@SerializedName("grocery")
 	@Expose
-	private Grocery grocery;
+	private Menus grocery;
 	@SerializedName("menus")
 	@Expose
 	private Menus menus;
 	@SerializedName("delivery_customer")
 	@Expose
-	private Menus deliveryCustomer;
+	private DeliveryCustomer deliveryCustomer;
 	@SerializedName("pay")
 	@Expose
 	private Pay pay;
@@ -198,11 +203,11 @@ public class LoginResponse {
 		this.userData = userData;
 	}
 
-	public Fresh getFresh() {
+	public Menus getFresh() {
 		return fresh;
 	}
 
-	public void setFresh(Fresh fresh) {
+	public void setFresh(Menus fresh) {
 		this.fresh = fresh;
 	}
 
@@ -222,11 +227,11 @@ public class LoginResponse {
 		this.delivery = delivery;
 	}
 
-	public Grocery getGrocery() {
+	public Menus getGrocery() {
 		return grocery;
 	}
 
-	public void setGrocery(Grocery grocery) {
+	public void setGrocery(Menus grocery) {
 		this.grocery = grocery;
 	}
 
@@ -263,50 +268,66 @@ public class LoginResponse {
 		}
 	}
 
-	public class Meals{
-		@SerializedName("promotions")
-		@Expose
-		private List<PromotionInfo> promotions = new ArrayList<>();
-		@SerializedName("coupons")
-		@Expose
-		private List<CouponInfo> coupons = new ArrayList<>();
+	public class Meals extends Menus{
 
 		@SerializedName("offers_strip_meals")
-		private MealsData.OfferStripMeals offerStripMeals;
+		private OfferStripMeals offerStripMeals;
 		@SerializedName("meals_favorite_feature")
-		private MealsData.MealsFavouriteFeature mealsFavouriteFeature;
+		private MealsFavouriteFeature mealsFavouriteFeature;
+		@SerializedName("feedback_order_items")
+		private String feedbackOrderItems;
 
-		public List<PromotionInfo> getPromotions() {
-			return promotions;
+
+
+		public class OfferStripMeals {
+
+			@SerializedName("message")
+			private String textToDisplay;
+
+			@SerializedName("deepindex")
+			private String deepIndex;
+
+
+			public String getTextToDisplay() {
+				return textToDisplay;
+			}
+
+			public String getDeepIndex() {
+				return deepIndex;
+			}
 		}
 
-		public void setPromotions(List<PromotionInfo> promotions) {
-			this.promotions = promotions;
+		public class MealsFavouriteFeature {
+			@SerializedName("is_enabled")
+			private int isEnabled;
+
+			public boolean getIsEnabled() {
+				return isEnabled>0;
+			}
 		}
 
-		public List<CouponInfo> getCoupons() {
-			return coupons;
-		}
-
-		public void setCoupons(List<CouponInfo> coupons) {
-			this.coupons = coupons;
-		}
-
-		public MealsData.OfferStripMeals getOfferStripMeals() {
+		public OfferStripMeals getOfferStripMeals() {
 			return offerStripMeals;
 		}
 
-		public MealsData.MealsFavouriteFeature getMealsFavouriteFeature() {
+		public MealsFavouriteFeature getMealsFavouriteFeature() {
 			return mealsFavouriteFeature;
 		}
 
-		/*public boolean isMealsFavEnabled(){
+		public boolean isMealsFavEnabled(){
 			return mealsFavouriteFeature!=null && mealsFavouriteFeature.getIsEnabled();
-		}*/
+		}
 
+		public String getFeedbackOrderItems() {
+			return feedbackOrderItems;
+		}
 	}
 
-	public class Fresh{
+
+
+
+
+	public class Menus extends FeedbackData{
 		@SerializedName("promotions")
 		@Expose
 		private List<PromotionInfo> promotions = new ArrayList<>();
@@ -314,11 +335,26 @@ public class LoginResponse {
 		@Expose
 		private List<CouponInfo> coupons = new ArrayList<>();
 
+		@SerializedName(Constants.KEY_FATAFAT_ENABLED)
+		int isFatafatEnabled = 1;
+
+
+
+
+
+		@SerializedName("popup_data")
+		private PopupData popupData;
+
+		@SerializedName("stores")
+		private ArrayList<Store> stores;
+
+
+
 		public List<PromotionInfo> getPromotions() {
 			return promotions;
 		}
 
-		public void setPromotions(List<PromotionInfo> promotions) {
+		public void setPromoCoupons(List<PromotionInfo> promotions) {
 			this.promotions = promotions;
 		}
 
@@ -329,61 +365,73 @@ public class LoginResponse {
 		public void setCoupons(List<CouponInfo> coupons) {
 			this.coupons = coupons;
 		}
+
+		public int getIsFatafatEnabled() {
+			return isFatafatEnabled;
+		}
+
+
+
+		public PopupData getPopupData() {
+			return popupData;
+		}
+
+		public ArrayList<Store> getStores() {
+			return stores;
+		}
+
+
+
+		public void setIsFatafatEnabled(int isFatafatEnabled) {
+			this.isFatafatEnabled = isFatafatEnabled;
+		}
+
+		private ArrayList<PromoCoupon> promoCoupons;
+
+		public ArrayList<PromoCoupon> getPromoCoupons() {
+			return promoCoupons;
+		}
+
+		public void setPromoCoupons(ArrayList<PromoCoupon> promoCoupons) {
+			this.promoCoupons = promoCoupons;
+		}
+
 	}
 
-	public class Grocery{
-		@SerializedName("promotions")
-		@Expose
-		private List<PromotionInfo> promotions = new ArrayList<>();
-		@SerializedName("coupons")
-		@Expose
-		private List<CouponInfo> coupons = new ArrayList<>();
+	public class DeliveryCustomer extends Menus{
 
-		public List<PromotionInfo> getPromotions() {
-			return promotions;
+		@SerializedName(Constants.SHOW_ADD_STORE)
+		private int showAddStore;
+
+		@SerializedName(Constants.ADD_STORE_IMAGES_LIMIT)
+		private int addStoreImagesLimit;
+
+		@SerializedName(Constants.KEY_MERCHANT_CATEGORY_ID)
+		private int merchantCategoryId;
+
+		@SerializedName(Constants.MERCHANT_CATEGORIES)
+		private ArrayList<MenusResponse.Category> merchantCategories;
+
+		public ArrayList<MenusResponse.Category> getMerchantCategoriesList() {
+			return merchantCategories;
 		}
 
-		public void setPromotions(List<PromotionInfo> promotions) {
-			this.promotions = promotions;
+
+		public boolean getShowAddStore() {
+			return showAddStore==1;
 		}
 
-		public List<CouponInfo> getCoupons() {
-			return coupons;
+		public int getAddStoreImages() {
+			return addStoreImagesLimit;
 		}
 
-		public void setCoupons(List<CouponInfo> coupons) {
-			this.coupons = coupons;
+		public int getMerchantCategoryId() {
+			return merchantCategoryId;
 		}
+
 	}
 
-
-
-	public class Menus{
-		@SerializedName("promotions")
-		@Expose
-		private List<PromotionInfo> promotions = new ArrayList<>();
-		@SerializedName("coupons")
-		@Expose
-		private List<CouponInfo> coupons = new ArrayList<>();
-
-		public List<PromotionInfo> getPromotions() {
-			return promotions;
-		}
-
-		public void setPromotions(List<PromotionInfo> promotions) {
-			this.promotions = promotions;
-		}
-
-		public List<CouponInfo> getCoupons() {
-			return coupons;
-		}
-
-		public void setCoupons(List<CouponInfo> coupons) {
-			this.coupons = coupons;
-		}
-	}
-
-	public class Feed {
+	public class Feed extends FeedbackData{
 		@SerializedName("contacts_synced")
 		@Expose
 		private Integer contactsSynced;
@@ -458,7 +506,7 @@ public class LoginResponse {
 		private Integer countNotificationPollingInterval;
 
 		@SerializedName("bottom_strip")
-		private MealsData.OfferStripMeals bottomStrip;
+		private Meals.OfferStripMeals bottomStrip;
 
 		@SerializedName("how_it_works")
 		private ArrayList<FatafatTutorialData> fatafatTutorialData;
@@ -477,7 +525,7 @@ public class LoginResponse {
 			return fatafatTutorialData;
 		}
 
-		public MealsData.OfferStripMeals getBottomStrip() {
+		public Meals.OfferStripMeals getBottomStrip() {
 			return bottomStrip;
 		}
 
@@ -1261,6 +1309,101 @@ public class LoginResponse {
 
 		public void setJobId(int jobId) {
 			this.jobId = jobId;
+		}
+	}
+
+
+	public class FeedbackData {
+
+
+		@SerializedName(Constants.KEY_FEEDBACK_ORDER_ID)
+		private String orderId = "";
+
+		@SerializedName(Constants.KEY_RESTAURANT_NAME)
+		private String restaurantName = "";
+
+		@SerializedName(Constants.QUESTION)
+		private String question = "";
+
+		@SerializedName(Constants.KEY_QUESTION_TYPE)
+		private int questionType;
+
+		@SerializedName(Constants.KEY_PENDING_FEEDBACK)
+		private int pendingFeedback;
+
+		@SerializedName(Constants.KEY_FEEDBACK_AMOUNT)
+		private double amount;
+
+		@SerializedName(Constants.KEY_FEEDBACK_DATE)
+		private String feedbackDeliveryDate = "";
+
+		@SerializedName(Constants.KEY_FEEDBACK_VIEW_TYPE)
+		private Integer feedbackViewType;
+
+		@SerializedName(Constants.KEY_RIDE_END_GOOD_FEEDBACK_TEXT)
+		private String rideEndGoodFeedbackText;
+
+
+		@SerializedName(Constants.KEY_NEGATIVE_FEEDBACK_REASONS)
+		ArrayList<FeedbackReason> negativeFeedbackReasons;
+
+		@SerializedName(Constants.KEY_POSITIVE_FEEDBACK_REASONS)
+		ArrayList<FeedbackReason> positiveFeedbackReasons;
+
+		public Integer getFeedbackViewType() {
+			return feedbackViewType==null? RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal():feedbackViewType;
+		}
+
+		public String getRideEndGoodFeedbackText(Context context) {
+			return rideEndGoodFeedbackText==null? context.getResources().getString(R.string.end_ride_with_image_text):rideEndGoodFeedbackText;
+		}
+
+		public String getOrderId() {
+			return orderId;
+		}
+
+		public String getRestaurantName() {
+			return restaurantName;
+		}
+
+		public String getQuestion() {
+			return question;
+		}
+
+		public int getQuestionType() {
+			return questionType;
+		}
+
+		public int getPendingFeedback() {
+			return pendingFeedback;
+		}
+
+		public double getAmount() {
+			return amount;
+		}
+
+		public String getFeedbackDeliveryDate() {
+			return feedbackDeliveryDate;
+		}
+
+		public String getRideEndGoodFeedbackText() {
+			return rideEndGoodFeedbackText;
+		}
+
+		public ArrayList<FeedbackReason> getNegativeFeedbackReasons() {
+			return negativeFeedbackReasons;
+		}
+
+		public ArrayList<FeedbackReason> getPositiveFeedbackReasons() {
+			return positiveFeedbackReasons;
+		}
+
+		public void setPendingFeedback(int pendingFeedback) {
+			this.pendingFeedback = pendingFeedback;
+		}
+
+		public void setFeedbackViewType(Integer feedbackViewType) {
+			this.feedbackViewType = feedbackViewType;
 		}
 	}
 
