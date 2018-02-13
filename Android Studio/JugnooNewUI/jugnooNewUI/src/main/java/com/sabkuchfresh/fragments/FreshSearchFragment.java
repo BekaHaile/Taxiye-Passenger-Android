@@ -27,6 +27,7 @@ import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.Utils;
+import com.sabkuchfresh.utils.WrapContentLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -109,7 +110,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
         Utils.setupUI(rlRoot, activity);
 
 		recyclerViewCategoryItems = (RecyclerView)rootView.findViewById(R.id.recyclerViewCategoryItems);
-		recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
+		recyclerViewCategoryItems.setLayoutManager(new WrapContentLinearLayoutManager(activity));
 		recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewCategoryItems.setHasFixedSize(false);
 
@@ -186,7 +187,7 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 					public boolean checkForAdd(int position, SubItem subItem) {
 						return activity.checkForAdd();
 					}
-				}, AppConstant.ListType.HOME, SEARCH_SCREEN, currentGroupId);
+				}, AppConstant.ListType.HOME, SEARCH_SCREEN, currentGroupId,this);
 		recyclerViewCategoryItems.setAdapter(freshCategoryItemsAdapter);
 
 
@@ -223,15 +224,16 @@ public class FreshSearchFragment extends Fragment implements GAAction, GACategor
 		subItemsInSearch.clear();
 		tokenSearched = "";
 		listHashMap.clear();
-		if(freshCategoryItemsAdapter!=null){
-			freshCategoryItemsAdapter.notifyDataSetChanged();
-
-		}
+		notifyAdapter();
 
 	}
 
 	private synchronized void notifyAdapter(){
-		freshCategoryItemsAdapter.notifyDataSetChanged();
+		if(freshCategoryItemsAdapter!=null){
+		    freshCategoryItemsAdapter.setResults(subItemsInSearch,this);
+            freshCategoryItemsAdapter.notifyDataSetChanged();
+
+        }
 	}
 
 	private String tokenSearched = "";

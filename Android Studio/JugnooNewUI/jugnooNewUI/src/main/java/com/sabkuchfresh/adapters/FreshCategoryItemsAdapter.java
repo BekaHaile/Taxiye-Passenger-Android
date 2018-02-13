@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.dialogs.BannerDetailDialog;
+import com.sabkuchfresh.fragments.FreshCategoryItemsFragment;
+import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.Category;
 import com.sabkuchfresh.retrofit.model.SubItem;
@@ -57,8 +60,8 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     private String categoryName;
     private int appType;
 
-    public FreshCategoryItemsAdapter(Context context, ArrayList<SubItem> subItems, Category.CategoryBanner categoryBanners, int showCategoryBanner,
-                                     OpenMode openMode, Callback callback, int listType, String categoryName, int currentGroupId) {
+    public<T extends FreshCategoryItemsFragment> FreshCategoryItemsAdapter(Context context, ArrayList<SubItem> subItems, Category.CategoryBanner categoryBanners, int showCategoryBanner,
+                                                                           OpenMode openMode, Callback callback, int listType, String categoryName, int currentGroupId,T fragment) {
         this.context = context;
         this.subItems = subItems;
         this.categoryBanners = categoryBanners;
@@ -70,10 +73,32 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         this.currentGroupId = currentGroupId;
         appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
     }
+    public<T extends FreshSearchFragment> FreshCategoryItemsAdapter(Context context, ArrayList<SubItem> subItems, Category.CategoryBanner categoryBanners, int showCategoryBanner,
+                                                                    OpenMode openMode, Callback callback, int listType, String categoryName, int currentGroupId, T fragment) {
+        this.context = context;
+        this.subItems = new ArrayList<>();
+        if(subItems!=null){
+            this.subItems.addAll(subItems);
 
-    public synchronized void setResults(ArrayList<SubItem> subItems){
-        this.subItems = subItems;
+        }
+        this.categoryBanners = categoryBanners;
+        this.showCategoryBanner = showCategoryBanner;
+        this.callback = callback;
+        this.openMode = openMode;
+        this.listType = listType;
+        this.categoryName = categoryName;
+        this.currentGroupId = currentGroupId;
+        appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
+    }
+
+   public synchronized   <T extends FreshSearchFragment> void setResults(ArrayList<SubItem> subItems,T fragment){
+        this.subItems.clear();
+        if(subItems!=null){
+            this.subItems.addAll(subItems);
+
+        }
         notifyDataSetChanged();
+
     }
 
 

@@ -715,9 +715,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 getHandler().post(new Runnable() {
                     @Override
                     public void run() {
-                        getSupportFragmentManager().beginTransaction()
-                                .replace(llRightDrawer.getId(), new MenusFilterFragment(), MenusFilterFragment.class.getName())
-                                .commitAllowingStateLoss();
+                        try {
+                            if (!FreshActivity.this.isFinishing()) {
+                                getSupportFragmentManager().beginTransaction()
+                                        .replace(llRightDrawer.getId(), new MenusFilterFragment(), MenusFilterFragment.class.getName())
+                                        .commitAllowingStateLoss();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
 
