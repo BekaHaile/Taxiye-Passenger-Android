@@ -276,6 +276,9 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
             llContactSyncing.setVisibility(View.VISIBLE);
             rvConnections.setVisibility(View.GONE);
             ivContactSync.startAnimation(rotateAnim);
+
+            // disable the sync button
+            imgBtnSync.setEnabled(false);
         }
     }
 
@@ -284,6 +287,9 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
             llContactSyncing.setVisibility(View.GONE);
             rvConnections.setVisibility(View.VISIBLE);
             ivContactSync.clearAnimation();
+
+            // re-enable sync button
+            imgBtnSync.setEnabled(true);
         }
     }
 
