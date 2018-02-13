@@ -384,14 +384,14 @@ public class JSONParser implements Constants {
     public <T extends LoginResponse.Menus> void setPromoCoupons(T loginData){
         try {
             if(loginData.getPromoCoupons() == null){
-                Data.getDeliveryCustomerData().setPromoCoupons(new ArrayList<PromoCoupon>());
+                loginData.setPromoCoupons(new ArrayList<PromoCoupon>());
             } else{
                 loginData.getPromoCoupons().clear();
             }
             if(loginData.getPromotions() != null)
-                Data.getDeliveryCustomerData().getPromoCoupons().addAll(loginData.getPromotions());
+                loginData.getPromoCoupons().addAll(loginData.getPromotions());
             if(loginData.getCoupons() != null)
-                Data.getDeliveryCustomerData().getPromoCoupons().addAll(loginData.getCoupons());
+                loginData.getPromoCoupons().addAll(loginData.getCoupons());
         } catch (Exception e) {
             e.printStackTrace();
         }
