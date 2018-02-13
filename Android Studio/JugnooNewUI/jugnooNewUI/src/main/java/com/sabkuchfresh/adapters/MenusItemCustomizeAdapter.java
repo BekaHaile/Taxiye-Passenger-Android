@@ -192,7 +192,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 mHolder.linearLayoutQuantitySelector.setVisibility(View.GONE);
             }
             try {
-                if(!TextUtils.isEmpty(item.getItemImage())){
+                if(!TextUtils.isEmpty(item.getItemImage()) || !TextUtils.isEmpty(item.getItemImageCompressed())){
                     mHolder.ivItemImage.setVisibility(View.VISIBLE);
                     Picasso.with(context).load(!TextUtils.isEmpty(item.getItemImageCompressed())?item.getItemImageCompressed():item.getItemImage())
                             .placeholder(R.drawable.ic_fresh_item_placeholder)
