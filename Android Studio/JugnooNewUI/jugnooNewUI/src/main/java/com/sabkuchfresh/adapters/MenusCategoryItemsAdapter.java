@@ -296,7 +296,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 mHolder.relativeLayoutItem.setBackgroundColor(ContextCompat.getColor(context, R.color.menu_item_selector_color_F7));
             }
             try {
-                if(!TextUtils.isEmpty(item.getItemImage())){
+                if(!TextUtils.isEmpty(item.getItemImage()) || !TextUtils.isEmpty(item.getItemImageCompressed())){
 					mHolder.ivItemImage.setVisibility(View.VISIBLE);
 					Picasso.with(context).load(!TextUtils.isEmpty(item.getItemImageCompressed())?item.getItemImageCompressed():item.getItemImage())
 							.placeholder(R.drawable.ic_fresh_item_placeholder)
