@@ -1345,10 +1345,10 @@ public class LoginResponse {
 
 
 		@SerializedName(Constants.KEY_NEGATIVE_FEEDBACK_REASONS)
-		ArrayList<FeedbackReason> negativeFeedbackReasons;
+		ArrayList<String> negativeFeedbackReasons;
 
 		@SerializedName(Constants.KEY_POSITIVE_FEEDBACK_REASONS)
-		ArrayList<FeedbackReason> positiveFeedbackReasons;
+		ArrayList<String> positiveFeedbackReasons;
 
 		public Integer getFeedbackViewType() {
 			return feedbackViewType==null? RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal():feedbackViewType;
@@ -1390,11 +1390,11 @@ public class LoginResponse {
 			return rideEndGoodFeedbackText;
 		}
 
-		public ArrayList<FeedbackReason> getNegativeFeedbackReasons() {
+		public ArrayList<String> getNegativeFeedbackReasons() {
 			return negativeFeedbackReasons;
 		}
 
-		public ArrayList<FeedbackReason> getPositiveFeedbackReasons() {
+		public ArrayList<String> getPositiveFeedbackReasons() {
 			return positiveFeedbackReasons;
 		}
 

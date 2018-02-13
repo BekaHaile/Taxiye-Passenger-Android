@@ -193,7 +193,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             }else if (feedbackClientId.equals(Config.getFeedClientId())) {
                 productType = ProductType.FEED;
                 if(Data.getFeedData()!=null && !TextUtils.isEmpty(Data.getFeedData().getFeedName())){
-                    activity.getTopBar().title.setText(Data.getDeliveryCustomerData().getRestaurantName());
+                    activity.getTopBar().title.setText(Data.getFeedData().getFeedName());
                 } else {
                     activity.getTopBar().title.setText(activity.getString(R.string.delivery_new_name));
                 }
@@ -233,8 +233,21 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         orderAmount = feedbackData.getAmount();
         orderId = feedbackData.getOrderId();
         endRideGoodFeedbackText = feedbackData.getRideEndGoodFeedbackText();
-        negativeReasons = feedbackData.getNegativeFeedbackReasons();
-        positiveReasons = feedbackData.getPositiveFeedbackReasons();
+        negativeReasons.clear();
+
+        if(feedbackData.getPositiveFeedbackReasons()!=null && feedbackData.getPositiveFeedbackReasons().size()>0){
+            positiveReasons = new ArrayList<>();
+            for(String feedbackReason: feedbackData.getPositiveFeedbackReasons()){
+                positiveReasons.add(new FeedbackReason(feedbackReason));
+            }
+        }if(feedbackData.getNegativeFeedbackReasons()!=null && feedbackData.getNegativeFeedbackReasons().size()>0){
+            negativeReasons = new ArrayList<>();
+            for(String feedbackReason: feedbackData.getNegativeFeedbackReasons()){
+                negativeReasons.add(new FeedbackReason(feedbackReason));
+            }
+        }
+
+
     }
 
 
