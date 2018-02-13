@@ -103,8 +103,13 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
             syncContacts();
         } else {
             allContactsList = Paper.book().read(PaperDBKeys.DB_ALL_CONTACTS_LIST);
-            // user has synced one time , only fetch contacts
-            fetchContacts(false);
+            if(allContactsList!=null){
+                // user has synced one time , only fetch contacts
+                fetchContacts(false);
+            }
+            else {
+                syncContacts();
+            }
         }
     }
 
