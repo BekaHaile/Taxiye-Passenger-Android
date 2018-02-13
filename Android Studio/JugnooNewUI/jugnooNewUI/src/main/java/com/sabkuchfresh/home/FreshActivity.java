@@ -5783,6 +5783,21 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             if(isStateChanged && menuBar!=null && menuBar.getMenuAdapter()!=null){
                 menuBar.getMenuAdapter().notifyDataSetChanged();
             }
+            boolean showFab = true;
+
+            if (getTopFragment()!=null) {
+                if(isDeliveryOpenInBackground()){
+                    showFab =  getTopFragment() instanceof MenusFragment && !getMenusFragment().iSChildCategoryOpen();
+                }else{
+                   showFab = getTopFragment() instanceof MealFragment || getTopFragment() instanceof MenusFragment || getTopFragment() instanceof FreshFragment ||
+                            getTopFragment() instanceof  AnywhereHomeFragment || getTopFragment() instanceof ProsHomeFragment;
+                }
+            }
+
+            if(!showFab){
+                fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
+            }
+
         }
     }
 
