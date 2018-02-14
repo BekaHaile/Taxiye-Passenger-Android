@@ -680,10 +680,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             setSlideInitial();
                         } else {
                             animateSliderButton(paramsF.leftMargin, activity.relativeLayoutSlider.getWidth() - activity.tvSlide.getWidth());
-                            activity.relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_confirm_color_bg);
-                            activity.rlSliderContainer.setBackgroundResource(R.color.slider_green);
-                            activity.sliderText.setVisibility(View.GONE);
-                            activity.viewAlpha.setAlpha(1.0f);
+                            setSliderCompleteState();
                             activity.buttonPlaceOrder.performClick();
                             GAUtils.event(activity.getGaCategory(), CHECKOUT, PAY_SLIDER + ENDED);
                         }
@@ -692,6 +689,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                 return true;
             }
+
+
         });
 
         try {
@@ -711,6 +710,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         return rootView;
     }
 
+    private void setSliderCompleteState() {
+        activity.relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_confirm_color_bg);
+        activity.rlSliderContainer.setBackgroundResource(R.color.slider_green);
+        activity.sliderText.setVisibility(View.GONE);
+        activity.viewAlpha.setAlpha(1.0f);
+    }
     private void toggleChatAvailability(boolean isChatAvailable) {
         if(activity.isDeliveryOpenInBackground() && isChatAvailable && activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER){
             tvOrderViaFatafat.setVisibility(View.VISIBLE);
@@ -3399,6 +3404,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 //                                    PlaceOrderResponse.ReferralPopupContent.class);
 //                    activity.getPlaceOrderResponse().setReferralPopupContent(referralPopupContent);
 //                }
+                setSliderCompleteState();
                 orderPlacedSuccess(activity.getPlaceOrderResponse());
             } else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
                 DialogPopup.alertPopup(activity, "", message);
