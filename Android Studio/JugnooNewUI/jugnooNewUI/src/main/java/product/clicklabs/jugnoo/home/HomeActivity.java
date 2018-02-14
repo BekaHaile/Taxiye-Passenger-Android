@@ -8269,7 +8269,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         dismissPushDialog(false);
         PushDialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
             @Override
-            public void onButtonClicked(int deepIndex, String url) {
+            public void onButtonClicked(int deepIndex, String url, int restaurantId) {
                 if("".equalsIgnoreCase(url)) {
                     Data.deepLinkIndex = deepIndex;
                     deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());

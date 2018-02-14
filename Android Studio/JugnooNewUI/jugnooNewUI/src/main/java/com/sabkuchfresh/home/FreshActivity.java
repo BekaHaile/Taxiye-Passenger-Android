@@ -3219,8 +3219,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         dismissPushDialog(false);
         PushDialog dialog = new PushDialog(FreshActivity.this, new PushDialog.Callback() {
             @Override
-            public void onButtonClicked(int deepIndex, String url) {
-                if ("".equalsIgnoreCase(url)) {
+            public void onButtonClicked(int deepIndex, String url, int restaurantId) {
+
+                if(restaurantId!=-1){
+                    try {
+                        fetchRestaurantMenuAPI(restaurantId, false, null, null, -1, null);
+                        Utils.hideSoftKeyboard(FreshActivity.this,relativeLayoutContainer);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if ("".equalsIgnoreCase(url)) {
                     Data.deepLinkIndex = deepIndex;
                     deepLinkAction.openDeepLink(FreshActivity.this, getSelectedLatLng());
                 } else {

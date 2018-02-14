@@ -47,6 +47,7 @@ public class PushDialog {
 				title = jObj.optString(Constants.KEY_TITLE, activity.getResources().getString(R.string.app_name));
 				String message = jObj.optString(Constants.KEY_MESSAGE, "");
 				final int deepindex = jObj.optInt(Constants.KEY_DEEPINDEX, -1);
+				final int restaurantId = jObj.optInt(Constants.KEY_RESTAURANT_ID, -1);
 				String picture = jObj.optString(Constants.KEY_PICTURE, "");
 				if("".equalsIgnoreCase(picture)){
 					picture = jObj.optString(Constants.KEY_IMAGE, "");
@@ -97,7 +98,7 @@ public class PushDialog {
 					public void onClick(View v) {
 						Prefs.with(activity).save(Constants.SP_PUSH_DIALOG_CONTENT,
 								Constants.EMPTY_JSON_OBJECT);
-						callback.onButtonClicked(deepindex, url);
+						callback.onButtonClicked(deepindex, url, restaurantId);
 						dialog.dismiss();
 					}
 				});
@@ -141,7 +142,7 @@ public class PushDialog {
 
 
 	public interface Callback{
-		void onButtonClicked(int deepIndex, String url);
+		void onButtonClicked(int deepIndex, String url, int restaurantId);
 	}
 
 }
