@@ -280,6 +280,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
         if (!this.isFinishing()) {
             llContactSyncing.setVisibility(View.VISIBLE);
             rvConnections.setVisibility(View.GONE);
+            tvNoJugnooConnections.setVisibility(View.GONE);
             ivContactSync.startAnimation(rotateAnim);
 
             // disable the sync button
