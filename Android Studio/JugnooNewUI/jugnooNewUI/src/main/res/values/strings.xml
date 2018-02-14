@@ -1475,5 +1475,6 @@
     <!-- Jugnoo Connections -->
     <string name="txt_jugnoo_connections">Your Jugnoo Connections</string>
     <string name="txt_new_message">New Message</string>
+    <string name="min_order_strip_merchant_info">Min. Order Amount %s</string>
 
 </resources>

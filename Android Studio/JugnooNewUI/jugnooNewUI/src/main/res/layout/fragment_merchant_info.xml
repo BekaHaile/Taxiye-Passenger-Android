@@ -166,6 +166,25 @@
                 app:typekitFont="@string/maven_r"
                 />
 
+            <TextView
+                android:id="@+id/tvMerchantMinOrder"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:drawableLeft="@drawable/ic_merchant_call"
+                android:background="?android:attr/selectableItemBackground"
+                android:drawablePadding="@dimen/dp_10"
+                android:text="@string/min_order_strip_merchant_info"
+                android:gravity="center_vertical"
+                android:textColor="@color/text_color"
+                android:textColorLink="@color/text_color_link"
+                android:textSize="@dimen/sp_13"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                app:typekitFont="@string/maven_r"
+                />
+
 
 
             <RelativeLayout

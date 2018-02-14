@@ -163,6 +163,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     View viewCenterOrder;
     @Bind(R.id.label_min_order_amt)
     TextView labelMinOrderAmt;
+    @Bind(R.id.tvMerchantMinOrder)
+    TextView tvMerchantMinOrder;
 
     private View rootView;
     private FreshActivity activity;
@@ -414,26 +416,32 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
                     tvDeliversIn.setText(activity.getVendorOpened().getDeliveryTimeText());
                     tvMinOrderAmt.setText(activity.getVendorOpened().getMinOrderText());
-                    if (TextUtils.isEmpty(activity.getVendorOpened().getDeliveryTimeText()) || TextUtils.isEmpty(activity.getVendorOpened().getMinOrderText())) {
-                        viewCenterOrder.setVisibility(View.GONE);
-
-                        if (TextUtils.isEmpty(activity.getVendorOpened().getMinOrderText())) {
-                            tvDeliversIn.setText(activity.getVendorOpened().getDeliveryTimeText());
-                            labelMinOrderAmt.setVisibility(View.GONE);
-                            tvMinOrderAmt.setVisibility(View.GONE);
-                            removeRule(RelativeLayout.ALIGN_PARENT_LEFT, labelDeliversIn);
-                            removeRule(RelativeLayout.ALIGN_PARENT_LEFT, tvDeliversIn);
-
-                        } else {
-                            labelDeliversIn.setVisibility(View.GONE);
+                    viewCenterOrder.setVisibility(View.GONE);
+                    tvMerchantMinOrder.setVisibility(View.GONE);
+                    if (TextUtils.isEmpty(activity.getVendorOpened().getDeliveryTimeText())) {
+                           /* labelDeliversIn.setVisibility(View.GONE);
                             tvDeliversIn.setVisibility(View.GONE);
                             removeRule(RelativeLayout.ALIGN_PARENT_RIGHT, labelMinOrderAmt);
-                            removeRule(RelativeLayout.ALIGN_PARENT_RIGHT, tvMinOrderAmt);
-                        }
+                            removeRule(RelativeLayout.ALIGN_PARENT_RIGHT, tvMinOrderAmt);*/
+
+                         //show min Order Amount in a strip below phone details instead of position it in center
+                        layoutOrderDetails.setVisibility(View.GONE);
+                        tvMerchantMinOrder.setText(activity.getString(R.string.min_order_strip_merchant_info, activity.getVendorOpened().getMinOrderText()));
+                        tvMerchantMinOrder.setVisibility(View.VISIBLE);
+
+
+                    } else if (TextUtils.isEmpty(activity.getVendorOpened().getMinOrderText())) {
+                        tvDeliversIn.setText(activity.getVendorOpened().getDeliveryTimeText());
+                        labelMinOrderAmt.setVisibility(View.GONE);
+                        tvMinOrderAmt.setVisibility(View.GONE);
+                        removeRule(RelativeLayout.ALIGN_PARENT_LEFT, labelDeliversIn);
+                        removeRule(RelativeLayout.ALIGN_PARENT_LEFT, tvDeliversIn);
+                        layoutOrderDetails.setVisibility(View.VISIBLE);
+
+
+                        //center align delivery text if min order amount is empty
 
                     }
-
-                    layoutOrderDetails.setVisibility(View.VISIBLE);
                 }
 
                 if (activity.getMenuProductsResponse().getMenusPromotionInfo() != null && activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText() != null) {
