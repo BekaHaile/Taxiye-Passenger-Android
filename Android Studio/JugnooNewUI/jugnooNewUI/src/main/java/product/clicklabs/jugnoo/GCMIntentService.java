@@ -574,22 +574,26 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 								return;
 							}
 
-							// deep link to restaurant page
-							int restaurantId = jObj.optInt(KEY_RESTAURANT_ID, -1);
-							Prefs.with(this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""+restaurantId);
-
-							// deep link to restaurant review page particular feedback
-							int feedbackId = jObj.optInt(KEY_FEEDBACK_ID, -1);
-							Prefs.with(this).save(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK, feedbackId);
 
 
 							if("".equalsIgnoreCase(picture)){
 								picture = jObj.optString(KEY_IMAGE, "");
 							}
 
+							int restaurantId = jObj.optInt(KEY_RESTAURANT_ID, -1);
+							int feedbackId = jObj.optInt(KEY_FEEDBACK_ID, -1);
+
+
 							// Push dialog content saved if showDialog flag is 1
 							if(showDialog == 1) {
 								Prefs.with(this).save(SP_PUSH_DIALOG_CONTENT, message);
+							}else{
+								// deep link to restaurant page
+								Prefs.with(this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""+restaurantId);
+
+								// deep link to restaurant review page particular feedback
+								Prefs.with(this).save(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK, feedbackId);
+
 							}
 
 

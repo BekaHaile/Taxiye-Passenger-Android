@@ -199,6 +199,8 @@ public class Data {
             Prefs.with(context).remove(Constants.SP_LAST_PUSH_RECEIVED_TIME);
             Prefs.with(context).remove(Constants.SP_REFERRAL_CODE);
             Prefs.with(context).remove(Constants.SP_PUSH_DIALOG_CONTENT);
+            Prefs.with(context).remove(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK);
+            Prefs.with(context).remove(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK);
             Prefs.with(context).remove(Constants.KEY_SP_FUGU_CAMPAIGN_NAME);
             Prefs.with(context).remove(Constants.SP_POOL_INTRO_SHOWN);
 

@@ -8272,6 +8272,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onButtonClicked(int deepIndex, String url, int restaurantId) {
                 if("".equalsIgnoreCase(url)) {
                     Data.deepLinkIndex = deepIndex;
+                    Prefs.with(HomeActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""+restaurantId);
                     deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
                 } else{
                     Utils.openUrl(HomeActivity.this, url);
