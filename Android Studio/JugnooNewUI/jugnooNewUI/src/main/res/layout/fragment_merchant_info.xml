@@ -166,24 +166,39 @@
                 app:typekitFont="@string/maven_r"
                 />
 
-            <TextView
-                android:id="@+id/tvMerchantMinOrder"
+
+            <LinearLayout
+                android:id="@+id/llMerchantMinOrderStrip"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:orientation="horizontal"
+                android:background="?android:attr/selectableItemBackground"
                 android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/dp_20"
-                android:drawableLeft="@drawable/ic_merchant_call"
-                android:background="?android:attr/selectableItemBackground"
-                android:drawablePadding="@dimen/dp_10"
-                android:text="@string/min_order_strip_merchant_info"
-                android:gravity="center_vertical"
-                android:textColor="@color/text_color"
-                android:textColorLink="@color/text_color_link"
-                android:textSize="@dimen/sp_13"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                app:typekitFont="@string/maven_r"
-                />
+                android:layout_marginBottom="@dimen/dp_20">
+
+                <ImageView
+                    android:src="@drawable/ic_merchant_min_order"
+                    android:layout_width="16dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_height="16dp" />
+                <TextView
+                    android:id="@+id/tvMerchantMinOrder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:drawablePadding="@dimen/dp_10"
+                    android:text="@string/min_order_strip_merchant_info"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/text_color"
+                    android:textColorLink="@color/text_color_link"
+                    android:textSize="@dimen/sp_13"
+                    app:typekitFont="@string/maven_r"
+                    />
+
+
+            </LinearLayout>
 
 
 

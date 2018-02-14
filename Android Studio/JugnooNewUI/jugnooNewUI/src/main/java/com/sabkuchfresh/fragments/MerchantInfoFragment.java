@@ -165,6 +165,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     TextView labelMinOrderAmt;
     @Bind(R.id.tvMerchantMinOrder)
     TextView tvMerchantMinOrder;
+    @Bind(R.id.llMerchantMinOrderStrip)
+    LinearLayout llMerchantMinOrderStrip;
 
     private View rootView;
     private FreshActivity activity;
@@ -417,17 +419,17 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     tvDeliversIn.setText(activity.getVendorOpened().getDeliveryTimeText());
                     tvMinOrderAmt.setText(activity.getVendorOpened().getMinOrderText());
                     viewCenterOrder.setVisibility(View.GONE);
-                    tvMerchantMinOrder.setVisibility(View.GONE);
+                    llMerchantMinOrderStrip.setVisibility(View.GONE);
                     if (TextUtils.isEmpty(activity.getVendorOpened().getDeliveryTimeText())) {
                            /* labelDeliversIn.setVisibility(View.GONE);
                             tvDeliversIn.setVisibility(View.GONE);
                             removeRule(RelativeLayout.ALIGN_PARENT_RIGHT, labelMinOrderAmt);
                             removeRule(RelativeLayout.ALIGN_PARENT_RIGHT, tvMinOrderAmt);*/
 
-                         //show min Order Amount in a strip below phone details instead of position it in center
+                        //show min Order Amount in a strip below phone details instead of position it in center
                         layoutOrderDetails.setVisibility(View.GONE);
                         tvMerchantMinOrder.setText(activity.getString(R.string.min_order_strip_merchant_info, activity.getVendorOpened().getMinOrderText()));
-                        tvMerchantMinOrder.setVisibility(View.VISIBLE);
+                        llMerchantMinOrderStrip.setVisibility(View.VISIBLE);
 
 
                     } else if (TextUtils.isEmpty(activity.getVendorOpened().getMinOrderText())) {

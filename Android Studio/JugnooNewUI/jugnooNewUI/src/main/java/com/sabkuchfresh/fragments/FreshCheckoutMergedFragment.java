@@ -3404,8 +3404,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 //                                    PlaceOrderResponse.ReferralPopupContent.class);
 //                    activity.getPlaceOrderResponse().setReferralPopupContent(referralPopupContent);
 //                }
-                setSliderCompleteState();
                 orderPlacedSuccess(activity.getPlaceOrderResponse());
+                setSliderCompleteState();
+
             } else if (flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
                 DialogPopup.alertPopup(activity, "", message);
                 setSlideInitial();
