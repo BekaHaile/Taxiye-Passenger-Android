@@ -368,9 +368,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             bNeedHelpFeed.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (datum1 != null && !TextUtils.isEmpty(datum1.getFuguChannelId())) {
-                        FuguConfig.getInstance().openChatByTransactionId(datum1.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-                                datum1.getFuguChannelName(), datum1.getFuguTags());
+                    if (activity instanceof RideTransactionsActivity) {
+                        if (datum1 != null && !TextUtils.isEmpty(datum1.getFuguChannelId())) {
+                            FuguConfig.getInstance().openChatByTransactionId(datum1.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
+                                    datum1.getFuguChannelName(), datum1.getFuguTags());
+                        }else if(activity instanceof FreshActivity){
+                            activity.onBackPressed();
+                        }
                     }
                 }
             });
@@ -386,7 +390,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             tvTaskDetails.setVisibility(View.VISIBLE);
             llAmount.setVisibility(View.GONE);
             llPaidVia.setVisibility(View.GONE);
-            bNeedHelpFeed.setText(R.string.chat);
+            bNeedHelpFeed.setText(activity instanceof RideTransactionsActivity?R.string.chat:R.string.ok);
             getFeedOrderData(activity);
             isFeedOrder = true;
         }else{
