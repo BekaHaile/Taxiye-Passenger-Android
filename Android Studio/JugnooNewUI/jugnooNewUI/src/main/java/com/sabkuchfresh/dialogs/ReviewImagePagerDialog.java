@@ -17,6 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
@@ -224,8 +226,9 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			RelativeLayout root = (RelativeLayout) inflater.inflate(R.layout.dialog_item_review_image, container, false);
+			RelativeLayout root = (RelativeLayout) inflater.inflate(R.layout.dialog_item_review_image_pager, container, false);
 			ImageView ivReviewImage = (ImageView) root.findViewById(R.id.ivReviewImage);
+			final View progressBar =  root.findViewById(R.id.pbar);
 
 			root.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -244,9 +247,35 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 
 			if(reviewImages!=null && reviewImages.size()==1 && reviewImages.get(0).getHeight()!=null && reviewImages.get(0).getHeight()>0)
-			  Glide.with(activity).load(reviewImages.get(position).getUrl()).placeholder(R.drawable.ic_fresh_item_placeholder).error(R.drawable.ic_fresh_item_placeholder).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(ivReviewImage);
+			  Glide.with(activity).load(reviewImages.get(position).getUrl()).listener(new RequestListener<String, GlideDrawable>() {
+				  @Override
+				  public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+					  progressBar.setVisibility(View.GONE);
+					  return false;
+				  }
+
+
+				  @Override
+				  public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+					  progressBar.setVisibility(View.GONE);
+					  return false;
+				  }
+			  }).error(R.drawable.ic_fresh_item_placeholder).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(ivReviewImage);
 			else
-				Glide.with(activity).load(reviewImages.get(position).getUrl()).placeholder(R.drawable.ic_fresh_item_placeholder).error(R.drawable.ic_fresh_item_placeholder).into(ivReviewImage);
+				Glide.with(activity).load(reviewImages.get(position).getUrl()).listener(new RequestListener<String, GlideDrawable>() {
+					@Override
+					public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+						progressBar.setVisibility(View.GONE);
+						return false;
+					}
+
+
+					@Override
+					public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+						progressBar.setVisibility(View.GONE);
+						return false;
+					}
+				}).error(R.drawable.ic_fresh_item_placeholder).into(ivReviewImage);
 			container.addView(root);
 			return root;
 		}
