@@ -2126,6 +2126,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public AddStoreViewHolder(final View view, final ItemListener itemListener) {
             super(view);
+            view.setVisibility(View.VISIBLE);
             view.findViewById(R.id.divider_bottom).setVisibility(View.VISIBLE);
             view.findViewById(R.id.seperator_below_add_store).setVisibility(View.VISIBLE);
             TextView textView = (TextView) view.findViewById(R.id.tv_add_store);
