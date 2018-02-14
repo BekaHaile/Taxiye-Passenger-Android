@@ -284,6 +284,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
 
             // disable the sync button
             imgBtnSync.setEnabled(false);
+            etSearchConnections.setEnabled(false);
         }
     }
 
@@ -295,6 +296,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
 
             // re-enable sync button
             imgBtnSync.setEnabled(true);
+            etSearchConnections.setEnabled(true);
         }
     }
 
