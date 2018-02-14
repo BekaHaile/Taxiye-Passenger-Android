@@ -1476,5 +1476,8 @@
     <string name="txt_jugnoo_connections">Your Jugnoo Connections</string>
     <string name="txt_new_message">New Message</string>
     <string name="min_order_strip_merchant_info">Min. Order Amount %s</string>
+    <string name="txt_check_pending_transactions">Check Your Pending Transactions</string>
+    <string name="txt_contacts_syncing">Your contacts are syncing&#8230;</string>
+    <string name="txt_no_jugnoo_connections">No jugnoo connections!</string>
 
 </resources>

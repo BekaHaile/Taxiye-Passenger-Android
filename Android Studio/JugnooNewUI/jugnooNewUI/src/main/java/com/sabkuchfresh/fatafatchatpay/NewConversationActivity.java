@@ -15,9 +15,15 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.fugu.FuguConfig;
@@ -41,8 +47,8 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.ContactsUploadService;
 import product.clicklabs.jugnoo.retrofit.CreateChatResponse;
 import product.clicklabs.jugnoo.utils.ContactBean;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 import retrofit.RetrofitError;
 
@@ -60,6 +66,10 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
     private ArrayList<UserContactObject> allJugnooContacts = new ArrayList<>();
     private UserContactAdapter mUserContactAdapter;
     private SharedPreferences sharedPreferences;
+    private LinearLayout llContactSyncing;
+    private TextView tvNoJugnooConnections;
+    private Animation rotateAnim;
+    private ImageView ivContactSync;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -81,15 +91,52 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
                 rvConnections.setAdapter(mUserContactAdapter);
             }
 
+            // show keyboard
+            Utils.showSoftKeyboard(this, etSearchConnections);
+
+        } else {
+            // hide
+            Utils.hideSoftKeyboard(this, etSearchConnections);
         }
         if (!areContactsSyncedOneTime) {
             // sync
             syncContacts();
         } else {
             allContactsList = Paper.book().read(PaperDBKeys.DB_ALL_CONTACTS_LIST);
-            // user has synced one time , only fetch contacts
-            fetchContacts(false);
+            if(allContactsList!=null){
+                // user has synced one time , only fetch contacts
+                fetchContacts(false);
+            }
+            else {
+                syncContacts();
+            }
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(final MotionEvent event) {
+        View view = getCurrentFocus();
+        try {
+            boolean ret = super.dispatchTouchEvent(event);
+            if (view != null && view instanceof EditText) {
+                View w = getCurrentFocus();
+                int[] scrcoords = new int[2];
+                assert w != null;
+                w.getLocationOnScreen(scrcoords);
+                float x = event.getRawX() + w.getLeft() - scrcoords[0];
+                float y = event.getRawY() + w.getTop() - scrcoords[1];
+                if (event.getAction() == MotionEvent.ACTION_UP
+                        && (x < w.getLeft() || x >= w.getRight()
+                        || y < w.getTop() || y > w.getBottom())) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+                }
+            }
+            return ret;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
@@ -114,6 +161,12 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
         imgBtnSync = (ImageButton) findViewById(R.id.imgBtnSync);
         rvConnections = (RecyclerView) findViewById(R.id.rvConnections);
         rvConnections.setLayoutManager(new LinearLayoutManager(this));
+        llContactSyncing = (LinearLayout) findViewById(R.id.llContactSyncing);
+        llContactSyncing.setVisibility(View.GONE);
+        tvNoJugnooConnections = (TextView) findViewById(R.id.tvNoJugnooConnections);
+        tvNoJugnooConnections.setVisibility(View.GONE);
+        rotateAnim = AnimationUtils.loadAnimation(this, R.anim.rotate);
+        ivContactSync = (ImageView) llContactSyncing.findViewById(R.id.ivContactSync);
 
         etSearchConnections.addTextChangedListener(this);
         imgBtnSync.setOnClickListener(this);
@@ -139,10 +192,10 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
                                 }
                             }).start();
 
-                            DialogPopup.dismissLoadingDialog();
+                            //DialogPopup.dismissLoadingDialog();
                             sharedPreferences.edit().putBoolean(Constants.SP_CONTACTS_SYNCED, true).commit();
                             //fetch contacts from api
-                            fetchContacts(true);
+                            fetchContacts(false);
                         }
 
                     }
@@ -179,46 +232,81 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
                 new APICommonCallback<ContactResponseModel>() {
                     @Override
                     public boolean onNotConnected() {
+                        hideSyncLayout();
                         return false;
                     }
 
                     @Override
                     public boolean onException(final Exception e) {
+                        hideSyncLayout();
                         return false;
                     }
 
                     @Override
                     public void onSuccess(final ContactResponseModel contactResponseModel, final String message, final int flag) {
                         if (!NewConversationActivity.this.isFinishing()) {
+                            hideSyncLayout();
                             if (contactResponseModel.getContacts() != null && contactResponseModel.getContacts().size() > 0) {
                                 renderContacts(contactResponseModel.getContacts());
+                                tvNoJugnooConnections.setVisibility(View.GONE);
+                            }
+                            else {
+                                tvNoJugnooConnections.setVisibility(View.VISIBLE);
                             }
                         }
                     }
 
                     @Override
                     public boolean onError(final ContactResponseModel contactResponseModel, final String message, final int flag) {
+                        hideSyncLayout();
                         return false;
                     }
 
                     @Override
                     public boolean onFailure(final RetrofitError error) {
+                        hideSyncLayout();
                         return false;
                     }
 
                     @Override
                     public void onNegativeClick() {
-
+                        hideSyncLayout();
                     }
                 });
 
+    }
+
+    private void showSyncLayout() {
+        if (!this.isFinishing()) {
+            llContactSyncing.setVisibility(View.VISIBLE);
+            rvConnections.setVisibility(View.GONE);
+            tvNoJugnooConnections.setVisibility(View.GONE);
+            ivContactSync.startAnimation(rotateAnim);
+
+            // disable the sync button
+            imgBtnSync.setEnabled(false);
+            etSearchConnections.setEnabled(false);
+        }
+    }
+
+    private void hideSyncLayout() {
+        if (!this.isFinishing()) {
+            llContactSyncing.setVisibility(View.GONE);
+            rvConnections.setVisibility(View.VISIBLE);
+            ivContactSync.clearAnimation();
+
+            // re-enable sync button
+            imgBtnSync.setEnabled(true);
+            etSearchConnections.setEnabled(true);
+        }
     }
 
     /**
      * Sync contacts
      */
     private void syncContacts() {
-        DialogPopup.showLoadingDialog(this, "");
+        //DialogPopup.showLoadingDialog(this, "");
+        showSyncLayout();
         // start the contact upload sync in background
         Intent syncContactsIntent = new Intent(this, ContactsUploadService.class);
         syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -253,7 +341,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
         for (ContactBean contactBean : allContactsList) {
             for (UserContactObject jugnooContact : jugnooContacts) {
                 String jugnooPhone = jugnooContact.getPhoneNumber();
-                if(contactBean.getName()!=null) {
+                if (contactBean.getName() != null) {
                     // full comparison
                     if (jugnooPhone.equals(contactBean.getPhone())) {
                         jugnooContact.setUserName(contactBean.getName());
