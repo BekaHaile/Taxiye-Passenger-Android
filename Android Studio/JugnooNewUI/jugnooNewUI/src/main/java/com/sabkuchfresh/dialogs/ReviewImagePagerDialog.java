@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.GestureDetector;
@@ -227,7 +228,7 @@ public class ReviewImagePagerDialog extends DialogFragment {
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
 			RelativeLayout root = (RelativeLayout) inflater.inflate(R.layout.dialog_item_review_image_pager, container, false);
-			ImageView ivReviewImage = (ImageView) root.findViewById(R.id.ivReviewImage);
+			final ImageView ivReviewImage = (ImageView) root.findViewById(R.id.ivReviewImage);
 			final View progressBar =  root.findViewById(R.id.pbar);
 
 			root.setOnClickListener(new View.OnClickListener() {
@@ -258,6 +259,7 @@ public class ReviewImagePagerDialog extends DialogFragment {
 				  @Override
 				  public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
 					  progressBar.setVisibility(View.GONE);
+					  ivReviewImage.setBackgroundColor(ContextCompat.getColor(activity,R.color.white));
 					  return false;
 				  }
 			  }).error(R.drawable.ic_fresh_item_placeholder).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(ivReviewImage);
@@ -273,6 +275,7 @@ public class ReviewImagePagerDialog extends DialogFragment {
 					@Override
 					public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
 						progressBar.setVisibility(View.GONE);
+						ivReviewImage.setBackgroundColor(ContextCompat.getColor(activity,R.color.white));
 						return false;
 					}
 				}).error(R.drawable.ic_fresh_item_placeholder).into(ivReviewImage);

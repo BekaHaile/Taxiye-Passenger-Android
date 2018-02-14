@@ -19,6 +19,7 @@
             android:layout_height="108px"
             android:layout_marginRight="14px"
             android:layout_marginTop="@dimen/px_20"
+            android:tag="mwar"
             android:layout_alignParentTop="true"
             android:visibility="visible"
             />

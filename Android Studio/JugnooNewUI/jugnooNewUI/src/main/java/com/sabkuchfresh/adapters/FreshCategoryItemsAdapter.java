@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.dialogs.BannerDetailDialog;
+import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.fragments.FreshCategoryItemsFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.home.FreshActivity;
@@ -266,7 +267,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
 
 
-
+            mHolder.relativeLayoutItemImage.setTag(position);
             mHolder.imageViewMinus.setTag(position);
             mHolder.imageViewPlus.setTag(position);
             mHolder.linearLayoutQuantitySelector.setTag(position);
@@ -340,6 +341,22 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                             .centerCrop()
                             .error(R.drawable.ic_fresh_item_placeholder)
                             .into(mHolder.imageViewItemImage);
+
+                    mHolder.relativeLayoutItemImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            try {
+                                int pos = (int) v.getTag();
+                                if(subItems.get(pos)!=null && !TextUtils.isEmpty(subItems.get(pos).getSubItemImage())){
+                                    ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(0, subItems.get(pos).getSubItemImage());
+                                    dialog.show(((Activity)context).getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
                 } else {
                     mHolder.imageViewItemImage.setImageResource(R.drawable.ic_fresh_item_placeholder);
                     mHolder.imageViewItemImage.setVisibility((appType == AppConstant.ApplicationType.MENUS) ? View.GONE : View.VISIBLE);
@@ -414,6 +431,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         public TextView textViewItemName, textViewItemUnit, textViewItemPrice, textViewQuantity, textViewItemCost, textViewItemOff, offerTag;
         public TextView textViewOutOfStock, textViewMoreInfo, unavilableView;
         public LinearLayout linearLayoutContent, linearLayoutQuantitySelector, offerTagLayout, llMoreInfoOff;
+        private RelativeLayout relativeLayoutItemImage;
         public MainViewHolder(View itemView, Context context) {
             super(itemView);
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
@@ -421,6 +439,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             linearLayoutQuantitySelector = (LinearLayout) itemView.findViewById(R.id.linearLayoutQuantitySelector);
             offerTagLayout = (LinearLayout) itemView.findViewById(R.id.offer_tag_layout);
             imageViewItemImage = (ImageView) itemView.findViewById(R.id.imageViewItemImage);
+            relativeLayoutItemImage = (RelativeLayout) itemView.findViewById(R.id.relativeLayoutItemImage);
             imageViewFoodType = (ImageView) itemView.findViewById(R.id.imageViewFoodType);
             imageViewMinus = (ImageView) itemView.findViewById(R.id.imageViewMinus);
             imageViewPlus = (ImageView) itemView.findViewById(R.id.imageViewPlus);
