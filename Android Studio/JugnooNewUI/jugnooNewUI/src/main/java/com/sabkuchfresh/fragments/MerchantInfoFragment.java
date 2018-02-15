@@ -94,6 +94,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     RecyclerView rvTopReviews;
     @Bind(R.id.llSeeAll)
     LinearLayout llSeeAll;
+    @Bind(R.id.tvSeeAllReviews)
+    TextView tvSeeAllReviews;
     @Bind(R.id.progressWheel)
     ProgressWheel progressWheel;
     @Bind(R.id.tvReviewsHeader)
@@ -699,6 +701,13 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                             tvNoReviews.setVisibility(View.GONE);
                             rvTopReviews.setVisibility(View.VISIBLE);
                             llSeeAll.setVisibility(fetchFeedbackResponse.getReviewCount() > 2 ? View.VISIBLE : View.GONE);
+                            if(fetchFeedbackResponse.getReviewCount()>2){
+                            StringBuilder reviewBuilder = new StringBuilder();
+                            reviewBuilder.append(tvSeeAllReviews.getText());
+                            reviewBuilder.append(" (").append(String.valueOf(fetchFeedbackResponse.getReviewCount()))
+                                    .append(")");
+                            tvSeeAllReviews.setText(reviewBuilder.toString());
+                            }
                         }
                         if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
                             activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());

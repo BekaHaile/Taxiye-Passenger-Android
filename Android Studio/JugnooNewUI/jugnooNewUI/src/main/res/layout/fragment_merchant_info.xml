@@ -810,19 +810,13 @@
                 >
 
                 <TextView
+                    android:id="@+id/tvSeeAllReviews"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/see_all_reviews"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/dialog_color_menus_customize_item"
                     android:textSize="@dimen/sp_13"
                     app:typekitFont="@string/maven"
-                    />
-
-                <ImageView
-                    android:layout_width="@dimen/dp_7"
-                    android:layout_height="@dimen/dp_11"
-                    android:layout_marginLeft="@dimen/dp_8"
-                    android:src="@drawable/ic_arrow_grey"
                     />
 
             </LinearLayout>
