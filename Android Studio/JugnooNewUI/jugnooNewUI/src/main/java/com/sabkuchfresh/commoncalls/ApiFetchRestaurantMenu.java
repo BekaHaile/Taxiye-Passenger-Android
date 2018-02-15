@@ -342,6 +342,13 @@ public class ApiFetchRestaurantMenu {
 
                 }
             }
+            if(item.getItemSelectedList().size() > 0){
+                for(ItemSelected itemSaved : item.getItemSelectedList()){
+                    if (itemSaved.getQuantity() > 0) {
+                        itemSaved.setTotalPrice(item.getCustomizeItemsSelectedTotalPriceForItemSelected(itemSaved));
+                    }
+                }
+            }
 
 
         }
