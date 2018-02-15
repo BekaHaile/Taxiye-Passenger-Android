@@ -1,5 +1,6 @@
 package com.sabkuchfresh.adapters;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -59,7 +61,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 
 	@Override
 	public RestaurantReviewsAdapter.ViewHolderReview onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_restaurant_review, parent, false);
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_restaurant_review_new, parent, false);
 		return new ViewHolderReview(v);
 	}
 
@@ -106,6 +108,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			holder.tvReviewTag.setText(review.getTags());
 			holder.tvReviewTag.setVisibility(TextUtils.isEmpty(review.getTags()) ? View.GONE : View.VISIBLE);
 			holder.tvRating.setVisibility(review.getRating() == null ? View.GONE : View.VISIBLE);
+			holder.llRatingMain.setVisibility(review.getRating() == null ? View.GONE : View.VISIBLE);
 			holder.tvReviewMessage.setVisibility(TextUtils.isEmpty(review.getReviewDesc()) ? View.GONE : View.VISIBLE);
 
 			if (review.getRating() != null) {
@@ -116,6 +119,10 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 				} else {
 					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_thumbsdown_small, 0, 0, 0);
 				}
+				activity.setRestaurantRatingStarsToLL(holder.llRating, null,
+						review.getRating(), R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey
+						, null, 0, Color.parseColor(review.getColor()));
+
 			} else {
 				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, ContextCompat.getColor(activity, R.color.text_color_light));
 			}
@@ -421,6 +428,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 		public TextView tvRestName, tvRestReply, tvReplyDateTime;
 		public ImageView ivRestImage;
 		TextView tvReviewFooter;
+		LinearLayout llRating,llRatingMain;
 
 		public ViewHolderReview(View itemView) {
 			super(itemView);
@@ -449,6 +457,8 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			tvReplyDateTime = (TextView) itemView.findViewById(R.id.tvReplyDateTime);
 			ivRestImage = (ImageView) itemView.findViewById(R.id.ivRestImage);
 			tvReviewFooter = (TextView) itemView.findViewById(R.id.tvReviewFooter);
+			llRating = (LinearLayout)itemView.findViewById(R.id.llRating);
+			llRatingMain = (LinearLayout)itemView.findViewById(R.id.llRatingMain);
 		}
 	}
 

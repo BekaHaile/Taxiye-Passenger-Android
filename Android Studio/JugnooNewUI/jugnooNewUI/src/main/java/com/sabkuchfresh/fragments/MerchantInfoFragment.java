@@ -2,6 +2,7 @@ package com.sabkuchfresh.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Typeface;
@@ -717,7 +718,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                             double rating = mUserReview.getRating();
                             activity.setRestaurantRatingStarsToLL(llRatingStars, tvRating,
                                     rating, R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey
-                                    , null, 0);
+                                    , null, 0, Color.parseColor(mUserReview.getColor()));
                         }
 
 
