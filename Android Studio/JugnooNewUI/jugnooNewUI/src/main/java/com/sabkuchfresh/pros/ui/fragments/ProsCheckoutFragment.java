@@ -48,9 +48,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -75,39 +76,39 @@ import retrofit.mime.TypedByteArray;
 public class ProsCheckoutFragment extends Fragment {
 
 	private final String TAG = ProsCheckoutFragment.class.getSimpleName();
-	@Bind(R.id.editTextDeliveryInstructions)
+	@BindView(R.id.editTextDeliveryInstructions)
 	EditText editTextDeliveryInstructions;
-	@Bind(R.id.tvRateCard)
+	@BindView(R.id.tvRateCard)
 	TextView tvRateCard;
-	@Bind(R.id.imageViewAddressType)
+	@BindView(R.id.imageViewAddressType)
 	ImageView imageViewAddressType;
-	@Bind(R.id.textViewAddressName)
+	@BindView(R.id.textViewAddressName)
 	TextView textViewAddressName;
-	@Bind(R.id.textViewAddressValue)
+	@BindView(R.id.textViewAddressValue)
 	TextView textViewAddressValue;
-	@Bind(R.id.relativeLayoutDeliveryAddress)
+	@BindView(R.id.relativeLayoutDeliveryAddress)
 	RelativeLayout relativeLayoutDeliveryAddress;
-	@Bind(R.id.imageViewDeliveryAddressForward)
+	@BindView(R.id.imageViewDeliveryAddressForward)
 	ImageView imageViewDeliveryAddressForward;
-	@Bind(R.id.tvNoAddressAlert)
+	@BindView(R.id.tvNoAddressAlert)
 	TextView tvNoAddressAlert;
-	@Bind(R.id.tvSelectDate)
+	@BindView(R.id.tvSelectDate)
 	TextView tvSelectDate;
-	@Bind(R.id.tvSelectTimeSlot)
+	@BindView(R.id.tvSelectTimeSlot)
 	TextView tvSelectTimeSlot;
-	@Bind(R.id.imageViewCashRadio)
+	@BindView(R.id.imageViewCashRadio)
 	ImageView imageViewCashRadio;
-	@Bind(R.id.relativeLayoutCash)
+	@BindView(R.id.relativeLayoutCash)
 	RelativeLayout relativeLayoutCash;
-	@Bind(R.id.llPaymentOptions)
+	@BindView(R.id.llPaymentOptions)
 	LinearLayout llPaymentOptions;
-	@Bind(R.id.scrollView)
+	@BindView(R.id.scrollView)
 	ScrollView scrollView;
-	@Bind(R.id.linearLayoutRoot)
+	@BindView(R.id.linearLayoutRoot)
 	RelativeLayout linearLayoutRoot;
-	@Bind(R.id.tvProductName)
+	@BindView(R.id.tvProductName)
 	TextView tvProductName;
-	@Bind(R.id.tvTerms)
+	@BindView(R.id.tvTerms)
 	TextView tvTerms;
 	private FreshActivity activity;
 	private ProsProductData.ProsProductDatum prosProductDatum;
@@ -131,6 +132,7 @@ public class ProsCheckoutFragment extends Fragment {
 		prosProductDatum = gson.fromJson(getArguments().getString(Constants.KEY_PRODUCT_DATUM), ProsProductData.ProsProductDatum.class);
 	}
 
+	Unbinder unbinder;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_pros_product_checkout, container, false);
@@ -139,7 +141,7 @@ public class ProsCheckoutFragment extends Fragment {
 		mBus = activity.getBus();
 		activity.fragmentUISetup(this);
 		parseArguments();
-		ButterKnife.bind(this, rootView);
+		unbinder = ButterKnife.bind(this, rootView);
 
 		tvProductName.setText(prosProductDatum.getName());
 
@@ -195,7 +197,7 @@ public class ProsCheckoutFragment extends Fragment {
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		ButterKnife.unbind(this);
+		unbinder.unbind();
 		activity.bRequestBooking.setOnClickListener(null);
 	}
 

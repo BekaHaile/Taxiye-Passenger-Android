@@ -1,20 +1,18 @@
 package product.clicklabs.jugnoo.utils;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 
 import com.facebook.accountkit.PhoneNumber;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import product.clicklabs.jugnoo.R;
 
@@ -26,7 +24,7 @@ public class FBAccountKit {
     private Activity activity;
     private static final int FRAMEWORK_REQUEST_CODE = 1;
     private int nextPermissionsRequestCode = 4000;
-    private final Map<Integer, OnCompleteListener> permissionsListeners = new HashMap<>();
+    private OnCompleteListener completeListener;
 
     public FBAccountKit(Activity activity) {
         this.activity = activity;
@@ -56,115 +54,44 @@ public class FBAccountKit {
         intent.putExtra(
                 AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
                 configuration);
-        OnCompleteListener completeListener = new OnCompleteListener() {
+        completeListener = new OnCompleteListener() {
             @Override
             public void onComplete() {
                 activity.startActivityForResult(intent, FRAMEWORK_REQUEST_CODE);
             }
         };
-        switch (loginType) {
-            case EMAIL:
-                final OnCompleteListener getAccountsCompleteListener = completeListener;
-                completeListener = new OnCompleteListener() {
-                    @Override
-                    public void onComplete() {
-                        requestPermissions(
-                                android.Manifest.permission.GET_ACCOUNTS,
-                                R.string.permissions_get_accounts_title,
-                                R.string.permissions_get_accounts_message,
-                                getAccountsCompleteListener);
-                    }
-                };
-                break;
-            case PHONE:
-                if (configuration.isReceiveSMSEnabled()) {
-                    final OnCompleteListener receiveSMSCompleteListener = completeListener;
-                    completeListener = new OnCompleteListener() {
-                        @Override
-                        public void onComplete() {
-                            requestPermissions(
-                                    android.Manifest.permission.RECEIVE_SMS,
-                                    R.string.permissions_receive_sms_title,
-                                    R.string.permissions_receive_sms_message,
-                                    receiveSMSCompleteListener);
-                        }
-                    };
-                }
-                if (configuration.isReadPhoneStateEnabled()) {
-                    final OnCompleteListener readPhoneStateCompleteListener = completeListener;
-                    completeListener = new OnCompleteListener() {
-                        @Override
-                        public void onComplete() {
-                            requestPermissions(
-                                    android.Manifest.permission.READ_PHONE_STATE,
-                                    R.string.permissions_read_phone_state_title,
-                                    R.string.permissions_read_phone_state_message,
-                                    readPhoneStateCompleteListener);
-                        }
-                    };
-                }
-                break;
-        }
-        completeListener.onComplete();
-    }
 
-    private void requestPermissions(
-            final String permission,
-            final int rationaleTitleResourceId,
-            final int rationaleMessageResourceId,
-            final OnCompleteListener listener) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            if (listener != null) {
-                listener.onComplete();
-            }
+            completeListener.onComplete();
             return;
         }
 
-        checkRequestPermissions(
-                permission,
-                rationaleTitleResourceId,
-                rationaleMessageResourceId,
-                listener);
-    }
-
-    @TargetApi(23)
-    private void checkRequestPermissions(
-            final String permission,
-            final int rationaleTitleResourceId,
-            final int rationaleMessageResourceId,
-            final OnCompleteListener listener) {
-        if (activity.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
-            if (listener != null) {
-                listener.onComplete();
+        String[] permissions = { android.Manifest.permission.READ_PHONE_STATE, android.Manifest.permission.RECEIVE_SMS };
+        int permissionsGranted = 0, rationalePermissions = 0;
+        for (String permission : permissions) {
+            if (ActivityCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED) {
+                permissionsGranted++;
             }
-            return;
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
+                rationalePermissions++;
+            }
         }
-
-        final int requestCode = nextPermissionsRequestCode++;
-        permissionsListeners.put(requestCode, listener);
-
-        if (activity.shouldShowRequestPermissionRationale(permission)) {
-            new AlertDialog.Builder(activity)
-                    .setTitle(rationaleTitleResourceId)
-                    .setMessage(rationaleMessageResourceId)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(final DialogInterface dialog, final int which) {
-                            activity.requestPermissions(new String[] { permission }, requestCode);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(final DialogInterface dialog, final int which) {
-                            // ignore and clean up the listener
-                            permissionsListeners.remove(requestCode);
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
+        if (permissionsGranted == permissions.length) {
+            completeListener.onComplete();
+            return;
+        } else if(rationalePermissions == permissions.length) {
+            completeListener.onComplete();
+            return;
         } else {
-            activity.requestPermissions(new String[]{ permission }, requestCode);
+            ActivityCompat.requestPermissions(activity, permissions, nextPermissionsRequestCode);
         }
     }
 
+    public void onRequestPermissionsResult(final int requestCode,
+                                           final @NonNull String permissions[],
+                                           final @NonNull int[] grantResults) {
+        if (completeListener != null) {
+            completeListener.onComplete();
+        }
+    }
 }

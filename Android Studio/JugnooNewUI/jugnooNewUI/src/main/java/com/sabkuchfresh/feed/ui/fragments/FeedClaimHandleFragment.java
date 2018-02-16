@@ -32,9 +32,10 @@ import com.sabkuchfresh.feed.ui.textwatchers.HandleTextWatcher;
 
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -48,42 +49,42 @@ import retrofit.RetrofitError;
 
 public final class FeedClaimHandleFragment extends FeedBaseFragment implements GAAction {
 
-    @Bind(R.id.edt_claim_handle)
+    @BindView(R.id.edt_claim_handle)
     EditText edtClaimHandle;
-    @Bind(R.id.btn_reserve_spot)
+    @BindView(R.id.btn_reserve_spot)
     Button btnReserveSpot;
-    @Bind(R.id.tv_error)
+    @BindView(R.id.tv_error)
     TextView tvError;
-    @Bind(R.id.tvClaimHandle)
+    @BindView(R.id.tvClaimHandle)
     TextView tvClaimHandle;
-    @Bind(R.id.sv)
+    @BindView(R.id.sv)
     ScrollView sv;
-    @Bind(R.id.llMain)
+    @BindView(R.id.llMain)
     LinearLayout llMain;
-    @Bind(R.id.layout_suggestions)
+    @BindView(R.id.layout_suggestions)
     RelativeLayout layoutHandleSuggestions;
-    @Bind(R.id.tv_suggestion_1)
+    @BindView(R.id.tv_suggestion_1)
     TextView tvSuggestion1;
-    @Bind(R.id.tv_suggestion_2)
+    @BindView(R.id.tv_suggestion_2)
     TextView tvSuggestion2;
-    @Bind(R.id.tv_suggestion_3)
+    @BindView(R.id.tv_suggestion_3)
     TextView tvSuggestion3;
-    @Bind(R.id.label_suggestions)
+    @BindView(R.id.label_suggestions)
     TextView labelSuggestions;
-    @Bind(R.id.iv_refresh_suggestions)
+    @BindView(R.id.iv_refresh_suggestions)
     ImageView ivRefreshSuggestions;
-    @Bind(R.id.sv_suggestions)
+    @BindView(R.id.sv_suggestions)
     HorizontalScrollView scrollViewSuggestions;
     private ApiCommon<HandleSuggestionsResponse> handleSuggestionsAPI;
     private RotateAnimation rotateAnimation;
     private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
 
-
+    Unbinder unbinder;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_feed_claim_handle, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
         btnReserveSpot.setEnabled(false);
         scrollViewSuggestions.setHorizontalScrollBarEnabled(false);
         ivRefreshSuggestions.setOnClickListener(new View.OnClickListener() {
@@ -294,7 +295,7 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
         if (handleSuggestionsAPI != null) {
             handleSuggestionsAPI.setCancelled(true);
         }
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @OnClick(R.id.btn_reserve_spot)

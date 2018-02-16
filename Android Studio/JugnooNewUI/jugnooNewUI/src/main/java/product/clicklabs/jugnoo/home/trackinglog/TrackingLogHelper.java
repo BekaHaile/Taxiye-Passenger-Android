@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.home.trackinglog;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Environment;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,7 +39,7 @@ public class TrackingLogHelper {
 
 	//79152766
 
-	public void generateTrackLogFile(String engagementId){
+	private void generateTrackLogFile(String engagementId){
 		try {
 			JSONArray driverLocations = MyApplication.getInstance().getDatabase2().getDriverLocations(Integer.parseInt(engagementId));
 			JSONArray trackingLogs = MyApplication.getInstance().getDatabase2().getTrackingLogs(Integer.parseInt(engagementId));
@@ -61,7 +60,7 @@ public class TrackingLogHelper {
 	public void uploadAllTrackLogs(){
 		try{
 			ArrayList<Integer> engagementIds = MyApplication.getInstance().getDatabase2().getDistinctEngagementIdsFromDriverLocations();
-			for(Integer engagementId : engagementIds){
+			for (Integer engagementId : engagementIds) {
 				generateTrackLogFile(String.valueOf(engagementId));
 			}
 		} catch (Exception e){
@@ -118,7 +117,7 @@ public class TrackingLogHelper {
 
 
 
-	public void checkAndUploadRemainingFiles(String accessToken){
+	void checkAndUploadRemainingFiles(String accessToken){
 		try{
 			File[] files = getTrackingLogFolder().listFiles();
 			if(files.length == 0){
@@ -169,10 +168,10 @@ public class TrackingLogHelper {
 
 	public void startSyncService(PassengerScreenMode mode, String accessToken){
 		try{
-			if(mode != PassengerScreenMode.P_REQUEST_FINAL
-					&& mode != PassengerScreenMode.P_DRIVER_ARRIVED){
+			if (mode != PassengerScreenMode.P_REQUEST_FINAL
+					&& mode != PassengerScreenMode.P_DRIVER_ARRIVED) {
 				File[] files = getTrackingLogFolder().listFiles();
-				if(files.length == 0){
+				if (files.length == 0) {
 					return;
 				}
 				Intent intent = new Intent(context, TrackingLogSyncIntentService.class);

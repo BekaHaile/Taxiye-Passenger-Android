@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -8,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -47,7 +47,7 @@ import product.clicklabs.jugnoo.wallet.WalletCore;
 /**
  * Created by socomo20 on 8/22/15.
  */
-public class MyApplication extends Application {
+public class MyApplication extends MultiDexApplication {
 
     public static final String TAG = MyApplication.class
             .getSimpleName();

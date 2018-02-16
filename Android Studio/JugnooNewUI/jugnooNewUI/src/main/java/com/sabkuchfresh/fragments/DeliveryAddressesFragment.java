@@ -1,14 +1,16 @@
 package com.sabkuchfresh.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
@@ -53,9 +55,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -64,6 +67,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
+import product.clicklabs.jugnoo.base.BaseFragment;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -77,6 +81,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
+import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
@@ -88,7 +93,7 @@ import retrofit.client.Response;
 /**
  * Created by ankit on 14/09/16.
  */
-public class DeliveryAddressesFragment extends Fragment implements GAAction,
+public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GACategory{
 
     private View rootView;
@@ -107,17 +112,17 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     private TextView tvDeliveryAddress;
     private SavedPlacesAdapter savedPlacesAdapter, savedPlacesAdapterRecent;
     private NestedScrollView scrollViewSuggestions;
-    @Bind(R.id.rlMarkerPin)
+    @BindView(R.id.rlMarkerPin)
     RelativeLayout rlMarkerPin;
-    @Bind(R.id.bNext)
+    @BindView(R.id.bNext)
     Button bNext;
-    @Bind(R.id.rlMain)
+    @BindView(R.id.rlMain)
     RelativeLayout rlMain;
-    @Bind(R.id.llLocationsContainer)
+    @BindView(R.id.llLocationsContainer)
     LinearLayout llLocationsContainer;
-    @Bind(R.id.llSetAnywhere)
+    @BindView(R.id.llSetAnywhere)
     LinearLayout llSetAnywhere;
-    @Bind(R.id.ll_set_location_on_map)
+    @BindView(R.id.ll_set_location_on_map)
     LinearLayout llSetLocationOnMap;
 
 
@@ -142,14 +147,29 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
     @OnClick(R.id.bMyLocation)
     void zoomToCurrentLocation(){
+        if (PermissionCommon.hasPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            animateToCurrent();
+        } else {
+            requestLocationPermissionExplicit();
+        }
+    }
+
+    private void animateToCurrent() {
         try {
-            if(googleMap != null
-                    && MapUtils.distance(googleMap.getCameraPosition().target,
-                    getCurrentLatLng()) > 10){
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14), 300, null);
-            }
+            if (googleMap != null
+					&& MapUtils.distance(googleMap.getCameraPosition().target,
+					getCurrentLatLng()) > 10) {
+				googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14), 300, null);
+			}
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void permissionGranted(int requestCode) {
+        if(requestCode == REQUEST_CODE_PERMISSION_LOCATION){
+            animateToCurrent();
         }
     }
 
@@ -175,11 +195,12 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         }
     }
 
+    Unbinder unbinder;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_delivery_addresses, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         activity = getActivity();
         mBus = MyApplication.getInstance().getBus();
@@ -455,7 +476,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 DeliveryAddressesFragment.this.googleMap = googleMap;
                 if (googleMap != null) {
                     googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                    googleMap.setMyLocationEnabled(true);
+                    enableMapMyLocation(googleMap);
                     googleMap.getUiSettings().setMyLocationButtonEnabled(false);
                     setupMapAndButtonMargins();
                     moveCameraToCurrent();
@@ -562,6 +583,12 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         return rootView;
     }
 
+    private void enableMapMyLocation(GoogleMap googleMap) {
+        if(googleMap != null && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+			googleMap.setMyLocationEnabled(true);
+		}
+    }
+
     private void showProgressWheelDeliveryPin() {
         if(activity instanceof AddPlaceActivity && ((AddPlaceActivity) activity).getTopFragment() instanceof DeliveryAddressesFragment
                 || (activity instanceof FreshActivity && ((FreshActivity) activity).getTopFragment() instanceof DeliveryAddressesFragment)){
@@ -579,7 +606,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(((AddPlaceActivity) activity).getSearchResult().getLatLng(), 14));
             } else {
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14));
-                zoomToCurrentLocation();
+                animateToCurrent();
             }
         }
     }
@@ -677,6 +704,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
     public void onResume() {
         super.onResume();
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        enableMapMyLocation(googleMap);
     }
 
     @Override
@@ -1038,7 +1066,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
 

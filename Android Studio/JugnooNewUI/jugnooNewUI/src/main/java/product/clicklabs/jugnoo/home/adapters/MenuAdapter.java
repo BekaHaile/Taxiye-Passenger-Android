@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.analytics.GAAction;
@@ -31,6 +30,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
+import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.ChangeLanguageActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -620,8 +620,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             }
 
             else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(tag)){
-                FuguConfig.getInstance().showConversations(activity,activity.getString(R.string.fugu_support_title));
-
+                if(activity instanceof BaseAppCompatActivity){
+                    ((BaseAppCompatActivity)activity).openFugu();
+                }
             }
             else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, SupportMailActivity.class));

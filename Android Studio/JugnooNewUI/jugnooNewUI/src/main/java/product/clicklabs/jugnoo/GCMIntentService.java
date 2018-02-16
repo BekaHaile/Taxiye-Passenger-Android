@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -56,6 +57,7 @@ import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
@@ -72,13 +74,12 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
     }
 
 
-    @SuppressWarnings("deprecation")
     private void notificationManager(Context context, String title, String message, int playSound) {
 		clearNotifications(context);
         try {
             long when = System.currentTimeMillis();
 
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = getNotificationManager(this, Constants.NOTIF_CHANNEL_DEFAULT);
 
 			Intent notificationIntent;
 			if(HomeActivity.appInterruptHandler != null){
@@ -90,12 +91,13 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context,Constants.NOTIF_CHANNEL_DEFAULT);
             builder.setAutoCancel(true);
             builder.setContentTitle(title);
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
             builder.setTicker(message);
+            builder.setChannelId(Constants.NOTIF_CHANNEL_DEFAULT);
 			setPlaySound(builder, playSound);
 
             builder.setWhen(when);
@@ -137,7 +139,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 
 	// 0, ProductType.AUTO.getOrdinal(), 0, -1
-    @SuppressWarnings("deprecation")
     private void notificationManagerCustomID(Context context, String title, String message, int notificationId, int deepindex,
 											 Bitmap bitmap, String url, int playSound, int showDialog, int showPush, int tabIndex, int flag,
 											 int orderId, int productType, int campaignId, int postId, int postNotificationId) {
@@ -149,7 +150,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
             long when = System.currentTimeMillis();
 
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = getNotificationManager(this, Constants.NOTIF_CHANNEL_DEFAULT);
 
             Intent notificationIntent = new Intent();
 			notificationIntent.setAction(Intent.ACTION_VIEW); // jungooautos://app?deepindex=0
@@ -176,9 +177,10 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context,Constants.NOTIF_CHANNEL_DEFAULT);
             builder.setAutoCancel(true);
             builder.setContentTitle(title);
+			builder.setChannelId(Constants.NOTIF_CHANNEL_DEFAULT);
 
 			if(bitmap == null){
 				builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
@@ -218,14 +220,33 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
     }
 
-	@SuppressWarnings("deprecation")
+
+    public static NotificationManager getNotificationManager(final Context context, String channel){
+
+		NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			// The user-visible name of the channel.
+			CharSequence name = context.getString(R.string.notification_channel_default);
+			// The user-visible description of the channel.
+			String description = context.getString(R.string.notification_channel_description_default);
+			int importance = NotificationManager.IMPORTANCE_HIGH;
+			NotificationChannel mChannel = new NotificationChannel(channel, name, importance);
+			// Configure the notification channel.
+			mChannel.setDescription(description);
+			notificationManager.createNotificationChannel(mChannel);
+		}
+        return notificationManager;
+	}
+
+
 	private void generateNotificationForCall(Context context, String title, String message, int notificationId,
 											 String callNumber, String eta, int playSound, String clientID) {
 
 		try {
 			long when = System.currentTimeMillis();
 
-			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+			NotificationManager notificationManager = getNotificationManager(this, Constants.NOTIF_CHANNEL_DEFAULT);
 
 			Intent notificationIntent = new Intent();
 			Log.d("clientID", "clientID = "+clientID);
@@ -251,7 +272,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 			PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-			NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+			NotificationCompat.Builder builder = new NotificationCompat.Builder(context,Constants.NOTIF_CHANNEL_DEFAULT);
 			if(TextUtils.isEmpty(clientID)) {
 				builder.setAutoCancel(false);
 			} else {
@@ -260,6 +281,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			builder.setContentTitle(title);
 			builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
 			builder.setContentText(message);
+			builder.setChannelId(Constants.NOTIF_CHANNEL_DEFAULT);
 			builder.setTicker(message);
 			setPlaySound(builder, playSound);
 			builder.setWhen(when);
@@ -297,14 +319,14 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 		}
 	}
 
-    @SuppressWarnings("deprecation")
+
     private void notificationManagerCustomIDAnotherApp(Context context, String title, String message,
 													   int notificationId, String packageName, int playSound) {
 
         try {
             long when = System.currentTimeMillis();
 
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = getNotificationManager(this, Constants.NOTIF_CHANNEL_DEFAULT);
 
             Intent appOpenIntent;
             try {
@@ -322,12 +344,13 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
             appOpenIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             PendingIntent intent = PendingIntent.getActivity(context, 0, appOpenIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context,Constants.NOTIF_CHANNEL_DEFAULT);
             builder.setAutoCancel(true);
             builder.setContentTitle(title);
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
             builder.setTicker(message);
+			builder.setChannelId(Constants.NOTIF_CHANNEL_DEFAULT);
 			setPlaySound(builder, playSound);
             builder.setWhen(when);
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
@@ -739,15 +762,17 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 
 					}else if (PushFlags.CUSTOMER_EMERGENCY_LOCATION.getOrdinal() == flag){
-						if(!Utils.isServiceRunning(this, LocationUpdateService.class.getName())) {
-							Intent intent = new Intent(this, LocationUpdateService.class);
-							intent.putExtra(KEY_ONE_SHOT, true);
-							startService(intent);
-						} else{
-							Intent intent1 = new Intent();
-							intent1.setAction(ACTION_LOCATION_UPDATE);
-							intent1.putExtra(KEY_EMERGENCY_LOC, true);
-							sendBroadcast(intent1);
+						if(PermissionCommon.hasPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+							if (!Utils.isServiceRunning(this, LocationUpdateService.class.getName())) {
+								Intent intent = new Intent(this, LocationUpdateService.class);
+								intent.putExtra(KEY_ONE_SHOT, true);
+								startService(intent);
+							} else {
+								Intent intent1 = new Intent();
+								intent1.setAction(ACTION_LOCATION_UPDATE);
+								intent1.putExtra(KEY_EMERGENCY_LOC, true);
+								sendBroadcast(intent1);
+							}
 						}
 					} else if (PushFlags.ORDER_DISPATCH.getOrdinal() == flag) {
 
@@ -874,20 +899,24 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
     }
 
 	private void startLocationUpdateService(){
-		if(!"".equalsIgnoreCase(Prefs.with(this).getString(SP_CURRENT_ENGAGEMENT_ID, ""))
-				&& Prefs.with(this).getLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
-				LOCATION_UPDATE_INTERVAL) > 0
-				&& !Utils.isServiceRunning(this, LocationUpdateService.class.getName())){
-			Intent intent = new Intent(this, LocationUpdateService.class);
-			intent.putExtra(KEY_ONE_SHOT, false);
-			startService(intent);
+		if(PermissionCommon.hasPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+			if (!"".equalsIgnoreCase(Prefs.with(this).getString(SP_CURRENT_ENGAGEMENT_ID, ""))
+					&& Prefs.with(this).getLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
+					LOCATION_UPDATE_INTERVAL) > 0
+					&& !Utils.isServiceRunning(this, LocationUpdateService.class.getName())) {
+				Intent intent = new Intent(this, LocationUpdateService.class);
+				intent.putExtra(KEY_ONE_SHOT, false);
+				startService(intent);
+			}
 		}
 	}
 
 	private void stopLocationUpdateService(){
 		Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_INITIAL.getOrdinal());
 		Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, "");
-		stopService(new Intent(this, LocationUpdateService.class));
+		Intent intent = new Intent(this, LocationUpdateService.class);
+		intent.putExtra(STOP_FOREGROUND, 1);
+		startService(intent);
 	}
 
 	private void incrementPushCounter(JSONObject jObj, int flag){
@@ -1009,7 +1038,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 	}
 
 	private void hideSmallIcon(Notification notification){
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
 			int smallIconViewId = getResources().getIdentifier("right_icon", "id", android.R.class.getPackage().getName());
 
 			if (smallIconViewId != 0) {

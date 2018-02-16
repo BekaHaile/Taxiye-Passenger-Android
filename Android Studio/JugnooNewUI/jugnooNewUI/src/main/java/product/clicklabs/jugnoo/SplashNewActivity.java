@@ -1,23 +1,20 @@
 package product.clicklabs.jugnoo;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
-import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -62,9 +59,6 @@ import com.facebook.CallbackManager;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.PhoneNumber;
-import com.facebook.accountkit.ui.AccountKitActivity;
-import com.facebook.accountkit.ui.AccountKitConfiguration;
-import com.facebook.accountkit.ui.LoginType;
 import com.facebook.appevents.AppEventsLogger;
 import com.fugu.FuguConfig;
 import com.google.android.gms.common.ConnectionResult;
@@ -118,6 +112,7 @@ import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.OwnerInfo;
+import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
@@ -136,7 +131,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		return false;
 	}
 
-	//adding drop location
 
 	RelativeLayout root, rlSplashLogo;
 	LinearLayout linearLayoutMain, llLoginContainer;
@@ -236,7 +230,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	private static final int FRAMEWORK_REQUEST_CODE = 1;
 
 	private int nextPermissionsRequestCode = 4000;
-	private final Map<Integer, OnCompleteListener> permissionsListeners = new HashMap<>();
 	private FBAccountKit fbAccountKit;
 	private EditText editTextPhoneNumber;
 	private TextView textViewPhoneNumberRequired;
@@ -1271,7 +1264,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			initiateDeviceInfoVariables();
 			startService(new Intent(this, PushPendingCallsService.class));
-			showLocationEnableDialog();
 
 			//getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
@@ -1305,7 +1297,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		}
 
 		logSome();
-
+		showLocationEnableDialog();
 
         if(Utils.isAppInstalled(this, POKEMON_GO_APP_PACKAGE)
                 && Prefs.with(this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, -1) == -1){
@@ -1317,17 +1309,19 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverDeviceToken,
 				new IntentFilter(INTENT_ACTION_DEVICE_TOKEN_UPDATE));
 
-		llSignupMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llSignupMain, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
+        if(llSignupMain != null) {
+			llSignupMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llSignupMain, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
+				@Override
+				public void keyboardOpened() {
 
-			}
+				}
 
-			@Override
-			public void keyBoardClosed() {
+				@Override
+				public void keyBoardClosed() {
 
-			}
-		}));
+				}
+			}));
+		}
 
 		llLoginContainer.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llLoginContainer, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
 			@Override
@@ -1523,12 +1517,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	public void onRequestPermissionsResult(final int requestCode,
 										   final @NonNull String permissions[],
 										   final @NonNull int[] grantResults) {
-		final OnCompleteListener permissionsListener = permissionsListeners.remove(requestCode);
-		if (permissionsListener != null
-				&& grantResults.length > 0
-				&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-			permissionsListener.onComplete();
-		}
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		fbAccountKit.onRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
 
 	private void moveViewToScreenCenter(final View view){
@@ -2023,7 +2013,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	};
 
 	public void getDeviceToken() {
-		boolean mockLocationEnabled = Utils.mockLocationEnabled(MyApplication.getInstance().getLocationFetcher().getLocationUnchecked());
+		boolean mockLocationEnabled = Utils.mockLocationEnabled(getLocationFetcher().getLocationUnchecked());
 		if (mockLocationEnabled) {
 			DialogPopup.alertPopupWithListener(SplashNewActivity.this, "",
 					getResources().getString(R.string.disable_mock_location),
@@ -2031,7 +2021,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 						@Override
 						public void onClick(View v) {
-							MyApplication.getInstance().getLocationFetcher().destroy();
+							getLocationFetcher().destroy();
 							startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
 							finish();
 						}
@@ -2110,7 +2100,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	protected void onResume() {
 		super.onResume();
 
-		MyApplication.getInstance().getLocationFetcher().connect(locationUpdate, 1000);
+		requestLocationUpdatesExplicit();
 
 		retryAccessTokenLogin();
 		resumed = true;
@@ -2125,6 +2115,10 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
 
 	public void retryAccessTokenLogin() {
 		try {
@@ -2137,16 +2131,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	}
 
 
-	@Override
-	protected void onPause() {
-		try {
-			MyApplication.getInstance().getLocationFetcher().destroy();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		super.onPause();
-
-	}
 
 	@Override
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
@@ -2168,7 +2152,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	private void afterDataReceived(int requestCode, int resultCode, Intent data) {
 		if (LocationInit.LOCATION_REQUEST_CODE == requestCode) {
-            if (0 == resultCode) {
+            if (RESULT_CANCELED == resultCode) {
                 Data.locationSettingsNoPressed = true;
                 Data.locationAddressSettingsNoPressed = true;
             }
@@ -2218,8 +2202,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		if (!"".equalsIgnoreCase(pair.first)) {
 			final String accessToken = pair.first;
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
 			getApiLoginUsingAccessToken().hit(accessToken, Data.loginLatitude, Data.loginLongitude, null,
 					false, new ApiLoginUsingAccessToken.Callback() {
@@ -2764,15 +2748,31 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 
-
 	private void showLocationEnableDialog() {
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if (resp != ConnectionResult.SUCCESS) {
 			Log.e("Google Play Service Error ", "=" + resp);
 			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
 		} else {
-			LocationInit.showLocationAlertDialog(this);
+			if (PermissionCommon.hasPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+				LocationInit.showLocationAlertDialog(this);
+			}
+			requestLocationPermissionAndUpdates();
 		}
+	}
+
+	@Override
+	public void permissionGranted(int requestCode) {
+		super.permissionGranted(requestCode);
+		if (requestCode == REQUEST_CODE_PERMISSION_LOCATION) {
+			LocationInit.showLocationAlertDialog(this);
+			getLocationFetcher().connect(this, 10000);
+		}
+	}
+
+	@Override
+	public boolean shouldRequestLocationPermission() {
+		return true;
 	}
 
 	private void initiateDeviceInfoVariables() {
@@ -2906,8 +2906,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 			HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
 			params.put("phone_no", phoneNumber);
 			params.put(Constants.KEY_COUNTRY_CODE, countryCode);
@@ -3038,8 +3038,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
 			if(googleRegister){
 				params.put("google_access_token", Data.googleSignInAccount.getIdToken());
@@ -3195,8 +3195,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
 
 			params.put("user_fb_id", Data.facebookUserData.fbId);
@@ -3312,8 +3312,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
 			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
@@ -3567,7 +3567,10 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			phoneFetchedName = "";
 			phoneFetchedEmail = "";
 			TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-			String mPhoneNumber = tMgr.getLine1Number();
+			String mPhoneNumber = "";
+			if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+				mPhoneNumber = tMgr.getLine1Number();
+			}
 			editTextSPhone.setText(mPhoneNumber);
 			SplashNewActivity.registerationType = registerationType;
 			if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
@@ -3728,8 +3731,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
             HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
             params.put("user_name", name);
             params.put("phone_no", phoneNo);
@@ -3849,8 +3852,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
             HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
             params.put("user_fb_id", Data.facebookUserData.fbId);
             params.put("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
@@ -3964,8 +3967,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
             HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
             params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
@@ -4186,8 +4189,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
             HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
             params.put("email", email);
             params.put("password", "");
@@ -4384,6 +4387,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
         private String getSmsFindVerificationLink(long diff) {
             String link = "";
             try {
+            	if(!PermissionCommon.hasPermission(SplashNewActivity.this, Manifest.permission.READ_SMS)){
+            		return "";
+				}
                 Uri uri = Uri.parse("content://sms/inbox");
                 long now = System.currentTimeMillis();
                 long last1 = now - diff;    //in millis
@@ -4463,13 +4469,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		unSelected3.setImageResource(R.drawable.ic_radio_button_normal);
 	}
 
-	private LocationUpdate locationUpdate = new LocationUpdate() {
-		@Override
-		public void onLocationChanged(Location location) {
-			Data.loginLatitude = location.getLatitude();
-			Data.loginLongitude = location.getLongitude();
-		}
-	};
 
 
 	String phoneNoToFillInInHouseLogin = "";

@@ -2,11 +2,10 @@ package com.sabkuchfresh.fragments;
 
 import android.Manifest;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -53,6 +52,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
@@ -68,7 +68,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class RestaurantAddReviewFragment extends Fragment implements GAAction {
+public class RestaurantAddReviewFragment extends Fragment implements GAAction, PermissionCommon.PermissionListener {
 
     private final String TAG = RestaurantAddReviewFragment.class.getSimpleName();
 
@@ -103,6 +103,8 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     private boolean isKeyboardOpen = true;
     private Float prefilledRating;
     private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
+    private final static int REQ_CODE_PERMISSION_IMAGE = 1002;
+    private PermissionCommon mPermissionCommon;
 
     public static RestaurantAddReviewFragment newInstance(int restaurantId,float rating) {
         RestaurantAddReviewFragment fragment = new RestaurantAddReviewFragment();
@@ -123,7 +125,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_restaurant_add_review, container, false);
-
+        mPermissionCommon = new PermissionCommon(this);
         fetchArguments();
 
         activity = (FreshActivity) getActivity();
@@ -278,42 +280,31 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
         ibAccessCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                if(PermissionChecker.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED ||
-                   PermissionChecker.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED)
-                {
-                    if (permissionsRequest==null) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            permissionsRequest = new String[2];
-                            permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
-                            permissionsRequest[1]=Manifest.permission.READ_EXTERNAL_STORAGE;
-                        }
-                        {
-                          permissionsRequest = new String[1];
-                          permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
-                       }
-                    }
-
-
-                      (RestaurantAddReviewFragment.this).requestPermissions(permissionsRequest, 20);
-                      return;
-                }
-
-
-                etFeedback.setText(etFeedback.getText().toString().trim());
-                int alreadyPresent = objectList == null ? 0 : objectList.size();
-                if(picker==null){
-                    picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
-                }
-
-
-                picker.setLimit(maxNoImages -alreadyPresent);
-                picker.startActivity(RestaurantAddReviewFragment.this,activity,REQUEST_CODE_SELECT_IMAGES);
-
+                pickImage();
 
             }
         });
+    }
+
+    private void pickImage(){
+
+        if(mPermissionCommon.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+
+            etFeedback.setText(etFeedback.getText().toString().trim());
+            int alreadyPresent = objectList == null ? 0 : objectList.size();
+            if(picker==null){
+                picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
+            }
+
+            picker.setLimit(maxNoImages -alreadyPresent);
+            picker.startActivity(RestaurantAddReviewFragment.this,activity,REQUEST_CODE_SELECT_IMAGES);
+
+        }
+        else {
+            mPermissionCommon.getPermission(REQ_CODE_PERMISSION_IMAGE,false,false,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+
     }
 
 
@@ -740,7 +731,25 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction {
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionCommon.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
     public View getFocusEditText() {
         return etFeedback;
+    }
+
+    @Override
+    public void permissionGranted(final int requestCode) {
+        if(requestCode == REQ_CODE_PERMISSION_IMAGE){
+            pickImage();
+        }
+    }
+
+    @Override
+    public void permissionDenied(final int requestCode) {
+
     }
 }

@@ -21,7 +21,7 @@ import com.sabkuchfresh.analytics.GAUtils;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -129,15 +129,15 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 	}
 
 	class ViewHolder extends RecyclerView.ViewHolder {
-		@Bind(R.id.vMultipleOffersBg)
+		@BindView(R.id.vMultipleOffersBg)
 		View vMultipleOffersBg;
-		@Bind(R.id.textViewCouponTitle)
+		@BindView(R.id.textViewCouponTitle)
 		TextView textViewCouponTitle;
-		@Bind(R.id.tvPromoCount)
+		@BindView(R.id.tvPromoCount)
 		TextView tvPromoCount;
-		@Bind(R.id.relative)
+		@BindView(R.id.relative)
 		RelativeLayout relative;
-		@Bind(R.id.textViewCouponExpiry)
+		@BindView(R.id.textViewCouponExpiry)
 		TextView textViewCouponExpiry;
 
 		ViewHolder(final View view, final ItemListener itemListener) {

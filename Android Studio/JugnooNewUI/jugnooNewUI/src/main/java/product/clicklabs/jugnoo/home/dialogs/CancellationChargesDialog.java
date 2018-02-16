@@ -40,7 +40,6 @@ public class CancellationChargesDialog {
 				callback.onYes();
 			} else {
 				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
 				dialog.setContentView(R.layout.dialog_cancellation_charges);
 
 				RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);

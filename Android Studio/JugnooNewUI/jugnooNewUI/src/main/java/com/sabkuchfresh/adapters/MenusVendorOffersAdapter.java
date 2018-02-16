@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
 
@@ -97,9 +97,9 @@ public class MenusVendorOffersAdapter extends PagerAdapter {
 	}
 
 	class ViewHolderVendorOffer{
-		@Bind(R.id.ivRestImage)
+		@BindView(R.id.ivRestImage)
 		ImageView ivRestImage;
-		@Bind(R.id.relative)
+		@BindView(R.id.relative)
 		RelativeLayout relative;
 
 		ViewHolderVendorOffer(View itemView) {

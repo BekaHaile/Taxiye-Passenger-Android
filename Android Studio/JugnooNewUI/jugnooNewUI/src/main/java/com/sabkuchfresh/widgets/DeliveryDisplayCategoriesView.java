@@ -6,21 +6,18 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.adapters.DeliveryDisplayCategoriesAdpater;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
-import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import product.clicklabs.jugnoo.R;
 
 /**
@@ -31,17 +28,17 @@ public class DeliveryDisplayCategoriesView extends RecyclerView.ViewHolder {
 
     private Activity activity;
     public View rootView;
-    @Bind(R.id.recycler_categories)
+    @BindView(R.id.recycler_categories)
     RecyclerView rvCategories;
-    @Bind(R.id.iv_category_arrow)
+    @BindView(R.id.iv_category_arrow)
     ImageView ivArrow;
-    @Bind(R.id.tv_category_name)
+    @BindView(R.id.tv_category_name)
     TextView tvCategoryName;
-    @Bind(R.id.label_select_category)
+    @BindView(R.id.label_select_category)
     TextView tvSelectCategory;
-   /* @Bind(R.id. view_bottom_blank)
+   /* @BindView(R.id. view_bottom_blank)
     View viewBottomblank;*/
-    @Bind(R.id.layout_choose_category)
+    @BindView(R.id.layout_choose_category)
     RelativeLayout layoutChooseCategory;
     private Callback callback;
     private DeliveryDisplayCategoriesAdpater deliveryDisplayCategoriesAdpater;

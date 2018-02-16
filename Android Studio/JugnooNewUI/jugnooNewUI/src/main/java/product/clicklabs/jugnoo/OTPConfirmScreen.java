@@ -1,10 +1,10 @@
 package product.clicklabs.jugnoo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -43,6 +43,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -294,7 +295,8 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
             }
         }, 100);
 
-    }
+		requestReceiveSMSPermission();
+	}
 
     private void startOTPTimer() {
         try {
@@ -394,11 +396,13 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
     protected void onResume() {
         super.onResume();
 
-        Prefs.with(this).save(SP_OTP_SCREEN_OPEN, OTPConfirmScreen.class.getName());
-        Utils.enableSMSReceiver(this);
+		Prefs.with(this).save(SP_OTP_SCREEN_OPEN, OTPConfirmScreen.class.getName());
+		if(PermissionCommon.hasPermission(this, Manifest.permission.RECEIVE_SMS)) {
+			Utils.enableSMSReceiver(this);
+		}
 
-        MyApplication.getInstance().getLocationFetcher().connect(locationUpdate, 1000);
-        HomeActivity.checkForAccessTokenChange(this);
+		requestLocationPermissionAndUpdates();
+		HomeActivity.checkForAccessTokenChange(this);
 
     }
 
@@ -419,17 +423,12 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
     }
 
 
-    @Override
-    protected void onPause() {
-        Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
-        Utils.disableSMSReceiver(this);
-        try {
-            MyApplication.getInstance().getLocationFetcher().destroy();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        super.onPause();
-    }
+	@Override
+	protected void onPause() {
+		Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
+		Utils.disableSMSReceiver(this);
+		super.onPause();
+	}
 
     private void showErrorOnMissedCallBack() {
         if (runAfterDelay) {
@@ -447,8 +446,8 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
 
             HashMap<String, String> params = new HashMap<>();
 
-            Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-            Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+				Data.loginLatitude = getLocationFetcher().getLatitude();
+				Data.loginLongitude = getLocationFetcher().getLongitude();
 
             params.put("phone_no", phoneNumber);
             params.put(KEY_COUNTRY_CODE, countryCode);
@@ -550,8 +549,8 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
             DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
             HashMap<String, String> params = new HashMap<>();
 
-            Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-            Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
             params.put("phone_no", phoneNumber);
             params.put("device_token", MyApplication.getInstance().getDeviceToken());
@@ -595,18 +594,20 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
                         JSONObject jObj = new JSONObject(responseStr);
                         int flag = jObj.getInt("flag");
 
-                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                            if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                DialogPopup.dismissLoadingDialog();
-                                if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-                                    Utils.enableSMSReceiver(OTPConfirmScreen.this);
-                                    startOTPTimer();
-                                }
-                            } else {
-                                DialogPopup.alertPopup(activity, "", jObj.optString("error"));
-                            }
-                            DialogPopup.dismissLoadingDialog();
-                        }
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+								DialogPopup.dismissLoadingDialog();
+								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+									if(PermissionCommon.hasPermission(activity, Manifest.permission.RECEIVE_SMS)) {
+										Utils.enableSMSReceiver(OTPConfirmScreen.this);
+									}
+									startOTPTimer();
+								}
+							} else {
+								DialogPopup.alertPopup(activity, "", jObj.optString("error"));
+							}
+							DialogPopup.dismissLoadingDialog();
+						}
 
 
                     } catch (Exception e) {
@@ -635,8 +636,8 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
 
                 HashMap<String, String> params = new HashMap<>();
 
-                Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-                Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+				Data.loginLatitude = getLocationFetcher().getLatitude();
+				Data.loginLongitude = getLocationFetcher().getLongitude();
 
 
                 params.put("user_fb_id", facebookRegisterData.fbId);
@@ -741,8 +742,8 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
 
                 HashMap<String, String> params = new HashMap<>();
 
-                Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-                Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+				Data.loginLatitude = getLocationFetcher().getLatitude();
+				Data.loginLongitude = getLocationFetcher().getLongitude();
 
                 params.put("user_google_id", googleRegisterData.id);
                 params.put("email", googleRegisterData.email);
@@ -1103,8 +1104,8 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
 
             HashMap<String, String> params = new HashMap<>();
 
-            Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-            Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
             if (isPhoneNumber) {
                 params.put("phone_no", emailId);
@@ -1211,8 +1212,8 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
 
             HashMap<String, String> params = new HashMap<>();
 
-            Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-            Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
 
             params.put("user_fb_id", Data.facebookUserData.fbId);
@@ -1317,8 +1318,8 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
 
             HashMap<String, String> params = new HashMap<>();
 
-            Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-            Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
             params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
@@ -1413,13 +1414,6 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
 
     }
 
-    private LocationUpdate locationUpdate = new LocationUpdate() {
-        @Override
-        public void onLocationChanged(Location location) {
-            Data.loginLatitude = location.getLatitude();
-            Data.loginLongitude = location.getLongitude();
-        }
-    };
 
 
     private void verifyClick(String otpCode, EditText editTextOTP) {

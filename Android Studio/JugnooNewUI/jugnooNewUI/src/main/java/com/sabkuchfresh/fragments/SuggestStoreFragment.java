@@ -3,13 +3,11 @@ package com.sabkuchfresh.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,14 +38,16 @@ import com.sabkuchfresh.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.RetrofitError;
 import retrofit.mime.MultipartTypedOutput;
@@ -60,36 +60,36 @@ import static android.app.Activity.RESULT_OK;
  * Created by cl-macmini-01 on 1/23/18.
  */
 
-public class SuggestStoreFragment extends Fragment {
+public class SuggestStoreFragment extends Fragment implements PermissionCommon.PermissionListener {
 
     public static final int ID_SELECT_CATEGORY = -1;
-    @Bind(R.id.edtBusinessName)
+    @BindView(R.id.edtBusinessName)
     EditText edtBusinessName;
-    @Bind(R.id.tvAddress)
+    @BindView(R.id.tvAddress)
     TextView tvAddress;
-    @Bind(R.id.spCategory)
+    @BindView(R.id.spCategory)
     Spinner spCategory;
-    @Bind(R.id.edtPhone)
+    @BindView(R.id.edtPhone)
     EditText edtPhone;
-    @Bind(R.id.edtTimings)
+    @BindView(R.id.edtTimings)
     EditText edtTimings;
-    @Bind(R.id.cvUploadImages)
+    @BindView(R.id.cvUploadImages)
     CardView cvUploadImages;
-    @Bind(R.id.cvImages)
+    @BindView(R.id.cvImages)
     CardView cvImages;
-    @Bind(R.id.ivUploadImage)
+    @BindView(R.id.ivUploadImage)
     ImageView ivUploadImage;
-    @Bind(R.id.rvImages)
+    @BindView(R.id.rvImages)
     RecyclerView rvImages;
-    @Bind(R.id.edtNotes)
+    @BindView(R.id.edtNotes)
     EditText edtNotes;
-    @Bind(R.id.cvNotes)
+    @BindView(R.id.cvNotes)
     CardView cvNotes;
-    @Bind(R.id.svSuggestStore)
+    @BindView(R.id.svSuggestStore)
     ScrollView svSuggestStore;
-    @Bind(R.id.llMain)
+    @BindView(R.id.llMain)
     LinearLayout llMain;
-    @Bind(R.id.svImages)
+    @BindView(R.id.svImages)
     HorizontalScrollView svImages;
 
     private FreshActivity activity;
@@ -98,19 +98,22 @@ public class SuggestStoreFragment extends Fragment {
     private ImageCompression imageCompressionTask;
     private SearchResult searchResult;
     public static final int REQUEST_CODE_SELECT_IMAGES= 100;
+    private static final int REQ_CODE_PERMISSION_IMAGE = 1003;
     private String[] permissionsRequest;
     private Picker picker;
     private int maxNoImages ;
     private FatafatImageAdapter fatafatImageAdapter;
     private List<MenusResponse.Category> categories;
+    private PermissionCommon mPermissionCommon;
 
-
+    Unbinder unbinder;
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_suggest_store, container, false);
+        mPermissionCommon = new PermissionCommon(this);
         activity.fragmentUISetup(this);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
         categories = new ArrayList<>();
         categories.add(0,new MenusResponse.Category(ID_SELECT_CATEGORY, getString(R.string.hint_spinner_add_store)));
 
@@ -349,7 +352,7 @@ public class SuggestStoreFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
 
@@ -395,32 +398,28 @@ public class SuggestStoreFragment extends Fragment {
      */
     private void pickImages() {
 
-        if(PermissionChecker.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED ||
-                PermissionChecker.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED)
-        {
-            if (permissionsRequest ==null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    permissionsRequest = new String[2];
-                    permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
-                    permissionsRequest[1]=Manifest.permission.READ_EXTERNAL_STORAGE;
-                } else {
-                    permissionsRequest = new String[1];
-                    permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
-                }
+        if(mPermissionCommon.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+
+            int alreadyPresent = imageObjectList == null ? 0 : imageObjectList.size();
+            if(picker ==null){
+                picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
             }
 
-            (SuggestStoreFragment.this).requestPermissions(permissionsRequest, 20);
-            return;
+            picker.setLimit(maxNoImages -alreadyPresent);
+            picker.startActivity(SuggestStoreFragment.this,activity, REQUEST_CODE_SELECT_IMAGES);
+
+        }
+        else {
+            mPermissionCommon.getPermission(REQ_CODE_PERMISSION_IMAGE,false,false,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 
-        int alreadyPresent = imageObjectList == null ? 0 : imageObjectList.size();
-        if(picker ==null){
-            picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
-        }
+    }
 
-        picker.setLimit(maxNoImages -alreadyPresent);
-        picker.startActivity(SuggestStoreFragment.this,activity, REQUEST_CODE_SELECT_IMAGES);
-
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionCommon.onRequestPermissionsResult(requestCode, permissions,grantResults);
     }
 
     private void setImageAdapter(final ArrayList<Object> objectList) {
@@ -495,4 +494,16 @@ public class SuggestStoreFragment extends Fragment {
             paySlider.setSlideInitial();
         }
     };
+
+    @Override
+    public void permissionGranted(final int requestCode) {
+        if(requestCode == REQ_CODE_PERMISSION_IMAGE){
+            pickImages();
+        }
+    }
+
+    @Override
+    public void permissionDenied(final int requestCode) {
+
+    }
 }

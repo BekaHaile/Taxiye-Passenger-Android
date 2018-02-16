@@ -1,21 +1,27 @@
 package product.clicklabs.jugnoo.home;
 
-import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.IBinder;
-import android.os.SystemClock;
+import android.support.v4.app.NotificationCompat;
 import android.util.Pair;
 
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.GCMIntentService;
+import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -46,6 +52,11 @@ public class LocationUpdateService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.i(TAG, "service onStartCommand");
 		try {
+			if(intent.getIntExtra(Constants.STOP_FOREGROUND, 0) == 1){
+				stopForeground(true);
+				stopSelf();
+				return Service.START_NOT_STICKY;
+			}
 			MyApplication.getInstance().initializeServerURL(this);
 			try {
 				oneShot = intent.getBooleanExtra(Constants.KEY_ONE_SHOT, true);
@@ -63,6 +74,9 @@ public class LocationUpdateService extends Service {
 				locationFetcherBG = null;
 			}
 			locationFetcherBG = new LocationFetcherBG(this, locationUpdateInterval);
+			if(!oneShot) {
+				startForeground(101, getNotification());
+			}
 
 			return Service.START_STICKY;
 		} catch (Exception e) {
@@ -93,13 +107,16 @@ public class LocationUpdateService extends Service {
 			if(!oneShot && (PassengerScreenMode.P_REQUEST_FINAL.getOrdinal() == mode
 					|| PassengerScreenMode.P_DRIVER_ARRIVED.getOrdinal() == mode
 					|| PassengerScreenMode.P_IN_RIDE.getOrdinal() == mode)) {
-				stopSelf();
-				Intent restartService = new Intent(getApplicationContext(), this.getClass());
-				restartService.setPackage(getPackageName());
-				restartService.putExtra(Constants.KEY_ONE_SHOT, false);
-				PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
-				AlarmManager alarmService = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-				alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 5000, restartServicePI);
+				Log.i(TAG, "service onTaskRemoved");
+//				stopSelf();
+//				Intent restartService = new Intent(getApplicationContext(), this.getClass());
+//				restartService.setPackage(getPackageName());
+//				restartService.putExtra(Constants.KEY_ONE_SHOT, false);
+//				PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
+//				AlarmManager alarmService = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+//				if (alarmService != null) {
+//					alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 5000, restartServicePI);
+//				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,7 +125,6 @@ public class LocationUpdateService extends Service {
 
 	private class CustomLocationReceiver extends BroadcastReceiver{
 
-		private final String TAG = CustomLocationReceiver.class.getSimpleName();
 		private boolean oneShot, emergencyLoc;
 
 		public CustomLocationReceiver(boolean oneShot){
@@ -122,8 +138,8 @@ public class LocationUpdateService extends Service {
 				double latitude = intent.getDoubleExtra(Constants.KEY_LATITUDE, 0);
 				double longitude = intent.getDoubleExtra(Constants.KEY_LONGITUDE, 0);
 				if(Double.compare(latitude, 0) == 0 && Double.compare(longitude, 0) == 0){
-					latitude = MyApplication.getInstance().getLocationFetcher().getSavedLatFromSP();
-					longitude = MyApplication.getInstance().getLocationFetcher().getSavedLngFromSP();
+					latitude = LocationFetcher.getSavedLatFromSP(context);
+					longitude = LocationFetcher.getSavedLngFromSP(context);
 				}
 				emergencyLoc = intent.getBooleanExtra(Constants.KEY_EMERGENCY_LOC, false);
 				Log.i(TAG, "customonReceive lat=" + latitude + ", lng=" + longitude);
@@ -190,6 +206,36 @@ public class LocationUpdateService extends Service {
 			}
 		}
 
+	}
+
+	private Notification getNotification() {
+		GCMIntentService.getNotificationManager(this, Constants.NOTIF_CHANNEL_DEFAULT);
+		long when = System.currentTimeMillis();
+		Intent notificationIntent;
+		if(HomeActivity.appInterruptHandler != null){
+			notificationIntent = new Intent(this, HomeActivity.class);
+		} else{
+			notificationIntent = new Intent(this, SplashNewActivity.class);
+		}
+
+		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		PendingIntent intent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIF_CHANNEL_DEFAULT);
+		builder.setAutoCancel(true);
+		builder.setContentTitle(getString(R.string.app_name));
+		builder.setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.running_in_background)));
+		builder.setContentText(getString(R.string.running_in_background));
+		builder.setTicker(getString(R.string.app_name));
+		builder.setWhen(when);
+		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+		builder.setSmallIcon(R.drawable.notification_icon);
+		builder.setChannelId(Constants.NOTIF_CHANNEL_DEFAULT);
+		builder.setContentIntent(intent);
+		if(Build.VERSION.SDK_INT >= 16){
+			builder.setPriority(Notification.PRIORITY_HIGH);
+		}
+		return builder.build();
 	}
 
 }

@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.PinEditTextLayout;
@@ -189,6 +190,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			}
 
 		startTimerForRetry();
+		requestReceiveSMSPermission();
 
 	}
 
@@ -207,7 +209,9 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		super.onResume();
 
 		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, PhoneNoOTPConfirmScreen.class.getName());
-		Utils.enableSMSReceiver(this);
+		if(PermissionCommon.hasPermission(this, android.Manifest.permission.RECEIVE_SMS)) {
+			Utils.enableSMSReceiver(this);
+		}
 
 		HomeActivity.checkForAccessTokenChange(this);
 	}
@@ -406,7 +410,9 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								DialogPopup.dismissLoadingDialog();
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									Utils.enableSMSReceiver(PhoneNoOTPConfirmScreen.this);
+									if(PermissionCommon.hasPermission(activity, android.Manifest.permission.RECEIVE_SMS)) {
+										Utils.enableSMSReceiver(PhoneNoOTPConfirmScreen.this);
+									}
 									DialogPopup.alertPopup(activity, "", JSONParser.getServerMessage(jObj));
 								}
 							} else {

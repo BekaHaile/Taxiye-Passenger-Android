@@ -14,14 +14,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v4.content.PermissionChecker;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -52,11 +51,12 @@ import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 
-public class PickerActivity extends AppCompatActivity {
+public class PickerActivity extends AppCompatActivity implements PermissionCommon.PermissionListener {
 
 
     public static final int NO_LIMIT = -1;
@@ -69,6 +69,7 @@ public class PickerActivity extends AppCompatActivity {
     private static final int REQUEST_PORTRAIT_FFC = REQUEST_PORTRAIT_RFC + 1;
     public static final int REQUEST_IMAGE_CAPTURE = 99;
     public static ArrayList<ImageEntry> sCheckedImages = new ArrayList<>();
+    private final static int REQ_CODE_PERMISSION_CAMERA = 1005;
 
     private boolean mShouldShowUp = false;
 
@@ -86,10 +87,12 @@ public class PickerActivity extends AppCompatActivity {
     private TextView toolbarTitle;
     private RecyclerView recyclerViewSelectedImages;
     private String[] permissionsRequestArray;
+    private PermissionCommon mPermissionCommon;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mPermissionCommon = new PermissionCommon(this);
         if(savedInstanceState==null)
           mPickOptions = (EventBus.getDefault().getStickyEvent(Events.OnPublishPickOptionsEvent.class)).options;
         else
@@ -277,35 +280,32 @@ public class PickerActivity extends AppCompatActivity {
             return;
         }
 
+        if(mPermissionCommon.isGranted(Manifest.permission.CAMERA)){
+
+            if (!mPickOptions.videosEnabled) {
+                capturePhoto();
+                return;
+            }
 
 
-        if(PermissionChecker.checkSelfPermission(this, Manifest.permission.CAMERA) != PermissionChecker.PERMISSION_GRANTED)
-        {
-            permissionsRequestArray = new String[1];
-            permissionsRequestArray[0]=Manifest.permission.CAMERA;
-            ActivityCompat.requestPermissions(this, permissionsRequestArray,20);
-            return;
-        }
-
-
-        if (!mPickOptions.videosEnabled) {
-            capturePhoto();
-            return;
-        }
-
-
-        new AlertDialog.Builder(this).setTitle(R.string.dialog_choose_camera_title)
-                .setItems(new String[]{getResources().getString(R.string.dialog_choose_camera_item_0), getResources().getString(R.string.dialog_choose_camera_item_1)}, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            //   capturePhoto();
-                        } else {
-                            //captureVideo();
+            new AlertDialog.Builder(this).setTitle(R.string.dialog_choose_camera_title)
+                    .setItems(new String[]{getResources().getString(R.string.dialog_choose_camera_item_0), getResources().getString(R.string.dialog_choose_camera_item_1)}, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which == 0) {
+                                //   capturePhoto();
+                            } else {
+                                //captureVideo();
+                            }
                         }
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
+
+        }
+        else {
+            mPermissionCommon.getPermission(REQ_CODE_PERMISSION_CAMERA, false, false,
+                    Manifest.permission.CAMERA);
+        }
 
     }
 
@@ -968,6 +968,24 @@ public class PickerActivity extends AppCompatActivity {
             return;
         }
         mSelectAllMenuItem.setVisible(true);*/
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionCommon.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void permissionGranted(final int requestCode) {
+        if(requestCode == REQ_CODE_PERMISSION_CAMERA){
+            startCamera(findViewById(R.id.iv_camera));
+        }
+    }
+
+    @Override
+    public void permissionDenied(final int requestCode) {
 
     }
 }

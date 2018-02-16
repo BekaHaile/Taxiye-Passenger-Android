@@ -5,12 +5,11 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,9 +61,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -76,6 +76,7 @@ import product.clicklabs.jugnoo.retrofit.model.FatafatUploadImageInfo;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.RetrofitError;
@@ -89,63 +90,64 @@ import static android.app.Activity.RESULT_OK;
  * Created by Parminder Saini on 09/10/17.
  */
 
-public class AnywhereHomeFragment extends Fragment implements GACategory, GAAction {
+public class AnywhereHomeFragment extends Fragment implements GACategory, GAAction, PermissionCommon.PermissionListener {
 
     public static final RelativeSizeSpan RELATIVE_SIZE_SPAN = new RelativeSizeSpan(1.15f);
     public static final int MIN_BUFFER_TIME_MINS = 30;
     public static final int BUFFER_TIME_TO_SELECT_MINS = 5;
-    @Bind(R.id.llRoot)
+    private static final int REQ_CODE_IMAGE_PERMISSION = 1001;
+    @BindView(R.id.llRoot)
     LinearLayout llRoot;
-    @Bind(R.id.ivPickUpAddressType)
+    @BindView(R.id.ivPickUpAddressType)
     ImageView ivPickUpAddressType;
-    @Bind(R.id.ivDelAddressType)
+    @BindView(R.id.ivDelAddressType)
     ImageView ivDelAddressType;
-    @Bind(R.id.switchDeliveryTime)
+    @BindView(R.id.switchDeliveryTime)
     SwitchCompat switchDeliveryTime;
-    @Bind(R.id.label_delivery_info)
+    @BindView(R.id.label_delivery_info)
     TextView labelDeliveryInfo;
-    @Bind(R.id.label_delivery_value)
+    @BindView(R.id.label_delivery_value)
     TextView labelDeliveryValue;
-    @Bind(R.id.edt_task_description)
+    @BindView(R.id.edt_task_description)
     EditText edtTaskDescription;
-    @Bind(R.id.tv_pickup_address)
+    @BindView(R.id.tv_pickup_address)
     TextView tvPickupAddress;
-    @Bind(R.id.tv_delivery_address)
+    @BindView(R.id.tv_delivery_address)
     TextView tvDeliveryAddress;
-    @Bind(R.id.rb_asap)
+    @BindView(R.id.rb_asap)
     TextView rbAsap;
-    @Bind(R.id.rb_st)
+    @BindView(R.id.rb_st)
     TextView rbSt;
-    @Bind(R.id.cv_pickup_address)
+    @BindView(R.id.cv_pickup_address)
     CardView cvPickupAddress;
-    @Bind(R.id.cv_delivery_address)
+    @BindView(R.id.cv_delivery_address)
     CardView cvDeliveryAddress;
-    @Bind(R.id.rlDeliveryCharge)
+    @BindView(R.id.rlDeliveryCharge)
     RelativeLayout rlDeliveryCharge;
     AnywhereDeliveryChargesDialog anywhereDeliveryChargesDialog;
-    @Bind(R.id.tv_promo_label)
+    @BindView(R.id.tv_promo_label)
     TextView tvPromoLabel;
-    @Bind(R.id.edtPromo)
+    @BindView(R.id.edtPromo)
     EditText edtPromo;
-    @Bind(R.id.tv_apply)
+    @BindView(R.id.tv_apply)
     Button tvApplyPromo;
-    @Bind(R.id.tv_promo_error)
+    @BindView(R.id.tv_promo_error)
     TextView tvPromoError;
-    @Bind(R.id.rvPromo)
+    @BindView(R.id.rvPromo)
     RelativeLayout relativeLayout;
-    @Bind(R.id.cv_promo)
+    @BindView(R.id.cv_promo)
     CardView cvPromo;
-    @Bind(R.id.sv_anywhere)
+    @BindView(R.id.sv_anywhere)
     ScrollView svAnywhere;
-    @Bind(R.id.cvUploadImages)
+    @BindView(R.id.cvUploadImages)
     CardView cvUploadImages;
-    @Bind(R.id.cvImages)
+    @BindView(R.id.cvImages)
     CardView cvImages;
-    @Bind(R.id.rvImages)
+    @BindView(R.id.rvImages)
     RecyclerView rvImages;
-    @Bind(R.id.ivUploadImage)
+    @BindView(R.id.ivUploadImage)
     ImageView ivUploadImage;
-    @Bind(R.id.svImages)
+    @BindView(R.id.svImages)
     HorizontalScrollView svImages;
 
     private ForegroundColorSpan textHintColorSpan;
@@ -204,6 +206,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private int maxNoImages;
     private ImageCompression imageCompressionTask;
     private FreshActivity.OrderViaChatData orderViaChatData;
+    private PermissionCommon mPermissionCommon;
 
     public boolean isPickUpAddressRequested() {
         return isPickUpAddressRequested;
@@ -216,12 +219,14 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     }
 
+    Unbinder unbinder;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_anywhere_home, container, false);
         activity.fragmentUISetup(this);
-        ButterKnife.bind(this, rootView);
+        mPermissionCommon = new PermissionCommon(this);
+        unbinder = ButterKnife.bind(this, rootView);
         try {
             product.clicklabs.jugnoo.utils.Utils.hideSoftKeyboard(activity, edtTaskDescription);
         } catch (Exception e) {
@@ -431,7 +436,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     public void onDestroyView() {
         super.onDestroyView();
 //        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     private void setAddress(boolean isDeliveryAddress, SearchResult searchResult) {
@@ -562,32 +567,26 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
      */
     private void pickImages() {
 
-        if(PermissionChecker.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED ||
-                PermissionChecker.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED)
-        {
-            if (permissionsRequest==null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                permissionsRequest = new String[2];
-                permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
-                permissionsRequest[1]=Manifest.permission.READ_EXTERNAL_STORAGE;
-            } else {
-                permissionsRequest = new String[1];
-                permissionsRequest[0]=Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        if(mPermissionCommon.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+            int alreadyPresent = imageObjectList == null ? 0 : imageObjectList.size();
+            if(picker==null){
+                picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
             }
+
+            picker.setLimit(maxNoImages -alreadyPresent);
+            picker.startActivity(AnywhereHomeFragment.this,activity,REQUEST_CODE_SELECT_IMAGES);
+        }
+        else {
+            mPermissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION,false,false
+                    , Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 
-            (AnywhereHomeFragment.this).requestPermissions(permissionsRequest, 20);
-            return;
-        }
+    }
 
-        int alreadyPresent = imageObjectList == null ? 0 : imageObjectList.size();
-        if(picker==null){
-            picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
-        }
-
-        picker.setLimit(maxNoImages -alreadyPresent);
-        picker.startActivity(AnywhereHomeFragment.this,activity,REQUEST_CODE_SELECT_IMAGES);
-
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionCommon.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
 
     private void setImageAdapter(final ArrayList<Object> objectList) {
@@ -1083,6 +1082,18 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 mFatafatTutorialDialog.showDialog();
             }
         }
+    }
+
+    @Override
+    public void permissionGranted(final int requestCode) {
+        if(requestCode == REQ_CODE_IMAGE_PERMISSION){
+            pickImages();
+        }
+    }
+
+    @Override
+    public void permissionDenied(final int requestCode) {
+
     }
 
     private class PromoTextWatcher implements TextWatcher {

@@ -1,13 +1,14 @@
 package com.sabkuchfresh.fatafatchatpay;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -41,6 +42,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 import io.paperdb.Paper;
+import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.PaperDBKeys;
@@ -50,6 +52,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.CreateChatResponse;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 import retrofit.RetrofitError;
@@ -58,7 +61,8 @@ import retrofit.RetrofitError;
  * Created by cl-macmini-01 on 2/6/18.
  */
 
-public class NewConversationActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher {
+public class NewConversationActivity extends BaseAppCompatActivity implements View.OnClickListener, TextWatcher
+,PermissionCommon.PermissionListener{
 
     private EditText etSearchConnections;
     private ImageButton imgBtnSync;
@@ -73,12 +77,14 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
     private Animation rotateAnim;
     private ImageView ivContactSync;
     private RelativeLayout rlSync;
+    private PermissionCommon mPermissionCommon;
     private TextView tvJugnooConnection;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_conversation);
+        mPermissionCommon = new PermissionCommon(this);
         initViews();
         registerSyncUpdateReceiver();
 
@@ -233,6 +239,9 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
      */
     private void fetchContacts(final boolean showLoader) {
 
+        if(Data.userData == null){
+            return;
+        }
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
@@ -315,12 +324,20 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
      */
     private void syncContacts() {
         //DialogPopup.showLoadingDialog(this, "");
-        showSyncLayout();
-        // start the contact upload sync in background
-        Intent syncContactsIntent = new Intent(this, ContactsUploadService.class);
-        syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-        syncContactsIntent.putExtra(Constants.KEY_COMING_FROM_NEW_CONVERSATION, true);
-        startService(syncContactsIntent);
+
+        if(mPermissionCommon.isGranted(Manifest.permission.READ_CONTACTS)){
+            showSyncLayout();
+            // start the contact upload sync in background
+            Intent syncContactsIntent = new Intent(this, ContactsUploadService.class);
+            syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            syncContactsIntent.putExtra(Constants.KEY_COMING_FROM_NEW_CONVERSATION, true);
+            startService(syncContactsIntent);
+        }
+        else {
+            final int REQ_CODE_CONTACTS = 1000;
+            mPermissionCommon.getPermission(REQ_CODE_CONTACTS,false, true, Manifest.permission.READ_CONTACTS);
+        }
+
     }
 
     @Override
@@ -483,6 +500,21 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
 
                     }
                 });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        mPermissionCommon.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
+    @Override
+    public void permissionGranted(final int requestCode) {
+        syncContacts();
+    }
+
+    @Override
+    public void permissionDenied(final int requestCode) {
+
     }
 }
 
