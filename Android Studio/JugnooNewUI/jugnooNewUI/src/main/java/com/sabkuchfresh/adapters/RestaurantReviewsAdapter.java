@@ -112,7 +112,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			holder.tvReviewMessage.setVisibility(TextUtils.isEmpty(review.getReviewDesc()) ? View.GONE : View.VISIBLE);
 
 			if (review.getRating() != null) {
-				int color = activity.setRatingAndGetColor(holder.tvRating, review.getRating(), review.getColor(), true);
+				int color = activity.setRatingAndGetColor(holder.tvRating, review.getRating(), review.getColor(), true,false);
 				activity.setTextViewBackgroundDrawableColor(holder.tvNameCap, color);
 				if (review.getRatingFlag() == 1) {
 					holder.tvReviewTag.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_thumbsup_small, 0, 0, 0);

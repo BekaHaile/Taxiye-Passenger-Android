@@ -4953,7 +4953,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public int setRatingAndGetColor(TextView tv, Double rating, String colorCode, boolean setBackgroundColor) {
-        Spannable spannable = new SpannableString(getString(R.string.star_icon) + " " + rating);
+         return setRatingAndGetColor(tv, rating, colorCode, setBackgroundColor,true);
+    }
+
+
+    public int setRatingAndGetColor(TextView tv, Double rating, String colorCode, boolean setBackgroundColor,boolean showStarIcon) {
+        Spannable spannable;
+        if(showStarIcon){
+            spannable = new SpannableString(getString(R.string.star_icon) + " " + rating);
+        } else {
+            spannable = new SpannableString(String.valueOf(rating));
+        }
         spannable.setSpan(new CustomTypeFaceSpan("", Fonts.iconsFont(this)), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv.setText(spannable);
         int ratingColor;
