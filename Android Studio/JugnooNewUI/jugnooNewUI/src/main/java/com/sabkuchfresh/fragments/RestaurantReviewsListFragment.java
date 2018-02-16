@@ -1,5 +1,6 @@
 package com.sabkuchfresh.fragments;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -166,7 +167,7 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
         tvFeedEmpty.append(ssb);
 
         activity.setRestaurantRatingStarsToLL(llRatingStars, tvRating,
-                vendor.getRating(), R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey, tvRatingCount, 0);
+                vendor.getRating(), R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey, tvRatingCount, 0, Color.parseColor(vendor.getColorCode()));
         tvRatingCount.setText("("+vendor.getReviewCount()+")");
 
         fetchFeedback(false);
@@ -218,7 +219,8 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
                                 activity.getVendorOpened().setReviewCount(fetchFeedbackResponse.getRestaurantInfo().getReviewCount());
                             }
                             activity.setRestaurantRatingStarsToLL(llRatingStars, tvRating,
-                                    vendor.getRating(), R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey, tvRatingCount, 0);
+                                    vendor.getRating(), R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey, tvRatingCount, 0
+                            ,Color.parseColor(vendor.getColorCode()));
                             tvRatingCount.setText("("+vendor.getReviewCount()+")");
                         }
                     }
