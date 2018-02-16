@@ -11,24 +11,24 @@
 
     <TextView
         android:id="@+id/tvNameCap"
-        android:layout_width="@dimen/dp_50"
-        android:layout_height="@dimen/dp_50"
+        android:layout_width="@dimen/dp_36"
+        android:layout_height="@dimen/dp_36"
         android:layout_marginLeft="@dimen/dp_22"
         android:layout_marginRight="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_22"
         android:background="@drawable/circle_grey"
         android:gravity="center"
         android:tag="mwar"
-        android:text="G"
+        tools:text="G"
         android:textColor="@color/white"
-        android:textSize="@dimen/sp_28"
+        android:textSize="@dimen/sp_20"
         app:typekitFont="maven"
         />
 
     <ImageView
         android:id="@+id/ivImage"
-        android:layout_width="@dimen/dp_50"
-        android:layout_height="@dimen/dp_50"
+        android:layout_width="@dimen/dp_36"
+        android:layout_height="@dimen/dp_36"
         android:layout_marginLeft="@dimen/dp_22"
         android:layout_marginRight="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_22"
@@ -43,50 +43,13 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/dp_5"
         android:layout_marginTop="@dimen/dp_18"
-        android:layout_toLeftOf="@+id/tvRating"
+        android:layout_toLeftOf="@+id/tvDateTime"
         android:layout_toRightOf="@+id/tvNameCap"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="Username"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/sp_16"
-        app:typekitFont="maven"
-        />
-
-
-    <TextView
-        android:id="@+id/tvRating"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/dp_20"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/tvName"
-        android:layout_marginRight="@dimen/dp_14"
-        android:layout_marginTop="@dimen/dp_4"
-        android:background="@drawable/capsule_text_color"
-        android:gravity="center_vertical"
-        android:paddingLeft="@dimen/dp_7"
-        android:paddingRight="@dimen/dp_7"
-        android:text="3.5"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp_11"
-        android:visibility="visible"
-        app:typekitFont="maven"/>
-
-    <TextView
-        android:id="@+id/tvReviewTag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvName"
-        android:layout_marginRight="@dimen/dp_14"
-        android:layout_marginTop="@dimen/dp_5"
-        android:layout_toRightOf="@+id/tvNameCap"
-        android:drawableLeft="@drawable/ic_thumbsup_small"
-        android:drawablePadding="@dimen/dp_4"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:text="Quality, Packaging"
-        android:textColor="@color/document_layout_bordor_color"
-        android:textSize="@dimen/sp_11"
+        android:textSize="@dimen/sp_14"
         app:typekitFont="maven"
         />
 
@@ -94,38 +57,103 @@
         android:id="@+id/tvDateTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvReviewTag"
-        android:layout_marginRight="@dimen/dp_14"
-        android:layout_marginTop="@dimen/dp_5"
-        android:layout_toRightOf="@+id/tvNameCap"
-        android:drawableLeft="@drawable/ic_clock"
-        android:drawablePadding="@dimen/dp_4"
         android:text="12 hrs ago"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/tvName"
+        android:layout_marginRight="@dimen/dp_14"
+        android:layout_marginTop="@dimen/dp_4"
         android:textColor="@color/document_layout_bordor_color"
         android:textSize="@dimen/sp_10"
         app:typekitFont="maven"
         />
 
-    <TextView
-        android:id="@+id/tvReviewMessage"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:id="@+id/llReview"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/tvNameCap"
-        android:layout_marginLeft="@dimen/dp_19"
-        android:layout_marginRight="@dimen/dp_19"
-        android:layout_marginTop="@dimen/dp_10"
-        android:text="Ended up here on the way to Sukhna Lake to grab a pizza along. Got their BOGO offer and ordered medium cheesy 7 and Ala Mexican. The Ala mexican was kinda cold. "
-        android:textColor="@color/text_color"
-        android:textSize="@dimen/sp_13"
-        app:typekitFont="maven"
-        />
+        android:layout_below="@+id/tvName"
+        android:layout_alignLeft="@id/tvName"
+        android:layout_alignStart="@+id/tvName"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:id="@+id/llRatingMain"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_14"
+            android:layout_marginTop="@dimen/dp_5"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/llRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="-5dp"
+                android:layout_marginLeft="-5dp"
+                android:orientation="horizontal"/>
+
+            <TextView
+                android:id="@+id/tvRating"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_16"
+                android:background="@drawable/capsule_text_color"
+                android:gravity="center_vertical"
+                android:paddingLeft="@dimen/dp_7"
+                android:paddingRight="@dimen/dp_7"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginStart="@dimen/dp_5"
+                android:text="3.5"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_10"
+                android:visibility="visible"
+                app:typekitFont="maven"/>
+
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tvReviewTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_14"
+            android:layout_marginTop="@dimen/dp_5"
+            android:drawableLeft="@drawable/ic_thumbsup_small"
+            android:drawablePadding="@dimen/dp_4"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="Quality, Packaging"
+            android:textColor="@color/document_layout_bordor_color"
+            android:textSize="@dimen/sp_11"
+            app:typekitFont="maven"
+            />
+
+
+        <TextView
+            android:id="@+id/tvReviewMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/dp_19"
+            android:layout_marginTop="@dimen/dp_5"
+            tools:text="Ended up here on the way to Sukhna Lake to grab a pizza along. Got their BOGO offer and ordered medium cheesy 7 and Ala Mexican. The Ala mexican was kinda cold. "
+            android:textColor="@color/text_color_87"
+            android:textSize="@dimen/sp_13"
+            app:typekitFont="maven"
+            />
+
+    </LinearLayout>
+
+
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvFeedImages"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_155"
-        android:layout_below="@+id/tvReviewMessage"
+        android:layout_below="@+id/llReview"
         android:layout_marginTop="@dimen/dp_10"
         android:scrollbars="horizontal"
         android:translationZ="1dp"
@@ -135,7 +163,7 @@
         android:id="@+id/ivFeedImageSingle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_155"
-        android:layout_below="@+id/tvReviewMessage"
+        android:layout_below="@+id/llReview"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="@dimen/dp_20"
         android:layout_marginRight="@dimen/dp_20"
@@ -202,7 +230,7 @@
                 app:typekitFont="@string/maven"
                 />
         </LinearLayout>
-        
+
         <View
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
@@ -211,17 +239,17 @@
             android:scaleY="-1"
             android:layout_marginLeft="-18dp"
             />
-        
+
         <ImageView
             android:id="@+id/ivRestImage"
-            android:layout_width="@dimen/dp_50"
-            android:layout_height="@dimen/dp_50"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="@dimen/dp_36"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/dp_20"
             />
 
     </RelativeLayout>
-    
+
 
     <View
         android:id="@+id/vSepBelowMessage"

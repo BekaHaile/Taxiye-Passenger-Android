@@ -61,7 +61,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 
 	@Override
 	public RestaurantReviewsAdapter.ViewHolderReview onCreateViewHolder(ViewGroup parent, int viewType) {
-		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_restaurant_review_new, parent, false);
+		View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_restaurant_review, parent, false);
 		return new ViewHolderReview(v);
 	}
 
