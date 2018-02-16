@@ -722,7 +722,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                             llSeeAll.setVisibility(fetchFeedbackResponse.getReviewCount() > 2 ? View.VISIBLE : View.GONE);
                             if(fetchFeedbackResponse.getReviewCount()>2){
                             StringBuilder reviewBuilder = new StringBuilder();
-                            reviewBuilder.append(tvSeeAllReviews.getText());
+                            reviewBuilder.append(activity.getResources().getString(R.string.see_all_reviews));
                             reviewBuilder.append(" (").append(String.valueOf(fetchFeedbackResponse.getReviewCount()))
                                     .append(")");
                             tvSeeAllReviews.setText(reviewBuilder.toString());
