@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -170,6 +172,14 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     TextView tvMerchantMinOrder;
     @Bind(R.id.llMerchantMinOrderStrip)
     LinearLayout llMerchantMinOrderStrip;
+    @Bind(R.id.ivStarRestaurantRating)
+    ImageView ivStarRestaurantRating;
+    @Bind(R.id.tvRestaurantRating)
+    TextView tvRestaurantRating;
+    @Bind(R.id.tvRatingReview)
+    TextView tvRatingReview;
+    @Bind(R.id.llRatingParent)
+    LinearLayout llRatingParent;
 
     private View rootView;
     private FreshActivity activity;
@@ -395,10 +405,19 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 tvMerchantName.setText(activity.getVendorOpened().getName());
                 DeliveryHomeAdapter.setCuisines(activity.getVendorOpened(), activity, tvCuisines);
                 if (activity.getVendorOpened().getRating() != null) {
-                    tvReviewCount.setText(product.clicklabs.jugnoo.utils.Utils.getDecimalFormat1Decimal().format(activity.getVendorOpened().getRating()) + " ");
+                    String ratingText = product.clicklabs.jugnoo.utils.Utils.getDecimalFormat1Decimal().format(activity.getVendorOpened().getRating()) + " ";
+                    tvReviewCount.setText(ratingText);
                     tvReviewCount.setVisibility(View.VISIBLE);
+                    tvRestaurantRating.setText(ratingText);
+                    tvRestaurantRating.setVisibility(View.VISIBLE);
+                    ivStarRestaurantRating.setColorFilter(new PorterDuffColorFilter(Color.parseColor(activity.getVendorOpened().getColorCode())
+                            , PorterDuff.Mode.SRC_IN));
+                    ivStarRestaurantRating.setVisibility(View.VISIBLE);
+
                 } else {
                     tvReviewCount.setVisibility(View.GONE);
+                    tvRestaurantRating.setVisibility(View.GONE);
+                    ivStarRestaurantRating.setVisibility(View.GONE);
                 }
 
                 tvlabelBullet.setText(activity.getString(R.string.bullet) + " ");
@@ -709,6 +728,18 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                             tvSeeAllReviews.setText(reviewBuilder.toString());
                             }
                         }
+
+                        // set rating and reviews text
+                        if(activity!=null && !activity.isFinishing() && userHasReviewed==0) {
+                            StringBuilder ratingReviewBuilder = new StringBuilder();
+                            ratingReviewBuilder.append(activity.getVendorOpened().getReviewCount())
+                                    .append(" ")
+                                    .append(activity.getString(R.string.txt_ratings)).append(" ")
+                                    .append(activity.getString(R.string.txt_and)).append(" ")
+                                    .append(fetchFeedbackResponse.getReviewCount()).append(" ")
+                                    .append(activity.getString(R.string.reviews));
+                            tvRatingReview.setText(ratingReviewBuilder.toString().toLowerCase());
+                        }
                         if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
                             activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());
                         }
@@ -755,6 +786,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     private void setRatingUI() {
         tvRateRestaurant.setVisibility(userHasReviewed == 1 ? View.GONE : View.VISIBLE);
         ratingBarReview.setVisibility(userHasReviewed == 1 ? View.GONE : View.VISIBLE);
+        llRatingParent.setVisibility(userHasReviewed == 1 ? View.GONE : View.VISIBLE);
         vAddReviewSep.setVisibility(View.VISIBLE);
         llMyReview.setVisibility(userHasReviewed == 1 ? View.VISIBLE : View.GONE);
     }

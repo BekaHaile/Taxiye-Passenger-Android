@@ -497,11 +497,6 @@
 
 
 
-
-
-
-
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_7"
@@ -591,47 +586,122 @@
                 android:background="@color/stroke_light_grey_alpha"
                 />
 
-            <TextView
-                android:id="@+id/tvRateRestaurant"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dp_6"
-                android:gravity="center_horizontal"
-                android:text="@string/rate_the_restaurant"
-                android:textColor="@color/pf_grey_light"
-                android:textSize="@dimen/sp_14"
-                app:typekitFont="@string/maven"
-                android:visibility="gone"
-                />
 
-            <com.sabkuchfresh.utils.RatingBarMenuFeedback
-                android:id="@+id/ratingBarReview"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/llRatingParent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/dp_8"
-                android:layout_marginTop="@dimen/dp_8"
-                android:numStars="5"
-                android:rating="0"
-                android:visibility="gone"
-                app:animate="false"
-                app:halfStars="false"
-                app:maxStars="5"
-                app:onlyForDisplay="false"
-                app:starOff="@drawable/ic_menu_feedback_star_off"
-                app:starOn="@drawable/ic_menu_feedback_star_on"
-                app:belowTextSize="1sp"
-                app:belowTextColor="@color/transparent"
-                app:compoundDrawablePadding="@dimen/dp_1"
-                app:starPadding="0dp"
-                app:viewMargin="@dimen/dp_5"
-                app:viewMinWidth="@dimen/dp_20"
-                app:displayText="false"
-                app:singleColor="true"
-                app:starColor="@color/star_color_yellow"
-                app:noStarColor="@color/nl_white_dark"
-                />
+                android:orientation="horizontal"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginTop="-3dp"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:gravity="bottom">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start|bottom"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/ivStarRestaurantRating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_star_feedback_grey"/>
+
+                        <TextView
+                            android:id="@+id/tvRestaurantRating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="35sp"
+                            android:textColor="@color/text_color"
+                            android:layout_marginStart="@dimen/dp_5"
+                            android:layout_marginLeft="@dimen/dp_5"
+                            app:typekitFont="@string/maven_r"
+                            tools:text="4.5"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvRatingReview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="11sp"
+                        android:textColor="@color/text_color"
+                        app:typekitFont="@string/maven_r"
+                        tools:text="50 ratings and 10 reviews"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="end|bottom">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tvRateRestaurant"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/rate_the_restaurant"
+                            android:gravity="center_horizontal"
+                            android:textColor="@color/pf_grey_light"
+                            android:textSize="@dimen/sp_13"
+                            app:typekitFont="@string/maven"
+                            android:visibility="visible"
+                            />
+
+                        <com.sabkuchfresh.utils.RatingBarMenuFeedback
+                            android:id="@+id/ratingBarReview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:numStars="5"
+                            android:rating="0"
+                            android:layout_marginTop="@dimen/dp_5"
+                            android:layout_marginBottom="-5dp"
+                            android:visibility="visible"
+                            app:animate="false"
+                            app:halfStars="false"
+                            app:maxStars="5"
+                            app:onlyForDisplay="false"
+                            app:starOff="@drawable/ic_star_feedback_grey_23"
+                            app:starOn="@drawable/ic_star_feedback_yellow_23"
+                            app:belowTextSize="1sp"
+                            app:belowTextColor="@color/transparent"
+                            app:compoundDrawablePadding="@dimen/dp_1"
+                            app:starPadding="0dp"
+                            app:viewMargin="@dimen/dp_2"
+                            app:viewMinWidth="@dimen/dp_20"
+                            app:displayText="false"
+                            app:singleColor="true"
+                            app:starColor="@color/star_color_yellow"
+                            app:noStarColor="@color/nl_white_dark"
+                            />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
 
             <LinearLayout
                 android:id="@+id/llMyReview"

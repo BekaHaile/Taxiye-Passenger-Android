@@ -1279,6 +1279,8 @@
     <string name="chat_with_us">Chat with us</string>
     <string name="call_restaurant">Call Restaurant</string>
     <string name="reviews">Reviews</string>
+    <string name="txt_and">and</string>
+    <string name="txt_ratings">Ratings</string>
     <string name="reviews_and_ratings">Reviews &amp; Ratings</string>
     <string name="order_is_late">Order is late</string>
     <string name="something_went_wrong">Something went wrong</string>
