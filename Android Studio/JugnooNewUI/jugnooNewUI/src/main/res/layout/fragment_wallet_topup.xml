@@ -193,7 +193,7 @@
 
                     <Button
                         android:id="@+id/buttonRecharge"
-                        style="@style/ButtonTheme"
+                        style="@style/ButtonThemeCapsule"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="66px"
                         android:text="@string/recharge" />

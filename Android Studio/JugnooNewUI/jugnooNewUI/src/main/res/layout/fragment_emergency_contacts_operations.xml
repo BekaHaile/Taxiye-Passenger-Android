@@ -87,7 +87,7 @@
 
                 <Button
                     android:id="@+id/buttonAddContact"
-                    style="@style/ButtonTheme"
+                    style="@style/ButtonThemeCapsule"
                     android:text="@string/add_contacts"
                     android:layout_centerInParent="true"
                     />
