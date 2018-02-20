@@ -731,14 +731,23 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
                         // set rating and reviews text
                         if(activity!=null && !activity.isFinishing() && userHasReviewed==0) {
-                            StringBuilder ratingReviewBuilder = new StringBuilder();
-                            ratingReviewBuilder.append(activity.getVendorOpened().getReviewCount())
-                                    .append(" ")
-                                    .append(activity.getString(R.string.txt_ratings)).append(" ")
-                                    .append(activity.getString(R.string.txt_and)).append(" ")
-                                    .append(fetchFeedbackResponse.getReviewCount()).append(" ")
-                                    .append(activity.getString(R.string.reviews));
-                            tvRatingReview.setText(ratingReviewBuilder.toString().toLowerCase());
+
+                            // show text if ratings > 0
+                            if(activity.getVendorOpened().getReviewCount()>0){
+                                tvRatingReview.setVisibility(View.VISIBLE);
+                                StringBuilder ratingReviewBuilder = new StringBuilder();
+                                ratingReviewBuilder.append(activity.getVendorOpened().getReviewCount())
+                                        .append(" ")
+                                        .append(activity.getString(R.string.txt_ratings)).append(" ")
+                                        .append(activity.getString(R.string.txt_and)).append(" ")
+                                        .append(fetchFeedbackResponse.getReviewCount()).append(" ")
+                                        .append(activity.getString(R.string.reviews));
+                                tvRatingReview.setText(ratingReviewBuilder.toString().toLowerCase());
+
+                            } else {
+                                tvRatingReview.setVisibility(View.GONE);
+                            }
+
                         }
                         if (fetchFeedbackResponse.getReviewImageLimit() != 0) {
                             activity.setReviewImageCount(fetchFeedbackResponse.getReviewImageLimit());
