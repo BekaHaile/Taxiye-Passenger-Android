@@ -418,8 +418,9 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
                     tvDeliversIn.setText(activity.getVendorOpened().getDeliveryTimeText());
                     tvMinOrderAmt.setText(activity.getVendorOpened().getMinOrderText());
-                    viewCenterOrder.setVisibility(View.GONE);
+                    viewCenterOrder.setVisibility(View.VISIBLE);
                     llMerchantMinOrderStrip.setVisibility(View.GONE);
+                    layoutOrderDetails.setVisibility(View.VISIBLE);
                     if (TextUtils.isEmpty(activity.getVendorOpened().getDeliveryTimeText())) {
                            /* labelDeliversIn.setVisibility(View.GONE);
                             tvDeliversIn.setVisibility(View.GONE);
@@ -436,6 +437,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         tvDeliversIn.setText(activity.getVendorOpened().getDeliveryTimeText());
                         labelMinOrderAmt.setVisibility(View.GONE);
                         tvMinOrderAmt.setVisibility(View.GONE);
+                        viewCenterOrder.setVisibility(View.GONE);
                         removeRule(RelativeLayout.ALIGN_PARENT_LEFT, labelDeliversIn);
                         removeRule(RelativeLayout.ALIGN_PARENT_LEFT, tvDeliversIn);
                         layoutOrderDetails.setVisibility(View.VISIBLE);
