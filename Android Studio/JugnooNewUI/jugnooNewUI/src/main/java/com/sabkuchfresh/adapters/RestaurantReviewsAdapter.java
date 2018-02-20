@@ -435,6 +435,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 			ivImage = (ImageView) itemView.findViewById(R.id.ivImage);
 			tvNameCap = (TextView) itemView.findViewById(R.id.tvNameCap);
 			tvName = (TextView) itemView.findViewById(R.id.tvName);
+			tvName.setTypeface(tvName.getTypeface(), Typeface.BOLD);
 			tvDateTime = (TextView) itemView.findViewById(R.id.tvDateTime);
 			tvRating = (TextView) itemView.findViewById(R.id.tvRating);
 			tvReviewTag = (TextView) itemView.findViewById(R.id.tvReviewTag);
