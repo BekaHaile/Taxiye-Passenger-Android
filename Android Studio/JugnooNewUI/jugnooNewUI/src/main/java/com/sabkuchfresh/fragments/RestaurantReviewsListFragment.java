@@ -221,7 +221,17 @@ public class RestaurantReviewsListFragment extends Fragment implements GAAction{
                             activity.setRestaurantRatingStarsToLL(llRatingStars, tvRating,
                                     vendor.getRating(), R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey, tvRatingCount, 0
                             ,Color.parseColor(vendor.getColorCode()));
-                            tvRatingCount.setText("("+vendor.getReviewCount()+")");
+
+                            // set rating / review text
+                            StringBuilder ratingReviewBuilder = new StringBuilder();
+                            ratingReviewBuilder.append("(")
+                                    .append(activity.getVendorOpened().getReviewCount())
+                                    .append(" ")
+                                    .append(activity.getString(R.string.txt_ratings)).append(" ")
+                                    .append(activity.getString(R.string.txt_and)).append(" ")
+                                    .append(fetchFeedbackResponse.getReviewCount()).append(" ")
+                                    .append(activity.getString(R.string.reviews)).append(")");
+                            tvRatingCount.setText(ratingReviewBuilder.toString().toLowerCase());
                         }
                     }
                 }
