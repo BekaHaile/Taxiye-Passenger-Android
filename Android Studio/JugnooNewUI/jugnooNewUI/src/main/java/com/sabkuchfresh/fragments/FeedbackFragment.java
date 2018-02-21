@@ -760,14 +760,14 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             } else if (feedbackClientId.equals(Config.getGroceryClientId())) {
                 activity.getTopBar().title.setText(getResources().getString(R.string.grocery));
             } else if(feedbackClientId.equals(Config.getMenusClientId()) ) {
-                if(!TextUtils.isEmpty(Data.getMenusData().getRestaurantName())){
+                if(Data.getMenusData()!=null && !TextUtils.isEmpty(Data.getMenusData().getRestaurantName())){
                     activity.getTopBar().title.setText(Data.getMenusData().getRestaurantName());
                 } else {
                     activity.getTopBar().title.setText(activity.getString(R.string.menus));
                 }
             } else if(feedbackClientId.equals(Config.getDeliveryCustomerClientId()) ) {
-                if(!TextUtils.isEmpty(Data.getMenusData().getRestaurantName())){
-                    activity.getTopBar().title.setText(Data.getMenusData().getRestaurantName());
+                if(Data.getDeliveryCustomerData()!=null && !TextUtils.isEmpty(Data.getDeliveryCustomerData().getRestaurantName())){
+                    activity.getTopBar().title.setText(Data.getDeliveryCustomerData().getRestaurantName());
                 } else {
                     activity.getTopBar().title.setText(activity.getString(R.string.delivery_new_name));
                 }
