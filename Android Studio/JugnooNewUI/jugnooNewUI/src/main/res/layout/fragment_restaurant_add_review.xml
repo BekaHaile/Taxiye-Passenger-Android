@@ -82,6 +82,8 @@
                 android:id="@+id/rvFeedImages"
                 android:layout_width="match_parent"
                 android:layout_height="310px"
+                android:layout_marginLeft="@dimen/px_30"
+                android:layout_marginStart="@dimen/px_30"
                 android:layout_marginTop="@dimen/px_10"
                 android:scrollbars="horizontal"/>
 

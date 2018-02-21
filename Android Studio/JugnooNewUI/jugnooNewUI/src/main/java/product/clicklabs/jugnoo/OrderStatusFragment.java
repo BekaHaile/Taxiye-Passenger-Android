@@ -672,7 +672,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.need_help);
-                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.capsule_theme_color_selector);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     }
                 } else {
@@ -683,19 +683,19 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
-                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.capsule_theme_color_selector);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     } else if (datum1.getCanReorder() == 0 && !(activity instanceof FreshActivity)) {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
-                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.capsule_theme_color_selector);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     } else {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.need_help);
-                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.capsule_theme_color_selector);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     }
 
@@ -1105,7 +1105,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.need_help);
-                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.capsule_theme_color_selector);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     }
                 } else {
@@ -1116,25 +1116,25 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
-                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.capsule_theme_color_selector);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     } else if (datum1.getCanReorder() == 0 && !(activity instanceof FreshActivity)) {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
-                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.capsule_theme_color_selector);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     } else if (datum1.getCanReorder() == 0 && (activity instanceof FreshActivity)) {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.ok);
-                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.capsule_theme_color_selector);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     } else {
                         orderComplete.setVisibility(View.GONE);
                         orderCancel.setVisibility(View.VISIBLE);
                         buttonCancelOrder.setText(R.string.need_help);
-                        buttonCancelOrder.setBackgroundResource(R.drawable.button_theme);
+                        buttonCancelOrder.setBackgroundResource(R.drawable.capsule_theme_color_selector);
                         buttonCancelOrder.setTextColor(activity.getResources().getColor(R.color.white));
                     }
 

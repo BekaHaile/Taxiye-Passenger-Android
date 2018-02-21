@@ -170,6 +170,27 @@
         </item>
     </style>
 
+    <style name="ButtonThemeAlternateCapsule" parent="@android:style/Widget.Button">
+        <item name="android:layout_width">
+            @dimen/button_width
+        </item>
+        <item name="android:layout_height">
+            @dimen/button_height
+        </item>
+        <item name="android:background">
+            @drawable/button_white_grey_theme_capsule_border_selector
+        </item>
+        <item name="android:textColor">
+            @color/text_color_theme_selector
+        </item>
+        <item name="android:textSize">
+            @dimen/text_size_34
+        </item>
+        <item name="android:textAllCaps">
+            true
+        </item>
+    </style>
+
 
     <style name="ButtonThemeBig" parent="@android:style/Widget.Button">
         <item name="android:layout_width">
@@ -228,6 +249,37 @@
         </item>
         <item name="android:textSize">
             @dimen/text_size_34
+        </item>
+        <item name="android:textAllCaps">
+            true
+        </item>
+    </style>
+
+
+    <style name="ButtonThemeCapsuleWrap" parent="@android:style/Widget.Button">
+        <item name="android:layout_width">
+            wrap_content
+        </item>
+        <item name="android:minWidth">
+            @dimen/button_width
+        </item>
+        <item name="android:layout_height">
+            @dimen/splash_button_height
+        </item>
+        <item name="android:background">
+            @drawable/capsule_theme_login_selector
+        </item>
+        <item name="android:textColor">
+            @color/white
+        </item>
+        <item name="android:textSize">
+            @dimen/text_size_34
+        </item>
+        <item name="android:paddingLeft">
+            @dimen/px_10
+        </item>
+        <item name="android:paddingRight">
+            @dimen/px_10
         </item>
         <item name="android:textAllCaps">
             true

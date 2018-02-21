@@ -255,7 +255,7 @@
 
                     <Button
                         android:id="@+id/buttonAddMoney"
-                        style="@style/ButtonTheme"
+                        style="@style/ButtonThemeCapsuleWrap"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="66px"
                         android:text="@string/add_paytm_cash" />

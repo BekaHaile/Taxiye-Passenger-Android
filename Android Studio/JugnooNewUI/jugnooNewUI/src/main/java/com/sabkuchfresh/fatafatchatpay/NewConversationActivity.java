@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fugu.FuguConfig;
@@ -70,6 +71,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
     private TextView tvNoJugnooConnections;
     private Animation rotateAnim;
     private ImageView ivContactSync;
+    private RelativeLayout rlSync;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -103,11 +105,10 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
             syncContacts();
         } else {
             allContactsList = Paper.book().read(PaperDBKeys.DB_ALL_CONTACTS_LIST);
-            if(allContactsList!=null){
+            if (allContactsList != null) {
                 // user has synced one time , only fetch contacts
                 fetchContacts(false);
-            }
-            else {
+            } else {
                 syncContacts();
             }
         }
@@ -167,6 +168,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
         tvNoJugnooConnections.setVisibility(View.GONE);
         rotateAnim = AnimationUtils.loadAnimation(this, R.anim.rotate);
         ivContactSync = (ImageView) llContactSyncing.findViewById(R.id.ivContactSync);
+        rlSync = (RelativeLayout) findViewById(R.id.rlSync);
 
         etSearchConnections.addTextChangedListener(this);
         imgBtnSync.setOnClickListener(this);
@@ -249,8 +251,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
                             if (contactResponseModel.getContacts() != null && contactResponseModel.getContacts().size() > 0) {
                                 renderContacts(contactResponseModel.getContacts());
                                 tvNoJugnooConnections.setVisibility(View.GONE);
-                            }
-                            else {
+                            } else {
                                 tvNoJugnooConnections.setVisibility(View.VISIBLE);
                             }
                         }
@@ -286,6 +287,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
             // disable the sync button
             imgBtnSync.setEnabled(false);
             etSearchConnections.setEnabled(false);
+            rlSync.setVisibility(View.GONE);
         }
     }
 
@@ -298,6 +300,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
             // re-enable sync button
             imgBtnSync.setEnabled(true);
             etSearchConnections.setEnabled(true);
+            rlSync.setVisibility(View.VISIBLE);
         }
     }
 
@@ -347,9 +350,9 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
                         jugnooContact.setUserName(contactBean.getName());
                     }
                     // last 10 digit comparison( server appends +91 )
-                    else if (jugnooPhone.length() >= 10 && contactBean.getPhone().length()>=10 &&
+                    else if (jugnooPhone.length() >= 10 && contactBean.getPhone().length() >= 10 &&
                             jugnooPhone.substring(jugnooContact.getPhoneNumber().length() - 10)
-                                    .equals(contactBean.getPhone().substring(contactBean.getPhone().length()-10))) {
+                                    .equals(contactBean.getPhone().substring(contactBean.getPhone().length() - 10))) {
                         jugnooContact.setUserName(contactBean.getName());
                     }
                 }

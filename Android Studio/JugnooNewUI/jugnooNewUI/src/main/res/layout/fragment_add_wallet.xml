@@ -141,7 +141,7 @@
 
                 <Button
                     android:id="@+id/buttonRequestOTP"
-                    style="@style/ButtonTheme"
+                    style="@style/ButtonThemeCapsule"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/request_otp"
                     android:visibility="gone" />
@@ -149,7 +149,7 @@
 
                 <Button
                     android:id="@+id/buttonVerifyOTP"
-                    style="@style/ButtonTheme"
+                    style="@style/ButtonThemeCapsule"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="30px"
                     android:text="@string/verify"
@@ -158,7 +158,7 @@
 
                 <Button
                     android:id="@+id/buttonResendOTP"
-                    style="@style/ButtonThemeAlternate"
+                    style="@style/ButtonThemeAlternateCapsule"
                     android:layout_gravity="center_horizontal"
                     android:text="@string/resend_otp"
                     android:visibility="visible" />

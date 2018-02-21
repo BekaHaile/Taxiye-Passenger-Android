@@ -4971,7 +4971,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public int setRatingAndGetColor(TextView tv, Double rating, String colorCode, boolean setBackgroundColor) {
-        Spannable spannable = new SpannableString(getString(R.string.star_icon) + " " + rating);
+         return setRatingAndGetColor(tv, rating, colorCode, setBackgroundColor,true);
+    }
+
+
+    public int setRatingAndGetColor(TextView tv, Double rating, String colorCode, boolean setBackgroundColor,boolean showStarIcon) {
+        Spannable spannable;
+        if(showStarIcon){
+            spannable = new SpannableString(getString(R.string.star_icon) + " " + rating);
+        } else {
+            spannable = new SpannableString(String.valueOf(rating));
+        }
         spannable.setSpan(new CustomTypeFaceSpan("", Fonts.iconsFont(this)), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tv.setText(spannable);
         int ratingColor;
@@ -5561,13 +5571,24 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setRestaurantRatingStarsToLL(LinearLayout llCollapRatingStars, TextView tvCollapRestaurantRating,
                                              Double rating, int halfStarRes, int blankStarRes,
                                              TextView tvCollapRestaurantRatingCount, int ratingCount){
+
+        setRestaurantRatingStarsToLL(llCollapRatingStars, tvCollapRestaurantRating, rating,
+                halfStarRes,  blankStarRes, tvCollapRestaurantRatingCount, ratingCount,-1);
+    }
+
+
+    public void setRestaurantRatingStarsToLL(LinearLayout llCollapRatingStars, TextView tvCollapRestaurantRating,
+                                             Double rating, int halfStarRes, int blankStarRes,
+                                             TextView tvCollapRestaurantRatingCount, int ratingCount, int starColor){
         if(rating == null){
             rating = 0d;
         }
         llCollapRatingStars.removeAllViews();
-        llCollapRatingStars.addView(tvCollapRestaurantRating);
-        tvCollapRestaurantRating.setText(String.valueOf(rating));
-        addStarsToLayout(llCollapRatingStars, rating, halfStarRes, blankStarRes);
+        if(tvCollapRestaurantRating!=null) {
+            llCollapRatingStars.addView(tvCollapRestaurantRating);
+            tvCollapRestaurantRating.setText(String.valueOf(rating));
+        }
+        addStarsToLayout(llCollapRatingStars, rating, halfStarRes, blankStarRes,starColor);
         if(tvCollapRestaurantRatingCount != null){
             llCollapRatingStars.addView(tvCollapRestaurantRatingCount);
             tvCollapRestaurantRatingCount.setText(ratingCount > 0 ? "("+ratingCount+")" : "");
@@ -5584,6 +5605,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public void addStarsToLayout(LinearLayout llCollapRatingStars, Double rating, int halfStarRes, int blankStarRes){
+        addStarsToLayout(llCollapRatingStars,rating,halfStarRes,blankStarRes,-1);
+    }
+
+    public void addStarsToLayout(LinearLayout llCollapRatingStars, Double rating, int halfStarRes, int blankStarRes, int starColor){
         double ratingInt = rating.intValue();
         for(int i=0; i<5; i++){
             ImageView star = new ImageView(this);
@@ -5593,9 +5618,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             } else {
                 params.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_1), 0, 0, 0);
             }
+
+            int color;
+            if(starColor!= -1){
+                color = starColor;
+            } else {
+                color = ContextCompat.getColor(this,R.color.green_delivery_stores);
+            }
             if(i < ratingInt){
                 star.setImageResource(blankStarRes);
-                star.setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(this, R.color.green_delivery_stores), PorterDuff.Mode.SRC_IN));
+                star.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
             } else if(i == ratingInt){
                 double decimal = Math.round((rating - Math.floor(rating))*10.0)/10.0;
                 if(decimal < 0.3){
@@ -5604,7 +5636,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     star.setImageResource(halfStarRes);
                 } else {
                     star.setImageResource(blankStarRes);
-                    star.setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(this, R.color.green_delivery_stores), PorterDuff.Mode.SRC_IN));
+                    star.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
                 }
             } else {
                 star.setImageResource(blankStarRes);
@@ -5612,6 +5644,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             llCollapRatingStars.addView(star, params);
         }
     }
+
+
+
+
+
+
+
 
     @Bind(R.id.llRightDrawer)
     public LinearLayout llRightDrawer;
