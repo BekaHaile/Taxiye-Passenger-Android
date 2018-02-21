@@ -44,7 +44,7 @@
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/sp_13"
                 android:visibility="visible"
-                app:typekitFont="@string/maven_r"
+                app:typekitFont="@string/maven"
                 android:layout_marginLeft="@dimen/dp_5"
                 />
 
