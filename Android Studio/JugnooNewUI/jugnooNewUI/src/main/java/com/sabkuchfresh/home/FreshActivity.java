@@ -2392,42 +2392,46 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private void addFreshHomeFragment(boolean addNew) {
 
-        if(addNew){
-            getSupportFragmentManager().beginTransaction()
-                    .add(relativeLayoutContainer.getId(), new FreshHomeFragment(),
-                            FreshHomeFragment.class.getName())
-                    .addToBackStack(FreshHomeFragment.class.getName())
-                    .commitAllowingStateLoss();
-        }else{
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                    .add(relativeLayoutContainer.getId(),  new FreshHomeFragment(),
-                            FreshHomeFragment.class.getName())
-                    .addToBackStack(FreshHomeFragment.class.getName())
-                    .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-                            .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                    .commitAllowingStateLoss();
+        if (!FreshActivity.this.isFinishing()) {
+            if(addNew){
+                getSupportFragmentManager().beginTransaction()
+                        .add(relativeLayoutContainer.getId(), new FreshHomeFragment(),
+                                FreshHomeFragment.class.getName())
+                        .addToBackStack(FreshHomeFragment.class.getName())
+                        .commitAllowingStateLoss();
+            }else{
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                        .add(relativeLayoutContainer.getId(),  new FreshHomeFragment(),
+                                FreshHomeFragment.class.getName())
+                        .addToBackStack(FreshHomeFragment.class.getName())
+                        .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+                                .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                        .commitAllowingStateLoss();
+            }
         }
 
     }
 
 
     private void addMealFragment(boolean addNew) {
-        if(addNew){
-            getSupportFragmentManager().beginTransaction()
-                    .add(relativeLayoutContainer.getId(), new MealFragment(),
-                            MealFragment.class.getName())
-                    .addToBackStack(MealFragment.class.getName())
-                    .commitAllowingStateLoss();
-        }else{
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                    .add(relativeLayoutContainer.getId(),  new MealFragment(),
-                            MealFragment.class.getName())
-                    .addToBackStack(MealFragment.class.getName())
-                    .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-                            .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                    .commitAllowingStateLoss();
+        if (!FreshActivity.this.isFinishing()) {
+            if(addNew){
+                getSupportFragmentManager().beginTransaction()
+                        .add(relativeLayoutContainer.getId(), new MealFragment(),
+                                MealFragment.class.getName())
+                        .addToBackStack(MealFragment.class.getName())
+                        .commitAllowingStateLoss();
+            }else{
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                        .add(relativeLayoutContainer.getId(),  new MealFragment(),
+                                MealFragment.class.getName())
+                        .addToBackStack(MealFragment.class.getName())
+                        .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+                                .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                        .commitAllowingStateLoss();
+            }
         }
 
 
@@ -2442,21 +2446,25 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     private void addCustomerDeliveryFragment(){
-        getSupportFragmentManager().beginTransaction()
-                .add(relativeLayoutContainer.getId(), new MenusFragment(),
-                        MenusFragment.class.getName())
-                .addToBackStack(MenusFragment.class.getName())
-                .commitAllowingStateLoss();
+        if (!FreshActivity.this.isFinishing()) {
+            getSupportFragmentManager().beginTransaction()
+                    .add(relativeLayoutContainer.getId(), new MenusFragment(),
+                            MenusFragment.class.getName())
+                    .addToBackStack(MenusFragment.class.getName())
+                    .commitAllowingStateLoss();
+        }
     }
     private void addMenusFragment() {
-        getSupportFragmentManager().beginTransaction()
-                .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                .add(relativeLayoutContainer.getId(),   new MenusFragment(),
-                        MenusFragment.class.getName())
-                .addToBackStack(MenusFragment.class.getName())
-                .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                .commitAllowingStateLoss();
+        if (!FreshActivity.this.isFinishing()) {
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                    .add(relativeLayoutContainer.getId(),   new MenusFragment(),
+                            MenusFragment.class.getName())
+                    .addToBackStack(MenusFragment.class.getName())
+                    .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+                            .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
 
     }
 
@@ -2469,21 +2477,23 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public void addAnywhereHomeFragment(boolean fromOnCreate) {
-        if(fromOnCreate){
-            getSupportFragmentManager().beginTransaction()
-                    .add(relativeLayoutContainer.getId(), new AnywhereHomeFragment(),
-                            AnywhereHomeFragment.class.getName())
-                    .addToBackStack(AnywhereHomeFragment.class.getName())
-                    .commitAllowingStateLoss();
-        }else{
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                    .add(relativeLayoutContainer.getId(),  new AnywhereHomeFragment(),
-                            AnywhereHomeFragment.class.getName())
-                    .addToBackStack(AnywhereHomeFragment.class.getName())
-                    .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
-                            .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                    .commitAllowingStateLoss();
+        if (!FreshActivity.this.isFinishing()) {
+            if(fromOnCreate){
+                getSupportFragmentManager().beginTransaction()
+                        .add(relativeLayoutContainer.getId(), new AnywhereHomeFragment(),
+                                AnywhereHomeFragment.class.getName())
+                        .addToBackStack(AnywhereHomeFragment.class.getName())
+                        .commitAllowingStateLoss();
+            }else{
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                        .add(relativeLayoutContainer.getId(),  new AnywhereHomeFragment(),
+                                AnywhereHomeFragment.class.getName())
+                        .addToBackStack(AnywhereHomeFragment.class.getName())
+                        .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+                                .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                        .commitAllowingStateLoss();
+            }
         }
 
     }
@@ -4732,12 +4742,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 @Override
                 public void success(String clientId) {
 
-                    if (isLoginDataAvailable(lastClientId)) {
-                        rlfabViewFatafat.setVisibility(View.GONE);
-                        fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
-                        saveAppCart();
-                        Prefs.with(FreshActivity.this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
-                        setOfferingData(lastClientId,false);
+                    try {
+                        if (isLoginDataAvailable(lastClientId)) {
+                            rlfabViewFatafat.setVisibility(View.GONE);
+                            fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
+                            saveAppCart();
+                            Prefs.with(FreshActivity.this).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, lastClientId);
+                            setOfferingData(lastClientId,false);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
 
@@ -4748,7 +4762,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 @Override
                 public void onRetry(View view) {
-                    switchOffering(lastClientId);
+                    try {
+                        switchOffering(lastClientId);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
