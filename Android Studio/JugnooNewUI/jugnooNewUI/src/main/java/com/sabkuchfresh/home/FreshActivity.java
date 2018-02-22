@@ -1095,6 +1095,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     };
 
     public void switchOfferingViaClientId(final String clientId) {
+
+
         clearFragmentStackTillLast();
 
         handler.postDelayed(new Runnable() {
@@ -4798,6 +4800,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 return  Data.getFreshData()!=null;
             case Config.FEED_CLIENT_ID:
                 return  Data.getFeedData()!=null;
+            case Config.DELIVERY_CUSTOMER_CLIENT_ID:
+                return Data.getDeliveryCustomerData()!=null;
+            case Config.MENUS_CLIENT_ID:
+                return Data.getMenusData()!=null;
             default:
                 return  false;
         }

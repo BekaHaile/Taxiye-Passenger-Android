@@ -261,7 +261,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     // for other client ids deeplink on delivery customer only case
                     String clientIdForDeepLink = Prefs.with(activity).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "");
-                    if(!clientIdForDeepLink.equalsIgnoreCase("")){
+                    if(!clientIdForDeepLink.equalsIgnoreCase("") && !clientIdForDeepLink.equals(Config.getLastOpenedClientId(activity))){
                         activity.switchOfferingViaClientId(clientIdForDeepLink);
                     }
                 }
@@ -720,7 +720,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     public void getAllMenus(final boolean loader, final LatLng latLng, final boolean scrollToTop, final MenusResponse.Category categoryObject, final int typeApi) {
 
-
+        Log.d(TAG, "getAllMenus: init"+System.currentTimeMillis());
         if (isMenusApiInProgress)
             return;
 
@@ -756,8 +756,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             Callback<MenusResponse> callback = new Callback<MenusResponse>() {
                 @Override
                 public void success(final MenusResponse menusResponse, Response response) {
+                    Log.d(TAG, "getAllMenus: success"+System.currentTimeMillis());
                     boolean shouldRecallSearchAPI = false;
-                    DialogPopup.dismissLoadingDialog();
                     lastTimeRefreshed = System.currentTimeMillis();
                     if (typeApi == TYPE_API_MENUS_ADDRESS_CHANGE || typeApi == TYPE_API_MENUS_CATEGORY_CHANGE) {
                         activity.setOfferingsVisibility(menusResponse.getOfferingsVisibilityData());
@@ -858,6 +858,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                      }
 
+                    Log.d(TAG, "getAllMenus: success"+System.currentTimeMillis());
+                    DialogPopup.dismissLoadingDialog();
+
+
                 }
 
                 @Override
@@ -865,11 +869,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                     relativeLayoutNoMenus.setVisibility(View.GONE);
                     Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
-                    DialogPopup.dismissLoadingDialog();
                     swipeRefreshLayout.setRefreshing(false);
                     activity.getTopBar().setPBSearchVisibility(View.GONE);
                     isMenusApiInProgress = false;
+                    DialogPopup.dismissLoadingDialog();
                     retryDialog(DialogErrorType.CONNECTION_LOST, latLng, loader, false, scrollToTop, categoryObject, typeApi);
+
 
                 }
             };
@@ -880,6 +885,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
             isMenusApiInProgress = true;
+            Log.d(TAG, "getAllMenus: hit"+System.currentTimeMillis());
             if (isSearchingCase(searchText)) {
                 params.put(Constants.KEY_SEARCH_TEXT, searchText);
                 RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
