@@ -842,7 +842,7 @@
     <string name="changes_not_updated_exit">Your changes are not updated. Do you want to exit?</string>
     <string name="payment_via">Payment Via</string>
     <string name="add_special_notes">Add special notes to driver..</string>
-    <string name="add_special_notes_for_menus">Allergic to something? Want your food less spicy? Mention it here..</string>
+    <string name="add_special_notes_for_menus">Mention any special instructions here...</string>
     <string name="cart_items">Cart Items</string>
     <string name="cart_items_format">Cart Items(%s)</string>
     <string name="cart_items_popup_format">Items (%s)</string>
