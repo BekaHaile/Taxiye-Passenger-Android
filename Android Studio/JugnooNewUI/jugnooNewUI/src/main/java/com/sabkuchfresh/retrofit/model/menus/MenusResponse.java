@@ -237,8 +237,9 @@ public class MenusResponse {
 			VendorDirectSearch vendorDirectSearch = new VendorDirectSearch();
 			vendorDirectSearch.setQuery("Query:"+String.valueOf(i+1));
 			vendorDirectSearch.setVendorName("Restaurent:"+String.valueOf(i+1));
-			vendorDirectSearch.setVendorId(12691);
-			vendorDirectSearch.setCategoryId(284);
+			vendorDirectSearch.setVendorId(332);
+			vendorDirectSearch.setCategoryId(298);
+			vendorDirectSearch.setSubcategoryId(166);
 			vendors.add(vendorDirectSearch);
 		}
 		return vendors;

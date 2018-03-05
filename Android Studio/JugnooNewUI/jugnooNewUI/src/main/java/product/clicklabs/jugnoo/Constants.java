@@ -844,6 +844,7 @@ public interface Constants {
     String CATEGORY = "category";
     String ITEM_CATEGORY_ID = "item_category_id";
     String ITEM_SUB_CATEGORY_ID = "item_sub_category_id";
+    String ITEM_RESTAURANT_ITEM_ID = "item_restaurant_item_id";
 
     // fugu custom action
     String FUGU_CUSTOM_ACTION_PAYLOAD = "FUGU_CUSTOM_ACTION_PAYLOAD";

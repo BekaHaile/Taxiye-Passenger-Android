@@ -70,6 +70,21 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
         mBus.unregister(this);
     }
 
+    /**
+     * Scrolls to direct vendor sub category / item position
+     */
+    public void scrollToDirectVendorSearchIndex(){
+        if(menusCategoryItemsAdapter!=null){
+            if(menusCategoryItemsAdapter.getVendorDirectSearchItemIndex()!=0){
+                recyclerViewCategoryItems.getLayoutManager().scrollToPosition(menusCategoryItemsAdapter.getVendorDirectSearchItemIndex());
+                return;
+            }
+            if(menusCategoryItemsAdapter.getVendorDirectSearchSubCatIndex()!=0){
+                recyclerViewCategoryItems.getLayoutManager().scrollToPosition(menusCategoryItemsAdapter.getVendorDirectSearchSubCatIndex());
+            }
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_fresh_category_items, container, false);

@@ -53,6 +53,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip.MyTabClickListener, GAAction {
 
     private final String TAG = VendorMenuFragment.class.getSimpleName();
+    protected Bus mBus;
     private LinearLayout llRoot;
     private LinearLayout mainLayout;
     private LinearLayout noFreshsView;
@@ -71,14 +72,11 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private TextView tvOfferTitle;
     private View viewPromoTitle;
     private ImageButton ibArrow;
-
     private TextView tvSwitchVegToggle;
     private SwitchCompat switchVegToggle;
-
+    private int categoryId, subCategoryId,itemId;
     public VendorMenuFragment() {
     }
-
-    protected Bus mBus;
 
     @Override
     public void onStart() {
@@ -95,11 +93,25 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        // fetch arguments if any
+        if (getArguments() != null) {
+            if (getArguments().containsKey(Constants.ITEM_CATEGORY_ID)) {
+                categoryId = getArguments().getInt(Constants.ITEM_CATEGORY_ID);
+            }
+            if (getArguments().containsKey(Constants.ITEM_SUB_CATEGORY_ID)) {
+                subCategoryId = getArguments().getInt(Constants.ITEM_SUB_CATEGORY_ID);
+            }
+            if (getArguments().containsKey(Constants.ITEM_RESTAURANT_ITEM_ID)) {
+                itemId = getArguments().getInt(Constants.ITEM_RESTAURANT_ITEM_ID);
+            }
+        }
+
         rootView = inflater.inflate(R.layout.fragment_fresh, container, false);
         mainLayout = (LinearLayout) rootView.findViewById(R.id.mainLayout);
         activity = (FreshActivity) getActivity();
         viewPromoTitle = rootView.findViewById(R.id.layout_offer_title);
-        tvOfferTitle = (TextView)  viewPromoTitle.findViewById(R.id.tv_offer_title);
+        tvOfferTitle = (TextView) viewPromoTitle.findViewById(R.id.tv_offer_title);
         ibArrow = (ImageButton) viewPromoTitle.findViewById(R.id.ib_arrow);
         ibArrow.setColorFilter(new PorterDuffColorFilter(ContextCompat.getColor(activity, R.color.theme_color), PorterDuff.Mode.SRC_IN));
         //ifHasAnyOffers
@@ -119,8 +131,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             e.printStackTrace();
         }
 
-        GAUtils.trackScreenView(activity.getGaCategory()+RESTAURANT_HOME);
-        GAUtils.trackScreenView(activity.getGaCategory()+RESTAURANT_HOME+V2);
+        GAUtils.trackScreenView(activity.getGaCategory() + RESTAURANT_HOME);
+        GAUtils.trackScreenView(activity.getGaCategory() + RESTAURANT_HOME + V2);
 
 
         noFreshsView = (LinearLayout) rootView.findViewById(R.id.noFreshsView);
@@ -142,7 +154,21 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         });
 
         viewPager = (ViewPager) rootView.findViewById(R.id.viewPager);
-        menusCategoryFragmentsAdapter = new MenusCategoryFragmentsAdapter(activity, getChildFragmentManager());
+        menusCategoryFragmentsAdapter = new MenusCategoryFragmentsAdapter(activity, getChildFragmentManager(), new MenusCategoryFragmentsAdapter.OnDirectVendorSearchCallback() {
+            @Override
+            public void fragmentScrolled(final Fragment fragment) {
+
+                // scroll to correct subcategory / item
+                if (subCategoryId != 0 || itemId != 0) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((MenusCategoryItemsFragment)fragment).scrollToDirectVendorSearchIndex();
+                        }
+                    },500);
+                }
+            }
+        });
         viewPager.setAdapter(menusCategoryFragmentsAdapter);
 
         tabs = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs);
@@ -164,8 +190,9 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     tabClickFlag = false;
                 } else {
                     Log.d(TAG, "onPageSelected = " + position);
-                    GAUtils.event(activity.getGaCategory(), GAAction.RESTAURANT_HOME , GAAction.TABS + GAAction.SLIDED);
+                    GAUtils.event(activity.getGaCategory(), GAAction.RESTAURANT_HOME, GAAction.TABS + GAAction.SLIDED);
                 }
+
             }
 
             @Override
@@ -187,31 +214,6 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         activity.setSortingList(this);
 
         success();
-
-        // check if we have category / subCategory coming in arguments, if yes we need to switch tabs accordingly
-        if(getArguments()!=null){
-            int categoryId = -1,subCategoryId = -1;
-            if(getArguments().containsKey(Constants.ITEM_CATEGORY_ID)){
-                categoryId = getArguments().getInt(Constants.ITEM_CATEGORY_ID);
-            }
-            if(getArguments().containsKey(Constants.ITEM_SUB_CATEGORY_ID)){
-                subCategoryId = getArguments().getInt(Constants.ITEM_SUB_CATEGORY_ID);
-            }
-
-            if(menusCategoryFragmentsAdapter!=null && categoryId!= -1){
-                int tabPosition = menusCategoryFragmentsAdapter.getCategoryPosition(categoryId);
-                viewPager.setCurrentItem(tabPosition);
-
-                if(subCategoryId!=-1){
-                    MenusCategoryItemsFragment itemsFragment = (MenusCategoryItemsFragment) getChildFragmentManager()
-                            .findFragmentByTag("android:switcher:" + R.id.viewPager + ":" +tabPosition );
-                }
-            }
-
-
-        }
-
-
         return rootView;
     }
 
@@ -244,44 +246,42 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 //                tvOfferTitle.setEnabled(false);
 //                ibArrow.setEnabled(false);
 //                handler.postDelayed(startEnableStateRunnable,activity.getResources().getInteger(R.integer.anim_time_promo_recycler));
-				DialogPopup.alertPopupLeftOriented(activity, promoText, TandC, true, true, true, true,
-						R.color.theme_color, 16, 13, Fonts.mavenMedium(activity));
+                DialogPopup.alertPopupLeftOriented(activity, promoText, TandC, true, true, true, true,
+                        R.color.theme_color, 16, 13, Fonts.mavenMedium(activity));
             }
         };
 
         tvOfferTitle.setOnClickListener(expandClickListener);
         ibArrow.setOnClickListener(expandClickListener);
-        recyclerViewOffers.setAdapter(new DisplayOffersAdapter(activity,true,TandC));
+        recyclerViewOffers.setAdapter(new DisplayOffersAdapter(activity, true, TandC));
         recyclerViewOffers.setLayoutManager(new LinearLayoutManager(activity));
         tvOfferTitle.setVisibility(View.VISIBLE);
         ibArrow.setVisibility(View.GONE);
-        tvOfferTitle.setText(setUpOfferTitle(promoText,null));
+        tvOfferTitle.setText(setUpOfferTitle(promoText, null));
         rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.VISIBLE);
 
 
     }
 
     private SpannableString setUpOfferTitle(String heading, String subHeading) {
-        if(TextUtils.isEmpty(heading))
+        if (TextUtils.isEmpty(heading))
             return null;
 
         tvOfferTitle.setTypeface(Fonts.mavenMedium(activity), Typeface.NORMAL);
-        SpannableString spannableContent ;
+        SpannableString spannableContent;
 
-        if(subHeading==null || subHeading.trim().length()<1)
-            spannableContent=new SpannableString(heading);
+        if (subHeading == null || subHeading.trim().length() < 1)
+            spannableContent = new SpannableString(heading);
         else
-            spannableContent= new SpannableString(heading + "\n" + subHeading);
+            spannableContent = new SpannableString(heading + "\n" + subHeading);
 
-        spannableContent.setSpan(new StyleSpan(Typeface.BOLD),0,heading.length(),0);
+        spannableContent.setSpan(new StyleSpan(Typeface.BOLD), 0, heading.length(), 0);
         spannableContent.setSpan(new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.color_orange_menus)), 0, heading.length(), 0);
-        if(subHeading!=null && subHeading.trim().length()>0)
-          spannableContent.setSpan(new RelativeSizeSpan(0.6f), spannableContent.length()-subHeading.length(),spannableContent.length(), 0);
+        if (subHeading != null && subHeading.trim().length() > 0)
+            spannableContent.setSpan(new RelativeSizeSpan(0.6f), spannableContent.length() - subHeading.length(), spannableContent.length(), 0);
         return spannableContent;
 
     }
-
-
 
 
     @Override
@@ -289,35 +289,36 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         super.onHiddenChanged(hidden);
         try {
             if (!hidden) {
-				activity.fragmentUISetup(this);
-				menusCategoryFragmentsAdapter.notifyDataSetChanged();
-				tabs.notifyDataSetChanged();
-				activity.resumeMethod();
+                activity.fragmentUISetup(this);
+                menusCategoryFragmentsAdapter.notifyDataSetChanged();
+                tabs.notifyDataSetChanged();
+                activity.resumeMethod();
                 activity.getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         try {
 
-                            if(!activity.isOrderJustCompleted()){
+                            if (!activity.isOrderJustCompleted()) {
                                 activity.setMinOrderAmountText(VendorMenuFragment.this);
                             }
                         } catch (Exception e) {
                         }
                     }
                 }, 200);
-                if(activity.getScrollToCategoryId() != -1){
+                if (activity.getScrollToCategoryId() != -1) {
                     int positionInPager = menusCategoryFragmentsAdapter.getCategoryPosition(activity.getScrollToCategoryId());
-                    if(positionInPager > -1) {
+                    if (positionInPager > -1) {
                         viewPager.setCurrentItem(positionInPager);
                     }
                     activity.setScrollToCategoryId(-1);
                 }
-			} else {
-				if(recyclerViewOffers!=null && recyclerViewOffers.getVisibility()==View.VISIBLE) {
-					ibArrow.performClick();
-				}
-			}
-        } catch (Exception e) {}
+            } else {
+                if (recyclerViewOffers != null && recyclerViewOffers.getVisibility() == View.VISIBLE) {
+                    ibArrow.performClick();
+                }
+            }
+        } catch (Exception e) {
+        }
     }
 
 
@@ -336,13 +337,13 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             // Update pager adapter
 
             try {
-                if(event.isVegToggle){
+                if (event.isVegToggle) {
                     // fix for category switching bug when previous category is a complete non-veg category
                     // now we return to the last selected category on toggle
                     int previousCatId = menusCategoryFragmentsAdapter.getCategories().get(viewPager.getCurrentItem()).getCategoryId();
-					int currentPos = menusCategoryFragmentsAdapter.filterCategoriesAccIsVeg(activity.getMenuProductsResponse().getCategories(), previousCatId);
+                    int currentPos = menusCategoryFragmentsAdapter.filterCategoriesAccIsVeg(activity.getMenuProductsResponse().getCategories(), previousCatId,null);
                     tabs.notifyDataSetChanged();
-                    if(currentPos > -1) {
+                    if (currentPos > -1) {
                         viewPager.setCurrentItem(currentPos);
                     }
                 }
@@ -389,6 +390,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
         return menusCategoryFragmentsAdapter;
     }
 
+
     void success() {
         try {
             noFreshsView.setVisibility(View.GONE);
@@ -396,36 +398,56 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
             if (activity.getMenuProductsResponse() != null) {
 
-                if(activity.getMenuProductsResponse().getCategories()!=null){
+                if (activity.getMenuProductsResponse().getCategories() != null) {
                     tabs.setVisibility(View.VISIBLE);
                     ivShadowAboveTab.setVisibility(View.VISIBLE);
                     ivShadowBelowTab.setVisibility(View.VISIBLE);
 
-                    menusCategoryFragmentsAdapter.filterCategoriesAccIsVeg(activity.getMenuProductsResponse().getCategories(), -1);
+                    // calculating tab position for direct vendor category id
+                    int tabPosition = -1;
+                    if(categoryId!=0){
+                        for(int i=0;i<activity.getMenuProductsResponse().getCategories().size();i++){
+                            if(activity.getMenuProductsResponse().getCategories().get(i).getCategoryId()==categoryId){
+                                tabPosition = i;
+                                break;
+                            }
+                        }
+                    }
+
+                    menusCategoryFragmentsAdapter.filterCategoriesAccIsVeg(activity.getMenuProductsResponse().getCategories(), -1,tabPosition);
                     tabs.setViewPager(viewPager);
                     viewPager.setCurrentItem(Data.tabLinkIndex);
                     Data.tabLinkIndex = 0;
                     tabs.setBackgroundColor(activity.getResources().getColor(R.color.white_light_grey));
                     tabs.notifyDataSetChanged();
 
+                    // if we have category / subCategory coming in arguments, we need to switch tabs accordingly
+                    if (menusCategoryFragmentsAdapter != null && categoryId != 0) {
+                        // scroll to correct category
+                        if(tabPosition!=-1){
+                            viewPager.setCurrentItem(tabPosition);
+                        }
+                    }
+
+
                     if (activity.updateCart) {
                         activity.updateCart = false;
                         activity.openCart();
                     }
-                    if(activity.menusSort == -1){
+                    if (activity.menusSort == -1) {
                         activity.menusSort = 0;
                     }
                     activity.getBus().post(new SortSelection(activity.menusSort));
 
-                    if(activity.getMenuProductsResponse().getMenusPromotionInfo()!=null && activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText()!=null) {
-                        setUpPromoDisplayView(activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText(),activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoTC());
+                    if (activity.getMenuProductsResponse().getMenusPromotionInfo() != null && activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText() != null) {
+                        setUpPromoDisplayView(activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoText(), activity.getMenuProductsResponse().getMenusPromotionInfo().getPromoTC());
                     } else {
                         tvOfferTitle.setVisibility(View.GONE);
                         ibArrow.setVisibility(View.GONE);
                         rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.VISIBLE);
                     }
 
-                    if(activity.collapsingToolBarEnabled(this)){
+                    if (activity.collapsingToolBarEnabled(this)) {
                         setUpCollapseToolbarData();
 
                     }
@@ -433,7 +455,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     tvSwitchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);
                     switchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);
 
-                    if(switchVegToggle.getVisibility() == View.GONE && tvOfferTitle.getVisibility() == View.GONE){
+                    if (switchVegToggle.getVisibility() == View.GONE && tvOfferTitle.getVisibility() == View.GONE) {
                         viewPromoTitle.setVisibility(View.GONE);
                         rootView.findViewById(R.id.ivShadowBelowOffer).setVisibility(View.GONE);
                     }
@@ -441,7 +463,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     activity.getHandler().post(new Runnable() {
                         @Override
                         public void run() {
-                            if(Prefs.with(activity).getInt(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK, -1) > 0){
+                            if (Prefs.with(activity).getInt(Constants.SP_RESTAURANT_FEEDBACK_ID_TO_DEEP_LINK, -1) > 0) {
                                 activity.openRestaurantReviewsListFragment();
                             }
                         }
@@ -469,7 +491,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             }
 
             int visibility = activity.setVendorDeliveryTimeAndDrawableColorToTextView(activity.getVendorOpened(), activity.tvCollapRestaurantDeliveryTime, R.color.white, true);
-			activity.tvCollapRestaurantDeliveryTime.setVisibility(visibility == View.VISIBLE ? View.VISIBLE : View.GONE);
+            activity.tvCollapRestaurantDeliveryTime.setVisibility(visibility == View.VISIBLE ? View.VISIBLE : View.GONE);
 
             if (activity.getVendorOpened().getRating() != null && activity.getVendorOpened().getRating() >= 1d) {
                 activity.llCollapRatingStars.setVisibility(View.VISIBLE);

@@ -35,9 +35,12 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 	private List<Category> categories;
 	private Context context;
 	private LayoutInflater inflater;
-	public MenusCategoryFragmentsAdapter(Context context, FragmentManager fm) {
+	private Integer positionToScrollTo;
+	private OnDirectVendorSearchCallback onDirectVendorSearchCallback;
+	public MenusCategoryFragmentsAdapter(Context context, FragmentManager fm, OnDirectVendorSearchCallback callback) {
 		super(fm);
 		this.context = context;
+		onDirectVendorSearchCallback = callback;
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -57,7 +60,10 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 		notifyDataSetChanged();
 	}
 
-	public int filterCategoriesAccIsVeg(List<Category> categories, int previousCatId){
+	public int filterCategoriesAccIsVeg(List<Category> categories, int previousCatId, Integer positionToScrollTo){
+		if(positionToScrollTo!=null) {
+			this.positionToScrollTo = positionToScrollTo;
+		}
 		int isVegToggle = Prefs.with(context).getInt(Constants.KEY_SP_IS_VEG_TOGGLE, 0);
 		if(this.categories == null){
 			this.categories = new ArrayList<>();
@@ -110,7 +116,15 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 
 	@Override
 	public Fragment getItem(int position) {
-		return MenusCategoryItemsFragment.newInstance(categories.get(position).getCategoryPos(), 1);
+
+		MenusCategoryItemsFragment menusCategoryItemsFragment = MenusCategoryItemsFragment
+				.newInstance(categories.get(position).getCategoryPos(), 1);
+
+		if(positionToScrollTo!=null && position==positionToScrollTo && onDirectVendorSearchCallback!=null ){
+				onDirectVendorSearchCallback.fragmentScrolled(menusCategoryItemsFragment);
+				positionToScrollTo=null;
+		}
+		return menusCategoryItemsFragment ;
 	}
 
 	@Override
@@ -144,5 +158,11 @@ public class MenusCategoryFragmentsAdapter extends FragmentStatePagerAdapter
 		convertView.setLayoutParams(new LinearLayout.LayoutParams(150, LinearLayout.LayoutParams.MATCH_PARENT));
 		ASSL.DoMagic(convertView);
 		return convertView;
+	}
+
+
+
+	public interface OnDirectVendorSearchCallback {
+		void fragmentScrolled(Fragment fragment);
 	}
 }

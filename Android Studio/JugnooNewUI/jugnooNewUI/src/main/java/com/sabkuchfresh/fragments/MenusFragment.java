@@ -222,6 +222,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
             @Override
             public void onVendorDirectSearchClicked(final MenusResponse.VendorDirectSearch vendorDirectSearch) {
+                activity.setDirectVendorSearchObject(vendorDirectSearch);
                 //fetch menu and redirect to vendor fragment
                 activity.fetchRestaurantMenuAPI((vendorDirectSearch.getVendorId()),
                         false, null, null, -1, null,vendorDirectSearch);

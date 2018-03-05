@@ -224,6 +224,7 @@ public class ApiFetchRestaurantMenu {
             Bundle args = new Bundle();
             args.putInt(Constants.ITEM_CATEGORY_ID,vendorDirectSearch.getCategoryId());
             args.putInt(Constants.ITEM_SUB_CATEGORY_ID,vendorDirectSearch.getSubcategoryId());
+            args.putInt(Constants.ITEM_RESTAURANT_ITEM_ID,vendorDirectSearch.getItemId());
             activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer(),args);
             return;
         }

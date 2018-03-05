@@ -62,6 +62,10 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     private static final int SUB_CATEGORY_ITEM = 2;
     private static final int SEARCHED_CATEGORY_ITEM = 3;
 
+    // indicates vendorDirectSearchItemPosition
+    private int vendorDirectSearchSubCatIndex, vendorDirectSearchItemIndex;
+    private MenusResponse.VendorDirectSearch vendorDirectSearch;
+
     private boolean isVendorMenuFragment;
     public MenusCategoryItemsAdapter(Activity context, int categoryPos, Category category, Callback callback) {
         this.context = context;
@@ -69,6 +73,11 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         this.categoryPos = categoryPos;
         this.category = category;
         isVendorMenuFragment = true;
+
+        if(((FreshActivity)context).getVendorDirectSearchObject()!=null){
+            vendorDirectSearch = ((FreshActivity)context).getVendorDirectSearchObject();
+        }
+
         setSubItems(false);
 
     }
@@ -88,6 +97,12 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 item.setItemName(subcategory.getSubcategoryName());
                 item.setIsSubCategory(1);
                 subItems.add(item);
+
+                if(vendorDirectSearch!=null && vendorDirectSearch.getSubcategoryId()!=0
+                        && vendorDirectSearch.getSubcategoryId()==subcategory.getSubcategoryId()){
+                    vendorDirectSearchSubCatIndex = subItems.size()-1;
+                }
+
                 int itemsInSubCategories = 0;
                 for(int j=0; j<subcategory.getItems().size(); j++){
                     Item item1 = subcategory.getItems().get(j);
@@ -96,7 +111,14 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     if(isVegCheck(isVegToggle, item1)){
                         subItems.add(item1);
                         itemsInSubCategories++;
+
+                        if(vendorDirectSearch!=null && vendorDirectSearch.getItemId()!=0
+                                && vendorDirectSearch.getItemId()==item1.getRestaurantItemId()){
+                            vendorDirectSearchItemIndex = subItems.size()-1;
+                        }
                     }
+
+
                 }
                 if(itemsInSubCategories == 0){
                     subItems.remove(subItems.size()-1);
@@ -110,6 +132,10 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 item1.setItemPos(j);
                 if(isVegCheck(isVegToggle, item1)) {
                     subItems.add(item1);
+                    if(vendorDirectSearch!=null && vendorDirectSearch.getItemId()!=0
+                            && vendorDirectSearch.getItemId()==item1.getRestaurantItemId()){
+                        vendorDirectSearchItemIndex = subItems.size()-1;
+                    }
                 }
             }
         }
@@ -207,6 +233,13 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
+    public int getVendorDirectSearchSubCatIndex(){
+        return vendorDirectSearchSubCatIndex;
+    }
+
+    public int getVendorDirectSearchItemIndex(){
+        return vendorDirectSearchItemIndex;
+    }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {

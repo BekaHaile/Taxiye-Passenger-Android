@@ -303,6 +303,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private KeyboardLayoutListener mParentKeyboardLayoutListener;
     private KeyboardLayoutListener.KeyBoardStateHandler mChildKeyboardListener;
     private boolean menusIsOpenMerchantInfo;
+    private MenusResponse.VendorDirectSearch vendorDirectSearch;
 
 
     public View getFeedHomeAddPostView() {
@@ -5960,5 +5961,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         if(isDeliveryOpenInBackground())return Config.DELIVERY_CUSTOMER_CLIENT_ID;
         return  Config.getLastOpenedClientId(this);
 
+    }
+
+    public MenusResponse.VendorDirectSearch getVendorDirectSearchObject(){
+        return vendorDirectSearch;
+    }
+
+    public void setDirectVendorSearchObject(MenusResponse.VendorDirectSearch vendorSearchItem){
+        this.vendorDirectSearch = vendorSearchItem;
     }
 }
