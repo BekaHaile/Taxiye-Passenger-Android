@@ -230,6 +230,19 @@ public class MenusResponse {
 		this.isOpenMerchantInfo = isOpenMerchantInfo;
 	}
 
+	// todo dummy method remove
+	public ArrayList<VendorDirectSearch> getDummyDirectSearchVendors(){
+		ArrayList<VendorDirectSearch> vendors = new ArrayList<>();
+		for(int i=0;i<4;i++){
+			VendorDirectSearch vendorDirectSearch = new VendorDirectSearch();
+			vendorDirectSearch.setQuery("Query:"+String.valueOf(i+1));
+			vendorDirectSearch.setVendorName("Restaurent:"+String.valueOf(i+1));
+			vendorDirectSearch.setVendorId(12691);
+			vendorDirectSearch.setCategoryId(284);
+			vendors.add(vendorDirectSearch);
+		}
+		return vendors;
+	}
 
 	public class VendorDirectSearch{
 
@@ -240,7 +253,7 @@ public class MenusResponse {
 		private String vendorName;
 
 		@SerializedName("id")
-		private String vendorId;
+		private int vendorId;
 
 		@SerializedName("category_id")
 		private int categoryId;
@@ -275,11 +288,11 @@ public class MenusResponse {
 			this.vendorName = vendorName;
 		}
 
-		public String getVendorId() {
+		public int getVendorId() {
 			return vendorId;
 		}
 
-		public void setVendorId(final String vendorId) {
+		public void setVendorId(final int vendorId) {
 			this.vendorId = vendorId;
 		}
 

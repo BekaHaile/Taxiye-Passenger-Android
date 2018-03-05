@@ -89,17 +89,24 @@ public class TransactionUtils {
         }
     }
 
-    public void openVendorMenuFragment(FragmentActivity activity, View container) {
+    public void openVendorMenuFragment(FragmentActivity activity, View container, Bundle args) {
         if (!checkIfFragmentAdded(activity, VendorMenuFragment.class.getName())) {
+            VendorMenuFragment vendorMenuFragment = new VendorMenuFragment();
+            if(args!=null){
+                vendorMenuFragment.setArguments(args);
+            }
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                    .add(container.getId(), new VendorMenuFragment(),
-                            VendorMenuFragment.class.getName())
+                    .add(container.getId(),vendorMenuFragment, VendorMenuFragment.class.getName())
                     .addToBackStack(VendorMenuFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();
         }
+    }
+
+    public void openVendorMenuFragment(FragmentActivity activity, View container) {
+        openVendorMenuFragment(activity,container,null);
     }
 
     public void openMerchantInfoFragment(FragmentActivity activity, View container) {

@@ -188,6 +188,29 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
         success();
 
+        // check if we have category / subCategory coming in arguments, if yes we need to switch tabs accordingly
+        if(getArguments()!=null){
+            int categoryId = -1,subCategoryId = -1;
+            if(getArguments().containsKey(Constants.ITEM_CATEGORY_ID)){
+                categoryId = getArguments().getInt(Constants.ITEM_CATEGORY_ID);
+            }
+            if(getArguments().containsKey(Constants.ITEM_SUB_CATEGORY_ID)){
+                subCategoryId = getArguments().getInt(Constants.ITEM_SUB_CATEGORY_ID);
+            }
+
+            if(menusCategoryFragmentsAdapter!=null && categoryId!= -1){
+                int tabPosition = menusCategoryFragmentsAdapter.getCategoryPosition(categoryId);
+                viewPager.setCurrentItem(tabPosition);
+
+                if(subCategoryId!=-1){
+                    MenusCategoryItemsFragment itemsFragment = (MenusCategoryItemsFragment) getChildFragmentManager()
+                            .findFragmentByTag("android:switcher:" + R.id.viewPager + ":" +tabPosition );
+                }
+            }
+
+
+        }
+
 
         return rootView;
     }

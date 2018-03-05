@@ -1210,6 +1210,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     activity.addSuggestStoreFragment();
 
                     break;
+                case R.id.llRootVendorDirectSearch:
+                    callback.onVendorDirectSearchClicked(((MenusResponse.VendorDirectSearch)dataToDisplay.get(pos)));
+                    break;
 
             }
         }
@@ -1877,7 +1880,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void onRestaurantSelected(int vendorId);
         void onBannerInfoDeepIndexClick(int deepIndex);
         void openCategory(MenusResponse.Category categoryId);
-
+        void onVendorDirectSearchClicked(MenusResponse.VendorDirectSearch vendorDirectSearch);
         void apiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone);
     }
 

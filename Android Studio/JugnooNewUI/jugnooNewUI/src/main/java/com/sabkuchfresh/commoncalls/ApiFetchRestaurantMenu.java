@@ -1,5 +1,6 @@
 package com.sabkuchfresh.commoncalls;
 
+import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -15,6 +16,7 @@ import com.sabkuchfresh.retrofit.model.menus.CustomiseOptionsId;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
@@ -59,7 +61,9 @@ public class ApiFetchRestaurantMenu {
         this.callback = callback;
     }
 
-    public void hit(final int restaurantId, final double latitude, final double longitude, final boolean directCheckout, final JSONArray cartItemToSet, final LatLng reOrderLatlng, final int reorderId, final String reorderAddress) {
+    public void hit(final int restaurantId, final double latitude, final double longitude, final boolean directCheckout,
+                    final JSONArray cartItemToSet, final LatLng reOrderLatlng, final int reorderId,
+                    final String reorderAddress, final MenusResponse.VendorDirectSearch vendorDirectSearch) {
         try {
             if (MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
@@ -76,7 +80,8 @@ public class ApiFetchRestaurantMenu {
                 // not to be opened
                 if(!directCheckout
                         && activity.isMenusIsOpenMerchantInfo()
-                        && activity.getMerchantInfoFragment() == null){
+                        && activity.getMerchantInfoFragment() == null
+                        && vendorDirectSearch == null){
                     params.put(Constants.KEY_NOT_SEND_MENU, "1");
                 }
 
@@ -139,7 +144,7 @@ public class ApiFetchRestaurantMenu {
                                                     }, new View.OnClickListener() {
                                                         @Override
                                                         public void onClick(View v) {
-                                                            openNextFragment(false);
+                                                            openNextFragment(false, vendorDirectSearch);
                                                             updateCartAndSetJeanie(jObj);
 
                                                         }
@@ -153,7 +158,7 @@ public class ApiFetchRestaurantMenu {
                                                 public void onClick(View v) {
                                                     activity.setReorderLatlngToAdrress(reOrderLatlng,reorderAddress);
                                                     Prefs.with(activity).save(activity.getAppType()== AppConstant.ApplicationType.MENUS?Constants.CART_STATUS_REORDER_ID:Constants.CART_STATUS_REORDER_ID_CUSTOMER_DELIVERY,reorderId);//save reoderId in cart to send in checkout
-                                                    openNextFragment(true);
+                                                    openNextFragment(true, vendorDirectSearch);
                                                     updateCartAndSetJeanie(jObj);
                                                 }
                                             });
@@ -162,7 +167,7 @@ public class ApiFetchRestaurantMenu {
                                             //Everything is okay go to checkout
                                             Prefs.with(activity).save(activity.getAppType()== AppConstant.ApplicationType.MENUS?Constants.CART_STATUS_REORDER_ID:Constants.CART_STATUS_REORDER_ID_CUSTOMER_DELIVERY,reorderId);//save reoderId in cart to send in checkout
                                             activity.setReorderLatlngToAdrress(reOrderLatlng,reorderAddress);
-                                            openNextFragment(true);
+                                            openNextFragment(true, vendorDirectSearch);
                                             updateCartAndSetJeanie(jObj);
                                         }
 
@@ -176,7 +181,7 @@ public class ApiFetchRestaurantMenu {
                                                 activity.clearMenusCart(activity.getAppType());
                                             }
                                             updateCartAndSetJeanie(jObj);
-                                            openNextFragment(directCheckout);
+                                            openNextFragment(directCheckout, vendorDirectSearch);
                                         }
 
 
@@ -212,7 +217,17 @@ public class ApiFetchRestaurantMenu {
         }
     }
 
-    private void openNextFragment(boolean goToCheckout) {
+    private void openNextFragment(boolean goToCheckout, MenusResponse.VendorDirectSearch vendorDirectSearch) {
+
+        // if from direct search open vendor
+        if(vendorDirectSearch!=null){
+            Bundle args = new Bundle();
+            args.putInt(Constants.ITEM_CATEGORY_ID,vendorDirectSearch.getCategoryId());
+            args.putInt(Constants.ITEM_SUB_CATEGORY_ID,vendorDirectSearch.getSubcategoryId());
+            activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer(),args);
+            return;
+        }
+
         if (goToCheckout) {
             activity.openCart(activity.getAppType(), true);
         } else {

@@ -5213,6 +5213,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private ApiFetchRestaurantMenu apiFetchRestaurantMenu;
     public void fetchRestaurantMenuAPI(int restaurantId, boolean directCheckout, final JSONArray jsonArray, final LatLng latLng, final int reorderStatusId, final String reoderDelAddress){
+        fetchRestaurantMenuAPI(restaurantId, directCheckout, jsonArray, latLng, reorderStatusId, reoderDelAddress,null);
+    }
+
+    public void fetchRestaurantMenuAPI(int restaurantId, boolean directCheckout, final JSONArray jsonArray
+            , final LatLng latLng, final int reorderStatusId, final String reoderDelAddress, final MenusResponse.VendorDirectSearch vendorDirectSearch){
 
 
         if(apiFetchRestaurantMenu == null){
@@ -5229,7 +5234,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 @Override
                 public void onRetry(View view, int restaurantId, boolean directCheckout) {
-                    fetchRestaurantMenuAPI(restaurantId, directCheckout, jsonArray, latLng, reorderStatusId, reoderDelAddress);
+                    fetchRestaurantMenuAPI(restaurantId, directCheckout, jsonArray, latLng, reorderStatusId, reoderDelAddress,vendorDirectSearch);
                 }
 
                 @Override
@@ -5239,7 +5244,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             });
         }
         apiFetchRestaurantMenu.hit(restaurantId, getSelectedLatLng().latitude,
-                getSelectedLatLng().longitude, directCheckout, jsonArray, latLng, reorderStatusId, reoderDelAddress);
+                getSelectedLatLng().longitude, directCheckout, jsonArray, latLng, reorderStatusId, reoderDelAddress,vendorDirectSearch);
     }
 
 
