@@ -260,9 +260,6 @@
         <item name="android:layout_width">
             wrap_content
         </item>
-        <item name="android:minWidth">
-            @dimen/button_width
-        </item>
         <item name="android:layout_height">
             @dimen/splash_button_height
         </item>
@@ -276,10 +273,10 @@
             @dimen/text_size_34
         </item>
         <item name="android:paddingLeft">
-            @dimen/px_10
+            @dimen/px_40
         </item>
         <item name="android:paddingRight">
-            @dimen/px_10
+            @dimen/px_40
         </item>
         <item name="android:textAllCaps">
             true
