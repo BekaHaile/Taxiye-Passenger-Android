@@ -21,6 +21,7 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
+import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -44,6 +45,7 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
     private FreshActivity activity;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ImageView noMealsView;
+    private LinearLayoutManager linearLayoutManager;
 
 
     protected Bus mBus;
@@ -75,14 +77,28 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
      */
     public void scrollToDirectVendorSearchIndex(){
         if(menusCategoryItemsAdapter!=null){
+
+            int scrollToPos = -1;
+
             if(menusCategoryItemsAdapter.getVendorDirectSearchItemIndex()!=0){
-                recyclerViewCategoryItems.getLayoutManager().scrollToPosition(menusCategoryItemsAdapter.getVendorDirectSearchItemIndex());
-                return;
+               scrollToPos = menusCategoryItemsAdapter.getVendorDirectSearchItemIndex();
+            }else if(menusCategoryItemsAdapter.getVendorDirectSearchSubCatIndex()!=0){
+                scrollToPos = menusCategoryItemsAdapter.getVendorDirectSearchSubCatIndex();
             }
-            if(menusCategoryItemsAdapter.getVendorDirectSearchSubCatIndex()!=0){
-                recyclerViewCategoryItems.getLayoutManager().scrollToPosition(menusCategoryItemsAdapter.getVendorDirectSearchSubCatIndex());
+            if(scrollToPos!=-1){
+                // compute scroll offset
+                int scrollOffset = 0;
+                int lastVisibleItemPos = linearLayoutManager.findLastVisibleItemPosition();
+
+                if(scrollToPos>lastVisibleItemPos){
+                    scrollOffset = Utils.dpToPx(activity,100);
+                }
+                linearLayoutManager.scrollToPositionWithOffset(scrollToPos,scrollOffset);
             }
+
         }
+
+
     }
 
     @Override
@@ -109,7 +125,8 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                 noMealsView.setVisibility(View.GONE);
 
                 recyclerViewCategoryItems = (RecyclerView) rootView.findViewById(R.id.recyclerViewCategoryItems);
-                recyclerViewCategoryItems.setLayoutManager(new LinearLayoutManager(activity));
+                linearLayoutManager  = new LinearLayoutManager(activity);
+                recyclerViewCategoryItems.setLayoutManager(linearLayoutManager);
                 recyclerViewCategoryItems.setItemAnimator(new DefaultItemAnimator());
                 recyclerViewCategoryItems.setHasFixedSize(false);
                 mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
