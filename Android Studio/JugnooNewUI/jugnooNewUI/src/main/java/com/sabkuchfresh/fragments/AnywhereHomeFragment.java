@@ -348,7 +348,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             if (orderViaChatData.getCartText() != null) {
                 isOrderViaCheckoutFragment = true;
                 edtTaskDescription.setText(orderViaChatData.getCartText());
-                edtTaskDescription.setEnabled(false);
             } else {
                 isOrderViaRestaurantDetail = true;
                 setMaxLength(edtTaskDescription, 1000);
