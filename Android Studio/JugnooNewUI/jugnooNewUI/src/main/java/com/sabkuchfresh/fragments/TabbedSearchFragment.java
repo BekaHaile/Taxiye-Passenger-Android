@@ -122,8 +122,19 @@ public class TabbedSearchFragment extends Fragment {
     }
 
     public void doSearch(String searchString){
-        searchText = searchString;
         searchOpened = true;
+        searchText  = searchString;
+        if (searchOpened) {
+            int oldLength = searchText.length();
+            searchText = searchString;
+            if (searchText.length() > 2) {
+                getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryOpened(), MenusFragment.TYPE_API_MENUS_SEARCH);
+            } else {
+                if (oldLength > searchString.length() && oldLength >= 1 && searchString.length() == 0) {
+                    getAllMenus(false, activity.getSelectedLatLng(), true,activity.getCategoryOpened(), MenusFragment.TYPE_API_MENUS_SEARCH);
+                }
+            }
+        }
     }
 
     public void searchClosed(){
