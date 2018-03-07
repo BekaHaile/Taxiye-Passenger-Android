@@ -1482,4 +1482,9 @@
     <string name="txt_contacts_syncing">Your contacts are syncing&#8230;</string>
     <string name="txt_no_jugnoo_connections">No jugnoo connections!</string>
 
+    <string-array name="search_tab_names">
+        <item>Stores</item>
+        <item>Items</item>
+    </string-array>
+
 </resources>

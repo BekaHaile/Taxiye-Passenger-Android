@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/white">
+
+    <View
+        android:id="@+id/vDividerLocation"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/stroke_light_grey_alpha"
+        android:visibility="visible"
+        android:tag="@string/dont_touch_me" />
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:tabIndicatorColor="@color/theme_color"
+        app:tabTextColor="@color/text_color"
+        app:tabSelectedTextColor="@android:color/black"
+        android:elevation="@dimen/dp_3"
+        android:tag="@string/dont_touch_me"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vpSearch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:tag="@string/dont_touch_me"/>
+
+</LinearLayout>

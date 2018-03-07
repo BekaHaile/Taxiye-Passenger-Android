@@ -116,6 +116,7 @@ import com.sabkuchfresh.fragments.RestaurantAddReviewFragment;
 import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.SuggestStoreFragment;
+import com.sabkuchfresh.fragments.TabbedSearchFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsCheckoutFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsHomeFragment;
@@ -1287,6 +1288,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return (MenusFragment) getSupportFragmentManager().findFragmentByTag(MenusFragment.class.getName());
     }
 
+    public TabbedSearchFragment getTabbedSearchFragment() {
+        return (TabbedSearchFragment) getSupportFragmentManager().findFragmentByTag(TabbedSearchFragment.class.getName());
+    }
+
     public FeedHomeFragment getFeedHomeFragment(){
         return (FeedHomeFragment) getSupportFragmentManager().findFragmentByTag(FeedHomeFragment.class.getName());
     }
@@ -1676,7 +1681,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 deliveryAddressInTopBarVisibility = View.VISIBLE;
                 topBar.title.setVisibility(View.GONE);
 
-            } else if (fragment instanceof VendorMenuFragment
+            } else if(fragment instanceof TabbedSearchFragment){
+
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+
+                topBar.title.setVisibility(View.GONE);
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+
+            }
+            else if (fragment instanceof VendorMenuFragment
                     || fragment instanceof RestaurantImageFragment
                     || fragment instanceof MerchantInfoFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -2196,7 +2210,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void searchItem() {
         try {
             if (isMenusOrDeliveryOpen()) {
-                if (getTopFragment() instanceof MenusFragment) {
+
+                if(getTopFragment() instanceof MenusFragment && getCategoryIdOpened()<0){
+                    // open tabbed search
+                    getTransactionUtils().openTabbedSearchFragment(this, getRelativeLayoutContainer(), null);
+                    topBar.title.setVisibility(View.GONE);
+                    topBar.title.invalidate();
+                    topBar.animateSearchBar(true);
+
+                }
+                else if (getTopFragment() instanceof MenusFragment) {
                     getMenusFragment().toggleSearch(true, true);
                     topBar.title.setVisibility(View.GONE);
                     topBar.title.invalidate();
@@ -2601,6 +2624,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             } else if(getTopFragment() instanceof FeedPostDetailFragment){
                 GAUtils.event(FEED, COMMENT, BACK+BUTTON+CLICKED);
             }
+        }
+
+        if(getTopFragment() instanceof TabbedSearchFragment){
+            // clear search
+            topBar.etSearch.setText("");
+            ((TabbedSearchFragment)getTopFragment()).searchClosed();
         }
 
         if(drawerLayout.isDrawerOpen(GravityCompat.END)){
@@ -4223,6 +4252,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     getMenusFragment().searchRestaurant(s.toString().trim());
                 } else if (getTopFragment() instanceof MenusSearchFragment) {
                     getMenusSearchFragment().searchItems(s.toString().trim());
+                }
+                else if (getTopFragment() instanceof TabbedSearchFragment) {
+                    getTabbedSearchFragment().doSearch(s.toString().trim());
                 }
                 if (s.length() > 0) {
                     topBar.ivSearchCross.setVisibility(View.VISIBLE);
