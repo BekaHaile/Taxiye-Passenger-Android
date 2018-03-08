@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -191,11 +192,27 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
                 mHolder.textViewTitle.setText(subItem.getSubItemName());
 
-                if(subItem.getVendorName()!=null && !subItem.getVendorName().equalsIgnoreCase("")){
+                // control vendor name visibility
+                boolean showVendorName = false;
+                if(position == 0){
+                   showVendorName = true;
+                }
+                else if(!subItems.get(position-1).getVendorId().equals(subItem.getVendorId())){
+                    // different vendor
+                    showVendorName = true;
+                }
+                if(showVendorName){
+                    mHolder.cvVendorName.setVisibility(View.VISIBLE);
                     mHolder.tvVendorName.setVisibility(View.VISIBLE);
-                    mHolder.tvVendorName.setText(subItem.getVendorName());
+                    if(subItem.getVendorName()!=null){
+                        mHolder.tvVendorName.setText(subItem.getVendorName());
+                    }
+                    else {
+                        mHolder.tvVendorName.setText("");
+                    }
                 }
                 else {
+                    mHolder.cvVendorName.setVisibility(View.GONE);
                     mHolder.tvVendorName.setVisibility(View.GONE);
                 }
 
@@ -584,6 +601,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         private RelativeLayout rlLikeLayout;
         private LikeButton likeButton;
         private TextView tvVendorName;
+        private CardView cvVendorName;
 
         public ViewHolderSlot(View itemView, Context context) {
             super(itemView);
@@ -617,7 +635,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             tvDiscountedOffer = (TextView) itemView.findViewById(R.id.tv_discounted_offer);
             rlLikeLayout = (RelativeLayout) itemView.findViewById(R.id.rl_like_layout);
             tvVendorName = (TextView) itemView.findViewById(R.id.tvVendorName);
-            tvVendorName.setTypeface(Fonts.mavenRegular(context), Typeface.NORMAL);
+            tvVendorName.setTypeface(Fonts.mavenMedium(context), Typeface.NORMAL);
+            cvVendorName = (CardView) itemView.findViewById(R.id.cvVendorName);
 
         }
     }
