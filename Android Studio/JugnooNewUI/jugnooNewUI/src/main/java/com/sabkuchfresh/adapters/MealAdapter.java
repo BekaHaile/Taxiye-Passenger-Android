@@ -692,6 +692,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         void minusNotDone(int position, SubItem subItem);
 
         boolean onLikeClicked(SubItem subItem, int pos);
+
+        boolean canAddItem(SubItem subItem);
     }
 
 

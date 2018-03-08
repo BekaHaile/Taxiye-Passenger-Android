@@ -300,6 +300,11 @@ public class MealAddonItemsFragment extends Fragment implements GACategory, GAAc
         return false;
     }
 
+    @Override
+    public boolean canAddItem(final SubItem subItem) {
+        return false;
+    }
+
     private void updateCartTopBarView(Pair<Double, Integer> pair){
         textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));
     }

@@ -389,14 +389,17 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     activity.setProductsResponse(productsResponse);
                                     activity.setMenuRefreshLatLng(new LatLng(latLng.latitude, latLng.longitude));
                                     setSortingList();
-                                    if (activity.mealSort == -1) {
+                                    /**
+                                     *  remove sorting
+                                     */
+                                   // if (activity.mealSort == -1) {
                                         slots.get(sortedBy).setCheck(true);
                                         activity.mealSort = sortedBy;
                                         mealAdapter.setList(mealsData, recentOrder, status, mealsBulkBanner,productsResponse.getDiscountInfo() );
-                                    } else {
-                                        slots.get(activity.mealSort).setCheck(true);
-                                        onSortEvent(activity.mealSort,productsResponse.getDiscountInfo() );
-                                    }
+                                   // } else {
+                                  //      slots.get(activity.mealSort).setCheck(true);
+                                  //      onSortEvent(activity.mealSort,productsResponse.getDiscountInfo() );
+                                  //  }
 
 
                                     activity.canOrder = false;
@@ -592,5 +595,8 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         return getView()!=null && relativeLayoutNoMenus.getVisibility()!=View.VISIBLE;
     }
 
-
+    @Override
+    public boolean canAddItem(SubItem subItem) {
+        return activity.getCart().getVendorCartHashMap().containsKey(subItem.getVendorId());
+    }
 }
