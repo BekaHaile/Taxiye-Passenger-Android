@@ -76,6 +76,9 @@ public class MenusResponse {
 	@Expose
 	private List<Vendor> vendors = new ArrayList<Vendor>();
 
+	@SerializedName("vendors_direct_search")
+	private List<VendorDirectSearch> directSearchVendors = new ArrayList<>();
+
 	@SerializedName("is_open_merchant_info")
 	@Expose
 	private int isOpenMerchantInfo;
@@ -86,6 +89,14 @@ public class MenusResponse {
 
 	public OfferingsVisibilityResponse.OfferingsVisibilityData getOfferingsVisibilityData() {
 		return offeringsVisibilityData;
+	}
+
+	public List<VendorDirectSearch> getDirectSearchVendors() {
+		return directSearchVendors;
+	}
+
+	public void setDirectSearchVendors(final List<VendorDirectSearch> directSearchVendors) {
+		this.directSearchVendors = directSearchVendors;
 	}
 
 	public int getChatAvailable() {
@@ -218,6 +229,77 @@ public class MenusResponse {
 	public void setIsOpenMerchantInfo(int isOpenMerchantInfo) {
 		this.isOpenMerchantInfo = isOpenMerchantInfo;
 	}
+
+
+	public class VendorDirectSearch{
+
+		@SerializedName("query")
+		private String query;
+
+		@SerializedName("name")
+		private String vendorName;
+
+		@SerializedName("id")
+		private String vendorId;
+
+		@SerializedName("category_id")
+		private int categoryId;
+
+		@SerializedName("subcategory_id")
+		private int subcategoryId;
+
+		@SerializedName("item_id")
+		private int itemId;
+
+		public int getItemId() {
+			return itemId;
+		}
+
+		public void setItemId(final int itemId) {
+			this.itemId = itemId;
+		}
+
+		public String getQuery() {
+			return query;
+		}
+
+		public void setQuery(final String query) {
+			this.query = query;
+		}
+
+		public String getVendorName() {
+			return vendorName;
+		}
+
+		public void setVendorName(final String vendorName) {
+			this.vendorName = vendorName;
+		}
+
+		public String getVendorId() {
+			return vendorId;
+		}
+
+		public void setVendorId(final String vendorId) {
+			this.vendorId = vendorId;
+		}
+
+		public int getCategoryId() {
+			return categoryId;
+		}
+
+		public void setCategoryId(final int categoryId) {
+			this.categoryId = categoryId;
+		}
+
+		public int getSubcategoryId() {
+			return subcategoryId;
+		}
+
+		public void setSubcategoryId(final int subcategoryId) {
+			this.subcategoryId = subcategoryId;
+		}
+	}
+
 
 
 	public class Vendor {

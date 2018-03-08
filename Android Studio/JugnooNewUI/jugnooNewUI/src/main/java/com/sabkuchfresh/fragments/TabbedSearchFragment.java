@@ -176,11 +176,7 @@ public class TabbedSearchFragment extends Fragment {
                             JSONObject jObj = new JSONObject(responseStr);
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
-                                    if (activity.getMenusResponse() == null) {
-                                        activity.setMenusResponse(menusResponse);
-                                    }
                                     // todo set the response to store and item fragments
-                                    activity.setMenuRefreshLatLng(latLng);
                                     shouldRecallSearchAPI = true;
                                 }
                             }

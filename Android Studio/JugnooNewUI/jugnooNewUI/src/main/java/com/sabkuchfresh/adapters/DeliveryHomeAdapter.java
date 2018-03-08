@@ -106,6 +106,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int NEW_VIEW_ORDER_ITEM = 14;
     private static final int ITEM_BANNER_FATAFAT_RESTAURANTS = 15;
     private static final int ITEM_ADD_STORE = 16;
+    private static final int VIEW_DIRECT_SEARCH_VENDOR = 17;
+
     private CategoriesData categoriesData;
     private ArrayList<Object> collapsedRecentOrdersData = new ArrayList<>();
     private int posFromWhichOrdersStart;
@@ -193,6 +195,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         final int sizeListBeforeAdding = dataToDisplay.size();
 
+
         // vendors calculation
         int vendorsCount = 0;
         if(menusResponse.getVendors() != null){
@@ -260,6 +263,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
 
+        // direct search vendors
+        if(menusResponse.getDirectSearchVendors()!=null){
+            dataToDisplay.addAll(menusResponse.getDirectSearchVendors());
+        }
 
 
         //vendors Assignment
@@ -478,6 +485,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case VIEW_VENDOR:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_restaurant, parent, false);
                 return new ViewHolderVendor(v, this);
+            case VIEW_DIRECT_SEARCH_VENDOR:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vendor_direct_search, parent, false);
+                return new ViewHolderVendorDirectSearch(v, this);
             case VIEW_DIVIDER:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_divider_delivery, parent, false);
                 return new ViewDivider(v);
@@ -527,8 +537,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             deliveryDisplayCategoriesView.setCategories(categoriesData.getCategories(),categoriesData.isCollapseCategories);
             categoriesData.setCollapseCategories(false);
 
-        }else if(mholder instanceof ViewHolderVendor){
-            DeliveryHomeAdapter.ViewHolderVendor mHolder = ((DeliveryHomeAdapter.ViewHolderVendor) mholder);
+        }else if(mholder instanceof ViewHolderVendorDirectSearch){
+
+        DeliveryHomeAdapter.ViewHolderVendorDirectSearch holder = ((DeliveryHomeAdapter.ViewHolderVendorDirectSearch)mholder);
+        MenusResponse.VendorDirectSearch vendorDirectSearch = (MenusResponse.VendorDirectSearch)dataToDisplay.get(position);
+        holder.tvQuery.setText(vendorDirectSearch.getQuery());
+        holder.tvRestaurant.setText(vendorDirectSearch.getVendorName());
+
+    } else if(mholder instanceof ViewHolderVendor){
+
+        DeliveryHomeAdapter.ViewHolderVendor mHolder = ((DeliveryHomeAdapter.ViewHolderVendor) mholder);
             MenusResponse.Vendor vendor = (MenusResponse.Vendor) dataToDisplay.get(position);
             mHolder.textViewRestaurantName.setText(vendor.getName());
 
@@ -1075,6 +1093,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(object instanceof MenusResponse.Vendor)
             return VIEW_VENDOR;
 
+        if(object instanceof MenusResponse.VendorDirectSearch)
+            return VIEW_DIRECT_SEARCH_VENDOR;
+
+
         if(object instanceof MenusResponse.StripInfo)
             return OFFER_STRIP_ITEM;
 
@@ -1306,6 +1328,28 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tvOffer = (TextView)itemView.findViewById(R.id.tv_offer);tvOffer.setTypeface(tvOffer.getTypeface(),Typeface.BOLD);
         }
     }
+
+    private class ViewHolderVendorDirectSearch extends RecyclerView.ViewHolder{
+
+        private LinearLayout llRoot;
+        private TextView tvQuery,tvRestaurant;
+
+        public ViewHolderVendorDirectSearch(final View itemView, final ItemListener itemListener) {
+            super(itemView);
+            llRoot = (LinearLayout) itemView.findViewById(R.id.llRootVendorDirectSearch);
+            tvQuery= (TextView) itemView.findViewById(R.id.tvQuery);
+            tvRestaurant = (TextView) itemView.findViewById(R.id.tvRestaurant);
+            tvRestaurant.setTypeface(tvRestaurant.getTypeface(),Typeface.BOLD);
+            llRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.onClickItem(llRoot, itemView);
+                }
+            });
+        }
+    }
+
+
     private class ViewOrderStatus extends RecyclerView.ViewHolder {
 
         public LinearLayout linear;
