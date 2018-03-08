@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Set;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -596,7 +597,56 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     @Override
-    public boolean canAddItem(SubItem subItem) {
-        return activity.getCart().getVendorCartHashMap().containsKey(subItem.getVendorId());
+    public boolean canAddItem(final SubItem subItem, final MealAdapter.CallbackCheckForAdd callbackCheckForAdd) {
+
+        boolean canAddItem = false;
+
+        Set<Integer> vendorMapKeySet = activity.getCart().getVendorCartHashMap().keySet();
+
+        // first item allow
+        if(activity.getCart().getVendorCartHashMap().size()==0 || (activity.getCart().getVendorCartHashMap().size()==1
+                && activity.getCart().getVendorCartHashMap().get(vendorMapKeySet.iterator().next()).values().size()==0)){
+            canAddItem = true;
+        }
+        // proceed for same vendor case in case canAddItem is still false
+        if(!canAddItem){
+            HashMap<Integer,SubItem> items = activity.getCart().getVendorCartHashMap()
+                    .get(vendorMapKeySet.iterator().next());
+
+            for(SubItem item:items.values()){
+                if(item.getVendorId().equals(subItem.getVendorId())){
+                    // same vendor
+                    canAddItem = true;
+                    break;
+                }
+            }
+        }
+
+        if(!canAddItem){
+            // show alert for different item selected from different vendor
+            HashMap<Integer, SubItem> prevItemsMap = activity.getCart().getVendorCartHashMap().get(vendorMapKeySet.iterator().next());
+            String previousVendorName = prevItemsMap.get(prevItemsMap.keySet().iterator().next()).getVendorName();
+
+            DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+                    getString(R.string.previous_vendor_cart_message_format, previousVendorName),
+                    getString(R.string.ok), getString(R.string.cancel),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // clear meals cart
+                            activity.clearMealCart();
+                           callbackCheckForAdd.addConfirmed();
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                        }
+                    }, false, false);
+
+        }
+
+        return canAddItem;
     }
 }

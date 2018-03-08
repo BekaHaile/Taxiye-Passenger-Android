@@ -3123,7 +3123,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         updateItemListFromSPDB();
     }
 
-    private void clearMealCart() {
+    public void clearMealCart() {
         Paper.book().delete(DB_MEALS_CART);
         Paper.book().delete(DB_PREVIOUS_VENDOR);
         createAppCart(Config.getMealsClientId());

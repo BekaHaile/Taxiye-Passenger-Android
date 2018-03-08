@@ -301,9 +301,10 @@ public class MealAddonItemsFragment extends Fragment implements GACategory, GAAc
     }
 
     @Override
-    public boolean canAddItem(final SubItem subItem) {
+    public boolean canAddItem(final SubItem subItem, final MealAdapter.CallbackCheckForAdd callbackCheckForAdd) {
         return false;
     }
+
 
     private void updateCartTopBarView(Pair<Double, Integer> pair){
         textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));

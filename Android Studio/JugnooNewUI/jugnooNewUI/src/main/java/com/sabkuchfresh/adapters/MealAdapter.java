@@ -66,6 +66,9 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private static final int STATUS_ITEM = 2;
     private static final int BULK_ORDER_ITEM = 3;
 
+    public interface CallbackCheckForAdd{
+        void addConfirmed();
+    }
 
     public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems) {
         this.activity = activity;
@@ -370,19 +373,20 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     @Override
                     public void onClick(View v) {
                         try {
-                            int pos = (int) v.getTag();
-                            if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
-                                subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
-                            } else {
-                                Utils.showToast(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
+                            final int pos = (int) v.getTag();
+
+                            CallbackCheckForAdd callbackCheckForAdd = new CallbackCheckForAdd() {
+                                @Override
+                                public void addConfirmed() {
+                                    addItemToCart(pos);
+                                }
+                            };
+
+                            if(callback.canAddItem(subItems.get(pos),callbackCheckForAdd)){
+                               addItemToCart(pos);
                             }
-                            callback.onPlusClicked(pos, subItems.get(pos));
-                            notifyDataSetChanged();
-                            if(subItems.get(pos).getSubItemQuantitySelected() == 1){
-                                GAUtils.event(activity.getGaCategory(), HOME, ITEM+ADDED);
-                            } else {
-                                GAUtils.event(activity.getGaCategory(), HOME, ITEM+INCREASED);
-                            }
+
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -451,6 +455,21 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             e.printStackTrace();
         }
 
+    }
+
+    private void addItemToCart(int pos){
+        if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
+            subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
+        } else {
+            Utils.showToast(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
+        }
+        callback.onPlusClicked(pos, subItems.get(pos));
+        notifyDataSetChanged();
+        if(subItems.get(pos).getSubItemQuantitySelected() == 1){
+            GAUtils.event(activity.getGaCategory(), HOME, ITEM+ADDED);
+        } else {
+            GAUtils.event(activity.getGaCategory(), HOME, ITEM+INCREASED);
+        }
     }
 
     private void showPossibleStatus(ArrayList<String> possibleStatus, int status, ViewTitleStatus statusHolder){
@@ -693,7 +712,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
         boolean onLikeClicked(SubItem subItem, int pos);
 
-        boolean canAddItem(SubItem subItem);
+        boolean canAddItem(SubItem subItem, MealAdapter.CallbackCheckForAdd callbackCheckForAdd);
     }
 
 
