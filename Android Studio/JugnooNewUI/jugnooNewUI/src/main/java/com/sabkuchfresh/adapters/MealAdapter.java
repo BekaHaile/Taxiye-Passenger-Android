@@ -191,6 +191,14 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
                 mHolder.textViewTitle.setText(subItem.getSubItemName());
 
+                if(subItem.getVendorName()!=null && !subItem.getVendorName().equalsIgnoreCase("")){
+                    mHolder.tvVendorName.setVisibility(View.VISIBLE);
+                    mHolder.tvVendorName.setText(subItem.getVendorName());
+                }
+                else {
+                    mHolder.tvVendorName.setVisibility(View.GONE);
+                }
+
                 mHolder.textViewdetails.setText(subItem.getItemLargeDesc());
 //                mHolder.deliveryTime.setText(DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart()) + "-"
 //                        + DateOperations.convertDayTimeAPViaFormat(subItem.getOrderEnd()));
@@ -575,6 +583,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         public TextView tvDiscountedOffer,tvLikeCount;
         private RelativeLayout rlLikeLayout;
         private LikeButton likeButton;
+        private TextView tvVendorName;
 
         public ViewHolderSlot(View itemView, Context context) {
             super(itemView);
@@ -607,6 +616,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             tvDiscountedPrice = (TextViewStrikeThrough) itemView.findViewById(R.id.text_price_striked);
             tvDiscountedOffer = (TextView) itemView.findViewById(R.id.tv_discounted_offer);
             rlLikeLayout = (RelativeLayout) itemView.findViewById(R.id.rl_like_layout);
+            tvVendorName = (TextView) itemView.findViewById(R.id.tvVendorName);
+            tvVendorName.setTypeface(Fonts.mavenRegular(context), Typeface.NORMAL);
 
         }
     }
