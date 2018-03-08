@@ -2627,8 +2627,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
 
         if(getTopFragment() instanceof TabbedSearchFragment){
-            // clear search
-            topBar.etSearch.setText("");
+            // search closed
             ((TabbedSearchFragment)getTopFragment()).searchClosed();
         }
 

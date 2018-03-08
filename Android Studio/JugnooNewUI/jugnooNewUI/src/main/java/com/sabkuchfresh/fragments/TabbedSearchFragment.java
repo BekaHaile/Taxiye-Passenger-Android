@@ -61,7 +61,7 @@ public class TabbedSearchFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
-        View main = inflater.inflate(R.layout.fragment_tabbed_search,container,false);
+        View main = inflater.inflate(R.layout.fragment_tabbed_search, container, false);
         initView(main);
         setData();
         return main;
@@ -83,16 +83,18 @@ public class TabbedSearchFragment extends Fragment {
         activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
         activity.getTopBar().etSearch.requestFocus();
         Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
+        searchOpened = true;
     }
 
-    private void setData(){
+    private void setData() {
         // set tabs up
         String[] titles = activity.getResources().getStringArray(R.array.search_tab_names);
         ArrayList<Fragment> fragments = new ArrayList<>();
         storeSearchResultFragment = new TabbedSearchResultFragment();
         itemSearchResultFragment = new TabbedSearchResultFragment();
-        fragments.add(storeSearchResultFragment); fragments.add(itemSearchResultFragment);
-        pagerAdaptor = new TabbedPagerAdaptor(getChildFragmentManager(),fragments,titles);
+        fragments.add(storeSearchResultFragment);
+        fragments.add(itemSearchResultFragment);
+        pagerAdaptor = new TabbedPagerAdaptor(getChildFragmentManager(), fragments, titles);
         viewPagerSearch.setAdapter(pagerAdaptor);
         tabLayoutSearch.setupWithViewPager(viewPagerSearch);
         changeFontInViewGroup(tabLayoutSearch);
@@ -102,11 +104,12 @@ public class TabbedSearchFragment extends Fragment {
     @Override
     public void onAttach(final Context context) {
         super.onAttach(context);
-        activity =(FreshActivity)context;
+        activity = (FreshActivity) context;
     }
 
     /**
      * Change font for a viewgroup
+     *
      * @param viewGroup the viewGroup
      */
     void changeFontInViewGroup(ViewGroup viewGroup) {
@@ -114,31 +117,33 @@ public class TabbedSearchFragment extends Fragment {
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View child = viewGroup.getChildAt(i);
             if (TextView.class.isAssignableFrom(child.getClass())) {
-                ((TextView) child).setTypeface(typeface,Typeface.BOLD);
+                ((TextView) child).setTypeface(typeface, Typeface.BOLD);
             } else if (ViewGroup.class.isAssignableFrom(child.getClass())) {
                 changeFontInViewGroup((ViewGroup) viewGroup.getChildAt(i));
             }
         }
     }
 
-    public void doSearch(String searchString){
-        searchOpened = true;
-        searchText  = searchString;
-        if (searchOpened) {
+    public void doSearch(String searchString) {
+
+        if(searchOpened) {
+            searchText = searchString;
             int oldLength = searchText.length();
             searchText = searchString;
             if (searchText.length() > 2) {
                 getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryOpened(), MenusFragment.TYPE_API_MENUS_SEARCH);
             } else {
                 if (oldLength > searchString.length() && oldLength >= 1 && searchString.length() == 0) {
-                    getAllMenus(false, activity.getSelectedLatLng(), true,activity.getCategoryOpened(), MenusFragment.TYPE_API_MENUS_SEARCH);
+                    getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryOpened(), MenusFragment.TYPE_API_MENUS_SEARCH);
                 }
             }
         }
+
     }
 
-    public void searchClosed(){
+    public void searchClosed() {
         searchOpened = false;
+        activity.getTopBar().etSearch.setText("");
     }
 
 
@@ -147,7 +152,7 @@ public class TabbedSearchFragment extends Fragment {
         if (isMenusApiInProgress)
             return;
 
-        int categoryId = categoryObject==null?-1:categoryObject.getId();
+        int categoryId = categoryObject == null ? -1 : categoryObject.getId();
         final String searchTextCurr = searchText;
         try {
             if (!MyApplication.getInstance().isOnline()) {
@@ -246,7 +251,7 @@ public class TabbedSearchFragment extends Fragment {
                         if (isPagination) {
                             // NA here
                         } else {
-                            getAllMenus(loader, latLng, scrollToTop,category , typeApi);
+                            getAllMenus(loader, latLng, scrollToTop, category, typeApi);
 
                         }
                     }
