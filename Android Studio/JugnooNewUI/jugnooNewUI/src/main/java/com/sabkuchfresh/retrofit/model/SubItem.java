@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by shankar on 4/6/16.
  */
-public class SubItem implements Serializable{
+public class SubItem implements Serializable,Cloneable{
     @SerializedName("delivery_time_text")
     @Expose
     private String deliveryTimeText;
@@ -567,5 +567,10 @@ public class SubItem implements Serializable{
 
     public boolean getIsLiked() {
         return isLiked>0 ;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

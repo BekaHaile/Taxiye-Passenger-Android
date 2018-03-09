@@ -28,6 +28,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -55,6 +56,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
     private DiscountInfo discountInfo;
     private boolean showDiscountedPrices;
     private RecyclerView recyclerView;
+    private ArrayList<SubItem> allSubItems = new ArrayList<>();
 
 
 
@@ -74,6 +76,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.subItems = subItems;
         this.recentOrders = new ArrayList<>();
         this.possibleStatus = new ArrayList<>();
+        cloneAllItemsList();
     }
 
     public MealAdapter(FreshActivity activity, ArrayList<SubItem> subItems, ArrayList<RecentOrder> recentOrders, ArrayList<String> possibleStatus, Callback callback, DiscountInfo discountInfo, RecyclerView recyclerView) {
@@ -84,7 +87,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.possibleStatus = possibleStatus;
         this.callback = callback;
         this.discountInfo = discountInfo;
-
+        cloneAllItemsList();
         scheduleHandlerForUpdatingDiscountTime(true, true);
 
     }
@@ -96,8 +99,27 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.showBulkOrderOption = (mealsBulkBanner != null) ? mealsBulkBanner.getMealsBannerEnabled() : 0;
         this.mealsBulkBanner = mealsBulkBanner;
         this.discountInfo = discountInfo;
+        cloneAllItemsList();
         scheduleHandlerForUpdatingDiscountTime(true, true);
         notifyDataSetChanged();
+    }
+
+    /**
+     * Checks if we have some items in cart ( qty would be non zero )
+     * If yes hide those vendors
+     */
+    public void checkForCartItemsPresent(){
+        for(SubItem item:subItems){
+            if(item.getSubItemQuantitySelected()!=null && item.getSubItemQuantitySelected()>0){
+                hideOtherVendors(item.getVendorId());
+                break;
+            }
+        }
+    }
+
+    private void cloneAllItemsList(){
+        allSubItems.clear();
+        allSubItems.addAll(subItems);
     }
 
 
@@ -362,6 +384,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                             if(callback.checkForMinus(pos, subItems.get(pos))) {
                                 subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
                                         subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
+
                                 callback.onMinusClicked(pos, subItems.get(pos));
 
                                 notifyDataSetChanged();
@@ -369,6 +392,13 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                             } else{
                                 callback.minusNotDone(pos, subItems.get(pos));
                             }
+
+                            // if the cart is empty, we need to reshow all vendors
+                            if(callback.isMealsCartEmpty()){
+                               showAllVendors();
+                            }
+
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -390,6 +420,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
                             if(callback.canAddItem(subItems.get(pos),callbackCheckForAdd)){
                                addItemToCart(pos);
+                               // hide other vendors so user cannot add item from them
+                                hideOtherVendors(subItems.get(pos).getVendorId());
                             }
 
 
@@ -463,12 +495,37 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
     }
 
+    /**
+     * Hides other vendors
+     * @param vendorId the vendor to show
+     */
+    public void hideOtherVendors(final Integer vendorId) {
+        Iterator<SubItem> itemIterator = subItems.iterator();
+        while(itemIterator.hasNext()){
+            if(!itemIterator.next().getVendorId().equals(vendorId)){
+                // remove
+                itemIterator.remove();
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Shows all vendors
+     */
+    public void showAllVendors(){
+        subItems.clear();
+        subItems.addAll(allSubItems);
+        notifyDataSetChanged();
+    }
+
     private void addItemToCart(int pos){
         if (subItems.get(pos).getSubItemQuantitySelected() < subItems.get(pos).getStock()) {
             subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() + 1);
         } else {
             Utils.showToast(activity, activity.getResources().getString(R.string.no_more_than, subItems.get(pos).getStock()));
         }
+
         callback.onPlusClicked(pos, subItems.get(pos));
         notifyDataSetChanged();
         if(subItems.get(pos).getSubItemQuantitySelected() == 1){
@@ -721,6 +778,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         boolean onLikeClicked(SubItem subItem, int pos);
 
         boolean canAddItem(SubItem subItem, MealAdapter.CallbackCheckForAdd callbackCheckForAdd);
+
+        boolean isMealsCartEmpty();
     }
 
 

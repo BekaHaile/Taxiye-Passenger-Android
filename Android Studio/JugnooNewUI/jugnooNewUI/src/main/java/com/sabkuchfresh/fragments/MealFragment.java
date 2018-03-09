@@ -229,6 +229,11 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 activity.updateItemListFromSPDB();
                 mealAdapter.notifyDataSetChanged();
                 activity.updateCartValuesGetTotalPrice();
+
+                // check if the cart has been emptied we need to show all vendors
+                if(isMealsCartEmpty()){
+                   mealAdapter.showAllVendors();
+                }
             }
             activity.setCartChangedAtCheckout(false);
             activity.getHandler().postDelayed(new Runnable() {
@@ -427,6 +432,12 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                             && activity.getProductsResponse().getCategories() != null) {
                                         activity.updateItemListFromSPDB(); // this is necessary
                                         activity.updateCartValuesGetTotalPrice();
+
+                                        // check if we have cart items added in adapter, if yes we have to hide other vendors
+                                        if(mealAdapter!=null){
+                                            mealAdapter.checkForCartItemsPresent();
+                                        }
+
                                     }
                                 }
                             }
@@ -649,4 +660,16 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         return canAddItem;
     }
+
+    @Override
+    public boolean isMealsCartEmpty() {
+        boolean cartEmpty = false;
+        Set<Integer> vendorMapKeySet = activity.getCart().getVendorCartHashMap().keySet();
+        if(activity.getCart().getVendorCartHashMap().size()==0 || (activity.getCart().getVendorCartHashMap().size()==1
+                && activity.getCart().getVendorCartHashMap().get(vendorMapKeySet.iterator().next()).values().size()==0)){
+            cartEmpty = true;
+        }
+        return cartEmpty;
+    }
+
 }
