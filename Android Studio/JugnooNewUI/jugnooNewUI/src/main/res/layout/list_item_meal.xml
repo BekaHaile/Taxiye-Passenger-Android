@@ -9,12 +9,19 @@
     android:orientation="vertical">
 
 
-    <android.support.v7.widget.CardView xmlns:app="http://schemas.android.com/apk/res-auto"
-                                        android:id="@+id/cvVendorName"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        app:cardBackgroundColor="@android:color/white"
-                                        android:layout_marginBottom="15px">
+    <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                  android:id="@+id/llVendorName"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
+                  android:layout_marginBottom="15px">
+
+        <View
+            android:id="@+id/vwVendorDivider"
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:background="@color/menu_item_selector_color_F7"
+            android:tag="@string/dont_touch_me"/>
 
         <TextView
             android:id="@+id/tvVendorName"
@@ -25,11 +32,17 @@
             tools:text="Vendor name"
             android:textAllCaps="true"
             android:visibility="visible"
-            android:background="@color/feed_comment_background"
+            android:background="@android:color/white"
             android:textColor="@color/stroke_light_grey"
             android:textSize="@dimen/text_size_28" />
 
-    </android.support.v7.widget.CardView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dull_background"
+            android:tag="@string/dont_touch_me"/>
+
+    </LinearLayout>
 
 
 
