@@ -118,9 +118,14 @@ public class TransactionUtils {
 
     public void openTabbedSearchFragment(FragmentActivity activity, View container,Bundle args) {
         if (!checkIfFragmentAdded(activity, TabbedSearchFragment.class.getName())) {
+
+            TabbedSearchFragment tabbedSearchFragment = new TabbedSearchFragment();
+            if(args!=null){
+                tabbedSearchFragment.setArguments(args);
+            }
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                    .add(container.getId(), new TabbedSearchFragment(),
+                    .add(container.getId(), tabbedSearchFragment,
                             TabbedSearchFragment.class.getName())
                     .addToBackStack(TabbedSearchFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

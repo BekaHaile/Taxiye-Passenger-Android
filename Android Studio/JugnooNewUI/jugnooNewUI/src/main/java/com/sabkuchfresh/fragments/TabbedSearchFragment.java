@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.TabbedPagerAdaptor;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -86,16 +87,58 @@ public class TabbedSearchFragment extends Fragment {
         searchOpened = true;
     }
 
-    public boolean isSearchOpened(){
+    @Override
+    public void onHiddenChanged(final boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden) {
+            activity.fragmentUISetup(this);
+            activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
+            activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
+            activity.getTopBar().title.setVisibility(View.GONE);
+            activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
+            activity.getTopBar().setSearchVisibility(View.VISIBLE);
+            activity.getTopBar().rlSearch.setVisibility(View.GONE);
+            activity.getTopBar().getLlTopBarDeliveryAddress().setVisibility(View.GONE);
+            activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            activity.getTopBar().etSearch.requestFocus();
+            Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
+            searchOpened = true;
+        }
+    }
+
+    public boolean isSearchOpened() {
         return searchOpened;
     }
 
     private void setData() {
+
+        MenusResponse menusResponse = null;
+        // get arguments if we have any
+        if (getArguments() != null && getArguments().containsKey(MenusResponse.class.getSimpleName())) {
+            menusResponse = new Gson().fromJson(getArguments().getString(MenusResponse.class.getSimpleName()), MenusResponse.class);
+        }
+
         // set tabs up
         String[] titles = activity.getResources().getStringArray(R.array.search_tab_names);
         ArrayList<Fragment> fragments = new ArrayList<>();
         storeSearchResultFragment = new TabbedSearchResultFragment();
+        if(menusResponse!=null){
+            MenusResponse storesResponse = new MenusResponse();
+            storesResponse.setVendors(menusResponse.getVendors());
+            storesResponse.setDirectSearchVendors(null);
+            Bundle args = new Bundle();
+            args.putString(MenusResponse.class.getSimpleName(),new Gson().toJson(storesResponse));
+            storeSearchResultFragment.setArguments(args);
+        }
         itemSearchResultFragment = new TabbedSearchResultFragment();
+        if(menusResponse!=null){
+            MenusResponse itemsResponse = new MenusResponse();
+            itemsResponse.setDirectSearchVendors(menusResponse.getDirectSearchVendors());
+            itemsResponse.setVendors(null);
+            Bundle args = new Bundle();
+            args.putString(MenusResponse.class.getSimpleName(),new Gson().toJson(itemsResponse));
+            itemSearchResultFragment.setArguments(args);
+        }
         fragments.add(storeSearchResultFragment);
         fragments.add(itemSearchResultFragment);
         pagerAdaptor = new TabbedPagerAdaptor(getChildFragmentManager(), fragments, titles);
@@ -130,7 +173,7 @@ public class TabbedSearchFragment extends Fragment {
 
     public void doSearch(String searchString) {
 
-        if(searchOpened) {
+        if (searchOpened) {
             int oldLength = searchText.length();
             searchText = searchString;
             if (searchText.length() > 2) {
@@ -233,7 +276,7 @@ public class TabbedSearchFragment extends Fragment {
     }
 
 
-    private boolean isSearchingCase(String searchTextCurr){
+    private boolean isSearchingCase(String searchTextCurr) {
         return (searchOpened && searchTextCurr.length() > 2);
     }
 
@@ -247,7 +290,7 @@ public class TabbedSearchFragment extends Fragment {
         params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
         params.put(Constants.INTERATED, "1");
         params.put(Constants.PAGE_NO, String.valueOf(0));
-        if(categoryId > 0){
+        if (categoryId > 0) {
             params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(categoryId));
         }
 

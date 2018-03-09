@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -39,6 +40,22 @@ public class TabbedSearchResultFragment extends Fragment {
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View main = inflater.inflate(R.layout.fragment_tabbed_search_result,container,false);
         initView(main);
+
+        // set initial data if coming
+        if(getArguments()!=null && getArguments().containsKey(MenusResponse.class.getSimpleName())){
+            MenusResponse menusResponse = new Gson().fromJson(getArguments().getString
+                    (MenusResponse.class.getSimpleName()),MenusResponse.class);
+
+            if(menusResponse.getVendors()!=null){
+                // stores response
+                setStoreSearchResponse(menusResponse);
+            }
+            else if(menusResponse.getDirectSearchVendors()!=null){
+                // items response
+                setItemSearchResponse(menusResponse);
+            }
+        }
+
         return main;
     }
 
