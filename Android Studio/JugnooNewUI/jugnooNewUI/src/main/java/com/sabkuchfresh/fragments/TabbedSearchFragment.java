@@ -86,6 +86,10 @@ public class TabbedSearchFragment extends Fragment {
         searchOpened = true;
     }
 
+    public boolean isSearchOpened(){
+        return searchOpened;
+    }
+
     private void setData() {
         // set tabs up
         String[] titles = activity.getResources().getStringArray(R.array.search_tab_names);
@@ -127,7 +131,6 @@ public class TabbedSearchFragment extends Fragment {
     public void doSearch(String searchString) {
 
         if(searchOpened) {
-            searchText = searchString;
             int oldLength = searchText.length();
             searchText = searchString;
             if (searchText.length() > 2) {
@@ -176,7 +179,15 @@ public class TabbedSearchFragment extends Fragment {
                             JSONObject jObj = new JSONObject(responseStr);
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
-                                    // todo set the response to store and item fragments
+                                    //set the response to store and item fragments
+                                    MenusResponse storeMenusResponse = new MenusResponse();
+                                    storeMenusResponse.setVendors(menusResponse.getVendors());
+                                    storeSearchResultFragment.setStoreSearchResponse(storeMenusResponse);
+
+                                    MenusResponse itemsMenusResponse = new MenusResponse();
+                                    itemsMenusResponse.setDirectSearchVendors(menusResponse.getDirectSearchVendors());
+                                    itemSearchResultFragment.setItemSearchResponse(itemsMenusResponse);
+
                                     shouldRecallSearchAPI = true;
                                 }
                             }
@@ -208,13 +219,22 @@ public class TabbedSearchFragment extends Fragment {
 
             activity.getTopBar().setPBSearchVisibility(View.VISIBLE);
             isMenusApiInProgress = true;
-            params.put(Constants.KEY_SEARCH_TEXT, searchText);
-            RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
+            if (isSearchingCase(searchText)) {
+                params.put(Constants.KEY_SEARCH_TEXT, searchText);
+                RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
+            } else {
+                RestClient.getMenusApiService().nearbyRestaurants(params, callback);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
             isMenusApiInProgress = false;
         }
+    }
+
+
+    private boolean isSearchingCase(String searchTextCurr){
+        return (searchOpened && searchTextCurr.length() > 2);
     }
 
     @NonNull
@@ -227,6 +247,9 @@ public class TabbedSearchFragment extends Fragment {
         params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
         params.put(Constants.INTERATED, "1");
         params.put(Constants.PAGE_NO, String.valueOf(0));
+        if(categoryId > 0){
+            params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(categoryId));
+        }
 
         new HomeUtil().putDefaultParams(params);
         return params;

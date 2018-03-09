@@ -206,7 +206,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(isPagination){
             showPaginationProgressBar(false,false);
         }else{
-            dataToDisplay.add(new DeliveryDivider());
+
+            // do not add divider if we come from tabbed search fragment
+            if(!(activity.getTabbedSearchFragment()!=null && activity.getTabbedSearchFragment().isSearchOpened())){
+                dataToDisplay.add(new DeliveryDivider());
+            }
             if(!activity.getMenusFragment().searchOpened){
                 categoriesData = null;
                 if(activity.getCategoryIdOpened()<0 && menusResponse.getCategories()!=null && menusResponse.getCategories().size()>0 && activity.isDeliveryOpenInBackground()){
@@ -287,7 +291,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if(!isPagination && (menusResponse.getServiceUnavailable() == 1 || (vendorsCount == 0))){
             int messageResId = Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()) ?
                     R.string.no_delivery_available_your_location : R.string.no_menus_available_your_location;
-            if (activity.getMenusFragment() != null && activity.getMenusFragment().searchOpened) {
+            if ((activity.getMenusFragment() != null && activity.getMenusFragment().searchOpened) ||
+                    (activity.getTabbedSearchFragment() != null && activity.getTabbedSearchFragment().isSearchOpened())) {
                 messageResId = R.string.oops_no_results_found;
             } else if (activity.isFilterApplied()) {
                 messageResId = R.string.no_menus_available_with_these_filters;
