@@ -926,4 +926,8 @@
     <item name="colorControlHighlight">#c5c5c5</item>
 </style>
 
+    <style name="TextAppearanceTab" parent="TextAppearance.AppCompat.Button">
+        <item name="textAllCaps">false</item>
+    </style>
+
 </resources>
