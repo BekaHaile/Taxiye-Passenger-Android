@@ -252,22 +252,22 @@ public class MenusResponse {
 
 	public class VendorDirectSearch{
 
-		@SerializedName("line1")
+		@SerializedName("line_1")
 		private String line1;
 
-		@SerializedName("line1_color")
+		@SerializedName("line_1_color")
 		private String line1Color;
 
-		@SerializedName("line2_start")
+		@SerializedName("line_2_start")
 		private String line2Start;
 
-		@SerializedName("line2_start_color")
+		@SerializedName("line_2_start_color")
 		private String line2StartColor;
 
-		@SerializedName("line2_end")
+		@SerializedName("line_2_end")
 		private String line2End;
 
-		@SerializedName("line2_end_color")
+		@SerializedName("line_2_end_color")
 		private String line2EndColor;
 
 		@SerializedName("restaurant_id")

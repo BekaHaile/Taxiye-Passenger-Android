@@ -119,6 +119,7 @@ public interface Constants {
 
 
     String KEY_OTP = "otp";
+    String KEY_SHOW_ALL_RESULT = "show_all_result";
 
     String KEY_BRANCH_REFERRING_USER_IDENTIFIER = "referring_user_identifier";
     String KEY_DEEPINDEX = "deepindex";

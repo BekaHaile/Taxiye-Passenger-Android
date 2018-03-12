@@ -96,6 +96,11 @@ public class TabbedSearchResultFragment extends Fragment {
             public void apiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone) {
                // NA here
             }
+
+            @Override
+            public boolean showDirectVendorSuggestions() {
+                return true;
+            }
         }, rvSearch, status,statusMeals,statusFatafat);
 
         rvSearch.setAdapter(deliveryHomeAdapter);

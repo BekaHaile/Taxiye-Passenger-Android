@@ -362,14 +362,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dataToDisplay.add(deliveryDivider);
         }
 
-
         // direct search vendors
         int directSearchVendorCount = 0;
-        if (menusResponse.getDirectSearchVendors() != null) {
+        if(callback.showDirectVendorSuggestions() && menusResponse.getDirectSearchVendors() != null){
             dataToDisplay.addAll(menusResponse.getDirectSearchVendors());
             directSearchVendorCount = menusResponse.getDirectSearchVendors().size();
         }
-
+        else {
+            // doing to avoid showing no result found at the bottom
+            menusResponse.setDirectSearchVendors(null);
+        }
 
         //vendors Assignment
         if (menusResponse.getVendors() != null) {
@@ -1533,6 +1535,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void onVendorDirectSearchClicked(MenusResponse.VendorDirectSearch vendorDirectSearch);
 
         void apiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone);
+
+        boolean showDirectVendorSuggestions();
+
     }
 
     private static class ViewDivider extends RecyclerView.ViewHolder {

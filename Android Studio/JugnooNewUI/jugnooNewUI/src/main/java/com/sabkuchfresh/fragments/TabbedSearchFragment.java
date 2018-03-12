@@ -229,8 +229,6 @@ public class TabbedSearchFragment extends Fragment {
                                     storeSearchResultFragment.setStoreSearchResponse(storeMenusResponse);
 
                                     MenusResponse itemsMenusResponse = new MenusResponse();
-                                    // todo remove later for test only
-                                    menusResponse.setDirectSearchVendors(menusResponse.getDummyDirectSearchVendors());
                                     itemsMenusResponse.setDirectSearchVendors(menusResponse.getDirectSearchVendors());
                                     itemsMenusResponse.setVendors(null);
                                     itemSearchResultFragment.setItemSearchResponse(itemsMenusResponse);
@@ -293,6 +291,7 @@ public class TabbedSearchFragment extends Fragment {
         params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
         params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
         params.put(Constants.INTERATED, "1");
+        params.put(Constants.KEY_SHOW_ALL_RESULT,String.valueOf(1));
         params.put(Constants.PAGE_NO, String.valueOf(0));
         if (categoryId > 0) {
             params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(categoryId));
