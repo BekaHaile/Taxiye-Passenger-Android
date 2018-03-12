@@ -225,10 +225,14 @@ public class TabbedSearchFragment extends Fragment {
                                     //set the response to store and item fragments
                                     MenusResponse storeMenusResponse = new MenusResponse();
                                     storeMenusResponse.setVendors(menusResponse.getVendors());
+                                    storeMenusResponse.setDirectSearchVendors(null);
                                     storeSearchResultFragment.setStoreSearchResponse(storeMenusResponse);
 
                                     MenusResponse itemsMenusResponse = new MenusResponse();
+                                    // todo remove later for test only
+                                    menusResponse.setDirectSearchVendors(menusResponse.getDummyDirectSearchVendors());
                                     itemsMenusResponse.setDirectSearchVendors(menusResponse.getDirectSearchVendors());
+                                    itemsMenusResponse.setVendors(null);
                                     itemSearchResultFragment.setItemSearchResponse(itemsMenusResponse);
 
                                     shouldRecallSearchAPI = true;

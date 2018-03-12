@@ -50,7 +50,7 @@ public class TabbedSearchResultFragment extends Fragment {
                 // stores response
                 setStoreSearchResponse(menusResponse);
             }
-            else if(menusResponse.getDirectSearchVendors()!=null){
+            if(menusResponse.getDirectSearchVendors()!=null){
                 // items response
                 setItemSearchResponse(menusResponse);
             }
@@ -102,11 +102,13 @@ public class TabbedSearchResultFragment extends Fragment {
     }
 
     public void setStoreSearchResponse(MenusResponse response){
+        response.setDirectSearchVendors(null);
         // send hasMorePages as true to avoid adding the suggest store layout
         deliveryHomeAdapter.setList(response, false, true);
     }
 
     public void setItemSearchResponse(MenusResponse response){
+        response.setVendors(null);
         // send hasMorePages as true to avoid adding the suggest store layout
         deliveryHomeAdapter.setList(response, false, true);
     }

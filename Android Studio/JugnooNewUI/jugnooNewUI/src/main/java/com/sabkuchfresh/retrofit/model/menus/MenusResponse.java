@@ -76,8 +76,8 @@ public class MenusResponse {
 	@Expose
 	private List<Vendor> vendors = new ArrayList<Vendor>();
 
-	@SerializedName("vendors_direct_search")
-	private List<VendorDirectSearch> directSearchVendors = new ArrayList<>();
+	@SerializedName("suggestions")
+	private List<VendorDirectSearch> directSearchVendors;
 
 	@SerializedName("is_open_merchant_info")
 	@Expose
@@ -235,8 +235,12 @@ public class MenusResponse {
 		ArrayList<VendorDirectSearch> vendors = new ArrayList<>();
 		for(int i=0;i<4;i++){
 			VendorDirectSearch vendorDirectSearch = new VendorDirectSearch();
-			vendorDirectSearch.setQuery("Query:"+String.valueOf(i+1));
-			vendorDirectSearch.setVendorName("Restaurent:"+String.valueOf(i+1));
+			vendorDirectSearch.setLine1("Query:"+String.valueOf(i+1));
+			vendorDirectSearch.setLine2Start("in");
+			vendorDirectSearch.setLine2End("Restaurent:"+String.valueOf(i+1));
+			vendorDirectSearch.setLine1Color("#000000");
+			vendorDirectSearch.setLine2StartColor("#000000");
+			vendorDirectSearch.setLine2EndColor("#000000");
 			vendorDirectSearch.setVendorId(332);
 			vendorDirectSearch.setCategoryId(298);
 			//vendorDirectSearch.setSubcategoryId(166);
@@ -248,23 +252,83 @@ public class MenusResponse {
 
 	public class VendorDirectSearch{
 
-		@SerializedName("query")
-		private String query;
+		@SerializedName("line1")
+		private String line1;
 
-		@SerializedName("name")
-		private String vendorName;
+		@SerializedName("line1_color")
+		private String line1Color;
 
-		@SerializedName("id")
+		@SerializedName("line2_start")
+		private String line2Start;
+
+		@SerializedName("line2_start_color")
+		private String line2StartColor;
+
+		@SerializedName("line2_end")
+		private String line2End;
+
+		@SerializedName("line2_end_color")
+		private String line2EndColor;
+
+		@SerializedName("restaurant_id")
 		private int vendorId;
 
 		@SerializedName("category_id")
 		private int categoryId;
 
-		@SerializedName("subcategory_id")
+		@SerializedName("sub_category_id")
 		private int subcategoryId;
 
-		@SerializedName("item_id")
+		@SerializedName("restaurant_item_id")
 		private int itemId;
+
+		public String getLine1() {
+			return line1;
+		}
+
+		public String getLine1Color() {
+			return line1Color;
+		}
+
+		public String getLine2Start() {
+			return line2Start;
+		}
+
+		public String getLine2StartColor() {
+			return line2StartColor;
+		}
+
+		public String getLine2End() {
+			return line2End;
+		}
+
+		public String getLine2EndColor() {
+			return line2EndColor;
+		}
+
+		public void setLine1(final String line1) {
+			this.line1 = line1;
+		}
+
+		public void setLine1Color(final String line1Color) {
+			this.line1Color = line1Color;
+		}
+
+		public void setLine2Start(final String line2Start) {
+			this.line2Start = line2Start;
+		}
+
+		public void setLine2StartColor(final String line2StartColor) {
+			this.line2StartColor = line2StartColor;
+		}
+
+		public void setLine2End(final String line2End) {
+			this.line2End = line2End;
+		}
+
+		public void setLine2EndColor(final String line2EndColor) {
+			this.line2EndColor = line2EndColor;
+		}
 
 		public int getItemId() {
 			return itemId;
@@ -272,22 +336,6 @@ public class MenusResponse {
 
 		public void setItemId(final int itemId) {
 			this.itemId = itemId;
-		}
-
-		public String getQuery() {
-			return query;
-		}
-
-		public void setQuery(final String query) {
-			this.query = query;
-		}
-
-		public String getVendorName() {
-			return vendorName;
-		}
-
-		public void setVendorName(final String vendorName) {
-			this.vendorName = vendorName;
 		}
 
 		public int getVendorId() {
