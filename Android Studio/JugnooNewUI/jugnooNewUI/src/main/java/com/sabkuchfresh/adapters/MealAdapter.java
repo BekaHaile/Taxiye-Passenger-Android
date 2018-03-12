@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -381,6 +382,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     public void onClick(View v) {
                         try {
                             int pos = (int) v.getTag();
+                            int itemId = subItems.get(pos).getSubItemId();
                             if(callback.checkForMinus(pos, subItems.get(pos))) {
                                 subItems.get(pos).setSubItemQuantitySelected(subItems.get(pos).getSubItemQuantitySelected() > 0 ?
                                         subItems.get(pos).getSubItemQuantitySelected() - 1 : 0);
@@ -396,6 +398,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                             // if the cart is empty, we need to reshow all vendors
                             if(callback.isMealsCartEmpty()){
                                showAllVendors();
+                               adjustScroll(itemId);
                             }
 
 
@@ -421,7 +424,10 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                             if(callback.canAddItem(subItems.get(pos),callbackCheckForAdd)){
                                addItemToCart(pos);
                                // hide other vendors so user cannot add item from them
+                                int itemId = subItems.get(pos).getSubItemId();
                                 hideOtherVendors(subItems.get(pos).getVendorId());
+                                adjustScroll(itemId);
+
                             }
 
 
@@ -509,6 +515,34 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         }
         notifyDataSetChanged();
     }
+
+    /**
+     * Adjusts scroll to the selected item
+     * @param itemId the id of the selected item
+     */
+    private void adjustScroll(final int itemId){
+
+        // calculate position of the item
+        int position = 0;
+
+        // add offset from recent orders if present
+        if(recentOrders!=null && recentOrders.size()>0){
+            position+=recentOrders.size();
+        }
+
+        for(SubItem item:subItems){
+            if(item.getSubItemId() == itemId){
+                break;
+            }
+            position++;
+        }
+
+        // scroll to position
+        final int finalPosition = position;
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+        linearLayoutManager.scrollToPositionWithOffset(finalPosition,0);
+    }
+
 
     /**
      * Shows all vendors
