@@ -30,11 +30,10 @@
             android:padding="@dimen/px_24"
             android:maxLines="2"
             tools:text="Vendor name"
-            android:textAllCaps="true"
             android:visibility="visible"
             android:background="@android:color/white"
-            android:textColor="@color/stroke_light_grey"
-            android:textSize="@dimen/text_size_28" />
+            android:textColor="@color/text_color_black_dark"
+            android:textSize="@dimen/text_size_32" />
 
         <View
             android:layout_width="match_parent"
