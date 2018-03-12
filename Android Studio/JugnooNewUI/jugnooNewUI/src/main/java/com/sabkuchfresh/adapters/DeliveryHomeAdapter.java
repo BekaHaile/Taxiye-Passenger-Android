@@ -301,14 +301,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                      categoryName=activity.isDeliveryOpenInBackground()?"Stores":"Restaurants";
                  }
 
-                 if(isCustomOrderModel || !showAddStoreLayout){//Don't show suggest store with restaurant form model if showAddStore is enabled by back end.
-                     if(dataToDisplay!=null && dataToDisplay.size()>1){
-                         dataToDisplay.add(new  DeliveryDivider());
-                     }
-                     formAddRestaurantModel = FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(),categoryName, isCustomOrderModel,!showAddStoreLayout);
-                     dataToDisplay.add(formAddRestaurantModel);
+                // do not show Custom Order layout
+                /*if (isCustomOrderModel || !showAddStoreLayout) {//Don't show suggest store with restaurant form model if showAddStore is enabled by back end.
+                    if (dataToDisplay != null && dataToDisplay.size() > 1) {
+                        dataToDisplay.add(new DeliveryDivider());
+                    }
+                    formAddRestaurantModel = FormAddRestaurantModel.getInstance(activity.getCategoryIdOpened(), categoryName, isCustomOrderModel, !showAddStoreLayout);
+                    dataToDisplay.add(formAddRestaurantModel);
 
-                 }
+                }*/
             }
 
              if(showAddStoreLayout) {
