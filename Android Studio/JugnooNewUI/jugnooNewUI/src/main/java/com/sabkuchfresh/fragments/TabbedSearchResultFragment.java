@@ -84,6 +84,15 @@ public class TabbedSearchResultFragment extends Fragment {
             }
 
             @Override
+            public void onVendorDirectSearchClicked(final MenusResponse.VendorDirectSearch vendorDirectSearch) {
+                activity.setDirectVendorSearchObject(vendorDirectSearch);
+                //fetch menu and redirect to vendor fragment
+                activity.fetchRestaurantMenuAPI((vendorDirectSearch.getVendorId()),
+                        false, null, null, -1, null,vendorDirectSearch);
+                Utils.hideKeyboard(activity);
+            }
+
+            @Override
             public void apiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone) {
                // NA here
             }
