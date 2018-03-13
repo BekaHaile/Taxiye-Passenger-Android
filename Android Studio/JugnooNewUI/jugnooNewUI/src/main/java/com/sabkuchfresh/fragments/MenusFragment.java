@@ -239,6 +239,17 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 // do not show direct search suggestions here
                 return false;
             }
+
+            @Override
+            public boolean showSuggestions() {
+                // we shall not show suggestions here
+                return false;
+            }
+
+            @Override
+            public void onSuggestionClicked(final MenusResponse.SearchSuggestions searchSuggestions) {
+                // NA here
+            }
         }, recyclerViewRestaurant, status,statusMeals,statusFatafat);
 
         recyclerViewRestaurant.setAdapter(deliveryHomeAdapter);

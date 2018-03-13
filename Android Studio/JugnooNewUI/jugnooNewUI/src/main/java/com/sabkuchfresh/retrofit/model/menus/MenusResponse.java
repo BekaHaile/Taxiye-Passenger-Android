@@ -76,7 +76,10 @@ public class MenusResponse {
 	@Expose
 	private List<Vendor> vendors = new ArrayList<Vendor>();
 
-	@SerializedName("suggestions")
+	@SerializedName("search_suggestions")
+	private List<SearchSuggestions> suggestionsList;
+
+	@SerializedName("directSearchItems")
 	private List<VendorDirectSearch> directSearchVendors;
 
 	@SerializedName("is_open_merchant_info")
@@ -86,6 +89,14 @@ public class MenusResponse {
 	@SerializedName("region_data")
 	@Expose
 	private OfferingsVisibilityResponse.OfferingsVisibilityData offeringsVisibilityData ;
+
+	public List<SearchSuggestions> getSuggestionsList() {
+		return suggestionsList;
+	}
+
+	public void setSuggestionsList(final List<SearchSuggestions> suggestionsList) {
+		this.suggestionsList = suggestionsList;
+	}
 
 	public OfferingsVisibilityResponse.OfferingsVisibilityData getOfferingsVisibilityData() {
 		return offeringsVisibilityData;
@@ -248,6 +259,43 @@ public class MenusResponse {
 			vendors.add(vendorDirectSearch);
 		}
 		return vendors;
+	}
+
+
+	public class SearchSuggestions{
+
+		@SerializedName("id")
+		private int id;
+
+		@SerializedName("text")
+		private String text;
+
+		@SerializedName("text_color")
+		private String textColor;
+
+		public int getId() {
+			return id;
+		}
+
+		public void setId(final int id) {
+			this.id = id;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+		public void setText(final String text) {
+			this.text = text;
+		}
+
+		public String getTextColor() {
+			return textColor;
+		}
+
+		public void setTextColor(final String textColor) {
+			this.textColor = textColor;
+		}
 	}
 
 	public class VendorDirectSearch{

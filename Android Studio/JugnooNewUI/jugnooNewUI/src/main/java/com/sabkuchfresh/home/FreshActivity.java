@@ -2218,7 +2218,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     if(getMenusResponse()!=null){
                         args = new Bundle();
                         MenusResponse menusResponse = new MenusResponse();
-                        menusResponse.setDirectSearchVendors(getMenusResponse().getDirectSearchVendors());
+                        menusResponse.setSuggestionsList(getMenusResponse().getSuggestionsList());
                         menusResponse.setVendors(getMenusResponse().getVendors());
                         args.putString(MenusResponse.class.getSimpleName(),new Gson().toJson(menusResponse));
                     }

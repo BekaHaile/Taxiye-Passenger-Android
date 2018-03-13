@@ -97,6 +97,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int ITEM_BANNER_FATAFAT_RESTAURANTS = 15;
     private static final int ITEM_ADD_STORE = 16;
     private static final int VIEW_DIRECT_SEARCH_VENDOR = 17;
+    private static final int VIEW_SEARCH_SUGGESTION = 18;
     private static final int RECENT_ORDERS_TO_SHOW = 2;
     private final static ColorMatrix BW_MATRIX = new ColorMatrix();
     private final static ColorMatrixColorFilter BW_FILTER;
@@ -373,6 +374,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             menusResponse.setDirectSearchVendors(null);
         }
 
+
+        // search suggestions
+        int searchSuggestionsCount = 0;
+        if(callback.showSuggestions() && menusResponse.getSuggestionsList()!=null){
+            dataToDisplay.addAll(menusResponse.getSuggestionsList());
+            searchSuggestionsCount = menusResponse.getSuggestionsList().size();
+        }
+
         //vendors Assignment
         if (menusResponse.getVendors() != null) {
             /*
@@ -594,6 +603,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case VIEW_DIRECT_SEARCH_VENDOR:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vendor_direct_search, parent, false);
                 return new ViewHolderVendorDirectSearch(v, this);
+            case VIEW_SEARCH_SUGGESTION:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_search_suggestion, parent, false);
+                return new ViewHolderSearchSuggestion(v, this);
             case VIEW_DIVIDER:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_divider_delivery, parent, false);
                 return new ViewDivider(v);
@@ -653,6 +665,13 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.tvLine2Start.setTextColor(Color.parseColor(vendorDirectSearch.getLine2StartColor()));
             holder.tvLine2End.setText(vendorDirectSearch.getLine2End());
             holder.tvLine2End.setTextColor(Color.parseColor(vendorDirectSearch.getLine2EndColor()));
+
+        }else if (mholder instanceof ViewHolderSearchSuggestion) {
+
+            DeliveryHomeAdapter.ViewHolderSearchSuggestion holder = ((DeliveryHomeAdapter.ViewHolderSearchSuggestion) mholder);
+            MenusResponse.SearchSuggestions searchSuggestions = (MenusResponse.SearchSuggestions) dataToDisplay.get(position);
+            holder.tvSuggestion.setText(searchSuggestions.getText());
+            holder.tvSuggestion.setTextColor(Color.parseColor(searchSuggestions.getTextColor()));
 
         } else if (mholder instanceof ViewHolderVendor) {
 
@@ -1266,6 +1285,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 case R.id.llRootVendorDirectSearch:
                     callback.onVendorDirectSearchClicked(((MenusResponse.VendorDirectSearch) dataToDisplay.get(pos)));
                     break;
+                case R.id.llRootSearchSuggestion:
+                    callback.onSuggestionClicked(((MenusResponse.SearchSuggestions)dataToDisplay.get(pos)));
+                    break;
 
             }
         }
@@ -1536,6 +1558,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         boolean showDirectVendorSuggestions();
 
+        boolean showSuggestions();
+
+        void onSuggestionClicked(MenusResponse.SearchSuggestions searchSuggestions);
     }
 
     private static class ViewDivider extends RecyclerView.ViewHolder {
@@ -1808,6 +1833,24 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tvLine2Start = (TextView) itemView.findViewById(R.id.tvLine2Start);
             tvLine2End = (TextView) itemView.findViewById(R.id.tvLine2End);
             tvLine2End.setTypeface(tvLine2End.getTypeface(), Typeface.BOLD);
+            llRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemListener.onClickItem(llRoot, itemView);
+                }
+            });
+        }
+    }
+
+    private class ViewHolderSearchSuggestion extends RecyclerView.ViewHolder {
+
+        private LinearLayout llRoot;
+        private TextView tvSuggestion;
+
+        public ViewHolderSearchSuggestion(final View itemView, final ItemListener itemListener) {
+            super(itemView);
+            llRoot = (LinearLayout) itemView.findViewById(R.id.llRootSearchSuggestion);
+            tvSuggestion = (TextView) itemView.findViewById(R.id.tvSuggestion);
             llRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

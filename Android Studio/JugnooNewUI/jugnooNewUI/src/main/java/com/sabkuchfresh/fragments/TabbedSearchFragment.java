@@ -130,15 +130,18 @@ public class TabbedSearchFragment extends Fragment {
             args.putString(MenusResponse.class.getSimpleName(),new Gson().toJson(storesResponse));
             storeSearchResultFragment.setArguments(args);
         }
+
         itemSearchResultFragment = new TabbedSearchResultFragment();
+        // pass empty suggestions
         if(menusResponse!=null){
             MenusResponse itemsResponse = new MenusResponse();
-            itemsResponse.setDirectSearchVendors(menusResponse.getDirectSearchVendors());
+            itemsResponse.setSuggestionsList(new ArrayList<MenusResponse.SearchSuggestions>());
             itemsResponse.setVendors(null);
             Bundle args = new Bundle();
             args.putString(MenusResponse.class.getSimpleName(),new Gson().toJson(itemsResponse));
             itemSearchResultFragment.setArguments(args);
         }
+
         fragments.add(storeSearchResultFragment);
         fragments.add(itemSearchResultFragment);
         pagerAdaptor = new TabbedPagerAdaptor(getChildFragmentManager(), fragments, titles);
@@ -229,9 +232,13 @@ public class TabbedSearchFragment extends Fragment {
                                     storeSearchResultFragment.setStoreSearchResponse(storeMenusResponse);
 
                                     MenusResponse itemsMenusResponse = new MenusResponse();
-                                    itemsMenusResponse.setDirectSearchVendors(menusResponse.getDirectSearchVendors());
-                                    itemsMenusResponse.setVendors(null);
-                                    itemSearchResultFragment.setItemSearchResponse(itemsMenusResponse);
+                                    if(menusResponse.getSuggestionsList()!=null) {
+                                        itemsMenusResponse.setSuggestionsList(menusResponse.getSuggestionsList());
+                                    }
+                                    else {
+                                        itemsMenusResponse.setSuggestionsList(new ArrayList<MenusResponse.SearchSuggestions>());
+                                    }
+                                    itemSearchResultFragment.setSearchSuggestions(itemsMenusResponse);
 
                                     shouldRecallSearchAPI = true;
                                 }

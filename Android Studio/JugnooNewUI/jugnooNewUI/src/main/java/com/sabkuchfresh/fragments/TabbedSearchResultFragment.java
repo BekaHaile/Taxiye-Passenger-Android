@@ -20,6 +20,7 @@ import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -28,7 +29,7 @@ import product.clicklabs.jugnoo.R;
  * Created by cl-macmini-01 on 3/7/18.
  */
 
-public class TabbedSearchResultFragment extends Fragment {
+public class TabbedSearchResultFragment extends Fragment implements View.OnClickListener {
 
     private RecyclerView rvSearch;
     private FreshActivity activity;
@@ -39,6 +40,7 @@ public class TabbedSearchResultFragment extends Fragment {
     private LinearLayout llSuggestions;
     private TextView tvSuggestionsHeader,tvSuggestionValue;
     private ImageView imgVwArrow;
+    private List<MenusResponse.SearchSuggestions> searchSuggestions = new ArrayList<>();
 
 
     @Nullable
@@ -52,13 +54,14 @@ public class TabbedSearchResultFragment extends Fragment {
             MenusResponse menusResponse = new Gson().fromJson(getArguments().getString
                     (MenusResponse.class.getSimpleName()),MenusResponse.class);
 
+            if(menusResponse.getSuggestionsList()!=null){
+                // suggestions response
+                setSearchSuggestions(menusResponse);
+            }
+
             if(menusResponse.getVendors()!=null){
                 // stores response
                 setStoreSearchResponse(menusResponse);
-            }
-            if(menusResponse.getDirectSearchVendors()!=null){
-                // items response
-                setItemSearchResponse(menusResponse);
             }
         }
 
@@ -76,6 +79,8 @@ public class TabbedSearchResultFragment extends Fragment {
 
         rvSearch = (RecyclerView) main.findViewById(R.id.rvSearchResults);
         rvSearch.setLayoutManager(new LinearLayoutManager(activity));
+
+        tvSuggestionsHeader.setOnClickListener(this);
 
         deliveryHomeAdapter = new DeliveryHomeAdapter(activity, new DeliveryHomeAdapter.Callback() {
             @Override
@@ -115,18 +120,48 @@ public class TabbedSearchResultFragment extends Fragment {
             public boolean showDirectVendorSuggestions() {
                 return true;
             }
+
+            @Override
+            public boolean showSuggestions() {
+                return true;
+            }
+
+            @Override
+            public void onSuggestionClicked(final MenusResponse.SearchSuggestions searchSuggestions) {
+                // todo get the items response from the suggestion
+            }
         }, rvSearch, status,statusMeals,statusFatafat);
 
         rvSearch.setAdapter(deliveryHomeAdapter);
     }
 
     public void setStoreSearchResponse(MenusResponse response){
+
+        llSuggestions.setVisibility(View.GONE);
+        response.setSuggestionsList(null);
         response.setDirectSearchVendors(null);
         // send hasMorePages as true to avoid adding the suggest store layout
         deliveryHomeAdapter.setList(response, false, true);
     }
 
     public void setItemSearchResponse(MenusResponse response){
+
+        response.setVendors(null);
+        response.setSuggestionsList(null);
+        // send hasMorePages as true to avoid adding the suggest store layout
+        deliveryHomeAdapter.setList(response, false, true);
+    }
+
+    public void setSearchSuggestions(MenusResponse response){
+
+        searchSuggestions = response.getSuggestionsList();
+
+        // show suggestions layout
+        llSuggestions.setVisibility(View.VISIBLE);
+        imgVwArrow.setVisibility(View.GONE);
+        tvSuggestionValue.setVisibility(View.GONE);
+
+        response.setDirectSearchVendors(null);
         response.setVendors(null);
         // send hasMorePages as true to avoid adding the suggest store layout
         deliveryHomeAdapter.setList(response, false, true);
@@ -136,5 +171,15 @@ public class TabbedSearchResultFragment extends Fragment {
     public void onAttach(final Context context) {
         super.onAttach(context);
         activity = (FreshActivity)context;
+    }
+
+    @Override
+    public void onClick(final View v) {
+        if(v.getId()==R.id.tvSuggestionHeader){
+            //hide items and show last suggestions again
+            MenusResponse menusResponse = new MenusResponse();
+            menusResponse.setSuggestionsList(searchSuggestions);
+            setSearchSuggestions(menusResponse);
+        }
     }
 }
