@@ -9,6 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
@@ -33,6 +36,9 @@ public class TabbedSearchResultFragment extends Fragment {
     private ArrayList<String> status = new ArrayList<>();
     private ArrayList<String> statusMeals = new ArrayList<>();
     private ArrayList<String> statusFatafat = new ArrayList<>();
+    private LinearLayout llSuggestions;
+    private TextView tvSuggestionsHeader,tvSuggestionValue;
+    private ImageView imgVwArrow;
 
 
     @Nullable
@@ -60,6 +66,14 @@ public class TabbedSearchResultFragment extends Fragment {
     }
 
     private void initView(final View main) {
+        llSuggestions = (LinearLayout) main.findViewById(R.id.llSuggestions);
+        tvSuggestionsHeader = (TextView) main.findViewById(R.id.tvSuggestionHeader);
+        tvSuggestionValue = (TextView) main.findViewById(R.id.tvSuggestionValue);
+        imgVwArrow = (ImageView) main.findViewById(R.id.imgVwArrow);
+
+        // initially hide the suggestions
+        llSuggestions.setVisibility(View.GONE);
+
         rvSearch = (RecyclerView) main.findViewById(R.id.rvSearchResults);
         rvSearch.setLayoutManager(new LinearLayoutManager(activity));
 

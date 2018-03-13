@@ -1487,4 +1487,6 @@
         <item>Items</item>
     </string-array>
 
+    <string name="txt_suggestions">Suggestions</string>
+
 </resources>
