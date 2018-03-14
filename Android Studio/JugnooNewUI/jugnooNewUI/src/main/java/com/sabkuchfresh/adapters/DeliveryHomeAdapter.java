@@ -534,7 +534,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 			int visibilityCloseTime = setRestaurantOpenStatus(mHolder.textViewRestaurantCloseTime, vendor, true);
 
-            String deliveryTime = showDeliveryStringWithTime(vendor);
+            //String deliveryTime = showDeliveryStringWithTime(vendor);
+
+            // server now sends formatted delivery time text, so commenting the function above
+            String deliveryTime = (vendor.getDeliveryTimeText()==null)?"":vendor.getDeliveryTimeText();
             String distance = getDistanceRestaurant(vendor);
 
             if(vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0){
