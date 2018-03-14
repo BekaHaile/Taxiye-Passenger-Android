@@ -4392,6 +4392,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return menusIsOpenMerchantInfo;
     }
 
+    public boolean shouldOpenMerchantInfoFragment(){
+        return Config.getLastOpenedClientId(this).equals(Config.getDeliveryCustomerClientId())
+                || (getMenusResponse() != null && getMenusResponse().isOpenMerchantInfo());
+    }
+
+
 
     public static class OrderViaChatData{
         private LatLng destinationlatLng;
@@ -5763,10 +5769,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public boolean collapsingToolBarEnabled(Fragment fragment){
-        boolean isEnable = isMenusIsOpenMerchantInfo() ?
+        boolean isEnable = shouldOpenMerchantInfoFragment() ?
                 fragment instanceof MerchantInfoFragment : fragment instanceof VendorMenuFragment;
+
         return isEnable;
+
     }
+
+
 
 
    public boolean isDeliveryOpenInBackground(){
