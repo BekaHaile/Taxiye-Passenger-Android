@@ -75,7 +75,7 @@ public class ApiFetchRestaurantMenu {
                 // if api hit from home list where MerchantInfoFragment is not opened and direct Checkout page is
                 // not to be opened
                 if(!directCheckout
-                        && activity.shouldOpenMerchantInfoFragment()
+                        && activity.isMenusIsOpenMerchantInfo()
                         && activity.getMerchantInfoFragment() == null){
                     params.put(Constants.KEY_NOT_SEND_MENU, "1");
                 }
@@ -216,7 +216,7 @@ public class ApiFetchRestaurantMenu {
         if (goToCheckout) {
             activity.openCart(activity.getAppType(), true);
         } else {
-            if(activity.shouldOpenMerchantInfoFragment()
+            if(activity.isMenusIsOpenMerchantInfo()
                     && activity.getMerchantInfoFragment() == null){
                 activity.getTransactionUtils().openMerchantInfoFragment(activity, activity.getRelativeLayoutContainer());
             } else {

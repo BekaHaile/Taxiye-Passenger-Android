@@ -301,7 +301,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public int lastAppTypeOpen;
     private KeyboardLayoutListener mParentKeyboardLayoutListener;
     private KeyboardLayoutListener.KeyBoardStateHandler mChildKeyboardListener;
-
+    private boolean menusIsOpenMerchantInfo;
 
 
     public View getFeedHomeAddPostView() {
@@ -4385,6 +4385,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return getSelectedLatLng();
     }
 
+    public void setMenusIsOpenMerchantInfo(final boolean menusIsOpenMerchantInfo) {
+        this.menusIsOpenMerchantInfo = menusIsOpenMerchantInfo;
+    }
+    public boolean isMenusIsOpenMerchantInfo(){
+        return menusIsOpenMerchantInfo;
+    }
+
 
     public static class OrderViaChatData{
         private LatLng destinationlatLng;
@@ -5756,15 +5763,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public boolean collapsingToolBarEnabled(Fragment fragment){
-        boolean isEnable = shouldOpenMerchantInfoFragment() ?
+        boolean isEnable = isMenusIsOpenMerchantInfo() ?
                 fragment instanceof MerchantInfoFragment : fragment instanceof VendorMenuFragment;
         return isEnable;
     }
 
-    public boolean shouldOpenMerchantInfoFragment(){
-        return Config.getLastOpenedClientId(this).equals(Config.getDeliveryCustomerClientId())
-                || (getMenusResponse() != null && getMenusResponse().isOpenMerchantInfo());
-    }
+
    public boolean isDeliveryOpenInBackground(){
        return appTypeDeliveryInBackground;
    }

@@ -774,6 +774,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             noOfCategories = menusResponse.getCategories() == null ? 0 : menusResponse.getCategories().size();
                             activity.setMenusResponse(menusResponse);
                         }
+                        activity.setMenusIsOpenMerchantInfo(menusResponse.isOpenMerchantInfo());
+
 
 
                         status.clear();
