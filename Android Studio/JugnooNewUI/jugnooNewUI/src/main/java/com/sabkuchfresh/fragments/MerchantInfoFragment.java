@@ -522,6 +522,11 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     tvOutOfRadiusFatafatBanner.setVisibility(View.GONE);
                 }
 
+                // hide the order online button if we have vendor menu in back ( direct vendor case)
+                if(activity.getVendorMenuFragment()!=null){
+                    bOrderOnline.setVisibility(View.GONE);
+                }
+
 
             }
         } catch (Exception exception) {

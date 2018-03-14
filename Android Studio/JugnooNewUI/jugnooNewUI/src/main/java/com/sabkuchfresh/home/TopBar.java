@@ -7,7 +7,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,14 +17,11 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.fragments.FreshHomeFragment;
-import com.sabkuchfresh.fragments.GroceryFragment;
 import com.sabkuchfresh.fragments.MealFragment;
 import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.utils.AppConstant;
 
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -121,6 +117,7 @@ public class TopBar implements GAAction, GACategory {
         rlFreshSort.setOnClickListener(topBarOnClickListener);
         imgVwFatafatTutorial.setOnClickListener(topBarOnClickListener);
         llTopBarDeliveryAddress.setOnClickListener(topBarOnClickListener);
+        title.setOnClickListener(topBarOnClickListener);
 
 
 
@@ -289,6 +286,12 @@ public class TopBar implements GAAction, GACategory {
                             ((FreshActivity)activity).onChangeLocalityClick();
 
                         }
+                    }
+                    break;
+
+                case R.id.title:
+                    if(activity instanceof FreshActivity){
+                        ((FreshActivity)activity).onTitleClicked();
                     }
                     break;
 

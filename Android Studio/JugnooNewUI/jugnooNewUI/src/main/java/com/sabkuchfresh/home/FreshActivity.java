@@ -4397,6 +4397,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 || (getMenusResponse() != null && getMenusResponse().isOpenMerchantInfo());
     }
 
+    public void onTitleClicked() {
+        // title clicked, open merchant info we come from direct vendor listing only ( i.e. no merchant
+        // info in background )
+        if(getTopFragment() instanceof VendorMenuFragment && !isMenusIsOpenMerchantInfo()){
+            getTransactionUtils().openMerchantInfoFragment(this,getRelativeLayoutContainer());
+        }
+    }
 
 
     public static class OrderViaChatData{
