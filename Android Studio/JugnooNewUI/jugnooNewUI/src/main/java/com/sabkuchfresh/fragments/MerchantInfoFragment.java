@@ -567,6 +567,10 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         if (firstTime || tvOpensAt.getText().length() > 0) {
             tvlabelBullet.setText(activity.getString(R.string.bullet) + " ");
         }
+        // hide bullet text if opensAt is empty
+        if(tvOpensAt.getText().toString().trim().isEmpty()){
+            tvlabelBullet.setText("");
+        }
     }
 
     private void setUpCollapseToolbarData() {
