@@ -13,7 +13,6 @@
         android:id="@+id/tvSuggestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxLines="1"
         android:padding="@dimen/dp_15"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_16"

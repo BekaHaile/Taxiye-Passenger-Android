@@ -98,7 +98,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 item.setIsSubCategory(1);
                 subItems.add(item);
 
-                if(vendorDirectSearch!=null && vendorDirectSearch.getSubcategoryId()!=0
+                if(vendorDirectSearch!=null && vendorDirectSearch.getSubcategoryId()!= -1
                         && vendorDirectSearch.getSubcategoryId()==subcategory.getSubcategoryId()){
                     vendorDirectSearchSubCatIndex = subItems.size()-1;
                 }
@@ -112,7 +112,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         subItems.add(item1);
                         itemsInSubCategories++;
 
-                        if(vendorDirectSearch!=null && vendorDirectSearch.getItemId()!=0
+                        if(vendorDirectSearch!=null && vendorDirectSearch.getItemId()!= -1
                                 && vendorDirectSearch.getItemId()==item1.getRestaurantItemId()){
                             vendorDirectSearchItemIndex = subItems.size()-1;
                         }
@@ -132,7 +132,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 item1.setItemPos(j);
                 if(isVegCheck(isVegToggle, item1)) {
                     subItems.add(item1);
-                    if(vendorDirectSearch!=null && vendorDirectSearch.getItemId()!=0
+                    if(vendorDirectSearch!=null && vendorDirectSearch.getItemId()!= -1
                             && vendorDirectSearch.getItemId()==item1.getRestaurantItemId()){
                         vendorDirectSearchItemIndex = subItems.size()-1;
                     }

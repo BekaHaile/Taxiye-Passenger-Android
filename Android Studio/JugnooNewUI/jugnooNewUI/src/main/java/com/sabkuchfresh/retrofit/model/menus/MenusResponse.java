@@ -76,10 +76,10 @@ public class MenusResponse {
 	@Expose
 	private List<Vendor> vendors = new ArrayList<Vendor>();
 
-	@SerializedName("search_suggestions")
+	@SerializedName("suggestions")
 	private List<SearchSuggestions> suggestionsList;
 
-	@SerializedName("directSearchItems")
+	@SerializedName("items")
 	private List<VendorDirectSearch> directSearchVendors;
 
 	@SerializedName("is_open_merchant_info")
@@ -265,7 +265,6 @@ public class MenusResponse {
 		ArrayList<SearchSuggestions> searchSuggestions = new ArrayList<>();
 		for(int i=0;i<4;i++){
 			SearchSuggestions suggestion = new SearchSuggestions();
-			suggestion.setId(i+1);
 			suggestion.setText("Suggestion:"+String.valueOf(i+1));
 			suggestion.setTextColor("#000000");
 			searchSuggestions.add(suggestion);
@@ -276,22 +275,11 @@ public class MenusResponse {
 
 	public class SearchSuggestions{
 
-		@SerializedName("id")
-		private int id;
-
-		@SerializedName("text")
+		@SerializedName("line_1")
 		private String text;
 
-		@SerializedName("text_color")
+		@SerializedName("line_1_color")
 		private String textColor;
-
-		public int getId() {
-			return id;
-		}
-
-		public void setId(final int id) {
-			this.id = id;
-		}
 
 		public String getText() {
 			return text;

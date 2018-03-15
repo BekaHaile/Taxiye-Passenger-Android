@@ -74,7 +74,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
     private ImageButton ibArrow;
     private TextView tvSwitchVegToggle;
     private SwitchCompat switchVegToggle;
-    private int categoryId, subCategoryId,itemId;
+    private int categoryId = -1, subCategoryId = -1,itemId = -1;
     public VendorMenuFragment() {
     }
 
@@ -159,7 +159,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
             public void fragmentScrolled(final Fragment fragment) {
 
                 // scroll to correct subcategory / item
-                if (subCategoryId != 0 || itemId != 0) {
+                if (subCategoryId != -1 || itemId != -1) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -405,7 +405,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
                     // calculating tab position for direct vendor category id
                     int tabPosition = -1;
-                    if(categoryId!=0){
+                    if(categoryId!= -1){
                         for(int i=0;i<activity.getMenuProductsResponse().getCategories().size();i++){
                             if(activity.getMenuProductsResponse().getCategories().get(i).getCategoryId()==categoryId){
                                 tabPosition = i;
@@ -422,7 +422,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     tabs.notifyDataSetChanged();
 
                     // if we have category / subCategory coming in arguments, we need to switch tabs accordingly
-                    if (menusCategoryFragmentsAdapter != null && categoryId != 0) {
+                    if (menusCategoryFragmentsAdapter != null && categoryId != -1) {
                         // scroll to correct category
                         if(tabPosition!=-1){
                             viewPager.setCurrentItem(tabPosition);

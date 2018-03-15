@@ -231,9 +231,6 @@ public class TabbedSearchFragment extends Fragment {
                                     storeMenusResponse.setDirectSearchVendors(null);
                                     storeSearchResultFragment.setStoreSearchResponse(storeMenusResponse);
 
-                                    // todo remove, adding dummy suggestions
-                                    menusResponse.setSuggestionsList(menusResponse.getDummySuggestions());
-
                                     MenusResponse itemsMenusResponse = new MenusResponse();
                                     if(menusResponse.getSuggestionsList()!=null) {
                                         itemsMenusResponse.setSuggestionsList(menusResponse.getSuggestionsList());
