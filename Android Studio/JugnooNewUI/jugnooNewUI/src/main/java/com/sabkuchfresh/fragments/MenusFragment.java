@@ -774,9 +774,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             noOfCategories = menusResponse.getCategories() == null ? 0 : menusResponse.getCategories().size();
                             activity.setMenusResponse(menusResponse);
                         }
-                        activity.setMenusIsOpenMerchantInfo(menusResponse.isOpenMerchantInfo());
-
-
 
                         status.clear();
                         status.addAll(menusResponse.getRecentOrdersPossibleStatus());
@@ -792,6 +789,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
                     }
+
+                    // set the openMerchantInfo irrespective of api
+                    activity.setMenusIsOpenMerchantInfo(menusResponse.isOpenMerchantInfo());
+
 
 
                     swipeRefreshLayout.setRefreshing(false);
