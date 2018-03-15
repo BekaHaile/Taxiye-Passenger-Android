@@ -1561,6 +1561,18 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             int fabFatafatVisibility = View.GONE;
             int deliveryAddressInTopBarVisibility = View.GONE;
 
+            // set topBar title background
+            if(getTopFragment() instanceof VendorMenuFragment && !isMenusIsOpenMerchantInfo()){
+                // we need to enable click effect
+                TypedValue outValue = new TypedValue();
+                getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+                topBar.title.setBackgroundResource(outValue.resourceId);
+            }
+            else {
+                // do not allow click effect
+                topBar.title.setBackgroundResource(android.R.color.transparent);
+            }
+
             if (fragment instanceof FreshHomeFragment) {
 
                 llCartContainerVis = View.VISIBLE;
@@ -1959,7 +1971,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             topBar.title.setGravity(Gravity.CENTER);
             titleLayoutParams.setMargins(0, 0, (int) (ASSL.Xscale() * 50f), 0);
         } else {
-            topBar.title.setGravity(Gravity.LEFT);
+            topBar.title.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
             titleLayoutParams.setMargins((int) (ASSL.Xscale() * 20f), 0, 0, 0);
             titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.getLlSearchCart().getId());
             topBar.title.setPadding(0, 0, 0, 0);
