@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -58,6 +59,7 @@ public class TabbedSearchFragment extends Fragment {
     private String searchText = "";
     private boolean isMenusApiInProgress = false;
     private boolean searchOpened = false;
+    private LinearLayout llRecentSearch,llSearchResults;
 
     @Nullable
     @Override
@@ -72,6 +74,8 @@ public class TabbedSearchFragment extends Fragment {
         tabLayoutSearch = (TabLayout) main.findViewById(R.id.tabSearch);
         tabLayoutSearch.setTabMode(TabLayout.MODE_SCROLLABLE);
         viewPagerSearch = (ViewPager) main.findViewById(R.id.vpSearch);
+        llRecentSearch = (LinearLayout) main.findViewById(R.id.llRecentSearch);
+        llSearchResults = (LinearLayout) main.findViewById(R.id.llSearchResults);
 
         activity.fragmentUISetup(this);
         activity.getTopBar().imageViewMenu.setVisibility(View.GONE);

@@ -15,22 +15,59 @@
         android:visibility="visible"
         android:tag="@string/dont_touch_me" />
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        app:tabTextAppearance="@style/TextAppearanceTab"
-        app:tabIndicatorColor="@color/theme_color"
-        app:tabTextColor="@color/text_color"
-        app:tabSelectedTextColor="@android:color/black"
-        android:elevation="@dimen/dp_3"
-        android:tag="@string/dont_touch_me"/>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vpSearch"
+    <LinearLayout
+        android:id="@+id/llSearchResults"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:tag="@string/dont_touch_me"/>
+        android:orientation="vertical">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            app:tabTextAppearance="@style/TextAppearanceTab"
+            app:tabIndicatorColor="@color/theme_color"
+            app:tabTextColor="@color/text_color"
+            app:tabSelectedTextColor="@android:color/black"
+            android:elevation="@dimen/dp_3"
+            android:tag="@string/dont_touch_me"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vpSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tag="@string/dont_touch_me"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llRecentSearch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="@dimen/dp_16"
+            android:text="@string/txt_recent_searches"
+            android:background="@color/menu_item_selector_color_F7"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/sp_16"
+            app:typekitFont="@string/maven"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvRecentSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+
 
 </LinearLayout>

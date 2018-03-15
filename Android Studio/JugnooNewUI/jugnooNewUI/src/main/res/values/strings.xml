@@ -1488,5 +1488,6 @@
     </string-array>
 
     <string name="txt_suggestions">Suggestions</string>
+    <string name="txt_recent_searches">Recent Searches</string>
 
 </resources>
