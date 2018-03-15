@@ -23,6 +23,8 @@
             android:clickable="true"
             android:focusable="true"
             android:text="@string/txt_suggestions"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:textColor="@color/text_color"
             android:textSize="@dimen/sp_16"
             app:typekitFont="@string/maven"
