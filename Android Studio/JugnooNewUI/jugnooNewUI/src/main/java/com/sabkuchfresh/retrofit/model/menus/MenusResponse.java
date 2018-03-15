@@ -241,37 +241,6 @@ public class MenusResponse {
 		this.isOpenMerchantInfo = isOpenMerchantInfo;
 	}
 
-	// todo dummy method remove
-	public ArrayList<VendorDirectSearch> getDummyDirectSearchVendors(){
-		ArrayList<VendorDirectSearch> vendors = new ArrayList<>();
-		for(int i=0;i<4;i++){
-			VendorDirectSearch vendorDirectSearch = new VendorDirectSearch();
-			vendorDirectSearch.setLine1("Query:"+String.valueOf(i+1));
-			vendorDirectSearch.setLine2Start("in");
-			vendorDirectSearch.setLine2End("Restaurent:"+String.valueOf(i+1));
-			vendorDirectSearch.setLine1Color("#000000");
-			vendorDirectSearch.setLine2StartColor("#000000");
-			vendorDirectSearch.setLine2EndColor("#000000");
-			vendorDirectSearch.setVendorId(332);
-			vendorDirectSearch.setCategoryId(298);
-			//vendorDirectSearch.setSubcategoryId(166);
-			vendorDirectSearch.setItemId(54691);
-			vendors.add(vendorDirectSearch);
-		}
-		return vendors;
-	}
-
-	public ArrayList<SearchSuggestions> getDummySuggestions(){
-		ArrayList<SearchSuggestions> searchSuggestions = new ArrayList<>();
-		for(int i=0;i<4;i++){
-			SearchSuggestions suggestion = new SearchSuggestions();
-			suggestion.setText("Suggestion:"+String.valueOf(i+1));
-			suggestion.setTextColor("#000000");
-			searchSuggestions.add(suggestion);
-		}
-		return searchSuggestions;
-	}
-
 
 	public class SearchSuggestions{
 
