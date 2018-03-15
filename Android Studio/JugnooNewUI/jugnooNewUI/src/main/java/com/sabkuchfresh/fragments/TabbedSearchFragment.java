@@ -87,6 +87,7 @@ public class TabbedSearchFragment extends Fragment {
         searchOpened = true;
     }
 
+
     @Override
     public void onHiddenChanged(final boolean hidden) {
         super.onHiddenChanged(hidden);
@@ -241,6 +242,7 @@ public class TabbedSearchFragment extends Fragment {
                                     itemSearchResultFragment.setSearchSuggestions(itemsMenusResponse);
 
                                     shouldRecallSearchAPI = true;
+                                    activity.getTopBar().etSearch.requestFocus();
                                 }
                             }
                         } catch (Exception exception) {
