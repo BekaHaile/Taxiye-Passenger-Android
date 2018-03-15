@@ -183,6 +183,9 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
 
     public void setSearchSuggestions(MenusResponse response){
 
+        // setting switchToSuggestions flag as we can come here when a new search query got made
+        switchedToSuggestions = true;
+
         searchSuggestions = response.getSuggestionsList();
 
         // show suggestions layout
@@ -241,6 +244,9 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
                 params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(categoryId));
             }
 
+            // todo remove, adding dummy param
+            params.put(Constants.KEY_SEARCH_TEXT, "sub");
+
             new HomeUtil().putDefaultParams(params);
 
             Callback<MenusResponse> callback = new Callback<MenusResponse>() {
@@ -258,10 +264,13 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
                                 if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                     if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
 
+                                        // todo remove, adding dummy suggestions
+                                        menusResponse.setDirectSearchVendors(menusResponse.getDummyDirectSearchVendors());
+
                                         //set the direct vendor response
                                         MenusResponse itemsMenusResponse = new MenusResponse();
                                         if (menusResponse.getDirectSearchVendors() != null) {
-                                            itemsMenusResponse.setSuggestionsList(menusResponse.getSuggestionsList());
+                                            itemsMenusResponse.setDirectSearchVendors(menusResponse.getDirectSearchVendors());
                                         } else {
                                             itemsMenusResponse.setDirectSearchVendors(new ArrayList<MenusResponse.VendorDirectSearch>());
                                         }

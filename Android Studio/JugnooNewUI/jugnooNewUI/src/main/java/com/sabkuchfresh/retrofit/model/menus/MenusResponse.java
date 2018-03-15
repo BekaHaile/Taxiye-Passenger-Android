@@ -261,6 +261,18 @@ public class MenusResponse {
 		return vendors;
 	}
 
+	public ArrayList<SearchSuggestions> getDummySuggestions(){
+		ArrayList<SearchSuggestions> searchSuggestions = new ArrayList<>();
+		for(int i=0;i<4;i++){
+			SearchSuggestions suggestion = new SearchSuggestions();
+			suggestion.setId(i+1);
+			suggestion.setText("Suggestion:"+String.valueOf(i+1));
+			suggestion.setTextColor("#000000");
+			searchSuggestions.add(suggestion);
+		}
+		return searchSuggestions;
+	}
+
 
 	public class SearchSuggestions{
 

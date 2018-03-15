@@ -1174,6 +1174,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (object instanceof MenusResponse.VendorDirectSearch)
             return VIEW_DIRECT_SEARCH_VENDOR;
 
+        if (object instanceof MenusResponse.SearchSuggestions)
+            return VIEW_SEARCH_SUGGESTION;
 
         if (object instanceof MenusResponse.StripInfo)
             return OFFER_STRIP_ITEM;
