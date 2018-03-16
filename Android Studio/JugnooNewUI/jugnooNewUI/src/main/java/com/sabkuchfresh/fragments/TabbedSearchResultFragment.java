@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -56,7 +55,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
     private ArrayList<String> statusMeals = new ArrayList<>();
     private ArrayList<String> statusFatafat = new ArrayList<>();
     private LinearLayout llSuggestions;
-    private TextView tvSuggestionsHeader,tvSuggestionValue;
+    private TextView tvSuggestionsHeader,tvSuggestionValue, tvStoresHeader;
     private ImageView imgVwArrow;
     private List<SearchSuggestion> searchSuggestions = new ArrayList<>();
     private boolean apiInProgress = false;
@@ -68,23 +67,6 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View main = inflater.inflate(R.layout.fragment_tabbed_search_result,container,false);
         initView(main);
-
-        // set initial data if coming
-        if(getArguments()!=null && getArguments().containsKey(MenusResponse.class.getSimpleName())){
-            MenusResponse menusResponse = new Gson().fromJson(getArguments().getString
-                    (MenusResponse.class.getSimpleName()),MenusResponse.class);
-
-            if(menusResponse.getSuggestionsList()!=null){
-                // suggestions response
-                setSearchSuggestions(menusResponse);
-            }
-
-            if(menusResponse.getVendors()!=null){
-                // stores response
-                setStoreSearchResponse(menusResponse);
-            }
-        }
-
         return main;
     }
 
@@ -93,6 +75,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
         tvSuggestionsHeader = (TextView) main.findViewById(R.id.tvSuggestionHeader);
         tvSuggestionValue = (TextView) main.findViewById(R.id.tvSuggestionValue);
         imgVwArrow = (ImageView) main.findViewById(R.id.imgVwArrow);
+        tvStoresHeader = (TextView) main.findViewById(R.id.tvStoresHeader);
 
         // initially hide the suggestions
         llSuggestions.setVisibility(View.GONE);
@@ -159,6 +142,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
                 imgVwArrow.setVisibility(View.VISIBLE);
                 tvSuggestionValue.setVisibility(View.VISIBLE);
                 tvSuggestionValue.setText(searchSuggestion.getText());
+                tvStoresHeader.setVisibility(View.GONE);
                 Utils.hideKeyboard(activity);
             }
         }, rvSearch, status,statusMeals,statusFatafat);
@@ -169,6 +153,9 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
     public void setStoreSearchResponse(MenusResponse response){
 
         llSuggestions.setVisibility(View.GONE);
+        tvStoresHeader.setVisibility(View.VISIBLE);
+        tvStoresHeader.setText(activity.getResources().getString(R.string.txt_related_to
+                ,activity.getTopBar().etSearch.getText().toString().trim()));
         response.setSuggestionsList(null);
         response.setDirectSearchVendors(null);
         // send hasMorePages as true to avoid adding the suggest store layout
@@ -194,6 +181,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
         llSuggestions.setVisibility(View.VISIBLE);
         imgVwArrow.setVisibility(View.GONE);
         tvSuggestionValue.setVisibility(View.GONE);
+        tvStoresHeader.setVisibility(View.GONE);
 
         response.setDirectSearchVendors(null);
         response.setVendors(null);

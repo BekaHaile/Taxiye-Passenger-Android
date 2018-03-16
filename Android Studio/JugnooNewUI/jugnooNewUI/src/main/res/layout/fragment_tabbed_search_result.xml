@@ -55,6 +55,23 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tvStoresHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:theme="@style/GreyHighlight"
+        android:visibility="gone"
+        android:padding="@dimen/dp_16"
+        android:background="@color/menu_item_selector_color_F7"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/sp_16"
+        app:typekitFont="@string/maven"
+        />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvSearchResults"
         android:layout_width="match_parent"
