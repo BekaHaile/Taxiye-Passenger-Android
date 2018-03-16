@@ -1839,7 +1839,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             tvLine1 = (TextView) itemView.findViewById(R.id.tvLine1);
             tvLine2Start = (TextView) itemView.findViewById(R.id.tvLine2Start);
             tvLine2End = (TextView) itemView.findViewById(R.id.tvLine2End);
-            tvLine2End.setTypeface(tvLine2End.getTypeface(), Typeface.BOLD);
             llRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
