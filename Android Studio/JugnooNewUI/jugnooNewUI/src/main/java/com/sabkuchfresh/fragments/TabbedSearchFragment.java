@@ -163,6 +163,7 @@ public class TabbedSearchFragment extends Fragment {
             public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
                 // set the suggestion on etSearch
                 activity.getTopBar().etSearch.setText(searchSuggestion.getText());
+                activity.getTopBar().etSearch.setSelection(searchSuggestion.getText().length());
 
                 // switch tab to first position
                 viewPagerSearch.setCurrentItem(0);
