@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.utils.DateOperations;
 
@@ -77,7 +78,7 @@ public class MenusResponse {
 	private List<Vendor> vendors = new ArrayList<Vendor>();
 
 	@SerializedName("suggestions")
-	private List<SearchSuggestions> suggestionsList;
+	private List<SearchSuggestion> suggestionsList;
 
 	@SerializedName("items")
 	private List<VendorDirectSearch> directSearchVendors;
@@ -90,11 +91,11 @@ public class MenusResponse {
 	@Expose
 	private OfferingsVisibilityResponse.OfferingsVisibilityData offeringsVisibilityData ;
 
-	public List<SearchSuggestions> getSuggestionsList() {
+	public List<SearchSuggestion> getSuggestionsList() {
 		return suggestionsList;
 	}
 
-	public void setSuggestionsList(final List<SearchSuggestions> suggestionsList) {
+	public void setSuggestionsList(final List<SearchSuggestion> suggestionsList) {
 		this.suggestionsList = suggestionsList;
 	}
 
@@ -239,32 +240,6 @@ public class MenusResponse {
 
 	public void setIsOpenMerchantInfo(int isOpenMerchantInfo) {
 		this.isOpenMerchantInfo = isOpenMerchantInfo;
-	}
-
-
-	public class SearchSuggestions{
-
-		@SerializedName("line_1")
-		private String text;
-
-		@SerializedName("line_1_color")
-		private String textColor;
-
-		public String getText() {
-			return text;
-		}
-
-		public void setText(final String text) {
-			this.text = text;
-		}
-
-		public String getTextColor() {
-			return textColor;
-		}
-
-		public void setTextColor(final String textColor) {
-			this.textColor = textColor;
-		}
 	}
 
 	public class VendorDirectSearch{

@@ -63,6 +63,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -247,7 +248,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
 
             @Override
-            public void onSuggestionClicked(final MenusResponse.SearchSuggestions searchSuggestions) {
+            public void onSuggestionClicked(final SearchSuggestion searchSuggestions) {
                 // NA here
             }
         }, recyclerViewRestaurant, status,statusMeals,statusFatafat);

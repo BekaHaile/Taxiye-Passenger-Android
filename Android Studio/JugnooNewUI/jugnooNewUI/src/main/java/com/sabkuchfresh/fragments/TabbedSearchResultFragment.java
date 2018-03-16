@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -57,7 +58,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
     private LinearLayout llSuggestions;
     private TextView tvSuggestionsHeader,tvSuggestionValue;
     private ImageView imgVwArrow;
-    private List<MenusResponse.SearchSuggestions> searchSuggestions = new ArrayList<>();
+    private List<SearchSuggestion> searchSuggestions = new ArrayList<>();
     private boolean apiInProgress = false;
     private boolean switchedToSuggestions = false;
 
@@ -146,11 +147,11 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
             }
 
             @Override
-            public void onSuggestionClicked(final MenusResponse.SearchSuggestions searchSuggestion) {
+            public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
                 // get the items response from the suggestion
                 switchedToSuggestions = false;
                 getSuggestions(false, activity.getSelectedLatLng(), true
-                        , activity.getCategoryOpened(),searchSuggestion.getText());
+                        , activity.getCategoryOpened(),searchSuggestion);
 
                 // show suggestion layout and set text
                 llSuggestions.setVisibility(View.VISIBLE);
@@ -217,7 +218,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
     }
 
     public void getSuggestions(final boolean loader, final LatLng latLng, final boolean scrollToTop
-            , final MenusResponse.Category categoryObject, final String suggestionText) {
+            , final MenusResponse.Category categoryObject, final SearchSuggestion suggestion) {
 
         if (apiInProgress)
             return;
@@ -225,7 +226,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
         int categoryId = categoryObject == null ? -1 : categoryObject.getId();
         try {
             if (!MyApplication.getInstance().isOnline()) {
-                retryDialog(DialogErrorType.NO_NET, latLng, loader, false, scrollToTop, categoryObject,suggestionText);
+                retryDialog(DialogErrorType.NO_NET, latLng, loader, false, scrollToTop, categoryObject,suggestion);
                 return;
             }
 
@@ -245,8 +246,8 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
             }
             // to indicate we only need items (direct vendor ) in response
             params.put(Constants.KEY_SEARCH_ITEMS_ONLY, String.valueOf(1));
-
-            params.put(Constants.KEY_SEARCH_TEXT, suggestionText);
+            params.put(Constants.KEY_SEARCH_ITEM_ID, String.valueOf(suggestion.getItemId()));
+            params.put(Constants.KEY_SEARCH_TEXT, suggestion.getText());
 
             new HomeUtil().putDefaultParams(params);
 
@@ -278,7 +279,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
                             } catch (Exception exception) {
                                 exception.printStackTrace();
                                 retryDialog(DialogErrorType.SERVER_ERROR, latLng, loader, false
-                                        , scrollToTop, categoryObject,suggestionText);
+                                        , scrollToTop, categoryObject,suggestion);
                             }
                         }
                         apiInProgress = false;
@@ -294,7 +295,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
                     DialogPopup.dismissLoadingDialog();
                     if(!switchedToSuggestions) {
                         retryDialog(DialogErrorType.CONNECTION_LOST, latLng, loader, false
-                                , scrollToTop, categoryObject,suggestionText);
+                                , scrollToTop, categoryObject,suggestion);
                     }
 
 
@@ -314,7 +315,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
     }
 
     private void retryDialog(DialogErrorType dialogErrorType, final LatLng latLng, final boolean loader, final boolean isPagination
-            , final boolean scrollToTop, final MenusResponse.Category category, final String suggestionText) {
+            , final boolean scrollToTop, final MenusResponse.Category category, final SearchSuggestion suggestion) {
         DialogPopup.dialogNoInternet(activity,
                 dialogErrorType,
                 new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
@@ -323,7 +324,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
                         if (isPagination) {
                             // NA here
                         } else {
-                            getSuggestions(loader, latLng, scrollToTop, category,suggestionText);
+                            getSuggestions(loader, latLng, scrollToTop, category,suggestion);
                         }
                     }
 

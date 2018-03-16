@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.retrofit.model;
 
 import android.content.Context;
-import android.view.Menu;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -18,9 +17,9 @@ import java.util.List;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.datastructure.SignupTutorial;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
@@ -338,10 +337,6 @@ public class LoginResponse {
 		@SerializedName(Constants.KEY_FATAFAT_ENABLED)
 		int isFatafatEnabled = 1;
 
-
-
-
-
 		@SerializedName("popup_data")
 		private PopupData popupData;
 
@@ -412,10 +407,21 @@ public class LoginResponse {
 		@SerializedName(Constants.MERCHANT_CATEGORIES)
 		private ArrayList<MenusResponse.Category> merchantCategories;
 
+		@SerializedName("suggestions")
+		private ArrayList<SearchSuggestion> recentSearches;
+
+
 		public ArrayList<MenusResponse.Category> getMerchantCategoriesList() {
 			return merchantCategories;
 		}
 
+		public ArrayList<SearchSuggestion> getRecentSearches() {
+			return recentSearches;
+		}
+
+		public void setRecentSearches(final ArrayList<SearchSuggestion> recentSearches) {
+			this.recentSearches = recentSearches;
+		}
 
 		public boolean getShowAddStore() {
 			return showAddStore==1;

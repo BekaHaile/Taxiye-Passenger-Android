@@ -10,6 +10,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.gson.Gson;
+import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.adapters.TabbedPagerAdaptor;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -36,6 +38,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -54,12 +57,15 @@ public class TabbedSearchFragment extends Fragment {
     private TabLayout tabLayoutSearch;
     private ViewPager viewPagerSearch;
     private TabbedSearchResultFragment storeSearchResultFragment, itemSearchResultFragment;
-    private TabbedPagerAdaptor pagerAdaptor;
     private FreshActivity activity;
     private String searchText = "";
     private boolean isMenusApiInProgress = false;
     private boolean searchOpened = false;
-    private LinearLayout llRecentSearch,llSearchResults;
+    private LinearLayout llRecentSearch, llSearchResults;
+    private RecyclerView rvRecentSearches;
+    private ArrayList<String> status = new ArrayList<>();
+    private ArrayList<String> statusMeals = new ArrayList<>();
+    private ArrayList<String> statusFatafat = new ArrayList<>();
 
     @Nullable
     @Override
@@ -76,6 +82,16 @@ public class TabbedSearchFragment extends Fragment {
         viewPagerSearch = (ViewPager) main.findViewById(R.id.vpSearch);
         llRecentSearch = (LinearLayout) main.findViewById(R.id.llRecentSearch);
         llSearchResults = (LinearLayout) main.findViewById(R.id.llSearchResults);
+        rvRecentSearches = (RecyclerView) main.findViewById(R.id.rvRecentSearch);
+        rvRecentSearches.setLayoutManager(new LinearLayoutManager(activity));
+        setUpViewForFresh();
+
+    }
+
+    /**
+     * Controls which elements to show/hide for fresh topBar
+     */
+    private void setUpViewForFresh(){
 
         activity.fragmentUISetup(this);
         activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
@@ -86,28 +102,17 @@ public class TabbedSearchFragment extends Fragment {
         activity.getTopBar().rlSearch.setVisibility(View.GONE);
         activity.getTopBar().getLlTopBarDeliveryAddress().setVisibility(View.GONE);
         activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+        activity.getTopBar().ivSearchCross.setVisibility(View.GONE);
         activity.getTopBar().etSearch.requestFocus();
         Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
         searchOpened = true;
     }
 
-
     @Override
     public void onHiddenChanged(final boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden) {
-            activity.fragmentUISetup(this);
-            activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
-            activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
-            activity.getTopBar().title.setVisibility(View.GONE);
-            activity.getTopBar().llSearchContainer.setVisibility(View.VISIBLE);
-            activity.getTopBar().setSearchVisibility(View.VISIBLE);
-            activity.getTopBar().rlSearch.setVisibility(View.GONE);
-            activity.getTopBar().getLlTopBarDeliveryAddress().setVisibility(View.GONE);
-            activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-            activity.getTopBar().etSearch.requestFocus();
-            Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
-            searchOpened = true;
+            setUpViewForFresh();
         }
     }
 
@@ -117,42 +122,85 @@ public class TabbedSearchFragment extends Fragment {
 
     private void setData() {
 
-        MenusResponse menusResponse = null;
-        // get arguments if we have any
-        if (getArguments() != null && getArguments().containsKey(MenusResponse.class.getSimpleName())) {
-            menusResponse = new Gson().fromJson(getArguments().getString(MenusResponse.class.getSimpleName()), MenusResponse.class);
-        }
+        DeliveryHomeAdapter deliveryHomeAdapter = new DeliveryHomeAdapter(activity, new DeliveryHomeAdapter.Callback() {
+            @Override
+            public void onRestaurantSelected(int vendorId) {
+                // NA here
+            }
+
+            @Override
+            public void onBannerInfoDeepIndexClick(int deepIndex) {
+                // NA here
+            }
+
+            @Override
+            public void openCategory(MenusResponse.Category category) {
+                // NA here
+            }
+
+            @Override
+            public void onVendorDirectSearchClicked(final MenusResponse.VendorDirectSearch vendorDirectSearch) {
+                // NA
+            }
+
+            @Override
+            public void apiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone) {
+                // NA here
+            }
+
+            @Override
+            public boolean showDirectVendorSuggestions() {
+                return false;
+            }
+
+            @Override
+            public boolean showSuggestions() {
+                return true;
+            }
+
+            @Override
+            public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
+                // set the suggestion on etSearch
+                activity.getTopBar().etSearch.setText(searchSuggestion.getText());
+
+            }
+        }, rvRecentSearches, status, statusMeals, statusFatafat);
+
+        rvRecentSearches.setAdapter(deliveryHomeAdapter);
 
         // set tabs up
         String[] titles = activity.getResources().getStringArray(R.array.search_tab_names);
         ArrayList<Fragment> fragments = new ArrayList<>();
         storeSearchResultFragment = new TabbedSearchResultFragment();
-        if(menusResponse!=null){
-            MenusResponse storesResponse = new MenusResponse();
-            storesResponse.setVendors(menusResponse.getVendors());
-            storesResponse.setDirectSearchVendors(null);
-            Bundle args = new Bundle();
-            args.putString(MenusResponse.class.getSimpleName(),new Gson().toJson(storesResponse));
-            storeSearchResultFragment.setArguments(args);
-        }
-
         itemSearchResultFragment = new TabbedSearchResultFragment();
-        // pass empty suggestions
-        if(menusResponse!=null){
-            MenusResponse itemsResponse = new MenusResponse();
-            itemsResponse.setSuggestionsList(new ArrayList<MenusResponse.SearchSuggestions>());
-            itemsResponse.setVendors(null);
-            Bundle args = new Bundle();
-            args.putString(MenusResponse.class.getSimpleName(),new Gson().toJson(itemsResponse));
-            itemSearchResultFragment.setArguments(args);
-        }
 
         fragments.add(storeSearchResultFragment);
         fragments.add(itemSearchResultFragment);
-        pagerAdaptor = new TabbedPagerAdaptor(getChildFragmentManager(), fragments, titles);
+        TabbedPagerAdaptor pagerAdaptor = new TabbedPagerAdaptor(getChildFragmentManager(), fragments, titles);
         viewPagerSearch.setAdapter(pagerAdaptor);
         tabLayoutSearch.setupWithViewPager(viewPagerSearch);
         changeFontInViewGroup(tabLayoutSearch);
+
+        // initially hide the search results layout and show recent searches
+        llSearchResults.setVisibility(View.GONE);
+        llRecentSearch.setVisibility(View.VISIBLE);
+
+        MenusResponse menusResponse = new MenusResponse();
+        menusResponse.setVendors(null);
+        //menusResponse.setSuggestionsList(Data.getDeliveryCustomerData().getRecentSearches());
+
+        // todo remove set up dummy recent suggestions
+        ArrayList<SearchSuggestion> searchSuggestions = new ArrayList<>();
+        for(int i=0;i<5;i++){
+            SearchSuggestion suggestion = new SearchSuggestion();
+            suggestion.setText("Item:"+String.valueOf(i+1));
+            suggestion.setTextColor("#000000");
+            searchSuggestions.add(suggestion);
+        }
+        menusResponse.setSuggestionsList(searchSuggestions);
+
+        // send hasMorePages as true to avoid adding the suggest store layout
+        deliveryHomeAdapter.setList(menusResponse, false, true);
 
     }
 
@@ -186,9 +234,15 @@ public class TabbedSearchFragment extends Fragment {
             searchText = searchString;
             if (searchText.length() > 2) {
                 getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryOpened(), MenusFragment.TYPE_API_MENUS_SEARCH);
+                // hide recent searches
+                llRecentSearch.setVisibility(View.GONE);
+                llSearchResults.setVisibility(View.VISIBLE);
+
             } else {
-                if (oldLength > searchString.length() && oldLength >= 1 && searchString.length() == 0) {
-                    getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryOpened(), MenusFragment.TYPE_API_MENUS_SEARCH);
+                if (oldLength > searchString.length() && oldLength >= 1) {
+                    // empty show recent suggestions
+                    llSearchResults.setVisibility(View.GONE);
+                    llRecentSearch.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -237,11 +291,10 @@ public class TabbedSearchFragment extends Fragment {
                                     storeSearchResultFragment.setStoreSearchResponse(storeMenusResponse);
 
                                     MenusResponse itemsMenusResponse = new MenusResponse();
-                                    if(menusResponse.getSuggestionsList()!=null) {
+                                    if (menusResponse.getSuggestionsList() != null) {
                                         itemsMenusResponse.setSuggestionsList(menusResponse.getSuggestionsList());
-                                    }
-                                    else {
-                                        itemsMenusResponse.setSuggestionsList(new ArrayList<MenusResponse.SearchSuggestions>());
+                                    } else {
+                                        itemsMenusResponse.setSuggestionsList(new ArrayList<SearchSuggestion>());
                                     }
                                     itemSearchResultFragment.setSearchSuggestions(itemsMenusResponse);
 
@@ -277,12 +330,8 @@ public class TabbedSearchFragment extends Fragment {
 
             activity.getTopBar().setPBSearchVisibility(View.VISIBLE);
             isMenusApiInProgress = true;
-            if (isSearchingCase(searchText)) {
-                params.put(Constants.KEY_SEARCH_TEXT, searchText);
-                RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
-            } else {
-                RestClient.getMenusApiService().nearbyRestaurants(params, callback);
-            }
+            params.put(Constants.KEY_SEARCH_TEXT, searchText);
+            RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -290,10 +339,6 @@ public class TabbedSearchFragment extends Fragment {
         }
     }
 
-
-    private boolean isSearchingCase(String searchTextCurr) {
-        return (searchOpened && searchTextCurr.length() > 2);
-    }
 
     @NonNull
     private HashMap<String, String> getMenusApiHashMap(LatLng latLng, int categoryId) {
@@ -304,7 +349,7 @@ public class TabbedSearchFragment extends Fragment {
         params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
         params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(activity));
         params.put(Constants.INTERATED, "1");
-        params.put(Constants.KEY_SHOW_ALL_RESULT,String.valueOf(1));
+        params.put(Constants.KEY_SHOW_ALL_RESULT, String.valueOf(1));
         params.put(Constants.PAGE_NO, String.valueOf(0));
         if (categoryId > 0) {
             params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(categoryId));

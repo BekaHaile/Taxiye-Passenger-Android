@@ -2214,15 +2214,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 if(getTopFragment() instanceof MenusFragment && getCategoryIdOpened()<0){
                     // open tabbed search and send it menus response if present
-                    Bundle args = null;
-                    if(getMenusResponse()!=null){
-                        args = new Bundle();
-                        MenusResponse menusResponse = new MenusResponse();
-                        menusResponse.setSuggestionsList(getMenusResponse().getSuggestionsList());
-                        menusResponse.setVendors(getMenusResponse().getVendors());
-                        args.putString(MenusResponse.class.getSimpleName(),new Gson().toJson(menusResponse));
-                    }
-                    getTransactionUtils().openTabbedSearchFragment(this, getRelativeLayoutContainer(), args);
+                    getTransactionUtils().openTabbedSearchFragment(this, getRelativeLayoutContainer(), null);
                     topBar.title.setVisibility(View.GONE);
                     topBar.title.invalidate();
                     topBar.animateSearchBar(true);

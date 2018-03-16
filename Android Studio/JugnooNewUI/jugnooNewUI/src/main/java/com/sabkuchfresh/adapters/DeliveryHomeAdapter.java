@@ -61,6 +61,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -398,7 +399,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         // service unavailable case
         if (!isPagination && (menusResponse.getServiceUnavailable() == 1 || (menusResponse.getVendors() != null && vendorsCount == 0)
-                || (menusResponse.getDirectSearchVendors() != null && directSearchVendorCount == 0))) {
+                || (menusResponse.getDirectSearchVendors() != null && directSearchVendorCount == 0)
+                || (menusResponse.getSuggestionsList() != null && searchSuggestionsCount == 0))) {
             int messageResId = Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()) ?
                     R.string.no_delivery_available_your_location : R.string.no_menus_available_your_location;
             if ((activity.getMenusFragment() != null && activity.getMenusFragment().searchOpened) ||
@@ -669,7 +671,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }else if (mholder instanceof ViewHolderSearchSuggestion) {
 
             DeliveryHomeAdapter.ViewHolderSearchSuggestion holder = ((DeliveryHomeAdapter.ViewHolderSearchSuggestion) mholder);
-            MenusResponse.SearchSuggestions searchSuggestions = (MenusResponse.SearchSuggestions) dataToDisplay.get(position);
+            SearchSuggestion searchSuggestions = (SearchSuggestion) dataToDisplay.get(position);
             holder.tvSuggestion.setText(searchSuggestions.getText());
             holder.tvSuggestion.setTextColor(Color.parseColor(searchSuggestions.getTextColor()));
 
@@ -1174,7 +1176,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (object instanceof MenusResponse.VendorDirectSearch)
             return VIEW_DIRECT_SEARCH_VENDOR;
 
-        if (object instanceof MenusResponse.SearchSuggestions)
+        if (object instanceof SearchSuggestion)
             return VIEW_SEARCH_SUGGESTION;
 
         if (object instanceof MenusResponse.StripInfo)
@@ -1288,7 +1290,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     callback.onVendorDirectSearchClicked(((MenusResponse.VendorDirectSearch) dataToDisplay.get(pos)));
                     break;
                 case R.id.llRootSearchSuggestion:
-                    callback.onSuggestionClicked(((MenusResponse.SearchSuggestions)dataToDisplay.get(pos)));
+                    callback.onSuggestionClicked(((SearchSuggestion)dataToDisplay.get(pos)));
                     break;
 
             }
@@ -1562,7 +1564,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         boolean showSuggestions();
 
-        void onSuggestionClicked(MenusResponse.SearchSuggestions searchSuggestions);
+        void onSuggestionClicked(SearchSuggestion searchSuggestions);
     }
 
     private static class ViewDivider extends RecyclerView.ViewHolder {
