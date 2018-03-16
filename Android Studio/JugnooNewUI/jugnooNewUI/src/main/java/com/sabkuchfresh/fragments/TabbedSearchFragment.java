@@ -192,17 +192,7 @@ public class TabbedSearchFragment extends Fragment {
 
         MenusResponse menusResponse = new MenusResponse();
         menusResponse.setVendors(null);
-        //menusResponse.setSuggestionsList(Data.getDeliveryCustomerData().getRecentSearches());
-
-        // todo remove set up dummy recent suggestions
-        ArrayList<SearchSuggestion> searchSuggestions = new ArrayList<>();
-        for(int i=0;i<5;i++){
-            SearchSuggestion suggestion = new SearchSuggestion();
-            suggestion.setText("Item:"+String.valueOf(i+1));
-            suggestion.setTextColor("#000000");
-            searchSuggestions.add(suggestion);
-        }
-        menusResponse.setSuggestionsList(searchSuggestions);
+        menusResponse.setSuggestionsList(Data.getDeliveryCustomerData().getRecentSearches());
 
         // send hasMorePages as true to avoid adding the suggest store layout
         deliveryHomeAdapter.setList(menusResponse, false, true);

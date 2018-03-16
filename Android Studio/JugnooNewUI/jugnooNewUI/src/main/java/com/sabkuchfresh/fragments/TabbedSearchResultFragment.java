@@ -159,6 +159,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
                 imgVwArrow.setVisibility(View.VISIBLE);
                 tvSuggestionValue.setVisibility(View.VISIBLE);
                 tvSuggestionValue.setText(searchSuggestion.getText());
+                Utils.hideKeyboard(activity);
             }
         }, rvSearch, status,statusMeals,statusFatafat);
 
