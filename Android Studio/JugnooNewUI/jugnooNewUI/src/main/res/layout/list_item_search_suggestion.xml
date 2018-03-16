@@ -5,7 +5,8 @@
               android:id="@+id/llRootSearchSuggestion"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@drawable/bg_white_menu_item_selector_color_selector"
+              android:theme="@style/GreyHighlight"
+              android:background="?attr/selectableItemBackground"
               android:orientation="vertical">
 
 

@@ -382,6 +382,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             dataToDisplay.addAll(menusResponse.getSuggestionsList());
             searchSuggestionsCount = menusResponse.getSuggestionsList().size();
         }
+        else {
+            menusResponse.setSuggestionsList(null);
+        }
 
         //vendors Assignment
         if (menusResponse.getVendors() != null) {

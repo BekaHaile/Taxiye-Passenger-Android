@@ -26,7 +26,6 @@ import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.InputFilter;
-import android.text.InputType;
 import android.text.Spanned;
 import android.util.Base64;
 import android.util.DisplayMetrics;
@@ -883,8 +882,13 @@ public class Utils {
 	public static void hideKeyboard(Activity activity){
 		View view = activity.getCurrentFocus();
 		if (view != null) {
-			InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		    try {
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+            catch (Exception e){
+            }
+
 		}
 	}
 

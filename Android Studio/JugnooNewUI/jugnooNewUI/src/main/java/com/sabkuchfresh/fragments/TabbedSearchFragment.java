@@ -85,6 +85,10 @@ public class TabbedSearchFragment extends Fragment {
         rvRecentSearches = (RecyclerView) main.findViewById(R.id.rvRecentSearch);
         rvRecentSearches.setLayoutManager(new LinearLayoutManager(activity));
         setUpViewForFresh();
+        // initially hide the cross button
+        activity.getTopBar().ivSearchCross.setVisibility(View.GONE);
+        activity.getTopBar().etSearch.requestFocus();
+        Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
 
     }
 
@@ -102,9 +106,6 @@ public class TabbedSearchFragment extends Fragment {
         activity.getTopBar().rlSearch.setVisibility(View.GONE);
         activity.getTopBar().getLlTopBarDeliveryAddress().setVisibility(View.GONE);
         activity.getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
-        activity.getTopBar().ivSearchCross.setVisibility(View.GONE);
-        activity.getTopBar().etSearch.requestFocus();
-        Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
         searchOpened = true;
     }
 
@@ -163,6 +164,11 @@ public class TabbedSearchFragment extends Fragment {
                 // set the suggestion on etSearch
                 activity.getTopBar().etSearch.setText(searchSuggestion.getText());
 
+                // switch tab to first position
+                viewPagerSearch.setCurrentItem(0);
+
+                Utils.hideKeyboard(activity);
+
             }
         }, rvRecentSearches, status, statusMeals, statusFatafat);
 
@@ -182,8 +188,7 @@ public class TabbedSearchFragment extends Fragment {
         changeFontInViewGroup(tabLayoutSearch);
 
         // initially hide the search results layout and show recent searches
-        llSearchResults.setVisibility(View.GONE);
-        llRecentSearch.setVisibility(View.VISIBLE);
+        showRecentSearches();
 
         MenusResponse menusResponse = new MenusResponse();
         menusResponse.setVendors(null);
@@ -203,6 +208,12 @@ public class TabbedSearchFragment extends Fragment {
         deliveryHomeAdapter.setList(menusResponse, false, true);
 
     }
+
+    private void showRecentSearches(){
+        llSearchResults.setVisibility(View.GONE);
+        llRecentSearch.setVisibility(View.VISIBLE);
+    }
+
 
     @Override
     public void onAttach(final Context context) {
@@ -241,8 +252,7 @@ public class TabbedSearchFragment extends Fragment {
             } else {
                 if (oldLength > searchString.length() && oldLength >= 1) {
                     // empty show recent suggestions
-                    llSearchResults.setVisibility(View.GONE);
-                    llRecentSearch.setVisibility(View.VISIBLE);
+                    showRecentSearches();
                 }
             }
         }
