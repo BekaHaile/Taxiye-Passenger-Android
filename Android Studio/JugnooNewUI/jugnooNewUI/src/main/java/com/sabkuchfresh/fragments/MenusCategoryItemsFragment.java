@@ -21,7 +21,6 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
-import com.sabkuchfresh.utils.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -86,14 +85,7 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                 scrollToPos = menusCategoryItemsAdapter.getVendorDirectSearchSubCatIndex();
             }
             if(scrollToPos!=-1){
-                // compute scroll offset
-                int scrollOffset = 0;
-                int lastVisibleItemPos = linearLayoutManager.findLastVisibleItemPosition();
-
-                if(scrollToPos>lastVisibleItemPos){
-                    scrollOffset = Utils.dpToPx(activity,100);
-                }
-                linearLayoutManager.scrollToPositionWithOffset(scrollToPos,scrollOffset);
+                linearLayoutManager.scrollToPositionWithOffset(scrollToPos,0);
             }
 
         }
