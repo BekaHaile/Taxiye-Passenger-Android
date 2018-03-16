@@ -54,6 +54,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
@@ -84,6 +85,7 @@ import java.util.Map;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
+import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
@@ -356,8 +358,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				return;
 			}
 
-			//todo renable this disabling for test purposes
-			//Fabric.with(this, new Crashlytics());
+
+			Fabric.with(this, new Crashlytics());
 			if(!Prefs.with(this).getBoolean(FUGU_CACHE_CLEARED,false)){
 				try {
 					FuguConfig.clearFuguData(SplashNewActivity.this);

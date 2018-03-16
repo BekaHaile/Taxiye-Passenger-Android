@@ -106,8 +106,7 @@ public class MyApplication extends Application {
 
 
         try {
-            // todo renable, doing this as testing on live
-            // Fabric.with(this, new Crashlytics());
+            Fabric.with(this, new Crashlytics());
             if (!this.isTestModeEnabled()) {
                 Branch.getInstance(this);
             } else {
