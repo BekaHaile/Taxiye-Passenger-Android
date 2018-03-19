@@ -90,8 +90,13 @@ public class TabbedSearchFragment extends Fragment {
         setUpViewForFresh();
         // initially hide the cross button
         activity.getTopBar().ivSearchCross.setVisibility(View.GONE);
-        activity.getTopBar().etSearch.requestFocus();
-        Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
+        activity.getTopBar().etSearch.post(new Runnable() {
+            @Override
+            public void run() {
+                activity.getTopBar().etSearch.requestFocus();
+                Utils.showSoftKeyboard(activity, activity.getTopBar().etSearch);
+            }
+        });
 
     }
 
