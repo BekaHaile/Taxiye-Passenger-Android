@@ -239,11 +239,11 @@ public class TabbedSearchFragment extends Fragment {
             int oldLength = searchText.length();
             searchText = searchString;
             if (searchText.length() > 2) {
-                getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryOpened(), MenusFragment.TYPE_API_MENUS_SEARCH);
                 // hide recent searches
                 llRecentSearch.setVisibility(View.GONE);
                 llSearchResults.setVisibility(View.VISIBLE);
                 tvNoResults.setVisibility(View.GONE);
+                getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryOpened(), MenusFragment.TYPE_API_MENUS_SEARCH);
 
             } else {
                 if (oldLength > searchString.length() && oldLength >= 1) {
@@ -274,6 +274,11 @@ public class TabbedSearchFragment extends Fragment {
                 return;
             }
 
+            // do not hit if recentSearch is visible
+            if(llRecentSearch.getVisibility()==View.VISIBLE){
+                return;
+            }
+
             if (loader)
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
@@ -290,32 +295,36 @@ public class TabbedSearchFragment extends Fragment {
                             JSONObject jObj = new JSONObject(responseStr);
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
-                                    //set the response to store and item fragments
-                                    MenusResponse storeMenusResponse = new MenusResponse();
-                                    storeMenusResponse.setVendors(menusResponse.getVendors());
-                                    storeMenusResponse.setDirectSearchVendors(null);
-                                    storeSearchResultFragment.setStoreSearchResponse(storeMenusResponse);
 
-                                    MenusResponse itemsMenusResponse = new MenusResponse();
-                                    if (menusResponse.getSuggestionsList() != null) {
-                                        itemsMenusResponse.setSuggestionsList(menusResponse.getSuggestionsList());
-                                    } else {
-                                        itemsMenusResponse.setSuggestionsList(new ArrayList<SearchSuggestion>());
-                                    }
-                                    itemSearchResultFragment.setSearchSuggestions(itemsMenusResponse);
+                                    // do not load results if recentSearch is visible
+                                    if(llRecentSearch.getVisibility()!=View.VISIBLE) {
 
-                                    shouldRecallSearchAPI = true;
-                                    activity.getTopBar().etSearch.requestFocus();
-                                    
-                                    // decide whether to show no results found
-                                    if((menusResponse.getSuggestionsList()!=null && menusResponse.getSuggestionsList().size()==0)
-                                            || (menusResponse.getVendors()!=null && menusResponse.getVendors().size()==0)){
-                                        tvNoResults.setVisibility(View.VISIBLE);
-                                        llSearchResults.setVisibility(View.GONE);
-                                    }
-                                    else {
-                                        tvNoResults.setVisibility(View.GONE);
-                                        llSearchResults.setVisibility(View.VISIBLE);
+                                        //set the response to store and item fragments
+                                        MenusResponse storeMenusResponse = new MenusResponse();
+                                        storeMenusResponse.setVendors(menusResponse.getVendors());
+                                        storeMenusResponse.setDirectSearchVendors(null);
+                                        storeSearchResultFragment.setStoreSearchResponse(storeMenusResponse);
+
+                                        MenusResponse itemsMenusResponse = new MenusResponse();
+                                        if (menusResponse.getSuggestionsList() != null) {
+                                            itemsMenusResponse.setSuggestionsList(menusResponse.getSuggestionsList());
+                                        } else {
+                                            itemsMenusResponse.setSuggestionsList(new ArrayList<SearchSuggestion>());
+                                        }
+                                        itemSearchResultFragment.setSearchSuggestions(itemsMenusResponse);
+
+                                        shouldRecallSearchAPI = true;
+                                        activity.getTopBar().etSearch.requestFocus();
+
+                                        // decide whether to show no results found
+                                        if ((menusResponse.getSuggestionsList() != null && menusResponse.getSuggestionsList().size() == 0)
+                                                || (menusResponse.getVendors() != null && menusResponse.getVendors().size() == 0)) {
+                                            tvNoResults.setVisibility(View.VISIBLE);
+                                            llSearchResults.setVisibility(View.GONE);
+                                        } else {
+                                            tvNoResults.setVisibility(View.GONE);
+                                            llSearchResults.setVisibility(View.VISIBLE);
+                                        }
                                     }
                                 }
                             }
