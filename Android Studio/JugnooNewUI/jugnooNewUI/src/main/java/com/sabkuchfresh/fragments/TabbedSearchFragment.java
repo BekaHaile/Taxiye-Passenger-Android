@@ -323,7 +323,7 @@ public class TabbedSearchFragment extends Fragment {
 
                                         // decide whether to show no results found
                                         if ((menusResponse.getSuggestionsList() != null && menusResponse.getSuggestionsList().size() == 0)
-                                                || (menusResponse.getVendors() != null && menusResponse.getVendors().size() == 0)) {
+                                                && (menusResponse.getVendors() != null && menusResponse.getVendors().size() == 0)) {
                                             tvNoResults.setVisibility(View.VISIBLE);
                                             llSearchResults.setVisibility(View.GONE);
                                         } else {
