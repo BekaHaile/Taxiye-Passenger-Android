@@ -66,6 +66,7 @@ public class TabbedSearchFragment extends Fragment {
     private ArrayList<String> status = new ArrayList<>();
     private ArrayList<String> statusMeals = new ArrayList<>();
     private ArrayList<String> statusFatafat = new ArrayList<>();
+    private TextView tvNoResults;
 
     @Nullable
     @Override
@@ -82,6 +83,8 @@ public class TabbedSearchFragment extends Fragment {
         viewPagerSearch = (ViewPager) main.findViewById(R.id.vpSearch);
         llRecentSearch = (LinearLayout) main.findViewById(R.id.llRecentSearch);
         llSearchResults = (LinearLayout) main.findViewById(R.id.llSearchResults);
+        tvNoResults = (TextView) main.findViewById(R.id.tvNoResults);
+        tvNoResults.setVisibility(View.GONE);
         rvRecentSearches = (RecyclerView) main.findViewById(R.id.rvRecentSearch);
         rvRecentSearches.setLayoutManager(new LinearLayoutManager(activity));
         setUpViewForFresh();
@@ -203,6 +206,7 @@ public class TabbedSearchFragment extends Fragment {
     private void showRecentSearches(){
         llSearchResults.setVisibility(View.GONE);
         llRecentSearch.setVisibility(View.VISIBLE);
+        tvNoResults.setVisibility(View.GONE);
     }
 
 
@@ -239,6 +243,7 @@ public class TabbedSearchFragment extends Fragment {
                 // hide recent searches
                 llRecentSearch.setVisibility(View.GONE);
                 llSearchResults.setVisibility(View.VISIBLE);
+                tvNoResults.setVisibility(View.GONE);
 
             } else {
                 if (oldLength > searchString.length() && oldLength >= 1) {
@@ -301,6 +306,17 @@ public class TabbedSearchFragment extends Fragment {
 
                                     shouldRecallSearchAPI = true;
                                     activity.getTopBar().etSearch.requestFocus();
+                                    
+                                    // decide whether to show no results found
+                                    if((menusResponse.getSuggestionsList()!=null && menusResponse.getSuggestionsList().size()==0)
+                                            || (menusResponse.getVendors()!=null && menusResponse.getVendors().size()==0)){
+                                        tvNoResults.setVisibility(View.VISIBLE);
+                                        llSearchResults.setVisibility(View.GONE);
+                                    }
+                                    else {
+                                        tvNoResults.setVisibility(View.GONE);
+                                        llSearchResults.setVisibility(View.VISIBLE);
+                                    }
                                 }
                             }
                         } catch (Exception exception) {

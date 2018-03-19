@@ -41,6 +41,22 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/tvNoResults"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginBottom="@dimen/dp_10"
+        android:layout_marginLeft="@dimen/dp_35"
+        android:layout_marginRight="@dimen/dp_35"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/sp_16"
+        android:text="@string/oops_no_results_found"
+        android:gravity="center"
+        android:visibility="gone"
+        app:typekitFont="@string/maven_r"
+        />
+
     <LinearLayout
         android:id="@+id/llRecentSearch"
         android:layout_width="match_parent"
