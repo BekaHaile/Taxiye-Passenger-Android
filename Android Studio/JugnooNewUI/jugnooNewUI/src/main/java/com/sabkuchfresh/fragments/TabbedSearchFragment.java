@@ -254,7 +254,19 @@ public class TabbedSearchFragment extends Fragment {
                 if (oldLength > searchString.length() && oldLength >= 1) {
                     // empty show recent suggestions
                     showRecentSearches();
+
+                    // clear the past search results in both tabs
+                    if(storeSearchResultFragment!=null && itemSearchResultFragment !=null){
+                        MenusResponse response = new MenusResponse();
+                        response.setVendors(null);
+                        response.setDirectSearchVendors(null);
+                        response.setSuggestionsList(null);
+                        storeSearchResultFragment.setStoreSearchResponse(response);
+                        itemSearchResultFragment.setSearchSuggestions(response);
+                    }
+
                 }
+
             }
         }
 

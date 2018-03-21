@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -153,9 +154,15 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
     public void setStoreSearchResponse(MenusResponse response){
 
         llSuggestions.setVisibility(View.GONE);
-        tvStoresHeader.setVisibility(View.VISIBLE);
-        tvStoresHeader.setText(activity.getResources().getString(R.string.txt_related_to
-                ,activity.getTopBar().etSearch.getText().toString().trim()));
+
+        if(!TextUtils.isEmpty(activity.getTopBar().etSearch.getText())){
+            tvStoresHeader.setVisibility(View.VISIBLE);
+            tvStoresHeader.setText(activity.getResources().getString(R.string.txt_related_to
+                    ,activity.getTopBar().etSearch.getText().toString().trim()));
+        }
+        else {
+            tvStoresHeader.setVisibility(View.GONE);
+        }
         response.setSuggestionsList(null);
         response.setDirectSearchVendors(null);
         // send hasMorePages as true to avoid adding the suggest store layout
