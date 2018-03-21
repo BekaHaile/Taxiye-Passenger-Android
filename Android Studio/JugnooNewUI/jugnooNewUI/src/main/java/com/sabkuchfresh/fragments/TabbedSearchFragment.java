@@ -255,6 +255,13 @@ public class TabbedSearchFragment extends Fragment {
                     // empty show recent suggestions
                     showRecentSearches();
 
+                    activity.getTopBar().etSearch.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            activity.getTopBar().etSearch.requestFocus();
+                        }
+                    });
+
                     // clear the past search results in both tabs
                     if(storeSearchResultFragment!=null && itemSearchResultFragment !=null){
                         MenusResponse response = new MenusResponse();
