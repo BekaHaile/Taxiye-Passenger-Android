@@ -612,11 +612,12 @@ public class JSONParser implements Constants {
 								fareStructure.getFarePerWaitingMin(),
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
 								fareStructure.getDisplayBaseFare(),
-								fareStructure.getDisplayFareText());
+								fareStructure.getDisplayFareText(), fareStructure.getOperatorId());
 						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
 							try {
 								if (Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
 										&& Data.autoData.getRegions().get(i).getRideType().equals(fareStructure.getRideType())
+										&& Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
 										) {
 									Data.autoData.getRegions().get(i).setFareStructure(fareStructure1);
 								}
@@ -648,7 +649,7 @@ public class JSONParser implements Constants {
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){
-        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null, null);
+        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null, null, 0);
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getFareStructure(){
@@ -732,7 +733,8 @@ public class JSONParser implements Constants {
             Data.autoData.setDropAddress("");
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
-                    jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no")));
+                    jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"),
+                    jDriverInfo.optInt(KEY_OPERATOR_ID, 0)));
             int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
             String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
             Data.autoData.getAssignedDriverInfo().setVehicleType(vehicleType);
@@ -963,6 +965,7 @@ public class JSONParser implements Constants {
             ArrayList<String> fellowRiders = new ArrayList<>();
             PlaceOrderResponse.ReferralPopupContent referralPopupContent = null;
             FuguChannelData fuguChannelData = new FuguChannelData();
+            int operatorId = 0;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1025,6 +1028,7 @@ public class JSONParser implements Constants {
                             pickupLongitude = jObject.getString("pickup_longitude");
                             pickupAddress = jObject.optString(KEY_PICKUP_LOCATION_ADDRESS, "");
                             chatEnabled = jObject.optInt("chat_enabled", 0);
+                            operatorId = jObject.optInt(KEY_OPERATOR_ID, 0);
 
                             try {
                                 if(jObject.has(KEY_OP_DROP_LATITUDE) && jObject.has(KEY_OP_DROP_LONGITUDE)) {
@@ -1147,7 +1151,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);
@@ -1248,7 +1252,8 @@ public class JSONParser implements Constants {
                     int vehicleType = driver.getVehicleType() == null ? VEHICLE_AUTO : driver.getVehicleType();
                     String brandingStatus = driver.getBrandingStatus();
                     Data.autoData.getDriverInfos().add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage,
-                            phoneNo, rating, carNumber, 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(), brandingStatus));
+                            phoneNo, rating, carNumber, 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(),
+                            brandingStatus, driver.getOperatorId()));
                 }
             }
         } catch (Exception e) {

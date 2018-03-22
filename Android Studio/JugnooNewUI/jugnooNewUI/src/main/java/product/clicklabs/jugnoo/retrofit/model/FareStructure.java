@@ -50,6 +50,9 @@ public class FareStructure {
 	@SerializedName("display_fare_text")
 	@Expose
 	private String displayFareText;
+	@SerializedName("operator_id")
+	@Expose
+	private int operatorId;
 
 	/**
 	 *
@@ -255,4 +258,11 @@ public class FareStructure {
 	}
 
 
+	public int getOperatorId() {
+		return operatorId;
+	}
+
+	public void setOperatorId(int operatorId) {
+		this.operatorId = operatorId;
+	}
 }

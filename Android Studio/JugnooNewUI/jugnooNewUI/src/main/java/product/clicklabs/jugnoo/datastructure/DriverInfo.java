@@ -34,6 +34,7 @@ public class DriverInfo {
 	private ArrayList<Integer> regionIds = new ArrayList<>();
 	private VehicleIconSet vehicleIconSet;
 	private ArrayList<String> fellowRiders = new ArrayList<>();
+	private int operatorId;
 	
 	public DriverInfo(String userId){
 		this.userId = userId;
@@ -42,7 +43,7 @@ public class DriverInfo {
 	//for drivers to show in free state
 	public DriverInfo(String userId, double latitude, double longitude, 
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
-			int freeRide, double bearing, int vehicleType, ArrayList<Integer> regionIds, String brandingStatus){
+			int freeRide, double bearing, int vehicleType, ArrayList<Integer> regionIds, String brandingStatus, int operatorId){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -56,6 +57,7 @@ public class DriverInfo {
 		this.vehicleType = vehicleType;
 		this.regionIds = regionIds;
 		this.brandingStatus = brandingStatus;
+		this.operatorId = operatorId;
 	}
 
 	//for engagement
@@ -63,7 +65,7 @@ public class DriverInfo {
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
 			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
-					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled){
+					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -91,10 +93,11 @@ public class DriverInfo {
 		this.fellowRiders = fellowRiders;
 		this.bearing = bearing;
 		this.chatEnabled = chatEnabled;
+		this.operatorId = operatorId;
 	}
 
 	//for last ride data
-	public DriverInfo(String userId, String name, String image, String carImage, String carNumber){
+	public DriverInfo(String userId, String name, String image, String carImage, String carNumber, int operatorId){
 		this.userId = userId;
 		this.latLng = new LatLng(0, 0);
 		this.name = name;
@@ -104,6 +107,7 @@ public class DriverInfo {
 		this.rating = "4";
 		this.carNumber = carNumber.toUpperCase(Locale.ENGLISH);
 		this.freeRide = 0;
+		this.operatorId = operatorId;
 	}
 
 	public void setEta(String eta){
@@ -243,5 +247,13 @@ public class DriverInfo {
 			return CustomMapMarkerCreator
 					.createMarkerBitmapForResource(activity, assl, vehicleIconSet.getIconMarker());
 		}
+	}
+
+	public int getOperatorId() {
+		return operatorId;
+	}
+
+	public void setOperatorId(int operatorId) {
+		this.operatorId = operatorId;
 	}
 }

@@ -5352,7 +5352,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         clearMarkersDriversFindADriver();
                         for (int i = 0; i < Data.autoData.getDriverInfos().size(); i++) {
                             if(region.getVehicleType().equals(Data.autoData.getDriverInfos().get(i).getVehicleType())
-                                    && Data.autoData.getDriverInfos().get(i).getRegionIds().contains(region.getRegionId())) {
+                                    && Data.autoData.getDriverInfos().get(i).getRegionIds().contains(region.getRegionId())
+                                    && Data.autoData.getDriverInfos().get(i).getOperatorId() == region.getOperatorId()
+                                    ) {
                                 Data.autoData.getDriverInfos().get(i).setVehicleIconSet(region.getVehicleIconSet().getName());
                                 markersDriversFindADriver.add(addDriverMarkerForCustomer(Data.autoData.getDriverInfos().get(i),
                                         region.getVehicleIconSet().getIconMarker()));
@@ -5451,7 +5453,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             DriverInfo firstDriverInfo = null;
             for(DriverInfo driverInfo : Data.autoData.getDriverInfos()){
                 if(driverInfo.getVehicleType() == region.getVehicleType()
-                        && driverInfo.getRegionIds().contains(region.getRegionId())){
+                        && driverInfo.getRegionIds().contains(region.getRegionId())
+                        && driverInfo.getOperatorId() == region.getOperatorId()
+                        ){
                     firstDriverInfo = driverInfo;
                     break;
                 }
@@ -6656,7 +6660,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         for(DriverInfo driverInfo : Data.autoData.getDriverInfos()){
             if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
                     && driverInfo.getRegionIds() != null
-                    && driverInfo.getRegionIds().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())){
+                    && driverInfo.getRegionIds().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
+                    && driverInfo.getOperatorId() == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId()
+                    ){
                 driversCount++;
             }
         }
@@ -6928,12 +6934,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Schedule scheduleT20 = JSONParser.parseT20Schedule(jObj);
 
             int vehicleType = jObj.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
+            int operatorId = jObj.optInt(KEY_OPERATOR_ID, 0);
             String iconSet = jObj.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
-                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled));
+                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);
@@ -7390,6 +7397,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 nameValuePairs.put(Constants.KEY_PREFERRED_PAYMENT_MODE, "" + Data.autoData.getPickupPaymentOption());
                                 nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(slidingBottomPanel
                                         .getRequestRideOptionsFragment().getRegionSelected().getVehicleType()));
+                                nameValuePairs.put(KEY_OPERATOR_ID, String.valueOf(slidingBottomPanel
+                                        .getRequestRideOptionsFragment().getRegionSelected().getOperatorId()));
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
                                         .getRequestRideOptionsFragment().getRegionSelected().getRegionId()));
 
@@ -9010,6 +9019,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void setVehicleTypeSelected(int position) {
         int oldVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
+        int oldOperatorId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId();
         int oldRegionId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId();
         int oldRideType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType();
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
@@ -9018,7 +9028,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     .getVehicleIconSet().getRequestSelector(this));
         } else {
             if (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(oldVehicleType)
-                    || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId().equals(oldRegionId)) {
+                    || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId().equals(oldRegionId)
+                    || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId() != oldOperatorId
+                    ) {
                 if(oldRideType == RideTypeValue.POOL.getOrdinal()
                         && textViewDestSearch.getText().toString()
                         .equalsIgnoreCase(getResources().getString(R.string.enter_destination))) {

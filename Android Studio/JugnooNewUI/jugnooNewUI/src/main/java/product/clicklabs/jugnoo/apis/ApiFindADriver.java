@@ -153,7 +153,8 @@ public class ApiFindADriver {
 					int vehicleType = driver.getVehicleType() == null ? Constants.VEHICLE_AUTO : driver.getVehicleType();
 					String brandingStatus = driver.getBrandingStatus();
 					Data.autoData.getDriverInfos().add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
-							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(), brandingStatus));
+							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(), brandingStatus,
+							driver.getOperatorId()));
 				}
 			}
 
@@ -383,11 +384,13 @@ public class ApiFindADriver {
 								fareStructure.getFarePerWaitingMin(),
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
 								fareStructure.getDisplayBaseFare(),
-								fareStructure.getDisplayFareText());
+								fareStructure.getDisplayFareText(), fareStructure.getOperatorId());
 						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
 							try {
 								if (Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
-										&& Data.autoData.getRegions().get(i).getRideType().equals(fareStructure.getRideType())) {
+										&& Data.autoData.getRegions().get(i).getRideType().equals(fareStructure.getRideType())
+										&& Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
+										) {
 									Data.autoData.getRegions().get(i).setFareStructure(fareStructure1);
 								}
 							} catch (Exception e) {
@@ -396,6 +399,7 @@ public class ApiFindADriver {
 						}
 						if (regionSelected.getVehicleType().equals(fareStructure.getVehicleType())
 								&& regionSelected.getRideType().equals(fareStructure.getRideType())
+								&& regionSelected.getOperatorId() == fareStructure.getOperatorId()
 								) {
 							Data.autoData.setFareStructure(fareStructure1);
 						}
