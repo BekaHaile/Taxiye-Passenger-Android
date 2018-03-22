@@ -360,7 +360,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 boolean matched = false;
                 for (int i=0; i<Data.autoData.getRegions().size(); i++) {
                     if(Data.autoData.getRegions().get(i).getRegionId().equals(getRegionSelected().getRegionId())
-                            && Data.autoData.getRegions().get(i).getVehicleType().equals(getRegionSelected().getVehicleType())){
+                            && Data.autoData.getRegions().get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
+                            && Data.autoData.getRegions().get(i).getOperatorId() == (getRegionSelected().getOperatorId())
+                            ){
                         regionSelected = Data.autoData.getRegions().get(i);
                         matched = true;
                         break;
@@ -412,7 +414,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         try {
             for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
                 if (Data.autoData.getRegions().get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
-                        && Data.autoData.getRegions().get(i).getRideType().equals(getRegionSelected().getRideType())) {
+                        && Data.autoData.getRegions().get(i).getRideType().equals(getRegionSelected().getRideType())
+                        && Data.autoData.getRegions().get(i).getOperatorId() == (getRegionSelected().getOperatorId())
+                        ) {
                     Data.autoData.setFareStructure(Data.autoData.getRegions().get(i).getFareStructure());
                     break;
                 }

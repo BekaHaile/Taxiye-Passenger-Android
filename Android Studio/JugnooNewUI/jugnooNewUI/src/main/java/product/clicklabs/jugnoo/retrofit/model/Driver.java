@@ -46,6 +46,9 @@ public class Driver {
 	@SerializedName("audit_status")
 	@Expose
 	private String brandingStatus;
+	@SerializedName("operator_id")
+	@Expose
+	private int operatorId;
 	/**
 	 * @return The userId
 	 */
@@ -187,5 +190,13 @@ public class Driver {
 
 	public void setBrandingStatus(String brandingStatus) {
 		this.brandingStatus = brandingStatus;
+	}
+
+	public int getOperatorId() {
+		return operatorId;
+	}
+
+	public void setOperatorId(int operatorId) {
+		this.operatorId = operatorId;
 	}
 }

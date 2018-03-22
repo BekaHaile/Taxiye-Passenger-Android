@@ -22,10 +22,11 @@ public class FareStructure {
     private boolean fromServer;
     private String displayBaseFare;
     private String displayFareText;
+    private int operatorId;
 
 
     public FareStructure(double fixedFare, double thresholdDistance, double farePerKm, double farePerMin, double freeMinutes, double farePerWaitingMin, double fareThresholdWaitingTime,
-						 double convenienceCharge, boolean fromServer, String displayBaseFare, String displayFareText){
+						 double convenienceCharge, boolean fromServer, String displayBaseFare, String displayFareText, int operatorId){
         this.fixedFare = fixedFare;
         this.thresholdDistance = thresholdDistance;
         this.farePerKm = farePerKm;
@@ -38,6 +39,7 @@ public class FareStructure {
         this.fromServer = fromServer;
         this.displayBaseFare = displayBaseFare;
         this.displayFareText = displayFareText;
+        this.operatorId = operatorId;
     }
 
 
@@ -107,5 +109,9 @@ public class FareStructure {
 
     public void setDisplayFareText(String displayFareText) {
         this.displayFareText = displayFareText;
+    }
+
+    public int getOperatorId() {
+        return operatorId;
     }
 }

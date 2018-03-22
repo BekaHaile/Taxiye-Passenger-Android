@@ -859,4 +859,5 @@ public interface Constants {
     String KEY_PROMO_CODE = "promo_code";
     String PAYER_USER_IDENTIFIER = "payer_user_identifier";
     String PAYEE_PHONE_NUMBER="payee_phone_no";
+    String KEY_OPERATOR_ID="operator_id";
 }
