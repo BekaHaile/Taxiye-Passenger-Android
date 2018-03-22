@@ -2,6 +2,7 @@ package com.sabkuchfresh.home;
 
 import com.sabkuchfresh.retrofit.model.SubItem;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -27,6 +28,9 @@ public class AppCart {
 	public void saveSubItemToStore(Integer vendorId, SubItem subItem){
 		if(subItem.getSubItemQuantitySelected() == 0){
 			getSubItemHashMap(vendorId).remove(subItem.getSubItemId());
+			if(getSubItemHashMap(vendorId).size() == 0){
+				vendorCartHashMap.remove(vendorId);
+			}
 		} else {
 			if(!getSubItemHashMap(vendorId).containsKey(subItem.getSubItemId())){
 				getSubItemHashMap(vendorId).put(subItem.getSubItemId(), subItem);
@@ -72,6 +76,19 @@ public class AppCart {
 
 	public void setCityId(int cityId) {
 		this.cityId = cityId;
+	}
+
+	public void removeEmptyItems(){
+		ArrayList<Integer> removeIds = new ArrayList<>();
+		for(Integer id : vendorCartHashMap.keySet()){
+			if(vendorCartHashMap.get(id).values().size() == 0){
+				removeIds.add(id);
+			}
+		}
+		for(Integer id : removeIds){
+			vendorCartHashMap.remove(id);
+		}
+		Log.e("AppCart", "emtry restaurants cleared");
 	}
 
 }

@@ -2919,7 +2919,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
             if(isMenusOrDeliveryOpen()){
 				getMenusCart().clearEmptyRestaurantCarts();
-			}
+			} else if(getAppType()== AppConstant.ApplicationType.MEALS || getAppType()== AppConstant.ApplicationType.FRESH){
+                getCart().removeEmptyItems();
+            }
             saveItemListToSPDB();
             saveAppCart();
 
@@ -5210,9 +5212,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private void createAppCart(String clientId){
         if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
             appCart = Paper.book().read(DB_FRESH_CART, new AppCart());
+            appCartMeals.removeEmptyItems();
         }
         else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
             appCartMeals = Paper.book().read(DB_MEALS_CART, new AppCart());
+            appCartMeals.removeEmptyItems();
         }
         else if(clientId.equalsIgnoreCase(Config.getMenusClientId())){
             menusCart = Paper.book().read(DB_MENUS_CART, new MenusCart());
@@ -5254,6 +5258,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private Integer openedVendorId;
     private DeliveryStore openedDeliveryStore;
     public Integer getOpenedVendorId(){
+        if(getAppType() == AppConstant.ApplicationType.MEALS){
+            return 0;
+        }
         if(openedVendorId == null){
             openedVendorId = Prefs.with(this).getInt(Constants.SP_VENDOR_ID, 0);
         }
