@@ -387,9 +387,9 @@ public class ApiFindADriver {
 								fareStructure.getDisplayFareText(), fareStructure.getOperatorId());
 						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
 							try {
-								if (Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
+								if (Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
+										&& Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
 										&& Data.autoData.getRegions().get(i).getRideType().equals(fareStructure.getRideType())
-										&& Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
 										) {
 									Data.autoData.getRegions().get(i).setFareStructure(fareStructure1);
 								}
@@ -397,9 +397,9 @@ public class ApiFindADriver {
 								e.printStackTrace();
 							}
 						}
-						if (regionSelected.getVehicleType().equals(fareStructure.getVehicleType())
+						if (regionSelected.getOperatorId() == fareStructure.getOperatorId()
+								&& regionSelected.getVehicleType().equals(fareStructure.getVehicleType())
 								&& regionSelected.getRideType().equals(fareStructure.getRideType())
-								&& regionSelected.getOperatorId() == fareStructure.getOperatorId()
 								) {
 							Data.autoData.setFareStructure(fareStructure1);
 						}
