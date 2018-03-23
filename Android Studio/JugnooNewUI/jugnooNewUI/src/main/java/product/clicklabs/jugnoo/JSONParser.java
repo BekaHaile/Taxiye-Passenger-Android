@@ -615,9 +615,9 @@ public class JSONParser implements Constants {
 								fareStructure.getDisplayFareText(), fareStructure.getOperatorId());
 						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
 							try {
-								if (Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
+								if (Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
+                                        && Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
 										&& Data.autoData.getRegions().get(i).getRideType().equals(fareStructure.getRideType())
-										&& Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
 										) {
 									Data.autoData.getRegions().get(i).setFareStructure(fareStructure1);
 								}
@@ -850,6 +850,7 @@ public class JSONParser implements Constants {
         String tripTotal = jLastRideData.optString(KEY_TRIP_TOTAL, "");
 
         int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
+        int operatorId = jLastRideData.optInt(KEY_OPERATOR_ID, 0);
         String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
         String engagementDate = jLastRideData.optString("engagement_date", "");
 
@@ -883,7 +884,7 @@ public class JSONParser implements Constants {
                 sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge,paidUsingRazorpay, totalRide, status, supportNumber
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
-                showPaymentOptions, paymentOption);
+                showPaymentOptions, paymentOption, operatorId);
 	}
 
 
