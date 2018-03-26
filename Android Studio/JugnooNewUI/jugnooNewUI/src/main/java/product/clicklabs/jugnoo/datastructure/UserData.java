@@ -824,8 +824,9 @@ public class UserData {
 		ArrayList<PromoCoupon> invalidPC = new ArrayList<>();
 		if(activity instanceof HomeActivity){
 			int currentVehicleTypeSelected = ((HomeActivity) activity).getVehicleTypeSelected();
+			int currentOperatorId = ((HomeActivity) activity).getOperatorIdSelected();
 			for(PromoCoupon pc : coupons){
-				if (!pc.isVehicleTypeExists(currentVehicleTypeSelected)){
+				if (!pc.isVehicleTypeExists(currentVehicleTypeSelected, currentOperatorId)){
 					continue;
 				}
 				if (pc.getIsValid() == 1) {
@@ -867,12 +868,12 @@ public class UserData {
 
 		return coupons;
 	}
-	public PromoCoupon getDefaultCoupon(int vehicleType, HomeActivity homeActivity){
+	public PromoCoupon getDefaultCoupon(int vehicleType, int operatorId, HomeActivity homeActivity){
 		ArrayList<PromoCoupon> promoCoupons = getCoupons(ProductType.AUTO,homeActivity) ;
 		if(promoCoupons!=null){
 
 			for(PromoCoupon promoCoupon: promoCoupons){
-				  if(promoCoupon.getIsSelected()==1 && promoCoupon.isVehicleTypeExists(vehicleType))
+				  if(promoCoupon.getIsSelected()==1 && promoCoupon.isVehicleTypeExists(vehicleType, operatorId))
 				  	return promoCoupon;
 			}
 		}

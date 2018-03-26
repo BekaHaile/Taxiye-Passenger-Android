@@ -5127,7 +5127,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
 
         if(!lastSelectedCouponExits) {
-            getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(Data.userData.getDefaultCoupon(getVehicleTypeSelected(),HomeActivity.this));
+            getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(Data.userData
+                    .getDefaultCoupon(getVehicleTypeSelected(), getOperatorIdSelected(),HomeActivity.this));
         }
 
 
@@ -9051,10 +9052,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         // if it exists for that vehicle type, if it cannot find anything it then sets the coupon to null
 
         PromoCoupon selectedCoupon = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
-        int vehicleTypeSelected = getVehicleTypeSelected();
 
-        if(selectedCoupon==null || selectedCoupon.getId()==-1 || !selectedCoupon.isVehicleTypeExists(vehicleTypeSelected)){
-            PromoCoupon defaultCoupon = Data.userData.getDefaultCoupon(getVehicleTypeSelected(),HomeActivity.this);
+        if(selectedCoupon==null || selectedCoupon.getId()==-1 || !selectedCoupon.isVehicleTypeExists(getVehicleTypeSelected(), getOperatorIdSelected())){
+            PromoCoupon defaultCoupon = Data.userData.getDefaultCoupon(getVehicleTypeSelected(), getOperatorIdSelected(), HomeActivity.this);
 
             if(defaultCoupon!=null){
                 slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(defaultCoupon);
@@ -9069,6 +9069,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public int getVehicleTypeSelected(){
         return  slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
+    }
+    public int getOperatorIdSelected(){
+        return  slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId();
     }
 
     private SelectorBitmapLoader selectorBitmapLoader;
