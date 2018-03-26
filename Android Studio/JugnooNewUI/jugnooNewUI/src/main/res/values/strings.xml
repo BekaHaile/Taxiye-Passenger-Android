@@ -1483,8 +1483,8 @@
     <string name="txt_no_jugnoo_connections">No jugnoo connections!</string>
 
     <string-array name="search_tab_names">
-        <item>Stores</item>
         <item>Items</item>
+        <item>Stores</item>
     </string-array>
 
     <string name="txt_suggestions">Suggestions</string>

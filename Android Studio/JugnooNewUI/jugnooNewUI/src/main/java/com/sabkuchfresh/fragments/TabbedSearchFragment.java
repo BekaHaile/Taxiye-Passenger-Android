@@ -173,8 +173,8 @@ public class TabbedSearchFragment extends Fragment {
                 activity.getTopBar().etSearch.setText(searchSuggestion.getText());
                 activity.getTopBar().etSearch.setSelection(searchSuggestion.getText().length());
 
-                // switch tab to second position
-                viewPagerSearch.setCurrentItem(1);
+                // switch to items tab
+                viewPagerSearch.setCurrentItem(0);
 
                 Utils.hideKeyboard(activity);
 
@@ -189,15 +189,12 @@ public class TabbedSearchFragment extends Fragment {
         storeSearchResultFragment = new TabbedSearchResultFragment();
         itemSearchResultFragment = new TabbedSearchResultFragment();
 
-        fragments.add(storeSearchResultFragment);
         fragments.add(itemSearchResultFragment);
+        fragments.add(storeSearchResultFragment);
         TabbedPagerAdaptor pagerAdaptor = new TabbedPagerAdaptor(getChildFragmentManager(), fragments, titles);
         viewPagerSearch.setAdapter(pagerAdaptor);
         tabLayoutSearch.setupWithViewPager(viewPagerSearch);
         changeFontInViewGroup(tabLayoutSearch);
-
-        // show items tab by default
-        viewPagerSearch.setCurrentItem(1);
 
         // initially hide the search results layout and show recent searches
         showRecentSearches();
