@@ -1,8 +1,13 @@
 package com.sabkuchfresh.fragments;
 
+import android.animation.Animator;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -86,6 +91,47 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
             }
             if(scrollToPos!=-1){
                 linearLayoutManager.scrollToPositionWithOffset(scrollToPos,0);
+                final int finalScrollToPos = scrollToPos;
+                recyclerViewCategoryItems.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        final View view = linearLayoutManager.findViewByPosition(finalScrollToPos);
+                        final String backgroundColorProperty = "backgroundColor";
+                        // highlight the row
+                        ObjectAnimator animFadeIn = ObjectAnimator.ofObject(view, backgroundColorProperty,
+                                new ArgbEvaluator(), Color.WHITE, ContextCompat.getColor(activity,R.color.grey_light_more));
+                        animFadeIn.setDuration(800);
+                        animFadeIn.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(final Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(final Animator animation) {
+
+                                ObjectAnimator animFadeOut = ObjectAnimator.ofObject(view, backgroundColorProperty,
+                                        new ArgbEvaluator(), ContextCompat.getColor(activity,R.color.grey_light_more)
+                                        ,Color.WHITE);
+                                animFadeOut.setDuration(800);
+                                animFadeOut.start();
+                            }
+
+                            @Override
+                            public void onAnimationCancel(final Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(final Animator animation) {
+
+                            }
+                        });
+                        animFadeIn.start();
+                    }
+                });
+
             }
 
         }
