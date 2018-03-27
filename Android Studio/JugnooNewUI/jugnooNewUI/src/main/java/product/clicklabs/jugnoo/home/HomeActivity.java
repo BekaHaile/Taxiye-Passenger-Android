@@ -5351,6 +5351,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     if (map != null) {
                         setDropLocationMarker();
                         clearMarkersDriversFindADriver();
+                        int regionDriversCount = 0;
                         for (int i = 0; i < Data.autoData.getDriverInfos().size(); i++) {
                             if(Data.autoData.getDriverInfos().get(i).getOperatorId() == region.getOperatorId()
                                     && region.getVehicleType().equals(Data.autoData.getDriverInfos().get(i).getVehicleType())
@@ -5359,6 +5360,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 Data.autoData.getDriverInfos().get(i).setVehicleIconSet(region.getVehicleIconSet().getName());
                                 markersDriversFindADriver.add(addDriverMarkerForCustomer(Data.autoData.getDriverInfos().get(i),
                                         region.getVehicleIconSet().getIconMarker()));
+                                regionDriversCount++;
                             }
                         }
                         if (!mapTouchedOnce) {
@@ -5366,7 +5368,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             mapTouchedOnce = true;
                         }
 
-                        if (Data.autoData.getDriverInfos().size() == 0) {
+                        if (regionDriversCount == 0) {
                             textViewCentrePinETA.setText("-");
                         } else {
                             textViewCentrePinETA.setText(region.getEta());
