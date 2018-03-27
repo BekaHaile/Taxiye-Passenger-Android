@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.datastructure.SearchSuggestion;
 import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
@@ -62,7 +63,6 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
-import com.sabkuchfresh.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -691,8 +691,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             // server now sends formatted delivery time text, so commenting the function above
             String deliveryTime = (vendor.getDeliveryTimeText()==null)?"":vendor.getDeliveryTimeText();
-            String distance = getDistanceRestaurant(vendor);
 
+            String distance;
+            if(!TextUtils.isEmpty(vendor.getDistanceText())){
+                distance = vendor.getDistanceText();
+            }
+            else {
+                distance = getDistanceRestaurant(vendor);
+            }
             if (vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0) {
                 mHolder.imageViewRestaurantImage.setColorFilter(BW_FILTER);
                 mHolder.tvOffer.getBackground().setColorFilter(BW_FILTER);

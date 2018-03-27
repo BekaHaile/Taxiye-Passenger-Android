@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.datastructure.SearchSuggestion;
 import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 
@@ -12,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
-import com.sabkuchfresh.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.utils.DateOperations;
 
@@ -275,6 +275,8 @@ public class MenusResponse {
 		@SerializedName("distance")
 		@Expose
 		private Double distance;
+		@SerializedName("distance_text")
+		private String distanceText;
 		@SerializedName("cuisines")
 		@Expose
 		private List<String> cuisines = new ArrayList<String>();
@@ -409,6 +411,10 @@ public class MenusResponse {
 		private boolean outOfRadiusStrip;
 
 		private boolean userJustEditedReview;
+
+		public String getDistanceText() {
+			return distanceText;
+		}
 
 		public boolean isUserJustEditedReview() {
 			return userJustEditedReview;
