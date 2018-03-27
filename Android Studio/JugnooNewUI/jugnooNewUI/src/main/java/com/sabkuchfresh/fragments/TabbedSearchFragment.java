@@ -90,6 +90,7 @@ public class TabbedSearchFragment extends Fragment {
         setUpViewForFresh();
         // initially hide the cross button
         activity.getTopBar().ivSearchCross.setVisibility(View.GONE);
+        activity.getTopBar().etSearch.setText("");
         activity.getTopBar().etSearch.post(new Runnable() {
             @Override
             public void run() {
