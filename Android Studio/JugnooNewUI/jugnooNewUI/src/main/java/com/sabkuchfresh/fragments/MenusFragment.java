@@ -31,6 +31,7 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
 import com.sabkuchfresh.datastructure.FilterCuisine;
+import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.fatafatchatpay.FatafatChatPayActivity;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
@@ -63,7 +64,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
-import product.clicklabs.jugnoo.datastructure.SearchSuggestion;
+import com.sabkuchfresh.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -222,7 +223,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
 
             @Override
-            public void onVendorDirectSearchClicked(final MenusResponse.VendorDirectSearch vendorDirectSearch) {
+            public void onVendorDirectSearchClicked(final VendorDirectSearch vendorDirectSearch) {
                 // NA here
             }
 

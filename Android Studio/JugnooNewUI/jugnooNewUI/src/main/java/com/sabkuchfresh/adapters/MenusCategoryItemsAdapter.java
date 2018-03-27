@@ -25,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Category;
@@ -64,7 +65,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     // indicates vendorDirectSearchItemPosition
     private int vendorDirectSearchSubCatIndex, vendorDirectSearchItemIndex;
-    private MenusResponse.VendorDirectSearch vendorDirectSearch;
+    private VendorDirectSearch vendorDirectSearch;
 
     private boolean isVendorMenuFragment;
     public MenusCategoryItemsAdapter(Activity context, int categoryPos, Category category, Callback callback) {

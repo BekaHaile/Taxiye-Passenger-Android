@@ -35,6 +35,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -61,7 +62,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
-import product.clicklabs.jugnoo.datastructure.SearchSuggestion;
+import com.sabkuchfresh.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -663,7 +664,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if (mholder instanceof ViewHolderVendorDirectSearch) {
 
             DeliveryHomeAdapter.ViewHolderVendorDirectSearch holder = ((DeliveryHomeAdapter.ViewHolderVendorDirectSearch) mholder);
-            MenusResponse.VendorDirectSearch vendorDirectSearch = (MenusResponse.VendorDirectSearch) dataToDisplay.get(position);
+            VendorDirectSearch vendorDirectSearch = (VendorDirectSearch) dataToDisplay.get(position);
             holder.tvLine1.setText(vendorDirectSearch.getLine1());
             holder.tvLine1.setTextColor(Color.parseColor(vendorDirectSearch.getLine1Color()));
             holder.tvLine2Start.setText(vendorDirectSearch.getLine2Start());
@@ -1176,7 +1177,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (object instanceof MenusResponse.Vendor)
             return VIEW_VENDOR;
 
-        if (object instanceof MenusResponse.VendorDirectSearch)
+        if (object instanceof VendorDirectSearch)
             return VIEW_DIRECT_SEARCH_VENDOR;
 
         if (object instanceof SearchSuggestion)
@@ -1290,7 +1291,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     break;
                 case R.id.llRootVendorDirectSearch:
-                    callback.onVendorDirectSearchClicked(((MenusResponse.VendorDirectSearch) dataToDisplay.get(pos)));
+                    callback.onVendorDirectSearchClicked(((VendorDirectSearch) dataToDisplay.get(pos)));
                     break;
                 case R.id.llRootSearchSuggestion:
                     callback.onSuggestionClicked(((SearchSuggestion)dataToDisplay.get(pos)));
@@ -1559,7 +1560,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         void openCategory(MenusResponse.Category categoryId);
 
-        void onVendorDirectSearchClicked(MenusResponse.VendorDirectSearch vendorDirectSearch);
+        void onVendorDirectSearchClicked(VendorDirectSearch vendorDirectSearch);
 
         void apiRecommendRestaurant(int categoryId, String restaurantName, String locality, String telephone);
 

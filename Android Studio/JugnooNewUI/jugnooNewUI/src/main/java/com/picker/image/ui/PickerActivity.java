@@ -854,7 +854,7 @@ public class PickerActivity extends AppCompatActivity {
 
 /*
 
-        final int itemId = item.getItemId();
+        final int itemId = item.getSearchItemId();
 
 
         if (itemId == R.id.action_take_photo) {

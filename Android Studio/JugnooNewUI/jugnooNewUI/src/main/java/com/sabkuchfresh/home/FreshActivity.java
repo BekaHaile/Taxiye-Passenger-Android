@@ -83,6 +83,7 @@ import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.datastructure.FuguCustomActionModel;
+import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.dialogs.FreshSortDialog;
 import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
 import com.sabkuchfresh.feed.ui.fragments.FeedChangeCityFragment;
@@ -303,7 +304,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private KeyboardLayoutListener mParentKeyboardLayoutListener;
     private KeyboardLayoutListener.KeyBoardStateHandler mChildKeyboardListener;
     private boolean menusIsOpenMerchantInfo;
-    private MenusResponse.VendorDirectSearch vendorDirectSearch;
+    private VendorDirectSearch vendorDirectSearch;
 
 
     public View getFeedHomeAddPostView() {
@@ -5210,7 +5211,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public void fetchRestaurantMenuAPI(int restaurantId, boolean directCheckout, final JSONArray jsonArray
-            , final LatLng latLng, final int reorderStatusId, final String reoderDelAddress, final MenusResponse.VendorDirectSearch vendorDirectSearch){
+            , final LatLng latLng, final int reorderStatusId, final String reoderDelAddress, final VendorDirectSearch vendorDirectSearch){
 
 
         if(apiFetchRestaurantMenu == null){
@@ -5955,11 +5956,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     }
 
-    public MenusResponse.VendorDirectSearch getVendorDirectSearchObject(){
+    public VendorDirectSearch getVendorDirectSearchObject(){
         return vendorDirectSearch;
     }
 
-    public void setDirectVendorSearchObject(MenusResponse.VendorDirectSearch vendorSearchItem){
+    public void setDirectVendorSearchObject(VendorDirectSearch vendorSearchItem){
         this.vendorDirectSearch = vendorSearchItem;
     }
 }

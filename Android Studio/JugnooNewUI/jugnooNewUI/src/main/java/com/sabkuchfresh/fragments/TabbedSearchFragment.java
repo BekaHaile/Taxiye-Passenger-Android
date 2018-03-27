@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.adapters.TabbedPagerAdaptor;
+import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.Utils;
@@ -38,7 +39,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
-import product.clicklabs.jugnoo.datastructure.SearchSuggestion;
+import com.sabkuchfresh.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -149,7 +150,7 @@ public class TabbedSearchFragment extends Fragment {
             }
 
             @Override
-            public void onVendorDirectSearchClicked(final MenusResponse.VendorDirectSearch vendorDirectSearch) {
+            public void onVendorDirectSearchClicked(final VendorDirectSearch vendorDirectSearch) {
                 // NA
             }
 

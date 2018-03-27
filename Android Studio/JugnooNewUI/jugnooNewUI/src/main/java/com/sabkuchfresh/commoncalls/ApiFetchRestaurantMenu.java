@@ -10,13 +10,13 @@ import com.google.gson.JsonParser;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.CustomiseOptionsId;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
-import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
@@ -63,7 +63,7 @@ public class ApiFetchRestaurantMenu {
 
     public void hit(final int restaurantId, final double latitude, final double longitude, final boolean directCheckout,
                     final JSONArray cartItemToSet, final LatLng reOrderLatlng, final int reorderId,
-                    final String reorderAddress, final MenusResponse.VendorDirectSearch vendorDirectSearch) {
+                    final String reorderAddress, final VendorDirectSearch vendorDirectSearch) {
         try {
             if (MyApplication.getInstance().isOnline()) {
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
@@ -217,7 +217,7 @@ public class ApiFetchRestaurantMenu {
         }
     }
 
-    private void openNextFragment(boolean goToCheckout, MenusResponse.VendorDirectSearch vendorDirectSearch) {
+    private void openNextFragment(boolean goToCheckout, VendorDirectSearch vendorDirectSearch) {
 
         // if from direct search open vendor
         if(vendorDirectSearch!=null){

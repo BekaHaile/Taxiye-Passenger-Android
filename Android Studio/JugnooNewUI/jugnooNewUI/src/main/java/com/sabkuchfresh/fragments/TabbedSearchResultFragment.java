@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
+import com.sabkuchfresh.datastructure.SearchSuggestion;
+import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.Utils;
@@ -34,7 +36,6 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
-import product.clicklabs.jugnoo.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -107,7 +108,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
             }
 
             @Override
-            public void onVendorDirectSearchClicked(final MenusResponse.VendorDirectSearch vendorDirectSearch) {
+            public void onVendorDirectSearchClicked(final VendorDirectSearch vendorDirectSearch) {
                 activity.setDirectVendorSearchObject(vendorDirectSearch);
                 //fetch menu and redirect to vendor fragment
                 activity.fetchRestaurantMenuAPI((vendorDirectSearch.getVendorId()),
@@ -132,19 +133,39 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
 
             @Override
             public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
-                // get the items response from the suggestion
-                switchedToSuggestions = false;
-                getSuggestions(false, activity.getSelectedLatLng(), true
-                        , activity.getCategoryOpened(),searchSuggestion);
 
-                // show suggestion layout and set text
-                llSuggestions.setVisibility(View.VISIBLE);
-                tvSuggestionsHeader.setVisibility(View.VISIBLE);
-                imgVwArrow.setVisibility(View.VISIBLE);
-                tvSuggestionValue.setVisibility(View.VISIBLE);
-                tvSuggestionValue.setText(searchSuggestion.getText());
-                tvStoresHeader.setVisibility(View.GONE);
-                Utils.hideKeyboard(activity);
+                // check for direct vendor case, if yes then send to direct vendor
+                if(searchSuggestion.getCategoryId()!= -1 || searchSuggestion.getSubcategoryId()!= -1
+                        || searchSuggestion.getItemId()!= -1){
+
+                    VendorDirectSearch vendorDirectSearch = new VendorDirectSearch();
+                    vendorDirectSearch.setVendorId(searchSuggestion.getVendorId());
+                    vendorDirectSearch.setCategoryId(searchSuggestion.getCategoryId());
+                    vendorDirectSearch.setSubcategoryId(searchSuggestion.getSubcategoryId());
+                    vendorDirectSearch.setItemId(searchSuggestion.getItemId());
+
+                    activity.setDirectVendorSearchObject(vendorDirectSearch);
+                    //fetch menu and redirect to vendor fragment
+                    activity.fetchRestaurantMenuAPI((vendorDirectSearch.getVendorId()),
+                            false, null, null, -1, null,vendorDirectSearch);
+                    Utils.hideKeyboard(activity);
+                }else {
+
+                    // get the items response from the suggestion
+                    switchedToSuggestions = false;
+                    getSuggestions(false, activity.getSelectedLatLng(), true
+                            , activity.getCategoryOpened(),searchSuggestion);
+
+                    // show suggestion layout and set text
+                    llSuggestions.setVisibility(View.VISIBLE);
+                    tvSuggestionsHeader.setVisibility(View.VISIBLE);
+                    imgVwArrow.setVisibility(View.VISIBLE);
+                    tvSuggestionValue.setVisibility(View.VISIBLE);
+                    tvSuggestionValue.setText(searchSuggestion.getText());
+                    tvStoresHeader.setVisibility(View.GONE);
+                    Utils.hideKeyboard(activity);
+                }
+
             }
         }, rvSearch, status,statusMeals,statusFatafat);
 
@@ -242,7 +263,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
             }
             // to indicate we only need items (direct vendor ) in response
             params.put(Constants.KEY_SEARCH_ITEMS_ONLY, String.valueOf(1));
-            params.put(Constants.KEY_SEARCH_ITEM_ID, String.valueOf(suggestion.getItemId()));
+            params.put(Constants.KEY_SEARCH_ITEM_ID, String.valueOf(suggestion.getSearchItemId()));
             params.put(Constants.KEY_SEARCH_TEXT, suggestion.getText());
 
             new HomeUtil().putDefaultParams(params);
@@ -267,7 +288,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
                                         if (menusResponse.getDirectSearchVendors() != null) {
                                             itemsMenusResponse.setDirectSearchVendors(menusResponse.getDirectSearchVendors());
                                         } else {
-                                            itemsMenusResponse.setDirectSearchVendors(new ArrayList<MenusResponse.VendorDirectSearch>());
+                                            itemsMenusResponse.setDirectSearchVendors(new ArrayList<VendorDirectSearch>());
                                         }
                                         setItemSearchResponse(itemsMenusResponse);
                                     }
