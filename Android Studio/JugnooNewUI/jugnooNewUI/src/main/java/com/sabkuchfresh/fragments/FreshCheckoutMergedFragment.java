@@ -26,7 +26,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -2346,7 +2345,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
                 if (type == AppConstant.ApplicationType.MEALS) {
-                    params.put(Constants.STORE_ID, "" + Prefs.with(activity).getInt(Constants.APP_TYPE, Data.AppType));
+                    params.put(Constants.STORE_ID, "" + AppConstant.ApplicationType.MEALS);
                     params.put(Constants.GROUP_ID, "" + activity.getProductsResponse().getCategories().get(0).getCurrentGroupId());
                 } else if (isMenusOrDeliveryOpen()) {
                     params.put(Constants.KEY_RESTAURANT_ID, String.valueOf(activity.getVendorOpened().getRestaurantId()));
