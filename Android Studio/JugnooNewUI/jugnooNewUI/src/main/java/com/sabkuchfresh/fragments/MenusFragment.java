@@ -31,6 +31,7 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCurrentStatusIciciUpi;
 import com.sabkuchfresh.datastructure.FilterCuisine;
+import com.sabkuchfresh.datastructure.SearchSuggestion;
 import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
 import com.sabkuchfresh.fatafatchatpay.FatafatChatPayActivity;
@@ -64,7 +65,6 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
-import com.sabkuchfresh.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -815,7 +815,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     }
 
                     // set the openMerchantInfo irrespective of api
-                    activity.setMenusIsOpenMerchantInfo(menusResponse.isOpenMerchantInfo());
+                    //activity.setMenusIsOpenMerchantInfo(menusResponse.isOpenMerchantInfo());
 
 
 

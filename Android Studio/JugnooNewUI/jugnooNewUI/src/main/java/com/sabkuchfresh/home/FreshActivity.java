@@ -1569,7 +1569,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             int deliveryAddressInTopBarVisibility = View.GONE;
 
             // set topBar title background
-            if(getTopFragment() instanceof VendorMenuFragment && !isMenusIsOpenMerchantInfo()){
+            /*if(getTopFragment() instanceof VendorMenuFragment && !isMenusIsOpenMerchantInfo()){
                 // we need to enable click effect
                 TypedValue outValue = new TypedValue();
                 getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
@@ -1578,7 +1578,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             else {
                 // do not allow click effect
                 topBar.title.setBackgroundResource(android.R.color.transparent);
-            }
+            }*/
 
             if (fragment instanceof FreshHomeFragment) {
 
@@ -4447,9 +4447,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void onTitleClicked() {
         // title clicked, open merchant info we come from direct vendor listing only ( i.e. no merchant
         // info in background )
-        if(getTopFragment() instanceof VendorMenuFragment && !isMenusIsOpenMerchantInfo()){
+        /*if(getTopFragment() instanceof VendorMenuFragment && !isMenusIsOpenMerchantInfo()){
             getTransactionUtils().openMerchantInfoFragment(this,getRelativeLayoutContainer());
-        }
+        }*/
     }
 
 
