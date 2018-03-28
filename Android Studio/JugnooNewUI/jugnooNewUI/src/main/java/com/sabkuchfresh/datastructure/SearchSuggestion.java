@@ -14,9 +14,6 @@ public class SearchSuggestion {
     @SerializedName("line_1_color")
     private String textColor;
 
-    @SerializedName("search_item_id")
-    private int searchItemId;
-
     @SerializedName("restaurant_id")
     private int vendorId;
 
@@ -28,6 +25,17 @@ public class SearchSuggestion {
 
     @SerializedName("restaurant_item_id")
     private int itemId = -1;
+
+    @SerializedName("show_restaurant_directly")
+    private int showRestaurantDirectly;
+
+    public int getShowRestaurantDirectly() {
+        return showRestaurantDirectly;
+    }
+
+    public void setShowRestaurantDirectly(final int showRestaurantDirectly) {
+        this.showRestaurantDirectly = showRestaurantDirectly;
+    }
 
     public int getVendorId() {
         return vendorId;
@@ -59,14 +67,6 @@ public class SearchSuggestion {
 
     public void setItemId(final int itemId) {
         this.itemId = itemId;
-    }
-
-    public int getSearchItemId() {
-        return searchItemId;
-    }
-
-    public void setSearchItemId(final int searchItemId) {
-        this.searchItemId = searchItemId;
     }
 
     public String getText() {

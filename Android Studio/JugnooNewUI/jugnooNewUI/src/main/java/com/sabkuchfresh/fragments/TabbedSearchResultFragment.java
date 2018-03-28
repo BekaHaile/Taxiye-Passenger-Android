@@ -135,8 +135,9 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
             public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
 
                 // check for direct vendor case, if yes then send to direct vendor
-                if(searchSuggestion.getCategoryId()!= -1 || searchSuggestion.getSubcategoryId()!= -1
-                        || searchSuggestion.getItemId()!= -1){
+                if( searchSuggestion.getShowRestaurantDirectly() == 1 &&
+                        (searchSuggestion.getCategoryId()!= -1 || searchSuggestion.getSubcategoryId()!= -1
+                        || searchSuggestion.getItemId()!= -1)){
 
                     VendorDirectSearch vendorDirectSearch = new VendorDirectSearch();
                     vendorDirectSearch.setVendorId(searchSuggestion.getVendorId());
@@ -263,7 +264,7 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
             }
             // to indicate we only need items (direct vendor ) in response
             params.put(Constants.KEY_SEARCH_ITEMS_ONLY, String.valueOf(1));
-            params.put(Constants.KEY_SEARCH_ITEM_ID, String.valueOf(suggestion.getSearchItemId()));
+            params.put(Constants.KEY_SEARCH_ITEM_ID, String.valueOf(suggestion.getItemId()));
             params.put(Constants.KEY_SEARCH_TEXT, suggestion.getText());
 
             new HomeUtil().putDefaultParams(params);
