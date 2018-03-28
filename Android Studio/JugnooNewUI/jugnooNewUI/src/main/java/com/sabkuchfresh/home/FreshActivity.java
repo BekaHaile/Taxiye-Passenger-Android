@@ -4440,8 +4440,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public boolean shouldOpenMerchantInfoFragment(){
-        return Config.getLastOpenedClientId(this).equals(Config.getDeliveryCustomerClientId())
-                || (getMenusResponse() != null && getMenusResponse().isOpenMerchantInfo());
+        //return Config.getLastOpenedClientId(this).equals(Config.getDeliveryCustomerClientId())
+               // || (getMenusResponse() != null && getMenusResponse().isOpenMerchantInfo());
+        return (getMenusResponse() != null && getMenusResponse().isOpenMerchantInfo());
     }
 
     public void onTitleClicked() {
