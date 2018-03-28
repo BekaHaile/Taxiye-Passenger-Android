@@ -320,11 +320,12 @@
 
                         <ImageView
                             android:id="@+id/ivSearch"
-                            android:layout_width="62px"
-                            android:layout_height="62px"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             android:layout_gravity="center_vertical"
                             android:src="@drawable/ic_search_new_selector"
-                            android:tag="mwar"
+                            android:adjustViewBounds="true"
+                            android:tag="@string/dont_touch_me"
                             android:visibility="visible" />
 
                     </RelativeLayout>
