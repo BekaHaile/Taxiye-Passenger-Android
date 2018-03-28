@@ -5250,7 +5250,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private void createAppCart(String clientId){
         if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
             appCart = Paper.book().read(DB_FRESH_CART, new AppCart());
-            appCartMeals.removeEmptyItems();
+            appCart.removeEmptyItems();
         }
         else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
             appCartMeals = Paper.book().read(DB_MEALS_CART, new AppCart());
