@@ -290,6 +290,27 @@
                     android:visibility="visible">
 
                     <RelativeLayout
+                        android:id="@+id/rlFreshCall"
+                        android:layout_width="@dimen/top_bar_height"
+                        android:layout_height="@dimen/top_bar_height"
+                        android:theme="@style/GreyHighlight"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:visibility="gone"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/ivFreshCall"
+                            android:layout_width="@dimen/dp_32"
+                            android:layout_height="@dimen/dp_32"
+                            android:src="@drawable/ic_fresh_call_selector"
+                            android:layout_gravity="center_vertical"
+                            android:adjustViewBounds="true"
+                            android:tag="@string/dont_touch_me"
+                            />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
                         android:id="@+id/rlSearch"
                         android:layout_width="@dimen/top_bar_height"
                         android:layout_height="@dimen/top_bar_height"
@@ -334,6 +355,7 @@
                             android:tag="mwar"
                             android:visibility="visible" />
                     </RelativeLayout>
+
 
 
                     <RelativeLayout

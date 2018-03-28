@@ -57,11 +57,13 @@ public class TopBar implements GAAction, GACategory {
     private Animation searchBarAnimation;
     private Animation searchBarCloseAnimation;
     public ImageView ivFreshSort;
+    public ImageView ivFreshCall;
 
     private TextView tvTopBarDeliveryAddressLocation;
     private TextView tvAddressLayoutTitle;
 
     public RelativeLayout rlFreshSort;
+    public RelativeLayout rlFreshCall;
 
 
 
@@ -105,7 +107,9 @@ public class TopBar implements GAAction, GACategory {
         ivSearchCross = (ImageView) drawerLayout.findViewById(R.id.ivSearchCross);
         ivFilterApplied.setVisibility(View.GONE);
         ivFreshSort = (ImageView) drawerLayout.findViewById(R.id.ivFreshSort);
+        ivFreshCall = (ImageView) drawerLayout.findViewById(R.id.ivFreshCall);
         rlFreshSort=(RelativeLayout)drawerLayout.findViewById(R.id.rlFreshSort);
+        rlFreshCall = (RelativeLayout)drawerLayout.findViewById(R.id.rlFreshCall);
         //setSearchVisibility(View.GONE);
 
         topRl.setOnClickListener(topBarOnClickListener);
@@ -115,6 +119,7 @@ public class TopBar implements GAAction, GACategory {
         rlFilter.setOnClickListener(topBarOnClickListener);
         imageViewBack.setOnClickListener(topBarOnClickListener);
         rlFreshSort.setOnClickListener(topBarOnClickListener);
+        rlFreshCall.setOnClickListener(topBarOnClickListener);
         imgVwFatafatTutorial.setOnClickListener(topBarOnClickListener);
         llTopBarDeliveryAddress.setOnClickListener(topBarOnClickListener);
         title.setOnClickListener(topBarOnClickListener);
@@ -272,6 +277,12 @@ public class TopBar implements GAAction, GACategory {
                 case R.id.rlFreshSort:
                     if(activity instanceof FreshActivity){
                         ((FreshActivity)activity).openFreshSortDialog();
+                    }
+                    break;
+
+                case R.id.rlFreshCall:
+                    if(activity instanceof FreshActivity){
+                        ((FreshActivity)activity).callVendor();
                     }
                     break;
 

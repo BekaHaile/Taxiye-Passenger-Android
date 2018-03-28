@@ -1,7 +1,5 @@
 package com.sabkuchfresh.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
@@ -24,7 +22,6 @@ import android.text.style.URLSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -612,7 +609,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     }
                     break;
                 case R.id.llCall:
-                    callVendor();
+                    activity.callVendor();
 
                     break;
                 case R.id.llPay:
@@ -624,7 +621,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     }
                     break;
                 case R.id.tvMerchantPhone:
-                    callVendor();
+                    activity.callVendor();
                     sendUserClickEvent(Constants.KEY_CALL_MODE);
                     break;
                 case R.id.bOrderOnline:
@@ -1016,35 +1013,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         }
     }
 
-    private void callVendor() {
-        try {
-            String callingNumbers = activity.getVendorOpened().getContactList();
-            String[] arr = callingNumbers.split("\\,\\ ");
-            if (arr.length == 1) {
-                Utils.openCallIntent(activity, arr[0]);
-                return;
-            }
 
-            AlertDialog.Builder builderSingle = new AlertDialog.Builder(activity);
-            builderSingle.setTitle("Call");
-
-            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1);
-            arrayAdapter.addAll(arr);
-
-            builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    String strName = arrayAdapter.getItem(which);
-                    Utils.openCallIntent(activity, strName);
-                }
-            });
-            builderSingle.setCancelable(true);
-            builderSingle.show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     private Runnable timerRunnable = new Runnable() {

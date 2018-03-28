@@ -3,8 +3,10 @@ package com.sabkuchfresh.home;
 import android.animation.LayoutTransition;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
@@ -49,6 +51,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -1971,6 +1974,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
             topBar.rlFreshSort.setVisibility(freshSortVis);
+            topBar.rlFreshCall.setVisibility(freshSortVis);
+
+
 
             feedHomeAddPostView.setVisibility(View.GONE);
             setCollapsingToolbar(collapsingToolBarEnabled(fragment), fragment);
@@ -4704,8 +4710,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     }
                     topBar.getRlSearch().setAlpha((int) searchAndCapsuleAlpha2);
                     topBar.rlFreshSort.setAlpha((int) searchAndCapsuleAlpha2);
+                    topBar.rlFreshCall.setAlpha((int) searchAndCapsuleAlpha2);
                     if (!topBar.ivFreshSort.isSelected()) {
                         topBar.ivFreshSort.setSelected(true);
+                    }
+                    if (!topBar.ivFreshCall.isSelected()) {
+                        topBar.ivFreshCall.setSelected(true);
                     }
 /*
                     if (!topBar.llCartContainer.isSelected())
@@ -4725,8 +4735,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                     topBar.getRlSearch().setAlpha((int) searchAndCapsuleAlpha1);
                     topBar.rlFreshSort.setAlpha((int) searchAndCapsuleAlpha1);
+                    topBar.rlFreshCall.setAlpha((int) searchAndCapsuleAlpha1);
                     if (topBar.ivFreshSort.isSelected()) {
                         topBar.ivFreshSort.setSelected(false);
+                    }
+                    if (topBar.ivFreshCall.isSelected()) {
+                        topBar.ivFreshCall.setSelected(false);
                     }
 
                    /*  if (topBar.llCartContainer.isSelected())
@@ -4758,6 +4772,36 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
         }
     };
+
+    public void callVendor() {
+        try {
+            String callingNumbers = getVendorOpened().getContactList();
+            String[] arr = callingNumbers.split("\\,\\ ");
+            if (arr.length == 1) {
+                Utils.openCallIntent(this, arr[0]);
+                return;
+            }
+
+            AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
+            builderSingle.setTitle("Call");
+
+            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+            arrayAdapter.addAll(arr);
+
+            builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String strName = arrayAdapter.getItem(which);
+                    Utils.openCallIntent(FreshActivity.this, strName);
+                }
+            });
+            builderSingle.setCancelable(true);
+            builderSingle.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void initCollapseToolBarViews() {
         ivCollapseRestImage = (ImageView) findViewById(R.id.iv_rest_collapse_image);
@@ -4893,7 +4937,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.getIvSearch().setSelected(true);
                 topBar.getRlSearch().setAlpha(255);
                 topBar.ivFreshSort.setSelected(true);
+                topBar.ivFreshCall.setSelected(true);
                 topBar.rlFreshSort.setAlpha(255);
+                topBar.rlFreshCall.setAlpha(255);
 
 
                 //back Button
@@ -4923,7 +4969,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.getIvSearch().setSelected(false);
                 topBar.getRlSearch().setAlpha(255);
                 topBar.ivFreshSort.setSelected(false);
+                topBar.ivFreshCall.setSelected(false);
                 topBar.rlFreshSort.setAlpha(255);
+                topBar.rlFreshCall.setAlpha(255);
 
                 //back Button
                 topBar.imageViewBack.getDrawable().mutate().setColorFilter(ContextCompat.getColor(this, R.color.lightBlackTxtColor), PorterDuff.Mode.SRC_ATOP);

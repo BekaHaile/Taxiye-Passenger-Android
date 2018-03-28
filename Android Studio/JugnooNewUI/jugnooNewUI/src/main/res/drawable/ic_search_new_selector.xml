@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:drawable="@drawable/ic_search_new_pressed" android:state_pressed="true" />
-    <item android:drawable="@drawable/ic_search_white_border" android:state_selected="true" />
-    <item android:drawable="@drawable/ic_search_new" />
+    <item android:drawable="@drawable/ic_fresh_search_active" android:state_selected="true" />
+    <item android:drawable="@drawable/ic_fresh_search_normal" />
 
 </selector>
