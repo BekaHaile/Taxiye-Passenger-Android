@@ -91,8 +91,8 @@ public class AddToAddressBookFragment extends Fragment {
 
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        initComponents();
         showAddressLabels = !(activity instanceof FreshActivity && ((FreshActivity) activity).getSuggestAStoreFragment()!=null);
+        initComponents();
         if(!showAddressLabels){
             rlAddressLabels.setVisibility(View.GONE);
             editTextLabel.setVisibility(View.GONE);
@@ -332,6 +332,9 @@ public class AddToAddressBookFragment extends Fragment {
             editTextLabel.setText(getString(R.string.work));
         } else {
             editTextLabel.setText(label);
+        }
+        if(TextUtils.isEmpty(label)){
+            label = editTextLabel.getText().toString();
         }
         editTextFlatNumber.requestFocus();
         editTextFlatNumber.setSelection(editTextFlatNumber.getText().length());

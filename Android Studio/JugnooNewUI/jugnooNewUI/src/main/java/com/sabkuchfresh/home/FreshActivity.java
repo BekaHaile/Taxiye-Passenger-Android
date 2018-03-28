@@ -3998,7 +3998,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     }
                     offeringsVisibilityController.fetchOfferingsCorrespondingToCurrentAddress(getSelectedLatLng());
                 }
-
+                saveDeliveryAddressModel();
             }
         } catch (Exception e) {
             e.printStackTrace();
