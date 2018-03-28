@@ -693,7 +693,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             String deliveryTime = (vendor.getDeliveryTimeText()==null)?"":vendor.getDeliveryTimeText();
 
             String distance;
-            if(!TextUtils.isEmpty(vendor.getDistanceText())){
+            if(vendor.getDistanceText()!=null){
                 distance = vendor.getDistanceText();
             }
             else {
@@ -708,11 +708,20 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             if (activity.isDeliveryOpenInBackground()) {
                 ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setVisibility(View.VISIBLE);
-                if (!TextUtils.isEmpty(vendor.getDisplayAddress())) {
-                    ((ViewHolderVendor) mholder).textViewDelivery.setText(distance + activity.getString(R.string.bullet) + " " + vendor.getDisplayAddress());
-                } else {
-                    ((ViewHolderVendor) mholder).textViewDelivery.setText(distance);
+
+                if(TextUtils.isEmpty(distance) && TextUtils.isEmpty(vendor.getDisplayAddress())){
+                    ((ViewHolderVendor) mholder).textViewDelivery.setVisibility(View.GONE);
                 }
+                else {
+                    ((ViewHolderVendor) mholder).textViewDelivery.setVisibility(View.VISIBLE);
+                    if (!TextUtils.isEmpty(vendor.getDisplayAddress())) {
+                        ((ViewHolderVendor) mholder).textViewDelivery.setText(distance +
+                                activity.getString(R.string.bullet) + " " + vendor.getDisplayAddress());
+                    } else {
+                        ((ViewHolderVendor) mholder).textViewDelivery.setText(distance);
+                    }
+                }
+
                 if (vendor.getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE || vendor.getOrderMode() == Constants.ORDER_MODE_CHAT || vendor.getOutOfRadius() == 1) {
                     ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
                     ((ViewHolderVendor) mholder).textViewRestaurantCloseTime.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
@@ -746,12 +755,19 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
             } else {
-                if (!TextUtils.isEmpty(deliveryTime)) {
-                    ((ViewHolderVendor) mholder).textViewDelivery.setText(distance + activity.getString(R.string.bullet) + " " + deliveryTime);
 
-                } else {
-                    ((ViewHolderVendor) mholder).textViewDelivery.setText(distance);
+                if(TextUtils.isEmpty(distance) && TextUtils.isEmpty(deliveryTime)){
+                    ((ViewHolderVendor) mholder).textViewDelivery.setVisibility(View.GONE);
+                }
+                else {
+                    ((ViewHolderVendor) mholder).textViewDelivery.setVisibility(View.VISIBLE);
+                    if (!TextUtils.isEmpty(deliveryTime)) {
+                        ((ViewHolderVendor) mholder).textViewDelivery.setText(distance + activity.getString(R.string.bullet) + " " + deliveryTime);
 
+                    } else {
+                        ((ViewHolderVendor) mholder).textViewDelivery.setText(distance);
+
+                    }
                 }
 
 
