@@ -165,7 +165,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         String suffix = vendor.getDistance() > 1 ? "kms" : (vendor.getDistance() == 1 ? "km" : "m");
         double dist = vendor.getDistance() > 1 ? vendor.getDistance() : vendor.getDistance() * 1000d;
         DecimalFormat df = vendor.getDistance() > 1 ? Utils.getDecimalFormat1Decimal() : Utils.getMoneyDecimalFormatWithoutFloat();
-        return df.format(dist) + " " + suffix + " ";
+        return df.format(dist) + " " + suffix;
     }
 
     public static String showDeliveryStringWithTime(MenusResponse.Vendor vendor) {
@@ -714,11 +714,14 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
                 else {
                     ((ViewHolderVendor) mholder).textViewDelivery.setVisibility(View.VISIBLE);
-                    if (!TextUtils.isEmpty(vendor.getDisplayAddress())) {
-                        ((ViewHolderVendor) mholder).textViewDelivery.setText(distance +
+                    if (!TextUtils.isEmpty(vendor.getDisplayAddress()) && !TextUtils.isEmpty(distance)) {
+                        ((ViewHolderVendor) mholder).textViewDelivery.setText(distance + " "+
                                 activity.getString(R.string.bullet) + " " + vendor.getDisplayAddress());
-                    } else {
+                    } else if(!TextUtils.isEmpty(distance)){
                         ((ViewHolderVendor) mholder).textViewDelivery.setText(distance);
+                    }
+                    else {
+                        ((ViewHolderVendor) mholder).textViewDelivery.setText(vendor.getDisplayAddress());
                     }
                 }
 
@@ -761,12 +764,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
                 else {
                     ((ViewHolderVendor) mholder).textViewDelivery.setVisibility(View.VISIBLE);
-                    if (!TextUtils.isEmpty(deliveryTime)) {
-                        ((ViewHolderVendor) mholder).textViewDelivery.setText(distance + activity.getString(R.string.bullet) + " " + deliveryTime);
+                    if (!TextUtils.isEmpty(deliveryTime) && !TextUtils.isEmpty(distance)) {
+                        ((ViewHolderVendor) mholder).textViewDelivery.setText(distance +" "
+                                + activity.getString(R.string.bullet) + " " + deliveryTime);
 
-                    } else {
+                    } else if(!TextUtils.isEmpty(distance)) {
                         ((ViewHolderVendor) mholder).textViewDelivery.setText(distance);
-
+                    }
+                    else {
+                        ((ViewHolderVendor) mholder).textViewDelivery.setText(deliveryTime);
                     }
                 }
 
