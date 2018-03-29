@@ -41,6 +41,9 @@ public class UserCheckoutResponse{
 	@SerializedName("payment_info")
 	@Expose
 	private PaymentInfo paymentInfo;
+	@SerializedName("vendor_info")
+	@Expose
+	private VendorInfo vendorInfo;
 	@SerializedName("delivery_info")
 	@Expose
 	private DeliveryInfo deliveryInfo;
@@ -88,6 +91,11 @@ public class UserCheckoutResponse{
 	private String  mealsDiscountEnabled;
 	@SerializedName("text_early_bird_discount_disabled")
 	private String mealsDiscountDisabled;
+
+	public VendorInfo getVendorInfo() {
+		return vendorInfo;
+	}
+
 	/**
 	 *
 	 * @return
@@ -299,6 +307,16 @@ public class UserCheckoutResponse{
 		private Integer applicablePaymentMode;
 
 		public Integer getApplicablePaymentMode() {
+			return applicablePaymentMode;
+		}
+	}
+
+	public class VendorInfo{
+		@SerializedName("applicable_payment_mode")
+		@Expose
+		private int applicablePaymentMode;
+
+		public int getApplicablePaymentMode() {
 			return applicablePaymentMode;
 		}
 	}
