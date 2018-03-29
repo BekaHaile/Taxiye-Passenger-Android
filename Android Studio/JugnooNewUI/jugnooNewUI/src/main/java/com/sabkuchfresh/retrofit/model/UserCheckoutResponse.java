@@ -2,6 +2,7 @@ package com.sabkuchfresh.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
 import com.sabkuchfresh.retrofit.model.menus.Tax;
 
@@ -314,7 +315,7 @@ public class UserCheckoutResponse{
 	public class VendorInfo{
 		@SerializedName("applicable_payment_mode")
 		@Expose
-		private int applicablePaymentMode;
+		private int applicablePaymentMode = ApplicablePaymentMode.BOTH.getOrdinal();
 
 		public int getApplicablePaymentMode() {
 			return applicablePaymentMode;
