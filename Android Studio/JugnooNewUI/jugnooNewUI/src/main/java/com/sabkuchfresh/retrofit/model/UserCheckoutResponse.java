@@ -315,10 +315,13 @@ public class UserCheckoutResponse{
 	public class VendorInfo{
 		@SerializedName("applicable_payment_mode")
 		@Expose
-		private int applicablePaymentMode = ApplicablePaymentMode.BOTH.getOrdinal();
+		private Integer applicablePaymentMode;
 
 		public int getApplicablePaymentMode() {
-			return applicablePaymentMode;
+			if(applicablePaymentMode!=null){
+				return applicablePaymentMode;
+			}
+			return ApplicablePaymentMode.BOTH.getOrdinal();
 		}
 	}
 
