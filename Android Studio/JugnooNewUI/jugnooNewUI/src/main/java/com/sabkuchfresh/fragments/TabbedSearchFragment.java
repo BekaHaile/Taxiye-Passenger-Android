@@ -136,7 +136,7 @@ public class TabbedSearchFragment extends Fragment {
 
         DeliveryHomeAdapter deliveryHomeAdapter = new DeliveryHomeAdapter(activity, new DeliveryHomeAdapter.Callback() {
             @Override
-            public void onRestaurantSelected(int vendorId) {
+            public void onRestaurantSelected(int vendorId, final boolean shouldOpenMerchantInfo) {
                 // NA here
             }
 

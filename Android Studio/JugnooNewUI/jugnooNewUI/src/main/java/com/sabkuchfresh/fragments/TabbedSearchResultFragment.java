@@ -89,7 +89,8 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
 
         deliveryHomeAdapter = new DeliveryHomeAdapter(activity, new DeliveryHomeAdapter.Callback() {
             @Override
-            public void onRestaurantSelected(int vendorId) {
+            public void onRestaurantSelected(int vendorId, final boolean shouldOpenMerchantInfo) {
+                activity.setMenusIsOpenMerchantInfo(shouldOpenMerchantInfo);
                 activity.fetchRestaurantMenuAPI(vendorId, false, null, null, -1, null);
                 Utils.hideKeyboard(activity);
             }

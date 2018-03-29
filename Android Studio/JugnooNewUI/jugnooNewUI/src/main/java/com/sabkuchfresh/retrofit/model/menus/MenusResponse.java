@@ -412,6 +412,18 @@ public class MenusResponse {
 
 		private boolean userJustEditedReview;
 
+		@SerializedName("is_open_merchant_info")
+		@Expose
+		private int shouldOpenMerchantInfo;
+
+		public boolean getShouldOpenMerchantInfo() {
+			return shouldOpenMerchantInfo == 1;
+		}
+
+		public void setShouldOpenMerchantInfo(final int shouldOpenMerchantInfo) {
+			this.shouldOpenMerchantInfo = shouldOpenMerchantInfo;
+		}
+
 		public String getDistanceText() {
 			return distanceText;
 		}

@@ -1011,7 +1011,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if (bannerInfo.getRestaurantId() == -1 && bannerInfo.getDeepIndex() != -1) {
                             callback.onBannerInfoDeepIndexClick(bannerInfo.getDeepIndex());
                         } else if (bannerInfo.getRestaurantId() != -1 && bannerInfo.getDeepIndex() == -1) {
-                            callback.onRestaurantSelected(bannerInfo.getRestaurantId());
+                            callback.onRestaurantSelected(bannerInfo.getRestaurantId(), true);
                         }
                     }
                 });
@@ -1251,7 +1251,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (pos != RecyclerView.NO_POSITION) {
             switch (viewClicked.getId()) {
                 case R.id.rlRoot:
-                    callback.onRestaurantSelected(((MenusResponse.Vendor) dataToDisplay.get(pos)).getRestaurantId());
+                    callback.onRestaurantSelected(((MenusResponse.Vendor) dataToDisplay.get(pos)).getRestaurantId()
+                            , ((MenusResponse.Vendor) dataToDisplay.get(pos)).getShouldOpenMerchantInfo());
                     break;
                 case R.id.rlRootNewOrder:
                     viewOrderClick(pos);
@@ -1303,7 +1304,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if (stripInfo.getRestaurantId() == -1 && stripInfo.getDeepIndex() != -1) {
                             callback.onBannerInfoDeepIndexClick(stripInfo.getDeepIndex());
                         } else if (stripInfo.getRestaurantId() != -1 && stripInfo.getDeepIndex() == -1) {
-                            callback.onRestaurantSelected(stripInfo.getRestaurantId());
+                            callback.onRestaurantSelected(stripInfo.getRestaurantId(), true);
                         }
                     }
                     break;
@@ -1582,7 +1583,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public interface Callback {
-        void onRestaurantSelected(int vendorId);
+        void onRestaurantSelected(int vendorId, final boolean shouldOpenMerchantInfo);
 
         void onBannerInfoDeepIndexClick(int deepIndex);
 

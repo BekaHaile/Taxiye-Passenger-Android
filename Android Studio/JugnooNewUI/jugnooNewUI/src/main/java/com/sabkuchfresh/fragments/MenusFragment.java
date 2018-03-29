@@ -204,7 +204,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         deliveryHomeAdapter = new DeliveryHomeAdapter(activity, new DeliveryHomeAdapter.Callback() {
             @Override
-            public void onRestaurantSelected(int vendorId) {
+            public void onRestaurantSelected(int vendorId, final boolean shouldOpenMerchantInfo) {
+                activity.setMenusIsOpenMerchantInfo(shouldOpenMerchantInfo);
                 activity.fetchRestaurantMenuAPI(vendorId, false, null, null, -1, null);
                 Utils.hideSoftKeyboard(activity, relativeLayoutNoMenus);
             }
@@ -813,11 +814,6 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
                     }
-
-                    // set the openMerchantInfo irrespective of api
-                    //activity.setMenusIsOpenMerchantInfo(menusResponse.isOpenMerchantInfo());
-
-
 
                     swipeRefreshLayout.setRefreshing(false);
                     activity.getTopBar().setPBSearchVisibility(View.GONE);
