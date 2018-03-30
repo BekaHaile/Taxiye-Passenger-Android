@@ -11,15 +11,31 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:src="@drawable/bg_top_2"
-        android:tag="mwar" />
+        android:tag="mwar"
+        android:visibility="invisible"/>
 
     <ImageView
-        android:layout_width="403px"
-        android:layout_height="101px"
-        android:src="@drawable/splash_logo"
-        android:tag="mwar"
+        android:id="@+id/ivLogoP"
+        android:layout_width="81dp"
+        android:layout_height="81dp"
+        android:src="@drawable/ic_taxi_logo"
+        android:tag="@string/dont_touch_me"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/px_240"/>
+        android:layout_marginTop="100dp"/>
+
+    <TextView
+        android:id="@+id/tvJugnooTaxiP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="@string/jugnoo_taxi"
+        android:textAllCaps="true"
+        android:textStyle="bold"
+        android:layout_below="@+id/ivLogoP"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:tag="@string/dont_touch_me"
+        />
 
     <RelativeLayout
         android:id="@+id/rlPhone"
@@ -109,6 +125,7 @@
         android:layout_height="@dimen/px_160"
         android:layout_alignParentBottom="true"
         android:src="@drawable/splash_bottom_building_bg2"
-        android:tag="mwar" />
+        android:tag="mwar"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

@@ -25,7 +25,8 @@
                 android:layout_height="@dimen/px_160"
                 android:scaleX="-1"
                 android:src="@drawable/bg_top_2"
-                android:tag="mwar"/>
+                android:tag="mwar"
+                android:visibility="invisible"/>
 
             <ImageView
                 android:id="@+id/ivGraphic"

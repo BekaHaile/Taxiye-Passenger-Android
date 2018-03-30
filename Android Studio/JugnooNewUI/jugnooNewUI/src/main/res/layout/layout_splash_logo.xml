@@ -10,7 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:src="@drawable/splash_top_bg"
-        android:tag="mwar" />
+        android:tag="mwar"
+        android:visibility="invisible"
+        />
 
     <!-- Jugnoo Logo layout-->
     <LinearLayout
@@ -28,14 +30,28 @@
 
             <ImageView
                 android:id="@+id/imageViewJugnooLogo"
-                android:layout_width="386px"
-                android:layout_height="96px"
+                android:layout_width="81dp"
+                android:layout_height="81dp"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/logo_big"
+                android:background="@drawable/ic_taxi_logo"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:tag="mhar"
+                android:tag="@string/dont_touch_me"
                 android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tvJugnooTaxiS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/jugnoo_taxi"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:layout_below="@+id/imageViewJugnooLogo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:tag="@string/dont_touch_me"
+                />
 
         </RelativeLayout>
 
@@ -55,6 +71,8 @@
         android:layout_height="@dimen/px_160"
         android:src="@drawable/splash_bottom_building_bg1"
         android:layout_alignParentBottom="true"
-        android:tag="mwar" />
+        android:tag="mwar"
+        android:visibility="invisible"
+        />
 
 </RelativeLayout>
