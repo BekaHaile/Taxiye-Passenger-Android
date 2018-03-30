@@ -17,7 +17,7 @@
         android:layout_alignParentBottom="true"
         android:src="@drawable/splash_bottom_building_bg1"
         android:tag="mwar"
-        android:visibility="visible" />
+        android:visibility="invisible" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -31,7 +31,9 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/px_160"
             android:src="@drawable/splash_top_bg"
-            android:tag="mwar" />
+            android:tag="mwar"
+            android:visibility="invisible"
+            />
 
 
         <LinearLayout
@@ -48,14 +50,28 @@
 
                 <ImageView
                     android:id="@+id/imageViewJugnooLogo"
-                    android:layout_width="@dimen/px_387"
-                    android:layout_height="@dimen/px_97"
+                    android:layout_width="81dp"
+                    android:layout_height="81dp"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/logo_big"
+                    android:src="@drawable/ic_taxi_logo"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:tag="mwar"
+                    android:tag="@string/dont_touch_me"
                     android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tvJugnooTaxiLS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:text="@string/jugnoo_taxi"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/imageViewJugnooLogo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:tag="@string/dont_touch_me"
+                    />
 
                 <ImageView
                     android:id="@+id/imageViewDebug1"

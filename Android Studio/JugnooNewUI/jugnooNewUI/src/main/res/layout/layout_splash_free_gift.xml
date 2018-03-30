@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:src="@drawable/bg_top_2"
-        android:tag="mwar" />
+        android:tag="mwar"
+        android:visibility="invisible"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -74,6 +75,7 @@
         android:layout_height="@dimen/px_160"
         android:src="@drawable/splash_bottom_building_bg2"
         android:layout_alignParentBottom="true"
-        android:tag="mwar" />
+        android:tag="mwar"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

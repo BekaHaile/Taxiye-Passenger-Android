@@ -1490,5 +1490,6 @@
     <string name="txt_suggestions">Suggestions</string>
     <string name="txt_recent_searches">Recent Searches</string>
     <string name="txt_related_to">Related to \"%s\"</string>
+    <string name="jugnoo_taxi">Jugnoo Taxi</string>
 
 </resources>
