@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.adapters.TabbedPagerAdaptor;
+import com.sabkuchfresh.datastructure.SearchSuggestion;
 import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -39,7 +40,6 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
-import com.sabkuchfresh.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -68,6 +68,7 @@ public class TabbedSearchFragment extends Fragment {
     private ArrayList<String> statusMeals = new ArrayList<>();
     private ArrayList<String> statusFatafat = new ArrayList<>();
     private TextView tvNoResults;
+    private final int TAB_ITEMS = 0, TAB_STORES = 1;
 
     @Nullable
     @Override
@@ -176,7 +177,7 @@ public class TabbedSearchFragment extends Fragment {
                 activity.getTopBar().etSearch.setSelection(searchSuggestion.getText().length());
 
                 // switch to items tab
-                viewPagerSearch.setCurrentItem(0);
+                viewPagerSearch.setCurrentItem(TAB_ITEMS);
 
                 Utils.hideKeyboard(activity);
 
@@ -350,6 +351,14 @@ public class TabbedSearchFragment extends Fragment {
                                         } else {
                                             tvNoResults.setVisibility(View.GONE);
                                             llSearchResults.setVisibility(View.VISIBLE);
+
+                                            // switch to stores tab if items are empty
+                                            if(menusResponse.getSuggestionsList().size()==0){
+                                                viewPagerSearch.setCurrentItem(TAB_STORES);
+                                            }
+                                            else {
+                                                viewPagerSearch.setCurrentItem(TAB_ITEMS);
+                                            }
                                         }
                                     }
                                 }
