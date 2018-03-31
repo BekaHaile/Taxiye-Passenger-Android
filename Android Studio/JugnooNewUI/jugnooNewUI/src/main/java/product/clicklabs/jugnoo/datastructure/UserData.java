@@ -11,6 +11,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
@@ -203,6 +204,24 @@ public class UserData {
 		this.showOfferDialog = showOfferDialog;
 		this.showTutorial = showTutorial;
 		this.signupOnboarding = signupOnboarding;
+
+		onlyAutosEnabled();
+
+	}
+
+	private void onlyAutosEnabled() {
+		this.autosEnabled = 1;
+		this.mealsEnabled = 0;
+		this.freshEnabled = 0;
+		this.groceryEnabled = 0;
+		this.menusEnabled = 0;
+		this.payEnabled = 0;
+		this.deliveryEnabled = 0;
+		this.feedEnabled = 0;
+		this.prosEnabled = 0;
+		this.deliveryCustomerEnabled = 0;
+		this.defaultClientId = Config.getAutosClientId();
+		this.integratedJugnooEnabled = 0;
 	}
 
 	private void checkUserImage(){
@@ -651,7 +670,7 @@ public class UserData {
 	}
 
 	public void setMealsEnabled(int mealsEnabled) {
-		this.mealsEnabled = mealsEnabled;
+		this.mealsEnabled = 0;
 	}
 
 	public int getFreshEnabled() {
@@ -659,7 +678,7 @@ public class UserData {
 	}
 
 	public void setFreshEnabled(int freshEnabled) {
-		this.freshEnabled = freshEnabled;
+		this.freshEnabled = 0;
 	}
 
 	public int getGroceryEnabled() {
@@ -667,7 +686,7 @@ public class UserData {
 	}
 
 	public void setGroceryEnabled(int groceryEnabled) {
-		this.groceryEnabled = groceryEnabled;
+		this.groceryEnabled = 0;
 	}
 
 	public int getDeliveryEnabled() {
@@ -675,7 +694,7 @@ public class UserData {
 	}
 
 	public void setDeliveryEnabled(int deliveryEnabled) {
-		this.deliveryEnabled = deliveryEnabled;
+		this.deliveryEnabled = 0;
 	}
 
 	public int getInviteFriendButton() {
@@ -940,7 +959,7 @@ public class UserData {
 	}
 
 	public void setMenusEnabled(int menusEnabled) {
-		this.menusEnabled = menusEnabled;
+		this.menusEnabled = 0;
 	}
 
 	public int getPayEnabled() {
@@ -948,7 +967,7 @@ public class UserData {
 	}
 
 	public void setPayEnabled(int payEnabled) {
-		this.payEnabled = payEnabled;
+		this.payEnabled = 0;
 	}
 
 
@@ -1039,7 +1058,7 @@ public class UserData {
 	}
 
 	public void setFeedEnabled(int feedEnabled) {
-		this.feedEnabled = feedEnabled;
+		this.feedEnabled = 0;
 	}
 
 	public int getExpandJeanie() {
@@ -1087,15 +1106,15 @@ public class UserData {
 	}
 
 	public void setProsEnabled(int prosEnabled) {
-		this.prosEnabled = prosEnabled;
+		this.prosEnabled = 0;
 	}
 
 	public void setDeliveryCustomerEnabled(Integer deliveryCustomerEnabled) {
-		this.deliveryCustomerEnabled = deliveryCustomerEnabled;
+		this.deliveryCustomerEnabled = 0;
 	}
 
 	public void setAutosEnabled(Integer autosEnabled) {
-		this.autosEnabled = autosEnabled;
+		this.autosEnabled = 1;
 	}
 
 	public boolean isRidesAndFatafatEnabled(){

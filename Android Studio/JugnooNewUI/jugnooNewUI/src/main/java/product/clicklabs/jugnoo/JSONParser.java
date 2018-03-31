@@ -919,7 +919,6 @@ public class JSONParser implements Constants {
             new HomeUtil().putDefaultParams(nameValuePairs);
             Response response = RestClient.getApiService().getCurrentUserStatus(nameValuePairs);
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-            Log.i(TAG, "getCurrentUserStatus response="+responseStr);
             if (response == null || responseStr == null) {
                 return Constants.SERVER_TIMEOUT;
             } else {
@@ -943,7 +942,6 @@ public class JSONParser implements Constants {
 
 
     public String parseCurrentUserStatus(Context context, int currentUserStatus, JSONObject jObject1) {
-		Log.e("parseCurrentUserStatus jObject1", "="+jObject1);
         String returnResponse = "";
 
         if (currentUserStatus == 2) {
