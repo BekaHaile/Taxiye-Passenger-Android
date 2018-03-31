@@ -46,7 +46,6 @@ public class TypekitFactory {
     }
 
     public View onViewCreated(View view, Context context, AttributeSet attrs) {
-        //TODO: implement
         return view;
     }
 

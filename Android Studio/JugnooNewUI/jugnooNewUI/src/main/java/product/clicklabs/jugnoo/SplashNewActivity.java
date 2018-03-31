@@ -4418,6 +4418,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 	String phoneNoToFillInInHouseLogin = "";
 	private void goToLoginUsingPhone(String previousLoginPhone){
+		// TODO: 31/03/18 remove prefs save
+		Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, 1);
 		if(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1){
 			phoneNoToFillInInHouseLogin = previousLoginPhone;
 			if(phoneNoToFillInInHouseLogin==null || phoneNoToFillInInHouseLogin.trim().length()==0){

@@ -150,7 +150,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     private ForegroundColorSpan textHintColorSpan;
 
-    // TODO: 28/11/17 Slider stuck on fatafat error
     private ForegroundColorSpan textColorSpan;
     private PaySlider paySlider;
     private FreshActivity activity;
