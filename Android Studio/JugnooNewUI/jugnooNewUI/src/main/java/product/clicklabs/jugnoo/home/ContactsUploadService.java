@@ -496,7 +496,7 @@ public class ContactsUploadService extends IntentService {
 						exception.printStackTrace();
 						doneWithSync();
 						return;
-						//DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						//DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 					}
                     //DialogPopup.dismissLoadingDialog();
                     currentSyncEntry.setSynced(true);

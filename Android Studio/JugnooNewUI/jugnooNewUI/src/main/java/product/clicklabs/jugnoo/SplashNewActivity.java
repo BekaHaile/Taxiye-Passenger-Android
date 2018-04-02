@@ -979,7 +979,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						facebookLoginHelper.openFacebookSession();
 					} else {
 						DialogPopup.dialogNoInternet(SplashNewActivity.this,
-								Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+								getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc),
 								new Utils.AlertCallBackWithButtonsInterface() {
 									@Override
 									public void positiveClick(View v) {
@@ -1008,7 +1008,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 					} else{
 						DialogPopup.dialogNoInternet(SplashNewActivity.this,
-								Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+								getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc),
 								new Utils.AlertCallBackWithButtonsInterface() {
 									@Override
 									public void positiveClick(View v) {
@@ -1124,28 +1124,28 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 					if ("".equalsIgnoreCase(name) || (name.startsWith("."))) {
 						editTextSName.requestFocus();
-						editTextSName.setError("Please enter name");
+						editTextSName.setError(getString(R.string.please_enter_name));
 					} else if (!Utils.hasAlphabets(name)) {
 						editTextSName.requestFocus();
-						editTextSName.setError("Please enter at least one alphabet");
+						editTextSName.setError(getString(R.string.please_enter_one_alphabet));
 					} else {
 						if ("".equalsIgnoreCase(emailId)) {
 							editTextSEmail.requestFocus();
-							editTextSEmail.setError("Please enter email id");
+							editTextSEmail.setError(getString(R.string.please_enter_email));
 						} else {
 							if ("".equalsIgnoreCase(phoneNo)) {
 								editTextSPhone.requestFocus();
-								editTextSPhone.setError("Please enter phone number");
+								editTextSPhone.setError(getString(R.string.please_enter_phone_number));
 							} else {
 								phoneNo = Utils.retrievePhoneNumberTenChars(phoneNo);
 								if (!Utils.validPhoneNumber(phoneNo)) {
 									editTextSPhone.requestFocus();
-									editTextSPhone.setError("Please enter valid phone number");
+									editTextSPhone.setError(getString(R.string.please_enter_valid_phone));
 								} else {
-									phoneNo = "+91" + phoneNo;
+									phoneNo = getString(R.string.country_code) + phoneNo;
 									if ("".equalsIgnoreCase(password)) {
 										editTextSPassword.requestFocus();
-										editTextSPassword.setError("Please enter password");
+										editTextSPassword.setError(getString(R.string.please_enter_password));
 									} else {
 										if ((linkedWallet == LinkedWalletStatus.NO_WALLET.getOrdinal() && Utils.isEmailValid(emailId))
 												||
@@ -1168,12 +1168,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 												}
 											} else {
 												editTextSPassword.requestFocus();
-												editTextSPassword.setError("Password must be of atleast six characters");
+												editTextSPassword.setError(getString(R.string.password_must_be_atleast_six));
 											}
 
 										} else {
 											editTextSEmail.requestFocus();
-											editTextSEmail.setError("Please enter valid email id");
+											editTextSEmail.setError(getString(R.string.please_enter_valid_email_id));
 										}
 
 									}
@@ -2134,7 +2134,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
             final String toastMessage;
             final AccountKitLoginResult loginResult = AccountKit.loginResultWithIntent(data);
             if (loginResult == null || loginResult.wasCancelled()) {
-                toastMessage = "Login Cancelled";
+                toastMessage = getString(R.string.login_cancelled);
             } else if (loginResult.getError() != null) {
                 toastMessage = loginResult.getError().getErrorType().getMessage();
             } else {
@@ -2142,10 +2142,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 final long tokenRefreshIntervalInSeconds =
                         loginResult.getTokenRefreshIntervalInSeconds();
                 if (authorizationCode != null) {
-                    toastMessage = "Success:" + authorizationCode;
+                    toastMessage = getString(R.string.success_colon_format, authorizationCode);
                     apiLoginUsingFbAccountKit(SplashNewActivity.this, loginResult.getAuthorizationCode());
                 } else {
-                    toastMessage = "Unknown response type";
+                    toastMessage = getString(R.string.unknown_response_type);
                 }
             }
             //Toast.makeText(this,toastMessage,Toast.LENGTH_LONG).show();
@@ -2613,8 +2613,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			final EditText etCode = (EditText) dialog.findViewById(R.id.etCode);
 			etCode.setTypeface(Fonts.mavenMedium(activity));
 
-			textHead.setText("Confirm Debug Password");
-			textMessage.setText("Please enter password to continue.");
+			textHead.setText(R.string.confirm_debug_password);
+			textMessage.setText(R.string.please_enter_password_to_continue);
 
 			textHead.setVisibility(View.GONE);
 			textMessage.setVisibility(View.GONE);
@@ -2629,7 +2629,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					String code = etCode.getText().toString().trim();
 					if ("".equalsIgnoreCase(code)) {
 						etCode.requestFocus();
-						etCode.setError("Code can't be empty.");
+						etCode.setError(getString(R.string.code_cant_be_empty));
 					} else {
 						if (Config.getDebugPassword().equalsIgnoreCase(code)) {
 							dialog.dismiss();
@@ -2638,7 +2638,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							ActivityCompat.finishAffinity(activity);
 						} else {
 							etCode.requestFocus();
-							etCode.setError("Code not matched.");
+							etCode.setError(getString(R.string.code_not_matched));
 						}
 					}
 				}
@@ -2833,7 +2833,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 	private void apiGenerateLoginOtp(final Activity activity, final String phoneNumber){
 		if(MyApplication.getInstance().isOnline()){
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 			HashMap<String, String> params = new HashMap<>();
 
 			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
@@ -2923,9 +2923,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 									otpScreenIntentAlongDataSet(1, LinkedWalletStatus.NO_WALLET.getOrdinal(), phoneNumber);
 								}
-								DialogPopup.showLoadingDialog(activity, "Loading...");
+								DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 							} else {
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
@@ -2940,11 +2940,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingEmailOrPhoneNo error=" + error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 		} else{
-			DialogPopup.alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(SplashNewActivity.this, "", activity.getString(R.string.connection_lost_desc));
 		}
 	}
 
@@ -2963,7 +2963,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				e.printStackTrace();
 			}
 		if(MyApplication.getInstance().isOnline()) {
-			final ProgressDialog missedCallDialog = DialogPopup.showLoadingDialogNewInstance(SplashNewActivity.this, "Loading...");
+			final ProgressDialog missedCallDialog = DialogPopup.showLoadingDialogNewInstance(SplashNewActivity.this, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -3075,7 +3075,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 									}
 								}
 							} else {
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
 							if (missedCallDialog != null) {
 								missedCallDialog.dismiss();
@@ -3088,7 +3088,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 					} catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						if (missedCallDialog != null) {
 							missedCallDialog.dismiss();
 						}
@@ -3101,12 +3101,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					if (missedCallDialog != null) {
 						missedCallDialog.dismiss();
 					}
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
@@ -3117,7 +3117,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		if (MyApplication.getInstance().isOnline()) {
 			resetFlags();
 
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -3200,9 +3200,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 
 								}
-								DialogPopup.showLoadingDialog(activity, "Loading...");
+								DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 							} else {
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
 							DialogPopup.dismissLoadingDialog();
 						} else {
@@ -3211,7 +3211,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 					} catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						DialogPopup.dismissLoadingDialog();
 					}
 				}
@@ -3220,13 +3220,13 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingFacebook error=" + error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
@@ -3234,7 +3234,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	public void sendGoogleLoginValues(final Activity activity) {
 		if (MyApplication.getInstance().isOnline()) {
 			resetFlags();
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -3315,10 +3315,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 									loginDataFetched = true;
 
 								}
-								DialogPopup.showLoadingDialog(activity, "Loading...");
+								DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 							}
 							else{
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
@@ -3328,7 +3328,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 					}  catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						DialogPopup.dismissLoadingDialog();
 					}
 				}
@@ -3337,13 +3337,13 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingGoogle error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
@@ -3669,7 +3669,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                  final String password, final int linkedWallet) {
         if (MyApplication.getInstance().isOnline()) {
             resetFlags();
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
             HashMap<String, String> params = new HashMap<>();
 
@@ -3754,7 +3754,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                     SplashNewActivity.this.emailId = emailId;
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                 } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                                 }
                                 DialogPopup.dismissLoadingDialog();
                             }
@@ -3763,7 +3763,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         DialogPopup.dismissLoadingDialog();
                     }
                 }
@@ -3772,12 +3772,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "registerUsingEmail error=" + error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
 
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
 
     }
@@ -3790,7 +3790,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
             , final int linkedWallet) {
         if (MyApplication.getInstance().isOnline()) {
             resetFlags();
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
             HashMap<String, String> params = new HashMap<>();
 
@@ -3871,7 +3871,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                 } else if(ApiResponseFlags.AUTH_VERIFICATION_SUCCESSFUL.getOrdinal() == flag){
 									sendFacebookLoginValues(SplashNewActivity.this);
 								} else{
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                                 }
                                 DialogPopup.dismissLoadingDialog();
                             }
@@ -3881,7 +3881,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                     } catch (Exception exception) {
                         exception.printStackTrace();
                         DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 }
 
@@ -3889,12 +3889,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "registerUsingFacebook error=" + error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
 
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
     }
 
@@ -3905,7 +3905,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
     public void sendGoogleSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password, final int linkedWallet) {
         if (MyApplication.getInstance().isOnline()) {
             resetFlags();
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
             HashMap<String, String> params = new HashMap<>();
 
@@ -3979,7 +3979,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                     SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                 } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                                 }
                                 DialogPopup.dismissLoadingDialog();
                             }
@@ -3989,7 +3989,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                     } catch (Exception exception) {
                         exception.printStackTrace();
                         DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 }
 
@@ -3997,12 +3997,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "registerUsingGoogle error=" + error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
 
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
     }
 
@@ -4067,7 +4067,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 	private void apiClaimGift(){
 		if (MyApplication.getInstance().isOnline()) {
-			DialogPopup.showLoadingDialog(SplashNewActivity.this, "Loading...");
+			DialogPopup.showLoadingDialog(SplashNewActivity.this, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 			params.put("user_id", refreeUserId);
@@ -4099,7 +4099,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				}
 			});
 		} else{
-			DialogPopup.alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(SplashNewActivity.this, "", getString(R.string.connection_lost_desc));
 		}
 	}
 
@@ -4127,7 +4127,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	public void verifyOtpViaEmail(final Activity activity, final String email, final String phoneNo, String otp) {
         if (MyApplication.getInstance().isOnline()) {
 
-            final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, "Loading...");
+            final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, getString(R.string.loading));
 
             HashMap<String, String> params = new HashMap<>();
 
@@ -4182,7 +4182,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                             loginResponse, LoginVia.EMAIL_OTP, new LatLng(Data.loginLatitude, Data.loginLongitude));
                                     loginDataFetched = true;
                                 }
-								DialogPopup.showLoadingDialog(activity, "Loading...");
+								DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
                             } else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
                                 String error = jObj.getString("error");
                                 DialogPopup.alertPopup(activity, "", error);
@@ -4201,7 +4201,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                     if (progressDialog != null) progressDialog.dismiss();
                 }
@@ -4210,11 +4210,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "verifyOtp error=" + error);
                     if (progressDialog != null) progressDialog.dismiss();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
     }
 
@@ -4222,7 +4222,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 									 final String updatedName, final String updatedEmail,
 									 final String referralCode) {
 		if(MyApplication.getInstance().isOnline()) {
-			DialogPopup.showLoadingDialog(activity, "Updating...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -4259,7 +4259,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								String message = jObj.optString("message", "");
 								Utils.showToast(activity, message);
 							} else {
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
 							loginDataFetched = true;
 							new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
@@ -4279,7 +4279,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						}
 					} catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						DialogPopup.dismissLoadingDialog();
 					}
 				}
@@ -4288,12 +4288,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "updateUserProfile error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
@@ -4427,7 +4427,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		} else {
 			PhoneNumber phoneNumber = null;
 			if(!TextUtils.isEmpty(previousLoginPhone)) {
-				phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(previousLoginPhone), "IND");
+				phoneNumber = new PhoneNumber(getString(R.string.country_code), Utils.retrievePhoneNumberTenChars(previousLoginPhone), getString(R.string.country_iso));
 			}
 			fbAccountKit.startFbAccountKit(phoneNumber);
 		}

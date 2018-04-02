@@ -150,7 +150,7 @@ public class PromoDescriptionFragment extends Fragment {
 			handler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					Utils.showToast(context, context.getString(R.string.offer_auto_applied_message_format, "checkout"), Toast.LENGTH_LONG);
+					Utils.showToast(context, context.getString(R.string.offer_auto_applied_message_format, context.getString(R.string.checkout)), Toast.LENGTH_LONG);
 				}
 			}, 500);
 		}

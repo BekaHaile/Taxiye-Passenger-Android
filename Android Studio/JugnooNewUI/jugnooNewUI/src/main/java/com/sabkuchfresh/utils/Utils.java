@@ -714,7 +714,7 @@ public class Utils {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setAutoCancel(true);
-            builder.setContentTitle("Autos");
+            builder.setContentTitle(context.getString(R.string.app_name));
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
             builder.setTicker(message);

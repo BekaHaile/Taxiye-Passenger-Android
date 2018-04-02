@@ -201,7 +201,7 @@ public class ShareActivity extends BaseFragmentActivity {
 		try {
 			if(!HomeActivity.checkIfUserDataNull(this) && MyApplication.getInstance().isOnline()) {
 				if(Data.userData.getReferralLeaderboardEnabled() == 1) {
-					DialogPopup.showLoadingDialog(this, "Loading...");
+					DialogPopup.showLoadingDialog(this, getString(R.string.loading));
 
 					RestClient.getApiService().leaderboardServerCall(Data.userData.accessToken, Config.getAutosClientId(),
 							new Callback<LeaderboardResponse>() {
@@ -225,20 +225,20 @@ public class ShareActivity extends BaseFragmentActivity {
 										}
 									} catch (Exception exception) {
 										exception.printStackTrace();
-										retryLeaderboardDialog(Data.SERVER_ERROR_MSG);
+										retryLeaderboardDialog(getString(R.string.connection_lost_please_try_again));
 									}
 								}
 
 								@Override
 								public void failure(RetrofitError error) {
 									DialogPopup.dismissLoadingDialog();
-									retryLeaderboardDialog(Data.SERVER_NOT_RESOPNDING_MSG);
+									retryLeaderboardDialog(getString(R.string.connection_lost_please_try_again));
 								}
 							});
 				}
 			} else {
-				//retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
-				DialogPopup.dialogNoInternet(this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+				//retryLeaderboardDialog(activity.getString(R.string.connection_lost_desc));
+				DialogPopup.dialogNoInternet(this, getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc), new Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View v) {
 						getLeaderboardCall();
@@ -292,7 +292,7 @@ public class ShareActivity extends BaseFragmentActivity {
 		try {
 			if(!HomeActivity.checkIfUserDataNull(this) && MyApplication.getInstance().isOnline()) {
 				if(Data.userData.getReferralActivityEnabled() == 1) {
-					DialogPopup.showLoadingDialog(this, "Loading...");
+					DialogPopup.showLoadingDialog(this, getString(R.string.loading));
 
 					RestClient.getApiService().leaderboardActivityServerCall(Data.userData.accessToken, Config.getAutosClientId(),
 							new Callback<LeaderboardActivityResponse>() {
@@ -326,8 +326,8 @@ public class ShareActivity extends BaseFragmentActivity {
 							});
 				}
 			} else {
-				//retryLeaderboardDialog(Data.CHECK_INTERNET_MSG);
-				DialogPopup.dialogNoInternet(this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+				//retryLeaderboardDialog(activity.getString(R.string.connection_lost_desc));
+				DialogPopup.dialogNoInternet(this, getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc), new Utils.AlertCallBackWithButtonsInterface() {
 					@Override
 					public void positiveClick(View v) {
 						getLeaderboardActivityCall();

@@ -1109,7 +1109,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 
             GAUtils.event(JUGNOO, DELIVERY_ADDRESS, NEXT+CLICKED);
         } else {
-            Utils.showToast(activity, "Please wait...");
+            Utils.showToast(activity, getString(R.string.please_wait));
         }
     }
 

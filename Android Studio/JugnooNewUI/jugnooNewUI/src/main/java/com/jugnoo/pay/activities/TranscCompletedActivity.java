@@ -206,7 +206,7 @@ public class TranscCompletedActivity extends BaseActivity {
             else{
                 // for Request
                 scrollView.setVisibility(View.VISIBLE);
-                toolbarTitleTxt.setText("Jugnoo Pay");
+                toolbarTitleTxt.setText(getString(R.string.jugnoo_pay));
                 textViewPaid.setText(getResources().getString(R.string.from));
                 rvBankRefId.setVisibility(View.GONE);
                 rvNpciTransId.setVisibility(View.GONE);
@@ -263,7 +263,7 @@ public class TranscCompletedActivity extends BaseActivity {
     private void callingSendMoneyCallbackApi(final MessageRequest message, final String orderId, final String accessToken) {
         try {
             if (MyApplication.getInstance().isOnline()) {
-                CallProgressWheel.showLoadingDialog(TranscCompletedActivity.this, AppConstant.PLEASE);
+                CallProgressWheel.showLoadingDialog(TranscCompletedActivity.this, getString(R.string.please_wait));
                 HashMap<String, String> params = new HashMap<>();
 
                 params.put("order_id", orderId);
@@ -302,7 +302,7 @@ public class TranscCompletedActivity extends BaseActivity {
                             else if(flag == ApiResponseFlags.TXN_NOT_EXISTS.getOrdinal())
                             {
                                 // DialogPopup.alertPopup(TranscCompletedActivity.this, "", commonResponse.getMessage(), false);
-                                DialogPopup.alertPopupWithListener(TranscCompletedActivity.this, "Error", commonResponse.getMessage(), new View.OnClickListener() {
+                                DialogPopup.alertPopupWithListener(TranscCompletedActivity.this, getString(R.string.error), commonResponse.getMessage(), new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
                                         onBackPressed();
@@ -419,7 +419,7 @@ public class TranscCompletedActivity extends BaseActivity {
     public void apiGetTransactionSummary(final int orderId, final int txnType, final TransactionInfo transactionInfo) {
         try {
             if (MyApplication.getInstance().isOnline()) {
-                CallProgressWheel.showLoadingDialog(this, "Loading...");
+                CallProgressWheel.showLoadingDialog(this, getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());

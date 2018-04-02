@@ -125,7 +125,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
 					String phoneNoChanged = editTextNewPhoneNumber.getText().toString().trim();
 					if("".equalsIgnoreCase(phoneNoChanged)){
 						editTextNewPhoneNumber.requestFocus();
-						editTextNewPhoneNumber.setError("Phone number can't be empty");
+						editTextNewPhoneNumber.setError(getString(R.string.phone_number_cant_be_empty));
 					}
 					else{
 						phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
@@ -133,7 +133,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
 							phoneNoChanged = "+91" + phoneNoChanged;
 							if(previousPhoneNumber.equalsIgnoreCase(phoneNoChanged)){
 								editTextNewPhoneNumber.requestFocus();
-								editTextNewPhoneNumber.setError("Changed Phone number is same as the previous one.");
+								editTextNewPhoneNumber.setError(getString(R.string.changed_phone_number_same));
 							}
 							else{
 								updateUserProfileAPI(ChangePhoneBeforeOTPActivity.this, phoneNoChanged, accessToken);
@@ -141,7 +141,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
 						}
 						else{
 							editTextNewPhoneNumber.requestFocus();
-							editTextNewPhoneNumber.setError("Please enter valid phone number");
+							editTextNewPhoneNumber.setError(getString(R.string.please_enter_valid_phone));
 						}
 					}
 				} catch (Exception e) {
@@ -192,7 +192,7 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
     public void updateUserProfileAPI(final Activity activity, final String updatedField, String accessToken) {
         if(MyApplication.getInstance().isOnline()) {
 
-            DialogPopup.showLoadingDialog(activity, "Updating...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.updating));
 
             HashMap<String, String> params = new HashMap<>();
             params.put("client_id", Config.getAutosClientId());
@@ -236,12 +236,12 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
                                 });
                             }
                             else{
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                             }
                         }
                     }  catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         DialogPopup.dismissLoadingDialog();
                     }
                 }
@@ -250,12 +250,12 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
                 public void failure(RetrofitError error) {
                     Log.e("request fail", error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
         }
         else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
 
     }

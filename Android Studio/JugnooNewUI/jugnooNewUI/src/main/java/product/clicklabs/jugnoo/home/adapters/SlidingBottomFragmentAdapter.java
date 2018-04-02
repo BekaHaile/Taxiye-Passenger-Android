@@ -1,9 +1,11 @@
 package product.clicklabs.jugnoo.home.adapters;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.fragments.SlidingBottomCashFragment;
 import product.clicklabs.jugnoo.home.fragments.SlidingBottomFareFragment;
 import product.clicklabs.jugnoo.home.fragments.SlidingBottomOffersFragment;
@@ -13,8 +15,10 @@ import product.clicklabs.jugnoo.home.fragments.SlidingBottomOffersFragment;
  */
 public class SlidingBottomFragmentAdapter extends FragmentPagerAdapter {
 
-	public SlidingBottomFragmentAdapter(FragmentManager fm) {
+	private Context context;
+	public SlidingBottomFragmentAdapter(Context context, FragmentManager fm) {
 		super(fm);
+		this.context = context;
 	}
 
 	@Override
@@ -41,11 +45,11 @@ public class SlidingBottomFragmentAdapter extends FragmentPagerAdapter {
 	public CharSequence getPageTitle(int position) {
 		switch (position) {
 			case 0:
-				return "Cash";
+				return context.getString(R.string.cash);
 			case 1:
-				return "Fare";
+				return context.getString(R.string.fare);
 			case 2:
-				return "Offers";
+				return context.getString(R.string.offers);
 		}
 		return null;
 	}

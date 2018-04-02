@@ -408,7 +408,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			if(giveAMissedCall) {
 				giveAMissedCall = false;
 				//buttonVerify.performClick();
-				missedCallDialog = DialogPopup.showLoadingDialogNewInstance(OTPConfirmScreen.this, "Loading...");
+				missedCallDialog = DialogPopup.showLoadingDialogNewInstance(OTPConfirmScreen.this, getString(R.string.loading));
 				//rlProgress.setVisibility(View.VISIBLE);
 				if (signupBy.equalsIgnoreCase("email")) {
 					if (onlyDigits) {
@@ -500,7 +500,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 	private void apiLoginUsingOtp(final Activity activity, String otp, final String phoneNumber){
 			if(MyApplication.getInstance().isOnline()){
-				DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 				HashMap<String, String> params = new HashMap<>();
 
@@ -572,7 +572,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
 								}else {
-									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 								}
 								DialogPopup.dismissLoadingDialog();
 							} else {
@@ -581,7 +581,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							DialogPopup.dismissLoadingDialog();
 						}
 					}
@@ -593,17 +593,17 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 							missedCallDialog.dismiss();
 						}
 						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 					}
 				});
 			} else{
-				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 			}
 	}
 
 	private void apiGenerateLoginOtp(final Activity activity, final String phoneNumber){
 		if(MyApplication.getInstance().isOnline()){
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 			HashMap<String, String> params = new HashMap<>();
 
 			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
@@ -674,11 +674,11 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingEmailOrPhoneNo error=" + error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 		} else{
-			DialogPopup.alertPopup(OTPConfirmScreen.this, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(OTPConfirmScreen.this, "", activity.getString(R.string.connection_lost_desc));
 		}
 	}
 
@@ -687,7 +687,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
         if(!checkIfRegisterDataNull(activity)) {
             if (MyApplication.getInstance().isOnline()) {
 
-                DialogPopup.showLoadingDialog(activity, "Loading...");
+                DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();
 
@@ -760,7 +760,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
 								} else {
-									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 								}
 								DialogPopup.dismissLoadingDialog();
 							} else {
@@ -770,7 +770,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 						} catch (Exception exception) {
 							exception.printStackTrace();
 							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						}
 					}
 
@@ -778,12 +778,12 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "verifyOtp error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 					}
 				});
 
             } else {
-                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
             }
         }
 	}
@@ -793,7 +793,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		if(!checkIfRegisterDataNull(activity)) {
 			if (MyApplication.getInstance().isOnline()) {
 
-				DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 				HashMap<String, String> params = new HashMap<>();
 
@@ -865,7 +865,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 									String error = jObj.getString("error");
 									DialogPopup.alertPopup(activity, "", error);
 								} else {
-									DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+									DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 								}
 								DialogPopup.dismissLoadingDialog();
 							} else {
@@ -875,7 +875,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 						} catch (Exception exception) {
 							exception.printStackTrace();
 							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						}
 					}
 
@@ -883,11 +883,11 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "verifyOtp errror="+error.toString());
 						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 					}
 				});
 			} else {
-				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 			}
 		}
 	}
@@ -899,7 +899,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 	public void initiateOTPCallAsync(final Activity activity, String phoneNo) {
 		if (MyApplication.getInstance().isOnline()) {
 
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -919,7 +919,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 						if (!jObj.isNull("error")) {
 							String errorMessage = jObj.getString("error");
 							int flag = jObj.getInt("flag");
-							if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
+							if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
 								HomeActivity.logoutUser(activity);
 							} else if (ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag) {
 								DialogPopup.alertPopup(activity, "", errorMessage);
@@ -937,7 +937,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 						}
 					} catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						DialogPopup.dismissLoadingDialog();
 					}
 				}
@@ -946,12 +946,12 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "sendOtpViaCall error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
@@ -1045,7 +1045,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 	public void generateOTP(final String accessToken, final int linkedWallet) {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
-				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, "Loading...");
+				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(KEY_ACCESS_TOKEN, accessToken);
 				params.put(KEY_CLIENT_ID, Config.getAutosClientId());
@@ -1070,7 +1070,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
-							DialogPopup.alertPopup(OTPConfirmScreen.this, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(OTPConfirmScreen.this, "", getString(R.string.connection_lost_please_try_again));
 						}
 					}
 
@@ -1078,7 +1078,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 					public void failure(RetrofitError error) {
 						Log.e(TAG, linkedWallet+"walletRequestOtp error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(OTPConfirmScreen.this, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(OTPConfirmScreen.this, "", getString(R.string.connection_lost_please_try_again));
 					}
 				};
 
@@ -1093,7 +1093,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 					RestClient.getApiService().freeChargeRequestOtp(params, callback);
 				}
 			} else{
-				DialogPopup.dialogNoInternet(OTPConfirmScreen.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+				DialogPopup.dialogNoInternet(OTPConfirmScreen.this, getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc),
 						new Utils.AlertCallBackWithButtonsInterface() {
 							@Override
 							public void positiveClick(View view) {
@@ -1119,7 +1119,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 	private void sendOTP(final String otp) {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
-				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, "Loading...");
+				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -1138,7 +1138,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "loginWithOtp error=" + error.toString());
 						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(OTPConfirmScreen.this, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(OTPConfirmScreen.this, "", getString(R.string.connection_lost_please_try_again));
 					}
 				};
 				new HomeUtil().putDefaultParams(params);
@@ -1150,7 +1150,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 					RestClient.getApiService().freeChargeLoginWithOtp(params, callback);
 				}
 			} else{
-				DialogPopup.dialogNoInternet(OTPConfirmScreen.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+				DialogPopup.dialogNoInternet(OTPConfirmScreen.this, getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc),
 						new Utils.AlertCallBackWithButtonsInterface() {
 							@Override
 							public void positiveClick(View view) {
@@ -1181,7 +1181,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		if (MyApplication.getInstance().isOnline()) {
 			//resetFlags();
 			if(showDialog){
-				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, "Loading...");
+				DialogPopup.showLoadingDialog(OTPConfirmScreen.this, getString(R.string.loading));
 			}
 			//DialogPopup.showLoadingDialog(activity, "Trying to verify through missed call...");
 
@@ -1256,11 +1256,11 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									goToLoginOrOnboarding(jObj, responseStr, loginResponse, LoginVia.EMAIL);
-									DialogPopup.showLoadingDialog(activity, "Loading...");
+									DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 									DialogPopup.dismissLoadingDialog();
 								}
 							} else {
-//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 								showErrorOnMissedCallBack();
 							}
 							DialogPopup.dismissLoadingDialog();
@@ -1270,7 +1270,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 					} catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						DialogPopup.dismissLoadingDialog();
 					}
 				}
@@ -1279,20 +1279,20 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingEmailOrPhoneNo error=" + error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
 
 	public void sendFacebookLoginValues(final Activity activity) {
 		if (MyApplication.getInstance().isOnline()) {
-			//DialogPopup.showLoadingDialog(activity, "Loading...");
+			//DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -1363,11 +1363,11 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									goToLoginOrOnboarding(jObj, responseStr, loginResponse, LoginVia.FACEBOOK);
 
-									DialogPopup.showLoadingDialog(activity, "Loading...");
+									DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 									DialogPopup.dismissLoadingDialog();
 								}
 							} else {
-//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 								showErrorOnMissedCallBack();
 							}
 							DialogPopup.dismissLoadingDialog();
@@ -1377,7 +1377,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 					} catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						DialogPopup.dismissLoadingDialog();
 					}
 				}
@@ -1386,20 +1386,20 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingFacebook error=" + error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
 
 	public void sendGoogleLoginValues(final Activity activity) {
 		if (MyApplication.getInstance().isOnline()) {
-			//DialogPopup.showLoadingDialog(activity, "Loading...");
+			//DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -1469,12 +1469,12 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
 									goToLoginOrOnboarding(jObj, responseStr, loginResponse, LoginVia.GOOGLE);
 
-									DialogPopup.showLoadingDialog(activity, "Loading...");
+									DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 									DialogPopup.dismissLoadingDialog();
 								}
 							}
 							else{
-//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 								showErrorOnMissedCallBack();
 							}
 							DialogPopup.dismissLoadingDialog();
@@ -1485,7 +1485,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 					}  catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						DialogPopup.dismissLoadingDialog();
 					}
 				}
@@ -1494,13 +1494,13 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingGoogle error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
@@ -1528,7 +1528,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			}
 		} else {
 			editTextOTP.requestFocus();
-			editTextOTP.setError("OTP can't be empty");
+			editTextOTP.setError(getString(R.string.otp_cant_be_empty));
 		}
 	}
 

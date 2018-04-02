@@ -2,11 +2,9 @@ package com.sabkuchfresh.home;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.graphics.Typeface;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,7 +44,7 @@ public class OrderCheckoutFailureDialog {
 			dialog.setCanceledOnTouchOutside(true);
 
 			if(titleStr == null || titleStr.equalsIgnoreCase("")){
-				titleStr = "Your payment via Jugnoo Pay was unsuccessful. In case, any money was debited from your bank account, it will be auto-credited in some time.";
+				titleStr = activity.getString(R.string.pay_unsuccessful_message);
 			}
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);

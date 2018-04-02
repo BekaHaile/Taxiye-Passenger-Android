@@ -320,7 +320,7 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
      */
     private boolean setFeedObjectAndRefresh(FeedDetailResponse feedbackResponse) {
         if (feedbackResponse.getPostDetails() == null) {
-            DialogPopup.alertPopupWithListener(activity, "", "We could not find this post right now", "Back",
+            DialogPopup.alertPopupWithListener(activity, "", activity.getString(R.string.we_could_not_find_this_post), activity.getString(R.string.back),
                     new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {

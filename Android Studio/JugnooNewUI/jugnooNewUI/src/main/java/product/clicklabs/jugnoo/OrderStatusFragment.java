@@ -439,7 +439,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         try {
             if (MyApplication.getInstance().isOnline()) {
 
-                DialogPopup.showLoadingDialog(activity, "Loading...");
+                DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -519,7 +519,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         if(!TextUtils.isEmpty(datum.getDeliveryTime())){
             tv3r.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum.getDeliveryTime())));
         } else {
-            tv3r.setText("ASAP");
+            tv3r.setText(R.string.asap);
         }
 
         SearchResult searchResultFrom = homeUtil.getNearBySavedAddress(activity,
@@ -706,11 +706,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
     private void setFragTitle() {
         if (activity instanceof RideTransactionsActivity) {
-            ((RideTransactionsActivity) activity).setTitle("Order #" + orderId);
+            ((RideTransactionsActivity) activity).setTitle(getString(R.string.order_hash_format, String.valueOf(orderId)));
         } else if (activity instanceof SupportActivity) {
-            ((SupportActivity) activity).setTitle("Order #" + orderId);
+            ((SupportActivity) activity).setTitle(getString(R.string.order_hash_format, String.valueOf(orderId)));
         } else if (activity instanceof FreshActivity) {
-            ((FreshActivity) activity).getTopBar().title.setText("Order #" + orderId);
+            ((FreshActivity) activity).getTopBar().title.setText(getString(R.string.order_hash_format, String.valueOf(orderId)));
         }
     }
 
@@ -721,7 +721,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         try {
             if (MyApplication.getInstance().isOnline()) {
 
-                DialogPopup.showLoadingDialog(activity, "Loading...");
+                DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -1245,7 +1245,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                     .commitAllowingStateLoss();
                         }
                     } else {
-                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Are you sure you want to cancel this order?", getResources().getString(R.string.ok),
+                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", getString(R.string.are_you_sure_cancel_order), getResources().getString(R.string.ok),
                                 getResources().getString(R.string.cancel), new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -1348,7 +1348,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
     public void saveHistoryCardToSP(HistoryResponse.Datum orderHistory) {
         try {
-            DialogPopup.showLoadingDialog(activity, "Please wait...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.please_wait));
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -1410,7 +1410,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                             datum1.setCancellable(0);
 
                             Intent intent = new Intent(Data.LOCAL_BROADCAST);
-                            intent.putExtra("message", "Order cancelled, refresh inventory");
+                            intent.putExtra("message", getString(R.string.order_cancelled_refresh_inventory));
                             intent.putExtra("open_type", 10);
                             LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
 

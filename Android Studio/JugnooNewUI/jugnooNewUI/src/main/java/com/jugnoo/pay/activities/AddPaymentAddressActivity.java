@@ -140,7 +140,7 @@ public class AddPaymentAddressActivity extends BaseActivity {
     public void apiAddPaymentAddress() {
         try {
             if (MyApplication.getInstance().isOnline()) {
-                CallProgressWheel.showLoadingDialog(this, "Loading...");
+                CallProgressWheel.showLoadingDialog(this, getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_USER_NAME, etName.getText().toString());

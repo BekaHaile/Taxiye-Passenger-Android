@@ -52,7 +52,6 @@ public class Data {
     public static boolean linkFoundOnce = false;
 
 
-    public static final String INVALID_ACCESS_TOKEN = "invalid access token";
     public static final String NO_PROMO_APPLIED = "No Promo Code applied";
 
     public static final String SHARED_PREF_NAME = "myPref";
@@ -73,10 +72,6 @@ public class Data {
     public static Activity context = null;
 
 
-    public static final String SERVER_ERROR_MSG = "Connection lost. Please try again later.";
-    public static final String SERVER_NOT_RESOPNDING_MSG = "Connection lost. Please try again later.";
-    public static final String CHECK_INTERNET_TITLE = "CONNECTION LOST";
-    public static final String CHECK_INTERNET_MSG = "Oops! Your Internet is not working.\nPlease try again.";
 
 
     public static double latitude = 0, longitude = 0;

@@ -161,7 +161,7 @@ public class AppSwitcher {
 					ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
 						@Override
 						public void noNet() {
-							DialogPopup.alertPopup(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
+							DialogPopup.alertPopup(activity, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc));
 						}
 
 						@Override
@@ -198,7 +198,7 @@ public class AppSwitcher {
 									true, new ApiLoginUsingAccessToken.Callback() {
 										@Override
 										public void noNet() {
-											DialogPopup.alertPopup(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
+											DialogPopup.alertPopup(activity, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc));
 										}
 
 										@Override
@@ -307,7 +307,7 @@ public class AppSwitcher {
 								true, new ApiLoginUsingAccessToken.Callback() {
 									@Override
 									public void noNet() {
-										DialogPopup.alertPopup(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
+										DialogPopup.alertPopup(activity, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc));
 									}
 
 									@Override

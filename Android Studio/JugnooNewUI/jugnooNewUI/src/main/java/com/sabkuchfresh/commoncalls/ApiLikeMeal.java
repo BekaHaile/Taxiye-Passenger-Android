@@ -5,18 +5,15 @@ package com.sabkuchfresh.commoncalls;
  */
 
 import android.app.Activity;
-import android.text.TextUtils;
 
 import com.sabkuchfresh.retrofit.model.SubItem;
-import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
-
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
@@ -80,7 +77,7 @@ public class ApiLikeMeal {
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             likeMealCallback.onFailure(isLikeAPI, position, subItem);
-                            Utils.showToast(activity, "Unable to connect");
+                            Utils.showToast(activity, activity.getString(R.string.unable_to_connect));
 
                         }
                     }
@@ -89,7 +86,7 @@ public class ApiLikeMeal {
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
                         likeMealCallback.onFailure(isLikeAPI, position, subItem);
-                        Utils.showToast(activity, "Network Error");
+                        Utils.showToast(activity, activity.getString(R.string.network_error));
 
 
                     }
@@ -98,7 +95,7 @@ public class ApiLikeMeal {
                 RestClient.getFreshApiService().markMealAsFavourite(params,callBack);
 
             } else {
-                Utils.showToast(activity, "Connection Error");
+                Utils.showToast(activity, activity.getString(R.string.connection_error));
                 likeMealCallback.onFailure(isLikeAPI, position, subItem);
 
             }

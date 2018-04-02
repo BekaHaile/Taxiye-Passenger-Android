@@ -82,10 +82,10 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
 
 
         if (helpSection != null) {
-            textViewTitle.setText(helpSection.getName().toUpperCase());
+            textViewTitle.setText(getString(helpSection.getName()));
             if(helpSection.getOrdinal() == HelpSection.FAQ.getOrdinal()){
                 textViewTitle.setAllCaps(false);
-                textViewTitle.setText("FAQs");
+                textViewTitle.setText(R.string.faqs);
             }
         }
 
@@ -312,11 +312,11 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
                                     String data = jObj.getString("data");
                                     openHelpData(data, false);
                                 } else {
-                                    openHelpData("Some error occured. Tap to retry.", true);
+                                    openHelpData(getString(R.string.some_error_occured_try_again), true);
                                 }
                             } catch (Exception exception) {
                                 exception.printStackTrace();
-                                openHelpData("Some error occured. Tap to retry.", true);
+                                openHelpData(getString(R.string.some_error_occured_try_again), true);
                             }
                         }
 
@@ -327,7 +327,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
                                 apiCalling = false;
                                 imageViewJugnooAnimation.setVisibility(View.GONE);
                                 //jugnooAnimation.stop();
-                                openHelpData("Some error occured. Tap to retry.", true);
+                                openHelpData(getString(R.string.some_error_occured_try_again), true);
                                 //                                DialogPopup.dismissLoadingDialog();
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -337,7 +337,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
                 }
             } else {
                 DialogPopup.dialogNoInternet(HelpParticularActivity.this,
-                        Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                        activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
                         new Utils.AlertCallBackWithButtonsInterface() {
                             @Override
                             public void positiveClick(View v) {

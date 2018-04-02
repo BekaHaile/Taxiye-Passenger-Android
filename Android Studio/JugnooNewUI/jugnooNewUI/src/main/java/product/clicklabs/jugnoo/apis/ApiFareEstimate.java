@@ -15,6 +15,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
@@ -50,7 +51,7 @@ public class ApiFareEstimate {
         try {
             if (MyApplication.getInstance().isOnline()) {
                 if (sourceLatLng != null && destLatLng != null) {
-                    DialogPopup.showLoadingDialog(context, "Loading...");
+                    DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
                     RestClient.getGoogleApiService().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
                             destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false, new retrofit.Callback<SettleUserDebt>() {
                                 @Override
@@ -78,14 +79,14 @@ public class ApiFareEstimate {
                                             }
                                         } else {
                                             DialogPopup.dismissLoadingDialog();
-                                            retryDialogDirections("Fare could not be estimated between the selected pickup and drop location", sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon);
+                                            retryDialogDirections(context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon);
                                             callback.onDirectionsFailure();
                                         }
 
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                         DialogPopup.dismissLoadingDialog();
-                                        retryDialogDirections(Data.SERVER_ERROR_MSG, sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon);
+                                        retryDialogDirections(context.getString(R.string.connection_lost_please_try_again), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon);
                                         callback.onDirectionsFailure();
                                     }
                                 }
@@ -93,7 +94,7 @@ public class ApiFareEstimate {
                                 @Override
                                 public void failure(RetrofitError error) {
                                     DialogPopup.dismissLoadingDialog();
-                                    retryDialogDirections(Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon);
+                                    retryDialogDirections(context.getString(R.string.connection_lost_please_try_again), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon);
                                     callback.onDirectionsFailure();
                                 }
                             });
@@ -101,7 +102,7 @@ public class ApiFareEstimate {
                     callback.onDirectionsFailure();
                 }
             } else {
-                retryDialogDirections(Data.CHECK_INTERNET_MSG, sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon);
+                retryDialogDirections(context.getString(R.string.connection_lost_desc), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon);
                 callback.onDirectionsFailure();
             }
         } catch (Exception e) {
@@ -182,7 +183,7 @@ public class ApiFareEstimate {
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            retryDialog(activity, Data.SERVER_ERROR_MSG, sourceLatLng, desLatLng, distanceValue, timeValue, isPooled, region, promoCoupon);
+                            retryDialog(activity, activity.getString(R.string.connection_lost_please_try_again), sourceLatLng, desLatLng, distanceValue, timeValue, isPooled, region, promoCoupon);
                             callback.onFareEstimateFailure();
                         }
 
@@ -192,13 +193,13 @@ public class ApiFareEstimate {
                     public void failure(RetrofitError error) {
                         Log.e("response", "getFareEstimate error="+error.toString());
                         DialogPopup.dismissLoadingDialog();
-                        retryDialog(activity, Data.SERVER_NOT_RESOPNDING_MSG, sourceLatLng, desLatLng, distanceValue, timeValue, isPooled, region, promoCoupon);
+                        retryDialog(activity, activity.getString(R.string.connection_lost_please_try_again), sourceLatLng, desLatLng, distanceValue, timeValue, isPooled, region, promoCoupon);
                         callback.onFareEstimateFailure();
                     }
                 });
 
             } else {
-                retryDialog(activity, Data.CHECK_INTERNET_MSG, sourceLatLng, desLatLng, distanceValue, timeValue, isPooled, region, promoCoupon);
+                retryDialog(activity, activity.getString(R.string.connection_lost_desc), sourceLatLng, desLatLng, distanceValue, timeValue, isPooled, region, promoCoupon);
                 DialogPopup.dismissLoadingDialog();
                 callback.onFareEstimateFailure();
             }
@@ -209,7 +210,7 @@ public class ApiFareEstimate {
     }
 
     private void retryDialog(final Activity activity, final String message, final LatLng sourceLatLng, final LatLng destLatLng, final double distanceValue, final double timeValue, final int isPooled, final Region region, final PromoCoupon promoCoupon){
-        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message, "Retry", "Cancel",
+        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message, activity.getString(R.string.retry), activity.getString(R.string.cancel),
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -227,7 +228,7 @@ public class ApiFareEstimate {
 
 
     private void retryDialogDirections(String message, final LatLng sourceLatLng, final LatLng destLatLng, final int isPooled, final boolean callFareEstimate, final Region region,final PromoCoupon promoCoupon){
-        DialogPopup.alertPopupTwoButtonsWithListeners((Activity) context, "", message, "Retry", "Cancel",
+        DialogPopup.alertPopupTwoButtonsWithListeners((Activity) context, "", message, context.getString(R.string.retry), context.getString(R.string.cancel),
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

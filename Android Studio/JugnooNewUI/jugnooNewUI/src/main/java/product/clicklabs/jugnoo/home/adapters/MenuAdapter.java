@@ -550,7 +550,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 } else {
                     DialogPopup.dialogNoInternet(activity,
-                            Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                            activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
                             new Utils.AlertCallBackWithButtonsInterface() {
                                 @Override
                                 public void positiveClick(View v) {

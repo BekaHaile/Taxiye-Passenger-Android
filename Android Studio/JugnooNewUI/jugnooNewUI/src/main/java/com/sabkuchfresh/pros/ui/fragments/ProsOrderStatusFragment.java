@@ -237,7 +237,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 				break;
 
 			case R.id.bCancelOrder:
-				DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Are you sure you want to cancel this booking?",
+				DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", getString(R.string.are_you_sure_cancel_booking),
 						getResources().getString(R.string.ok),
 						getResources().getString(R.string.cancel),
 						new View.OnClickListener() {
@@ -308,7 +308,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 					tvAmountValue.setText(R.string.to_be_confirmed);
 				}
 			}
-			tv1r.setText(ProsCatalogueAdapter.getProsOrderState(datum.getJobStatus()).second);
+			tv1r.setText(ProsCatalogueAdapter.getProsOrderState(activity, datum.getJobStatus()).second);
 			tv1r.setTextColor(ContextCompat.getColor(activity, datum.getJobStatusColorRes()));
 
 			tv3r.setText(DateOperations.convertDateTimeUSToInd(datum.getJobPickupDatetime().replace("\\", "")));
@@ -336,7 +336,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 	public void cancelOrderApi(final Activity activity) {
 		try {
 			if (getInstance().isOnline()) {
-				DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_JOB_ID, String.valueOf(jobId));
@@ -360,7 +360,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 											Data.isOrderCancelled = true;
 
 											Intent intent = new Intent(Data.LOCAL_BROADCAST);
-											intent.putExtra("message", "Order cancelled, refresh inventory");
+											intent.putExtra("message", getString(R.string.order_cancelled_refresh_inventory));
 											intent.putExtra("open_type", 10);
 											LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
 
@@ -446,7 +446,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 		try {
 			if (MyApplication.getInstance().isOnline()) {
 
-				DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -507,7 +507,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 		if(!TextUtils.isEmpty(datum.getDeliveryTime())){
 			tv3r.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum.getDeliveryTime())));
 		} else {
-			tv3r.setText("ASAP");
+			tv3r.setText(getString(R.string.asap));
 		}
 
 		SearchResult searchResultFrom = homeUtil.getNearBySavedAddress(activity,

@@ -622,7 +622,7 @@ public class Utils implements GAAction, GACategory{
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setAutoCancel(true);
-            builder.setContentTitle("Autos");
+            builder.setContentTitle(context.getString(R.string.app_name));
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
             builder.setTicker(message);
@@ -1026,7 +1026,7 @@ public class Utils implements GAAction, GACategory{
 			context.startActivity(intent);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Utils.showToast(context, "Could not open directions");
+			Utils.showToast(context, context.getString(R.string.could_not_open_directions));
 		}
 	}
 
@@ -1037,7 +1037,7 @@ public class Utils implements GAAction, GACategory{
 			context.startActivity(intent);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Utils.showToast(context, "Could not open directions");
+			Utils.showToast(context, context.getString(R.string.could_not_open_directions));
 		}
 	}
 }

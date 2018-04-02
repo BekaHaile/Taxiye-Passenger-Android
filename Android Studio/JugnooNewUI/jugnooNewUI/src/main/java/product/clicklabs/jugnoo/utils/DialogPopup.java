@@ -36,8 +36,8 @@ public class DialogPopup {
 	private static boolean ifOtherDialog(Activity activity, String message,
 										 final View.OnClickListener positiveListener,
 										 final View.OnClickListener negativeListener, boolean cancellable){
-		if(message.contains(Data.CHECK_INTERNET_MSG)){
-			dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+		if(message.contains(activity.getString(R.string.connection_lost_desc))){
+			dialogNoInternet(activity, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
 					new Utils.AlertCallBackWithButtonsInterface() {
 						@Override
 						public void positiveClick(View v) {
@@ -60,8 +60,8 @@ public class DialogPopup {
 					}, cancellable, true);
 			return false;
 		}
-		else if(message.contains(Data.SERVER_NOT_RESOPNDING_MSG)){
-			dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+		else if(message.contains(activity.getString(R.string.connection_lost_please_try_again))){
+			dialogNoInternet(activity, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
 					new Utils.AlertCallBackWithButtonsInterface() {
 						@Override
 						public void positiveClick(View v) {
@@ -84,8 +84,8 @@ public class DialogPopup {
 					}, cancellable, true);
 			return false;
 		}
-		else if(message.contains(Data.SERVER_ERROR_MSG)){
-			dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+		else if(message.contains(activity.getString(R.string.connection_lost_please_try_again))){
+			dialogNoInternet(activity, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
 					new Utils.AlertCallBackWithButtonsInterface() {
 						@Override
 						public void positiveClick(View v) {
@@ -891,14 +891,14 @@ public class DialogPopup {
 				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
 		   	 
 		        // Setting Dialog Title
-		        alertDialogPrepare.setTitle("Google Play Services Error");
+		        alertDialogPrepare.setTitle(R.string.google_play_services_error);
 		        alertDialogPrepare.setCancelable(false);
 		 
 		        // Setting Dialog Message
-		        alertDialogPrepare.setMessage("Google Play services not found or outdated. Please install Google Play Services?");
+		        alertDialogPrepare.setMessage(R.string.google_play_services_outdated_please_update);
 		 
 		        // On pressing Settings button
-		        alertDialogPrepare.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		        alertDialogPrepare.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 		            public void onClick(DialogInterface dialog,int which) {
 		            	dialog.dismiss();
                         try {
@@ -915,7 +915,7 @@ public class DialogPopup {
 		        });
 		 
 		        // on pressing cancel button
-		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		        alertDialogPrepare.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 		            public void onClick(DialogInterface dialog, int which) {
 		            	dialog.dismiss();
 		            	mContext.finish();
@@ -957,14 +957,14 @@ public class DialogPopup {
 				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
 		   	 
 		        // Setting Dialog Title
-		        alertDialogPrepare.setTitle("Location Settings");
+		        alertDialogPrepare.setTitle(R.string.location_settings);
 		        alertDialogPrepare.setCancelable(false);
 		 
 		        // Setting Dialog Message
-		        alertDialogPrepare.setMessage("Location is not enabled. Do you want to enable it from settings menu?");
+		        alertDialogPrepare.setMessage(R.string.location_not_enabled_enable_from_settings);
 		 
 		        // On pressing Settings button
-		        alertDialogPrepare.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+		        alertDialogPrepare.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
 		            public void onClick(DialogInterface dialog,int which) {
 		            	Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 		            	mContext.startActivity(intent);
@@ -993,14 +993,14 @@ public class DialogPopup {
                 AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
 
                 // Setting Dialog Title
-                alertDialogPrepare.setTitle("Location Settings");
+                alertDialogPrepare.setTitle(R.string.location_settings);
                 alertDialogPrepare.setCancelable(false);
 
                 // Setting Dialog Message
-                alertDialogPrepare.setMessage("GPS Location is not enabled. Do you want to enable it from settings menu?");
+                alertDialogPrepare.setMessage(R.string.gps_not_enabled_enable_from_settings);
 
                 // On pressing Settings button
-                alertDialogPrepare.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                alertDialogPrepare.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int which) {
                         Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         mContext.startActivity(intent);

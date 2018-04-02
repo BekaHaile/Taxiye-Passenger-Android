@@ -141,7 +141,7 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
         tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
-        slidingBottomFragmentAdapter = new SlidingBottomFragmentAdapter(activity.getSupportFragmentManager());
+        slidingBottomFragmentAdapter = new SlidingBottomFragmentAdapter(activity, activity.getSupportFragmentManager());
         viewPager.setAdapter(slidingBottomFragmentAdapter);
         tabs.setViewPager(viewPager);
 

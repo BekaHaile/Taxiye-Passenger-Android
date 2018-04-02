@@ -338,7 +338,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             @Override
             public void onClick(View v) {
                 Log.v("phone click", "phone click");
-                PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(editTextPhone.getText().toString().trim()), "IND");
+                PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(editTextPhone.getText().toString().trim()), getString(R.string.country_iso));
                 //startFbAccountKit(phoneNumber);
                 fbAccountKit.startFbAccountKit(phoneNumber);
             }
@@ -949,7 +949,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                      final boolean phoneUpdated) {
 		if(MyApplication.getInstance().isOnline()) {
 
-			DialogPopup.showLoadingDialog(activity, "Updating...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.updating));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -1009,12 +1009,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 //                                    reloadProfileAPI(activity);
                                 }
                             } else {
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                             }
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         DialogPopup.dismissLoadingDialog();
                     }
                 }
@@ -1023,12 +1023,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "updateUserProfile error="+error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
@@ -1093,7 +1093,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 	public void sendEmailVerifyLink(final Activity activity) {
 		if(MyApplication.getInstance().isOnline()) {
 
-			DialogPopup.showLoadingDialog(activity, "Updating...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.updating));
 
 			HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -1118,12 +1118,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 String message = jObj.getString("message");
                                 DialogPopup.dialogBanner(activity, message);
                             } else {
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                             }
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         DialogPopup.dismissLoadingDialog();
                     }
                 }
@@ -1132,12 +1132,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "sendVerifyEmailLink error="+error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 	}
 
@@ -1145,7 +1145,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 	void logoutAsync(final Activity activity) {
 		if (MyApplication.getInstance().isOnline()) {
 
-			DialogPopup.showLoadingDialog(activity, "Please Wait ...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.please_wait));
 
 			HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -1172,12 +1172,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                             } else if (ApiResponseFlags.AUTH_LOGOUT_SUCCESSFUL.getOrdinal() == flag) {
                                 new HomeUtil().logoutFunc(activity, null);
                             } else {
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                             }
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                     DialogPopup.dismissLoadingDialog();
                 }
@@ -1186,12 +1186,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "logoutUser error=" + error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 	}
 
@@ -1247,16 +1247,16 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 final String toastMessage;
                 final AccountKitLoginResult loginResult = AccountKit.loginResultWithIntent(data);
                 if (loginResult == null || loginResult.wasCancelled()) {
-                    toastMessage = "Login Cancelled";
+                    toastMessage = getString(R.string.login_cancelled);
                 } else if (loginResult.getError() != null) {
                     toastMessage = loginResult.getError().getErrorType().getMessage();
                 } else {
                     String authorizationCode = loginResult.getAuthorizationCode();
                     if (authorizationCode != null) {
-                        toastMessage = "Success:" + authorizationCode;
+                        toastMessage = getString(R.string.successful) + ":" + authorizationCode;
                         apiChangeContactNumberUsingFB(AccountActivity.this, loginResult.getAuthorizationCode());
                     } else {
-                        toastMessage = "Unknown response type";
+                        toastMessage = getString(R.string.unknown_response_type);
                     }
                 }
                 //Toast.makeText(this,toastMessage,Toast.LENGTH_LONG).show();
@@ -1270,7 +1270,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     public void updateUserProfileChangePasswordAPI(final Activity activity, final String oldPassword, final String newPassword) {
         if(MyApplication.getInstance().isOnline()) {
 
-            DialogPopup.showLoadingDialog(activity, "Updating...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.updating));
 
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -1300,12 +1300,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 String message = jObj.getString(Constants.KEY_MESSAGE);
                                 new HomeUtil().logoutFunc(activity, null);
                             } else {
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                             }
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         DialogPopup.dismissLoadingDialog();
                     }
                 }
@@ -1314,12 +1314,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "updateUserProfile error=" + error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
         }
         else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
 
     }
@@ -1515,7 +1515,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     public void apiChangeContactNumberUsingFB(final Activity activity, final String fbAccessToken) {
         if(MyApplication.getInstance().isOnline()) {
 
-            DialogPopup.showLoadingDialog(activity, "Updating...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.updating));
 
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -1544,12 +1544,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
                                 DialogPopup.alertPopup(activity, "", message);
                             } else {
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                             }
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         DialogPopup.dismissLoadingDialog();
                     }
                 }
@@ -1558,12 +1558,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "change phone number with fb error=" + error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
         }
         else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
 
     }

@@ -377,7 +377,7 @@ public class JugnooStarSubscribedActivity extends RazorpayBaseActivity implement
     private void apiFetchTotalSavings() {
         try {
             if (MyApplication.getInstance().isOnline()) {
-                DialogPopup.showLoadingDialog(JugnooStarSubscribedActivity.this, "Loading...");
+                DialogPopup.showLoadingDialog(JugnooStarSubscribedActivity.this, getString(R.string.loading));
                 llSavingsValue.removeAllViews();
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);

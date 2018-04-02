@@ -13,9 +13,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
-import com.sabkuchfresh.datastructure.PopupData;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
-import com.sabkuchfresh.retrofit.model.Store;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,7 +86,7 @@ public class JSONParser implements Constants {
     }
 
     public static String getServerMessage(JSONObject jObj) {
-        String message = Data.SERVER_ERROR_MSG;
+        String message = MyApplication.getInstance().getString(R.string.connection_lost_please_try_again);
         try {
             if (jObj.has("message")) {
                 message = jObj.getString("message");
@@ -1048,7 +1046,7 @@ public class JSONParser implements Constants {
                                 freeRide = jObject.getInt("free_ride");
                             }
 
-                            promoName = getPromoName(jObject);
+                            promoName = getPromoName(context, jObject);
 
                             if (jObject.has("eta")) {
                                 eta = jObject.getString("eta");
@@ -1183,8 +1181,8 @@ public class JSONParser implements Constants {
     }
 
 
-    public static String getPromoName(JSONObject jObject) {
-        String promoName = Data.NO_PROMO_APPLIED;
+    public static String getPromoName(Context context, JSONObject jObject) {
+        String promoName = context.getString(R.string.no_promo_code_applied);
         try {
             String coupon = "", promotion = "";
             try {
@@ -1208,7 +1206,7 @@ public class JSONParser implements Constants {
             } else if (!"".equalsIgnoreCase(promotion)) {
                 promoName = promotion;
             } else {
-                promoName = Data.NO_PROMO_APPLIED;
+                promoName = context.getString(R.string.no_promo_code_applied);
             }
         } catch (Exception e) {
             e.printStackTrace();
