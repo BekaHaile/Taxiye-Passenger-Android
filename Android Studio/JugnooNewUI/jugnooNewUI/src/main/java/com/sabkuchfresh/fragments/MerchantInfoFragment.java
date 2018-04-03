@@ -200,6 +200,10 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         activity.fragmentUISetup(this);
         activity.appBarLayout.setExpanded(true);
         activity.fragmentUISetup(this);
+
+        // hide the delivery icon text
+        activity.tvCollapRestaurantDeliveryTime.setVisibility(View.GONE);
+
         rvTopReviews.setLayoutManager(new LinearLayoutManager(activity));
         reviewsAdapter = new RestaurantReviewsAdapter(activity, new RestaurantReviewsAdapter.Callback() {
             @Override

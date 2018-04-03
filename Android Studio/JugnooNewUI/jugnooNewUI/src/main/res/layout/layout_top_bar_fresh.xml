@@ -157,7 +157,6 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:theme="@style/GreyHighlight"
-                    android:background="?attr/selectableItemBackground"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_34"/>
 
