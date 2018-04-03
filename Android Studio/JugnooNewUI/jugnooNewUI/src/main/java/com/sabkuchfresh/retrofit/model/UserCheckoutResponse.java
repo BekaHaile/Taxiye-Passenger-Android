@@ -2,6 +2,7 @@ package com.sabkuchfresh.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.datastructure.ApplicablePaymentMode;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
 import com.sabkuchfresh.retrofit.model.menus.Tax;
 
@@ -41,6 +42,9 @@ public class UserCheckoutResponse{
 	@SerializedName("payment_info")
 	@Expose
 	private PaymentInfo paymentInfo;
+	@SerializedName("vendor_info")
+	@Expose
+	private VendorInfo vendorInfo;
 	@SerializedName("delivery_info")
 	@Expose
 	private DeliveryInfo deliveryInfo;
@@ -88,6 +92,11 @@ public class UserCheckoutResponse{
 	private String  mealsDiscountEnabled;
 	@SerializedName("text_early_bird_discount_disabled")
 	private String mealsDiscountDisabled;
+
+	public VendorInfo getVendorInfo() {
+		return vendorInfo;
+	}
+
 	/**
 	 *
 	 * @return
@@ -300,6 +309,19 @@ public class UserCheckoutResponse{
 
 		public Integer getApplicablePaymentMode() {
 			return applicablePaymentMode;
+		}
+	}
+
+	public class VendorInfo{
+		@SerializedName("applicable_payment_mode")
+		@Expose
+		private Integer applicablePaymentMode;
+
+		public int getApplicablePaymentMode() {
+			if(applicablePaymentMode!=null){
+				return applicablePaymentMode;
+			}
+			return ApplicablePaymentMode.BOTH.getOrdinal();
 		}
 	}
 

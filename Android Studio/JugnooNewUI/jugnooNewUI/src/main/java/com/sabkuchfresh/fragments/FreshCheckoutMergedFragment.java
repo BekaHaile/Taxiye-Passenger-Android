@@ -2078,7 +2078,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         try {
             if (isMenusOrDeliveryOpen()) {
                 setPaymentOptionVisibility(activity.getVendorOpened().getApplicablePaymentMode());
-            } else if (type == AppConstant.ApplicationType.FRESH) {
+            } else {
                 setPaymentOptionVisibility(getPaymentInfoMode());
             }
         } catch (Exception e) {
@@ -2087,8 +2087,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
     private int getPaymentInfoMode() {
-        if (activity.getUserCheckoutResponse() != null && activity.getUserCheckoutResponse().getPaymentInfo().getApplicablePaymentMode() != null) {
+
+        if (type == AppConstant.ApplicationType.FRESH && activity.getUserCheckoutResponse() != null
+                && activity.getUserCheckoutResponse().getPaymentInfo().getApplicablePaymentMode() != null) {
             return activity.getUserCheckoutResponse().getPaymentInfo().getApplicablePaymentMode().intValue();
+        } else if (type == AppConstant.ApplicationType.MEALS && activity.getUserCheckoutResponse() != null
+                && activity.getUserCheckoutResponse().getVendorInfo().getApplicablePaymentMode()!= -1){
+            return activity.getUserCheckoutResponse().getVendorInfo().getApplicablePaymentMode();
         } else {
             return ApplicablePaymentMode.BOTH.getOrdinal();
         }
