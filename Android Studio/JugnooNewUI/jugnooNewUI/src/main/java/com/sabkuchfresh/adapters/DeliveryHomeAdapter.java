@@ -653,7 +653,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder mholder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder mholder, final int position) {
         if (mholder instanceof DeliveryDisplayCategoriesView) {
 
             DeliveryDisplayCategoriesView deliveryDisplayCategoriesView = (DeliveryDisplayCategoriesView) mholder;
@@ -1011,7 +1011,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if (bannerInfo.getRestaurantId() == -1 && bannerInfo.getDeepIndex() != -1) {
                             callback.onBannerInfoDeepIndexClick(bannerInfo.getDeepIndex());
                         } else if (bannerInfo.getRestaurantId() != -1 && bannerInfo.getDeepIndex() == -1) {
-                            callback.onRestaurantSelected(bannerInfo.getRestaurantId(), true);
+                            callback.onRestaurantSelected(bannerInfo.getRestaurantId(),
+                                    ((MenusResponse.BannerInfo) dataToDisplay.get(position)).getShouldOpenMerchantInfo());
                         }
                     }
                 });
@@ -1304,7 +1305,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if (stripInfo.getRestaurantId() == -1 && stripInfo.getDeepIndex() != -1) {
                             callback.onBannerInfoDeepIndexClick(stripInfo.getDeepIndex());
                         } else if (stripInfo.getRestaurantId() != -1 && stripInfo.getDeepIndex() == -1) {
-                            callback.onRestaurantSelected(stripInfo.getRestaurantId(), true);
+                            callback.onRestaurantSelected(stripInfo.getRestaurantId(),
+                                    ((MenusResponse.StripInfo) dataToDisplay.get(pos)).getShouldOpenMerchantInfo());
                         }
                     }
                     break;

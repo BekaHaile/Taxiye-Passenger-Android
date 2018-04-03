@@ -886,6 +886,14 @@ public class MenusResponse {
 		@Expose
 		private Integer deepIndex;
 
+		@SerializedName("is_open_merchant_info")
+		@Expose
+		private int shouldOpenMerchantInfo;
+
+		public boolean getShouldOpenMerchantInfo() {
+			return shouldOpenMerchantInfo == 1;
+		}
+
 		public String getImageLink() {
 			return imageLink;
 		}
@@ -915,6 +923,14 @@ public class MenusResponse {
 		@SerializedName("deep_index")
 		@Expose
 		private Integer deepIndex;
+
+		@SerializedName("is_open_merchant_info")
+		@Expose
+		private int shouldOpenMerchantInfo;
+
+		public boolean getShouldOpenMerchantInfo() {
+			return shouldOpenMerchantInfo == 1;
+		}
 
 		public Integer getRestaurantId() {
 			if (restaurantId == null) {
