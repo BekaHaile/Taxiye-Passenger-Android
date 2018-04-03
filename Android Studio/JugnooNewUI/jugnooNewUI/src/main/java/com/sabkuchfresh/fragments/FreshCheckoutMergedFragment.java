@@ -1132,7 +1132,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             && activity.getPaymentOption() == PaymentOption.CASH) {
                         activity.setPaymentOption(PaymentOption.PAYTM);
                     }
-                } else if (type == AppConstant.ApplicationType.FRESH) {
+                } else {
                     if (getPaymentInfoMode() == ApplicablePaymentMode.CASH.getOrdinal()) {
                         activity.setPaymentOption(PaymentOption.CASH);
                     } else if (getPaymentInfoMode() == ApplicablePaymentMode.ONLINE.getOrdinal()
@@ -2100,6 +2100,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     }
 
     private void setPaymentOptionVisibility(int applicablePaymentMode) {
+        relativeLayoutCash.setVisibility(View.VISIBLE);
+        relativeLayoutPaytm.setVisibility(View.VISIBLE);
+        relativeLayoutMobikwik.setVisibility(View.VISIBLE);
+        relativeLayoutFreeCharge.setVisibility(View.VISIBLE);
+        relativeLayoutJugnooPay.setVisibility(View.VISIBLE);
+        rlOtherModesToPay.setVisibility(View.VISIBLE);
+        rlUPI.setVisibility(View.VISIBLE);
+        relativeLayoutIcici.setVisibility(View.VISIBLE);
         if (applicablePaymentMode == ApplicablePaymentMode.CASH.getOrdinal()) {
             relativeLayoutPaytm.setVisibility(View.GONE);
             relativeLayoutMobikwik.setVisibility(View.GONE);
@@ -2520,9 +2528,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         updateCouponsDataView();
                                         updateCartDataView();
                                         setPaymentOptionUI();
-                                        if (type == AppConstant.ApplicationType.FRESH) {
-                                            setPaymentOptionVisibility(getPaymentInfoMode());
-                                        }
+                                        setPaymentOptionVisibility(getPaymentInfoMode());
 
                                         try {
                                             if (cartChangedRefreshCheckout) {
