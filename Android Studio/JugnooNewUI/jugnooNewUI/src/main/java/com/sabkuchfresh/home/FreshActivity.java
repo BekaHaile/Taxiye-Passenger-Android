@@ -306,7 +306,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public int lastAppTypeOpen;
     private KeyboardLayoutListener mParentKeyboardLayoutListener;
     private KeyboardLayoutListener.KeyBoardStateHandler mChildKeyboardListener;
-    private boolean menusIsOpenMerchantInfo;
+    private boolean menusIsOpenMerchantInfo = true; // keep default value as true ( to account for deepIndex cases )
     private VendorDirectSearch vendorDirectSearch;
 
 
