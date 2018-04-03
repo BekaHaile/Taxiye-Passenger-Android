@@ -272,10 +272,10 @@
         <item name="android:textSize">
             @dimen/text_size_34
         </item>
-        <item name="android:paddingLeft">
+        <item name="android:paddingStart">
             @dimen/px_40
         </item>
-        <item name="android:paddingRight">
+        <item name="android:paddingEnd">
             @dimen/px_40
         </item>
         <item name="android:textAllCaps">
@@ -303,7 +303,7 @@
         <item name="android:scaleType">
             centerInside
         </item>
-        <item name="android:layout_marginLeft">
+        <item name="android:layout_marginStart">
             10px
         </item>
         <item name="android:background">@drawable/white_selector</item>
@@ -345,7 +345,7 @@
         <item name="android:layout_height">
             73px
         </item>
-        <item name="android:layout_alignRight">
+        <item name="android:layout_alignEnd">
             @+id/linearLayoutInner
         </item>
         <item name="android:layout_alignTop">
@@ -363,13 +363,13 @@
         <item name="android:tag">
             mwar
         </item>
-        <item name="android:paddingLeft">
+        <item name="android:paddingStart">
             10px
         </item>
         <item name="android:paddingBottom">
             10px
         </item>
-        <item name="android:layout_marginRight">
+        <item name="android:layout_marginEnd">
             -20px
         </item>
         <item name="android:layout_marginTop">
@@ -797,10 +797,10 @@
         <item name="android:paddingBottom">
             @dimen/spacing_small
         </item>
-        <item name="android:paddingLeft">
+        <item name="android:paddingStart">
             @dimen/spacing_large
         </item>
-        <item name="android:paddingRight">
+        <item name="android:paddingEnd">
             @dimen/spacing_large
         </item>
         <item name="android:paddingTop">
@@ -915,7 +915,7 @@
         <item name="android:textSize">@dimen/sp_20</item>
         <item name="android:textColor">@color/text_color</item>
         <item name="android:padding">@dimen/dp_10</item>
-        <item name="android:layout_marginLeft">@dimen/dp_2</item>
+        <item name="android:layout_marginStart">@dimen/dp_2</item>
         <item name="android:layout_marginTop">@dimen/dp_4</item>
         <item name="android:background">@drawable/bg_white_layer_shadow</item>
     </style>

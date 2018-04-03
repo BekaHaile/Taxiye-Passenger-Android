@@ -12,7 +12,7 @@
         android:layout_height="68dp"
         android:layout_alignParentBottom="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
         android:tag="DontTouchMe"
         android:visibility="gone" />
 
@@ -27,7 +27,7 @@
             android:layout_width="90px"
             android:layout_height="90px"
             android:layout_marginBottom="36px"
-            android:layout_marginLeft="56px"
+            android:layout_marginStart="56px"
             android:src="@drawable/ic_poke_on_off_button"
             android:tag="mwar"
             android:visibility="visible" />
@@ -72,8 +72,8 @@
                     android:id="@+id/textViewFindingDriver"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginRight="20px"
+                    android:layout_marginStart="20px"
+                    android:layout_marginEnd="20px"
                     android:gravity="center"
                     android:singleLine="true"
                     android:text="Finding a Jugnoo driver..."
@@ -117,8 +117,8 @@
         android:id="@+id/relativeLayoutAssigningDropLocationClick"
         android:layout_width="match_parent"
         android:layout_height="100px"
-        android:layout_marginLeft="20px"
-        android:layout_marginRight="20px"
+        android:layout_marginStart="20px"
+        android:layout_marginEnd="20px"
         android:layout_marginTop="20px"
         android:background="@drawable/dropshadow_in_white"
         android:splitMotionEvents="false">
@@ -128,7 +128,7 @@
             android:layout_width="16px"
             android:layout_height="16px"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="37px"
+            android:layout_marginStart="37px"
             android:src="@drawable/circle_red"
             android:tag="mwar" />
 
@@ -137,13 +137,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="37px"
-            android:layout_toLeftOf="@+id/linearLayoutAssigningDropLocationEditProgress"
-            android:layout_toRightOf="@+id/imageViewAssigningDropLocationSearch"
+            android:layout_marginStart="37px"
+            android:layout_toStartOf="@+id/linearLayoutAssigningDropLocationEditProgress"
+            android:layout_toEndOf="@+id/imageViewAssigningDropLocationSearch"
             android:background="@color/transparent"
             android:gravity="center_vertical"
             android:hint="@string/enter_destination"
-            android:paddingRight="20px"
+            android:paddingEnd="20px"
             android:singleLine="true"
             android:textColor="@color/text_color"
             android:textColorHint="@color/text_color_hint"
@@ -154,9 +154,9 @@
             android:id="@+id/linearLayoutAssigningDropLocationEditProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10px"
+            android:layout_marginEnd="10px"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -190,8 +190,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/relativeLayoutAssigningDropLocationClick"
-        android:layout_marginLeft="50px"
-        android:layout_marginRight="50px"
+        android:layout_marginStart="50px"
+        android:layout_marginEnd="50px"
         android:layout_marginTop="-15px"
         android:visibility="gone">
 
@@ -199,7 +199,7 @@
             android:id="@+id/imageViewDestHelp"
             android:layout_width="60px"
             android:layout_height="60px"
-            android:layout_marginLeft="50px"
+            android:layout_marginStart="50px"
             android:layout_marginTop="-30px"
             android:background="@drawable/triangle_help_text"
             android:rotation="0"

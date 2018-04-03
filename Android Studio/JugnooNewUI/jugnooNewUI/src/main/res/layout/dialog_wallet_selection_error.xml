@@ -24,8 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="60px"
             android:gravity="center"
-            android:paddingLeft="20px"
-            android:paddingRight="20px"
+            android:paddingStart="20px"
+            android:paddingEnd="20px"
             android:text="@string/your_driver_is_on_his_way"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_34"/>

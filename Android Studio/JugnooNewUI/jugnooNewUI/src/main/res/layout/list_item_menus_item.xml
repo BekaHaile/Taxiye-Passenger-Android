@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:id="@+id/rlInner"
-        android:paddingLeft="28px"
+        android:paddingStart="28px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -17,7 +17,7 @@
             android:id="@+id/ivItemImage"
             android:layout_width="108px"
             android:layout_height="108px"
-            android:layout_marginRight="14px"
+            android:layout_marginEnd="14px"
             android:layout_marginTop="@dimen/px_20"
             android:tag="mwar"
             android:layout_alignParentTop="true"
@@ -28,21 +28,21 @@
             android:id="@+id/imageViewFoodType"
             android:layout_width="26px"
             android:layout_height="26px"
-            android:layout_marginRight="14px"
+            android:layout_marginEnd="14px"
             android:layout_marginTop="@dimen/px_20"
             android:layout_alignParentTop="true"
             android:src="@drawable/veg"
-            android:layout_toRightOf="@+id/ivItemImage"
+            android:layout_toEndOf="@+id/ivItemImage"
             />
 
         <TextView
             android:id="@+id/textViewItemCategoryName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="220px"
+            android:layout_marginEnd="220px"
             android:layout_marginTop="@dimen/px_20"
             android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/imageViewFoodType"
+            android:layout_toEndOf="@id/imageViewFoodType"
             android:lineSpacingExtra="2px"
             android:text="Margherita \nPizza"
             android:textColor="@color/lightBlackTxtColor"
@@ -53,8 +53,8 @@
             layout="@layout/layout_item_quantity_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/px_20"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/px_20"
             android:layout_marginTop="@dimen/px_20"
             />
 
@@ -64,8 +64,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewItemCategoryName"
-            android:layout_toRightOf="@id/imageViewFoodType"
-            android:layout_marginRight="@dimen/px_20"
+            android:layout_toEndOf="@id/imageViewFoodType"
+            android:layout_marginEnd="@dimen/px_20"
             android:layout_marginTop="5px"
             android:text="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
             android:textColor="@color/color_menu_item_desc"
@@ -78,8 +78,8 @@
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:layout_below="@id/rlInner"
-        android:layout_marginLeft="25px"
-        android:layout_marginRight="25px"
+        android:layout_marginStart="25px"
+        android:layout_marginEnd="25px"
         android:layout_marginTop="25px"
         android:background="@color/grey_light_more_alpha"
         android:visibility="visible"

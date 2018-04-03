@@ -24,7 +24,6 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
         <ImageView
@@ -66,7 +65,7 @@
                     android:id="@+id/imageViewDebug2"
                     android:layout_width="180px"
                     android:layout_height="120px"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_alignParentEnd="true"/>
 
                 <ImageView
                     android:id="@+id/imageViewDebug3"
@@ -115,9 +114,9 @@
                     android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/px_20"
+                    android:layout_marginStart="@dimen/px_20"
                     android:textSize="@dimen/text_size_32"
-                    android:layout_toRightOf="@+id/ivMobileNumber"
+                    android:layout_toEndOf="@+id/ivMobileNumber"
                     app:typekitFont="maven"/>
 
             </RelativeLayout>
@@ -187,9 +186,9 @@
                         android:text="@string/nl_login_facebook"
                         android:textColor="#3b5998"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/px_20"
+                        android:layout_marginStart="@dimen/px_20"
                         android:textSize="@dimen/text_size_32"
-                        android:layout_toRightOf="@+id/bFacebook"
+                        android:layout_toEndOf="@+id/bFacebook"
                         app:typekitFont="maven"/>
 
                 </RelativeLayout>
@@ -198,7 +197,7 @@
                     android:id="@+id/rlLSGoogle"
                     android:layout_width="268px"
                     android:layout_height="@dimen/splash_button_height"
-                    android:layout_marginLeft="@dimen/px_20"
+                    android:layout_marginStart="@dimen/px_20"
                     android:gravity="center_horizontal"
                     android:background="@drawable/capsule_login_button_selector">
 
@@ -221,9 +220,9 @@
                         android:text="@string/nl_login_google"
                         android:textColor="@color/text_color"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/px_20"
+                        android:layout_marginStart="@dimen/px_20"
                         android:textSize="@dimen/text_size_32"
-                        android:layout_toRightOf="@+id/bGoogle"
+                        android:layout_toEndOf="@+id/bGoogle"
                         app:typekitFont="maven"/>
 
                 </RelativeLayout>

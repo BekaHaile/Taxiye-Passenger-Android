@@ -45,7 +45,7 @@ public class FreshSortDialog extends Dialog {
 
 		Window window = getWindow();
 		WindowManager.LayoutParams wlp = getWindow().getAttributes();
-		wlp.gravity = Gravity.LEFT | Gravity.TOP;
+		wlp.gravity = Gravity.START | Gravity.TOP;
 		wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 		wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
 		getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//to avoid black backgorund during animation

@@ -11,7 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -80,7 +79,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import io.branch.referral.Branch;
@@ -429,11 +427,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 //			FlurryAgent.init(this, Config.getFlurryKey());
 
 
-			Locale locale = new Locale("en");
-			Locale.setDefault(locale);
-			Configuration config = new Configuration();
-			config.locale = locale;
-			getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+//			Locale locale = new Locale("en");
+//			Locale.setDefault(locale);
+//			Configuration config = new Configuration();
+//			config.locale = locale;
+//			getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 
 
 			setContentView(R.layout.activity_splash_new);

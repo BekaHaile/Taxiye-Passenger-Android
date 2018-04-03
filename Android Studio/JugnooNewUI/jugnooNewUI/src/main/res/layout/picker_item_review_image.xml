@@ -20,7 +20,7 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_alignTop="@+id/ivImage"
-        android:layout_alignRight="@+id/ivImage"
+        android:layout_alignEnd="@+id/ivImage"
         android:padding="5dp"
         android:rotation="45"
         android:visibility="gone"

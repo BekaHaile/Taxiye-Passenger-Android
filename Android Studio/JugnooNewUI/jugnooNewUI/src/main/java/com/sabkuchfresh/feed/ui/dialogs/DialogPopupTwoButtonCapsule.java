@@ -56,7 +56,7 @@ public class DialogPopupTwoButtonCapsule extends Dialog {
         Window window = getWindow();
         WindowManager.LayoutParams wlp = getWindow().getAttributes();
         wlp.windowAnimations = R.style.Animations_LoadingDialogFade;
-        wlp.gravity=Gravity.LEFT|Gravity.CENTER;
+        wlp.gravity=Gravity.START|Gravity.CENTER;
         wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//to avoid black backgorund during animation
@@ -64,7 +64,7 @@ public class DialogPopupTwoButtonCapsule extends Dialog {
 /*
         getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
         getWindow().getAttributes().dimAmount = 0.6f;
-        getWindow().getAttributes().gravity = Gravity.LEFT|Gravity.CENTER;
+        getWindow().getAttributes().gravity = Gravity.START|Gravity.CENTER;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));*/
 

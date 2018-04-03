@@ -10,7 +10,7 @@
         android:id="@+id/topBar"
         android:layout_width="@dimen/screen_width"
         android:layout_height="@dimen/top_bar_height"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="@color/white">
 
@@ -64,8 +64,8 @@
                     android:id="@+id/relativeLayoutWallet"
                     android:layout_width="match_parent"
                     android:layout_height="105px"
-                    android:layout_marginLeft="30px"
-                    android:layout_marginRight="30px"
+                    android:layout_marginStart="30px"
+                    android:layout_marginEnd="30px"
                     android:layout_marginTop="15px"
                     android:background="@drawable/white_background_rounded_corner_selector">
 
@@ -75,7 +75,7 @@
                         android:layout_width="66px"
                         android:layout_height="50px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="30px"
+                        android:layout_marginStart="30px"
                         android:src="@drawable/ic_jugnoo_cash"
                         android:tag="mwar" />
 
@@ -84,10 +84,10 @@
                         android:id="@+id/textViewJugnooCashBalanceValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="34px"
-                        android:gravity="right"
+                        android:layout_marginEnd="34px"
+                        android:gravity="end"
                         android:text="@string/rupee_0"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_38" />
@@ -97,8 +97,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="20px"
-                        android:layout_toRightOf="@+id/imageViewJugnooCashIcon"
+                        android:layout_marginStart="20px"
+                        android:layout_toEndOf="@+id/imageViewJugnooCashIcon"
                         android:gravity="center_vertical">
 
                         <TextView
@@ -126,8 +126,8 @@
                     android:id="@+id/relativeLayoutPaytm"
                     android:layout_width="match_parent"
                     android:layout_height="105px"
-                    android:layout_marginLeft="30px"
-                    android:layout_marginRight="30px"
+                    android:layout_marginStart="30px"
+                    android:layout_marginEnd="30px"
                     android:layout_marginTop="15px"
                     android:background="@drawable/white_background_rounded_corner_selector"
                     android:visibility="visible">
@@ -135,7 +135,7 @@
                     <ImageView
                         style="@style/payment_option_icon_small"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="15px"
+                        android:layout_marginStart="15px"
                         android:src="@drawable/ic_paytm_small" />
 
                     <TextView
@@ -143,7 +143,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="120px"
+                        android:layout_marginStart="120px"
                         android:text="@string/paytm_wallet"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
@@ -153,10 +153,10 @@
                         android:id="@+id/textViewPaytmBalanceValue"
                         android:layout_width="250px"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="34px"
-                        android:gravity="right"
+                        android:layout_marginEnd="34px"
+                        android:gravity="end"
                         android:text="@string/rupee_0"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_38" />
@@ -168,8 +168,8 @@
                     android:id="@+id/relativeLayoutMobikwik"
                     android:layout_width="match_parent"
                     android:layout_height="105px"
-                    android:layout_marginLeft="30px"
-                    android:layout_marginRight="30px"
+                    android:layout_marginStart="30px"
+                    android:layout_marginEnd="30px"
                     android:layout_marginTop="15px"
                     android:background="@drawable/white_background_rounded_corner_selector"
                     android:visibility="visible">
@@ -177,7 +177,7 @@
                     <ImageView
                         style="@style/payment_option_icon_small"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="15px"
+                        android:layout_marginStart="15px"
                         android:src="@drawable/ic_mobikwik_small" />
 
                     <TextView
@@ -185,7 +185,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="120px"
+                        android:layout_marginStart="120px"
                         android:text="@string/mobikwik_wallet"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
@@ -195,10 +195,10 @@
                         android:id="@+id/textViewMobikwikBalanceValue"
                         android:layout_width="250px"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="34px"
-                        android:gravity="right"
+                        android:layout_marginEnd="34px"
+                        android:gravity="end"
                         android:text="@string/rupee_0"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_38" />
@@ -210,8 +210,8 @@
                     android:id="@+id/relativeLayoutFreeCharge"
                     android:layout_width="match_parent"
                     android:layout_height="105px"
-                    android:layout_marginLeft="30px"
-                    android:layout_marginRight="30px"
+                    android:layout_marginStart="30px"
+                    android:layout_marginEnd="30px"
                     android:layout_marginTop="15px"
                     android:background="@drawable/white_background_rounded_corner_selector"
                     android:visibility="visible">
@@ -219,7 +219,7 @@
                     <ImageView
                         style="@style/payment_option_icon_small"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="15px"
+                        android:layout_marginStart="15px"
                         android:src="@drawable/ic_freecharge_small"
                         />
 
@@ -228,7 +228,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="120px"
+                        android:layout_marginStart="120px"
                         android:text="@string/freecharge_wallet"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
@@ -238,10 +238,10 @@
                         android:id="@+id/textViewFreeChargeBalanceValue"
                         android:layout_width="250px"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="34px"
-                        android:gravity="right"
+                        android:layout_marginEnd="34px"
+                        android:gravity="end"
                         android:text="@string/rupee_0"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_38" />
@@ -258,8 +258,8 @@
             android:layout_width="match_parent"
             android:layout_height="105px"
             android:layout_marginBottom="30px"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
+            android:layout_marginStart="30px"
+            android:layout_marginEnd="30px"
             android:layout_above="@+id/relativeLayoutWalletTransactions"
             android:background="@drawable/white_background_rounded_corner_selector">
 
@@ -268,7 +268,7 @@
                 android:layout_width="33px"
                 android:layout_height="35px"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="30px"
+                android:layout_marginStart="30px"
                 android:src="@drawable/ic_recent_transactions" />
 
             <TextView
@@ -276,16 +276,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="20px"
-                android:layout_toRightOf="@+id/imageViewPayTransactionsIcon"
+                android:layout_marginStart="20px"
+                android:layout_toEndOf="@+id/imageViewPayTransactionsIcon"
                 android:text="@string/pay_transactions"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_32" />
 
             <ImageView
                 style="@style/forward_image"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10px" />
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10px" />
 
 
         </RelativeLayout>
@@ -297,8 +297,8 @@
             android:layout_height="105px"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="30px"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
+            android:layout_marginStart="30px"
+            android:layout_marginEnd="30px"
             android:background="@drawable/white_background_rounded_corner_selector">
 
             <ImageView
@@ -306,7 +306,7 @@
                 android:layout_width="33px"
                 android:layout_height="35px"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="30px"
+                android:layout_marginStart="30px"
                 android:src="@drawable/ic_recent_transactions" />
 
             <TextView
@@ -314,16 +314,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="20px"
-                android:layout_toRightOf="@+id/imageViewWalletTransactionsIcon"
+                android:layout_marginStart="20px"
+                android:layout_toEndOf="@+id/imageViewWalletTransactionsIcon"
                 android:text="@string/wallet_transactions"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_32" />
 
             <ImageView
                 style="@style/forward_image"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10px" />
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10px" />
 
 
         </RelativeLayout>

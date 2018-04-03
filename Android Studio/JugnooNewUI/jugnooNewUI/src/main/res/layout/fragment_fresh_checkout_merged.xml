@@ -19,8 +19,8 @@
             android:id="@+id/tv_min_order_label"
             android:gravity="center"
             android:textColor="@color/text_color"
-            android:paddingLeft="60px"
-            android:paddingRight="60px"
+            android:paddingStart="60px"
+            android:paddingEnd="60px"
             android:paddingTop="22px"
             android:paddingBottom="22px"
             android:textSize="28px"
@@ -87,7 +87,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="26px"
+                    android:paddingStart="26px"
                     android:text="@string/delivery_address"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
@@ -99,8 +99,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8px"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginRight="20px"
+                    android:layout_marginStart="20px"
+                    android:layout_marginEnd="20px"
                     android:layout_marginTop="10px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
@@ -116,9 +116,9 @@
                             android:id="@+id/imageViewAddressType"
                             android:layout_width="50px"
                             android:layout_height="50px"
-                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="20px"
+                            android:layout_marginStart="20px"
                             android:src="@drawable/ic_loc_other"
                             android:tag="mwar" />
 
@@ -126,10 +126,10 @@
                             android:layout_width="500px"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="10px"
-                            android:layout_marginRight="25px"
+                            android:layout_marginStart="10px"
+                            android:layout_marginEnd="25px"
                             android:layout_marginTop="25px"
-                            android:layout_toRightOf="@+id/imageViewAddressType"
+                            android:layout_toEndOf="@+id/imageViewAddressType"
                             android:orientation="vertical">
 
                             <TextView
@@ -166,8 +166,8 @@
                         <ImageView
                             android:id="@+id/imageViewDeliveryAddressForward"
                             style="@style/back_image"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="5px"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="5px"
                             android:rotation="180" />
 
                     </RelativeLayout>
@@ -190,7 +190,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="26px"
+                    android:paddingStart="26px"
                     android:text="@string/delivery_from"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
@@ -203,8 +203,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8px"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginRight="20px"
+                    android:layout_marginStart="20px"
+                    android:layout_marginEnd="20px"
                     android:layout_marginTop="14px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
@@ -220,7 +220,7 @@
                             android:layout_width="50px"
                             android:layout_height="50px"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="20px"
+                            android:layout_marginStart="20px"
                             android:padding="10px"
                             android:src="@drawable/ic_restaurant"
                             android:tag="mwar" />
@@ -229,8 +229,8 @@
                             android:id="@+id/tvRestName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/px_80"
-                            android:layout_marginRight="@dimen/px_20"
+                            android:layout_marginStart="@dimen/px_80"
+                            android:layout_marginEnd="@dimen/px_20"
                             android:layout_marginTop="@dimen/px_25"
                             android:text=""
                             android:textColor="@color/text_color"
@@ -243,8 +243,8 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/tvRestName"
                             android:layout_marginBottom="@dimen/px_25"
-                            android:layout_marginLeft="@dimen/px_80"
-                            android:layout_marginRight="@dimen/px_20"
+                            android:layout_marginStart="@dimen/px_80"
+                            android:layout_marginEnd="@dimen/px_20"
                             android:layout_marginTop="4px"
                             android:text=""
                             android:textColor="@color/text_color_light"
@@ -272,7 +272,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="26px"
+                    android:paddingStart="26px"
                     android:text="@string/delivery_slot"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
@@ -284,8 +284,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8px"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginRight="20px"
+                    android:layout_marginStart="20px"
+                    android:layout_marginEnd="20px"
                     android:layout_marginTop="10px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
@@ -335,7 +335,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="26px"
+                    android:paddingStart="26px"
                     android:text="@string/payment_via"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
@@ -347,8 +347,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8px"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginRight="20px"
+                    android:layout_marginStart="20px"
+                    android:layout_marginEnd="20px"
                     android:layout_marginTop="10px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
@@ -380,12 +380,12 @@
                                 <ImageView
                                     android:id="@+id/imageViewPaytmRadio"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="30px" />
+                                    android:layout_marginStart="30px" />
 
                                 <ImageView
                                     android:layout_width="84px"
                                     android:layout_height="27px"
-                                    android:layout_marginLeft="24px"
+                                    android:layout_marginStart="24px"
                                     android:src="@drawable/ic_paytm_no_padding"
                                     android:tag="mwar" />
 
@@ -395,9 +395,9 @@
                                 android:id="@+id/textViewPaytmValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="30px"
+                                android:layout_marginEnd="30px"
                                 android:text="00"
                                 android:textColor="@color/text_green_color"
                                 android:textSize="@dimen/text_size_30" />
@@ -406,9 +406,9 @@
                                 android:id="@+id/imageViewAddPaytm"
                                 android:layout_width="52px"
                                 android:layout_height="53px"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="30px"
+                                android:layout_marginEnd="30px"
                                 android:src="@drawable/ic_add_checkout"
                                 android:tag="mwar" />
 
@@ -432,12 +432,12 @@
                                 <ImageView
                                     android:id="@+id/imageViewRadioMobikwik"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="30px" />
+                                    android:layout_marginStart="30px" />
 
                                 <ImageView
                                     android:layout_width="120px"
                                     android:layout_height="36px"
-                                    android:layout_marginLeft="24px"
+                                    android:layout_marginStart="24px"
                                     android:src="@drawable/ic_mobikwik_no_padding"
                                     android:tag="mwar" />
 
@@ -447,9 +447,9 @@
                                 android:id="@+id/textViewMobikwikValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="30px"
+                                android:layout_marginEnd="30px"
                                 android:text="00"
                                 android:textColor="@color/text_green_color"
                                 android:textSize="@dimen/text_size_30" />
@@ -458,9 +458,9 @@
                                 android:id="@+id/imageViewAddMobikwik"
                                 android:layout_width="52px"
                                 android:layout_height="53px"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="30px"
+                                android:layout_marginEnd="30px"
                                 android:src="@drawable/ic_add_checkout"
                                 android:tag="mwar" />
 
@@ -471,8 +471,8 @@
                             layout="@layout/layout_icici_upi_payment_option"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/px_30"
-                            android:layout_marginRight="@dimen/px_30"
+                            android:layout_marginStart="@dimen/px_30"
+                            android:layout_marginEnd="@dimen/px_30"
                             />
 
 
@@ -494,12 +494,12 @@
                                 <ImageView
                                     android:id="@+id/imageViewRadioFreeCharge"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="30px" />
+                                    android:layout_marginStart="30px" />
 
                                 <ImageView
                                     android:layout_width="123px"
                                     android:layout_height="28px"
-                                    android:layout_marginLeft="24px"
+                                    android:layout_marginStart="24px"
                                     android:src="@drawable/ic_freecharge_no_padding"
                                     android:tag="mwar" />
 
@@ -509,9 +509,9 @@
                                 android:id="@+id/textViewFreeChargeValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="30px"
+                                android:layout_marginEnd="30px"
                                 android:text="00"
                                 android:textColor="@color/text_green_color"
                                 android:textSize="@dimen/text_size_30" />
@@ -520,9 +520,9 @@
                                 android:id="@+id/imageViewAddFreeCharge"
                                 android:layout_width="52px"
                                 android:layout_height="53px"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="30px"
+                                android:layout_marginEnd="30px"
                                 android:src="@drawable/ic_add_checkout"
                                 android:tag="mwar" />
 
@@ -544,12 +544,12 @@
                                 <ImageView
                                     android:id="@+id/imageViewRadioJugnooPay"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="30px" />
+                                    android:layout_marginStart="30px" />
 
                                 <ImageView
                                     android:layout_width="45px"
                                     android:layout_height="45px"
-                                    android:layout_marginLeft="23px"
+                                    android:layout_marginStart="23px"
                                     android:src="@drawable/ic_pay_grey"
                                     android:tag="mwar" />
 
@@ -557,7 +557,7 @@
                                     android:id="@+id/textViewJugnooPay"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="14px"
+                                    android:layout_marginStart="14px"
                                     android:text="@string/jugnoo_pay"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_34" />
@@ -568,9 +568,9 @@
                                 android:id="@+id/imageViewAddJugnooPay"
                                 android:layout_width="52px"
                                 android:layout_height="53px"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
-                                android:layout_marginRight="30px"
+                                android:layout_marginEnd="30px"
                                 android:src="@drawable/ic_add_checkout"
                                 android:tag="mwar" />
 
@@ -592,12 +592,12 @@
                                 <ImageView
                                     android:id="@+id/imageViewCashRadio"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="30px" />
+                                    android:layout_marginStart="30px" />
 
                                 <ImageView
                                     android:layout_width="47px"
                                     android:layout_height="25px"
-                                    android:layout_marginLeft="24px"
+                                    android:layout_marginStart="24px"
                                     android:src="@drawable/ic_cash_no_padding"
                                     android:tag="mwar" />
 
@@ -605,7 +605,7 @@
                                     android:id="@+id/textViewCash"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="16px"
+                                    android:layout_marginStart="16px"
                                     android:text="@string/cash"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_34" />
@@ -630,14 +630,14 @@
                                 <ImageView
                                     android:id="@+id/ivUPI"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="30px" />
+                                    android:layout_marginStart="30px" />
 
 
                                 <TextView
                                     android:id="@+id/tvUPI"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="16px"
+                                    android:layout_marginStart="16px"
                                     android:text="@string/other_modes_to_pay"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_34"
@@ -663,14 +663,14 @@
                                 <ImageView
                                     android:id="@+id/ivOtherModesToPay"
                                     style="@style/ic_radio_button_style"
-                                    android:layout_marginLeft="30px" />
+                                    android:layout_marginStart="30px" />
 
 
                                 <TextView
                                     android:id="@+id/tvOtherModesToPay"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="16px"
+                                    android:layout_marginStart="16px"
                                     android:text="@string/other_modes_to_pay"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_34"
@@ -700,7 +700,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="26px"
+                    android:paddingStart="26px"
                     android:text="@string/offers"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
@@ -712,8 +712,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8px"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginRight="20px"
+                    android:layout_marginStart="20px"
+                    android:layout_marginEnd="20px"
                     android:layout_marginTop="15px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
@@ -746,7 +746,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:paddingLeft="26px"
+                    android:paddingStart="26px"
                     android:text="@string/delivery_instructions"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
@@ -758,8 +758,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8px"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginRight="20px"
+                    android:layout_marginStart="20px"
+                    android:layout_marginEnd="20px"
                     android:layout_marginTop="10px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
@@ -768,10 +768,10 @@
                         android:id="@+id/editTextDeliveryInstructions"
                         android:layout_width="match_parent"
                         android:layout_height="116px"
-                        android:layout_marginLeft="36px"
-                        android:layout_marginRight="36px"
+                        android:layout_marginStart="36px"
+                        android:layout_marginEnd="36px"
                         android:background="@color/transparent"
-                        android:gravity="left"
+                        android:gravity="start"
                         android:hint="@string/add_special_notes"
                         android:inputType="textCapSentences|textMultiLine"
                         android:paddingBottom="10px"

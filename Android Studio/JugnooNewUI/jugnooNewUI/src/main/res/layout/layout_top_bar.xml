@@ -20,7 +20,7 @@
             android:layout_height="70px"
             android:layout_centerVertical="true"
             android:contentDescription="@string/side_menu"
-            android:layout_marginLeft="10px"
+            android:layout_marginStart="10px"
             android:src="@drawable/ic_menu_selector"
             android:tag="mwar"/>
 
@@ -29,8 +29,8 @@
             android:layout_width="80px"
             android:layout_height="80px"
             android:background="@drawable/background_transparent"
-            android:layout_toRightOf="@+id/imageViewMenu"
-            android:layout_marginLeft="50px"
+            android:layout_toEndOf="@+id/imageViewMenu"
+            android:layout_marginStart="50px"
             android:soundEffectsEnabled="false"
             />
 
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/app_name"
-            android:layout_marginLeft="95px"
+            android:layout_marginStart="95px"
             android:layout_centerVertical="true"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
@@ -56,9 +56,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="20px"
+            android:layout_marginEnd="20px"
             android:orientation="horizontal"
             >
 
@@ -76,7 +76,7 @@
                 android:id="@+id/relativeLayoutNotification"
                 android:layout_width="80px"
                 android:layout_height="70px"
-                android:layout_marginLeft="10px"
+                android:layout_marginStart="10px"
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"
                 >
@@ -93,7 +93,7 @@
                 <TextView
                     android:layout_width="32px"
                     android:layout_height="35px"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:background="@drawable/ic_notification_unread"
                     android:gravity="center_horizontal"
                     android:paddingTop="2px"
@@ -117,7 +117,7 @@
                 android:layout_width="77px"
                 android:layout_height="77px"
                 android:padding="5px"
-                android:layout_marginLeft="5px"
+                android:layout_marginStart="5px"
                 android:contentDescription="@string/help"
                 android:visibility="gone"
                 android:src="@drawable/ic_emergency_help_selector"
@@ -130,9 +130,9 @@
             android:id="@+id/imageViewDelete"
             android:layout_width="67px"
             android:layout_height="73px"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10px"
+            android:layout_marginEnd="10px"
             android:src="@drawable/ic_delete_white"
             android:padding="20px"
             android:tag="mwar"
@@ -143,9 +143,9 @@
             android:id="@+id/textViewAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10px"
+            android:layout_marginEnd="10px"
             android:padding="20px"
             android:text="@string/add"
             android:textAllCaps="true"

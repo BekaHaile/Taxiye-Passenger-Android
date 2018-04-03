@@ -12,8 +12,8 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:background="@drawable/recent_orders_middle_elements_background_normal"
         android:padding="10dp">
 
@@ -22,8 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_toLeftOf="@id/iv_arrow">
+            android:layout_marginStart="5dp"
+            android:layout_toStartOf="@id/iv_arrow">
 
 
             <TextView
@@ -33,11 +33,11 @@
                 android:layout_marginBottom="@dimen/dp_5"
                 android:textColor="@color/text_color_fatafat_bold"
                 app:typekitFont="@string/maven"
-                android:gravity="left"
+                android:gravity="start"
                 android:singleLine="true"
                 android:ellipsize="marquee"
-                android:layout_marginRight="55dp"
-                android:paddingRight="2dp"
+                android:layout_marginEnd="55dp"
+                android:paddingEnd="2dp"
                 tools:text="dsakjdajskhdjsfhkdshfkdsjfhsdjeqweqweqweqweqweqwewqeqwf"
                 android:visibility="visible"
                 android:layout_height="wrap_content" />
@@ -48,11 +48,11 @@
                 android:id="@+id/tv_order_id"
                 android:layout_width="wrap_content"
                 android:textSize="14.3sp"
-                android:layout_marginLeft="-52dp"
-                android:paddingRight="5dp"
+                android:layout_marginStart="-52dp"
+                android:paddingEnd="5dp"
                 android:layout_alignBottom="@id/tv_order_restaurant"
                 android:textColor="@color/text_color_fatafat_bold"
-                android:layout_toRightOf="@id/tv_order_restaurant"
+                android:layout_toEndOf="@id/tv_order_restaurant"
                 app:typekitFont="@string/maven_r"
                 android:singleLine="true"
                 android:text="#5289"
@@ -68,8 +68,8 @@
                 android:layout_below="@+id/tv_order_restaurant"
                 android:layout_marginBottom="@dimen/dp_5"
                 android:ellipsize="marquee"
-                android:gravity="left"
-                android:paddingRight="2dp"
+                android:gravity="start"
+                android:paddingEnd="2dp"
                 android:singleLine="true"
                 tools:text="dsakjdajskhdjsfhkdshfkdsjfhsdjeqweqweqweqweqweqwewqeqwf"
                 android:textColor="@color/text_color_fatafat_bold"
@@ -84,8 +84,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_order_description"
                 android:background="@drawable/bg_tv_order_status"
-                android:paddingLeft="@dimen/spacing_tiny"
-                android:paddingRight="@dimen/spacing_tiny"
+                android:paddingStart="@dimen/spacing_tiny"
+                android:paddingEnd="@dimen/spacing_tiny"
                 android:paddingTop="@dimen/dp_3"
                 android:paddingBottom="@dimen/dp_3"
                 android:gravity="center"
@@ -101,8 +101,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/tv_order_status"
                 android:layout_below="@id/tv_order_description"
-                android:layout_marginLeft="4dp"
-                android:layout_toRightOf="@id/tv_order_status"
+                android:layout_marginStart="4dp"
+                android:layout_toEndOf="@id/tv_order_status"
                 android:ellipsize="marquee"
                 android:singleLine="true"
                 android:gravity="center"
@@ -118,10 +118,10 @@
             android:id="@+id/iv_arrow"
             android:layout_width="@dimen/dp_7"
             android:layout_height="@dimen/dp_11"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:src="@drawable/ic_arrow_grey" />
     </RelativeLayout>
 </RelativeLayout>

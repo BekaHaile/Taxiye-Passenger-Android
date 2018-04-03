@@ -10,7 +10,7 @@
         android:id="@+id/textViewNameInitial"
         android:layout_width="43dp"
         android:layout_height="43dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
         android:textColor="@color/white"
         android:textSize="@dimen/sp_18"
@@ -24,15 +24,15 @@
         android:id="@+id/linearLayoutContent"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
         android:orientation="vertical"
         android:gravity="center"
         android:splitMotionEvents="false"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/textViewNameInitial"
+        android:layout_toEndOf="@+id/textViewNameInitial"
         >
 
         <TextView
@@ -74,8 +74,8 @@
         android:textSize="@dimen/sp_20"
         android:text="@string/rupee_0"
         android:textStyle="bold"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="20dp"
         />
 
@@ -84,9 +84,9 @@
         android:layout_height="wrap_content"
         android:splitMotionEvents="false"
         android:orientation="horizontal"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/textViewPaymentValue"
-        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_marginTop="8dp"
         >
         <Button
@@ -107,7 +107,7 @@
             android:textAllCaps="true"
             android:textColor="@color/text_color_selector"
             android:textSize="@dimen/sp_12"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             />
     </LinearLayout>
 
@@ -116,8 +116,8 @@
         android:id="@+id/imageViewSep"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="17dp"
         android:background="@color/stroke_color_light"
         android:layout_below="@+id/linearLayoutContent"
         />

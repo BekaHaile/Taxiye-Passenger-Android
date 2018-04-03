@@ -15,22 +15,22 @@
         android:id="@+id/contact_image"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginStart="10dp"/>
 
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_toRightOf="@+id/contact_image"
-        android:layout_toLeftOf="@+id/ivDelete"
+        android:layout_marginStart="15dp"
+        android:layout_toEndOf="@+id/contact_image"
+        android:layout_toStartOf="@+id/ivDelete"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/contact_name_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:text="Name"
             android:textColor="@color/services_name_txt_color"
             android:textSize="@dimen/text_view_size" />
@@ -39,7 +39,7 @@
             android:id="@+id/mobile_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginTop="5dp"
             android:text="fds"
             android:textColor="@color/lightBlackTxtColor"
@@ -51,10 +51,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_delete_pay"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:padding="5dp"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginEnd="10dp"/>
     </RelativeLayout>
 
 </LinearLayout>

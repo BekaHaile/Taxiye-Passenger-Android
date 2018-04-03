@@ -115,7 +115,7 @@ public class CheckoutPriceMismatchDialog extends Dialog {
         btnCancel.setSelected(true);
         Window window = getWindow();
         WindowManager.LayoutParams wlp = getWindow().getAttributes();
-        wlp.gravity = Gravity.LEFT | Gravity.CENTER;
+        wlp.gravity = Gravity.START | Gravity.CENTER;
         wlp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//to avoid black background during animation

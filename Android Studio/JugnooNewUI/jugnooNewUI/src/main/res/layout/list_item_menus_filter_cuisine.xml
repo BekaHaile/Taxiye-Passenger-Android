@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingLeft="@dimen/dp_20"
-    android:paddingRight="@dimen/dp_20"
+    android:paddingStart="@dimen/dp_20"
+    android:paddingEnd="@dimen/dp_20"
     >
 
     <ImageView
@@ -15,7 +15,7 @@
         android:layout_width="@dimen/dp_16"
         android:layout_height="@dimen/dp_16"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/dp_12"
+        android:layout_marginStart="@dimen/dp_12"
         android:src="@drawable/checkbox_signup_checked"
 
         />
@@ -25,10 +25,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dp_12"
-        android:layout_marginLeft="@dimen/dp_12"
+        android:layout_marginStart="@dimen/dp_12"
         android:layout_marginTop="@dimen/dp_12"
         android:text="cashback\nkjhkj"
-        android:layout_toRightOf="@+id/imageViewCheck"
+        android:layout_toEndOf="@+id/imageViewCheck"
         android:textColor="@color/text_color_selector"
         android:textSize="@dimen/sp_14"
         app:typekitFont="@string/maven"

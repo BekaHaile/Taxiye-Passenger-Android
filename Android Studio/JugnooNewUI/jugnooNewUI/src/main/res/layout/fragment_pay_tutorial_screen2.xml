@@ -22,7 +22,7 @@
             android:layout_width="@dimen/px_22"
             android:layout_height="@dimen/px_17"
             android:src="@drawable/arrow"
-            android:layout_marginRight="@dimen/px_32"
+            android:layout_marginEnd="@dimen/px_32"
             android:layout_marginTop="@dimen/px_10"/>
 
         <TextView
@@ -46,7 +46,7 @@
             android:layout_width="@dimen/px_22"
             android:layout_height="@dimen/px_17"
             android:src="@drawable/arrow"
-            android:layout_marginRight="@dimen/px_32"
+            android:layout_marginEnd="@dimen/px_32"
             android:layout_marginTop="@dimen/px_10"/>
 
         <TextView

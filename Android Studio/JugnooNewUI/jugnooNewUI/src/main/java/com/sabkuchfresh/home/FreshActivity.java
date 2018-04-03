@@ -2009,9 +2009,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             topBar.title.setGravity(Gravity.CENTER);
             titleLayoutParams.setMargins(0, 0, (int) (ASSL.Xscale() * 50f), 0);
         } else {
-            topBar.title.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+            topBar.title.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
             titleLayoutParams.setMargins((int) (ASSL.Xscale() * 20f), 0, 0, 0);
-            titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.getLlSearchCart().getId());
+            titleLayoutParams.addRule(RelativeLayout.START_OF, topBar.getLlSearchCart().getId());
             topBar.title.setPadding(0, 0, 0, 0);
         }
         topBar.title.setLayoutParams(titleLayoutParams);

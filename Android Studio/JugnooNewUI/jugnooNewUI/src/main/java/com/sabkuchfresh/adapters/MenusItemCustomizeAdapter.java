@@ -174,7 +174,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             int gravity, visibilityDesc;
 //            RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
             if(!TextUtils.isEmpty(item.getItemDetails())){
-//                gravity = Gravity.LEFT;
+//                gravity = Gravity.START;
                 visibilityDesc = View.VISIBLE;
 //                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 30f), paramsFT.rightMargin, paramsFT.bottomMargin);
             } else {

@@ -55,7 +55,7 @@
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:src="@color/stroke_light_grey_alpha"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         />
 
 </RelativeLayout>

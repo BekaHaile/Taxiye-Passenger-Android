@@ -326,9 +326,9 @@ public class DialogPopup {
 				relativeLayoutInner.setLayoutParams(params);
 			}
 			if(leftOriented) {
-				textMessage.setGravity(Gravity.LEFT);
+				textMessage.setGravity(Gravity.START);
 				LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) textMessage.getLayoutParams();
-				layoutParams1.gravity=Gravity.LEFT;
+				layoutParams1.gravity=Gravity.START;
 				textMessage.setLayoutParams(layoutParams1);
 			}
 			textHead.setText(title);

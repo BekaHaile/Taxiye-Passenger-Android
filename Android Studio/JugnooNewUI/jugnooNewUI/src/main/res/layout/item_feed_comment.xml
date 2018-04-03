@@ -30,15 +30,15 @@
     <RelativeLayout
         android:paddingTop="@dimen/spacing_normal"
 
-        android:paddingLeft="@dimen/spacing_normal"
-        android:paddingRight="@dimen/spacing_normal"
+        android:paddingStart="@dimen/spacing_normal"
+        android:paddingEnd="@dimen/spacing_normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/iv_profile_pic"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginRight="@dimen/spacing_small"
+            android:layout_marginEnd="@dimen/spacing_small"
             android:scaleType="centerCrop"
             android:src="@drawable/whatsapp" />
 
@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_marginTop="@dimen/spacing_tiny"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/iv_profile_pic"
+            android:layout_toEndOf="@id/iv_profile_pic"
             android:text="Jesse Cennedy"
             android:lineSpacingExtra="3dp"
             android:textColorHighlight="@color/blue_selection_color"
@@ -64,7 +64,7 @@
              android:layout_below="@id/tv_user_name"
              android:layout_marginBottom="@dimen/spacing_tiny"
 
-             android:layout_toRightOf="@id/iv_profile_pic"
+             android:layout_toEndOf="@id/iv_profile_pic"
              android:text="Ended up here on the way to Sukhna Lake to grab a pizza along."
              android:textColor="@color/feed_grey_text"
              android:textSize="@dimen/font_small"
@@ -77,8 +77,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:layout_below="@id/tv_user_name_and_comment"
-            android:layout_toRightOf="@id/iv_profile_pic"
-            android:drawableLeft="@drawable/ic_clock"
+            android:layout_toEndOf="@id/iv_profile_pic"
+            android:drawableStart="@drawable/ic_clock"
             android:drawablePadding="2dp"
             android:text="12m"
             android:textColor="@color/feed_grey_text_secondary"
