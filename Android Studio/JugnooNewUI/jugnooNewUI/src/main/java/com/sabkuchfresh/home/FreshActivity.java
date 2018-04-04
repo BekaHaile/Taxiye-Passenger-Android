@@ -5900,10 +5900,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public boolean collapsingToolBarEnabled(Fragment fragment){
        // boolean isEnable = shouldOpenMerchantInfoFragment() ?
                 //fragment instanceof MerchantInfoFragment : fragment instanceof VendorMenuFragment;
-        boolean isEnable = isMenusIsOpenMerchantInfo() ?
-                fragment instanceof MerchantInfoFragment : fragment instanceof VendorMenuFragment;
-
-        return isEnable;
+       // boolean isEnable = isMenusIsOpenMerchantInfo() ?
+                //fragment instanceof MerchantInfoFragment : fragment instanceof VendorMenuFragment;
+        //return isEnable;
+        return fragment instanceof MerchantInfoFragment || fragment instanceof VendorMenuFragment;
 
     }
 
