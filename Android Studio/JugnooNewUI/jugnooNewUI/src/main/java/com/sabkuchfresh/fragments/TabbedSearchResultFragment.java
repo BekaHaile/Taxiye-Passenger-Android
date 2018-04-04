@@ -111,6 +111,8 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
             @Override
             public void onVendorDirectSearchClicked(final VendorDirectSearch vendorDirectSearch) {
                 activity.setDirectVendorSearchObject(vendorDirectSearch);
+                // direct vendor would always have menu, so set flag to false
+                activity.setMenusIsOpenMerchantInfo(false);
                 //fetch menu and redirect to vendor fragment
                 activity.fetchRestaurantMenuAPI((vendorDirectSearch.getVendorId()),
                         false, null, null, -1, null,vendorDirectSearch);
@@ -145,6 +147,9 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
                     vendorDirectSearch.setCategoryId(searchSuggestion.getCategoryId());
                     vendorDirectSearch.setSubcategoryId(searchSuggestion.getSubcategoryId());
                     vendorDirectSearch.setItemId(searchSuggestion.getItemId());
+
+                    // direct vendor would always have menu, so set flag to false
+                    activity.setMenusIsOpenMerchantInfo(false);
 
                     activity.setDirectVendorSearchObject(vendorDirectSearch);
                     //fetch menu and redirect to vendor fragment
