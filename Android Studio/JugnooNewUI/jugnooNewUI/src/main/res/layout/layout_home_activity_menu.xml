@@ -68,7 +68,7 @@
 
             <TextView
                 android:id="@+id/textViewUserName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Garry Gurcharan"
                 android:maxLines="1"
@@ -79,7 +79,7 @@
 
             <TextView
                 android:id="@+id/textViewViewPhone"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5px"
                 android:singleLine="true"
@@ -99,7 +99,9 @@
             android:layout_marginEnd="30px"
             android:layout_centerVertical="true"
             android:src="@drawable/back_arrow_white"
-            android:tag="mwar"/>
+            android:tag="mwar"
+            android:rotationY="@integer/locale_mirror_flip"
+            />
 
     </RelativeLayout>
 

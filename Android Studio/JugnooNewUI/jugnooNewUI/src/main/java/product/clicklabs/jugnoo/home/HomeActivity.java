@@ -2463,7 +2463,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }else {
                     mapTopPadding = 100.0f;
                 }
-                map.setPaddingRelative(0, (int) (ASSL.Yscale() * mapTopPadding), 0, (int) (ASSL.Yscale() * bottomPadding));
+                map.setPadding(0, (int) (ASSL.Yscale() * mapTopPadding), 0, (int) (ASSL.Yscale() * bottomPadding));
                 googleMapPadding = bottomPadding;
                 setCentrePinAccToGoogleMapPadding();
             }
@@ -6506,7 +6506,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
             dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
-            new ASSL(activity, (FrameLayout) dialog.findViewById(R.id.rv), 1134, 720, true);
+            new ASSL(activity, (RelativeLayout) dialog.findViewById(R.id.rv), 1134, 720, true);
 
             WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
             layoutParams.dimAmount = 0.6f;

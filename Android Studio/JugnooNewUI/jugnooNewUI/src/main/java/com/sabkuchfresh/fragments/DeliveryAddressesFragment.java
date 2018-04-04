@@ -603,7 +603,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 paramsB.bottomMargin = height;
                 bNext.setLayoutParams(paramsB);
                 if (googleMap != null) {
-                    googleMap.setPaddingRelative(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
+                    googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
                             height : 0);
                 }
                 paramsRL.setMargins(0, 0, 0, 0);
@@ -648,7 +648,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                 rlMarkerPin.setLayoutParams(paramsRL);
                 bNext.setLayoutParams(paramsB);
                 if (googleMap != null) {
-                    googleMap.setPaddingRelative(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
+                    googleMap.setPadding(0, 0, 0, scrollViewSuggestions.getVisibility() == View.VISIBLE ?
                             height : 0);
                 }
                 if (getBottomSheetBehaviour() != null ) {

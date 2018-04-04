@@ -690,10 +690,10 @@ public class FABViewTest implements GACategory, GAAction {
      */
     public void setMenuLabelsRightTestPadding(int paddingBottom){
         if(activity instanceof FreshActivity){
-            menuLabelsRightTest.setPaddingRelative((int) (40f * ASSL.Yscale()), 0, 0,paddingBottom);
+            menuLabelsRightTest.setPaddingRelative((int) (40f * ASSL.Xscale()), 0, (int) (40f * ASSL.Xscale()),paddingBottom);
             setRlGenieHelpBottomMargin(paddingBottom + (int)(ASSL.Yscale() * 100f));
         }else{
-            menuLabelsRightTest.setPaddingRelative((int) (40f * ASSL.Yscale()), 0, 0, paddingBottom);
+            menuLabelsRightTest.setPaddingRelative((int) (40f * ASSL.Xscale()), 0, (int) (40f * ASSL.Xscale()), paddingBottom);
             setRlGenieHelpBottomMargin(paddingBottom + (int)(ASSL.Yscale() * 100f));
         }
 

@@ -310,6 +310,9 @@
         <item name="android:tag">
             mwar
         </item>
+        <item name="android:rotationY">
+            @integer/locale_mirror_flip
+        </item>
 
     </style>
 

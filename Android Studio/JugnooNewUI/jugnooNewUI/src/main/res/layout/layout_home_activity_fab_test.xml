@@ -17,6 +17,7 @@
         android:contentDescription="@string/jugnoo_offerings"
         android:paddingBottom="@dimen/padding_bottom_menu_labels"
         android:paddingStart="@dimen/padding_left_menu_labels"
+        android:paddingEnd="@dimen/padding_left_menu_labels"
         android:tag="DontTouchMe"
         fab:fab_colorRipple="@color/grey_light_alpha"
         fab:menu_animationDelayPerItem="25"

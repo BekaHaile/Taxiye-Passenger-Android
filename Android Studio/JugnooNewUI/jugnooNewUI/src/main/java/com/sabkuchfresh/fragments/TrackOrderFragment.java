@@ -282,7 +282,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 			}else{
 				padding = 50f;
 			}
-			googleMap.setPaddingRelative(0, 0, 0, expanded ? 0 : (rootHeight - initialHeight));
+			googleMap.setPadding(0, 0, 0, expanded ? 0 : (rootHeight - initialHeight));
 
 			try {
 				if (MapUtils.distance(pickupLatLng, deliveryLatLng) > 10) {
@@ -790,7 +790,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		if(googleMap != null) {
 			padding = 140f;
 			expanded = true;
-			googleMap.setPaddingRelative(0, 0, 0, 0);
+			googleMap.setPadding(0, 0, 0, 0);
 			tiltState = false;
 			zoomToDriverAndDrop(null,0);
 
@@ -805,7 +805,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		if(googleMap != null) {
 			padding = 50f;
 			expanded = false;
-			googleMap.setPaddingRelative(15, 15, 15, (rootHeight - initialHeight));
+			googleMap.setPadding(15, 15, 15, (rootHeight - initialHeight));
 			tiltState = true;
 
 			if(isMapJustInitialised){
