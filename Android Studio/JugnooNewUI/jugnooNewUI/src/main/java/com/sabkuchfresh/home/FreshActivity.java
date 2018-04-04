@@ -611,6 +611,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     }
 
+    /**
+     * Sets the search text without firing the text change listener to prevent
+     * api hit ( in tabbed search fragment )
+     *
+     * @param searchText search text
+     */
+    public void setSearchTextWithoutListener(String searchText){
+        if(topBar != null && topBar.etSearch!=null && textWatcher!=null){
+            topBar.etSearch.removeTextChangedListener(textWatcher);
+            topBar.etSearch.setText(searchText);
+            // renable listener
+            topBar.etSearch.addTextChangedListener(textWatcher);
+        }
+    }
+
+
     private void initFatafatChatIcon() {
         rlfabViewFatafat = (RelativeLayout)findViewById(R.id.rlMenuLabelfatat);
         fabViewFatafat = (ImageView) findViewById(R.id.menuLabelFatafat);

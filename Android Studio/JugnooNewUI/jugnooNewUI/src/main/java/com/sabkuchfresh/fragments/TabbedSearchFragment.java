@@ -125,6 +125,10 @@ public class TabbedSearchFragment extends Fragment {
         super.onHiddenChanged(hidden);
         if (!hidden) {
             setUpViewForFresh();
+            // set the search text again (  that might have cleared from vendor menu )
+            if(activity!=null){
+                activity.setSearchTextWithoutListener(searchText);
+            }
         }
     }
 
