@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -685,20 +684,24 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 } else {
                     holder.linearLayoutCategories.setVisibility(View.GONE);
                    holder.linearLayoutSubCategories.setVisibility(View.VISIBLE);
+                   int enabledOfferings = 0;
                     if (Data.userData.getAutosEnabled() == 1) {
                         holder.linearLayoutSubAutos.setVisibility(View.VISIBLE);
+                        enabledOfferings++;
                     } else {
                         holder.linearLayoutSubAutos.setVisibility(View.GONE);
                     }
 
                     if (Data.userData.getFreshEnabled() == 1) {
                         holder.linearLayoutSubFresh.setVisibility(View.VISIBLE);
+                        enabledOfferings++;
                     } else {
                         holder.linearLayoutSubFresh.setVisibility(View.GONE);
                     }
 
                     if (Data.userData.getMealsEnabled() == 1) {
                         holder.linearLayoutSubMeals.setVisibility(View.VISIBLE);
+                        enabledOfferings++;
                     } else {
                         holder.linearLayoutSubMeals.setVisibility(View.GONE);
                     }
@@ -711,31 +714,39 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
                     if(Data.userData.getMenusEnabled() == 1){
                         holder.linearLayoutSubMenus.setVisibility(View.VISIBLE);
+                        enabledOfferings++;
                     } else {
                         holder.linearLayoutSubMenus.setVisibility(View.GONE);
                     }
                    if(Data.userData.getDeliveryCustomerEnabled() == 1){
                         holder.linearlayoutDeliveryCustomer.setVisibility(View.VISIBLE);
+                       enabledOfferings++;
                     } else {
                         holder.linearlayoutDeliveryCustomer.setVisibility(View.GONE);
                     }
 
                     if(Data.userData.getPayEnabled() == 1){
                         holder.linearLayoutSubPay.setVisibility(View.VISIBLE);
+                        enabledOfferings++;
                     } else {
                         holder.linearLayoutSubPay.setVisibility(View.GONE);
                     }
 
                     if (Data.userData.getFeedEnabled() == 1) {
                         holder.linearLayoutSubFeed.setVisibility(View.VISIBLE);
+                        enabledOfferings++;
                     } else {
                         holder.linearLayoutSubFeed.setVisibility(View.GONE);
                     }
 
                     if (Data.userData.getProsEnabled() == 1) {
                         holder.linearLayoutSubPros.setVisibility(View.VISIBLE);
+                        enabledOfferings++;
                     } else {
                         holder.linearLayoutSubPros.setVisibility(View.GONE);
+                    }
+                    if(enabledOfferings <= 1){
+                        holder.linearLayoutSubCategories.setVisibility(View.GONE);
                     }
                 }
 
