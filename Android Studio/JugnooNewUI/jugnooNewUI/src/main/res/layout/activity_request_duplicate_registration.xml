@@ -71,7 +71,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40px"
-                            android:text="Name:"
+                            android:text="@string/name_with_colon"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_28" />
 
@@ -82,7 +82,7 @@
                             android:layout_marginLeft="180px"
                             android:layout_marginRight="40px"
                             android:singleLine="true"
-                            android:text="User1"
+                            android:text="@string/user1"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_28" />
 
@@ -100,7 +100,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40px"
-                            android:text="Email:"
+                            android:text="@string/email_with_colon"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_28" />
 
@@ -111,7 +111,7 @@
                             android:layout_marginLeft="180px"
                             android:layout_marginRight="40px"
                             android:singleLine="true"
-                            android:text="User1"
+                            android:text="@string/user1"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_28" />
 
@@ -128,7 +128,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="40px"
-                            android:text="Phone:"
+                            android:text="@string/phone"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_28" />
 
@@ -139,7 +139,7 @@
                             android:layout_marginLeft="180px"
                             android:layout_marginRight="40px"
                             android:singleLine="true"
-                            android:text="User1"
+                            android:text="@string/user1"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_28" />
 

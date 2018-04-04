@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:text="HELP"
+            android:text="@string/help_caps"
             style="@style/title" />
 
         <ImageView

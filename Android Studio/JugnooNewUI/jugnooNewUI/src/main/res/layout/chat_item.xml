@@ -53,7 +53,7 @@
                 android:layout_marginRight="@dimen/px_10"
                 android:gravity="right"
                 android:paddingBottom="@dimen/px_5"
-                android:text="Time"
+                android:text="@string/time"
                 android:textColor="@color/text_color_hint"
                 android:textSize="@dimen/text_size_22" />
         </RelativeLayout>

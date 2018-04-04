@@ -55,7 +55,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="30px"
                         android:layout_marginTop="20px"
-                        android:text="Title"
+                        android:text="@string/title"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
 
@@ -67,7 +67,7 @@
                         android:layout_marginBottom="10px"
                         android:layout_marginRight="30px"
                         android:layout_marginTop="5px"
-                        android:text="Hello"
+                        android:text="@string/hello"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_28" />
 
@@ -78,7 +78,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10px"
                         android:layout_marginRight="10px"
-                        android:text="18 May, 2016"
+                        android:text="@string/_18_may_2016"
                         android:textColor="@color/text_color_light"
                         android:textSize="@dimen/text_size_24" />
                 </LinearLayout>

@@ -26,7 +26,7 @@
                 android:id="@+id/textViewDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="19"
+                android:text="@string/_19"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_50"
                 />
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3px"
-                android:text="MAR"
+                android:text="@string/mar"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_28"
                 android:textAllCaps="true"
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3px"
-                android:text="19:30"
+                android:text="@string/_19_30"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_22"
                 />
@@ -92,7 +92,7 @@
                 android:layout_marginRight="10px"
                 android:layout_toLeftOf="@+id/textViewVS"
                 android:gravity="center"
-                android:text="IND"
+                android:text="@string/ind"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_36"
                 />
@@ -115,7 +115,7 @@
                 android:layout_marginLeft="10px"
                 android:layout_toRightOf="@+id/textViewVS"
                 android:gravity="center"
-                android:text="PAK"
+                android:text="@string/pak"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_36"
                 />
@@ -175,7 +175,7 @@
             android:id="@+id/textViewYourGuessValue"
             android:layout_width="400px"
             android:layout_height="wrap_content"
-            android:text="SOUTH AFRICA"
+            android:text="@string/south_africa"
             android:textColor="@color/theme_color"
             android:textSize="@dimen/text_size_36"
             android:textAllCaps="true"

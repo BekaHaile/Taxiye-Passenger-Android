@@ -329,7 +329,7 @@
                         android:layout_marginTop="@dimen/dp_13"
                         android:layout_toRightOf="@+id/ivProsRadio"
                         android:gravity="center_vertical"
-                        android:text="Pros"
+                        android:text="@string/pros"
                         android:textColor="@color/text_color_selector"
                         android:textSize="@dimen/sp_14"
                         android:visibility="visible"

@@ -35,7 +35,7 @@
             android:id="@+id/textViewSearchName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Name"
+            android:text="@string/name"
             android:textColor="@color/text_color_light_selector"
             android:textSize="@dimen/text_size_32" />
 
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="7px"
-            android:text="Name"
+            android:text="@string/name"
             android:textColor="@color/text_color_light"
             android:textSize="@dimen/text_size_26" />
 

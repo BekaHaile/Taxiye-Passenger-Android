@@ -54,7 +54,7 @@
                 android:id="@+id/tvOfferingDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rides"
+                android:text="@string/rides"
                 android:textColor="@color/white_80"
                 android:textSize="@dimen/sp_14"
                 app:typekitFont="@string/maven_r"

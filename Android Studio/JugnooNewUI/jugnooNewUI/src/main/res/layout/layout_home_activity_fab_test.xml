@@ -179,7 +179,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/capsule_black_70"
             android:padding="15px"
-            android:text="Explore more from Jugnoo"
+            android:text="@string/explore_more_from_jugnoo"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_30"
             app:typekitFont="maven"/>
@@ -205,7 +205,7 @@
         android:layout_marginRight="60px"
         android:layout_marginTop="100px"
         android:gravity="right"
-        android:text="What would you like to\ndo today?"
+        android:text="@string/what_would_you_like_to_ndo_today"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_45"
         android:visibility="gone"

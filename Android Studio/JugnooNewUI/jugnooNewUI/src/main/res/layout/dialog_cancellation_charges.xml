@@ -90,7 +90,7 @@
                     android:background="@drawable/button_white_grey_theme_border_selector"
                     android:layout_gravity="center_horizontal"
                     android:textColor="@color/text_color_theme_selector"
-                    android:text="NO"
+                    android:text="@string/no_caps"
                     />
 
             </LinearLayout>

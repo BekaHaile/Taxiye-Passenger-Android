@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:text="PAYTM WALLET"
+            android:text="@string/paytm_wallet_caps"
             style="@style/title" />
 
         <ImageView
@@ -33,7 +33,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10px"
             android:padding="15px"
-            android:text="EDIT"
+            android:text="@string/edit_caps"
             android:textColor="@color/text_color_light_selector"
             android:textSize="30.6px" />
     </RelativeLayout>
@@ -107,7 +107,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="50px"
                         android:gravity="center"
-                        android:text="Current Balance"
+                        android:text="@string/current_balance"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
 
@@ -121,7 +121,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginRight="50px"
                         android:gravity="right"
-                        android:text="5000"
+                        android:text="@string/_5000"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
 
@@ -235,7 +235,7 @@
                         android:background="@color/transparent"
                         android:digits="0123456789"
                         android:ems="10"
-                        android:hint="Enter Amount"
+                        android:hint="@string/enter_amount"
                         android:inputType="number|textNoSuggestions"
                         android:maxLength="5"
                         android:gravity="center"

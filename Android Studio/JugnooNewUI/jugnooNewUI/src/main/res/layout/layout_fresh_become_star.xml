@@ -108,7 +108,7 @@
                 android:layout_marginRight="20px"
                 android:layout_marginTop="@dimen/px_20"
                 android:background="@drawable/button_theme"
-                android:text="ADD"
+                android:text="@string/add_caps"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_32"
                 android:visibility="visible" />

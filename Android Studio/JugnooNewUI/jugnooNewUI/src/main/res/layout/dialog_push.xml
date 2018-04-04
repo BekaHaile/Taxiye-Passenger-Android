@@ -39,7 +39,7 @@
             android:layout_marginLeft="20px"
             android:layout_marginRight="20px"
             android:gravity="center"
-            android:text="Order fruits &amp; veggies\nwhile you ride"
+            android:text="@string/order_fruits_amp_veggies_nwhile_you_ride"
             android:textColor="@color/text_color_dark"
             android:textSize="@dimen/text_size_34"
             android:textAllCaps="true"
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:text="Jugnoo Fresh will get them\ndelivered to "
+            android:text="@string/jugnoo_fresh_will_get_them_ndelivered_to"
             android:textColor="@color/text_color_dark"
             android:textSize="@dimen/text_size_26"
             android:layout_marginLeft="20px"
@@ -75,7 +75,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40px"
             android:layout_marginBottom="40px"
-            android:text="Order Now"/>
+            android:text="@string/order_now"/>
 
     </LinearLayout>
 

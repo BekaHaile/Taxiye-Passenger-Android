@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:singleLine="true"
-        android:text="0"
+        android:text="@string/_0"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_34"
         android:visibility="visible"

@@ -59,7 +59,7 @@
         android:textColor="@color/red_dark"
         android:textSize="15sp"
         app:typekitFont="@string/maven_r"
-        android:text="Seems like an error!"
+        android:text="@string/seems_like_an_error"
         android:layout_below="@+id/edtPromo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

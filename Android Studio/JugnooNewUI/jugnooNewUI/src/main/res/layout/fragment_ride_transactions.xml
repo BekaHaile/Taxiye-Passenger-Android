@@ -55,7 +55,7 @@
             android:id="@+id/buttonGetRide"
             style="@style/ButtonTheme"
             android:layout_marginTop="240px"
-            android:text="GET A RIDE"
+            android:text="@string/get_a_ride"
             android:visibility="visible"
             />
 

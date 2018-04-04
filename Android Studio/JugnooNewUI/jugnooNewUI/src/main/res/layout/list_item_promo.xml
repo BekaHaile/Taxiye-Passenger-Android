@@ -58,7 +58,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_2"
-                    android:text="All"
+                    android:text="@string/all"
                     android:textColor="@color/promo_all_text_color"
                     android:textSize="@dimen/sp_8"
                     />

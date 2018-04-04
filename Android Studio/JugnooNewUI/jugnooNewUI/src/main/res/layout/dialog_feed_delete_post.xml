@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/tv_delete_post"
-        android:text="Delete Post"
+        android:text="@string/delete_post"
         android:textSize="@dimen/font_normal"
         style="@style/text_feed_popup"
          />
@@ -37,7 +37,7 @@
         android:id="@+id/tv_edit_post"
         style="@style/text_feed_popup"
         android:textSize="@dimen/font_normal"
-        android:text="Edit Post" />
+        android:text="@string/edit_post" />
 
     <View
         android:layout_width="match_parent"
@@ -50,7 +50,7 @@
         android:id="@+id/tv_cancel"
         style="@style/text_feed_popup"
         android:textSize="@dimen/font_normal"
-        android:text="Cancel" />
+        android:text="@string/cancel" />
 
 
 

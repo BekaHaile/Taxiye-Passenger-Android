@@ -105,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="3.2"
+                android:text="@string/_3_2"
                 android:textColor="@drawable/text_color_white_alpha_selector"
                 android:textSize="@dimen/text_size_22"
                 android:visibility="visible"

@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="3"
-        android:text="AC \nService \nand Repair"
+        android:text="@string/ac_nservice_nand_repair"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_16"
         android:layout_toRightOf="@+id/ivItemImage"

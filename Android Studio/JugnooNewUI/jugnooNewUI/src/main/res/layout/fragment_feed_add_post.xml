@@ -365,7 +365,7 @@
 
         <TextView
             android:id="@+id/tv_switch_label"
-            android:text="Handle"
+            android:text="@string/handle"
             android:textColor="@color/feed_grey_text"
             android:layout_marginLeft="@dimen/spacing_dimin"
             android:layout_centerVertical="true"
@@ -388,7 +388,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="end"
             android:background="@null"
-            android:text="Submit"
+            android:text="@string/submit"
             android:textAllCaps="false"
             android:textColor="@drawable/text_color_submit_add_post"
             android:textSize="@dimen/sp_15"
@@ -413,7 +413,7 @@
             android:layout_toLeftOf="@id/submitDivider"
             android:gravity="right"
             android:maxLines="1"
-            android:text="500"
+            android:text="@string/_500"
             android:visibility="gone"
             android:textColor="@color/text_color_light"
             android:textSize="@dimen/sp_13"

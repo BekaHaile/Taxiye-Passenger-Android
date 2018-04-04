@@ -37,7 +37,7 @@
         android:textAllCaps="true"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/icon_title"
-        android:text="Ongoing Orders"
+        android:text="@string/ongoing_orders"
         android:textColor="@color/text_color"
         android:textSize="14.3sp"
         app:typekitFont="@string/maven"/>
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:text="See All"
+        android:text="@string/see_all"
         android:layout_marginRight="5dp"
         android:paddingTop="4dp"
         android:textSize="14.3sp"

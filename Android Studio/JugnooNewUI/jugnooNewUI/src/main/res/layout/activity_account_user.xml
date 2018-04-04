@@ -256,7 +256,7 @@
                                     android:layout_height="match_parent"
                                     android:layout_gravity="center_vertical"
                                     android:gravity="center_vertical"
-                                    android:text="+91"
+                                    android:text="@string/_91"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/sp_13"/>
 
@@ -268,7 +268,7 @@
                                     android:layout_gravity="center_horizontal"
                                     android:background="@color/transparent"
                                     android:gravity="left|center_vertical"
-                                    android:hint="Phone Number"
+                                    android:hint="@string/phone_number"
                                     android:imeActionLabel="DONE"
                                     android:imeOptions="actionDone"
                                     android:inputType="number"

@@ -84,7 +84,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/action_send"
             android:background="@color/white"
-            android:hint="Type your message here"
+            android:hint="@string/type_your_message_here"
             android:maxHeight="96px"
             android:paddingLeft="20px"
             android:textColor="@color/text_color"

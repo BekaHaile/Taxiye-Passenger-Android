@@ -35,7 +35,7 @@
             android:layout_toLeftOf="@+id/textViewTNC"
             android:layout_toRightOf="@+id/radioPromotion1"
             android:maxLines="2"
-            android:text="cashback"
+            android:text="@string/cashback"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_30"
             />

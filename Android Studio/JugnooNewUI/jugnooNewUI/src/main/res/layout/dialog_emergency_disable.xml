@@ -53,7 +53,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="0px"
             android:background="@drawable/button_white_grey_br_selector"
-            android:text="OK"
+            android:text="@string/ok"
             android:textColor="@color/text_color"
             android:textSize="30px"/>
 

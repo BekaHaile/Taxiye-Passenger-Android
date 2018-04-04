@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="No Current Notifications"
+            android:text="@string/no_current_notifications"
             android:textColor="@color/stroke_color_dark"
             android:textSize="@dimen/text_size_26" />
 
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:lineSpacingExtra="5px"
-            android:text="No Current Notifications"
+            android:text="@string/no_current_notifications"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_28" />
 

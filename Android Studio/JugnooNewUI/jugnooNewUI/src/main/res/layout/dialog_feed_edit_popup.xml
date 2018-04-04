@@ -33,7 +33,7 @@
             android:drawablePadding="@dimen/spacing_normal"
             android:gravity="center|left"
 
-            android:text="Edit Post"
+            android:text="@string/edit_post"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:textColor="@color/feed_grey_text"
@@ -54,7 +54,7 @@
             android:drawablePadding="@dimen/spacing_normal"
             android:gravity="center|left"
 
-            android:text="Delete Post"
+            android:text="@string/delete_post"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:textColor="@color/feed_grey_text"

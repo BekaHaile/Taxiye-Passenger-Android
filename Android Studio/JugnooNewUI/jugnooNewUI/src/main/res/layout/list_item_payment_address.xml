@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:text="Name"
+            android:text="@string/name"
             android:textColor="@color/services_name_txt_color"
             android:textSize="@dimen/text_view_size" />
 
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
-            android:text="fds"
+            android:text="@string/fds"
             android:textColor="@color/lightBlackTxtColor"
             android:textSize="@dimen/small_text_view_size" />
     </LinearLayout>

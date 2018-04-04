@@ -267,7 +267,7 @@
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="Monthly"
+                                android:text="@string/monthly"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_30"/>
 
@@ -283,7 +283,7 @@
                                     android:layout_marginBottom="-10px"
                                     android:ellipsize="end"
                                     android:maxLines="1"
-                                    android:text="2388"
+                                    android:text="@string/_2388"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_24"
                                     android:visibility="gone"/>
@@ -353,7 +353,7 @@
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="Annual"
+                                android:text="@string/annual"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_30"/>
 
@@ -433,7 +433,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/px_10"
                         android:layout_toRightOf="@+id/ivStar"
-                        android:text="Jugnoo Star"
+                        android:text="@string/jugnoo_star_camel_case"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32"/>
 
@@ -443,7 +443,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:text="199"
+                        android:text="@string/_199"
                         android:textColor="@color/green"
                         android:textSize="@dimen/text_size_44"/>
 
@@ -535,7 +535,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:layout_marginRight="30px"
-                                android:text="00"
+                                android:text="@string/_00"
                                 android:textColor="@color/text_green_color"
                                 android:textSize="@dimen/text_size_30"/>
 
@@ -589,7 +589,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:layout_marginRight="30px"
-                                android:text="00"
+                                android:text="@string/_00"
                                 android:textColor="@color/text_green_color"
                                 android:textSize="@dimen/text_size_30"/>
 
@@ -649,7 +649,7 @@
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
                                 android:layout_marginRight="30px"
-                                android:text="00"
+                                android:text="@string/_00"
                                 android:textColor="@color/text_green_color"
                                 android:textSize="@dimen/text_size_30"/>
 

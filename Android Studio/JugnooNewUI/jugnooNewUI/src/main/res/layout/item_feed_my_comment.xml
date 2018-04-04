@@ -23,7 +23,7 @@
     <TextView
         android:layout_marginTop="18dp"
         android:id="@+id/tv_user_name"
-        android:text="Jesse Cennedy"
+        android:text="@string/jesse_cennedy"
         android:gravity="center_horizontal"
         app:typekitFont="maven"
         android:textColor="@color/feed_color_orange"
@@ -48,7 +48,7 @@
             android:paddingTop="@dimen/spacing_normal"
             android:textSize="@dimen/font_normal"
             android:maxLength="500"
-            android:hint="Tap to add reply"
+            android:hint="@string/tap_to_add_reply"
             android:textCursorDrawable="@drawable/cursor_black"
             android:textColorHint="@color/feed_grey_hint_color"
             android:textColor="@color/feed_grey_text"

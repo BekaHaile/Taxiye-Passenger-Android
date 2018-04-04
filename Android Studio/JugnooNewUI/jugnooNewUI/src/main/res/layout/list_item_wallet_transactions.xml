@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="46px"
-                android:text="send to"
+                android:text="@string/send_to"
                 android:textAllCaps="true"
                 android:visibility="gone"
                 android:paddingBottom="10px"
@@ -93,7 +93,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="43px"
-                    android:text="Cash Added"
+                    android:text="@string/cash_added"
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/text_size_26" />
             </RelativeLayout>

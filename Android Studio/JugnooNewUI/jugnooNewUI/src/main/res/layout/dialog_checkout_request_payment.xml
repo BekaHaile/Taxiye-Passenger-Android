@@ -88,7 +88,7 @@
             android:background="@drawable/capsule_theme_color_selector"
             android:minWidth="100dp"
             android:layout_marginBottom="@dimen/dp_5"
-            android:text="Try Again"
+            android:text="@string/try_again"
             android:textColor="@color/white"
             android:textSize="14sp"
             app:typekitFont="maven" />
@@ -135,7 +135,7 @@
 
             <Button
                 android:id="@+id/btn_back"
-                android:text="BACK"
+                android:text="@string/back_caps"
                 android:textSize="14sp"
                 android:minWidth="100dp"
                 app:typekitFont="maven"
@@ -147,7 +147,7 @@
                 />
             <Button
                 android:id="@+id/btn_submit"
-                android:text="SUBMIT"
+                android:text="@string/submit_caps"
                 android:minWidth="100dp"
                 android:textSize="14sp"
                 app:typekitFont="maven"

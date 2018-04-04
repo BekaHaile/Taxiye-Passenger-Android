@@ -100,7 +100,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
 
-                            android:text="1234"
+                            android:text="@string/_1234"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_24" />
                     </RelativeLayout>
@@ -179,7 +179,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@id/textViewDetails"
-                            android:text="15 Aug 2016, 05:30PM, 8.5 Km"
+                            android:text="@string/_15_aug_2016_05_30pm_8_5_km"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_24" />
                     </RelativeLayout>

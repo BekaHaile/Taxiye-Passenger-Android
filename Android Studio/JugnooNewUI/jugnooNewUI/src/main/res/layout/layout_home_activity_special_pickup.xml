@@ -57,7 +57,7 @@
                         android:layout_marginTop="10px"
                         android:gravity="center"
                         android:padding="10px"
-                        android:text="CHOOSE YOUR EXACT PICKUP"
+                        android:text="@string/choose_your_exact_pickup"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_34" />
 

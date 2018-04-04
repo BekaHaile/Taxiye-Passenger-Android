@@ -125,7 +125,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_36"
             android:textColor="@color/text_color"
-            android:text="9999999999"
+            android:text="@string/_9999999999"
             android:layout_marginTop="@dimen/px_10"
             />
 

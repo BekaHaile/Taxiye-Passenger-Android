@@ -49,7 +49,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40px"
             android:textSize="@dimen/text_size_26"
-            android:text="Retry with Jugnoo Pay"/>
+            android:text="@string/retry_with_jugnoo_pay"/>
 
         <Button
             android:id="@+id/buttonPayViaOther"

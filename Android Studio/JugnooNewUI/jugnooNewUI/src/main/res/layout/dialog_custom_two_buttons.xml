@@ -32,7 +32,7 @@ android:splitMotionEvents="false" >
             android:gravity="center"
             android:paddingLeft="40px"
             android:paddingRight="40px"
-            android:text="Alert"
+            android:text="@string/alert"
             android:textColor="@color/text_color"
             android:textSize="34px"
             android:visibility="gone" />
@@ -49,7 +49,7 @@ android:splitMotionEvents="false" >
             android:maxHeight="800px"
             android:paddingLeft="40px"
             android:paddingRight="40px"
-            android:text="Message"
+            android:text="@string/message"
             android:textColor="@color/text_color"
             android:textSize="30px" />
 
@@ -72,7 +72,7 @@ android:splitMotionEvents="false" >
                 android:layout_alignParentRight="true"
                 android:background="@drawable/button_white_grey_brr_selector"
                 android:singleLine="true"
-                android:text="OK"
+                android:text="@string/ok"
                 android:textColor="@color/text_color"
                 android:textSize="34px" />
 
@@ -91,7 +91,7 @@ android:splitMotionEvents="false" >
                 android:layout_toLeftOf="@+id/imageView1"
                 android:background="@drawable/button_white_grey_blr_selector"
                 android:singleLine="true"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:textColor="@color/text_color"
                 android:textSize="34px" />
         </RelativeLayout>

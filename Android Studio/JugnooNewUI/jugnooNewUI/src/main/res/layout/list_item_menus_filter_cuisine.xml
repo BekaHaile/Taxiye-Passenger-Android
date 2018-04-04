@@ -27,7 +27,7 @@
         android:layout_marginBottom="@dimen/dp_12"
         android:layout_marginLeft="@dimen/dp_12"
         android:layout_marginTop="@dimen/dp_12"
-        android:text="cashback\nkjhkj"
+        android:text="@string/cashback_nkjhkj"
         android:layout_toRightOf="@+id/imageViewCheck"
         android:textColor="@color/text_color_selector"
         android:textSize="@dimen/sp_14"

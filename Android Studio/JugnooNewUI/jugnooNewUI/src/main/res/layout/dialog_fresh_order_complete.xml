@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
-                    android:text="Delivery Slot"
+                    android:text="@string/delivery_slot"
                     android:textColor="@color/text_color_dark"
                     android:textSize="@dimen/text_size_34"
                     android:lineSpacingExtra="@dimen/dp_4"

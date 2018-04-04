@@ -40,7 +40,7 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 app:typekitFont="maven"
-                android:text="Choose Image"
+                android:text="@string/choose_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@+id/tv_count"/>
@@ -63,7 +63,7 @@
                 app:typekitFont="maven"
                 android:textSize="17sp"
                 android:gravity="center"
-                android:text="432"
+                android:text="@string/_432"
                 android:textColor="@color/yellow_jugnoo"
                 android:layout_marginRight="20dp"
                 android:layout_toLeftOf="@id/iv_camera"

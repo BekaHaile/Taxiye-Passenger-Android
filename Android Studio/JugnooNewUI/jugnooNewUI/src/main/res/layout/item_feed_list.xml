@@ -50,7 +50,7 @@
             android:drawableLeft="@drawable/ic_clock"
             android:drawablePadding="2dp"
             android:gravity="top"
-            android:text="2w"
+            android:text="@string/_2w"
             app:typekitFont="maven"
             android:textColor="@color/feed_grey_text_secondary"
             android:textSize="@dimen/font_extra_small" />
@@ -123,7 +123,7 @@
                    android:drawableLeft="@drawable/ic_clock"
                    android:drawablePadding="2dp"
                    android:gravity="top"
-                   android:text="2w"
+                   android:text="@string/_2w"
                    app:typekitFont="maven"
                    android:textColor="@color/feed_grey_text_secondary"
                    android:textSize="@dimen/font_extra_small" />
@@ -176,7 +176,7 @@
            android:layout_marginLeft="@dimen/spacing_large"
            android:layout_marginRight="@dimen/spacing_large"
            android:layout_marginBottom="@dimen/spacing_small"
-           android:text="Not the best pizza I’ve ever had, Pepperoni was too less."
+           android:text="@string/not_the_best_pizza_i_ve_ever_had_pepperoni_was_too_less"
            android:textColor="@color/feed_grey_text"
            android:textColorHighlight="@color/blue_selection_color"
            android:textIsSelectable="true"
@@ -290,7 +290,7 @@
             android:drawableLeft="@drawable/ic_comment_active_new"
             android:drawablePadding="@dimen/spacing_tiny"
             android:gravity="center"
-            android:text="Reply"
+            android:text="@string/reply"
             android:textColor="@color/feed_grey_text"
             android:textSize="12.5sp"
             app:typekitFont="maven" />
@@ -338,7 +338,7 @@
                 android:visibility="visible"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Like"
+                android:text="@string/like"
                 android:textColor="@color/feed_grey_text"
                 android:textSize="12.5sp"
                 app:typekitFont="maven" />

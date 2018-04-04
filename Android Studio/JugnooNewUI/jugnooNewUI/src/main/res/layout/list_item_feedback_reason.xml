@@ -13,7 +13,7 @@
         android:layout_height="@dimen/px_56"
         android:gravity="center"
         android:padding="5px"
-        android:text="Reason"
+        android:text="@string/reason"
         android:background="@drawable/capsule_green_color_selector"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_28" />

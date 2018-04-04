@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_14"
             android:layout_centerVertical="true"
-            android:text="CHECKOUT"
+            android:text="@string/checkout_caps"
             android:textColor="@color/white"
             android:textSize="@dimen/sp_16"
             app:typekitFont="maven" />

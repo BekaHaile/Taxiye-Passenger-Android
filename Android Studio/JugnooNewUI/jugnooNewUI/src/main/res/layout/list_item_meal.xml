@@ -307,7 +307,7 @@
                     android:maxLines="3"
                     android:paddingLeft="27px"
                     android:paddingRight="20px"
-                    android:text="Description"
+                    android:text="@string/description"
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/text_size_24"
                     android:visibility="visible" />

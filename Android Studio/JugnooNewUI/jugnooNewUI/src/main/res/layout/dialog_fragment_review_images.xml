@@ -25,7 +25,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="18dp"
         android:layout_marginLeft="20dp"
-        android:text="1 Like | 1 Share"
+        android:text="@string/_1_like_1_share"
         android:textColor="@color/white"
         android:textSize="12sp"
         app:typekitFont="maven" />

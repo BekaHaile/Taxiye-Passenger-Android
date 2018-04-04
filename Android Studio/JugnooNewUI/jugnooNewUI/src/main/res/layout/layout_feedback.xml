@@ -108,7 +108,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10px"
-                        android:text="Aug 5, 2016"
+                        android:text="@string/aug_5_2016"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_22" />
 
@@ -455,7 +455,7 @@
                 android:id="@+id/textViewRSScroll"
                 android:layout_width="20px"
                 android:layout_height="20px"
-                android:text=" " />
+                android:text="@string/space" />
 
         </LinearLayout>
     </ScrollView>

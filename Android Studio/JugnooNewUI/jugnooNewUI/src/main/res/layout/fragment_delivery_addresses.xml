@@ -173,7 +173,7 @@
                         android:gravity="center|left"
                         android:textSize="32px"
                         android:textColor="@color/text_color"
-                        android:text="Set Location on Map"
+                        android:text="@string/set_location_on_map"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
 
