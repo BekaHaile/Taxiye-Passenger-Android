@@ -1012,7 +1012,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             callback.onBannerInfoDeepIndexClick(bannerInfo.getDeepIndex());
                         } else if (bannerInfo.getRestaurantId() != -1 && bannerInfo.getDeepIndex() == -1) {
                             callback.onRestaurantSelected(bannerInfo.getRestaurantId(),
-                                    ((MenusResponse.BannerInfo) dataToDisplay.get(position)).getShouldOpenMerchantInfo());
+                                    bannerInfo.getShouldOpenMerchantInfo());
                         }
                     }
                 });
@@ -1306,7 +1306,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             callback.onBannerInfoDeepIndexClick(stripInfo.getDeepIndex());
                         } else if (stripInfo.getRestaurantId() != -1 && stripInfo.getDeepIndex() == -1) {
                             callback.onRestaurantSelected(stripInfo.getRestaurantId(),
-                                    ((MenusResponse.StripInfo) dataToDisplay.get(pos)).getShouldOpenMerchantInfo());
+                                    stripInfo.getShouldOpenMerchantInfo());
                         }
                     }
                     break;
