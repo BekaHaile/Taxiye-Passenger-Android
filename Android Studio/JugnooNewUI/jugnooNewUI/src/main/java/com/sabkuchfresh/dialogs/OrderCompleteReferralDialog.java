@@ -100,6 +100,8 @@ public class OrderCompleteReferralDialog  extends OrderCompletDialog implements 
 					tvYourOrder.setText(orderText);
 					LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) tvYourOrder.getLayoutParams();
 					params.setMargins(0, 0, 0, (int) (ASSL.Yscale() * 26f));
+					params.setMarginStart(0);
+					params.setMarginEnd(0);
 					tvYourOrder.setLayoutParams(params);
 				} else {
 					tvOrderTimeVal.setText(orderTime);

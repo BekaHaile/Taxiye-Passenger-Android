@@ -109,11 +109,15 @@ public class OrderItemsAdapter extends BaseAdapter {
 			mHolder.textViewItemCustomizeText.setVisibility(View.GONE);
 			params.addRule(RelativeLayout.CENTER_VERTICAL);
 			params.setMargins((int)(30.0f * ASSL.Xscale()), 0, 0, 0);
+			params.setMarginStart((int)(30.0f * ASSL.Xscale()));
+			params.setMarginEnd(0);
 		} else {
 			mHolder.textViewItemCustomizeText.setVisibility(View.VISIBLE);
 			mHolder.textViewItemCustomizeText.setText(subItem.getCustomisations());
 			params.addRule(RelativeLayout.CENTER_VERTICAL, 0);
 			params.setMargins((int)(30.0f * ASSL.Xscale()), (int) (30.0f * ASSL.Yscale()), 0, 0);
+			params.setMarginStart((int)(30.0f * ASSL.Xscale()));
+			params.setMarginEnd(0);
 		}
 		mHolder.imageViewItemImage.setLayoutParams(params);
 	}
@@ -140,6 +144,8 @@ public class OrderItemsAdapter extends BaseAdapter {
 
 			RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewSep.getLayoutParams();
 			layoutParams.setMargins(55, 0, 34, 0);
+			layoutParams.setMarginStart(55);
+			layoutParams.setMarginEnd(34);
 			imageViewSep.setLayoutParams(layoutParams);
 
 		}

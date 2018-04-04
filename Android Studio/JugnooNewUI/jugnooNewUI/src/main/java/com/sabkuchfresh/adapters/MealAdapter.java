@@ -150,6 +150,8 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
             int margin = activity.getResources().getDimensionPixelSize(R.dimen.dp_12);
             layoutParams.setMargins(margin, margin, margin, margin);
+            layoutParams.setMarginStart(margin);
+            layoutParams.setMarginEnd(margin);
             v.setLayoutParams(layoutParams);
             return new ViewHolderBulkOrder(v);
         }

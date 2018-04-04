@@ -284,7 +284,7 @@ public class ProsCheckoutFragment extends Fragment {
 
 	public void updateAddressView(){
 		imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
-		imageViewAddressType.setPadding(0,0,0,0);
+		imageViewAddressType.setPaddingRelative(0,0,0,0);
 		textViewAddressName.setVisibility(View.GONE);
 		textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color));
 		if(!addressSelectedNotValid() && !TextUtils.isEmpty(activity.getSelectedAddress())) {
@@ -314,7 +314,7 @@ public class ProsCheckoutFragment extends Fragment {
 			imageViewAddressType.setImageResource(R.drawable.ic_exclamation_address);
 			imageViewDeliveryAddressForward.getDrawable().mutate().setColorFilter(ContextCompat.getColor(activity,R.color.red_alert_no_address), PorterDuff.Mode.SRC_ATOP);
 			int padding = activity.getResources().getDimensionPixelSize(R.dimen.dp_2);
-			imageViewAddressType.setPadding(padding,padding,padding,padding);
+			imageViewAddressType.setPaddingRelative(padding,padding,padding,padding);
 			textViewAddressValue.setVisibility(View.GONE);
 			tvNoAddressAlert.setVisibility(View.VISIBLE);
 		}

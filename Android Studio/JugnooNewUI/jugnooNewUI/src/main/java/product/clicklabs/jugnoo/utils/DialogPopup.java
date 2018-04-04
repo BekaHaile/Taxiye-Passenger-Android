@@ -323,6 +323,8 @@ public class DialogPopup {
 				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutInner.getLayoutParams();
 				int margin = (int) (30.0f * Math.min(ASSL.Xscale(), ASSL.Yscale()));
 				params.setMargins(margin, margin, margin, margin);
+				params.setMarginStart(margin);
+				params.setMarginEnd(margin);
 				relativeLayoutInner.setLayoutParams(params);
 			}
 			if(leftOriented) {

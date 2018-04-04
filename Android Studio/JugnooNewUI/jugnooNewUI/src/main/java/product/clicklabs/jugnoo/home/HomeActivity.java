@@ -2457,11 +2457,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     mapTopPadding = 200.0f;
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) centreLocationRl.getLayoutParams();
                     params.setMargins(0, (int) (ASSL.Yscale() * mapTopPadding), 0, 0);
+                    params.setMarginStart(0);
+                    params.setMarginEnd(0);
                     centreLocationRl.setLayoutParams(params);
                 }else {
                     mapTopPadding = 100.0f;
                 }
-                map.setPadding(0, (int) (ASSL.Yscale() * mapTopPadding), 0, (int) (ASSL.Yscale() * bottomPadding));
+                map.setPaddingRelative(0, (int) (ASSL.Yscale() * mapTopPadding), 0, (int) (ASSL.Yscale() * bottomPadding));
                 googleMapPadding = bottomPadding;
                 setCentrePinAccToGoogleMapPadding();
             }
@@ -3560,13 +3562,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void setMargins (View view, int left, int top, int right, int bottom) {
-        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-            p.setMargins(left, top, right, bottom);
-            view.requestLayout();
-        }
-    }
 
 
     private void setFabViewAtRide(PassengerScreenMode mode){

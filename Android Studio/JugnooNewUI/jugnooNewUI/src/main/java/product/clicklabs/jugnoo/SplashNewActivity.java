@@ -1323,6 +1323,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
 				params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
 				params.setMargins(0, (int)(ASSL.Yscale()*150), 0, 0);
+				params.setMarginStart(0);
+				params.setMarginEnd(0);
 				llLoginContainer.setLayoutParams(params);
 			}
 
@@ -1331,6 +1333,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
 				params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
 				params.setMargins(0, 0, 0, 0);
+				params.setMarginStart(0);
+				params.setMarginEnd(0);
 				llLoginContainer.setLayoutParams(params);
 			}
 		}));

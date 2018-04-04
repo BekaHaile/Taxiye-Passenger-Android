@@ -394,7 +394,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.layoutActualPost.getLayoutParams();
                 layoutParams.setMargins(FeedUtils.dpToPx(12),0,FeedUtils.dpToPx(20),FeedUtils.dpToPx(12));
-                holder.layoutActualPost.setPadding(0,FeedUtils.dpToPx(20),0,0);
+                layoutParams.setMarginStart(FeedUtils.dpToPx(12));
+                layoutParams.setMarginEnd(FeedUtils.dpToPx(20));
+                holder.layoutActualPost.setPaddingRelative(0,FeedUtils.dpToPx(20),0,0);
                 holder.layoutActualPost.setLayoutParams(layoutParams);
            /* if (userImage != null)
                 Picasso.with(activity).load(userImage).resize(FeedUtils.convertDpToPx(activity, 50), FeedUtils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivUserProfilePic);*/
@@ -405,7 +407,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.layoutActualPost.getLayoutParams();
                 layoutParams.setMargins(0,0,0,0);
-                holder.layoutActualPost.setPadding(0,FeedUtils.dpToPx(20),0,0);
+                layoutParams.setMarginStart(0);
+                layoutParams.setMarginEnd(0);
+                holder.layoutActualPost.setPaddingRelative(0,FeedUtils.dpToPx(20),0,0);
                 holder.layoutActualPost.setLayoutParams(layoutParams);
             }
 
@@ -454,6 +458,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     View tab = ((ViewGroup) holder.tabDots.getChildAt(0)).getChildAt(i);
                     ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
                     p.setMargins(activity.getResources().getDimensionPixelSize(R.dimen.dp_4), 0, 0, 0);
+                    p.setMarginStart(activity.getResources().getDimensionPixelSize(R.dimen.dp_4));
+                    p.setMarginEnd(0);
                     tab.requestLayout();
                 }
                 holder.tabDots.setVisibility(reviewImages.size() > 1 ? View.VISIBLE : View.GONE);

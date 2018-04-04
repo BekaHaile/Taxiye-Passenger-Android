@@ -432,6 +432,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             statusHolder.tvOrderNotDelivered.setText(R.string.dig_in_enjoy_food_experience_feedback);
                         }
                         paramsTV.setMargins(paramsTV.leftMargin, marginTop, paramsTV.rightMargin, paramsTV.bottomMargin);
+                        paramsTV.setMarginStart(paramsTV.getMarginStart());
+                        paramsTV.setMarginEnd(paramsTV.getMarginEnd());
                         statusHolder.tvOrderNotDelivered.setLayoutParams(paramsTV);
                     } else {
                         statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
@@ -481,10 +483,14 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     paramsCloseTime.addRule(RelativeLayout.BELOW, mHolder.textViewMinimumOrder.getId());
                     paramsCloseTime.setMargins(paramsCloseTime.leftMargin, (int)(ASSL.Yscale() * 14f), (int)(ASSL.Xscale() * 14f),
                             paramsCloseTime.bottomMargin);
+                    paramsCloseTime.setMarginStart(paramsCloseTime.getMarginStart());
+                    paramsCloseTime.setMarginEnd((int)(ASSL.Xscale() * 14f));
 
                     paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 23f), paramsDelivery.rightMargin,
                             (int)(ASSL.Yscale() * 26f));
-                    paramsDelivery.addRule(RelativeLayout.RIGHT_OF, mHolder.textViewRestaurantCloseTime.getId());
+                    paramsDelivery.setMarginStart(paramsDelivery.getMarginStart());
+                    paramsDelivery.setMarginEnd(paramsDelivery.getMarginEnd());
+                    paramsDelivery.addRule(RelativeLayout.END_OF, mHolder.textViewRestaurantCloseTime.getId());
                     mHolder.imageViewRestaurantImage.setColorFilter(BW_FILTER);
                     mHolder.tvOffer.getBackground().setColorFilter(BW_FILTER);
                     mHolder.textViewMinimumOrder.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
@@ -499,17 +505,23 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         mHolder.textViewRestaurantCloseTime.setText("Closing in " + minutes + (minutes>1?" mins":" min"));
                         paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 14f), paramsDelivery.rightMargin,
                                 (int)(ASSL.Yscale() * 14f));
+                        paramsDelivery.setMarginStart(paramsDelivery.getMarginStart());
+                        paramsDelivery.setMarginEnd(paramsDelivery.getMarginEnd());
                     }
                     // restaurant is open
                     else {
                         visibilityCloseTime = View.GONE;
                         paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 14f), paramsDelivery.rightMargin,
                                 (int)(ASSL.Yscale() * 26f));
+                        paramsDelivery.setMarginStart(paramsDelivery.getMarginStart());
+                        paramsDelivery.setMarginEnd(paramsDelivery.getMarginEnd());
                     }
-                    paramsDelivery.addRule(RelativeLayout.RIGHT_OF, mHolder.imageViewRestaurantImage.getId());
+                    paramsDelivery.addRule(RelativeLayout.END_OF, mHolder.imageViewRestaurantImage.getId());
                     paramsCloseTime.addRule(RelativeLayout.BELOW, mHolder.textViewDelivery.getId());
                     paramsCloseTime.setMargins(paramsCloseTime.leftMargin, visDeliveryTime != View.VISIBLE ? (int)(ASSL.Yscale() * 14f) : 0, 0,
                             paramsCloseTime.bottomMargin);
+                    paramsCloseTime.setMarginStart(paramsCloseTime.getMarginStart());
+                    paramsCloseTime.setMarginEnd(0);
                 }
                 mHolder.textViewRestaurantCloseTime.setVisibility(visibilityCloseTime);
                 mHolder.textViewRestaurantCloseTime.setLayoutParams(paramsCloseTime);
@@ -636,6 +648,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     View tab = ((ViewGroup) holderOffers.tabDots.getChildAt(0)).getChildAt(i);
                     ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
                     p.setMargins(activity.getResources().getDimensionPixelSize(R.dimen.dp_4), 0, 0, 0);
+                    p.setMarginStart(activity.getResources().getDimensionPixelSize(R.dimen.dp_4));
+                    p.setMarginEnd(0);
                     tab.requestLayout();
                 }
                 if(bannerInfos.size() == 1){
