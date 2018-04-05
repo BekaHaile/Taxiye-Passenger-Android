@@ -33,6 +33,7 @@
             android:theme="@style/GreyHighlight"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back_selector"
+            android:rotationY="@integer/locale_mirror_flip"
             />
 
         <View

@@ -61,7 +61,7 @@
 
                     <TextView
                         android:id="@+id/textViewEndRideDriverName"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="10px"
@@ -89,7 +89,7 @@
 
                     <TextView
                         android:id="@+id/textViewEndRideDriverCarNumber"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="8px"
@@ -156,7 +156,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideFare"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
@@ -167,7 +167,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideFareValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="40px"
@@ -187,7 +187,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideLuggageCharge"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
@@ -198,7 +198,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideLuggageChargeValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="40px"
@@ -217,7 +217,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideConvenienceCharge"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
@@ -228,7 +228,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideConvenienceChargeValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="40px"
@@ -247,7 +247,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideDiscount"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
@@ -258,7 +258,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideDiscountValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="40px"
@@ -286,7 +286,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideFinalFare"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
@@ -296,7 +296,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideFinalFareValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="40px"
@@ -315,7 +315,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideJugnooCash"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
@@ -326,7 +326,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideJugnooCashValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="40px"
@@ -344,7 +344,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRidePaytm"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
@@ -355,7 +355,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRidePaytmValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="40px"
@@ -373,7 +373,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideMobikwik"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
@@ -384,7 +384,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideMobikwikValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="40px"
@@ -402,7 +402,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideFreeCharge"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
@@ -413,7 +413,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideFreeChargeValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="40px"
@@ -431,7 +431,7 @@
 
                             <TextView
                                 android:id="@+id/tvEndRideRazorpay"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
@@ -443,7 +443,7 @@
 
                             <TextView
                                 android:id="@+id/tvEndRideRazorpayValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="40px"
@@ -462,7 +462,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideToBePaid"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
@@ -473,7 +473,7 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideToBePaidValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="40px"
@@ -695,7 +695,9 @@
                             android:layout_height="44px"
                             android:layout_centerHorizontal="true"
                             android:src="@drawable/start_end_icon"
-                            android:tag="mwar" />
+                            android:tag="mwar"
+                            android:rotationY="@integer/locale_mirror_flip"
+                            />
 
                         <LinearLayout
                             android:layout_width="280px"

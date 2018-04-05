@@ -45,7 +45,7 @@
 
             <TextView
                 android:id="@+id/tvOfferingName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/autos"
                 android:textAllCaps="true"
@@ -54,7 +54,7 @@
 
             <TextView
                 android:id="@+id/tvOfferingBenefits"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7px"
                 android:text="ajhdjkas"

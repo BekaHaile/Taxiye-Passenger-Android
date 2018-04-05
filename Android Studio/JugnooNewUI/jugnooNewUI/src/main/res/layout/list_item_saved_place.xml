@@ -29,14 +29,13 @@
         android:layout_marginTop="20px"
         android:layout_toStartOf="@+id/ivDeleteAddress"
         android:layout_toEndOf="@+id/imageViewType"
-        android:gravity="center"
         android:orientation="vertical"
         android:splitMotionEvents="false"
         >
 
         <TextView
             android:id="@+id/textViewSearchName"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name"
             android:textColor="@color/text_color_light_selector"
@@ -44,7 +43,7 @@
 
         <TextView
             android:id="@+id/textViewSearchAddress"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7px"
             android:text=""
@@ -54,7 +53,7 @@
 
         <TextView
             android:id="@+id/textViewAddressUsed"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7px"
             android:text="@string/address_used_multiple_time_format"

@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/textViewDiscount"
-        android:layout_width="300px"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30px"
         android:gravity="center_vertical"
@@ -17,7 +17,7 @@
 
     <TextView
         android:id="@+id/textViewDiscountValue"
-        android:layout_width="200px"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="40px"
