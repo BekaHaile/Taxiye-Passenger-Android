@@ -16,8 +16,8 @@
 
     <ImageView
         android:id="@+id/ivLogoP"
-        android:layout_width="81dp"
-        android:layout_height="81dp"
+        android:layout_width="193dp"
+        android:layout_height="48dp"
         android:src="@drawable/ic_taxi_logo"
         android:tag="@string/dont_touch_me"
         android:layout_centerHorizontal="true"

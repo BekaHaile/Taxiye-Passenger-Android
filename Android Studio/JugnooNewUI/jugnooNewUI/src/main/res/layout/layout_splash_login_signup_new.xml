@@ -49,8 +49,8 @@
 
                 <ImageView
                     android:id="@+id/imageViewJugnooLogo"
-                    android:layout_width="81dp"
-                    android:layout_height="81dp"
+                    android:layout_width="193dp"
+                    android:layout_height="48dp"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/ic_taxi_logo"
                     android:focusable="true"
