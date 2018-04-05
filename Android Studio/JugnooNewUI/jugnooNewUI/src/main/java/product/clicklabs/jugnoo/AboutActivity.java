@@ -53,6 +53,9 @@ public class AboutActivity extends BaseActivity {
         relativeLayoutTNC = (RelativeLayout) findViewById(R.id.relativeLayoutTNC);
         relativeLayoutPrivacy = (RelativeLayout) findViewById(R.id.relativeLayoutPrivacy);
         relativeLayoutAbout = (RelativeLayout) findViewById(R.id.relativeLayoutAbout);
+        relativeLayoutAbout.setVisibility(View.GONE);
+        relativeLayoutPrivacy.setVisibility(View.GONE);
+        relativeLayoutTNC.setVisibility(View.GONE);
 
         textViewRateUs = (TextView) findViewById(R.id.textViewRateUs);
         textViewRateUs.setTypeface(Fonts.mavenLight(this));

@@ -76,7 +76,7 @@
                     android:layout_marginRight="20px"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text="Finding a Jugnoo driver..."
+                    android:text="Finding a driver..."
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_34" />
 

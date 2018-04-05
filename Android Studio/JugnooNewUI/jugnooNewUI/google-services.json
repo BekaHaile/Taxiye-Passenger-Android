@@ -8,12 +8,32 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:204360948031:android:8abc750aaf179aa8",
+        "mobilesdk_app_id": "1:204360948031:android:66ba4cae46d449a0",
         "android_client_info": {
-          "package_name": "production.product.jingos.driver"
+          "package_name": "production.jingos.customer"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "204360948031-mig0i9uvje0k8bvbf4fe87sd5kfm90du.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "production.jingos.customer",
+            "certificate_hash": "32031a8c87e112337d565114576a2f56a4587e52"
+          }
+        },
+        {
+          "client_id": "204360948031-14lq93stbb1kpbpkhcusbsracerfu3ad.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "production.jingos.customer",
+            "certificate_hash": "fdf071c5f1e9318ac811df588a55085e4c5a6f11"
+          }
+        },
+        {
+          "client_id": "204360948031-4scattcu43l308rkc6aa8suo39tiql8k.apps.googleusercontent.com",
+          "client_type": 3
+        },
         {
           "client_id": "204360948031-e5s2qvlpsa26jhcgoulnpl7gftibk1cr.apps.googleusercontent.com",
           "client_type": 3
@@ -29,8 +49,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "204360948031-4scattcu43l308rkc6aa8suo39tiql8k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2
@@ -39,12 +64,16 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:204360948031:android:66ba4cae46d449a0",
+        "mobilesdk_app_id": "1:204360948031:android:8abc750aaf179aa8",
         "android_client_info": {
-          "package_name": "production.jingos.customer"
+          "package_name": "production.product.jingos.driver"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "204360948031-4scattcu43l308rkc6aa8suo39tiql8k.apps.googleusercontent.com",
+          "client_type": 3
+        },
         {
           "client_id": "204360948031-e5s2qvlpsa26jhcgoulnpl7gftibk1cr.apps.googleusercontent.com",
           "client_type": 3
