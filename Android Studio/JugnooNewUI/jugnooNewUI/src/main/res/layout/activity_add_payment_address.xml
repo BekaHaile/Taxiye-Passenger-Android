@@ -17,8 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:layout_marginRight="25dp"
-        android:layout_marginLeft="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginStart="25dp"
         android:orientation="vertical">
 
     <ImageView
@@ -53,19 +53,19 @@
                 android:textColor="@color/text_color"
                 android:hint="@string/enter_name"
                 android:textColorHint="@color/text_color_hint"
-                android:paddingLeft="8dp"
+                android:paddingStart="8dp"
                 android:inputType="textCapWords"
                 android:lines="1"
                 android:maxLines="1"
                 android:textCursorDrawable="@drawable/cursor_black"
-                android:layout_toLeftOf="@+id/ivContacts"/>
+                android:layout_toStartOf="@+id/ivContacts"/>
 
             <ImageView
                 android:id="@+id/ivContacts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_contact_pay"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:padding="10dp"
                 android:layout_centerVertical="true"/>
 
@@ -81,7 +81,7 @@
             android:textColorHint="@color/text_color_hint"
             android:layout_marginTop="10dp"
             android:inputType="textEmailAddress"
-            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
             android:lines="1"
             android:maxLines="1"
             android:ellipsize="end"

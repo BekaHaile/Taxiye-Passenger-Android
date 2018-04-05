@@ -175,7 +175,7 @@
 //		LinearLayout linear_bottom = new LinearLayout(activity);
 //		linear_match_match.topMargin = 8;
 //		linear_bottom.setLayoutParams(linear_match_match);
-//		linear_bottom.setPadding(5, 5, 5, 5);
+//		linear_bottom.setPaddingRelative(5, 5, 5, 5);
 //
 //		btn_set = new Button(activity);
 //		button_params.setMargins(5, 0, 0, 0);

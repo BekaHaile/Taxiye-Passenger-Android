@@ -19,8 +19,8 @@
             android:id="@+id/searchLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/background_search_shap">
 
@@ -33,7 +33,7 @@
                 android:gravity="center_vertical"
                 android:nextFocusDown="@+id/password_et"
                 android:padding="5dp"
-                android:layout_toLeftOf="@+id/imageViewSearch"
+                android:layout_toStartOf="@+id/imageViewSearch"
                 android:inputType="textCapSentences"
                 android:hint="@string/mobile_contact"
                 android:maxLines="1"
@@ -47,9 +47,9 @@
                 android:id="@+id/imageViewSearch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
                 android:src="@drawable/search_pay"/>
 
         </RelativeLayout>

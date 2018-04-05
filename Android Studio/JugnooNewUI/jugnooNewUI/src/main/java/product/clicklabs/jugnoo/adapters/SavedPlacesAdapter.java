@@ -154,6 +154,8 @@ public class SavedPlacesAdapter extends BaseAdapter{
                 params.addRule(RelativeLayout.BELOW, 0);
                 int margin = addSepMargins ? (int)(ASSL.Xscale() * 35f) : 0;
                 params.setMargins(margin, 0, margin, 0);
+                params.setMarginStart(margin);
+                params.setMarginEnd(margin);
                 holder.imageViewSep.setLayoutParams(params);
                 holder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.stroke_light_grey_alpha));
             } else {

@@ -49,9 +49,13 @@ public class RestaurantQuerySuggestionsAdapter extends RecyclerView.Adapter<Rest
             RelativeLayout.LayoutParams paramsSep = (RelativeLayout.LayoutParams) holder.vSep.getLayoutParams();
             if(position == 0){
                 paramsSep.setMargins(0, 0, 0, 0);
+                paramsSep.setMarginStart(0);
+                paramsSep.setMarginEnd(0);
             } else {
                 int margin = holder.vSep.getContext().getResources().getDimensionPixelSize(R.dimen.dp_20);
                 paramsSep.setMargins(margin, 0, margin, 0);
+                paramsSep.setMarginStart(margin);
+                paramsSep.setMarginEnd(margin);
             }
             holder.vSep.setLayoutParams(paramsSep);
 

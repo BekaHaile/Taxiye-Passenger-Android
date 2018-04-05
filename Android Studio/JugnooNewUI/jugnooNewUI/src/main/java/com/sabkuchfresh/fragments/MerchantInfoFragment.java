@@ -461,8 +461,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         labelMinOrderAmt.setVisibility(View.GONE);
                         tvMinOrderAmt.setVisibility(View.GONE);
                         viewCenterOrder.setVisibility(View.GONE);
-                        removeRule(RelativeLayout.ALIGN_PARENT_LEFT, labelDeliversIn);
-                        removeRule(RelativeLayout.ALIGN_PARENT_LEFT, tvDeliversIn);
+                        removeRule(RelativeLayout.ALIGN_PARENT_START, labelDeliversIn);
+                        removeRule(RelativeLayout.ALIGN_PARENT_START, tvDeliversIn);
                         layoutOrderDetails.setVisibility(View.VISIBLE);
 
 

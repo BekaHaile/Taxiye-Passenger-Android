@@ -20,7 +20,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -184,7 +183,7 @@ public class DialogPopup {
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_no_internet);
 
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, false);
 
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
@@ -323,12 +322,14 @@ public class DialogPopup {
 				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutInner.getLayoutParams();
 				int margin = (int) (30.0f * Math.min(ASSL.Xscale(), ASSL.Yscale()));
 				params.setMargins(margin, margin, margin, margin);
+				params.setMarginStart(margin);
+				params.setMarginEnd(margin);
 				relativeLayoutInner.setLayoutParams(params);
 			}
 			if(leftOriented) {
-				textMessage.setGravity(Gravity.LEFT);
+				textMessage.setGravity(Gravity.START);
 				LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) textMessage.getLayoutParams();
-				layoutParams1.gravity=Gravity.LEFT;
+				layoutParams1.gravity=Gravity.START;
 				textMessage.setLayoutParams(layoutParams1);
 			}
 			textHead.setText(title);
@@ -529,7 +530,7 @@ public class DialogPopup {
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 				dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
-				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 				new ASSL(activity, frameLayout, 1134, 720, true);
 
 				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
@@ -628,7 +629,7 @@ public class DialogPopup {
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_upload_contacts);
 
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
 
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();

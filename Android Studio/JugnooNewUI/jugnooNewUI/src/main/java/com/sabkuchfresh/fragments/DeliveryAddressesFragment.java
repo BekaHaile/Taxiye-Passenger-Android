@@ -607,6 +607,8 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                             height : 0);
                 }
                 paramsRL.setMargins(0, 0, 0, 0);
+                paramsRL.setMarginStart(0);
+                paramsRL.setMarginEnd(0);
                 rlMarkerPin.setLayoutParams(paramsRL);
             }else{
                 RelativeLayout.LayoutParams paramsRL = (RelativeLayout.LayoutParams) rlMarkerPin.getLayoutParams();
@@ -622,14 +624,26 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
                     if (savedPlacesAdapter.getCount() >= 3) {
                         height = activity.getResources().getDimensionPixelSize(R.dimen.dp_280);
                         paramsRL.setMargins(0, 0, 0, height);
+                        paramsRL.setMarginStart(0);
+                        paramsRL.setMarginEnd(0);
                         paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_300));
+                        paramsB.setMarginStart(0);
+                        paramsB.setMarginEnd(0);
                     } else {
                         paramsRL.setMargins(0, 0, 0, height);
+                        paramsRL.setMarginStart(0);
+                        paramsRL.setMarginEnd(0);
                         paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_186));
+                        paramsB.setMarginStart(0);
+                        paramsB.setMarginEnd(0);
                     }
                 } else {
                     paramsRL.setMargins(0, 0, 0, 0);
+                    paramsRL.setMarginStart(0);
+                    paramsRL.setMarginEnd(0);
                     paramsB.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_20));
+                    paramsB.setMarginStart(0);
+                    paramsB.setMarginEnd(0);
                 }
                 rlMarkerPin.setLayoutParams(paramsRL);
                 bNext.setLayoutParams(paramsB);

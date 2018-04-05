@@ -28,8 +28,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_10"
                 android:visibility="visible"
-                android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
                 android:layout_marginTop="@dimen/dp_10"
                 android:orientation="horizontal"
                 >
@@ -62,16 +62,16 @@
                 android:id="@+id/divider_below_rlOrderStatusFeed"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_1"
-                android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
                 android:background="@color/stroke_light_grey_alpha"
                 />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_10"
-                android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
                 android:layout_marginTop="@dimen/dp_10"
                 android:orientation="horizontal"
                 >
@@ -101,8 +101,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_1"
-                android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
                 android:background="@color/stroke_light_grey_alpha"
                 />
 
@@ -111,8 +111,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_10"
-                android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
                 android:layout_marginTop="@dimen/dp_10"
                 android:orientation="horizontal"
                 >
@@ -142,8 +142,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_1"
-                android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
                 android:layout_marginTop="-1dp"
                 android:background="@color/stroke_light_grey_alpha"
                 />
@@ -153,8 +153,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_10"
-                android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
                 android:layout_marginTop="@dimen/dp_10"
                 android:orientation="horizontal"
                 >
@@ -195,7 +195,7 @@
                             android:id="@+id/tvFromPlace"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_5"
+                            android:layout_marginStart="@dimen/dp_5"
                             android:text="HOME"
                             android:textAllCaps="true"
                             android:textColor="@color/text_color"
@@ -219,8 +219,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_1"
-                android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
                 android:background="@color/stroke_light_grey_alpha"
                 />
 
@@ -228,8 +228,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_10"
-                android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
                 android:layout_marginTop="@dimen/dp_10"
                 android:orientation="horizontal"
                 >
@@ -270,7 +270,7 @@
                             android:id="@+id/tvDeliveryPlace"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/dp_5"
+                            android:layout_marginStart="@dimen/dp_5"
                             android:text="HOME"
                             android:textAllCaps="true"
                             android:textColor="@color/text_color"
@@ -295,8 +295,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_2"
-                android:layout_marginLeft="@dimen/dp_12"
-                android:layout_marginRight="@dimen/dp_12"
+                android:layout_marginStart="@dimen/dp_12"
+                android:layout_marginEnd="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_12"
                 android:background="@drawable/bg_white_layer_shadow_bottom_right"
                 android:orientation="vertical"
@@ -334,8 +334,8 @@
                         android:id="@+id/tvAmountValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/dp_10"
-                        android:gravity="right"
+                        android:layout_marginStart="@dimen/dp_10"
+                        android:gravity="end"
                         android:text=""
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_15"
@@ -351,8 +351,8 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_12"
-                android:layout_marginRight="@dimen/dp_12"
+                android:layout_marginStart="@dimen/dp_12"
+                android:layout_marginEnd="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_12"
                 android:orientation="vertical"
                 app:cardBackgroundColor="@color/white"
@@ -379,8 +379,8 @@
 
                     <View
                         style="@style/HorizontalDividerLight"
-                        android:layout_marginLeft="@dimen/dp_17"
-                        android:layout_marginRight="@dimen/dp_17"/>
+                        android:layout_marginStart="@dimen/dp_17"
+                        android:layout_marginEnd="@dimen/dp_17"/>
 
                     <LinearLayout
                         android:id="@+id/llFeedExtraCharges"
@@ -398,8 +398,8 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
                 android:layout_marginTop="14dp"
                 android:orientation="vertical"
                 app:cardBackgroundColor="@color/white"
@@ -427,8 +427,8 @@
 
                     <View
                         style="@style/HorizontalDividerLight"
-                        android:layout_marginLeft="17dp"
-                        android:layout_marginRight="17dp"/>
+                        android:layout_marginStart="17dp"
+                        android:layout_marginEnd="17dp"/>
 
                     <RelativeLayout
                         android:id="@+id/rlWalletDeducted"
@@ -440,7 +440,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="20dp"
+                            android:layout_marginStart="20dp"
                             android:tag="mwar"
                             android:text="@string/cash"
                             android:textColor="@color/text_color"
@@ -451,10 +451,10 @@
                             android:id="@+id/tvAmountPayableVal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:layout_marginBottom="13dp"
-                            android:layout_marginRight="18dp"
+                            android:layout_marginEnd="18dp"
                             android:layout_marginTop="15dp"
                             android:text="@string/rupee_0"
                             android:textColor="@color/text_color"
@@ -465,8 +465,8 @@
                             android:id="@+id/vDividerPayment"
                             style="@style/HorizontalDividerDotted"
                             android:layout_below="@+id/tvAmountPayableVal"
-                            android:layout_marginLeft="@dimen/dp_20"
-                            android:layout_marginRight="@dimen/dp_20"/>
+                            android:layout_marginStart="@dimen/dp_20"
+                            android:layout_marginEnd="@dimen/dp_20"/>
 
                     </RelativeLayout>
 
@@ -486,8 +486,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_2"
-                android:layout_marginLeft="@dimen/dp_12"
-                android:layout_marginRight="@dimen/dp_12"
+                android:layout_marginStart="@dimen/dp_12"
+                android:layout_marginEnd="@dimen/dp_12"
                 android:layout_marginTop="@dimen/dp_12"
                 android:background="@drawable/bg_white_layer_shadow_bottom_right"
                 >
@@ -514,7 +514,7 @@
                         android:layout_width="@dimen/dp_24"
                         android:layout_height="@dimen/dp_13"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/tvPaidViaValue"
+                        android:layout_toStartOf="@+id/tvPaidViaValue"
                         android:src="@drawable/ic_cash_no_padding"
                         />
 
@@ -522,9 +522,9 @@
                         android:id="@+id/tvPaidViaValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginStart="@dimen/dp_10"
                         android:text="Cash"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_15"
@@ -538,8 +538,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_14"
-                android:layout_marginRight="@dimen/dp_14"
+                android:layout_marginStart="@dimen/dp_14"
+                android:layout_marginEnd="@dimen/dp_14"
                 android:layout_marginTop="@dimen/dp_10"
                 android:gravity="center"
                 android:orientation="horizontal"

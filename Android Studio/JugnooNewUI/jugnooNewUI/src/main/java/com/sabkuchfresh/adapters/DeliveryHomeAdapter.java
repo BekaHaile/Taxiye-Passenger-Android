@@ -965,7 +965,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 }
                 statusHolder.rlRootNewOrder.setBackgroundDrawable(ContextCompat.getDrawable(activity, backgroundDrawable));
-                statusHolder.rlRootNewOrder.setPadding(paddingRecentOrders, paddingRecentOrders, paddingRecentOrders, paddingRecentOrders);
+                statusHolder.rlRootNewOrder.setPaddingRelative(paddingRecentOrders, paddingRecentOrders, paddingRecentOrders, paddingRecentOrders);
 
 
 //                setHolderMethod(statusHolder, recentOrder);
@@ -1026,6 +1026,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 View tab = ((ViewGroup) holderOffers.tabDots.getChildAt(0)).getChildAt(i);
                 ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
                 p.setMargins(activity.getResources().getDimensionPixelSize(R.dimen.dp_4), 0, 0, 0);
+                p.setMarginStart(activity.getResources().getDimensionPixelSize(R.dimen.dp_4));
+                p.setMarginEnd(0);
                 tab.requestLayout();
             }
             if (bannerInfos.size() == 1) {
@@ -1077,7 +1079,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void setPaddingIfLastElement(View rootLayout, FormAddRestaurantModel formAddRestaurantModel) {
         int normalPadding = activity.getResources().getDimensionPixelSize(R.dimen.padding_custom_order_root_layout);
         int paddingBottom = formAddRestaurantModel.isIncludePaddingAtBottom() ? activity.getResources().getDimensionPixelSize(R.dimen.padding_bottom_delivery_home_page) : normalPadding;
-        rootLayout.setPadding(normalPadding, normalPadding, normalPadding, paddingBottom);
+        rootLayout.setPaddingRelative(normalPadding, normalPadding, normalPadding, paddingBottom);
     }
 
     private void setHolderMethod(ViewOrderStatus statusHolder, RecentOrder recentOrder) {
@@ -1164,6 +1166,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 statusHolder.tvOrderNotDelivered.setText(R.string.dig_in_enjoy_food_experience_feedback);
             }
             paramsTV.setMargins(paramsTV.leftMargin, marginTop, paramsTV.rightMargin, paramsTV.bottomMargin);
+            paramsTV.setMarginStart(paramsTV.getMarginStart());
+            paramsTV.setMarginEnd(paramsTV.getMarginEnd());
             statusHolder.tvOrderNotDelivered.setLayoutParams(paramsTV);
         } else {
             statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);

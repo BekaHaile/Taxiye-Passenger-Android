@@ -41,21 +41,21 @@
                     android:id="@+id/imageViewRadioPaytm"
                     android:layout_width="33px"
                     android:layout_height="33px"
-                    android:layout_marginLeft="23px"
+                    android:layout_marginStart="23px"
                     android:src="@drawable/ic_radio_button_normal"
                     android:tag="mwar"/>
 
                 <ImageView
                     style="@style/payment_option_icon_small"
                     android:src="@drawable/ic_paytm_small"
-                    android:layout_marginLeft="10px"
+                    android:layout_marginStart="10px"
                     />
 
                 <TextView
                     android:id="@+id/textViewPaytm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px"
+                    android:layout_marginStart="10px"
                     android:text="@string/paytm_wallet"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_30"/>
@@ -66,9 +66,9 @@
                 android:id="@+id/textViewPaytmValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="30px"
+                android:layout_marginEnd="30px"
                 android:text="200"
                 android:textColor="@color/theme_green_color"
                 android:textSize="@dimen/text_size_30"/>
@@ -94,21 +94,21 @@
                     android:id="@+id/imageViewRadioMobikwik"
                     android:layout_width="33px"
                     android:layout_height="33px"
-                    android:layout_marginLeft="23px"
+                    android:layout_marginStart="23px"
                     android:src="@drawable/ic_radio_button_normal"
                     android:tag="mwar"/>
 
                 <ImageView
                     style="@style/payment_option_icon_small"
                     android:src="@drawable/ic_mobikwik_small"
-                    android:layout_marginLeft="10px"
+                    android:layout_marginStart="10px"
                     />
 
                 <TextView
                     android:id="@+id/textViewMobikwik"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px"
+                    android:layout_marginStart="10px"
                     android:text="@string/mobikwik_wallet"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_30"/>
@@ -119,9 +119,9 @@
                 android:id="@+id/textViewMobikwikValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="30px"
+                android:layout_marginEnd="30px"
                 android:text="200"
                 android:textColor="@color/theme_green_color"
                 android:textSize="@dimen/text_size_30"/>
@@ -147,21 +147,21 @@
                     android:id="@+id/imageViewRadioFreeCharge"
                     android:layout_width="33px"
                     android:layout_height="33px"
-                    android:layout_marginLeft="23px"
+                    android:layout_marginStart="23px"
                     android:src="@drawable/ic_radio_button_normal"
                     android:tag="mwar"/>
 
                 <ImageView
                     style="@style/payment_option_icon_small"
                     android:src="@drawable/ic_freecharge_small"
-                    android:layout_marginLeft="10px"
+                    android:layout_marginStart="10px"
                     />
 
                 <TextView
                     android:id="@+id/textViewFreeCharge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10px"
+                    android:layout_marginStart="10px"
                     android:text="@string/freecharge_wallet"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_30"/>
@@ -172,9 +172,9 @@
                 android:id="@+id/textViewFreeChargeValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="30px"
+                android:layout_marginEnd="30px"
                 android:text="200"
                 android:textColor="@color/theme_green_color"
                 android:textSize="@dimen/text_size_30"/>
@@ -197,20 +197,20 @@
                 android:id="@+id/imageViewRadioCash"
                 android:layout_width="33px"
                 android:layout_height="33px"
-                android:layout_marginLeft="23px"
+                android:layout_marginStart="23px"
                 android:src="@drawable/ic_radio_button_normal"
                 android:tag="mwar"/>
 
             <ImageView
                 style="@style/payment_option_icon_small"
-                android:layout_marginLeft="10px"
+                android:layout_marginStart="10px"
                 />
 
             <TextView
                 android:id="@+id/textViewCash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10px"
+                android:layout_marginStart="10px"
                 android:text="@string/cash"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_30"/>
@@ -222,8 +222,8 @@
             android:layout_width="match_parent"
             android:tag="@string/dont_touch_me"
             android:layout_height="@dimen/dp_43"
-            android:layout_marginLeft="@dimen/dp_15"
-            android:layout_marginRight="@dimen/dp_15"
+            android:layout_marginStart="@dimen/dp_15"
+            android:layout_marginEnd="@dimen/dp_15"
             android:layout_marginTop="@dimen/dp_7"
             android:gravity="center_vertical"
             android:orientation="horizontal"
@@ -235,7 +235,7 @@
                 android:id="@+id/ivOtherModesToPay"
                 android:layout_width="@dimen/dp_17"
                 android:layout_height="@dimen/dp_17"
-                android:layout_marginLeft="@dimen/dp_11"
+                android:layout_marginStart="@dimen/dp_11"
                 android:src="@drawable/ic_radio_button_normal"
                 />
 
@@ -243,7 +243,7 @@
                 android:id="@+id/tvOtherModesToPay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginStart="@dimen/dp_15"
                 android:text="@string/cash"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/sp_15"

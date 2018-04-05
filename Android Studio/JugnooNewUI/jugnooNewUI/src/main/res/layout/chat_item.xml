@@ -17,7 +17,7 @@
             android:id="@+id/usr_icon_you"
             android:layout_width="@dimen/px_100"
             android:layout_height="@dimen/px_100"
-            android:layout_marginLeft="@dimen/px_32"
+            android:layout_marginStart="@dimen/px_32"
             android:tag="mwar"
             android:src="@drawable/profile_placeholder" />
 
@@ -25,16 +25,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/px_10"
-            android:layout_toRightOf="@+id/triangle_you"
+            android:layout_marginEnd="@dimen/px_10"
+            android:layout_toEndOf="@+id/triangle_you"
             android:background="@drawable/bg_msg_you">
 
             <TextView
                 android:id="@+id/chat_txt_you"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px_20"
-                android:layout_marginRight="@dimen/px_20"
+                android:layout_marginStart="@dimen/px_20"
+                android:layout_marginEnd="@dimen/px_20"
                 android:layout_marginTop="@dimen/px_10"
                 android:autoLink="web"
                 android:minWidth="170px"
@@ -49,9 +49,9 @@
                 android:layout_width="@dimen/px_150"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/chat_txt_you"
-                android:layout_alignRight="@+id/chat_txt_you"
-                android:layout_marginRight="@dimen/px_10"
-                android:gravity="right"
+                android:layout_alignEnd="@+id/chat_txt_you"
+                android:layout_marginEnd="@dimen/px_10"
+                android:gravity="end"
                 android:paddingBottom="@dimen/px_5"
                 android:text="Time"
                 android:textColor="@color/text_color_hint"
@@ -63,7 +63,7 @@
             android:layout_width="@dimen/px_32"
             android:layout_height="@dimen/px_32"
             android:layout_marginTop="@dimen/px_10"
-            android:layout_toRightOf="@id/usr_icon_you"
+            android:layout_toEndOf="@id/usr_icon_you"
             android:tag="mwar"
             android:src="@drawable/triangle_you" />
     </RelativeLayout>
@@ -79,16 +79,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/px_32"
-            android:layout_toLeftOf="@+id/triangle_me"
+            android:layout_marginStart="@dimen/px_32"
+            android:layout_toStartOf="@+id/triangle_me"
             android:background="@drawable/bg_msg_me">
 
             <TextView
                 android:id="@+id/chat_txt_me"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/px_20"
-                android:layout_marginRight="@dimen/px_20"
+                android:layout_marginStart="@dimen/px_20"
+                android:layout_marginEnd="@dimen/px_20"
                 android:layout_marginTop="@dimen/px_10"
                 android:minWidth="170px"
                 android:maxWidth="420px"
@@ -104,9 +104,9 @@
                 android:layout_width="@dimen/px_150"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/chat_txt_me"
-                android:layout_marginRight="@dimen/px_10"
-                android:gravity="right"
-                android:layout_alignRight="@+id/chat_txt_me"
+                android:layout_marginEnd="@dimen/px_10"
+                android:gravity="end"
+                android:layout_alignEnd="@+id/chat_txt_me"
                 android:paddingBottom="@dimen/px_5"
                 android:text=""
                 android:textColor="@color/text_color_hint"
@@ -117,8 +117,8 @@
             android:id="@+id/triangle_me"
             android:layout_width="@dimen/px_32"
             android:layout_height="@dimen/px_32"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/px_32"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/px_32"
             android:layout_marginTop="@dimen/px_10"
             android:tag="mwar"
             android:src="@drawable/triangle_me" />
@@ -127,11 +127,11 @@
             android:id="@+id/usr_icon_me"
             android:layout_width="@dimen/px_100"
             android:layout_height="@dimen/px_100"
-            android:layout_alignParentRight="true"
-            android:layout_marginLeft="@dimen/px_8"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="@dimen/px_8"
             android:tag="mwar"
             android:visibility="gone"
-            android:layout_marginRight="@dimen/px_32"
+            android:layout_marginEnd="@dimen/px_32"
             android:src="@drawable/profile_placeholder" />
     </RelativeLayout>
 

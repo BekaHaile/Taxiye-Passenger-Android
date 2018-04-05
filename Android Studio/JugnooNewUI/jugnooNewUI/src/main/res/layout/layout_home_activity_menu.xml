@@ -23,8 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/px_30"
-            android:layout_marginLeft="@dimen/px_20"
-            android:layout_marginRight="@dimen/px_25"
+            android:layout_marginStart="@dimen/px_20"
+            android:layout_marginEnd="@dimen/px_25"
             android:layout_marginBottom="@dimen/px_30"
             android:tag="mwar">
 
@@ -41,7 +41,7 @@
                 android:layout_width="126px"
                 android:layout_height="126px"
                 android:visibility="visible"
-                android:layout_marginLeft="@dimen/px_30"
+                android:layout_marginStart="@dimen/px_30"
                 android:src="@drawable/ic_profile_img_placeholder"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/px_10"
@@ -59,16 +59,16 @@
 
         <LinearLayout
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/iv_jugnoo_image"
-            android:layout_toLeftOf="@+id/iv_arrow"
+            android:layout_toEndOf="@id/iv_jugnoo_image"
+            android:layout_toStartOf="@+id/iv_arrow"
             android:layout_width="wrap_content"
-            android:layout_marginRight="10px"
+            android:layout_marginEnd="10px"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textViewUserName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Garry Gurcharan"
                 android:maxLines="1"
@@ -79,7 +79,7 @@
 
             <TextView
                 android:id="@+id/textViewViewPhone"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5px"
                 android:singleLine="true"
@@ -95,11 +95,13 @@
             android:id="@id/iv_arrow"
             android:layout_width="19px"
             android:layout_height="33px"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="30px"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="30px"
             android:layout_centerVertical="true"
             android:src="@drawable/back_arrow_white"
-            android:tag="mwar"/>
+            android:tag="mwar"
+            android:rotationY="@integer/locale_mirror_flip"
+            />
 
     </RelativeLayout>
 

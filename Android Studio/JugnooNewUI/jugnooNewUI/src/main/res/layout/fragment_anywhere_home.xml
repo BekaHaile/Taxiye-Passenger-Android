@@ -34,8 +34,8 @@
                 android:id="@+id/tv_label_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/txt_what_do_you_need"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
@@ -45,8 +45,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="2dp">
@@ -77,8 +77,8 @@
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/dp_50"
                 android:layout_marginBottom="15dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
                 app:cardBackgroundColor="@color/menu_item_selector_color_F7"
                 app:cardCornerRadius="2dp">
@@ -104,7 +104,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="vertical"
-                        android:layout_marginLeft="@dimen/dp_10"
                         android:layout_marginStart="@dimen/dp_10">
 
                         <TextView
@@ -137,8 +136,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="2dp">
@@ -158,7 +157,6 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@+id/rvImages"
-                        android:layout_toRightOf="@+id/rvImages"
                         android:paddingTop="4.5dp">
 
                         <ImageView
@@ -166,7 +164,6 @@
                             android:layout_width="@dimen/dp_40"
                             android:layout_height="@dimen/dp_40"
                             android:src="@drawable/ic_camera"
-                            android:layout_marginRight="@dimen/dp_10"
                             android:layout_marginEnd="@dimen/dp_10"
                             android:scaleType="center"
                             android:background="@drawable/white_dotted_background"/>
@@ -177,14 +174,11 @@
                         android:id="@+id/rvImages"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/dp_5"
                         android:paddingStart="@dimen/dp_5"
-                        android:paddingRight="@dimen/dp_5"
                         android:paddingEnd="@dimen/dp_5"
                         android:paddingTop="@dimen/dp_5"
                         android:paddingBottom="@dimen/dp_10"
                         android:layout_alignParentStart="true"
-                        android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"/>
 
                 </RelativeLayout>
@@ -197,8 +191,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/from_wo"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
@@ -209,8 +203,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="2dp">
@@ -220,8 +214,8 @@
                 <RelativeLayout
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="10dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="10dp"
                     android:minHeight="50dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -233,16 +227,16 @@
                         android:id="@+id/ivPickUpAddressType"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginEnd="10dp"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_loc_other"
                         android:tag="mwar" />
 
                     <TextView
-                        android:layout_toRightOf="@id/ivPickUpAddressType"
+                        android:layout_toEndOf="@id/ivPickUpAddressType"
                         android:layout_centerVertical="true"
                         android:id="@+id/tv_pickup_address"
-                        android:drawableRight="@drawable/ic_arrow_grey"
+                        android:drawableEnd="@drawable/ic_arrow_grey"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
 
@@ -263,8 +257,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/to_wo"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
@@ -275,8 +269,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="2dp">
@@ -284,8 +278,8 @@
                 <RelativeLayout
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="10dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="10dp"
                     android:minHeight="50dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -296,16 +290,16 @@
                         android:id="@+id/ivDelAddressType"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginEnd="10dp"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_loc_other"
                         android:tag="mwar" />
 
                     <TextView
-                        android:layout_toRightOf="@id/ivDelAddressType"
+                        android:layout_toEndOf="@id/ivDelAddressType"
                         android:layout_centerVertical="true"
                         android:id="@+id/tv_delivery_address"
-                        android:drawableRight="@drawable/ic_arrow_grey"
+                        android:drawableEnd="@drawable/ic_arrow_grey"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
 
@@ -328,7 +322,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
                 android:text="Delivery Time"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
@@ -337,8 +331,8 @@
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="@dimen/dp_10"
                 app:cardBackgroundColor="@android:color/white"
@@ -367,8 +361,8 @@
                         android:id="@+id/switchDeliveryTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/rb_asap"
-                        android:layout_alignParentRight="true"
+                        android:layout_toEndOf="@id/rb_asap"
+                        android:layout_alignParentEnd="true"
                         android:padding="10dp"
                         android:theme="@style/ThemeSwitchAlternate"
                         android:visibility="visible"
@@ -411,7 +405,7 @@
                 android:id="@+id/tv_heading_delivery_charges"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
                 android:text="Delivery Charges"
                 android:textAllCaps="true"
                 android:visibility="visible"
@@ -422,8 +416,8 @@
                 android:id="@+id/cv_delivery_charges"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="@dimen/dp_10"
                 android:visibility="visible"
@@ -446,27 +440,27 @@
                         android:text="@string/estimated_charges"
                         android:gravity="center"
                         android:minHeight="40dp"
-                        android:paddingLeft="10dp"
+                        android:paddingStart="10dp"
                         android:layout_centerVertical="true"
                         android:drawablePadding="5dp"
-                        android:drawableRight="@drawable/ic_question_vector"
+                        android:drawableEnd="@drawable/ic_question_vector"
                         app:typekitFont="@string/maven"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/label_delivery_value"
-                        android:gravity="center|right"
-                        android:layout_toRightOf="@id/label_delivery_info"
+                        android:gravity="center|end"
+                        android:layout_toEndOf="@id/label_delivery_info"
                         android:layout_alignTop="@id/label_delivery_info"
                         android:text="@string/no_value_delivery_charges"
                         android:minHeight="40dp"
                         android:textSize="20sp"
-                        android:paddingRight="10dp"
+                        android:paddingEnd="10dp"
                         android:layout_centerVertical="true"
 
                         app:typekitFont="@string/maven"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:textColor="@color/text_color_orange"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
@@ -477,7 +471,7 @@
                 android:id="@+id/tv_promo_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
+                android:layout_marginStart="15dp"
                 android:text="@string/label_promo"
                 android:textAllCaps="true"
                 android:visibility="visible"
@@ -489,8 +483,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="@dimen/dp_25"
                 android:visibility="visible"

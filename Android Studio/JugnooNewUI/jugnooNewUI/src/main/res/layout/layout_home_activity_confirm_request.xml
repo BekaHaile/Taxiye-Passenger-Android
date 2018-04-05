@@ -10,9 +10,9 @@
         android:id="@+id/confirmMyLocationBtn"
         android:layout_width="121px"
         android:layout_height="117px"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/recyclerViewVehicles"
-        android:layout_marginRight="30px"
+        android:layout_marginEnd="30px"
         android:background="@drawable/mylocation_btn_selector"
         android:tag="mwar"
         android:visibility="visible" />
@@ -23,7 +23,7 @@
         android:layout_height="90px"
         android:src="@drawable/ic_poke_on_off_button"
         android:tag="mwar"
-        android:layout_marginLeft="56px"
+        android:layout_marginStart="56px"
         android:layout_marginTop="15px"
         android:visibility="gone"
         />
@@ -40,8 +40,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30px"
-            android:layout_marginLeft="30px"
-            android:layout_marginRight="30px"
+            android:layout_marginStart="30px"
+            android:layout_marginEnd="30px"
             android:layout_marginTop="30px"
             android:background="@drawable/background_white_rounded_bordered"
             android:orientation="vertical"
@@ -68,7 +68,7 @@
                         android:id="@+id/textViewPaymentModeValueConfirm"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10px"
+                        android:layout_marginStart="10px"
                         android:gravity="center"
                         android:text="200"
                         android:textAllCaps="true"
@@ -80,7 +80,7 @@
                 <ImageView
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="-1dp"
+                    android:layout_marginStart="-1dp"
                     android:src="@color/stroke_light_grey_alpha" />
 
                 <RelativeLayout
@@ -94,7 +94,7 @@
                         android:layout_width="30px"
                         android:layout_height="29px"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/textViewOffersConfirm"
+                        android:layout_toStartOf="@+id/textViewOffersConfirm"
                         android:src="@drawable/ic_gift"
                         android:tag="mwar" />
 
@@ -104,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="20px"
+                        android:layout_marginStart="20px"
                         android:gravity="center"
                         android:text="@string/nl_offers"
                         android:textAllCaps="true"
@@ -115,9 +115,9 @@
                         android:id="@+id/imageViewOfferConfirm"
                         android:layout_width="31px"
                         android:layout_height="31px"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="50px"
+                        android:layout_marginEnd="50px"
                         android:src="@drawable/tick"
                         android:tag="mwar"
                         android:visibility="gone" />
@@ -129,8 +129,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginLeft="5px"
-                android:layout_marginRight="5px"
+                android:layout_marginStart="5px"
+                android:layout_marginEnd="5px"
                 android:layout_marginTop="-1dp"
                 android:background="@color/stroke_light_grey_alpha" />
 
@@ -179,7 +179,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text=""
-                        android:layout_marginLeft="10px"
+                        android:layout_marginStart="10px"
                         android:textAllCaps="true"
                         android:textColor="@color/theme_color"
                         android:textSize="@dimen/text_size_32"

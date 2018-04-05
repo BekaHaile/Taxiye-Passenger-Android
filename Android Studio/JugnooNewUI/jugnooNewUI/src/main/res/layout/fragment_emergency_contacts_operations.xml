@@ -23,7 +23,7 @@
             android:layout_width="70px"
             android:layout_height="71px"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10px"
+            android:layout_marginStart="10px"
             android:padding="20px"
             android:src="@drawable/ic_cross_grey_selector"/>
 
@@ -31,9 +31,9 @@
             android:id="@+id/textViewSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10px"
+            android:layout_marginEnd="10px"
             android:padding="20px"
             android:text="@string/send"
             android:textAllCaps="true"
@@ -79,8 +79,8 @@
                     android:id="@+id/recyclerViewEmergencyContacts"
                     android:layout_width="match_parent"
                     android:layout_height="256px"
-                    android:layout_marginLeft="40px"
-                    android:layout_marginRight="40px"
+                    android:layout_marginStart="40px"
+                    android:layout_marginEnd="40px"
                     android:scrollbars="vertical"
                     android:fadeScrollbars="true"
                     />
@@ -111,8 +111,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="20px"
-                    android:layout_toLeftOf="@+id/textViewOr"
+                    android:layout_marginEnd="20px"
+                    android:layout_toStartOf="@+id/textViewOr"
                     android:background="@color/text_color_hint"
                     />
 
@@ -130,8 +130,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="20px"
-                    android:layout_toRightOf="@+id/textViewOr"
+                    android:layout_marginStart="20px"
+                    android:layout_toEndOf="@+id/textViewOr"
                     android:background="@color/text_color_hint"
                     />
 
@@ -156,8 +156,8 @@
                 android:id="@+id/recyclerViewPhoneContacts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="40px"
-                android:layout_marginRight="40px"
+                android:layout_marginStart="40px"
+                android:layout_marginEnd="40px"
                 android:scrollbars="vertical"
                 android:fadeScrollbars="true"
 

@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rv"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:splitMotionEvents="false">
 
-    <RelativeLayout
-        android:layout_width="660px"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="40px">
 
     <RelativeLayout
         android:id="@+id/linearLayoutInner"
         android:layout_width="640px"
         android:layout_marginTop="20px"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:background="@drawable/background_priority_tip"
         android:splitMotionEvents="false">
 
@@ -25,8 +21,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="7px"
-            android:layout_marginLeft="7px"
-            android:layout_marginRight="7px"
+            android:layout_marginStart="7px"
+            android:layout_marginEnd="7px"
             android:layout_marginTop="7px"
             android:background="@drawable/button_white_normal"
             android:orientation="vertical"
@@ -40,8 +36,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="40px"
                 android:gravity="center"
-                android:paddingLeft="40px"
-                android:paddingRight="40px"
+                android:paddingStart="40px"
+                android:paddingEnd="40px"
                 android:text="@string/connection_lost_title"
                 android:textColor="#51515D"
                 android:textSize="@dimen/text_size_42"
@@ -63,8 +59,8 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="45px"
                 android:gravity="center"
-                android:paddingLeft="40px"
-                android:paddingRight="40px"
+                android:paddingStart="40px"
+                android:paddingEnd="40px"
                 android:text="@string/connection_lost_desc"
                 android:textColor="#51515D"
                 android:textSize="@dimen/text_size_30" />
@@ -86,6 +82,5 @@
             android:id="@+id/close"
             style="@style/cross_popup"
             />
-    </RelativeLayout>
 
-</FrameLayout>
+</RelativeLayout>

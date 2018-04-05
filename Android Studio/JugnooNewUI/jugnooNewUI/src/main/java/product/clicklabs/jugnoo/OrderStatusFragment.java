@@ -1165,21 +1165,29 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         }
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tvPaymentMethodVal.getLayoutParams();
-        tvPaymentMethodVal.setPadding(0, 0, 0, 0);
+        tvPaymentMethodVal.setPaddingRelative(0, 0, 0, 0);
         tvPaymentMethodVal.setText("");
         tvPaymentMethodVal.setBackgroundResource(R.drawable.background_transparent);
         if (datum1.getPaymentMode() == PaymentOption.PAYTM.getOrdinal()) {
             params.setMargins((int) (ASSL.Xscale() * 10f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 10f));
+            params.setMarginEnd(0);
             tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_paytm_small);
         } else if (datum1.getPaymentMode() == PaymentOption.MOBIKWIK.getOrdinal()) {
             params.setMargins((int) (ASSL.Xscale() * 25f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 25f));
+            params.setMarginEnd(0);
             tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_mobikwik_small);
         } else if (datum1.getPaymentMode() == PaymentOption.FREECHARGE.getOrdinal()) {
             params.setMargins((int) (ASSL.Xscale() * 30f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 30f));
+            params.setMarginEnd(0);
             tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_freecharge_small);
         } else if (datum1.getPaymentMode() == PaymentOption.JUGNOO_PAY.getOrdinal()) {
             tvPaymentMethodVal.setText(R.string.jugnoo_pay);
             params.setMargins((int) (ASSL.Xscale() * 35f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 35f));
+            params.setMarginEnd(0);
         } else if (datum1.getPaymentMode() == PaymentOption.RAZOR_PAY.getOrdinal()) {
             if (!TextUtils.isEmpty(datum1.getOtherPaymentModeText())) {
                 tvPaymentMethodVal.setText(datum1.getOtherPaymentModeText());
@@ -1187,8 +1195,12 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 tvPaymentMethodVal.setText(R.string.other_payment_mode);
             }
             params.setMargins((int) (ASSL.Xscale() * 35f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 35f));
+            params.setMarginEnd(0);
         } else if(datum1.getPaymentMode()==PaymentOption.ICICI_UPI.getOrdinal()){
             params.setMargins((int) (ASSL.Xscale() * 34f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 34f));
+            params.setMarginEnd(0);
             params.height= (int) (ASSL.minRatio() * 35f);
             params.width= (int) (ASSL.minRatio() * 90f);
             tvPaymentMethodVal.setBackgroundResource(R.drawable.upi_logo);

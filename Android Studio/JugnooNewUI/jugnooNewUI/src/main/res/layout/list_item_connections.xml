@@ -23,8 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/dp_12"
-            android:layout_marginRight="@dimen/dp_12">
+            android:layout_marginEnd="@dimen/dp_12">
 
             <ImageView
                 android:id="@+id/ivPersonImage"
@@ -53,7 +52,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/rlPerson"
-            android:layout_toRightOf="@+id/rlPerson"
             android:singleLine="true"
             android:textColor="@color/fatafat_fab"
             android:textSize="@dimen/sp_16"
@@ -68,7 +66,6 @@
             android:layout_below="@+id/tvPersonName"
             android:layout_marginTop="@dimen/dp_2"
             android:layout_toEndOf="@+id/rlPerson"
-            android:layout_toRightOf="@+id/rlPerson"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/text_color_fugu_secondary"

@@ -37,8 +37,8 @@
             android:layout_below="@+id/ivUser"
             android:text="Free Gift from friend"
             android:layout_marginTop="@dimen/px_54"
-            android:paddingLeft="@dimen/px_20"
-            android:paddingRight="@dimen/px_20"
+            android:paddingStart="@dimen/px_20"
+            android:paddingEnd="@dimen/px_20"
             android:gravity="center"
             android:textColor="@color/text_color"/>
 
@@ -49,8 +49,8 @@
             android:textSize="@dimen/text_size_36"
             android:layout_below="@+id/tvGiftFrom"
             android:text="Your friend just gifted you a cashback coupon for your first transaction."
-            android:paddingLeft="@dimen/px_50"
-            android:paddingRight="@dimen/px_50"
+            android:paddingStart="@dimen/px_50"
+            android:paddingEnd="@dimen/px_50"
             android:textColor="@color/text_color"
             android:gravity="center"
             android:layout_marginTop="@dimen/px_88"/>

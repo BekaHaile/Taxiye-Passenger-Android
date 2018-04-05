@@ -667,6 +667,8 @@ public class FABViewTest implements GACategory, GAAction {
     public void setRlGenieHelpBottomMargin(int bottomMargin){
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rlGenieHelp.getLayoutParams();
         params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, bottomMargin);
+        params.setMarginStart(params.getMarginStart());
+        params.setMarginEnd(params.getMarginEnd());
         rlGenieHelp.setLayoutParams(params);
     }
 
@@ -688,10 +690,10 @@ public class FABViewTest implements GACategory, GAAction {
      */
     public void setMenuLabelsRightTestPadding(int paddingBottom){
         if(activity instanceof FreshActivity){
-            menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0,paddingBottom);
+            menuLabelsRightTest.setPaddingRelative((int) (40f * ASSL.Xscale()), 0, (int) (40f * ASSL.Xscale()),paddingBottom);
             setRlGenieHelpBottomMargin(paddingBottom + (int)(ASSL.Yscale() * 100f));
         }else{
-            menuLabelsRightTest.setPadding((int) (40f * ASSL.Yscale()), 0, 0, paddingBottom);
+            menuLabelsRightTest.setPaddingRelative((int) (40f * ASSL.Xscale()), 0, (int) (40f * ASSL.Xscale()), paddingBottom);
             setRlGenieHelpBottomMargin(paddingBottom + (int)(ASSL.Yscale() * 100f));
         }
 

@@ -10,8 +10,8 @@
         android:id="@+id/imageViewSep"
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_marginLeft="40px"
-        android:layout_marginRight="40px"
+        android:layout_marginStart="40px"
+        android:layout_marginEnd="40px"
         android:background="@color/stroke_color_light" />
     <RelativeLayout
         android:id="@+id/relativeLayoutAddHome"
@@ -25,12 +25,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20px"
-            android:layout_toLeftOf="@+id/imageViewEditHome"
-            android:layout_toRightOf="@+id/imageViewAddHome"
+            android:layout_marginStart="20px"
+            android:layout_toStartOf="@+id/imageViewEditHome"
+            android:layout_toEndOf="@+id/imageViewAddHome"
             android:gravity="center_vertical"
             android:maxLines="2"
-            android:paddingRight="20px"
+            android:paddingEnd="20px"
             android:text="@string/add_home"
             android:textColor="@color/text_color_light_selector"
             android:textSize="28px" />
@@ -39,9 +39,9 @@
             android:id="@+id/imageViewAddHome"
             android:layout_width="50px"
             android:layout_height="50px"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30px"
+            android:layout_marginStart="30px"
             android:src="@drawable/ic_home"
             android:tag="mwar" />
 
@@ -51,8 +51,8 @@
         android:id="@+id/imageViewSep2"
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_marginLeft="40px"
-        android:layout_marginRight="40px"
+        android:layout_marginStart="40px"
+        android:layout_marginEnd="40px"
         android:background="@color/stroke_color_light"
         />
 
@@ -69,12 +69,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20px"
-            android:layout_toLeftOf="@+id/imageViewEditWork"
-            android:layout_toRightOf="@+id/imageViewAddWork"
+            android:layout_marginStart="20px"
+            android:layout_toStartOf="@+id/imageViewEditWork"
+            android:layout_toEndOf="@+id/imageViewAddWork"
             android:gravity="center_vertical"
             android:maxLines="2"
-            android:paddingRight="20px"
+            android:paddingEnd="20px"
             android:text="@string/add_work"
             android:textColor="@color/text_color_light_selector"
             android:textSize="28px" />
@@ -83,9 +83,9 @@
             android:id="@+id/imageViewAddWork"
             android:layout_width="50px"
             android:layout_height="50px"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30px"
+            android:layout_marginStart="30px"
             android:src="@drawable/ic_work"
             android:tag="mwar" />
 

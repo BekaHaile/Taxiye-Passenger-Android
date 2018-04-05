@@ -15,8 +15,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="@dimen/spacing_extra_tiny"
-        android:layout_marginRight="@dimen/spacing_extra_tiny"
+        android:layout_marginStart="@dimen/spacing_extra_tiny"
+        android:layout_marginEnd="@dimen/spacing_extra_tiny"
         android:background="@color/feed_grey_background" />
 
     <TextView
@@ -29,8 +29,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="@dimen/spacing_extra_tiny"
-        android:layout_marginRight="@dimen/spacing_extra_tiny"
+        android:layout_marginStart="@dimen/spacing_extra_tiny"
+        android:layout_marginEnd="@dimen/spacing_extra_tiny"
         android:background="@color/feed_grey_background" />
 
     <TextView
@@ -42,8 +42,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="@dimen/spacing_extra_tiny"
-        android:layout_marginRight="@dimen/spacing_extra_tiny"
+        android:layout_marginStart="@dimen/spacing_extra_tiny"
+        android:layout_marginEnd="@dimen/spacing_extra_tiny"
         android:background="@color/feed_grey_background" />
 
     <TextView

@@ -12,7 +12,7 @@
         android:layout_width="120px"
         android:layout_height="120px"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="30px"
+        android:layout_marginStart="30px"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_fresh_item_placeholder"
         android:tag="mwar"/>
@@ -22,10 +22,10 @@
         android:layout_width="380px"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="35px"
+        android:layout_marginStart="35px"
         android:layout_marginTop="34px"
         android:layout_marginBottom="34px"
-        android:layout_toRightOf="@+id/imageViewItemImage"
+        android:layout_toEndOf="@+id/imageViewItemImage"
         android:orientation="vertical">
 
         <TextView
@@ -72,7 +72,7 @@
                 android:id="@+id/textViewItemQuantity"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10px"
+                android:layout_marginStart="10px"
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:text="X 2"
@@ -83,7 +83,7 @@
                 android:id="@+id/textViewItemCancelled"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10px"
+                android:layout_marginStart="10px"
                 android:gravity="center_vertical"
                 android:maxLines="1"
                 android:text="@string/item_cancelled"
@@ -102,8 +102,8 @@
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_32"
         android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30px"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30px"
 
         />
 
@@ -111,8 +111,8 @@
     <ImageView
         android:id="@+id/imageViewSep"
         style="@style/HorizontalDividerLight"
-        android:layout_marginLeft="34px"
-        android:layout_marginRight="34px"
+        android:layout_marginStart="34px"
+        android:layout_marginEnd="34px"
         android:layout_below="@+id/linearLayoutContent"
         />
 

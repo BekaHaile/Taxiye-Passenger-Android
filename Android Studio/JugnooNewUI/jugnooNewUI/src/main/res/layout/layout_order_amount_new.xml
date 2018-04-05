@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginBottom="@dimen/px_26"
-        android:layout_marginLeft="@dimen/px_34"
+        android:layout_marginStart="@dimen/px_34"
         android:layout_marginTop="@dimen/px_30"
         android:text="@string/delivery_charges"
         android:textColor="@color/text_color"
@@ -23,9 +23,9 @@
         android:id="@+id/tvDelChargesVal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/px_34"
+        android:layout_marginEnd="@dimen/px_34"
         android:text="@string/rupee_0"
         android:textColor="@color/order_status_green"
         android:textSize="@dimen/text_size_32"
@@ -35,8 +35,8 @@
         android:id="@+id/vDivider"
         style="@style/HorizontalDividerDotted"
         android:layout_below="@+id/tvDelCharges"
-        android:layout_marginLeft="@dimen/px_40"
-        android:layout_marginRight="@dimen/px_40"
+        android:layout_marginStart="@dimen/px_40"
+        android:layout_marginEnd="@dimen/px_40"
         />
 
 </RelativeLayout>

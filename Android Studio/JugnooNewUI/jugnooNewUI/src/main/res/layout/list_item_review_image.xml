@@ -21,7 +21,7 @@
         android:layout_width="70px"
         android:layout_height="70px"
         android:layout_alignTop="@+id/ivImage"
-        android:layout_alignRight="@+id/ivImage"
+        android:layout_alignEnd="@+id/ivImage"
         android:padding="10px"
         android:rotation="45"
         android:visibility="gone"

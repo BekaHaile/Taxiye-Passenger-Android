@@ -4,8 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:background="@color/feed_grey_background_light"
-    android:paddingLeft="@dimen/spacing_normal"
-    android:paddingRight="@dimen/spacing_normal"
+    android:paddingStart="@dimen/spacing_normal"
+    android:paddingEnd="@dimen/spacing_normal"
     android:paddingBottom="@dimen/spacing_normal"
     android:layout_height="wrap_content">
 
@@ -15,7 +15,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/whatsapp"
         android:layout_width="25dp"
-        android:layout_marginRight="@dimen/spacing_tiny"
+        android:layout_marginEnd="@dimen/spacing_tiny"
         android:layout_marginBottom="@dimen/spacing_small"
         android:layout_marginTop="@dimen/spacing_normal"
         android:layout_height="25dp" />
@@ -29,7 +29,7 @@
         android:textColor="@color/feed_color_orange"
         android:textSize="@dimen/font_normal"
         android:maxLines="1"
-        android:layout_toRightOf="@id/iv_profile_pic"
+        android:layout_toEndOf="@id/iv_profile_pic"
         android:layout_marginBottom="@dimen/spacing_tiny"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -42,8 +42,8 @@
         <EditText
             android:id="@+id/edt_comment"
             android:layout_below="@id/iv_profile_pic"
-            android:paddingLeft="@dimen/spacing_normal"
-            android:paddingRight="@dimen/spacing_normal"
+            android:paddingStart="@dimen/spacing_normal"
+            android:paddingEnd="@dimen/spacing_normal"
             app:typekitFont="maven"
             android:paddingTop="@dimen/spacing_normal"
             android:textSize="@dimen/font_normal"
@@ -54,7 +54,7 @@
             android:textColor="@color/feed_grey_text"
             android:inputType="textMultiLine|textCapSentences"
             android:background="@drawable/bg_white_layer_shadow"
-            android:gravity="left"
+            android:gravity="start"
             android:layout_width="match_parent"
             android:layout_height="100dp" />
 

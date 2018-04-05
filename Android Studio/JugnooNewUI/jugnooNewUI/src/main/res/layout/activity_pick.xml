@@ -16,8 +16,8 @@
             android:animateLayoutChanges="true"
             android:background="@android:color/transparent"
             android:layout_width="match_parent"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:layout_height="?attr/actionBarSize">
 
 
@@ -26,7 +26,7 @@
                 android:id="@+id/imageViewBack"
                 android:layout_width="23dp"
                 android:layout_height="23dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_back_selector"
                 android:scaleType="centerInside" />
@@ -34,7 +34,7 @@
 
             <TextView
                 android:id="@+id/toolbar_title"
-                android:layout_toRightOf="@id/imageViewBack"
+                android:layout_toEndOf="@id/imageViewBack"
                 android:textSize="20sp"
                 android:layout_centerVertical="true"
                 android:maxLines="1"
@@ -43,7 +43,7 @@
                 android:text="Choose Image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/tv_count"/>
+                android:layout_toStartOf="@+id/tv_count"/>
 
 
 
@@ -52,7 +52,7 @@
                 android:onClick="startCamera"
                 android:background="@android:color/transparent"
                 android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:src="@drawable/ic_add_review_camera"
                 android:layout_width="26dp"
                 android:layout_height="26dp" />
@@ -65,8 +65,8 @@
                 android:gravity="center"
                 android:text="432"
                 android:textColor="@color/yellow_jugnoo"
-                android:layout_marginRight="20dp"
-                android:layout_toLeftOf="@id/iv_camera"
+                android:layout_marginEnd="20dp"
+                android:layout_toStartOf="@id/iv_camera"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -116,9 +116,9 @@
         android:id="@+id/fab_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_gravity="end|bottom"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginTop="@dimen/fab_margin"
         android:layout_marginBottom="80dp"
         android:clickable="true"

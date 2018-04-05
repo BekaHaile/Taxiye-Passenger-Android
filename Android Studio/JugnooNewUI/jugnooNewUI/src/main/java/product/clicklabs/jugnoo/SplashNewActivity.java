@@ -11,7 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -46,7 +45,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -80,7 +78,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import io.branch.referral.Branch;
@@ -429,11 +426,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 //			FlurryAgent.init(this, Config.getFlurryKey());
 
 
-			Locale locale = new Locale("en");
-			Locale.setDefault(locale);
-			Configuration config = new Configuration();
-			config.locale = locale;
-			getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+//			Locale locale = new Locale("en");
+//			Locale.setDefault(locale);
+//			Configuration config = new Configuration();
+//			config.locale = locale;
+//			getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 
 
 			setContentView(R.layout.activity_splash_new);
@@ -1325,6 +1322,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
 				params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
 				params.setMargins(0, (int)(ASSL.Yscale()*150), 0, 0);
+				params.setMarginStart(0);
+				params.setMarginEnd(0);
 				llLoginContainer.setLayoutParams(params);
 			}
 
@@ -1333,6 +1332,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
 				params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
 				params.setMargins(0, 0, 0, 0);
+				params.setMarginStart(0);
+				params.setMarginEnd(0);
 				llLoginContainer.setLayoutParams(params);
 			}
 		}));
@@ -2405,7 +2406,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, false);
 
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
@@ -2596,7 +2597,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_edittext_confirm);
 
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
 
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();

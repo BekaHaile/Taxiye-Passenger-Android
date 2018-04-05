@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/dp_10"
-        android:layout_marginLeft="@dimen/dp_20"
-        android:layout_marginRight="@dimen/dp_20"
+        android:layout_marginStart="@dimen/dp_20"
+        android:layout_marginEnd="@dimen/dp_20"
         android:layout_marginTop="@dimen/dp_10"
         android:background="@drawable/bg_white_menu_item_selector_color_selector"
         android:orientation="vertical"
@@ -23,8 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginLeft="@dimen/dp_20"
-            android:layout_marginRight="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_20"
             android:layout_marginTop="@dimen/dp_14"
             android:visibility="visible"
             >
@@ -33,8 +33,8 @@
                 android:id="@+id/tvServiceName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/ivPaidVia"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/ivPaidVia"
                 android:text=""
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/sp_15"
@@ -47,7 +47,7 @@
                 android:layout_width="@dimen/dp_24"
                 android:layout_height="@dimen/dp_13"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/tvPaidViaValue"
+                android:layout_toStartOf="@+id/tvPaidViaValue"
                 android:src="@drawable/ic_cash_no_padding"
                 />
 
@@ -55,9 +55,9 @@
                 android:id="@+id/tvPaidViaValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginStart="@dimen/dp_10"
                 android:text="Cash"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/sp_15"
@@ -69,8 +69,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginLeft="@dimen/dp_20"
-            android:layout_marginRight="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_20"
             android:background="@color/stroke_light_grey_alpha"/>
 
         <TextView
@@ -78,8 +78,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_10"
-            android:layout_marginLeft="@dimen/dp_20"
-            android:layout_marginRight="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_20"
             android:layout_marginTop="@dimen/dp_10"
             android:text="Service Date: 02:00PM | 24 June,17"
             android:textColor="@color/text_color"
@@ -90,8 +90,8 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginLeft="@dimen/dp_20"
-            android:layout_marginRight="@dimen/dp_20"
+            android:layout_marginStart="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_20"
             android:background="@color/stroke_light_grey_alpha"/>
 
         <RelativeLayout
@@ -108,8 +108,8 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/dp_20"
-                android:paddingRight="@dimen/dp_20">
+                android:paddingStart="@dimen/dp_20"
+                android:paddingEnd="@dimen/dp_20">
 
                 <ImageView
                     android:id="@+id/ivStatus0"
@@ -171,8 +171,8 @@
                 android:orientation="horizontal"
                 android:layout_below="@+id/llOrderPath"
                 android:layout_marginTop="@dimen/dp_7"
-                android:layout_marginLeft="@dimen/dp_7"
-                android:layout_marginRight="@dimen/dp_7"
+                android:layout_marginStart="@dimen/dp_7"
+                android:layout_marginEnd="@dimen/dp_7"
 
                 >
 
@@ -241,8 +241,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dp_1"
-                android:layout_marginLeft="@dimen/dp_20"
-                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
                 android:background="@color/stroke_light_grey_alpha"
                 />
 
@@ -261,7 +261,7 @@
                 android:id="@+id/tvNeedHelp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toLeftOf="@+id/vMidSep"
+                android:layout_toStartOf="@+id/vMidSep"
                 android:background="?attr/selectableItemBackground"
                 android:gravity="center"
                 android:text="@string/need_help"
@@ -275,7 +275,7 @@
                 android:id="@+id/tvViewDetails"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_toRightOf="@+id/vMidSep"
+                android:layout_toEndOf="@+id/vMidSep"
                 android:background="?attr/selectableItemBackground"
                 android:gravity="center"
                 android:text="@string/view_details"

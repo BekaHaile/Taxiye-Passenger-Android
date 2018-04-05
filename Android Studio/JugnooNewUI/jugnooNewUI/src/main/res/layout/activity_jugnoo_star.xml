@@ -80,7 +80,7 @@
                             android:layout_width="@dimen/px_50"
                             android:layout_height="@dimen/px_50"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/px_50"
+                            android:layout_marginStart="@dimen/px_50"
                             android:src="@drawable/ic_radio_button_normal"
                             android:tag="mwar" />
 
@@ -88,8 +88,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/px_24"
-                            android:layout_toRightOf="@+id/ivRadio1"
+                            android:layout_marginStart="@dimen/px_24"
+                            android:layout_toEndOf="@+id/ivRadio1"
                             android:orientation="vertical">
 
 
@@ -147,7 +147,7 @@
                             android:layout_width="@dimen/px_50"
                             android:layout_height="@dimen/px_50"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/px_25"
+                            android:layout_marginStart="@dimen/px_25"
                             android:src="@drawable/ic_radio_button_normal"
                             android:tag="mwar" />
 
@@ -155,8 +155,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/px_24"
-                            android:layout_toRightOf="@+id/ivRadio2"
+                            android:layout_marginStart="@dimen/px_24"
+                            android:layout_toEndOf="@+id/ivRadio2"
                             android:orientation="vertical">
 
 

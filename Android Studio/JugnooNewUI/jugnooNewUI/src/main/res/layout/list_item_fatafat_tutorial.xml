@@ -7,8 +7,6 @@
               android:background="@android:color/white"
               android:orientation="horizontal"
               android:paddingEnd="@dimen/spacing_large"
-              android:paddingLeft="@dimen/spacing_extra_large"
-              android:paddingRight="@dimen/spacing_large"
               android:paddingStart="@dimen/spacing_extra_large">
 
     <RelativeLayout
@@ -30,7 +28,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/spacing_small"
         android:layout_marginStart="@dimen/spacing_small">
 
 
@@ -89,7 +86,6 @@
             android:layout_marginEnd="@dimen/spacing_small"
             android:layout_marginStart="@dimen/spacing_small"
             android:layout_toEndOf="@+id/llPoints"
-            android:layout_toRightOf="@+id/llPoints"
             android:orientation="vertical"
             android:paddingBottom="@dimen/spacing_large">
 

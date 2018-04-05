@@ -132,7 +132,7 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 			ProsCatalogueData.ProsCatalogueDatum prosCatalogueDatum = prosCatalogueDatumList.get(position);
 			ViewHolderCategory holder = ((ViewHolderCategory) mholder);
 			holder.tvSuperCategoryName.setText(prosCatalogueDatum.getName());
-			holder.llRoot.setPadding(setSideMargins?gridItemsMargin:0,setTopMargin?gridItemsMargin:0
+			holder.llRoot.setPaddingRelative(setSideMargins?gridItemsMargin:0,setTopMargin?gridItemsMargin:0
 									,setSideMargins?gridItemsMargin:0,gridItemsMargin);
 
 			try {

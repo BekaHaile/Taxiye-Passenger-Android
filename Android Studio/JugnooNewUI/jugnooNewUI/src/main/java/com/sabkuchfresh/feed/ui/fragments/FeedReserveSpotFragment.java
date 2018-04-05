@@ -151,7 +151,8 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
         TextView v = new TextView(getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.rightMargin = FeedUtils.dpToPx(4.0f);
-        v.setPadding(FeedUtils.dpToPx(6), FeedUtils.dpToPx(8f), FeedUtils.dpToPx(6), FeedUtils.dpToPx(8f));
+        params.setMarginEnd(FeedUtils.dpToPx(4.0f));
+        v.setPaddingRelative(FeedUtils.dpToPx(6), FeedUtils.dpToPx(8f), FeedUtils.dpToPx(6), FeedUtils.dpToPx(8f));
         v.setGravity(Gravity.CENTER);
         v.setBackgroundResource(R.drawable.background_white_rounded_bordered);
         v.setTypeface(Fonts.mavenRegular(getContext()), Typeface.BOLD);

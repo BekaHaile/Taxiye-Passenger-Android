@@ -18,7 +18,7 @@
         android:layout_width="56px"
         android:layout_height="56px"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="40px"
+        android:layout_marginStart="40px"
         android:src="@drawable/ic_play_normal"
         android:tag="mwar" />
 
@@ -27,20 +27,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/menu_text_margin_left"
+        android:layout_marginStart="@dimen/menu_text_margin_left"
         android:text="@string/t20_world_cup_2016"
         android:textColor="@color/text_color_white_theme_selector"
         android:textSize="@dimen/text_size_38" />
 
     <LinearLayout
-        android:layout_marginLeft="@dimen/px_12"
-        android:gravity="right"
-        android:layout_toRightOf="@id/textViewMenu"
+        android:layout_marginStart="@dimen/px_12"
+        android:gravity="end"
+        android:layout_toEndOf="@id/textViewMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_centerVertical="true"
-        android:layout_alignParentRight="true">
+        android:layout_alignParentEnd="true">
 
         <TextView
             android:id="@+id/textViewNew"
@@ -48,20 +48,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/px_3"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:visibility="visible"
             android:text="@string/str_new"
             android:textColor="@color/theme_color"
             android:textSize="@dimen/text_size_36"
-            android:layout_marginRight="30px"/>
+            android:layout_marginEnd="30px"/>
 
         <TextView
             android:id="@+id/textViewValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="30px"
-            android:layout_alignParentRight="true"
+            android:layout_marginEnd="30px"
+            android:layout_alignParentEnd="true"
             android:layout_marginTop="@dimen/px_3"
             android:gravity="center"
 

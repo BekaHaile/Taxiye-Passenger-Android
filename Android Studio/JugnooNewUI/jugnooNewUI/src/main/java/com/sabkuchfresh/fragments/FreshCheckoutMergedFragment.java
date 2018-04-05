@@ -662,6 +662,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         if ((event.getRawX() - getRelativeSliderLeftMargin()) > (activity.tvSlide.getWidth() / 2)
                                 && (event.getRawX() - getRelativeSliderLeftMargin()) < activity.relativeLayoutSlider.getWidth() - (activity.tvSlide.getWidth() / 2)) {
                             paramsF.leftMargin = (int) layoutX(event.getRawX() - getRelativeSliderLeftMargin());
+                            paramsF.setMarginStart((int) layoutX(event.getRawX() - getRelativeSliderLeftMargin()));
                             activity.relativeLayoutSlider.updateViewLayout(activity.tvSlide, paramsF);
                             activity.sliderText.setVisibility(View.VISIBLE);
                             float percent = (event.getRawX() - getRelativeSliderLeftMargin()) / (activity.relativeLayoutSlider.getWidth() - activity.tvSlide.getWidth());
@@ -678,7 +679,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         if ((event.getRawX() - getRelativeSliderLeftMargin()) < (activity.relativeLayoutSlider.getWidth() - (activity.tvSlide.getWidth() / 2)) * 0.6f) {
                             setSlideInitial();
                         } else {
-                            animateSliderButton(paramsF.leftMargin, activity.relativeLayoutSlider.getWidth() - activity.tvSlide.getWidth());
+                            animateSliderButton(paramsF.getMarginStart(), activity.relativeLayoutSlider.getWidth() - activity.tvSlide.getWidth());
                             setSliderCompleteState();
                             activity.buttonPlaceOrder.performClick();
                             GAUtils.event(activity.getGaCategory(), CHECKOUT, PAY_SLIDER + ENDED);
@@ -781,13 +782,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 updateDeliveryFromView("");
                 updateCartDataView();
                 fetchWalletBalance();
-                linearLayoutRoot.setPadding(0, 0, 0, activity.llPayViewContainer.getMeasuredHeight());
+                linearLayoutRoot.setPaddingRelative(0, 0, 0, activity.llPayViewContainer.getMeasuredHeight());
             }
         }, 50);
     }
 
     private void setSlideInitial() {
-        animateSliderButton(paramsF.leftMargin, 0);
+        animateSliderButton(paramsF.getMarginStart(), 0);
         activity.rlSliderContainer.setBackgroundResource(R.drawable.bg_rectangle_gradient_normal);
         activity.relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_color_bg);
         activity.sliderText.setVisibility(View.VISIBLE);
@@ -797,7 +798,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
     private float getRelativeSliderLeftMargin() {
         RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams) activity.relativeLayoutSlider.getLayoutParams();
-        return relativeParams.leftMargin;
+        return relativeParams.getMarginStart();
     }
 
     private long animDuration = 150;
@@ -822,6 +823,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             public void onAnimationEnd(Animation animation) {
                 activity.tvSlide.clearAnimation();
                 paramsF.leftMargin = (int) newMargin;
+                paramsF.setMarginStart((int) newMargin);
                 activity.relativeLayoutSlider.updateViewLayout(activity.tvSlide, paramsF);
                 activity.tvSlide.setEnabled(true);
             }
@@ -2797,7 +2799,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
 
         imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
-        imageViewAddressType.setPadding(0, 0, 0, 0);
+        imageViewAddressType.setPaddingRelative(0, 0, 0, 0);
         textViewAddressName.setVisibility(View.GONE);
         textViewAddressValue.setTextColor(activity.getResources().getColor(R.color.text_color));
         if (!addressSelectedNotValid() && !TextUtils.isEmpty(activity.getSelectedAddress())) {
@@ -2826,7 +2828,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             imageViewAddressType.setImageResource(R.drawable.ic_exclamation_address);
             imageViewDeliveryAddressForward.getDrawable().mutate().setColorFilter(ContextCompat.getColor(activity, R.color.red_alert_no_address), PorterDuff.Mode.SRC_ATOP);
             int padding = activity.getResources().getDimensionPixelSize(R.dimen.dp_2);
-            imageViewAddressType.setPadding(padding, padding, padding, padding);
+            imageViewAddressType.setPaddingRelative(padding, padding, padding, padding);
             textViewAddressValue.setVisibility(View.GONE);
             tvNoAddressAlert.setVisibility(View.VISIBLE);
 //            imageViewDeliveryAddressForward.setVisibility(View.GONE);

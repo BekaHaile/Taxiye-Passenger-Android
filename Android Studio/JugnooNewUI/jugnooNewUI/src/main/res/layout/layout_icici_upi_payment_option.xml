@@ -26,7 +26,7 @@
         <ImageView
             android:layout_width="90px"
             android:layout_height="35px"
-            android:layout_marginLeft="24px"
+            android:layout_marginStart="24px"
             android:src="@drawable/upi_logo"
             android:tag="mwar"/>
 
@@ -35,8 +35,8 @@
             android:id="@+id/tvUPICashback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:paddingRight="@dimen/dp_2"
+            android:gravity="end"
+            android:paddingEnd="@dimen/dp_2"
             android:tag="@string/dont_touch_me"
             android:text=""
             android:textColor="@color/theme_color"
@@ -67,8 +67,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/edtIciciVpa"
-        android:layout_marginLeft="@dimen/px_10"
-        android:layout_marginRight="@dimen/px_10"
+        android:layout_marginStart="@dimen/px_10"
+        android:layout_marginEnd="@dimen/px_10"
         android:text="@string/label_below_icici_payment_edt"
         android:textColor="@color/text_color"
         android:textSize="@dimen/px_24"

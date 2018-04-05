@@ -351,7 +351,7 @@ public class JugnooStarSubscribedActivity extends RazorpayBaseActivity implement
     private TextView getDigitTextView(String digit, boolean rupeeIcon){
         TextView textView = new TextView(this);
         float ratio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-        textView.setPadding((int) (ratio * 11f), (int) (ratio * 6f), (int) (ratio * 11f), (int) (ratio * 6f));
+        textView.setPaddingRelative((int) (ratio * 11f), (int) (ratio * 6f), (int) (ratio * 11f), (int) (ratio * 6f));
         textView.setTextColor(getResources().getColor(R.color.text_color));
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, ratio * 82f);
         textView.setTypeface(Fonts.avenirNext(this));
@@ -367,6 +367,8 @@ public class JugnooStarSubscribedActivity extends RazorpayBaseActivity implement
         char[] digits = String.valueOf(savingValue).toCharArray();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins((int)(ASSL.Xscale()*3f), 0, (int)(ASSL.Xscale()*3f), 0);
+        params.setMarginStart((int)(ASSL.Xscale()*3f));
+        params.setMarginEnd((int)(ASSL.Xscale()*3f));
         llSavingsValue.addView(getDigitTextView(getString(R.string.rupee), false), params);
         for(char digit : digits){
             llSavingsValue.addView(getDigitTextView(String.valueOf(digit), false), params);

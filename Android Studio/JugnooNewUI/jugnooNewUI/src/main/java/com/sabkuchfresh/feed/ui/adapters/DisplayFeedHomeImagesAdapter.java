@@ -15,7 +15,6 @@ import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.utils.ASSL;
 
 
 /**
@@ -56,6 +55,8 @@ public class DisplayFeedHomeImagesAdapter extends PagerAdapter {
 		params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
 		params.height = RelativeLayout.LayoutParams.MATCH_PARENT;
 		params.setMargins(0,0,0,0);
+		params.setMarginStart(0);
+		params.setMarginEnd(0);
 		ivImage.setLayoutParams(params);
 
 		RelativeLayout relative = (RelativeLayout) itemView.findViewById(R.id.relative);

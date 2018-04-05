@@ -2457,6 +2457,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     mapTopPadding = 200.0f;
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) centreLocationRl.getLayoutParams();
                     params.setMargins(0, (int) (ASSL.Yscale() * mapTopPadding), 0, 0);
+                    params.setMarginStart(0);
+                    params.setMarginEnd(0);
                     centreLocationRl.setLayoutParams(params);
                 }else {
                     mapTopPadding = 100.0f;
@@ -3560,13 +3562,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void setMargins (View view, int left, int top, int right, int bottom) {
-        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-            p.setMargins(left, top, right, bottom);
-            view.requestLayout();
-        }
-    }
 
 
     private void setFabViewAtRide(PassengerScreenMode mode){
@@ -6511,7 +6506,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
             dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
-            new ASSL(activity, (FrameLayout) dialog.findViewById(R.id.rv), 1134, 720, true);
+            new ASSL(activity, (RelativeLayout) dialog.findViewById(R.id.rv), 1134, 720, true);
 
             WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
             layoutParams.dimAmount = 0.6f;

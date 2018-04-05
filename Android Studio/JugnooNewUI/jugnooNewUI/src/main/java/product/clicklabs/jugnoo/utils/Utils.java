@@ -13,6 +13,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.LinearGradient;
@@ -1039,6 +1040,11 @@ public class Utils implements GAAction, GACategory{
 			e.printStackTrace();
 			Utils.showToast(context, "Could not open directions");
 		}
+	}
+
+	public static boolean isRTL(Context context){
+		Configuration config = context.getResources().getConfiguration();
+		return (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
 	}
 }
 

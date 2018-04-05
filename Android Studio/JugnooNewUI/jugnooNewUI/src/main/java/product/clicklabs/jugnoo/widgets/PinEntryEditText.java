@@ -142,14 +142,14 @@ public class PinEntryEditText extends EditText {
     @Override
     protected void onDraw(Canvas canvas) {
         //super.onDraw(canvas);
-        int availableWidth = getWidth() - getPaddingRight() - getPaddingLeft();
+        int availableWidth = getWidth() - getPaddingEnd() - getPaddingStart();
         if (mSpace < 0) {
             mCharSize = (availableWidth / (mNumChars * 2 - 1));
         } else {
             mCharSize = (availableWidth - (mSpace * (mNumChars - 1))) / mNumChars;
         }
 
-        int startX = getPaddingLeft();
+        int startX = getPaddingStart();
         int bottom = getHeight() - getPaddingBottom();
 
         //Text Width

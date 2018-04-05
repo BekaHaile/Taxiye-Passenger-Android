@@ -15,7 +15,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.dialogs.CheckoutPriceMismatchDialog;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
@@ -187,10 +186,18 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 			RelativeLayout.LayoutParams paramsLLC = (RelativeLayout.LayoutParams) mHolder.linearLayoutContent.getLayoutParams();
 			if(mHolder.imageViewFoodType.getVisibility() == View.VISIBLE && mHolder.imageViewItemImage.getVisibility() == View.GONE){
 				paramsFT.setMargins(0, (int)(ASSL.Yscale()*25f), 0, 0);
+				paramsFT.setMarginStart(0);
+				paramsFT.setMarginEnd(0);
 				paramsLLC.setMargins((int)(ASSL.Xscale()*20f), 0, 0, 0);
+				paramsLLC.setMarginStart((int)(ASSL.Xscale()*20f));
+				paramsLLC.setMarginEnd(0);
 			} else {
 				paramsFT.setMargins((int)(ASSL.Xscale()*2f), (int)(ASSL.Yscale()*2f), 0, 0);
+				paramsFT.setMarginStart((int)(ASSL.Xscale()*2f));
+				paramsFT.setMarginEnd(0);
 				paramsLLC.setMargins((int)(ASSL.Xscale()*30f), 0, 0, 0);
+				paramsLLC.setMarginStart((int)(ASSL.Xscale()*30f));
+				paramsLLC.setMarginEnd(0);
 			}
 			mHolder.imageViewFoodType.setLayoutParams(paramsFT);
 			mHolder.linearLayoutContent.setLayoutParams(paramsLLC);
