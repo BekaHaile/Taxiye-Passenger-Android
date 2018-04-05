@@ -3650,7 +3650,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         if (isMenusOrDeliveryOpen() && getVendorOpened() != null) {
 
             if(getVendorOpened().getOutOfRadius()==1 && isDeliveryOpenInBackground()){
-                FreshCheckoutMergedFragment.orderViaFatafat(FreshCheckoutMergedFragment.prepareItemsInCartForMenus(this,null),null,
+                FreshCheckoutMergedFragment.orderViaFatafat(this, FreshCheckoutMergedFragment.prepareItemsInCartForMenus(this,null),null,
                         this,updateCartValuesGetTotalPrice().first);
                 return;
             }
@@ -4809,7 +4809,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
             AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
-            builderSingle.setTitle("Call");
+            builderSingle.setTitle(R.string.call);
 
             final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
             arrayAdapter.addAll(arr);
@@ -4876,7 +4876,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
                 @Override
                 public void noNet() {
-                    DialogPopup.alertPopup(FreshActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
+                    DialogPopup.alertPopup(FreshActivity.this, getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc));
                 }
 
                 @Override

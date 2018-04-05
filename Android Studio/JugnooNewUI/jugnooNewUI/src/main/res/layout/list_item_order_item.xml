@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:text="Orange"
+            android:text="@string/orange"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_32"
             />
@@ -43,7 +43,7 @@
             android:layout_width="380px"
             android:layout_height="match_parent"
             android:layout_marginBottom="10px"
-            android:text="ah"
+            android:text="@string/ah"
             android:textColor="@color/text_color_light"
             android:textSize="@dimen/text_size_24"
             android:visibility="gone"
@@ -75,7 +75,7 @@
                 android:layout_marginStart="10px"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:text="X 2"
+                android:text="@string/x_2"
                 android:textColor="@color/text_color_light"
                 android:textSize="@dimen/text_size_26"/>
 

@@ -31,7 +31,7 @@
             android:layout_marginStart="35px"
             android:layout_marginEnd="35px"
             android:layout_marginTop="35px"
-            android:text="Account"
+            android:text="@string/account"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_32"
             />
@@ -43,7 +43,7 @@
             android:layout_marginBottom="10px"
             android:layout_marginStart="35px"
             android:layout_marginEnd="35px"
-            android:text="Answer"
+            android:text="@string/answer"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_28"
             android:lineSpacingExtra="6px"

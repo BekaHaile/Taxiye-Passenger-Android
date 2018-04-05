@@ -41,7 +41,7 @@
                 android:layout_height="36dp"
                 android:background="@drawable/capsule_white_color"
                 android:gravity="center"
-                android:text="Pay 300"
+                android:text="@string/pay_300"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/sp_12"
                 app:typekitFont="maven"
@@ -56,7 +56,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="50dp"
-            android:text="Swipe to confirm >>"
+            android:text="@string/swipe_to_confirm"
             android:textColor="#fff"
             android:textSize="@dimen/sp_12"
             app:typekitFont="maven"/>

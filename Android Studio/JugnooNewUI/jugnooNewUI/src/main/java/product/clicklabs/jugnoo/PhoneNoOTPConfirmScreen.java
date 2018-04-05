@@ -201,7 +201,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			verifyOtpPhoneNoChange(PhoneNoOTPConfirmScreen.this, phoneNoToVerify, otp);
 		} else {
 			editText.requestFocus();
-			editText.setError("OTP can't be empty");
+			editText.setError(getString(R.string.otp_cant_be_empty));
 		}
 	}
 
@@ -227,7 +227,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	public void verifyOtpPhoneNoChange(final Activity activity, String phoneNo, String otp) {
 		if (MyApplication.getInstance().isOnline()) {
 
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -263,12 +263,12 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 								});
 							}
 							else{
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
 						}
 					}  catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 					}
 					DialogPopup.dismissLoadingDialog();
 				}
@@ -277,13 +277,13 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				public void failure(RetrofitError error) {
 					Log.e("request fail", error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
@@ -295,7 +295,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	public void initiateOTPCallAsync(final Activity activity, String phoneNo) {
 		if (MyApplication.getInstance().isOnline()) {
 
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -324,12 +324,12 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 								DialogPopup.dialogBanner(activity, message);
 							}
 							else{
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
 						}
 					}  catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 					}
 					DialogPopup.dismissLoadingDialog();
 				}
@@ -338,13 +338,13 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				public void failure(RetrofitError error) {
 					Log.e("request fail", error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
@@ -373,7 +373,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 	private void apiGenerateLoginOtp(final Activity activity, final String phoneNumber){
 		if(MyApplication.getInstance().isOnline()){
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 			HashMap<String, String> params = new HashMap<>();
 
 			params.put("phone_no", "+91"+phoneNumber);
@@ -426,11 +426,11 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				public void failure(RetrofitError error) {
 					Log.e("TAG", "loginUsingEmailOrPhoneNo error=" + error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 		} else{
-			DialogPopup.alertPopup(this, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(this, "", activity.getString(R.string.connection_lost_desc));
 		}
 	}
 

@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5px"
                 android:gravity="center"
-                android:text="NA"
+                android:text="@string/na"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_28"/>

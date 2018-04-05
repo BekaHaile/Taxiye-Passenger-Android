@@ -103,7 +103,7 @@ public class AboutActivity extends BaseActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Utils.showToast(AboutActivity.this, "Facebook app not enabled");
+                    Utils.showToast(AboutActivity.this, getString(R.string.facebook_not_installed));
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("https://www.facebook.com/" + facebookPageName));
                     startActivity(intent);

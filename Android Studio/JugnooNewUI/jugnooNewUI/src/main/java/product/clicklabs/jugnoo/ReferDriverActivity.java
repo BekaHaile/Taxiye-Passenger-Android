@@ -87,20 +87,20 @@ public class ReferDriverActivity extends BaseActivity  {
                         referDriver();
                     }else {
                         editTextPhone.requestFocus();
-                        editTextPhone.setError("Invalid number");
+                        editTextPhone.setError(getString(R.string.invalid_number));
                         editTextName.setError(null);
                     }
                 }else{
                     if(editTextName.getText().toString().isEmpty()){
                         editTextName.requestFocus();
-                        editTextName.setError("Name is required");
+                        editTextName.setError(getString(R.string.name_is_required));
                         editTextPhone.setError(null);
                     }else if(editTextPhone.getText().toString().isEmpty()){
                         editTextPhone.requestFocus();
-                        editTextPhone.setError("Enter Contact number");
+                        editTextPhone.setError(getString(R.string.enter_contact_number));
                         editTextName.setError(null);
                     }else{
-                        editTextName.setError("Name is required");
+                        editTextName.setError(getString(R.string.name_is_required));
                         editTextPhone.setError(null);
                     }
 

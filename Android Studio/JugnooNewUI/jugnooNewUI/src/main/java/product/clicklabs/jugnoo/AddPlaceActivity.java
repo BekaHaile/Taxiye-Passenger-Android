@@ -127,26 +127,26 @@ public class AddPlaceActivity extends BaseFragmentActivity {
                 searchResult = null;
                 editThisAddress = false;
                 if(placeRequestCode == Constants.REQUEST_CODE_ADD_HOME){
-                    textViewTitle.setText("ADD Home");
-                    editTextDeliveryAddress.setHint("Enter Home location");
+                    textViewTitle.setText(R.string.add_home);
+                    editTextDeliveryAddress.setHint(R.string.enter_home_location);
                 } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_WORK){
-                    textViewTitle.setText("ADD Work");
-                    editTextDeliveryAddress.setHint("Enter Work location");
+                    textViewTitle.setText(R.string.add_work);
+                    editTextDeliveryAddress.setHint(R.string.enter_work_location);
                 } else if(placeRequestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION){
-                    textViewTitle.setText("ADD New Address");
-                    editTextDeliveryAddress.setHint("Enter location");
+                    textViewTitle.setText(R.string.add_new_address);
+                    editTextDeliveryAddress.setHint(R.string.enter_location);
                 }
             } else {
                 searchResult = new Gson().fromJson(getIntent().getStringExtra(Constants.KEY_ADDRESS), SearchResult.class);
                 editThisAddress = true;
                 if(!searchResult.isRecentAddress()){
-                    textViewTitle.setText("EDIT "+ searchResult.getName());
-                    editTextDeliveryAddress.setHint("Enter " + searchResult.getName().toLowerCase() + " location");
+                    textViewTitle.setText(getString(R.string.edit_format, searchResult.getName()));
+                    editTextDeliveryAddress.setHint(getString(R.string.enter_location_format, searchResult.getName().toLowerCase()));
                     editTextDeliveryAddress.setText(searchResult.getAddress());
                     editTextDeliveryAddress.setSelection(editTextDeliveryAddress.getText().length());
                 } else {
-                    textViewTitle.setText("ADD New Address");
-                    editTextDeliveryAddress.setHint("Enter location");
+                    textViewTitle.setText(R.string.add_new_address);
+                    editTextDeliveryAddress.setHint(R.string.enter_location);
                 }
             }
         }

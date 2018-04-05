@@ -28,7 +28,7 @@
         android:paddingRight="@dimen/fugu_padding_15"
         android:paddingLeft="@dimen/fugu_padding_15"
         android:gravity="end"
-        android:text="CLOSE"
+        android:text="@string/close"
         android:background="@drawable/fugu_text_gradient"
         android:textColor="@android:color/white"
         android:textSize="@dimen/fugu_text_size_large" />

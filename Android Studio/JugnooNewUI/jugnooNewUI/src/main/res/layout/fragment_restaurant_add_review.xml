@@ -146,7 +146,7 @@
             android:layout_marginTop="-10px"
             android:background="@null"
             android:paddingBottom="-20px"
-            android:text="Submit"
+            android:text="@string/submit"
             android:textColor="@color/text_color_light_selector"
             android:textSize="32px"
             app:typekitFont="maven"/>
@@ -183,7 +183,7 @@
             android:layout_toEndOf="@id/ib_access_star"
             android:gravity="end"
             android:maxLines="1"
-            android:text="400"
+            android:text="@string/_400"
             android:textColor="@color/text_color_dark_1"
             android:textSize="26px"
             app:typekitFont="maven"/>

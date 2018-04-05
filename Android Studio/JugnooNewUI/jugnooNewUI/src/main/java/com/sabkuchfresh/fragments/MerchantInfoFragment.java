@@ -480,8 +480,8 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
 
                 String addressToSet;
-                if (DeliveryHomeAdapter.getDistanceRestaurant(activity.getVendorOpened()) != null) {
-                    addressToSet = DeliveryHomeAdapter.getDistanceRestaurant(activity.getVendorOpened()) + activity.getString(R.string.bullet) + " " + activity.getVendorOpened().getAddress();
+                if (DeliveryHomeAdapter.getDistanceRestaurant(activity, activity.getVendorOpened()) != null) {
+                    addressToSet = DeliveryHomeAdapter.getDistanceRestaurant(activity, activity.getVendorOpened()) + activity.getString(R.string.bullet) + " " + activity.getVendorOpened().getAddress();
                 } else {
                     addressToSet = activity.getVendorOpened().getAddress();
                 }
@@ -550,7 +550,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
 
     private void setOpenCloseStateText(boolean firstTime) {
         try {
-            if (DeliveryHomeAdapter.setRestaurantOpenStatus(tvOpenStatus, activity.getVendorOpened(), false) == View.VISIBLE) {
+            if (DeliveryHomeAdapter.setRestaurantOpenStatus(activity, tvOpenStatus, activity.getVendorOpened(), false) == View.VISIBLE) {
                 tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
             } else {
                 tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
@@ -558,10 +558,10 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         } catch (Exception e) {
             if (activity.getVendorOpened().getIsClosed() != null && activity.getVendorOpened().getIsAvailable() != null) {
                 if (activity.getVendorOpened().getIsClosed() == 1 || activity.getVendorOpened().getIsAvailable() == 0) {
-                    tvOpenStatus.setText("Closed ");
+                    tvOpenStatus.setText(getString(R.string.closed)+" ");
                     tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.red_dark_more));
                 } else {
-                    tvOpenStatus.setText("Open Now ");
+                    tvOpenStatus.setText(getString(R.string.open_now)+" ");
                     tvOpenStatus.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                 }
             } else {
@@ -1043,7 +1043,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         if (vendorImages != null && vendorImages.size() > 0) {
 
             layoutPhotos.setVisibility(View.VISIBLE);
-            photosCount.setText("Photos (" + vendorImages.size() + ")");
+            photosCount.setText(getString(R.string.photos_bracket_format, String.valueOf(vendorImages.size())));
             if (imagesAdapter == null) {
                 imagesAdapter = new RestaurantReviewImagesAdapter(activity, null, vendorImages, true,
                         new RestaurantReviewImagesAdapter.Callback() {

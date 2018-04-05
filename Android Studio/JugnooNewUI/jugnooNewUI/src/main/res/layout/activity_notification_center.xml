@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginTop="30px"
-            android:text="No Current Notifications"
+            android:text="@string/no_current_notifications"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_32" />
 

@@ -76,7 +76,7 @@
                     android:layout_marginEnd="20px"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text="Finding a Jugnoo driver..."
+                    android:text="@string/finding_a_jugnoo_driver"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_34" />
 
@@ -212,7 +212,7 @@
             android:layout_below="@+id/imageViewDestHelp"
             android:background="@drawable/background_black_80_r"
             android:padding="15px"
-            android:text="For complete peace of mind please enter the destination so we can provide him turn by turn navigation"
+            android:text="@string/for_complete_peace_of_mind_please_enter_the_destination_so_we_can_provide_him_turn_by_turn_navigation"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_30" />
     </RelativeLayout>

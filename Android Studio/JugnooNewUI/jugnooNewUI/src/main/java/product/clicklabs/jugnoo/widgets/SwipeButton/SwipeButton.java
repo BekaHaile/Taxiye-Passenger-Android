@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.Button;
 
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Log;
 
 /**
@@ -64,7 +65,7 @@ public class SwipeButton extends Button {
                 confirmThresholdCrossed = false;
 
                 if (!swipeTextShown) {
-                    this.setText(swipeButtonCustomItems.getButtonPressText());
+                    this.setText(R.string.swipe_to_confirm_arrows);
                     swipeTextShown = true;
                 }
 
@@ -107,7 +108,7 @@ public class SwipeButton extends Button {
 
 
                     if (swipeTextShown == false) {
-                        this.setText(swipeButtonCustomItems.getButtonPressText());
+                        this.setText(R.string.swipe_to_confirm_arrows);
                         //change text while swiping
                         swipeTextShown = true;
                     }

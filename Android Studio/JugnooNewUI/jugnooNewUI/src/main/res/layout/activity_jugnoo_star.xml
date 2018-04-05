@@ -99,7 +99,7 @@
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="Monthly"
+                                android:text="@string/monthly"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_36" />
 
@@ -166,7 +166,7 @@
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
                                 android:maxLines="1"
-                                android:text="Annual"
+                                android:text="@string/annual"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_36" />
 

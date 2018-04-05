@@ -172,11 +172,11 @@
                         <!--android:digits="@string/digits_characters_numbers"-->
                         <EditText
                             android:id="@+id/editTextUserName"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_white_orange_bb"
                             android:gravity="center_vertical"
-                            android:hint="@string/enter_name"
+                            android:hint="@string/enter_your_name"
                             android:maxLength="60"
                             android:inputType="text"
                             android:maxLines="1"
@@ -207,7 +207,7 @@
 
                             <EditText
                                 android:id="@+id/editTextEmail"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bg_white_orange_bb"
                                 android:gravity="center_vertical"
@@ -268,7 +268,7 @@
                                     android:layout_gravity="center_horizontal"
                                     android:background="@color/transparent"
                                     android:gravity="start|center_vertical"
-                                    android:hint="Phone Number"
+                                    android:hint="@string/phone_number"
                                     android:imeActionLabel="DONE"
                                     android:imeOptions="actionDone"
                                     android:inputType="number"

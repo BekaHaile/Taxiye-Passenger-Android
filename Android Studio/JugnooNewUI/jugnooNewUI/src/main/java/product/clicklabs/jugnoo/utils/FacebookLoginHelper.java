@@ -20,6 +20,8 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
+import product.clicklabs.jugnoo.R;
+
 /**
  * Created by socomo20 on 7/20/15.
  */
@@ -31,7 +33,7 @@ public class FacebookLoginHelper {
     private FacebookUserData facebookUserData;
     private boolean fetchData = true;
 
-    public FacebookLoginHelper(Activity activity, CallbackManager callbackManager, FacebookLoginCallback facebookLoginCallback) {
+    public FacebookLoginHelper(final Activity activity, CallbackManager callbackManager, FacebookLoginCallback facebookLoginCallback) {
         facebookUserData = null;
         this.activity = activity;
         this.facebookLoginCallback = facebookLoginCallback;
@@ -53,12 +55,12 @@ public class FacebookLoginHelper {
 
             @Override
             public void onCancel() {
-                FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError("Login cancelled");
+                FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError(activity.getString(R.string.login_cancelled));
             }
 
             @Override
             public void onError(FacebookException exception) {
-                FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError("Error in fetching information from Facebook\n" + exception.toString());
+                FacebookLoginHelper.this.facebookLoginCallback.facebookLoginError(activity.getString(R.string.error_in_fetching_facebook_info)+"\n" + exception.toString());
             }
         });
     }
@@ -101,7 +103,7 @@ public class FacebookLoginHelper {
 
     private void requestMe(final AccessToken accessToken, boolean fetchData) {
         if(fetchData) {
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialog(activity, activity.getString(R.string.loading));
             GraphRequest request = GraphRequest.newMeRequest(
                     accessToken,
                     new GraphRequest.GraphJSONObjectCallback() {
@@ -150,7 +152,7 @@ public class FacebookLoginHelper {
                                 Log.e("facebookUserData", "=" + facebookUserData);
                                 facebookLoginCallback.facebookLoginDone(facebookUserData);
                             } else {
-                                facebookLoginCallback.facebookLoginError("Error in fetching information from Facebook");
+                                facebookLoginCallback.facebookLoginError(activity.getString(R.string.error_in_fetching_facebook_info));
                             }
                         }
                     });

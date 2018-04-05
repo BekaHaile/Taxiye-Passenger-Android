@@ -96,7 +96,7 @@
             android:padding="@dimen/dp_10"
             android:textSize="@dimen/sp_14"
             android:textColor="@color/text_color_selector"
-            android:text="Resend Code in 0:15"
+            android:text="@string/resend_code_in_0_15"
             android:gravity="center_vertical"
             app:typekitFont="@string/maven"
             />
@@ -111,7 +111,7 @@
             android:padding="@dimen/dp_10"
             android:textSize="@dimen/sp_14"
             android:textColor="@color/text_color_selector"
-            android:text="Call Me in 0:15"
+            android:text="@string/call_me_in_0_15"
             android:gravity="center_vertical"
             app:typekitFont="@string/maven"
             />

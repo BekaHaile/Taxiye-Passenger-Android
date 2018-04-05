@@ -22,7 +22,7 @@
         android:layout_marginEnd="@dimen/spacing_extra_large"
         android:layout_marginTop="@dimen/spacing_large"
         android:drawableEnd="@drawable/ic_feed_city_search"
-        android:hint="Type City Name"
+        android:hint="@string/type_city_name"
         android:paddingBottom="@dimen/spacing_normal"
         android:paddingStart="@dimen/spacing_normal"
         android:paddingEnd="@dimen/spacing_normal"
@@ -71,7 +71,7 @@
             android:gravity="center"
             android:paddingStart="@dimen/spacing_normal"
             android:paddingEnd="@dimen/spacing_normal"
-            android:text="Use Current Location" />
+            android:text="@string/use_current_location" />
 
     </LinearLayout>
 
@@ -85,7 +85,7 @@
         android:layout_marginStart="@dimen/spacing_normal"
         android:layout_marginEnd="@dimen/spacing_small"
 
-        android:text="TRENDING CITIES"
+        android:text="@string/trending_cities"
         android:textColor="@color/text_color_less_light"
         android:textSize="@dimen/font_extra_small"
         app:typekitFont="maven" />

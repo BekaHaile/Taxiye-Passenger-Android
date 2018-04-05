@@ -178,7 +178,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
         try {
             if (MyApplication.getInstance().isOnline()) {
                 if(!swipeRefreshLayout.isRefreshing()) {
-                    DialogPopup.showLoadingDialog(NotificationCenterActivity.this, "Loading...");
+                    DialogPopup.showLoadingDialog(NotificationCenterActivity.this, getString(R.string.loading));
                 }
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -239,7 +239,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
                 });
             } else {
                 DialogPopup.dialogNoInternet(NotificationCenterActivity.this,
-                        Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                        getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc),
                         new Utils.AlertCallBackWithButtonsInterface() {
                             @Override
                             public void positiveClick(View v) {

@@ -365,7 +365,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         }
                     }
                     showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
-                    statusHolder.tvOrderIdValue.setText("Order: #"+recentOrder.getOrderId().toString());
+                    statusHolder.tvOrderIdValue.setText(activity.getString(R.string.order_hash_format, recentOrder.getOrderId().toString()));
                     statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
 
                     statusHolder.tvViewOrder.setTag(position);
@@ -502,7 +502,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                     // restaurant about to close
                     if (minutes <= vendor.getBufferTime() && minutes > 0) {
-                        mHolder.textViewRestaurantCloseTime.setText("Closing in " + minutes + (minutes>1?" mins":" min"));
+                        mHolder.textViewRestaurantCloseTime.setText(activity.getString(R.string.closing_in_format, String.valueOf(minutes), activity.getString(minutes>1?R.string.mins:R.string.min)));
                         paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 14f), paramsDelivery.rightMargin,
                                 (int)(ASSL.Yscale() * 14f));
                         paramsDelivery.setMarginStart(paramsDelivery.getMarginStart());
@@ -1375,7 +1375,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         }
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -1383,11 +1383,11 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     @Override
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 });
             } else {
-                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1399,7 +1399,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         activity.addStarsToLayout(llRatingStars, rating,
                 R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey);
         llRatingStars.addView(tvReviewCount);
-        tvReviewCount.setText(activity.getVendorOpened().getReviewCount()+" Ratings");
+        tvReviewCount.setText(activity.getString(R.string.ratings_format, String.valueOf(activity.getVendorOpened().getReviewCount())));
     }
 
 

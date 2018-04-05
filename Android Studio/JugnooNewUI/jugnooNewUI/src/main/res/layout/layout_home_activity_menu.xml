@@ -70,7 +70,7 @@
                 android:id="@+id/textViewUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Garry Gurcharan"
+                android:text="@string/garry_gurcharan"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:visibility="visible"
@@ -85,7 +85,7 @@
                 android:singleLine="true"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="View Account"
+                android:text="@string/view_account"
                 android:textColor="@color/white"
                 android:textSize="@dimen/px_27"/>
         </LinearLayout>

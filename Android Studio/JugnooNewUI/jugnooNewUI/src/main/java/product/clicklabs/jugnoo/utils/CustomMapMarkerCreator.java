@@ -116,9 +116,9 @@ public class CustomMapMarkerCreator {
 		shape.setBounds(0, 0, bmpText.getWidth(), bmpText.getHeight());
 		shape.draw(canvasText);
 		if(text!=null){
-			String minsText = "MIN";
+			String minsText = context.getString(R.string.min).toUpperCase();
 			try{
-				minsText = Math.round(Double.parseDouble(text)) > 1 ? "MINS" : "MIN";
+				minsText = Math.round(Double.parseDouble(text)) > 1 ? context.getString(R.string.mins).toUpperCase() : context.getString(R.string.min).toUpperCase();
 			} catch (Exception e){}
 			canvasText.drawText(minsText, canvasText.getWidth() / 2, (int)(37f*assl.Yscale()) + boundsText.height(), paint);
 			canvasText.drawText(textToWrite, canvasText.getWidth() / 2, (31f*assl.Yscale()), paint);
@@ -251,8 +251,8 @@ public class CustomMapMarkerCreator {
 		shape.setBounds(0, 0, bmpText.getWidth(), bmpText.getHeight());
 		shape.draw(canvasText);
 
-		canvasText.drawText("ETA: ", (45f * assl.Xscale()), (34f * assl.Yscale()), paint);
-		canvasText.drawText(text+" MIN", (105f * assl.Xscale()), (int)(34f*assl.Yscale()), paint1);
+		canvasText.drawText(context.getString(R.string.eta)+": ", (45f * assl.Xscale()), (34f * assl.Yscale()), paint);
+		canvasText.drawText(text+" "+context.getString(R.string.min).toUpperCase(), (105f * assl.Xscale()), (int)(34f*assl.Yscale()), paint1);
 
 
 		return bmpText;

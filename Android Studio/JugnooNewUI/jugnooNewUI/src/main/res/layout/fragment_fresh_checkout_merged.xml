@@ -136,7 +136,7 @@
                                 android:id="@+id/textViewAddressName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Home"
+                                android:text="@string/home"
                                 android:textColor="@color/text_color_light_selector"
                                 android:textSize="30px"
                                 android:visibility="gone" />
@@ -146,7 +146,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4px"
-                                android:text="Add Address"
+                                android:text="@string/add_address"
                                 android:textColor="@color/text_color_light"
                                 android:textSize="26px" />
                         </LinearLayout>
@@ -157,7 +157,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:tag="@string/dont_touch_me"
-                            android:text="Please confirm delivery address."
+                            android:text="@string/please_confirm_delivery_address"
                             android:textColor="@color/red_alert_no_address"
                             android:textSize="14.5sp"
                             android:visibility="gone"

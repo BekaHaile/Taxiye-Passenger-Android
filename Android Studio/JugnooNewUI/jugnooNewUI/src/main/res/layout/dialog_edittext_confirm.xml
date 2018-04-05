@@ -33,7 +33,7 @@
                 android:gravity="center"
                 android:paddingStart="40px"
                 android:paddingEnd="40px"
-                android:text="Title"
+                android:text="@string/title"
                 android:textColor="@color/grey_dark_more"
                 android:textSize="50px"
                 android:visibility="gone" />
@@ -50,7 +50,7 @@
                 android:maxHeight="800px"
                 android:paddingStart="40px"
                 android:paddingEnd="40px"
-                android:text="Message"
+                android:text="@string/message"
                 android:textColor="@color/black"
                 android:textSize="34px"
                 android:visibility="gone" />
@@ -93,7 +93,7 @@
                 android:layout_marginTop="0px"
                 android:background="@drawable/button_white_grey_br_selector"
                 android:singleLine="true"
-                android:text="OK"
+                android:text="@string/ok"
                 android:textColor="@color/text_color"
                 android:textSize="34px" />
             

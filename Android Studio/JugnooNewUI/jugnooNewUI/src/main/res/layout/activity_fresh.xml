@@ -181,7 +181,7 @@
                     <TextView
                         android:id="@+id/tv_fatafat_icon_desc"
                         android:layout_centerVertical="true"
-                        android:text="Custom Order"
+                        android:text="@string/custom_order"
                         android:textAllCaps="true"
                         android:layout_toEndOf="@id/menuLabelFatafat"
                         android:visibility="visible"

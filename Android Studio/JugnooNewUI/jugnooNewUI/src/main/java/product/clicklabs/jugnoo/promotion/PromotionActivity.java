@@ -28,7 +28,6 @@ import com.sabkuchfresh.analytics.GAUtils;
 
 import org.json.JSONObject;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -177,7 +176,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            Utils.showToast(PromotionActivity.this, "Code can't be empty");
+                            Utils.showToast(PromotionActivity.this, getString(R.string.code_cant_be_empty));
                             buttonApplyPromo.setEnabled(true);
                         }
                     }, 200);
@@ -286,7 +285,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         try {
             if(!HomeActivity.checkIfUserDataNull(activity)) {
                 if (MyApplication.getInstance().isOnline()) {
-                    DialogPopup.showLoadingDialog(activity, "Loading...");
+                    DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
                     HashMap<String, String> params = new HashMap<>();
                     params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -415,7 +414,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         try {
             if(!HomeActivity.checkIfUserDataNull(activity)) {
                 if (MyApplication.getInstance().isOnline()) {
-                    DialogPopup.showLoadingDialog(activity, "Loading...");
+                    DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
                     HashMap<String, String> params = new HashMap<>();
                     params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -470,11 +469,11 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
 
                                     }).getBalance(false);
                                 } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                                 }
                             } catch (Exception exception) {
                                 exception.printStackTrace();
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 
                             }
                             DialogPopup.dismissLoadingDialog();
@@ -484,12 +483,12 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                         public void failure(RetrofitError error) {
                             Log.e(TAG, "enterCode error="+error.toString());
                             DialogPopup.dismissLoadingDialog();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         }
                     });
                 } else {
                     DialogPopup.dialogNoInternet(activity,
-                            Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                            activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
                             new Utils.AlertCallBackWithButtonsInterface() {
                                 @Override
                                 public void positiveClick(View v) {

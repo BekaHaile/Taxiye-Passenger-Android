@@ -102,7 +102,7 @@
                             android:id="@+id/contact_name_txt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Name"
+                            android:text="@string/name"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/sp_17"
                             />
@@ -112,7 +112,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Mobile"
+                            android:text="@string/mobile"
                             android:textColor="@color/text_color_light"
                             android:textSize="@dimen/sp_13"
                             />
@@ -176,7 +176,7 @@
                                 android:id="@+id/textViewAccountNumber"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="AccNo"
+                                android:text="@string/accno"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/sp_17"
                                 />
@@ -186,7 +186,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="Bank"
+                                android:text="@string/bank"
                                 android:textColor="@color/text_color_light"
                                 android:textSize="@dimen/sp_13"
                                 />

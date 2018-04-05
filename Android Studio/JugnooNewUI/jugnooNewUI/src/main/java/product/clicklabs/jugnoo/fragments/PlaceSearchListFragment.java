@@ -450,7 +450,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						updateSavedPlacesLists();
 						showSearchLayout();
 					} else {
-						textViewAddHome.setText("Add Home");
+						textViewAddHome.setText(R.string.add_home);
 					}
 
 				} else if (requestCode == Constants.REQUEST_CODE_ADD_WORK) {
@@ -460,7 +460,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						updateSavedPlacesLists();
 						showSearchLayout();
 					} else{
-						textViewAddWork.setText("Add Work");
+						textViewAddWork.setText(R.string.add_work);
 					}
 				}
 

@@ -36,4 +36,10 @@
     <string name="could_not_read_from_source">Could not read from source</string>
     <string name="fugu_text_all">All</string>
     <string name="fugu_no_conversations">No conversations yet!</string>
+    <string name="fugu">Fugu ,</string>
+    <string name="close">CLOSE</string>
+    <string name="loading">Loading...</string>
+    <string name="connected">Connected</string>
+    <string name="conversation_has_been_closed">Conversation has been closed</string>
+    <string name="today">Today</string>
 </resources>

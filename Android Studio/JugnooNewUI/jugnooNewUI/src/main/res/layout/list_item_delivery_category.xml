@@ -28,7 +28,7 @@
         android:gravity="center"
         android:padding="@dimen/dp_5"
         android:maxLines="2"
-        android:text="Home services and Repairs"
+        android:text="@string/home_services_and_repairs"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_11"
         app:typekitFont="@string/maven"

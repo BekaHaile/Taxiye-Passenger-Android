@@ -330,7 +330,7 @@ public class EmergencyContactsFragment extends Fragment {
 							}
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						}
 						DialogPopup.dismissLoadingDialog();
 					}
@@ -339,12 +339,12 @@ public class EmergencyContactsFragment extends Fragment {
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 					}
 				});
 			}
 			else {
-				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

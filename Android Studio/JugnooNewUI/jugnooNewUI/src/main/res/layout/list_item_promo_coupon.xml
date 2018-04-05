@@ -22,7 +22,7 @@
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/textViewTNC"
         android:layout_toEndOf="@+id/imageViewRadio"
-        android:text="cashback\nabc"
+        android:text="@string/cashback_nabc"
         android:maxLines="2"
         android:paddingStart="@dimen/px_26"
         android:gravity="center_vertical"

@@ -11,6 +11,8 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 
+import product.clicklabs.jugnoo.R;
+
 /**
  * Created by shankar on 20/06/17.
  */
@@ -36,8 +38,8 @@ public class TimePickerFragment extends DialogFragment
 		TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), this, hour, minute,
 				DateFormat.is24HourFormat(getActivity()));
 		try {
-			timePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE,"OK",timePickerDialog);
-			timePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE,"DISMISS",timePickerDialog);
+			timePickerDialog.setButton(DatePickerDialog.BUTTON_POSITIVE,getString(R.string.ok),timePickerDialog);
+			timePickerDialog.setButton(DatePickerDialog.BUTTON_NEGATIVE,getString(R.string.dismiss),timePickerDialog);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -7,6 +7,8 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+import product.clicklabs.jugnoo.R;
+
 public class Validator {
 
     public boolean validateEmail(String email) {
@@ -50,27 +52,27 @@ public class Validator {
         if (ccNumber.length() < 16) {
             ccNumEt.requestFocus();
             ccNumEt.setHovered(true);
-            Toast.makeText(ctx,"Card number invalid",Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx,ctx.getString(R.string.card_number_invalid),Toast.LENGTH_LONG).show();
              return false;
         }
         if (ccMonth.length() == 0) {
             expiryDateET.requestFocus();
             expiryDateET.setHovered(true);
-            Toast.makeText(ctx,"Please enter correct expiry date",Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx,ctx.getString(R.string.please_enter_correct_expiry_date),Toast.LENGTH_LONG).show();
             return false;
 
         }
         if (ccYear.length() == 0) {
             expiryDateET.requestFocus();
             expiryDateET.setHovered(true);
-            Toast.makeText(ctx,"Please enter correct expiry date",Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx,ctx.getString(R.string.please_enter_correct_expiry_date),Toast.LENGTH_LONG).show();
             return false;
 
         }
         if (Integer.parseInt(ccMonth) > 12) {
             expiryDateET.requestFocus();
             expiryDateET.setHovered(true);
-            Toast.makeText(ctx,"Expiry month invalid",Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx,ctx.getString(R.string.expiry_month_invalid),Toast.LENGTH_LONG).show();
             return false;
 
         }
@@ -78,35 +80,35 @@ public class Validator {
 //                (Integer.parseInt(ccYear) + 100) - Calendar.getInstance().getTime().getYear() > 20) {
             expiryDateET.requestFocus();
             expiryDateET.setHovered(true);
-            Toast.makeText(ctx,"Expiry year invalid",Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx,ctx.getString(R.string.expiry_year_invalid),Toast.LENGTH_LONG).show();
             return false;
 
         }
         if (ccCVV.length() == 0) {
             ccvET.requestFocus();
             ccvET.setHovered(true);
-            Toast.makeText(ctx,"Please enter your cvv",Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx,ctx.getString(R.string.please_enter_cvv),Toast.LENGTH_LONG).show();
             return false;
 
         }
         if (ccCVV.length() < 3 || ccCVV.length() > 4) {
             ccvET.requestFocus();
             ccvET.setHovered(true);
-            Toast.makeText(ctx,"Invalid CVV",Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx,ctx.getString(R.string.invalid_cvv),Toast.LENGTH_LONG).show();
             return false;
 
         }
         if (fName.length() == 0) {
             fNameET.setHovered(true);
             fNameET.requestFocus();
-            Toast.makeText(ctx,"Please fill your first name",Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx,ctx.getString(R.string.please_fill_first_name),Toast.LENGTH_LONG).show();
             return false;
         }
 
         if (lName.length() == 0) {
             lNameET.setHovered(true);
             lNameET.requestFocus();
-            Toast.makeText(ctx,"Please fill your last name",Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx,ctx.getString(R.string.please_fill_last_name),Toast.LENGTH_LONG).show();
             return false;
         }
         return true;
@@ -119,13 +121,13 @@ public class Validator {
         if (newPass.length() < 6 || newPass.length() > 15) {
             etNewPass.requestFocus();
             etNewPass.setHovered(true);
-            etNewPass.setError("Password should be 6-15 chars long");
+            etNewPass.setError(etNewPass.getContext().getString(R.string.password_should_be_long));
             return false;
         }
         if (conPass.compareTo(newPass) != 0) {
             etConPass.requestFocus();
             etConPass.setHovered(true);
-            etConPass.setError("Should be same as new password");
+            etConPass.setError(etConPass.getContext().getString(R.string.should_be_same_as_new_password));
             return false;
         }
         if (newPass.compareTo(oldPass) == 0) {

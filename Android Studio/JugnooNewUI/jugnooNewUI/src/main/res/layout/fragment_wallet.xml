@@ -17,7 +17,7 @@
         <TextView
             android:id="@+id/textViewTitle"
             style="@style/title"
-            android:text="WALLET" />
+            android:text="@string/wallet" />
 
         <ImageView
             android:id="@+id/imageViewBack"
@@ -47,7 +47,7 @@
                     android:gravity="center"
                     android:maxLines="3"
                     android:padding="15px"
-                    android:text="Promotional banner"
+                    android:text="@string/promotional_banner"
                     android:textColor="@color/grey_black_light"
                     android:textSize="26px"
                     android:visibility="gone" />

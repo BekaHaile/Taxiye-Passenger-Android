@@ -115,7 +115,7 @@
                         android:layout_marginStart="@dimen/px_10"
                         android:layout_toEndOf="@+id/ivExpireWarning"
                         android:gravity="center"
-                        android:text="Your star status has expired."
+                        android:text="@string/your_star_status_has_expired"
                         android:textColor="#d0021b"
                         android:textSize="@dimen/text_size_30" />
 
@@ -279,7 +279,7 @@
                                             android:layout_height="wrap_content"
                                             android:ellipsize="end"
                                             android:maxLines="1"
-                                            android:text="Monthly"
+                                            android:text="@string/monthly"
                                             android:textColor="@color/text_color"
                                             android:textSize="@dimen/text_size_36" />
 
@@ -295,7 +295,7 @@
                                                 android:layout_marginBottom="-10px"
                                                 android:ellipsize="end"
                                                 android:maxLines="1"
-                                                android:text="2388"
+                                                android:text="@string/_2388"
                                                 android:textColor="@color/text_color"
                                                 android:textSize="@dimen/text_size_24"
                                                 android:visibility="gone" />
@@ -346,7 +346,7 @@
                                             android:layout_height="wrap_content"
                                             android:ellipsize="end"
                                             android:maxLines="1"
-                                            android:text="Annual"
+                                            android:text="@string/annual"
                                             android:textColor="@color/text_color"
                                             android:textSize="@dimen/text_size_36" />
 
@@ -404,7 +404,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/px_40"
                     android:layout_marginStart="@dimen/px_40"
-                    android:text="BENEFITS"
+                    android:text="@string/benefits"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_28"
                     android:visibility="gone" />

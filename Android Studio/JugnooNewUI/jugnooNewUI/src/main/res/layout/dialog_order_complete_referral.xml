@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_34"
-                    android:text="02:00PM-06:00PM"
+                    android:text="@string/_02_00pm_06_00pm"
                     android:layout_marginTop="@dimen/px_4"
                     />
 
@@ -93,7 +93,7 @@
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_24"
                         android:textAllCaps="true"
-                        android:text="TODAY"
+                        android:text="@string/today"
                         android:layout_centerHorizontal="true"
                         />
 
@@ -147,7 +147,7 @@
                 android:layout_marginEnd="@dimen/px_32"
                 android:layout_marginTop="@dimen/px_40"
                 android:gravity="center_vertical"
-                android:text="Gift your friends \nRs. 50"
+                android:text="@string/gift_your_friends_nrs_50"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_32"
                 />

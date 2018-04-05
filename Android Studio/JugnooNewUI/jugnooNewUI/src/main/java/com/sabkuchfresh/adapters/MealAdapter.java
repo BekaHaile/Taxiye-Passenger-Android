@@ -266,7 +266,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     if(subItem.getLikeCount()>0)
                          noOfLikesLabel =  activity.getResources().getQuantityString(R.plurals.like_suffix, subItem.getLikeCount(), subItem.getLikeCount());
                     else
-                        noOfLikesLabel = " Like";
+                        noOfLikesLabel = " "+activity.getString(R.string.like);
 
                         mHolder.tvLikeCount.setText(noOfLikesLabel);
                         mHolder.rlLikeLayout.setVisibility(View.VISIBLE);
@@ -356,7 +356,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         mHolder.cartLayout.setVisibility(View.VISIBLE);
                     }
 
-                    mHolder.deliveryTime.setText(subItem.getDeliveryTimeText()+"\n"+ DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart(), false) + " to "
+                    mHolder.deliveryTime.setText(subItem.getDeliveryTimeText()+"\n"+ DateOperations.convertDayTimeAPViaFormat(subItem.getOrderStart(), false) + " - "
                             + DateOperations.convertDayTimeAPViaFormat(subItem.getOrderEnd(), false));
                     mHolder.deliveryTime.setVisibility(View.GONE);
                 }
@@ -939,7 +939,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             return null;
 
         if(endDate.getTime()-currentTime>discountInfo.getThreshHoldTime()*60*1000){
-            return "Discount valid till "+ DateOperations.getAmPmFromServerDateFormat(discountInfo.getDiscountEndTime());
+            return activity.getString(R.string.discount_valid_till_format, DateOperations.getAmPmFromServerDateFormat(discountInfo.getDiscountEndTime()));
 
         }
 
@@ -953,10 +953,10 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         {
             if(secs>0)
                 min+=1;
-            String suffix= min>1?" mins":" min";
-            return "Discount valid for next "+ min + suffix;
+            String suffix= " "+activity.getString(min>1 ? R.string.mins : R.string.min);
+            return activity.getString(R.string.discount_valid_for_next_format, min + suffix);
         } else if(secs>0){
-            return "Discount valid for less than 1 min";
+            return activity.getString(R.string.discount_valid_for_less_than_1_min);
         }
         else
             return null;

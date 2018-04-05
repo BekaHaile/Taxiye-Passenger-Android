@@ -44,7 +44,7 @@
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@id/imageViewFoodType"
             android:lineSpacingExtra="2px"
-            android:text="Margherita \nPizza"
+            android:text="@string/margherita_npizza"
             android:textColor="@color/lightBlackTxtColor"
             android:textSize="@dimen/px_28"
             />
@@ -67,7 +67,7 @@
             android:layout_toEndOf="@id/imageViewFoodType"
             android:layout_marginEnd="@dimen/px_20"
             android:layout_marginTop="5px"
-            android:text="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+            android:text="@string/wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
             android:textColor="@color/color_menu_item_desc"
             android:textSize="24px"
             />

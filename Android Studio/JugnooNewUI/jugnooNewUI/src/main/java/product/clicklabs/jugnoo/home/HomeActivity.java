@@ -2668,7 +2668,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
 
                     } else {
-                        DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+                        DialogPopup.dialogNoInternet(HomeActivity.this, getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc), new Utils.AlertCallBackWithButtonsInterface() {
                             @Override
                             public void positiveClick(View v) {
                                 imageViewRideNow.performClick();
@@ -4049,7 +4049,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewInRideDriverCarNumber.setText("");
             }
 
-            if (!Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().promoName)) {
+            if (!getString(R.string.no_promo_code_applied).equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().promoName)) {
                 relativeLayoutInRideInfo.setVisibility(View.VISIBLE);
                 textViewInRidePromoName.setText(Data.autoData.getAssignedDriverInfo().promoName);
             } else {
@@ -4220,7 +4220,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (Data.autoData.getReferAllStatus() == 0
                         && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
                         && dialogUploadContacts == null
-                        && Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().promoName)) {
+                        && getString(R.string.no_promo_code_applied).equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().promoName)) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                     dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
                             Data.autoData.getReferAllTitle(),
@@ -5656,10 +5656,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
-
+                        int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
                         if (!jObj.isNull("error")) {
                             String errorMessage = jObj.getString("error");
-                            if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
+                            if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
                                 HomeActivity.logoutUser(activity);
                             } else {
                                 DialogPopup.alertPopupWithListener(activity, "", errorMessage,
@@ -5675,7 +5675,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 }
 
@@ -5691,8 +5691,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUEST + CANCELLED);
             }
         } else {
-            //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-            DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+            //DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
+            DialogPopup.dialogNoInternet(HomeActivity.this, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc), new Utils.AlertCallBackWithButtonsInterface() {
                 @Override
                 public void positiveClick(View v) {
                     cancelCustomerRequestAsync(HomeActivity.this);
@@ -5862,12 +5862,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     setUserData();
 
                                 } else {
-                                    endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
+                                    endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
                                 }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
+                            endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
                         }
                     }
 
@@ -5875,11 +5875,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     public void failure(RetrofitError error) {
                         Log.e(TAG, "getRideSummary error="+error);
                         DialogPopup.dismissLoadingDialog();
-                        endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
+                        endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
                     }
                 });
             } else {
-                endRideRetryDialog(activity, engagementId, Data.CHECK_INTERNET_MSG);
+                endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_desc));
             }
         }
     }
@@ -5953,7 +5953,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
 //                        DialogPopup.dismissLoadingDialog();
                     progressWheel.setVisibility(View.GONE);
@@ -5964,11 +5964,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Log.e(TAG, "addDropLocation error="+error.toString());
 //                        DialogPopup.dismissLoadingDialog();
                     progressWheel.setVisibility(View.GONE);
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
             progressWheel.setVisibility(View.GONE);
         }
     }
@@ -6011,7 +6011,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                 if (!jObj.isNull("error")) {
                                     String errorMessage = jObj.getString("error");
-                                    if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
+                                    int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+                                    if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
                                         HomeActivity.logoutUser(HomeActivity.this);
                                     }
                                 } else {
@@ -6632,8 +6633,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 return true;
             }
         } else{
-            DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE,
-                    Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+            DialogPopup.dialogNoInternet(HomeActivity.this, getString(R.string.connection_lost_title),
+                    getString(R.string.connection_lost_desc), new Utils.AlertCallBackWithButtonsInterface() {
                         @Override
                         public void positiveClick(View v) {
                             requestRideDriverCheck();
@@ -6903,7 +6904,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 eta = jObj.getString("eta");
             }
             String driverRating = jObj.getString("rating");
-            String promoName = JSONParser.getPromoName(jObj);
+            String promoName = JSONParser.getPromoName(this, jObj);
 
             Data.autoData.setPickupLatLng(new LatLng(pickupLatitude, pickupLongitude));
             Data.autoData.setPickupAddress(jObj.optString(KEY_PICKUP_LOCATION_ADDRESS, Data.autoData.getPickupAddress()));
@@ -7430,7 +7431,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-//											DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//											DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                                         }
                                     });
                                 } else {
@@ -7439,7 +7440,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                         if (!jObj.isNull("error")) {
                                             final String errorMessage = jObj.getString("error");
                                             final int flag = jObj.getInt("flag");
-                                            if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
+                                            if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
                                                 cancelTimerRequestRide();
                                                 HomeActivity.logoutUser(HomeActivity.this);
                                             } else {
@@ -8061,7 +8062,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     public void run() {
                                         try {
                                             if (showDialogs) {
-                                                DialogPopup.alertPopup(HomeActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                                                DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.connection_lost_please_try_again));
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -8544,7 +8545,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        //DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        //DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 }
 
@@ -8646,14 +8647,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                         relativeLayoutGreat.setVisibility(View.GONE);
                                     }
                                 } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                                     relativeLayoutGreat.setVisibility(View.GONE);
                                 }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             relativeLayoutGreat.setVisibility(View.GONE);
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         }
                     }
 
@@ -8662,12 +8663,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         Log.e(TAG, "rateTheDriver error="+error.toString());
                         relativeLayoutGreat.setVisibility(View.GONE);
                         DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 });
             } else {
                 DialogPopup.dialogNoInternet(HomeActivity.this,
-                        Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                        activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
                         new Utils.AlertCallBackWithButtonsInterface() {
                             @Override
                             public void positiveClick(View v) {

@@ -469,7 +469,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 					} else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
-						message1 = jObj.optString(KEY_MESSAGE, "Your ride has started");
+						message1 = jObj.optString(KEY_MESSAGE, getString(R.string.your_ride_has_started));
 						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID, Prefs.with(this).getString(Constants.SP_CURRENT_ENGAGEMENT_ID, "")));
 						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_IN_RIDE.getOrdinal());
 
@@ -502,7 +502,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 					} else if (PushFlags.RIDE_ENDED.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
-						message1 = jObj.optString(KEY_MESSAGE, "Your ride has ended");
+						message1 = jObj.optString(KEY_MESSAGE, getString(R.string.your_ride_has_ended));
 						String engagementId = jObj.getString("engagement_id");
 
 						if (HomeActivity.appInterruptHandler != null) {
@@ -688,7 +688,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							otpConfirmScreen.putExtra("otp", otp);
 							startActivity(otpConfirmScreen);
 						}
-						notificationManagerCustomID(this, title, "Your account has been verified", NOTIFICATION_ID, -1,
+						notificationManagerCustomID(this, title, getString(R.string.your_account_has_been_verified), NOTIFICATION_ID, -1,
 								null, "", playSound, 0, 1, 0, flag);
 
 					}
@@ -969,14 +969,14 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 		paint1.setColor(Color.WHITE);
 
 		final TextView textView2 = new TextView(context);
-		textView2.setText("min");
+		textView2.setText(R.string.min);
 		textView2.setTextSize(fontSize-4);
 		textView2.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
 
 		final Rect boundsText2 = new Rect();
 
 		final Paint paint2 = textView2.getPaint();
-		paint2.getTextBounds("min", 0, textView2.length(), boundsText2);
+		paint2.getTextBounds(context.getString(R.string.min), 0, textView2.length(), boundsText2);
 		paint2.setTextAlign(Paint.Align.CENTER);
 		paint2.setColor(Color.WHITE);
 
@@ -985,7 +985,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 		drawable.draw(canvas);
 
 		canvas.drawText(text, canvas.getWidth() / 2, Utils.dpToPx(context, 24), paint1);
-		canvas.drawText("min", canvas.getWidth() / 2, Utils.dpToPx(context, 26) + boundsText1.height(), paint2);
+		canvas.drawText(context.getString(R.string.min), canvas.getWidth() / 2, Utils.dpToPx(context, 26) + boundsText1.height(), paint2);
 
 		return bitmap;
 	}

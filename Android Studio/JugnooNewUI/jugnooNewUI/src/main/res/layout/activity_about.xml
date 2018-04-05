@@ -51,7 +51,7 @@
                     android:layout_width="43px"
                     android:layout_height="43px"
                     android:src="@drawable/ic_about_rateus"
-                    android:layout_marginStart="@dimen/px_36"
+                    android:layout_marginLeft="@dimen/px_36"
                     android:layout_centerVertical="true"
                     android:tag="mwar"/>
 
@@ -60,15 +60,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:text="@string/rate_us_on_play_store"
                     android:layout_marginStart="@dimen/px_110"
-                    android:text="Rate us on Play Store"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     style="@style/forward_image"
-                    android:layout_marginEnd="10px"
+                    android:layout_marginRight="10px"
                     />
 
                 <ImageView
@@ -88,7 +88,7 @@
                     android:layout_width="42px"
                     android:layout_height="40px"
                     android:src="@drawable/ic_about_like"
-                    android:layout_marginStart="@dimen/px_36"
+                    android:layout_marginLeft="@dimen/px_36"
                     android:layout_centerVertical="true"
                     android:tag="mwar"/>
 
@@ -98,14 +98,14 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/px_110"
-                    android:text="Like us on Facebook"
+                    android:text="@string/like_us_on_facebook"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     style="@style/forward_image"
-                    android:layout_marginEnd="10px" />
+                    android:layout_marginRight="10px" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -124,7 +124,7 @@
                     android:layout_width="40px"
                     android:layout_height="43px"
                     android:src="@drawable/ic_about_tnc"
-                    android:layout_marginStart="@dimen/px_36"
+                    android:layout_marginLeft="@dimen/px_36"
                     android:layout_centerVertical="true"
                     android:tag="mwar"/>
 
@@ -134,14 +134,14 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/px_110"
-                    android:text="Terms and Conditions"
+                    android:text="@string/terms_and_conditions"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     style="@style/forward_image"
-                    android:layout_marginEnd="10px" />
+                    android:layout_marginRight="10px" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -160,7 +160,7 @@
                     android:layout_width="34px"
                     android:layout_height="46px"
                     android:src="@drawable/ic_about_privacy"
-                    android:layout_marginStart="@dimen/px_36"
+                    android:layout_marginLeft="@dimen/px_36"
                     android:layout_centerVertical="true"
                     android:tag="mwar"/>
 
@@ -170,14 +170,14 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/px_110"
-                    android:text="Privacy Policy"
+                    android:text="@string/privacy_policy"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     style="@style/forward_image"
-                    android:layout_marginEnd="10px" />
+                    android:layout_marginRight="10px" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -196,7 +196,7 @@
                     android:layout_width="43px"
                     android:layout_height="43px"
                     android:src="@drawable/ic_about_who_we_are"
-                    android:layout_marginStart="@dimen/px_36"
+                    android:layout_marginLeft="@dimen/px_36"
                     android:layout_centerVertical="true"
                     android:tag="mwar"/>
 
@@ -205,15 +205,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/px_110"
+                    android:layout_marginLeft="@dimen/px_110"
                     android:text="@string/who_are_we"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     style="@style/forward_image"
-                    android:layout_marginEnd="10px" />
+                    android:layout_marginRight="10px" />
 
                 <ImageView
                     android:layout_width="match_parent"

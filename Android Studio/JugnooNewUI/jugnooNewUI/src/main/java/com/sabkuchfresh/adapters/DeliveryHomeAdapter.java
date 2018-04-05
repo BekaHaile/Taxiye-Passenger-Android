@@ -1,6 +1,7 @@
 package com.sabkuchfresh.adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
@@ -158,11 +159,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         timerHandler.postDelayed(timerRunnable, 1000);
     }
 
-    public static String getDistanceRestaurant(MenusResponse.Vendor vendor) {
+    public static String getDistanceRestaurant(Context context, MenusResponse.Vendor vendor) {
         if (vendor.getDistance() == null) {
             return null;
         }
-        String suffix = vendor.getDistance() > 1 ? "kms" : (vendor.getDistance() == 1 ? "km" : "m");
+        String suffix = vendor.getDistance() > 1 ? context.getString(R.string.kms) : (vendor.getDistance() == 1 ? context.getString(R.string.km) : context.getString(R.string.meter));
         double dist = vendor.getDistance() > 1 ? vendor.getDistance() : vendor.getDistance() * 1000d;
         DecimalFormat df = vendor.getDistance() > 1 ? Utils.getDecimalFormat1Decimal() : Utils.getMoneyDecimalFormatWithoutFloat();
         return df.format(dist) + " " + suffix;
@@ -242,16 +243,16 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return minutes;
     }
 
-    public static int setRestaurantOpenStatus(TextView textView, MenusResponse.Vendor vendor, boolean setVisibility) {
+    public static int setRestaurantOpenStatus(Context context, TextView textView, MenusResponse.Vendor vendor, boolean setVisibility) {
         int visibilityCloseTime = View.VISIBLE;
         long minutes = updateVendorClosedState(vendor);
         if (vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0) {
-            textView.setText("Closed ");
+            textView.setText(context.getString(R.string.closed)+" ");
         } else {
             if (minutes <= vendor.getBufferTime() && minutes > 0 && vendor.getOrderMode() != Constants.ORDER_MODE_UNAVAILABLE && vendor.getOrderMode() != Constants.ORDER_MODE_CHAT && vendor.getOutOfRadius() != 1) {
-                textView.setText("Closing in " + minutes + (minutes > 1 ? " mins " : " min "));
+                textView.setText(context.getString(R.string.closing_in_format, String.valueOf(minutes), " "+context.getString(minutes > 1 ? R.string.mins : R.string.min)+" "));
             } else {
-                textView.setText("Open now ");
+                textView.setText(context.getString(R.string.open_now)+" ");
                 visibilityCloseTime = View.GONE;
             }
         }
@@ -426,7 +427,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 boolean isCustomOrderModel = activity.isDeliveryOpenInBackground() && activity.getMenusFragment().chatAvailable;
                 String categoryName = activity.getCategoryOpened() == null ? null : activity.getCategoryOpened().getCategoryName();
                 if (categoryName == null) {
-                    categoryName = activity.isDeliveryOpenInBackground() ? "Stores" : "Restaurants";
+                    categoryName = activity.isDeliveryOpenInBackground() ? activity.getString(R.string.stores) : activity.getString(R.string.restaurants);
                 }
 
                 // do not show Custom Order layout
@@ -685,7 +686,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             MenusResponse.Vendor vendor = (MenusResponse.Vendor) dataToDisplay.get(position);
             mHolder.textViewRestaurantName.setText(vendor.getName());
 
-            int visibilityCloseTime = setRestaurantOpenStatus(mHolder.textViewRestaurantCloseTime, vendor, true);
+            int visibilityCloseTime = setRestaurantOpenStatus(activity, mHolder.textViewRestaurantCloseTime, vendor, true);
 
             //String deliveryTime = showDeliveryStringWithTime(vendor);
 
@@ -697,7 +698,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 distance = vendor.getDistanceText();
             }
             else {
-                distance = getDistanceRestaurant(vendor);
+                distance = getDistanceRestaurant(activity, vendor);
             }
             if (vendor.getIsClosed() == 1 || vendor.getIsAvailable() == 0) {
                 mHolder.imageViewRestaurantImage.setColorFilter(BW_FILTER);
@@ -883,7 +884,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if (recentOrder.getDeliveryTimeText() != null && !TextUtils.isEmpty(recentOrder.getDeliveryTimeText())) {
                             deliveryText = recentOrder.getDeliveryTimeText();
                         } else {
-                            deliveryText = "Delivery: " + DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(recentOrder.getDeliveryTime()));
+                            deliveryText = activity.getString(R.string.delivery_colon_format, DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(recentOrder.getDeliveryTime())));
                         }
                     }
                     status = possibleFatafatStatus.get(recentOrder.getStatus());
@@ -1095,7 +1096,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         }
         showPossibleStatus(recentOrder.getProductType() == ProductType.MEALS.getOrdinal() ? possibleMealsStatus : possibleStatus, recentOrder.getStatus(), statusHolder);
-        statusHolder.tvOrderIdValue.setText(Utils.fromHtml("Order: #<b>" + recentOrder.getOrderId().toString() + "</b>"));
+        statusHolder.tvOrderIdValue.setText(Utils.fromHtml(activity.getString(R.string.order_hash)+"<b>" + recentOrder.getOrderId().toString() + "</b>"));
         statusHolder.tvOrderIdValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
 
         if (recentOrder.getProductType() == ProductType.MEALS.getOrdinal()) {
@@ -1562,7 +1563,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         }
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -1570,11 +1571,11 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     @Override
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 });
             } else {
-                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
             }
         } catch (Exception e) {
             e.printStackTrace();

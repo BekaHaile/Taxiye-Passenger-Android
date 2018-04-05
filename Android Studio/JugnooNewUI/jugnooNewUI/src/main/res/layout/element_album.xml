@@ -43,7 +43,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:singleLine="true"
-            android:text="Album name"
+            android:text="@string/album_name"
             android:textSize="14sp" />
 
         <TextView

@@ -278,10 +278,10 @@ public class MealFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private void setSortingList() {
         slots.clear();
-        slots.add(new SortResponseModel(0, "A-Z", false));
-        slots.add(new SortResponseModel(1, "Popularity", false));
-        slots.add(new SortResponseModel(2, "Price: Low to High", false));
-        slots.add(new SortResponseModel(3, "Price: High to Low", false));
+        slots.add(new SortResponseModel(0, getString(R.string.a_to_z), false));
+        slots.add(new SortResponseModel(1, getString(R.string.popularity), false));
+        slots.add(new SortResponseModel(2, getString(R.string.price_low_to_high), false));
+        slots.add(new SortResponseModel(3, getString(R.string.price_high_to_low), false));
 
 
     }

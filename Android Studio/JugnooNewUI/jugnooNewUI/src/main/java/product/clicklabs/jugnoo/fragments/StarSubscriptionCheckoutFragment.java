@@ -209,6 +209,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_star_subscription_checkout, container, false);
+        noSelectionCoupon = new CouponInfo(-1, getString(R.string.dont_apply_coupon_on_this_ride));
+
         ButterKnife.bind(this,rootView);
         activity = (RazorpayBaseActivity) getActivity();
 
@@ -374,7 +376,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 String fareRs = activity.getString(R.string.rupees_value_format,
                         Utils.getDoubleTwoDigits((double) Math.round(fareToPay)));
                 netPayableAmount = fareToPay;
-                paySlider.tvSlide.setText("PAY " + fareRs);
+                paySlider.tvSlide.setText(getString(R.string.pay_format, fareRs));
                 paySlider.sliderText.setText(R.string.swipe_right_to_pay);
                 llRideInfo.setVisibility(View.VISIBLE);
                 tvCashPaidValue.setText(fareRs);
@@ -1322,7 +1324,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     }
 
     private PromoCoupon selectedPromoCoupon;
-    private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
+    private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "");
     public PromoCoupon getSelectedPromoCoupon() {
         return selectedPromoCoupon;
     }
@@ -1431,7 +1433,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                             slideInitialDelay();
                         }
                     }
@@ -1513,7 +1515,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                             slideInitialDelay();
                         }
                     }
@@ -1660,7 +1662,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             }
         } catch (Exception e) {
             e.printStackTrace();
-            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
             paySlider.setSlideInitial();
         }
     }

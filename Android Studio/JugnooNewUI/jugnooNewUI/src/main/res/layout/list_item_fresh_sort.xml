@@ -15,7 +15,7 @@
         android:paddingBottom="@dimen/dp_15"
         android:paddingStart="@dimen/dp_5"
         android:paddingEnd="@dimen/dp_5"
-        android:text="A - Z"
+        android:text="@string/a_z"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_13"
         android:layout_marginStart="@dimen/dp_15"

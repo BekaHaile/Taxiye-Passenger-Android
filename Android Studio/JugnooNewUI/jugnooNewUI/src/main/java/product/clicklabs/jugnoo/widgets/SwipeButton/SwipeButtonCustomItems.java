@@ -12,7 +12,6 @@ public abstract class SwipeButtonCustomItems {
     public int gradientColor3 = 0xFF888888;
     public int postConfirmationColor = 0xFF888888;
     public double actionConfirmDistanceFraction = 0.7;
-    public String buttonPressText = ">>   SWIPE TO CONFIRM   >> ";
 
     public String actionConfirmText = null;
 
@@ -58,15 +57,6 @@ public abstract class SwipeButtonCustomItems {
 
     public SwipeButtonCustomItems setActionConfirmDistanceFraction(double actionConfirmDistanceFraction) {
         this.actionConfirmDistanceFraction = actionConfirmDistanceFraction;
-        return this;
-    }
-
-    public String getButtonPressText() {
-        return buttonPressText;
-    }
-
-    public SwipeButtonCustomItems setButtonPressText(String buttonPressText) {
-        this.buttonPressText = buttonPressText;
         return this;
     }
 

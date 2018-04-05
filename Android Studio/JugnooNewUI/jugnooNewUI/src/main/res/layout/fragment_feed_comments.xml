@@ -58,7 +58,7 @@
 
         <TextView
             android:id="@+id/tv_switch_label"
-            android:text="Handle"
+            android:text="@string/handle"
             android:textColor="@color/feed_grey_text"
             android:layout_marginStart="@dimen/spacing_dimin"
             android:ellipsize="end"
@@ -141,9 +141,9 @@
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Post"
             android:paddingStart="@dimen/spacing_large"
             android:paddingEnd="@dimen/spacing_large"
+            android:text="@string/post"
             android:paddingBottom="@dimen/spacing_normal"
             android:textAllCaps="false"
             android:textColor="@color/text_color_selector"

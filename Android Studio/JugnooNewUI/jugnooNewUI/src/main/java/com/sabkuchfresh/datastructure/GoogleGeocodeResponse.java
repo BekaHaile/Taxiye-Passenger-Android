@@ -8,6 +8,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.R;
+
 /**
  * Created by anshul1235 on 29/07/14.
  */
@@ -109,7 +112,7 @@ public class GoogleGeocodeResponse {
                 } else if(!TextUtils.isEmpty(sublocality)) {
                     return sublocality;
                 } else {
-                    return "India";
+                    return MyApplication.getInstance().getString(R.string.country_name);
                 }
             } else {
                 String[] address = getAddress();
@@ -154,7 +157,7 @@ public class GoogleGeocodeResponse {
                 } else if(!TextUtils.isEmpty(sublocality)) {
                     return sublocality;
                 } else {
-                    return "India";
+                    return MyApplication.getInstance().getString(R.string.country_name);
                 }
             } else {
                 String[] address = getAddress();
@@ -299,7 +302,7 @@ public class GoogleGeocodeResponse {
                 } else if(!TextUtils.isEmpty(sublocality)) {
                     return sublocality;
                 } else {
-                    return "India";
+                    return MyApplication.getInstance().getString(R.string.country_name);
                 }
             } else {
                 String[] address = getAddress();
@@ -328,7 +331,7 @@ public class GoogleGeocodeResponse {
                 } else if(!TextUtils.isEmpty(political)) {
                     return political;
                 } else {
-                    return "India";
+                    return MyApplication.getInstance().getString(R.string.country_name);
                 }
             } else {
                 String[] address = getAddress();

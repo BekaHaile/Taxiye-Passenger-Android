@@ -386,7 +386,7 @@ public class WalletCore {
                 return String.format(context.getResources().getString(R.string.rupees_value_format_without_space),
                         Data.userData.getFreeChargeBalanceStr());
             } else if(paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()){
-				return getRazorpayName();
+				return getRazorpayName(context);
             } else {
 				return context.getResources().getString(R.string.cash);
 			}
@@ -396,8 +396,8 @@ public class WalletCore {
 		return context.getResources().getString(R.string.cash);
 	}
 
-	public String getRazorpayName() {
-		String name = "Card";
+	public String getRazorpayName(Context context) {
+		String name = context.getString(R.string.card);
 		for(PaymentModeConfigData configData : getPaymentModeConfigDatas()){
 			if(configData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()){
 				name = configData.getDisplayName();

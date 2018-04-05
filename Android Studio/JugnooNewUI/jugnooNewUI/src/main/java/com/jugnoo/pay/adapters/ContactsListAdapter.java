@@ -51,7 +51,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
 
         holder.contactNameTxt.setText(selectUsersList.get(position).getName());
         String num = selectUsersList.get(position).getPhone().replace(" ","").trim();
-        holder.mobileTxt.setText(num+"  Mobile");
+        holder.mobileTxt.setText(activity.getString(R.string.mobile_number_format, num));
 
         // Set image if exists
         try {
@@ -94,9 +94,9 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                 selectUser.setPhone(CommonMethods.extractNumber(charText));
                 if (selectUser.getPhone().length() == 0) {
                     selectUser.setPhone(charText);
-                    selectUser.setName("VPA Address");
+                    selectUser.setName(activity.getString(R.string.vpa_address));
                 } else
-                    selectUser.setName("Unknown");
+                    selectUser.setName(activity.getString(R.string.unknown));
                 selectUsersList.add(selectUser);
 
             }

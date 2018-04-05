@@ -129,7 +129,7 @@ public class MainActivity extends BaseActivity {
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    DialogPopup.alertPopup(this, "", "Please make sure you've granted the permission to read Contacts");
+                    DialogPopup.alertPopup(this, "", getString(R.string.please_make_sure_to_grant_contacts_permission));
                 }
                 return;
             }
@@ -505,7 +505,7 @@ public class MainActivity extends BaseActivity {
 
     private void callVerifyUserApi(final VerifyRegisterResponse verifyRegisterResponse) {
         if(MyApplication.getInstance().isOnline()) {
-            CallProgressWheel.showLoadingDialog(this, AppConstant.PLEASE);
+            CallProgressWheel.showLoadingDialog(this, getString(R.string.please_wait));
             VerifyUserRequest request = new VerifyUserRequest();
             request.setDeviceToken(MyApplication.getInstance().getDeviceToken());
             request.setUniqueDeviceId(CommonMethods.getUniqueDeviceId(this));
@@ -555,7 +555,7 @@ public class MainActivity extends BaseActivity {
                         }
                         else if(flag == com.jugnoo.pay.utils.ApiResponseFlags.VPA_NOT_FOUND.getOrdinal())
                         {
-                            DialogPopup.alertPopupWithListener(MainActivity.this, "Error", fetchPayDataResponse.getMessage(), new View.OnClickListener() {
+                            DialogPopup.alertPopupWithListener(MainActivity.this, getString(R.string.error), fetchPayDataResponse.getMessage(), new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
                                     MyApplication.getInstance().getAppSwitcher().switchApp(MainActivity.this, Config.getAutosClientId(), new LatLng(Data.latitude, Data.longitude), false);
@@ -588,7 +588,7 @@ public class MainActivity extends BaseActivity {
     public void apiFetchPayData() {
         try {
             if (MyApplication.getInstance().isOnline()) {
-                CallProgressWheel.showLoadingDialog(this, "Loading...");
+                CallProgressWheel.showLoadingDialog(this, getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());

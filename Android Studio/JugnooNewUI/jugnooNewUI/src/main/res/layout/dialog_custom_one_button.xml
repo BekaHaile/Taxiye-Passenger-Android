@@ -39,7 +39,7 @@
                 android:gravity="center"
                 android:paddingStart="40px"
                 android:paddingEnd="40px"
-                android:text="Title"
+                android:text="@string/title"
                 android:textColor="@color/text_color"
                 android:textSize="40px"
                 android:visibility="visible"/>
@@ -56,7 +56,7 @@
                 android:maxHeight="800px"
                 android:paddingStart="40px"
                 android:paddingEnd="40px"
-                android:text="Message"
+                android:text="@string/message"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_32"
                 android:textIsSelectable="true"
@@ -76,7 +76,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="0px"
                 android:background="@drawable/button_white_grey_br_selector"
-                android:text="OK"
+                android:text="@string/ok"
                 android:textColor="@color/text_color"
                 android:textSize="34px"/>
         </LinearLayout>

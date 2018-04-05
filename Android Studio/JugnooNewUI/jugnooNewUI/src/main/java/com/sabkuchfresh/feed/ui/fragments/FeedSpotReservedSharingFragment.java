@@ -156,7 +156,7 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 					BranchMetricsUtils.BRANCH_CHANNEL_FEED_EARLY_ACCESS,
 					map);
 		} else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 	}
 

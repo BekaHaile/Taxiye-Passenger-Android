@@ -42,20 +42,18 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 	private Activity context;
 	private LayoutInflater mInflater;
 	private List<SubItem> subItems;
-	private String categoryName;
 	private Callback callback;
 	private boolean checkForCouponApplied;
 	private int appType;
 	private UserCheckoutResponse.SubscriptionInfo subscription;
 	private FreshCheckoutMergedFragment freshCheckoutMergedFragment;
 
-	public FreshCartItemsAdapter(Activity context, ArrayList<SubItem> subItems, String categoryName, boolean checkForCouponApplied,
+	public FreshCartItemsAdapter(Activity context, ArrayList<SubItem> subItems, boolean checkForCouponApplied,
 								 Callback callback, Fragment fragment) {
 		this.context = context;
 		this.subItems = subItems;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.callback = callback;
-		this.categoryName = categoryName;
 		this.checkForCouponApplied = checkForCouponApplied;
 		appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
 		if(fragment instanceof FreshCheckoutMergedFragment)

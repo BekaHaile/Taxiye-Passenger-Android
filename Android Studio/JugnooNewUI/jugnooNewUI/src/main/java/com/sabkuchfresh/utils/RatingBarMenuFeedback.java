@@ -260,19 +260,19 @@ public class RatingBarMenuFeedback extends LinearLayout {
                 if (i == mCurrentScore) {
                     switch (i) {
                         case 1:
-                            mStarsViews[i - 1].setText("Terrible");
+                            mStarsViews[i - 1].setText(getContext().getString(R.string.terrible));
                             break;
                         case 2:
-                            mStarsViews[i - 1].setText("Bad");
+                            mStarsViews[i - 1].setText(getContext().getString(R.string.bad_only));
                             break;
                         case 3:
-                            mStarsViews[i - 1].setText("Okay");
+                            mStarsViews[i - 1].setText(getContext().getString(R.string.okay));
                             break;
                         case 4:
-                            mStarsViews[i - 1].setText("Good");
+                            mStarsViews[i - 1].setText(getContext().getString(R.string.good));
                             break;
                         case 5:
-                            mStarsViews[i - 1].setText("Great");
+                            mStarsViews[i - 1].setText(getContext().getString(R.string.great));
                             break;
                     }
                 } else {

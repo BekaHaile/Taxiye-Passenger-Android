@@ -693,7 +693,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
             } else {
                 DialogPopup.dialogNoInternet(activity,
-                        Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                        activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
                         new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
                             @Override
                             public void positiveClick(View v) {
@@ -923,7 +923,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     public void apiProsFeedback(final int rating, final String comments) {
         try {
             if (MyApplication.getInstance().isOnline()) {
-                DialogPopup.showLoadingDialog(activity, "Loading...");
+                DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_JOB_ID, String.valueOf(orderStatusResponse.getData().get(0).getJobHash()));

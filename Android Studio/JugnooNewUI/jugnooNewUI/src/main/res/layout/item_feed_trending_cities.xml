@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/spacing_small"
     android:paddingStart="@dimen/spacing_large"
     android:paddingEnd="@dimen/spacing_large"
-    android:text="New Delhi"
+    android:text="@string/new_delhi"
     android:clickable="true"
     app:typekitFont="maven"
     android:textColor="@color/feed_grey_text"

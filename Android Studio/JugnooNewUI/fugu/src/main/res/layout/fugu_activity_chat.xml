@@ -107,7 +107,7 @@
                     android:background="@drawable/fugu_card_disabled_layout"
                     android:gravity="center"
                     android:padding="@dimen/fugu_padding_5"
-                    android:text="Conversation has been closed"
+                    android:text="@string/conversation_has_been_closed"
                     android:textColor="@color/fugu_theme_color_primary"
                     android:textSize="@dimen/fugu_text_size_intermediate"
                     android:visibility="gone" />
@@ -214,7 +214,7 @@
                 android:paddingLeft="@dimen/fugu_padding_15"
                 android:paddingRight="@dimen/fugu_padding_15"
                 android:paddingTop="@dimen/fugu_padding_5"
-                android:text="Today"
+                android:text="@string/today"
                 android:textColor="#000"
                 android:textSize="@dimen/fugu_text_size_small"
                 android:visibility="gone" />

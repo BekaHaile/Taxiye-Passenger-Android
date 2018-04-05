@@ -34,7 +34,7 @@
                 android:layout_centerVertical="true"
                 android:maxLines="1"
                 android:paddingStart="44px"
-                android:text="Order:"
+                android:text="@string/order"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_24"/>
 
@@ -46,7 +46,7 @@
                 android:layout_toEndOf="@+id/tvOrderId"
                 android:maxLines="1"
                 android:paddingStart="10px"
-                android:text="13AF67"
+                android:text="@string/_13af67"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_24"/>
 
@@ -57,7 +57,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toStartOf="@+id/tvDeliveryTime"
                 android:maxLines="1"
-                android:text="Delivery before:"
+                android:text="@string/delivery_before"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_24"
                 android:visibility="gone"/>
@@ -171,7 +171,7 @@
                 android:layout_marginTop="15px"
                 android:gravity="center"
                 android:maxLines="2"
-                android:text="Statu0"
+                android:text="@string/statu0"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_22"
                 android:visibility="visible"/>

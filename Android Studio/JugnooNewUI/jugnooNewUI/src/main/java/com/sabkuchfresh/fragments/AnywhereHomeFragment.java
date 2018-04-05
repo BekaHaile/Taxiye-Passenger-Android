@@ -704,7 +704,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             rbSt.setVisibility(View.VISIBLE);
             switchDeliveryTime.setOnCheckedChangeListener(switchListenerTime);
             isAsapSelected = false;
-            rbSt.setText("Schedule Time " + DateOperations.getDateFormatted(selectedDate) + " " + display);
+            rbSt.setText(getString(R.string.schedule_time_format, DateOperations.getDateFormatted(selectedDate) + " " + display));
             return true;
         } else {
             Utils.showToast(activity, activity.getString(R.string.please_select_appropriate_time));
@@ -793,18 +793,18 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                         try {
 
-                            String deliveryTime = finalDateTime1 == null ? "ASAP" : DateOperations.convertDateViaFormat(finalDateTime1);
-                            String pickupAddress = pickUpAddress != null ? pickUpAddress.getAddress() : "Anywhere";
-                            String fuguMessage = "I need:\n" +
+                            String deliveryTime = finalDateTime1 == null ? getString(R.string.asap) : DateOperations.convertDateViaFormat(finalDateTime1);
+                            String pickupAddress = pickUpAddress != null ? pickUpAddress.getAddress() : getString(R.string.anywhere);
+                            String fuguMessage = getString(R.string.i_need_colon)+"\n" +
                                     taskDetails + "\n" +
                                     "\n" +
-                                    "From:\n" +
+                                    getString(R.string.from_colon)+"\n" +
                                     pickupAddress + "\n" +
                                     "\n" +
-                                    "To:\n" +
+                                    getString(R.string.to_colon)+"\n" +
                                     deliveryAddress.getAddress() + "\n" +
                                     "\n" +
-                                    "When:\n" +
+                                    getString(R.string.when_colon)+"\n" +
                                     deliveryTime;
 
                             resetUI();

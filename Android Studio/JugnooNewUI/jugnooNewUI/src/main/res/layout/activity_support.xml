@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:text="SUPPORT"
+            android:text="@string/support"
             style="@style/title"
             />
 

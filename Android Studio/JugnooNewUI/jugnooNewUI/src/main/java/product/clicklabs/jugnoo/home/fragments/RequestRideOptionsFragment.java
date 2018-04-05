@@ -83,7 +83,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     private Region regionSelected = null;
     private static PromoCoupon selectedCoupon = null;
-    private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
+    private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "");
 
 
     /*public RelativeLayout getRelativeLayoutPoolInfoBar() {
@@ -93,6 +93,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_request_ride_options, container, false);
+        noSelectionCoupon = new CouponInfo(-1, getString(R.string.dont_apply_coupon_on_this_ride));
+
         activity = (HomeActivity) getActivity();
         linearLayoutSlidingBottom = (LinearLayout) rootView.findViewById(R.id.linearLayoutSlidingBottom);
         try {
@@ -640,7 +642,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                     if(((isCouponInfo && pc instanceof CouponInfo) || (!isCouponInfo && pc instanceof PromotionInfo))
                             && pc.getId() == promoCouponId) {
                         if (pc.getIsValid() == 1 && setSelectedCoupon(i)) {
-                            Utils.showToast(activity, activity.getString(R.string.offer_auto_applied_message_format, "ride"), Toast.LENGTH_LONG);
+                            Utils.showToast(activity, activity.getString(R.string.offer_auto_applied_message_format, getString(R.string.ride)), Toast.LENGTH_LONG);
                         }
                         couponSelected = true;
                         break;

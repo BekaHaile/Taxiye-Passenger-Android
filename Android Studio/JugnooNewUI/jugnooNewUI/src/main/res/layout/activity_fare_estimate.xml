@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:text="FARE ESTIMATE"
+            android:text="@string/fare_estimate"
             style="@style/title" />
 
         <ImageView
@@ -260,7 +260,7 @@
 
         <TextView
             android:id="@+id/tv_coupon_applied"
-            android:text="Coupon Applied: "
+            android:text="@string/coupon_applied"
             android:drawablePadding="4dp"
             android:gravity="center"
             android:layout_centerHorizontal="true"
@@ -299,7 +299,7 @@
             android:layout_above="@+id/buttonOk"
             android:layout_marginBottom="20px"
             android:gravity="center"
-            android:text="Convenience charges Rs.10"
+            android:text="@string/convenience_charges_rs_10"
             android:textColor="@color/text_color_light"
             android:textSize="@dimen/text_size_26"
 

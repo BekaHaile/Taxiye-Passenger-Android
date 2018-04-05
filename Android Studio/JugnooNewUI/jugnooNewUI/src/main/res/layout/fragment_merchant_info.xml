@@ -35,7 +35,7 @@
                     android:id="@+id/tvMerchantName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bittu Delux Dhaba"
+                    android:text="@string/bittu_delux_dhaba"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_20"
                     android:maxLines="3"
@@ -53,7 +53,7 @@
                     android:drawablePadding="3dp"
                     android:drawableStart="@drawable/ic_star_yellow_20"
                     android:background="?android:attr/selectableItemBackground"
-                    android:text="3.5"
+                    android:text="@string/_3_5"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_18"
                     app:typekitFont="@string/maven_r"
@@ -76,7 +76,7 @@
                 android:drawablePadding="@dimen/dp_10"
                 android:gravity="center_vertical"
                 android:background="?android:attr/selectableItemBackground"
-                android:text="SCF-128, phase 7, mohali, Sahibzada Ajit Singh Nagar, 160062"
+                android:text="@string/scf_128_phase_7_mohali_sahibzada_ajit_singh_nagar_160062"
                 android:textColor="@color/text_color"
                 android:textColorLink="@color/text_color_link"
                 android:textSize="@dimen/sp_14"
@@ -93,7 +93,7 @@
                 android:drawableStart="@drawable/ic_merchant_tags"
                 android:drawablePadding="@dimen/dp_10"
                 android:gravity="center_vertical"
-                android:text="Kabab . Chicken "
+                android:text="@string/kabab_chicken"
                 android:textColor="@color/text_color"
                 android:textColorLink="@color/text_color_link"
                 android:textSize="@dimen/sp_13"
@@ -118,7 +118,7 @@
                     android:drawableStart="@drawable/ic_merchant_timings"
                     android:drawablePadding="@dimen/dp_10"
                     android:gravity="center_vertical"
-                    android:text="Open Now"
+                    android:text="@string/open_now"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_13"
                     app:typekitFont="maven"
@@ -140,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="@dimen/dp_10"
                     android:gravity="center_vertical"
-                    android:text="09:00 PM - 10:00 PM"
+                    android:text="@string/_09_00_pm_10_00_pm"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_13"
                     app:typekitFont="maven"
@@ -229,7 +229,7 @@
                     app:typekitFont="@string/maven"
                     android:textColor="@color/text_color_less_light"
                     android:layout_marginBottom="5dp"
-                    android:text="Delivery"/>
+                    android:text="@string/delivery"/>
 
 
                 <TextView
@@ -244,7 +244,7 @@
                     android:textSize="16sp"
                     app:typekitFont="@string/maven"
                     android:textColor="@color/text_color"
-                    android:text="25 - 45 min"/>
+                    android:text="@string/_25_45_min"/>
 
                 <View
                     android:id="@id/view_center_order"
@@ -267,7 +267,7 @@
                     android:textColor="@color/text_color_less_light"
                     app:typekitFont="@string/maven"
                     android:layout_marginBottom="5dp"
-                    android:text="Min. Order Amount"/>
+                    android:text="@string/min_order_amount"/>
 
                 <TextView
                     android:id="@+id/tv_min_order_amt"
@@ -281,7 +281,7 @@
                     android:textSize="16sp"
                     app:typekitFont="@string/maven"
                     android:textColor="@color/text_color"
-                    android:text="150"/>
+                    android:text="@string/_150"/>
             </RelativeLayout>
 
 
@@ -313,7 +313,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_gravity="center"
                     android:gravity="center_vertical"
-                    android:text="20% off on selected orders"
+                    android:text="@string/_20_off_on_selected_orders"
                     android:textColor="@color/text_color_selector"
                     android:textColorLink="@color/text_color_link"
                     android:textSize="@dimen/sp_14"
@@ -512,8 +512,8 @@
                 android:layout_height="wrap_content">
                 
                 <TextView
-                    android:text="Photos"
                     android:layout_marginStart="15dp"
+                    android:text="@string/photos"
                     android:layout_marginBottom="8dp"
                     android:id="@+id/photos_count"
                     app:typekitFont="@string/maven"
@@ -810,7 +810,7 @@
                 android:layout_marginEnd="@dimen/dp_20"
                 android:textSize="@dimen/sp_9"
                 android:textColor="@color/text_color_hint"
-                android:text="500"
+                android:text="@string/_500"
                 android:layout_marginTop="-15dp"
                 android:layout_marginBottom="@dimen/dp_15"
                 android:gravity="end"

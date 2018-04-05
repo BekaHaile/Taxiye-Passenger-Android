@@ -225,7 +225,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
                         }
 
                         if ("".equalsIgnoreCase(cancelReasonsStr)) {
-                            DialogPopup.alertPopup(RideCancellationActivity.this, "", "Please select one reason");
+                            DialogPopup.alertPopup(RideCancellationActivity.this, "", getString(R.string.please_select_one_reason));
                         } else {
                             cancelRideAPI(RideCancellationActivity.this, cancelReasonsStr, "");
                         }
@@ -440,7 +440,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 
 	public void cancelRideAPI(final Activity activity, final String reasons, final String addtionalReason) {
 			if (MyApplication.getInstance().isOnline()) {
-				DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 				
 				HashMap<String, String> params = new HashMap<>();
 				
@@ -489,7 +489,7 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						}
 						DialogPopup.dismissLoadingDialog();
 					}
@@ -498,12 +498,12 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "cancelRideByCustomer error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 					}
 				});
 			}
 			else {
-                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 			}
 	}
 

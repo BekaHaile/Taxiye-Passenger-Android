@@ -162,7 +162,7 @@
                     android:gravity="center_vertical"
                     android:maxLines="2"
                     android:padding="10px"
-                    android:text="No Promo Code applied"
+                    android:text="@string/no_promo_code_applied"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_28" />
 
@@ -249,7 +249,7 @@
                         android:gravity="start"
                         android:maxLines="2"
                         android:contentDescription="@string/driver_mode"
-                        android:text="Driver Name"
+                        android:text="@string/driver_name"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_30" />
@@ -261,7 +261,7 @@
                         android:layout_marginTop="-5px"
                         android:gravity="start"
                         android:maxLines="2"
-                        android:text="Car Number"
+                        android:text="@string/car_number"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_30" />
@@ -276,7 +276,7 @@
                         android:layout_marginTop="20px"
                         android:gravity="start"
                         android:maxLines="1"
-                        android:text="Driver\nEnroute"
+                        android:text="@string/driver_nenroute"
                         android:textColor="#39BDF6"
                         android:textSize="@dimen/text_size_28" />
 
@@ -313,7 +313,7 @@
                         android:layout_marginTop="10px"
                         android:textAllCaps="true"
                         android:gravity="center"
-                        android:text="Rs. 0100"
+                        android:text="@string/rs_0100"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32"
                         android:visibility="visible" />
@@ -340,7 +340,7 @@
                             android:layout_marginStart="10px"
                             android:gravity="center_vertical"
                             android:singleLine="true"
-                            android:text="1.0x"
+                            android:text="@string/_1_0x"
                             android:textColor="@color/text_color"
                             android:textSize="28px"
                             android:visibility="visible" />
@@ -407,7 +407,7 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_theme_color_selector"
                     android:textColor="@android:color/white"
-                    android:text="Cancel Ride"
+                    android:text="@string/cancel_ride"
                     android:textAllCaps="true"
                     android:textSize="@dimen/text_size_32"
                     android:visibility="gone"
@@ -419,7 +419,7 @@
                     android:layout_width="359px"
                     android:layout_height="match_parent"
                     android:background="@color/menu_item_selector_color"
-                    android:text="Add Paytm Cash"
+                    android:text="@string/add_paytm_cash"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_light_selector"
                     android:textSize="@dimen/text_size_32"
@@ -486,7 +486,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10px"
                     android:layout_marginTop="10px"
-                    android:text="1"
+                    android:text="@string/_1"
                     android:textColor="@color/theme_color"
                     android:textSize="@dimen/text_size_24"
                     android:gravity="center"

@@ -12,6 +12,8 @@ import com.sabkuchfresh.fragments.AnywhereHomeFragment;
 
 import java.util.Calendar;
 
+import product.clicklabs.jugnoo.R;
+
 /**
  * Created by shankar on 19/06/17.
  */
@@ -48,8 +50,8 @@ public class DatePickerFragment extends DialogFragment
 
 		// Create a new instance of DatePickerDialog and return it
 		DatePickerDialog dialog = new DatePickerDialog(getActivity(), this, year, month, day+1);
-		dialog.setButton(DatePickerDialog.BUTTON_POSITIVE,"OK",dialog);
-		dialog.setButton(DatePickerDialog.BUTTON_NEGATIVE,"DISMISS",dialog);
+		dialog.setButton(DatePickerDialog.BUTTON_POSITIVE,getString(R.string.ok),dialog);
+		dialog.setButton(DatePickerDialog.BUTTON_NEGATIVE,getString(R.string.dismiss),dialog);
 
 		dialog.getDatePicker().setMinDate(c.getTimeInMillis());
 		dialog.getDatePicker().updateDate(year, month, day);

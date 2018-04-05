@@ -429,7 +429,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
                     for (int i = 0; i < endRideData.discountTypes.size(); i++) {
                         if (endRideData.discountTypes.get(i).getReferenceId() == 0) {
                             textViewEndRideDiscount.setVisibility(View.VISIBLE);
-                            textViewEndRideDiscount.setText("Discounts");
+                            textViewEndRideDiscount.setText(R.string.discounts);
                             break;
                         }
                     }
@@ -500,7 +500,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 }
                 if(Utils.compareDouble(endRideData.paidUsingRazorpay, 0) > 0){
                     rlPaidUsingRazorpay.setVisibility(View.VISIBLE);
-                    tvEndRideRazorpay.setText(MyApplication.getInstance().getWalletCore().getRazorpayName());
+                    tvEndRideRazorpay.setText(MyApplication.getInstance().getWalletCore().getRazorpayName(activity));
                     tvEndRideRazorpayValue.setText(String.format(getResources()
                                     .getString(R.string.rupees_value_format_without_space),
                             Utils.getMoneyDecimalFormat().format(endRideData.paidUsingRazorpay)));
@@ -521,24 +521,24 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 double totalDistanceInKm = endRideData.distance;
                 String kmsStr = "";
                 if (totalDistanceInKm > 1) {
-                    kmsStr = "kms";
+                    kmsStr = getString(R.string.kms);
                 } else {
-                    kmsStr = "km";
+                    kmsStr = getString(R.string.km);
                 }
                 textViewEndRideDistanceValue.setText("" + decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
                 if (endRideData.rideTime > -1) {
                     linearLayoutEndRideTime.setVisibility(View.VISIBLE);
-                    textViewEndRideTimeValue.setText(decimalFormatNoDecimal.format(endRideData.rideTime) + " min");
+                    textViewEndRideTimeValue.setText(decimalFormatNoDecimal.format(endRideData.rideTime) + " "+getString(R.string.min));
                 } else {
                     linearLayoutEndRideTime.setVisibility(View.GONE);
                 }
                 if (endRideData.waitingChargesApplicable == 1 || endRideData.waitTime > 0) {
                     relativeLayoutEndRideWaitTime.setVisibility(View.VISIBLE);
-                    textViewEndRideWaitTimeValue.setText(decimalFormatNoDecimal.format(endRideData.waitTime) + " min");
-                    textViewEndRideTime.setText("Total");
+                    textViewEndRideWaitTimeValue.setText(decimalFormatNoDecimal.format(endRideData.waitTime) + " "+getString(R.string.min));
+                    textViewEndRideTime.setText(R.string.total);
                 } else {
                     relativeLayoutEndRideWaitTime.setVisibility(View.GONE);
-                    textViewEndRideTime.setText("Time");
+                    textViewEndRideTime.setText(R.string.time);
                 }
 
                 if(rideCancelled){

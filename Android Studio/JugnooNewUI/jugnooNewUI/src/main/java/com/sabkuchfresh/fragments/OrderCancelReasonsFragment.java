@@ -444,7 +444,7 @@ public class OrderCancelReasonsFragment extends Fragment implements GAAction, GA
 							Data.isOrderCancelled = true;
 
 							Intent intent = new Intent(Data.LOCAL_BROADCAST);
-							intent.putExtra("message", "Order cancelled, refresh inventory");
+							intent.putExtra("message", getString(R.string.order_cancelled_refresh_inventory));
 							intent.putExtra("open_type", 10);
 							LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
 

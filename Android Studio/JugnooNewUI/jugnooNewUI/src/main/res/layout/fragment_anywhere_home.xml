@@ -59,7 +59,7 @@
                     android:background="@null"
                     android:minHeight="100dp"
                     android:gravity="top"
-                    android:hint="Tell us what you need and we'll get it for you. Amazon or Flipkart product link works well."
+                    android:hint="@string/tell_us_what_you_need_and_we_ll_get_it_for_you_amazon_or_flipkart_product_link_works_well"
                     android:padding="10dp"
                     android:textColor="@color/text_color"
                     android:inputType="textMultiLine|textCapSentences"
@@ -241,7 +241,7 @@
                         android:layout_height="wrap_content"
 
                         android:gravity="top"
-                        android:text="Anywhere"
+                        android:text="@string/anywhere"
                         android:textColor="@color/text_color"
                         android:textSize="13sp"
                         app:typekitFont="@string/maven" />
@@ -323,7 +323,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:text="Delivery Time"
+                android:text="@string/delivery_time_camel_case"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
                 app:typekitFont="@string/maven_r" />
@@ -352,7 +352,7 @@
                         android:background="@null"
                         android:gravity="top"
                         android:padding="10dp"
-                        android:text="As soon as possible"
+                        android:text="@string/as_soon_as_possible"
                         android:textColor="@color/text_color"
                         android:textSize="14sp"
                         app:typekitFont="@string/maven" />
@@ -377,7 +377,7 @@
                         android:gravity="top"
                         android:padding="10dp"
                         android:visibility="gone"
-                        android:text="Scheduled Time"
+                        android:text="@string/scheduled_time"
                         android:layout_below="@+id/rb_asap"
                         android:textColor="@color/text_color"
                         android:textSize="14sp"
@@ -406,7 +406,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:text="Delivery Charges"
+                android:text="@string/delivery_charges"
                 android:textAllCaps="true"
                 android:visibility="visible"
                 android:textColor="@color/text_color"

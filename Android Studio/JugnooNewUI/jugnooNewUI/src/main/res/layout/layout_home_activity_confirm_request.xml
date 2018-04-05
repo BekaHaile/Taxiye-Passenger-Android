@@ -70,7 +70,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10px"
                         android:gravity="center"
-                        android:text="200"
+                        android:text="@string/_200"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_26" />

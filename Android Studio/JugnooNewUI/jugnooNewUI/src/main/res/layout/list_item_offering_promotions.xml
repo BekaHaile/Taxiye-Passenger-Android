@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_16"
-        android:text="Rides"
+        android:text="@string/rides"
         android:drawablePadding="@dimen/dp_4"
         android:gravity="center_vertical"
         android:layout_marginStart="@dimen/dp_24"

@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/sp_15"
                 android:textColor="@color/white"
-                android:text="Resto"
+                android:text="@string/resto"
                 android:maxLines="1"
                 android:ellipsize="end"
                 app:typekitFont="@string/maven"

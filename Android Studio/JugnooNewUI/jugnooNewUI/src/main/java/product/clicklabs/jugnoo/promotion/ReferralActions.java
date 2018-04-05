@@ -59,7 +59,7 @@ public class ReferralActions  {
                                 facebookLoginHelper = new FacebookLoginHelper(activity, callbackManager, new FacebookLoginCallback() {
                                     @Override
                                     public void facebookLoginDone(FacebookUserData facebookUserData) {
-                                        facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
+                                        facebookLoginHelper.publishFeedDialog(activity.getString(R.string.app_name),
                                                 Data.userData.getReferralMessages().fbShareCaption,
                                                 Data.userData.getReferralMessages().fbShareDescription,
                                                 link,
@@ -109,7 +109,7 @@ public class ReferralActions  {
             }
         });
 		if(Data.userData != null && Data.userData.getReferralMessages() != null) {
-			facebookLoginHelper.publishFeedDialog("Jugnoo Autos - Autos on demand",
+			facebookLoginHelper.publishFeedDialog(activity.getString(R.string.app_name),
 					Data.userData.getReferralMessages().fbShareCaption,
 					Data.userData.getReferralMessages().fbShareDescription,
 					link,
@@ -138,7 +138,7 @@ public class ReferralActions  {
                             }
                         }
                     } catch (Exception e) {
-                        Utils.showToast(activity, "WhatsApp not Installed");
+                        Utils.showToast(activity, activity.getString(R.string.whatsapp_not_installed));
                     }
                 }
 
@@ -202,7 +202,7 @@ public class ReferralActions  {
                     email.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralMessages().referralSharingMessage + "\n"
                             + link); //
                     email.setType("message/rfc822");
-                    activity.startActivity(Intent.createChooser(email, "Choose an Email client:"));
+                    activity.startActivity(Intent.createChooser(email, activity.getString(R.string.choose_email_client)));
                 }
 
                 @Override
@@ -273,7 +273,7 @@ public class ReferralActions  {
             List<ResolveInfo> activities = activity.getPackageManager().queryIntentActivities(sendIntent, 0);
             sortAppsInGenericShareDialog(activities);
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AlertDialogCustom));
-            builder.setTitle("Share with...");
+            builder.setTitle(activity.getString(R.string.share_with));
             final ShareIntentListAdapter adapter = new ShareIntentListAdapter(activity,
                     R.layout.list_item_share_intent, activities.toArray());
             builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
@@ -290,7 +290,7 @@ public class ReferralActions  {
                                 if (!TextUtils.isEmpty(subject)) {
                                     builder1.setContentTitle(subject);
                                 } else {
-                                    builder1.setContentTitle("Jugnoo");
+                                    builder1.setContentTitle(activity.getString(R.string.app_name));
                                 }
                                 builder1.setContentDescription(body);
                                 if (!TextUtils.isEmpty(link)) {
@@ -473,7 +473,7 @@ public class ReferralActions  {
             if (!TextUtils.isEmpty(title)) {
                 builder1.setContentTitle(title);
             } else {
-                builder1.setContentTitle("Jugnoo");
+                builder1.setContentTitle(context.getString(R.string.app_name));
             }
             builder1.setContentDescription(desc);
             if (!TextUtils.isEmpty(link)) {

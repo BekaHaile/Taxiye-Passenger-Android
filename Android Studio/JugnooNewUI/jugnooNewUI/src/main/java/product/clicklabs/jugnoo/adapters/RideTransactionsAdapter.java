@@ -117,7 +117,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     } catch (Exception e) {
                         holder.textViewStatusValue.setTextColor(ContextCompat.getColor(activity, R.color.text_color_blue));
                     }
-                    holder.textViewDetailsValue.setText(orderHistory.getDate() + ", " + decimalFormat.format(orderHistory.getDistance()) + " km, " + decimalFormatNoDec.format(orderHistory.getRideTime()) + " min");
+                    holder.textViewDetailsValue.setText(orderHistory.getDate() + ", " + decimalFormat.format(orderHistory.getDistance()) + " "+activity.getString(R.string.km)+", " + decimalFormatNoDec.format(orderHistory.getRideTime()) + " "+activity.getString(R.string.min));
                     holder.relativeLayoutTo.setVisibility(View.VISIBLE);
 //                    holder.ivOrderStatusIcon.setImageResource(R.drawable.ic_tick_copy);
                 } else {
@@ -199,7 +199,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
             else if(orderHistory.getProductType() == ProductType.PROS.getOrdinal()){
                 holder.textViewStatus.setText(R.string.status_colon);
-                holder.textViewStatusValue.setText(ProsCatalogueAdapter.getProsOrderState(orderHistory.getJobStatus()).second);
+                holder.textViewStatusValue.setText(ProsCatalogueAdapter.getProsOrderState(activity, orderHistory.getJobStatus()).second);
                 try{
                     holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
                 } catch (Exception e){
