@@ -54,6 +54,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.country.picker.Country;
+import com.country.picker.CountryPicker;
+import com.country.picker.OnCountryPickerListener;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.accountkit.AccountKit;
@@ -68,9 +71,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.mukesh.countrypicker.fragments.CountryPicker;
-import com.mukesh.countrypicker.interfaces.CountryPickerListener;
-import com.mukesh.countrypicker.models.Country;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -127,7 +127,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class SplashNewActivity extends FragmentActivity implements  Constants, GAAction, GACategory,CountryPickerListener {
+public class SplashNewActivity extends FragmentActivity implements  Constants, GAAction, GACategory,OnCountryPickerListener {
 
 	//adding drop location
 
@@ -611,10 +611,15 @@ public class SplashNewActivity extends FragmentActivity implements  Constants, G
 			btnPhoneLogin = (Button) findViewById(R.id.btnPhoneLogin);
 			rlCountryCode = (LinearLayout) findViewById(R.id.rlCountryCode);
 			tvCountryCode = (TextView) findViewById(R.id.tvCountryCode);
-			countryPicker = CountryPicker.newInstance("Select Country");
-			countryPicker.setListener(this);
-			Country country = countryPicker.getUserCountryInfo(this);
-			tvCountryCode.setText(country.getDialCode());
+
+			countryPicker =
+					new CountryPicker.Builder().with(this)
+							.listener(this)
+							.build();
+//			countryPicker = CountryPicker.newInstance("Select Country");
+//			countryPicker.setListener(this);
+//			Country country = countryPicker.getUserCountryInfo(this);
+//			tvCountryCode.setText(country.getDialCode());
 //			countryCodePicker = (CountryCodePicker)findViewById(R.id.ccp);
 //
 //
@@ -757,11 +762,7 @@ public class SplashNewActivity extends FragmentActivity implements  Constants, G
 			rlCountryCode.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					if (countryPicker == null) {
-						countryPicker = CountryPicker.newInstance("Select Country");
-						countryPicker.setListener(SplashNewActivity.this);
-					}
-					countryPicker.show(getSupportFragmentManager(), "COUNTRY_PICKER");
+					countryPicker.showDialog(getSupportFragmentManager());
 				}
 			});
 			btnPhoneLogin.setOnClickListener(new View.OnClickListener() {
@@ -4468,8 +4469,8 @@ public class SplashNewActivity extends FragmentActivity implements  Constants, G
 		}
 	}
 	@Override
-	public void onSelectCountry(String name, String code, String dialCode, int flagDrawableResID) {
-		tvCountryCode.setText(dialCode);
-		countryPicker.dismiss();
+	public void onSelectCountry(Country country) {
+		tvCountryCode.setText(country.getDialCode());
+		//countryPicker.dismiss();
 	}
 }
