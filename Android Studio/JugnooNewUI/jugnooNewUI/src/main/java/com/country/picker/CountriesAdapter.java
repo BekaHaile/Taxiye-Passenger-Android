@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -66,13 +66,13 @@ public class CountriesAdapter extends
     class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView countryFlagImageView;
         private TextView countryNameText;
-        private LinearLayout rootView;
+        private RelativeLayout rootView;
 
         ViewHolder(View itemView) {
             super(itemView);
             countryFlagImageView = (ImageView) itemView.findViewById(R.id.country_flag);
             countryNameText = (TextView) itemView.findViewById(R.id.country_title);
-            rootView = (LinearLayout) itemView.findViewById(R.id.rootView);
+            rootView = (RelativeLayout) itemView.findViewById(R.id.rootView);
         }
     }
     // endregion
