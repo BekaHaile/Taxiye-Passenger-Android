@@ -22,7 +22,6 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
@@ -121,13 +120,14 @@ import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.UserEmailFetcher;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class SplashNewActivity extends FragmentActivity implements  Constants, GAAction, GACategory,OnCountryPickerListener {
+public class SplashNewActivity extends AppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
 
 	//adding drop location
 
@@ -241,6 +241,10 @@ public class SplashNewActivity extends FragmentActivity implements  Constants, G
 //		FlurryAgent.onEndSession(this);
 	}
 
+	@Override
+	protected void attachBaseContext(Context newBase) {
+		super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+	}
 
 	@Override
 	public void onStart() {
