@@ -3125,7 +3125,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             textViewCancellation.setVisibility(View.GONE);
                         }
 
-                        textViewFindingDriver.setText("Finding a Jugnoo driver...");
+                        textViewFindingDriver.setText("Finding a Sindbad driver...");
                         initialCancelRideBtn.setVisibility(View.GONE);
                         try {
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -6522,7 +6522,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             textMessage.setTypeface(Fonts.mavenMedium(activity));
 
             textHead.setVisibility(View.VISIBLE);
-            textHead.setText("Chalo Jugnoo Se");
+            textHead.setText("Request Ride");
 
 
             final Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
@@ -7782,7 +7782,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         setUserData();
                     }
                     DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this,
-                            "Jugnoo Cash added",
+                            "Sindbad Cash added",
                             message,
                             "Check Balance", "Call Support",
                             new OnClickListener() {
