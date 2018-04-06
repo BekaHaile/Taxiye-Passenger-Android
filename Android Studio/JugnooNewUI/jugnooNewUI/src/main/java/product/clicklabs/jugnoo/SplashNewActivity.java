@@ -22,7 +22,9 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -66,6 +68,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.mukesh.countrypicker.fragments.CountryPicker;
+import com.mukesh.countrypicker.interfaces.CountryPickerListener;
+import com.mukesh.countrypicker.models.Country;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -122,7 +127,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class SplashNewActivity extends BaseActivity implements  Constants, GAAction, GACategory {
+public class SplashNewActivity extends FragmentActivity implements  Constants, GAAction, GACategory,CountryPickerListener {
 
 	//adding drop location
 
@@ -196,6 +201,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	public static String loginResponseStr;
 	private RelativeLayout rlLoginSignupNew, rlMobileNumber, rlLSFacebook, rlLSGoogle, rlPhoneLogin;
 	public static LoginResponse loginResponseData;
+	//private CountryCodePicker countryCodePicker;
+	LinearLayout rlCountryCode;
+	private TextView tvCountryCode;
+	private CountryPicker countryPicker;
 
 
 	public void resetFlags() {
@@ -600,7 +609,22 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			tvSkip = (TextView) findViewById(R.id.tvSkip);
 			rlPhoneLogin = (RelativeLayout) findViewById(R.id.rlPhoneLogin);
 			btnPhoneLogin = (Button) findViewById(R.id.btnPhoneLogin);
-
+			rlCountryCode = (LinearLayout) findViewById(R.id.rlCountryCode);
+			tvCountryCode = (TextView) findViewById(R.id.tvCountryCode);
+			countryPicker = CountryPicker.newInstance("Select Country");
+			countryPicker.setListener(this);
+			Country country = countryPicker.getUserCountryInfo(this);
+			tvCountryCode.setText(country.getDialCode());
+//			countryCodePicker = (CountryCodePicker)findViewById(R.id.ccp);
+//
+//
+//			countryCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+//				@Override
+//				public void onCountrySelected() {
+//
+//					countryCodePicker.setDefaultCountryUsingPhoneCode(Integer.parseInt(countryCodePicker.getSelectedCountryCode()));
+//				}
+//			});
 
 			root.setOnClickListener(onClickListenerKeybordHide);
 
@@ -730,6 +754,16 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				}
 			});
 
+			rlCountryCode.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					if (countryPicker == null) {
+						countryPicker = CountryPicker.newInstance("Select Country");
+						countryPicker.setListener(SplashNewActivity.this);
+					}
+					countryPicker.show(getSupportFragmentManager(), "COUNTRY_PICKER");
+				}
+			});
 			btnPhoneLogin.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -746,7 +780,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								editTextPhoneNumber.requestFocus();
 								editTextPhoneNumber.setError(getResources().getString(R.string.invalid_phone_error));
 							} else {
-								phoneNumber = "+91" + phoneNumber;
+								phoneNumber = tvCountryCode.getText().toString() + phoneNumber;
 								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber);
 							}
 						}
@@ -898,7 +932,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								editTextEmail.requestFocus();
 								editTextEmail.setError(getResources().getString(R.string.invalid_phone_error));
 							} else {
-								phoneNumber = "+91" + phoneNumber;
+								phoneNumber = tvCountryCode.getText().toString() + phoneNumber;
 								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber);
 							}
 						}
@@ -1376,7 +1410,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				AccountKitActivity.ResponseType.CODE);
 		configurationBuilder.setTheme(R.style.AppLoginTheme_Salmon);
 		configurationBuilder.setTitleType(AccountKitActivity.TitleType.LOGIN);
-		configurationBuilder.setDefaultCountryCode("+91");
+		configurationBuilder.setDefaultCountryCode(tvCountryCode.getText().toString());
 		if(phoneNumber != null && !phoneNumber.toString().equalsIgnoreCase("")) {
 			configurationBuilder.setInitialPhoneNumber(phoneNumber);
 		}
@@ -4433,5 +4467,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			fbAccountKit.startFbAccountKit(phoneNumber);
 		}
 	}
-
+	@Override
+	public void onSelectCountry(String name, String code, String dialCode, int flagDrawableResID) {
+		tvCountryCode.setText(dialCode);
+		countryPicker.dismiss();
+	}
 }

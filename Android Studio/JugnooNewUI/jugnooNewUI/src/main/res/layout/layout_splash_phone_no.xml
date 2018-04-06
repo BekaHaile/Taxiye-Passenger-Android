@@ -35,8 +35,39 @@
             android:layout_height="@dimen/px_30"
             android:layout_centerVertical="true"
             android:layout_marginStart="36px"
+            android:visibility="gone"
             android:src="@drawable/ic_phone"
             android:tag="mhar" />
+        <LinearLayout
+            android:id="@+id/rlCountryCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp">
+
+            <TextView
+                android:id="@+id/tvCountryCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="+91"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/text_size_34"
+                app:typekitFont="@string/maven"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:src="@drawable/ic_arrow_down_vector"
+                android:background="@color/transparent"
+                android:includeFontPadding="false" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/editTextPhoneNumber"
@@ -45,7 +76,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="10px"
             android:layout_toStartOf="@+id/textViewPhoneNumberRequired"
-            android:layout_toEndOf="@+id/imageViewEmail"
+            android:layout_toEndOf="@+id/rlCountryCode"
             android:background="#0000"
             android:completionThreshold="1"
             android:gravity="center_vertical"
