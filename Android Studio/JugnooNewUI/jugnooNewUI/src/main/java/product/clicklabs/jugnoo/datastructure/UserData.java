@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 public class UserData {
 	public String userIdentifier, accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, jugnooFbBanner;
+	private String countryCode;
 	public int emailVerificationStatus;
 	private double jugnooBalance;
 	public int showJugnooJeanie;
@@ -120,7 +121,7 @@ public class UserData {
 					int payEnabled, int feedEnabled, int prosEnabled, int deliveryCustomerEnabled,
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
-					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding, int autosEnabled){
+					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding, int autosEnabled, String countryCode){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -131,6 +132,7 @@ public class UserData {
 		this.userImage = userImage;
 		this.referralCode = referralCode;
 		this.phoneNo = phoneNo;
+		this.countryCode = countryCode;
 		this.jugnooBalance = jugnooBalance;
 
 		this.jugnooFbBanner = jugnooFbBanner;
@@ -1102,4 +1104,11 @@ public class UserData {
 		return getDeliveryCustomerEnabled() == 1;
 	}
 
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
 }

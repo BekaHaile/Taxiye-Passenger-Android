@@ -343,20 +343,12 @@ public class Utils implements GAAction, GACategory{
         phoneNo = phoneNo.replace("#", "");
         phoneNo = phoneNo.replace("-", "");
         phoneNo = phoneNo.replace(".", "");
-        if(phoneNo.length() >= 10){
-            phoneNo = phoneNo.substring(phoneNo.length()-10, phoneNo.length());
-        }
         return phoneNo;
     }
 
     public static boolean validPhoneNumber(String phoneNo){
-        if(phoneNo.length() >= 10){
-            if(phoneNo.charAt(0) == '0' || phoneNo.contains("+")){
-                return false;
-            }
-            else{
-                return isPhoneValid(phoneNo);
-            }
+        if(phoneNo.length() >= 7 && phoneNo.length() <= 14 && checkIfOnlyDigits(phoneNo)){
+        	return isPhoneValid(phoneNo);
         }
         else{
             return false;

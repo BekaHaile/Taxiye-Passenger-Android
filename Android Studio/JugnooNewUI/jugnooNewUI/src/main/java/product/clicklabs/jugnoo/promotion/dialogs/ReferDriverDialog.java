@@ -89,7 +89,7 @@ public class ReferDriverDialog {
 				public void onClick(View v) {
 					Utils.hideSoftKeyboard(activity, editTextName);
 					if ((!editTextName.getText().toString().isEmpty()) && (!editTextPhone.getText().toString().isEmpty())) {
-						if ((editTextPhone.getText().toString().length() == 10)) {
+						if (Utils.validPhoneNumber(editTextPhone.getText().toString())) {
 							referDriver();
 						} else {
 							editTextPhone.requestFocus();

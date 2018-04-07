@@ -3,12 +3,10 @@ package product.clicklabs.jugnoo.utils;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
 
 import com.facebook.accountkit.PhoneNumber;
 import com.facebook.accountkit.ui.AccountKitActivity;
@@ -19,7 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.SplashNewActivity;
 
 /**
  * Created by ankit on 04/04/17.
@@ -51,7 +48,7 @@ public class FBAccountKit {
                 AccountKitActivity.ResponseType.CODE);
         configurationBuilder.setTheme(R.style.AppLoginTheme_Salmon);
         configurationBuilder.setTitleType(AccountKitActivity.TitleType.LOGIN);
-        configurationBuilder.setDefaultCountryCode("+91");
+        configurationBuilder.setDefaultCountryCode(Utils.getCountryZipCode(activity));
         if(phoneNumber != null && !phoneNumber.toString().equalsIgnoreCase("")) {
             configurationBuilder.setInitialPhoneNumber(phoneNumber);
         }

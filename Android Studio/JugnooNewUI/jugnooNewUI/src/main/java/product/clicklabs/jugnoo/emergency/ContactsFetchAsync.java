@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
 
+import com.sabkuchfresh.utils.Utils;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Set;
@@ -79,7 +81,7 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 
 							phone = phone.replace(" ","");
 							phone = phone.replace("-", "");
-							if (phone != null && (phone.length() >= 10)) {
+							if (phone != null && Utils.validPhoneNumber(phone)) {
 								contactBeans.add(new ContactBean(name, phone, type, ContactBean.ContactBeanViewType.CONTACT));
 							}
 						}
