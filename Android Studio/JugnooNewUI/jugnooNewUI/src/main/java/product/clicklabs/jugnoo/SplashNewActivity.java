@@ -786,19 +786,10 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 								editTextPhoneNumber.setError(getResources().getString(R.string.invalid_phone_error));
 							} else {
 								phoneNumber = tvCountryCode.getText().toString() + phoneNumber;
-								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber);
+								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber, tvCountryCode.getText().toString());
 							}
 						}
 					}
-
-//					Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
-//					intent.putExtra("show_timer", 0);
-//					intent.putExtra(LINKED_WALLET, LinkedWalletStatus.NO_WALLET.getOrdinal());
-//					intent.putExtra("signup_by", signUpBy);
-//					intent.putExtra("email", editTextEmail.getText().toString().trim());
-//					intent.putExtra("otp_length", "4");
-//					startActivity(intent);
-//					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
 			});
 
@@ -938,46 +929,11 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 								editTextEmail.setError(getResources().getString(R.string.invalid_phone_error));
 							} else {
 								phoneNumber = tvCountryCode.getText().toString() + phoneNumber;
-								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber);
+								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber, tvCountryCode.getText().toString());
 							}
 						}
 					}
 
-
-					/*FeedUtils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
-					String email = editTextEmail.getText().toString().trim();
-					String password = editTextPassword.getText().toString().trim();
-					if ("".equalsIgnoreCase(email)) {
-						editTextEmail.requestFocus();
-						editTextEmail.setError(getResources().getString(R.string.nl_login_phone_empty_error));
-					} else {
-						if ("".equalsIgnoreCase(password)) {
-							editTextPassword.requestFocus();
-							editTextPassword.setError(getResources().getString(R.string.nl_login_empty_password_error));
-						} else {
-							boolean onlyDigits = FeedUtils.checkIfOnlyDigits(email);
-							if (onlyDigits) {
-								email = FeedUtils.retrievePhoneNumberTenChars(email);
-								if (!FeedUtils.validPhoneNumber(email)) {
-									editTextEmail.requestFocus();
-									editTextEmail.setError(getResources().getString(R.string.invalid_phone_error));
-								} else {
-									email = "+91" + email;
-									sendLoginValues(SplashNewActivity.this, email, password, true);
-									phoneNoLogin = true;
-								}
-							} else {
-								if (FeedUtils.isEmailValid(email)) {
-									enteredEmail = email;
-									sendLoginValues(SplashNewActivity.this, email, password, false);
-									phoneNoLogin = false;
-								} else {
-									editTextEmail.requestFocus();
-									editTextEmail.setError("Please enter valid email");
-								}
-							}
-						}
-					}*/
 				}
 			});
 			editTextEmail.addTextChangedListener(new TextWatcher() {
@@ -2171,7 +2127,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
                 sendGoogleLoginValues(this);
             }
         } else if (requestCode == FRAMEWORK_REQUEST_CODE){
-            final String toastMessage;
+			String toastMessage = null;
             final AccountKitLoginResult loginResult = AccountKit.loginResultWithIntent(data);
             if (loginResult == null || loginResult.wasCancelled()) {
                 toastMessage = getString(R.string.login_cancelled);
@@ -2179,16 +2135,15 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
                 toastMessage = loginResult.getError().getErrorType().getMessage();
             } else {
                 String authorizationCode = loginResult.getAuthorizationCode();
-                final long tokenRefreshIntervalInSeconds =
-                        loginResult.getTokenRefreshIntervalInSeconds();
                 if (authorizationCode != null) {
-                    toastMessage = getString(R.string.success_colon_format, authorizationCode);
                     apiLoginUsingFbAccountKit(SplashNewActivity.this, loginResult.getAuthorizationCode());
                 } else {
                     toastMessage = getString(R.string.unknown_response_type);
                 }
             }
-            //Toast.makeText(this,toastMessage,Toast.LENGTH_LONG).show();
+            if(toastMessage != null) {
+				Utils.showToast(this, toastMessage);
+			}
         }
         else{
             callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -2871,7 +2826,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 		}
 	}
 
-	private void apiGenerateLoginOtp(final Activity activity, final String phoneNumber){
+	private void apiGenerateLoginOtp(final Activity activity, final String phoneNumber, final String countryCode){
 		if(MyApplication.getInstance().isOnline()){
 			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 			HashMap<String, String> params = new HashMap<>();
@@ -2880,6 +2835,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
 			params.put("phone_no", phoneNumber);
+			params.put(Constants.KEY_COUNTRY_CODE, countryCode);
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
 			params.put("device_name", MyApplication.getInstance().deviceName());
 			params.put("os_version", MyApplication.getInstance().osVersion());
@@ -2935,7 +2891,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 								SplashNewActivity.this.referralCode = referralCode;
 								SplashNewActivity.this.accessToken = "";
 								Data.kitPhoneNumber = jObj.optString("kit_phone_no");
-								SplashNewActivity.parseDataSendToMultipleAccountsScreen(activity, jObj, name, emailId, phoneNo, password, referralCode, accessToken);
+								SplashNewActivity.parseDataSendToMultipleAccountsScreen(activity, jObj, name, emailId, phoneNumber, password, referralCode, accessToken);
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
 								DialogPopup.alertPopup(activity, "", error);
@@ -2961,7 +2917,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 									signUpBy = "email";
 									Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER, jObj.optString("knowlarity_missed_call_number", ""));
 
-									otpScreenIntentAlongDataSet(1, LinkedWalletStatus.NO_WALLET.getOrdinal(), phoneNumber);
+									otpScreenIntentAlongDataSet(1, LinkedWalletStatus.NO_WALLET.getOrdinal(), phoneNumber, countryCode);
 								}
 								DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 							} else {
@@ -3389,37 +3345,9 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 	}
 
 
-	/**
-	 * Send intent to otp screen by making required data objects
-	 * flag 0 for email, 1 for Facebook
-	 */
-	public void sendIntentToOtpScreen() {
-		if (State.LOGIN == state) {
-			DialogPopup.alertPopupWithListener(SplashNewActivity.this, "", otpErrorMsg, new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					DialogPopup.dismissAlertPopup();
-					otpScreenIntentAlongDataSet(0, linkedWallet, emailId);
-				}
-			});
-		} else if (State.SIGNUP == state) {
-			OTPConfirmScreen.intentFromRegister = true;
-			generateOTPRegisterData(name, emailId, phoneNo, password, referralCode, accessToken);
-			Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
-			intent.putExtra("show_timer", 1);
-			intent.putExtra(LINKED_WALLET_MESSAGE, linkedWalletErrorMsg);
-			intent.putExtra(LINKED_WALLET, linkedWallet);
-			intent.putExtra("signup_by", signUpBy);
-			intent.putExtra("email", editTextSEmail.getText().toString().trim());
-			intent.putExtra("password", editTextSPassword.getText().toString().trim());
-			startActivity(intent);
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
-		}
-	}
 
 
-	private void otpScreenIntentAlongDataSet(int showTimer, int linkedWallet, String phone){
+	private void otpScreenIntentAlongDataSet(int showTimer, int linkedWallet, String phone, String countryCode){
 		OTPConfirmScreen.intentFromRegister = false;
 		Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
 		if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
@@ -3445,6 +3373,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 
 		intent.putExtra("signup_by", signUpBy);
 		intent.putExtra("email", phone);
+		intent.putExtra(Constants.KEY_COUNTRY_CODE, countryCode);
 		intent.putExtra("show_timer", showTimer);
 		intent.putExtra(LINKED_WALLET, linkedWallet);
 		intent.putExtra("otp_length", String.valueOf(4));

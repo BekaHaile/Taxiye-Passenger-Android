@@ -210,7 +210,7 @@ public class SendMoneyActivity extends BaseActivity {
     void setData() {
         contactNameTxt.setText(contactDetails.getName());
         if (new Validator().validateEmail(contactDetails.getPhone())) {
-            contactDetails.setPhone("+91"+Utils.retrievePhoneNumberTenChars(contactDetails.getPhone()));
+            contactDetails.setPhone(contactDetails.getPhone());
             contactMobileTxt.setText(contactDetails.getPhone());
         } else {
             contactMobileTxt.setText(contactDetails.getPhone());
