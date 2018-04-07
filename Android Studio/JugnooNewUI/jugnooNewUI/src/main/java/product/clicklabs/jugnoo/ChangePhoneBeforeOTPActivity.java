@@ -128,7 +128,8 @@ public class ChangePhoneBeforeOTPActivity extends BaseActivity implements Consta
 						editTextNewPhoneNumber.setError(getString(R.string.phone_number_cant_be_empty));
 					}
 					else{
-						phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
+						phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged,
+								Utils.getCountryCode(ChangePhoneBeforeOTPActivity.this));
 						if(Utils.validPhoneNumber(phoneNoChanged)) {
 							phoneNoChanged = "+91" + phoneNoChanged;
 							if(previousPhoneNumber.equalsIgnoreCase(phoneNoChanged)){

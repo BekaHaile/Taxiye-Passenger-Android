@@ -126,7 +126,7 @@ public class ForgotPasswordScreen extends BaseActivity  {
                 } else {
                     boolean onlyDigits = Utils.checkIfOnlyDigits(email);
                     if (onlyDigits) {
-                        email = Utils.retrievePhoneNumberTenChars(email);
+                        email = Utils.retrievePhoneNumberTenChars(email, Utils.getCountryCode(ForgotPasswordScreen.this));
                         if (!Utils.validPhoneNumber(email)) {
                             editTextEmail.requestFocus();
                             editTextEmail.setError(getString(R.string.please_enter_valid_phone));

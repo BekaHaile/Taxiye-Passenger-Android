@@ -56,7 +56,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	private TextView tvResendCode, tvCallMe;
 
 
-	String phoneNoToVerify = "";
+	String phoneNoToVerify = "", countryCode = "";
 	private PinEditTextLayout pinEditTextLayout;
 
 	@Override
@@ -151,7 +151,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			public void onClick(View v) {
 				try{
 					Utils.disableSMSReceiver(PhoneNoOTPConfirmScreen.this);
-					apiGenerateLoginOtp(PhoneNoOTPConfirmScreen.this, Utils.retrievePhoneNumberTenChars(phoneNoToVerify));
+					apiGenerateLoginOtp(PhoneNoOTPConfirmScreen.this, Utils.retrievePhoneNumberTenChars(phoneNoToVerify, countryCode));
 					startTimerForRetry();
 				} catch(Exception e){
 					e.printStackTrace();
@@ -165,6 +165,9 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			if(getIntent().hasExtra("phone_no_verify")){
 				phoneNoToVerify = getIntent().getStringExtra("phone_no_verify");
 				textViewOtpNumber.setText(phoneNoToVerify);
+				if(getIntent().hasExtra(Constants.KEY_COUNTRY_CODE)){
+					countryCode = getIntent().getStringExtra(Constants.KEY_COUNTRY_CODE);
+				}
 			}
 			else {
 				performBackPressed();
@@ -176,11 +179,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 
 		try{
-			if(!"".equalsIgnoreCase(Prefs.with(this).getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
-			}
-			else{
-			}
-
 			if(1 == Prefs.with(this).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 1)) {
 				tvCallMe.setVisibility(View.VISIBLE);
 			}
@@ -235,6 +233,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			params.put("access_token", Data.userData.accessToken);
 			params.put("is_access_token_new", "1");
 			params.put("phone_no", phoneNo);
+			params.put(Constants.KEY_COUNTRY_CODE, countryCode);
 			params.put("verification_token", otp);
 
 			Log.i("params", ">" + params);
@@ -303,6 +302,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 			params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 			params.put(Constants.KEY_PHONE_NO, phoneNo);
+			params.put(Constants.KEY_COUNTRY_CODE, countryCode);
 			Log.i("params", ">"+params);
 
 			new HomeUtil().putDefaultParams(params);
@@ -376,7 +376,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 			HashMap<String, String> params = new HashMap<>();
 
-			params.put("phone_no", "+91"+phoneNumber);
+			params.put("phone_no", countryCode+phoneNumber);
+			params.put(Constants.KEY_COUNTRY_CODE, countryCode);
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
 			params.put("device_name", MyApplication.getInstance().deviceName());
 			params.put("os_version", MyApplication.getInstance().osVersion());
@@ -434,33 +435,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		}
 	}
 
-
-	private void giveAMissCall(){
-		try {
-			if (!"".equalsIgnoreCase(Prefs.with(PhoneNoOTPConfirmScreen.this)
-					.getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
-				DialogPopup.alertPopupTwoButtonsWithListeners(PhoneNoOTPConfirmScreen.this, "",
-						getResources().getString(R.string.give_missed_call_dialog_text),
-						getResources().getString(R.string.call_us),
-						getResources().getString(R.string.cancel),
-						new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								Utils.openCallIntent(PhoneNoOTPConfirmScreen.this, Prefs.with(PhoneNoOTPConfirmScreen.this)
-										.getString(Constants.SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-							}
-						},
-						new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-
-							}
-						}, false, false);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	private Handler handler = new Handler();
 	private Runnable runnableRetryBlock;

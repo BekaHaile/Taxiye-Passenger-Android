@@ -620,6 +620,8 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 					new CountryPicker.Builder().with(this)
 							.listener(this)
 							.build();
+
+			tvCountryCode.setText(Utils.getCountryCode(this));
 //			countryPicker = CountryPicker.newInstance("Select Country");
 //			countryPicker.setListener(this);
 //			Country country = countryPicker.getUserCountryInfo(this);
@@ -780,13 +782,13 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 					} else{
 						boolean onlyDigits = Utils.checkIfOnlyDigits(phoneNumber);
 						if (onlyDigits) {
-							phoneNumber = Utils.retrievePhoneNumberTenChars(phoneNumber);
+							phoneNumber = Utils.retrievePhoneNumberTenChars(phoneNumber, getCountryCodeSelected());
 							if (!Utils.validPhoneNumber(phoneNumber)) {
 								editTextPhoneNumber.requestFocus();
 								editTextPhoneNumber.setError(getResources().getString(R.string.invalid_phone_error));
 							} else {
-								phoneNumber = tvCountryCode.getText().toString() + phoneNumber;
-								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber, tvCountryCode.getText().toString());
+								phoneNumber = getCountryCodeSelected() + phoneNumber;
+								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber, getCountryCodeSelected());
 							}
 						}
 					}
@@ -923,13 +925,13 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 					} else{
 						boolean onlyDigits = Utils.checkIfOnlyDigits(phoneNumber);
 						if (onlyDigits) {
-							phoneNumber = Utils.retrievePhoneNumberTenChars(phoneNumber);
+							phoneNumber = Utils.retrievePhoneNumberTenChars(phoneNumber, getCountryCodeSelected());
 							if (!Utils.validPhoneNumber(phoneNumber)) {
 								editTextEmail.requestFocus();
 								editTextEmail.setError(getResources().getString(R.string.invalid_phone_error));
 							} else {
-								phoneNumber = tvCountryCode.getText().toString() + phoneNumber;
-								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber, tvCountryCode.getText().toString());
+								phoneNumber = getCountryCodeSelected() + phoneNumber;
+								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber, getCountryCodeSelected());
 							}
 						}
 					}
@@ -1129,12 +1131,12 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 								editTextSPhone.requestFocus();
 								editTextSPhone.setError(getString(R.string.please_enter_phone_number));
 							} else {
-								phoneNo = Utils.retrievePhoneNumberTenChars(phoneNo);
+								phoneNo = Utils.retrievePhoneNumberTenChars(phoneNo, Utils.getCountryCode(SplashNewActivity.this));
 								if (!Utils.validPhoneNumber(phoneNo)) {
 									editTextSPhone.requestFocus();
 									editTextSPhone.setError(getString(R.string.please_enter_valid_phone));
 								} else {
-									phoneNo = getString(R.string.country_code) + phoneNo;
+									phoneNo = Utils.getCountryCode(SplashNewActivity.this) + phoneNo;
 									if ("".equalsIgnoreCase(password)) {
 										editTextSPassword.requestFocus();
 										editTextSPassword.setError(getString(R.string.please_enter_password));
@@ -1371,7 +1373,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 				AccountKitActivity.ResponseType.CODE);
 		configurationBuilder.setTheme(R.style.AppLoginTheme_Salmon);
 		configurationBuilder.setTitleType(AccountKitActivity.TitleType.LOGIN);
-		configurationBuilder.setDefaultCountryCode(tvCountryCode.getText().toString());
+		configurationBuilder.setDefaultCountryCode(getCountryCodeSelected());
 		if(phoneNumber != null && !phoneNumber.toString().equalsIgnoreCase("")) {
 			configurationBuilder.setInitialPhoneNumber(phoneNumber);
 		}
@@ -1695,7 +1697,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 				imageViewBack.setVisibility(View.VISIBLE);
 				llContainer.setVisibility(View.VISIBLE);
 				rlPhoneLogin.setVisibility(View.VISIBLE);
-				editTextPhoneNumber.setText(Utils.retrievePhoneNumberTenChars(phoneNoToFillInInHouseLogin));
+				editTextPhoneNumber.setText(Utils.retrievePhoneNumberTenChars(phoneNoToFillInInHouseLogin, Utils.getCountryCode(this)));
 				animRightToLeft(rlLoginSignupNew, rlPhoneLogin, duration);
 
 				break;
@@ -3435,17 +3437,17 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 			if (getIntent().hasExtra(KEY_BACK_FROM_OTP)) {
 				if (RegisterationType.FACEBOOK == registerationType) {
 					editTextSPromo.setText(OTPConfirmScreen.facebookRegisterData.referralCode);
-					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.facebookRegisterData.phoneNo));
+					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.facebookRegisterData.phoneNo, getCountryCodeSelected()));
 					editTextSPassword.setText(OTPConfirmScreen.facebookRegisterData.password);
 				} else if (RegisterationType.GOOGLE == registerationType) {
 					editTextSPromo.setText(OTPConfirmScreen.googleRegisterData.referralCode);
-					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.googleRegisterData.phoneNo));
+					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.googleRegisterData.phoneNo, getCountryCodeSelected()));
 					editTextSPassword.setText(OTPConfirmScreen.googleRegisterData.password);
 				} else {
 					editTextSName.setText(OTPConfirmScreen.emailRegisterData.name);
 					editTextSEmail.setText(OTPConfirmScreen.emailRegisterData.emailId);
 					editTextSPromo.setText(OTPConfirmScreen.emailRegisterData.referralCode);
-					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.emailRegisterData.phoneNo));
+					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.emailRegisterData.phoneNo, getCountryCodeSelected()));
 					editTextSPassword.setText(OTPConfirmScreen.emailRegisterData.password);
 				}
 
@@ -3519,7 +3521,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 			}
 			else if(RegisterationType.EMAIL == SplashNewActivity.registerationType){
 				if(Utils.checkIfOnlyDigits(emailNeedRegister)){
-					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(emailNeedRegister));
+					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(emailNeedRegister, getCountryCodeSelected()));
 				} else{
 					if(emailNeedRegister.equalsIgnoreCase("")){
 						String ownerEmail = UserEmailFetcher.getEmail(SplashNewActivity.this);
@@ -4387,6 +4389,9 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 			phoneNoToFillInInHouseLogin = previousLoginPhone;
 			if(phoneNoToFillInInHouseLogin==null || phoneNoToFillInInHouseLogin.trim().length()==0){
  				phoneNoToFillInInHouseLogin = 	OwnerInfo.OwnerPhone(this);
+ 				if(!phoneNoToFillInInHouseLogin.startsWith("+")){
+					phoneNoToFillInInHouseLogin = "+"+phoneNoToFillInInHouseLogin;
+				}
 			}
 			if(phoneNoToFillInInHouseLogin==null){
 				phoneNoToFillInInHouseLogin="";
@@ -4396,7 +4401,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 		} else {
 			PhoneNumber phoneNumber = null;
 			if(!TextUtils.isEmpty(previousLoginPhone)) {
-				phoneNumber = new PhoneNumber(getString(R.string.country_code), Utils.retrievePhoneNumberTenChars(previousLoginPhone), getString(R.string.country_iso));
+				phoneNumber = new PhoneNumber(Utils.getCountryCode(this), Utils.retrievePhoneNumberTenChars(previousLoginPhone, Utils.getCountryCode(this)), Utils.getSimCountryIso(this));
 			}
 			fbAccountKit.startFbAccountKit(phoneNumber);
 		}
@@ -4405,5 +4410,9 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 	public void onSelectCountry(Country country) {
 		tvCountryCode.setText(country.getDialCode());
 		//countryPicker.dismiss();
+	}
+
+	private String getCountryCodeSelected(){
+		return tvCountryCode.getText().toString();
 	}
 }

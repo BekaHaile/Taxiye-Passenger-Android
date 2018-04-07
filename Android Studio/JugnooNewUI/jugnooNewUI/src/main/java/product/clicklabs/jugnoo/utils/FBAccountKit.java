@@ -48,7 +48,7 @@ public class FBAccountKit {
                 AccountKitActivity.ResponseType.CODE);
         configurationBuilder.setTheme(R.style.AppLoginTheme_Salmon);
         configurationBuilder.setTitleType(AccountKitActivity.TitleType.LOGIN);
-        configurationBuilder.setDefaultCountryCode(Utils.getCountryZipCode(activity));
+        configurationBuilder.setDefaultCountryCode(Utils.getCountryCode(activity));
         if(phoneNumber != null && !phoneNumber.toString().equalsIgnoreCase("")) {
             configurationBuilder.setInitialPhoneNumber(phoneNumber);
         }
