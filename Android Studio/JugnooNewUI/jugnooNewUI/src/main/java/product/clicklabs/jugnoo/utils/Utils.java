@@ -403,6 +403,23 @@ public class Utils implements GAAction, GACategory{
 		return "";
     }
 
+	public static String getCountryCodeFromCountryIso(Context context, String countryIso) {
+		String CountryZipCode = "";
+		try {
+			String[] rl = context.getResources().getStringArray(R.array.CountryCodes);
+			for (String aRl : rl) {
+				String[] g = aRl.split(",");
+				if (g[1].trim().equals(countryIso.trim())) {
+					CountryZipCode = g[0];
+					return CountryZipCode;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
 	public static String getCountryIsoFromCode(Context context, String code) {
 		try {
 			String[] rl = context.getResources().getStringArray(R.array.CountryCodes);
@@ -415,11 +432,11 @@ public class Utils implements GAAction, GACategory{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "IND";
+		return "IN";
 	}
 
 	public static String getSimCountryIso(Context context) {
-		String CountryID = "IND";
+		String CountryID = "IN";
 		TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 		// getNetworkCountryIso
 		try {

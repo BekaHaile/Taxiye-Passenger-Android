@@ -304,6 +304,20 @@ public class CountryPicker
   }
   // endregion
 
+  public void filterCountries(ArrayList<String> codesToFilter){
+    if(codesToFilter != null){
+      ArrayList<Country> countriesF = new ArrayList<>();
+      countries = new ArrayList<>(Arrays.asList(COUNTRIES));
+      for(Country country : countries){
+        if(codesToFilter.contains(country.getCode())){
+          countriesF.add(country);
+        }
+      }
+      countries = countriesF;
+      sortCountries(countries);
+    }
+  }
+
   // region Listeners
   @Override
   public void sortCountries(@NonNull List<Country> countries) {
