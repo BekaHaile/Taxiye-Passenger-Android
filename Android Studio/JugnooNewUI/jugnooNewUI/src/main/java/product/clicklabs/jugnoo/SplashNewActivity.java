@@ -2092,6 +2092,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 	protected void onPause() {
 		try {
 			MyApplication.getInstance().getLocationFetcher().destroy();
+			if(countryPicker.showDialog();)
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ public class CountryPickerDialog extends DialogFragment implements OnItemClickLi
     private CountriesAdapter adapter;
     private List<Country> searchResults;
     private OnCountryPickerListener listener;
+    private LinearLayout llNoData;
     // endregion
 
     // region Constructors
@@ -45,6 +48,7 @@ public class CountryPickerDialog extends DialogFragment implements OnItemClickLi
         getDialog().setTitle(R.string.country_picker_header);
         searchEditText = (EditText) view.findViewById(R.id.country_code_picker_search);
         countriesRecyclerView = (RecyclerView) view.findViewById(R.id.countries_recycler_view);
+        llNoData = (LinearLayout) view.findViewById(R.id.llNoData);
         setupRecyclerView();
         if (!dialogInteractionListener.canSearch()) {
             searchEditText.setVisibility(View.GONE);
@@ -95,6 +99,14 @@ public class CountryPickerDialog extends DialogFragment implements OnItemClickLi
             }
         }
         dialogInteractionListener.sortCountries(searchResults);
+        if(searchResults.size()>0) {
+            llNoData.setVisibility(View.GONE);
+            countriesRecyclerView.setVisibility(View.VISIBLE);
+        }
+        else {
+            llNoData.setVisibility(View.VISIBLE);
+            countriesRecyclerView.setVisibility(View.GONE);
+        }
         adapter.notifyDataSetChanged();
     }
 
