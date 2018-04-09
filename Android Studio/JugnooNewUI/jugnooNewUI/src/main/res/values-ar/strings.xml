@@ -54,12 +54,12 @@
     <string name="confirm_request">Confirm Request</string>
 
     <string name="enter_code">Enter Code</string>
-    <string name="done">Done</string>
+    <string name="done">فعله</string>
 
-    <string name="logout">Logout</string>
-    <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
+    <string name="logout">الخروج</string>
+    <string name="are_you_sure_you_want_to_logout">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
 
-    <string name="cancel">Cancel</string>
+    <string name="cancel">إلغاء</string>
 
     <string name="from">From: </string>
     <string name="to">To: </string>
@@ -69,7 +69,7 @@
     <string name="driver_mode">Driver Mode</string>
     <string name="invite_friends">Invite Friends</string>
     <string name="type_delivery_address">Type Delivery Address</string>
-    <string name="about">About</string>
+    <string name="about">حول</string>
     <string name="great">Great :)</string>
     <string name="bad">Bad :(</string>
 
@@ -133,17 +133,17 @@
     <string name="jugnoo_jeanie">Jugnoo Jeanie</string>
 
     <!-- Account Settings Strings -->
-    <string name="add_home">Add Home</string>
-    <string name="add_work">Add Work</string>
-    <string name="home">Home</string>
-    <string name="work">Work</string>
+    <string name="add_home">أضف الرئيسية</string>
+    <string name="add_work">إضافة عمل</string>
+    <string name="home">منزل</string>
+    <string name="work">مكان العمل</string>
 
 
     <!-- Search state strings -->
     <string name="set_pickup_location">Set pick up location</string>
 
     <!-- Assigning state strings -->
-    <string name="assigning_state_edit_text_hint">Enter Destination</string>
+    <string name="assigning_state_edit_text_hint">أدخل الوجهة</string>
 
     <!-- Ride Summary New Strings -->
     <string name="total_fare">TOTAL FARE</string>
@@ -207,7 +207,7 @@
 
 
     <!-- NL Splash screen-->
-    <string name="nl_splash_terms">By Signing up you agree to our <u>Terms of Use</u></string>
+    <string name="nl_splash_terms">بمواصلة موافقتك على موقعنا <u>تعليمات الاستخدام</u></string>
     <string name="paytm_wallet">Paytm Wallet</string>
     <string name="nl_add_paytm_wallet">Add Paytm Wallet</string>
     <string name="nl_splash_required">Required</string>
@@ -217,11 +217,11 @@
     <!-- NL Login-->
     <string name="nl_login">Login</string>
     <string name="nl_log_in">Log In</string>
-    <string name="nl_login_facebook">Facebook</string>
-    <string name="nl_login_google">Google</string>
+    <string name="nl_login_facebook">فيس بوك</string>
+    <string name="nl_login_google">جوجل</string>
     <string name="nl_login_phone_empty_error">Please enter phone number</string>
-    <string name="invalid_phone_error">Please enter valid phone number</string>
-    <string name="invalid_email_error">Please enter valid email</string>
+    <string name="invalid_phone_error">أدخل رقم هاتف صالح</string>
+    <string name="invalid_email_error">الرجاء إدخال بريد إلكتروني صحيح</string>
 
     <!-- NL Signup-->
     <string name="nl_signup">Signup</string>
@@ -264,7 +264,7 @@
     <!-- Jugnoo Fresh -->
 
 
-    <string name="no_results_found">No results found</string>
+    <string name="no_results_found">لا نتيجة</string>
     <string name="i_want_to_cancel_my_ride_because">I WANT TO CANCEL MY RIDE BECAUSE</string>
     <string name="connection_lost_title">CONNECTION LOST</string>
     <string name="connection_lost_desc">Oops! Your Internet is not working.\nPlease try again.</string>
@@ -496,8 +496,8 @@
     <string name="paytm_no_cash">You do not have money in your\nPaytm Account</string>
     <string name="paytm_error_case_select_cash">We are not able to connect to Paytm</string>
 
-    <string name="who_are_we">Who are we?</string>
-    <string name="about_caps">ABOUT</string>
+    <string name="who_are_we">من نحن؟</string>
+    <string name="about_caps">حول</string>
 
     <string name="request_accepted_message">Your request has been accepted</string>
 
@@ -576,7 +576,7 @@
     <string name="call_emergency_contact">Call Emergency Contact</string>
     <string name="call_your_contacts">Call Your Contacts</string>
     <string name="disable_emergency_mode">Disable Emergency Mode</string>
-    <string name="emergency_contacts">Emergency Contacts</string>
+    <string name="emergency_contacts">جهة اتصال للطوارئ</string>
     <string name="add">Add</string>
     <string name="add_contacts">Add Contacts</string>
     <string name="contacts">Contacts</string>
@@ -628,7 +628,7 @@
 
     <string name="auto">Auto</string>
     <string name="autos">Autos</string>
-    <string name="rides">Rides</string>
+    <string name="rides">ركوب سيارة أجرة</string>
     <string name="waiting_for_location">Waiting for location&#8230;</string>
     <string name="get_ride">Get Ride</string>
     <string name="fresh">Fresh</string>
@@ -650,7 +650,7 @@
     <string name="dont_have_enough_paytm_balance">You don\'t have enough money for\ntransaction in your Paytm wallet.</string>
     <string name="dont_have_enough_mobikwik_balance">You don\'t have enough money for\ntransaction in your Mobikwik wallet.</string>
     <string name="dont_have_enough_freecharge_balance">You don\'t have enough money for\ntransaction in your FreeCharge wallet.</string>
-    <string name="continue_text">Continue</string>
+    <string name="continue_text">استمر</string>
     <string name="order_date_colon">Order Date:</string>
     <string name="delivery_date">Delivery Date</string>
     <string name="delivery_slot">Delivery Slot</string>
@@ -688,8 +688,8 @@
 
     <string name="fare_details">Fare Details</string>
     <string name="pay_for_your_rides_using">Pay for your rides using</string>
-    <string name="enter_destination">Enter Destination</string>
-    <string name="destination_required">Destination required</string>
+    <string name="enter_destination">أدخل الوجهة</string>
+    <string name="destination_required">الوجهة المطلوبة</string>
     <string name="add_paytm_money_help_text">Pay for Jugnoo with a Mobile Wallet</string>
     <string name="convenience_charge_rupees_format">Convenience Charge: \u20B9%s</string>
     <string name="base_fare">Base Fare</string>
@@ -705,22 +705,22 @@
     <string name="old_password">Old Password</string>
     <string name="new_password">New Password</string>
     <string name="retype_password">Retype Password</string>
-    <string name="username_empty_error">Username can\'t be empty</string>
-    <string name="email_empty_error">Email can\'t be empty</string>
-    <string name="phone_empty_error">Phone number can\'t be empty</string>
+    <string name="username_empty_error">اسم المستخدم لا يمكن أن يكون فارغًا</string>
+    <string name="email_empty_error">لا يمكن أن يكون البريد الإلكتروني فارغًا</string>
+    <string name="phone_empty_error">لا يمكن أن يكون رقم الهاتف فارغًا</string>
     <string name="old_password_empty_error">Please enter old password</string>
     <string name="new_password_empty_error">Please enter new password</string>
     <string name="retype_password_empty_error">Please retype new password</string>
     <string name="retype_password_different_error">Passwords not matched</string>
     <string name="new_password_same_error">New Password is same as the old one</string>
     <string name="new_password_length_error_format">New Password must be of atleast %s characters</string>
-    <string name="add_emergency_contacts">Add Emergency Contacts</string>
+    <string name="add_emergency_contacts">إضافة جهات اتصال الطوارئ</string>
     <string name="pool_rides_offer_guaranteed_fares">Pool rides offer guaranteed fares. Check your fare on next screen before confirming the ride</string>
     <string name="please_provide_pickup_and_dest">Please provide pickup and destination location to generate your guaranteed fare.</string>
     <string name="you_will_not_change_dest">* You will not be able to change destination during the ride.</string>
 
     <string name="receipt">Receipt</string>
-    <string name="confirmation">Confirmation</string>
+    <string name="confirmation">التأكيد</string>
     <string name="max_people">MAX PEOPLE:</string>
     <string name="fares_updated">Fares updated try again</string>
     <string name="mobikwik_wallet">MobiKwik Wallet</string>
@@ -778,7 +778,7 @@
     <!-- strings used in AddToAddressBookActivity -->
 
 
-    <string name="OR">OR</string>
+    <string name="OR">أو</string>
     <string name="id_colon">ID:</string>
     <string name="from_colon">From:</string>
     <string name="to_colon">To:</string>
@@ -823,7 +823,7 @@
     <string name="offers">Offers</string>
     <string name="add_new_address">Add new address</string>
     <string name="could_not_find_address">Could not find address</string>
-    <string name="address_book">Address Book</string>
+    <string name="address_book">دليل العناوين</string>
     <string name="enter_topup_card_code">Enter Topup Card code</string>
     <string name="recharge_jc_topup_info">Recharge Jugnoo Cash with Topup Card</string>
     <string name="topup_code_empty">Topup code empty</string>
@@ -854,13 +854,13 @@
     <string name="refund">Refund</string>
     <string name="choose_pickup">Choose Pickup</string>
     <string name="chat">Chat</string>
-    <string name="address_used_multiple_time_format">Used %s times</string>
-    <string name="address_used_one_time_format">Used %s time</string>
-    <string name="enter_pickup">Enter Pickup Location</string>
-    <string name="recent_locations">Recent locations</string>
-    <string name="recent_location">Recent location</string>
-    <string name="saved_locations">Saved locations</string>
-    <string name="saved_location">Saved location</string>
+    <string name="address_used_multiple_time_format">أوقات الاستخدام</string>
+    <string name="address_used_one_time_format">الوقت المستنفد</string>
+    <string name="enter_pickup">أدخل موقع الاستلام</string>
+    <string name="recent_locations">المواقع الأخيرة</string>
+    <string name="recent_location">المواقع الأخيرة</string>
+    <string name="saved_locations">مواقع محفوظه</string>
+    <string name="saved_location">مواقع محفوظه</string>
     <string name="we_could_not_verify">Sorry, we could not verify through\nmissed call. Please try again.</string>
     <string name="selecting_a_pickup_spot">Selecting a pickup spot will save you time and make it easier to find your driver.</string>
     <string name="no_available_offers">No Available Offers</string>
@@ -925,7 +925,7 @@
 
     //
     signup
-    <string name="mobile_string">Mobile Number</string>
+    <string name="mobile_string">رقم الهاتف المحمول</string>
 
     <string name="rupees_symbol">\u20B9</string>
 
@@ -1034,7 +1034,7 @@
     <string name="no_continue_with_current_pickup">No, continue with current pickup</string>
 
     <string name="remove_payment_address_string">Are you sure you want to remove this payment address?</string>
-    <string name="please_enter_valid_phone">Please enter valid phone number</string>
+    <string name="please_enter_valid_phone">أدخل رقم هاتف صالح</string>
     <string name="requested_in_caps">REQUESTED</string>
 
 
@@ -1140,7 +1140,7 @@
     <string name="or_login_with">Or login with</string>
     <string name="welcome_to_jugnoo">Welcome to Jugnoo</string>
     <string name="or_signup_with">Or signup with</string>
-    <string name="enter_otp_recieved_on">Enter OTP received on:</string>
+    <string name="enter_otp_recieved_on">أدخل كلمة مرور لمرة واحدة تم استلامها</string>
     <string name="autodetecting_otp_sent_to">Autodetecting OTP sent to</string>
 
     <string name="permissions_get_accounts_message">
@@ -1155,7 +1155,7 @@
         Grant permission to read your SMS code from your device to pre-fill.
     </string>
     <string name="permissions_receive_sms_title">Read SMS Code</string>
-    <string name="login_signup_with">Login / Signup with</string>
+    <string name="login_signup_with">تسجيل الدخول / الاشتراك مع</string>
     <string name="please_check_tnc">Offer conditions not met. Please review detailed Terms and Conditions for more information</string>
     <string name="checkout_our_different_services_from_here">Checkout our different services from here</string>
     <string name="get_free_discount_coupons">Get Free Discount\nCoupons</string>
@@ -1253,7 +1253,7 @@
     <string name="ask_a_question">Ask a question</string>
     <string name="item_not_available">Selected item currently not available!</string>
     <string name="total_savings">Total Savings</string>
-    <string name="title_my_profile">MY PROFILE</string>
+    <string name="title_my_profile">ملفي</string>
     <string name="order_adjustment">Order Adjustment</string>
     <string name="label_suggestions">Suggestions</string>
     <string name="error_get_handle_suggestions">Network Error! Could not fetch suggestions.</string>
@@ -1492,7 +1492,7 @@
     <string name="faqs">FAQs</string>
     <string name="we_could_not_find_this_post">We could not find this post right now</string>
     <string name="closing_in_format">Closing in %1$s %2$s</string>
-    <string name="mins">mins</string>
+    <string name="mins">الدقائق</string>
     <string name="min">min</string>
     <string name="ratings_format">%s Ratings</string>
     <string name="please_enter_one_alphabet">Please enter at least one alphabet</string>
@@ -1500,7 +1500,7 @@
     <string name="please_enter_phone_number">Please enter phone number</string>
     <string name="please_enter_password">Please enter password</string>
     <string name="password_must_be_atleast_six">Password must be of atleast six characters</string>
-    <string name="please_enter_valid_email_id">Please enter valid email id</string>
+    <string name="please_enter_valid_email_id">الرجاء إدخال بريد إلكتروني صحيح</string>
     <string name="login_cancelled">Login Cancelled</string>
     <string name="success_colon_format">Success: %s</string>
     <string name="unknown_response_type">Unknown response type</string>
@@ -1559,7 +1559,7 @@
     <string name="replies">Replies</string>
     <string name="reply">Reply</string>
     <string name="send_us_email">Send Us an Email</string>
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy">سياسة الخصوصية</string>
     <string name="rate_card">Rate Card</string>
     <string name="terms_of_schedule">Terms of Schedule</string>
     <string name="wallet_promotions">Wallet Promotions</string>
@@ -1591,14 +1591,14 @@
     <string name="settings">Settings</string>
     <string name="gps_not_enabled_enable_from_settings">GPS Location is not enabled. Do you want to enable it from settings menu?</string>
     <string name="error_in_fetching_facebook_info">Error in fetching information from Facebook</string>
-    <string name="eta">ETA</string>
+    <string name="eta">الوقت المقدر للوصول</string>
     <string name="could_not_open_directions">Could not open directions</string>
     <string name="fare">Fare</string>
     <string name="fare_could_not_be_estimated_between_pickup_drop">Fare could not be estimated between the selected pickup and drop location</string>
     <string name="otp_cant_be_empty">OTP can\'t be empty</string>
-    <string name="phone_number_cant_be_empty">Phone number can\'t be empty</string>
+    <string name="phone_number_cant_be_empty">لا يمكن أن يكون رقم الهاتف فارغًا</string>
     <string name="changed_phone_number_same">Changed Phone number is same as the previous one.</string>
-    <string name="coupon_applied_format">Coupon Applied: %s</string>
+    <string name="coupon_applied_format">تطبيقي كوبون</string>
     <string name="hello_user_format">Hello, %s!</string>
     <string name="what_would_you_like_to_get_done_today">What would you like to\nget done today?</string>
     <string name="affordable_auto_rides_online">Affordable auto rickshaws online</string>
@@ -1741,10 +1741,10 @@
     <string name="status1">Status1</string>
     <string name="status2">Status2</string>
     <string name="status3">Status3</string>
-    <string name="home_caps">HOME</string>
+    <string name="home_caps">منزل</string>
     <string name="support">SUPPORT</string>
     <string name="hyphen">-</string>
-    <string name="min_caps">MIN</string>
+    <string name="min_caps">الدقائق</string>
     <string name="your_treat_to_beat_heat_nis_on_the_way">Your treat to beat heat is on the way.</string>
     <string name="order_fruits_amp_veggies_nwhile_you_ride"><![CDATA[Order fruits & veggies while you ride]]></string>
     <string name="jugnoo_fresh_will_get_them_ndelivered_to">Jugnoo Fresh will get them delivered to</string>
@@ -1806,9 +1806,9 @@
     <string name="no_transactions_currently_camel_case">No Transactions Currently</string>
     <string name="_1234">1234</string>
     <string name="_15_aug_2016_05_30pm_8_5_km">15 Aug 2016, 05:30PM, 8.5 Km</string>
-    <string name="rate_us_on_play_store">Rate us on Play Store</string>
-    <string name="like_us_on_facebook">Like us on Facebook</string>
-    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="rate_us_on_play_store">قيمنا على متجر التطبيقات</string>
+    <string name="like_us_on_facebook">اعجب بنا على الفيسبوك</string>
+    <string name="terms_and_conditions">الأحكام والشروط</string>
     <string name="a_z">A - Z</string>
     <string name="_9999999999">9999999999</string>
     <string name="choose_image">Choose Image</string>
@@ -1865,7 +1865,7 @@
     <string name="cancel_ride_caps">CANCEL RIDE</string>
     <string name="others">Others</string>
     <string name="please_specify_the_reason">Please specify the reason</string>
-    <string name="required">* Required</string>
+    <string name="required">* مطلوب</string>
     <string name="cancellation_of_a_ride_more_than_5_minutes_nafter_the_driver_is_allocated_will_lead_to_ncancellation_charges_of_rs_20">Cancellation of a ride more than 5 minutes after the driver is allocated will lead to cancellation charges of Rs. 20</string>
     <string name="fare_estimate">FARE ESTIMATE</string>
     <string name="convenience_charges_rs_10">Convenience charges Rs.10</string>
