@@ -170,7 +170,7 @@ public class ContactsUploadService extends IntentService {
                             contactBean.setName(name);
                             contactBean.setPhone(phone);
                             contactBean.setEmail(email);
-                            if (phone != null && (phone.length() >= 10)) {
+                            if (phone != null && Utils.validPhoneNumber(phone)) {
                                 allContactList.add(contactBean);
                             }
                         }

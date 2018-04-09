@@ -331,7 +331,7 @@ public class Utils implements GAAction, GACategory{
     }
 
 
-    public static String retrievePhoneNumberTenChars(String phoneNo){
+    public static String retrievePhoneNumberTenChars(String phoneNo, String countryCode){
         phoneNo = phoneNo.replace(" ", "");
         phoneNo = phoneNo.replace("(", "");
         phoneNo = phoneNo.replace("/", "");
@@ -343,20 +343,13 @@ public class Utils implements GAAction, GACategory{
         phoneNo = phoneNo.replace("#", "");
         phoneNo = phoneNo.replace("-", "");
         phoneNo = phoneNo.replace(".", "");
-        if(phoneNo.length() >= 10){
-            phoneNo = phoneNo.substring(phoneNo.length()-10, phoneNo.length());
-        }
+        phoneNo = phoneNo.replace(countryCode, "");
         return phoneNo;
     }
 
     public static boolean validPhoneNumber(String phoneNo){
-        if(phoneNo.length() >= 10){
-            if(phoneNo.charAt(0) == '0' || phoneNo.contains("+")){
-                return false;
-            }
-            else{
-                return isPhoneValid(phoneNo);
-            }
+        if(phoneNo.length() >= 7 && phoneNo.length() <= 14 && checkIfOnlyDigits(phoneNo)){
+        	return isPhoneValid(phoneNo);
         }
         else{
             return false;
@@ -386,25 +379,73 @@ public class Utils implements GAAction, GACategory{
 
 
 
-    public static String getCountryZipCode(Context context) {
+    public static String getCountryCode(Context context) {
 
         String CountryID = "";
         String CountryZipCode = "";
 
         TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         // getNetworkCountryIso
-        CountryID = manager.getSimCountryIso().toUpperCase();
-        Log.e("CountryID", "=" + CountryID);
-        String[] rl = context.getResources().getStringArray(R.array.CountryCodes);
-        for (int i = 0; i < rl.length; i++) {
-            String[] g = rl[i].split(",");
-            if (g[1].trim().equals(CountryID.trim())) {
-                CountryZipCode = g[0];
-                return CountryZipCode;
-            }
-        }
-        return "";
+		try {
+			CountryID = manager.getSimCountryIso().toUpperCase();
+			Log.e("CountryID", "=" + CountryID);
+			String[] rl = context.getResources().getStringArray(R.array.CountryCodes);
+			for (String aRl : rl) {
+				String[] g = aRl.split(",");
+				if (g[1].trim().equals(CountryID.trim())) {
+					CountryZipCode = g[0];
+					return CountryZipCode;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
     }
+
+	public static String getCountryCodeFromCountryIso(Context context, String countryIso) {
+		String CountryZipCode = "";
+		try {
+			String[] rl = context.getResources().getStringArray(R.array.CountryCodes);
+			for (String aRl : rl) {
+				String[] g = aRl.split(",");
+				if (g[1].trim().equals(countryIso.trim())) {
+					CountryZipCode = g[0];
+					return CountryZipCode;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+
+	public static String getCountryIsoFromCode(Context context, String code) {
+		try {
+			String[] rl = context.getResources().getStringArray(R.array.CountryCodes);
+			for (String aRl : rl) {
+				String[] g = aRl.split(",");
+				if (g[0].trim().equals(code.trim())) {
+					return g[1];
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "IN";
+	}
+
+	public static String getSimCountryIso(Context context) {
+		String CountryID = "IN";
+		TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		// getNetworkCountryIso
+		try {
+			CountryID = manager.getSimCountryIso().toUpperCase();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return CountryID;
+	}
 
 
 

@@ -106,6 +106,7 @@ public class JSONParser implements Constants {
 
         String userName = userData.optString("user_name", "");
         String phoneNo = userData.optString("phone_no", "");
+        String countryCode = userData.optString(Constants.KEY_COUNTRY_CODE, "+91");
         String userImage = userData.optString("user_image", "");
         String referralCode = userData.optString(KEY_REFERRAL_CODE, "");
         double jugnooBalance = userData.optDouble(KEY_JUGNOO_BALANCE, 0);
@@ -244,7 +245,7 @@ public class JSONParser implements Constants {
                 mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled, feedEnabled, prosEnabled,
                 deliveryCustomerEnabled,inviteFriendButton, defaultClientId, integratedJugnooEnabled,
                 topupCardEnabled, showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled, showJeanieHelpText,
-                showOfferDialog, showTutorial, signupOnboarding,autosEnabled);
+                showOfferDialog, showTutorial, signupOnboarding,autosEnabled, countryCode);
 
         Data.userData.setSubscriptionData(loginUserData.getSubscriptionData());
         Data.userData.setShowJugnooStarInAcccount(loginUserData.getShowJugnooStarInAccount());

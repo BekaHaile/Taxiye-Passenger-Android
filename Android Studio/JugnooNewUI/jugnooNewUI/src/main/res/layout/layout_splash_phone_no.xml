@@ -35,8 +35,35 @@
             android:layout_height="@dimen/px_30"
             android:layout_centerVertical="true"
             android:layout_marginStart="36px"
+            android:visibility="gone"
             android:src="@drawable/ic_phone"
             android:tag="mhar" />
+        <LinearLayout
+            android:id="@+id/rlCountryCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp"
+            android:paddingTop="8dp"
+            android:tag="@string/dont_touch_me"
+            >
+
+            <TextView
+                android:id="@+id/tvCountryCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:includeFontPadding="false"
+                android:text="+91"
+                android:textColor="@color/text_color"
+                android:textSize="17sp"
+                android:drawableEnd="@drawable/ic_arrow_down_vector"
+                android:drawablePadding="3dp"
+                app:typekitFont="@string/maven"/>
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/editTextPhoneNumber"
@@ -45,7 +72,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="10px"
             android:layout_toStartOf="@+id/textViewPhoneNumberRequired"
-            android:layout_toEndOf="@+id/imageViewEmail"
+            android:layout_toEndOf="@+id/rlCountryCode"
             android:background="#0000"
             android:completionThreshold="1"
             android:gravity="center_vertical"
@@ -54,7 +81,7 @@
             android:paddingStart="20px"
             android:paddingEnd="20px"
             android:maxLines="1"
-            android:maxLength="10"
+            android:maxLength="14"
             android:ellipsize="end"
             android:textColor="@color/text_color"
             android:textColorHint="@color/text_color_hint"

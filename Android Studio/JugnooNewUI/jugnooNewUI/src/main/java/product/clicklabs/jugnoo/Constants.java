@@ -861,4 +861,6 @@ public interface Constants {
     String PAYEE_PHONE_NUMBER="payee_phone_no";
     String KEY_OPERATOR_ID="operator_id";
     String KEY_CUSTOMER_PACKAGE_NAME = "customer_package_name";
+    String KEY_COUNTRY_CODE = "country_code";
+    String KEY_UPDATED_COUNTRY_CODE = "updated_country_code";
 }
