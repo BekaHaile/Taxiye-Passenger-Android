@@ -68,7 +68,7 @@ public class AccountMenuItemsAdapter extends RecyclerView.Adapter<AccountMenuIte
                 holder.tvJugnooStar.setText(menuList.get(position).getName());
                 if(menuList.get(position).getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())) {
                     holder.tvValue.setVisibility(View.VISIBLE);
-                    holder.tvValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
+                    holder.tvValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
                 }else if(menuList.get(position).getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())){
                     int unreadNotificationsCount = Prefs.with(activity).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
                     if(unreadNotificationsCount > 0){

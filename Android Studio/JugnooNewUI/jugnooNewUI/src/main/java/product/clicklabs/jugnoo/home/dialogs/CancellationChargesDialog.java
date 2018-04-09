@@ -15,6 +15,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by Ankit on 5/2/16.
@@ -119,11 +120,10 @@ public class CancellationChargesDialog {
 
 	private String replaceStringWithAmount(String text){
 		String finalStr = "";
-		//String.format(getString(R.string.rupees_value_format_without_space),"" + FeedUtils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().finalFare))
+		//String.format(getString(R.string.rupees_value_format),"" + FeedUtils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().finalFare))
 		try {
 			if(text.contains("{amount}") && (Data.autoData.getAssignedDriverInfo().getCancellationCharges() > 0)){
-                finalStr = text.replace("{amount}", (String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-						"" + Data.autoData.getAssignedDriverInfo().getCancellationCharges())));
+                finalStr = text.replace("{amount}", (Utils.formatCurrencyValue(Data.autoData.getAssignedDriverInfo().getCurrency(), Data.autoData.getAssignedDriverInfo().getCancellationCharges())));
             } else{
 				finalStr = text;
 			}

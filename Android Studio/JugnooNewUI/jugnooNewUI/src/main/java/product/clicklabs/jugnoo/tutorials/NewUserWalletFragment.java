@@ -145,7 +145,7 @@ public class NewUserWalletFragment extends Fragment {
             activity.getIvTickWallet().setImageResource(R.drawable.ic_bar_check);
             ivAddPaytm.setVisibility(View.GONE);
             tvPaytmBalanceValue.setVisibility(View.VISIBLE);
-            tvPaytmBalanceValue.setText(getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance())));
+            tvPaytmBalanceValue.setText(getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(Data.userData.getPaytmBalance())));
         } else{
             ivAddPaytm.setVisibility(View.VISIBLE);
             tvPaytmBalanceValue.setVisibility(View.GONE);
@@ -161,7 +161,7 @@ public class NewUserWalletFragment extends Fragment {
             activity.getIvTickWallet().setImageResource(R.drawable.ic_bar_check);
             ivAddMobikwik.setVisibility(View.GONE);
             tvMobikwikBalanceValue.setVisibility(View.VISIBLE);
-            tvMobikwikBalanceValue.setText(getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(Data.userData.getMobikwikBalance())));
+            tvMobikwikBalanceValue.setText(getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(Data.userData.getMobikwikBalance())));
         } else{
             ivAddMobikwik.setVisibility(View.VISIBLE);
             tvMobikwikBalanceValue.setVisibility(View.GONE);
@@ -177,7 +177,7 @@ public class NewUserWalletFragment extends Fragment {
             activity.getIvTickWallet().setImageResource(R.drawable.ic_bar_check);
             ivAddFreecharge.setVisibility(View.GONE);
             tvFreeChargeBalanceValue.setVisibility(View.VISIBLE);
-            tvFreeChargeBalanceValue.setText(getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(Data.userData.getFreeChargeBalance())));
+            tvFreeChargeBalanceValue.setText(getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(Data.userData.getFreeChargeBalance())));
         } else{
             ivAddFreecharge.setVisibility(View.VISIBLE);
             tvFreeChargeBalanceValue.setVisibility(View.GONE);

@@ -611,7 +611,7 @@ public class JSONParser implements Constants {
 								fareStructure.getFarePerWaitingMin(),
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
 								fareStructure.getDisplayBaseFare(),
-								fareStructure.getDisplayFareText(), fareStructure.getOperatorId());
+								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(), autos.getCurrency());
 						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
 							try {
 								if (Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
@@ -648,7 +648,7 @@ public class JSONParser implements Constants {
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){
-        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null, null, 0);
+        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null, null, 0, null);
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getFareStructure(){
@@ -849,6 +849,7 @@ public class JSONParser implements Constants {
 
         int totalRide = jLastRideData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 0);
         int status = jLastRideData.optInt(Constants.KEY_STATUS, EngagementStatus.ENDED.getOrdinal());
+        String currency = jLastRideData.optString(Constants.KEY_CURRENCY);
 
         String supportNumber = jLastRideData.optString(KEY_SUPPORT_NUMBER, "");
 
@@ -873,7 +874,7 @@ public class JSONParser implements Constants {
                 sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge,paidUsingRazorpay, totalRide, status, supportNumber
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
-                showPaymentOptions, paymentOption, operatorId);
+                showPaymentOptions, paymentOption, operatorId, currency);
 	}
 
 
@@ -956,6 +957,7 @@ public class JSONParser implements Constants {
             PlaceOrderResponse.ReferralPopupContent referralPopupContent = null;
             FuguChannelData fuguChannelData = new FuguChannelData();
             int operatorId = 0;
+            String currency = null;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1019,6 +1021,7 @@ public class JSONParser implements Constants {
                             pickupAddress = jObject.optString(KEY_PICKUP_LOCATION_ADDRESS, "");
                             chatEnabled = jObject.optInt("chat_enabled", 0);
                             operatorId = jObject.optInt(KEY_OPERATOR_ID, 0);
+                            currency = jObject.optString(KEY_CURRENCY);
 
                             try {
                                 if(jObject.has(KEY_OP_DROP_LATITUDE) && jObject.has(KEY_OP_DROP_LONGITUDE)) {
@@ -1141,7 +1144,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

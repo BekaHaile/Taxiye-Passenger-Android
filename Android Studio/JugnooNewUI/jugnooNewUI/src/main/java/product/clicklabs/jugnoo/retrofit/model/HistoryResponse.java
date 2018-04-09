@@ -328,6 +328,8 @@ public class HistoryResponse {
         private int category;
         @SerializedName("is_paid")
         private int isPaid;
+        @SerializedName("currency")
+        private String currency;
 
         public int getIsPaid() {
             return isPaid;
@@ -1117,6 +1119,14 @@ public class HistoryResponse {
 
         public void setDeliveryTime(String deliveryTime) {
             this.deliveryTime = deliveryTime;
+        }
+
+        public String getCurrency() {
+            return currency;
+        }
+
+        public void setCurrency(String currency) {
+            this.currency = currency;
         }
     }
 

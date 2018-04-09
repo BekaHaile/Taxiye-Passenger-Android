@@ -346,6 +346,7 @@ public class Utils implements GAAction, GACategory{
         phoneNo = phoneNo.replace("-", "");
         phoneNo = phoneNo.replace(".", "");
         phoneNo = phoneNo.replace(countryCode, "");
+		phoneNo = phoneNo.replace("+", "");
         return phoneNo;
     }
 
@@ -1091,6 +1092,9 @@ public class Utils implements GAAction, GACategory{
 	}
 
 	public static String formatCurrencyValue(String currency, double value){
+		if(TextUtils.isEmpty(currency)){
+			currency = "INR";
+		}
 		NumberFormat format = NumberFormat.getCurrencyInstance(MyApplication.getInstance().getCurrentLocale());
 		format.setCurrency(Currency.getInstance(currency));
 		return format.format(value);

@@ -183,9 +183,9 @@ public class WalletRechargeFragment extends Fragment {
 		});
 
 
-		buttonAmount1.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), amount1));
-		buttonAmount2.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), amount2));
-		buttonAmount3.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), amount3));
+		buttonAmount1.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format), amount1));
+		buttonAmount2.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format), amount2));
+		buttonAmount3.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format), amount3));
 
 		buttonAmount1.setOnClickListener(new View.OnClickListener() {
 			@Override

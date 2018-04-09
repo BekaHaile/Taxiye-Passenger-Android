@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -185,7 +184,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_wallet_selector);
                     try {
                         holder.textViewValue.setText(String.format(activity.getResources()
-                                        .getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
+                                        .getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
                         holder.textViewValue.setVisibility(View.VISIBLE);
                     } catch (Exception e) {
                         e.printStackTrace();

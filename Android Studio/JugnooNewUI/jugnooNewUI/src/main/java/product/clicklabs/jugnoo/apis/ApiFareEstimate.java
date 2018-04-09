@@ -161,7 +161,7 @@ public class ApiFareEstimate {
                                 int flag = jObj.getInt("flag");
                                 String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                    String currency = jObj.optString(Constants.KEY_CURRENCY, activity.getString(R.string.rupee));
+                                    String currency = jObj.optString(Constants.KEY_CURRENCY);
                                     if(jObj.has("pool_fare_id")){
                                         callback.onPoolSuccess(currency, jObj.optDouble("fare", 0), jObj.optDouble("ride_distance", 0),
                                                 jObj.optString("ride_distance_unit"), jObj.optDouble("ride_time", 0),

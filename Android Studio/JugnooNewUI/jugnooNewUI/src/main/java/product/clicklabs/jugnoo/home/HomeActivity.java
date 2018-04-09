@@ -2893,7 +2893,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             Data.autoData.getFeedbackReasons().get(i).checked = false;
                         }
                         feedbackReasonsAdapter.notifyDataSetChanged();
-                        textViewRSTotalFareValue.setText(String.format(getString(R.string.rupees_value_format_without_space),"" + Utils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().finalFare)));
+                        textViewRSTotalFareValue.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), Data.autoData.getEndRideData().finalFare));
                         /*imageViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_up));
                         imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
                         textViewThumbsUp.setVisibility(View.INVISIBLE);
@@ -3525,8 +3525,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public int updateRideEndPayment() {
         try {
-            textViewRSCashPaidValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
-					"" + Utils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().toPay)));
+            textViewRSCashPaidValue.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), Data.autoData.getEndRideData().toPay));
             int onlinePaymentVisibility = (Data.autoData.getEndRideData().toPay > 0 &&
                     (Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.CASH.getOrdinal()
                     || Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal())
@@ -3858,7 +3857,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 fragToCheck = getStarSubscriptionCheckoutFragment();
                 fragToAdd = StarSubscriptionCheckoutFragment.newInstance(Integer.parseInt(Data.autoData.getEndRideData().engagementId),
                         Data.autoData.getEndRideData().finalFare,
-                        Data.autoData.getEndRideData().toPay);
+                        Data.autoData.getEndRideData().toPay,
+                        Data.autoData.getEndRideData().getCurrency());
                 tag = StarSubscriptionCheckoutFragment.class.getName();
                 title = getResources().getString(R.string.pay_online);
             }
@@ -6935,11 +6935,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             int vehicleType = jObj.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
             int operatorId = jObj.optInt(KEY_OPERATOR_ID, 0);
             String iconSet = jObj.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+            String currency = jObj.optString(KEY_CURRENCY);
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
-                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId));
+                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);
@@ -8391,7 +8392,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     jugnooPoolFareId = poolFareId;
 
                     textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
-                    textViewTotalFareValue.setText(" " +String.format(getResources().getString(R.string.rupees_value_format_without_space), (int)fare));
+                    textViewTotalFareValue.setText(Utils.formatCurrencyValue(currency, fare));
 
                     textViewIncludes.setVisibility(View.VISIBLE);
                     textViewIncludes.setText(text);

@@ -342,7 +342,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                             Utils.formatCurrencyValue(currency, maxFare));
 
                     if (convenienceCharge > 0) {
-                        textViewConvenienceCharge.setText(getString(R.string.convenience_charge_rupees_format, Utils.getMoneyDecimalFormat().format(convenienceCharge)));
+                        textViewConvenienceCharge.setText(getString(R.string.convenience_charge_colon) + " " + Utils.formatCurrencyValue(currency, convenienceCharge));
                     } else {
                         textViewConvenienceCharge.setText("");
                     }
@@ -355,7 +355,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                     textViewEstimateFare.setText(Utils.formatCurrencyValue(currency, fare));
 
                     if (convenienceCharge > 0) {
-                        textViewConvenienceCharge.setText(getString(R.string.convenience_charge_rupees_format, Utils.getMoneyDecimalFormat().format(convenienceCharge)));
+                        textViewConvenienceCharge.setText(getString(R.string.convenience_charge_colon) + " " + Utils.formatCurrencyValue(currency, convenienceCharge));
                     } else {
                         textViewConvenienceCharge.setText("");
                     }

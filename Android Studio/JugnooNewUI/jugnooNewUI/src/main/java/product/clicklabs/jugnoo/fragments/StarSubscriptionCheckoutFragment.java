@@ -134,6 +134,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private boolean fromStar;
     private int engagementId;
     private double totalFare, fareToPay;
+    private String currency;
     private String jugnooVpaHandle;
     private EditText edtIciciVpa;
     private TextView tvLabelIciciUpi,tvUPICashback;
@@ -162,13 +163,14 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         return  fragment;
     }
 
-    public static StarSubscriptionCheckoutFragment newInstance(int engagementId, double totalFare, double fare){
+    public static StarSubscriptionCheckoutFragment newInstance(int engagementId, double totalFare, double fare, String currency){
         StarSubscriptionCheckoutFragment fragment = new StarSubscriptionCheckoutFragment();
         Bundle bundle = new Bundle();
         bundle.putBoolean(FOR_STAR_SUBSCRIPTION, false);
         bundle.putInt(Constants.KEY_ENGAGEMENT_ID, engagementId);
         bundle.putDouble(Constants.KEY_TOTAL_FARE, totalFare);
         bundle.putDouble(Constants.KEY_FARE_TO_PAY, fare);
+        bundle.putString(Constants.KEY_CURRENCY, currency);
         fragment.setArguments(bundle);
         return  fragment;
     }
@@ -195,6 +197,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             engagementId = bundle.getInt(Constants.KEY_ENGAGEMENT_ID);
             totalFare = bundle.getDouble(Constants.KEY_TOTAL_FARE);
             fareToPay = bundle.getDouble(Constants.KEY_FARE_TO_PAY);
+            currency = bundle.getString(Constants.KEY_CURRENCY);
             if(bundle.containsKey(Constants.KEY_ORDER_ID)){
                 orderId=bundle.getInt(Constants.KEY_ORDER_ID);
             }
@@ -323,7 +326,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     subscription=subscriptionsActivityList.get(0);
                     purchaseType =subscriptionsActivityList.get(0).getStarPurchaseType().getOrdinal();
                     tvPaymentPlan.setText(subscription.getDescription());
-                    tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(getAmount())));
+                    tvPlanAmount.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(getAmount())));
 
                 } else{
 
@@ -339,7 +342,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             if(subscriptionsActivityList.get(i).getAmountText()!=null)
                                 tvAmount1.setText(subscriptionsActivityList.get(i).getAmountText());
                             else if(getAmount()!=null){
-                                tvAmount1.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscriptionsActivityList.get(i).getAmount())));
+                                tvAmount1.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(subscriptionsActivityList.get(i).getAmount())));
 
                             }
 
@@ -353,7 +356,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                             if(subscriptionsActivityList.get(i).getAmountText()!=null)
                                 tvAmount2.setText(subscriptionsActivityList.get(i).getAmountText());
                             else if(getAmount()!=null){
-                                tvAmount2.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(subscriptionsActivityList.get(i).getAmount())));
+                                tvAmount2.setText(String.format(activity.getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(subscriptionsActivityList.get(i).getAmount())));
 
                             }
                             tvPeriod2.setText(String.valueOf(subscriptionsActivityList.get(i).getDescription()));
@@ -373,15 +376,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                 }
             } else if(activity instanceof HomeActivity){
                 cvStarPlans.setVisibility(View.GONE);
-                String fareRs = activity.getString(R.string.rupees_value_format,
-                        Utils.getDoubleTwoDigits((double) Math.round(fareToPay)));
+                String fareRs = Utils.formatCurrencyValue(currency, fareToPay);
                 netPayableAmount = fareToPay;
                 paySlider.tvSlide.setText(getString(R.string.pay_format, fareRs));
                 paySlider.sliderText.setText(R.string.swipe_right_to_pay);
                 llRideInfo.setVisibility(View.VISIBLE);
                 tvCashPaidValue.setText(fareRs);
-                tvTotalFareValue.setText(activity.getString(R.string.rupees_value_format,
-                        Utils.getDoubleTwoDigits((double) Math.round(totalFare))));
+                tvTotalFareValue.setText(Utils.formatCurrencyValue(currency, totalFare));
                 textViewPaymentVia.setText(R.string.choose_payment_method);
             }
             else if(activity instanceof FatafatChatPayActivity){
@@ -906,13 +907,13 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     MyApplication.getInstance().getWalletCore().getPaymentOptionAccAvailability(getPaymentOption().getOrdinal())));
 
             textViewPaytmValue.setText(String.format(activity.getResources()
-                    .getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
+                    .getString(R.string.rupees_value_format), Data.userData.getPaytmBalanceStr()));
             textViewPaytmValue.setTextColor(Data.userData.getPaytmBalanceColor(activity));
             textViewMobikwikValue.setText(String.format(activity.getResources()
-                    .getString(R.string.rupees_value_format_without_space), Data.userData.getMobikwikBalanceStr()));
+                    .getString(R.string.rupees_value_format), Data.userData.getMobikwikBalanceStr()));
             textViewMobikwikValue.setTextColor(Data.userData.getMobikwikBalanceColor(activity));
             textViewFreeChargeValue.setText(String.format(activity.getResources()
-                    .getString(R.string.rupees_value_format_without_space), Data.userData.getFreeChargeBalanceStr()));
+                    .getString(R.string.rupees_value_format), Data.userData.getFreeChargeBalanceStr()));
             textViewFreeChargeValue.setTextColor(Data.userData.getFreeChargeBalanceColor(activity));
 
             if(Data.userData.getPaytmEnabled() == 1){

@@ -397,8 +397,7 @@ public class JugnooStarSubscribedActivity extends RazorpayBaseActivity implement
                             if (savingsResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 llSavingsValue.removeAllViews();
                                 subscriptionSavingsResponse = savingsResponse;
-                                String currency = savingsResponse.getCurrency() != null ? savingsResponse.getCurrency() : getString(R.string.rupee);
-                                setTotalSavingsValueText(llSavingsValue, savingsResponse.getTotalSavings(), currency);
+                                setTotalSavingsValueText(llSavingsValue, savingsResponse.getTotalSavings(), savingsResponse.getCurrency());
                                 setUpgradeView(savingsResponse);
                                 if(savingsResponse.getRenewalData() != null) {
                                     setRenewView(savingsResponse);

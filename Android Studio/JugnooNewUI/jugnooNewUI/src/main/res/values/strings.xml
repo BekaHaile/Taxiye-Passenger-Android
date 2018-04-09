@@ -159,9 +159,7 @@
     <string name="star_required">* Required</string>
     <string name="leave_a_comment">Leave a comment</string>
     <string name="what_could_we_improve">What could we improve?</string>
-    <string name="rupees_value_format">\u20B9%s</string>
-    <string name="rupees_value_format_without_space">\u20B9%s</string>
-    <string name="rupees_minus_value_format_without_space">-\u20B9%s</string>
+    <string name="rupees_value_format">&currency;%s</string>
     <string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
     <string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
     <string name="review_must_be_in">Review must be in 300 letters.</string>
@@ -246,8 +244,8 @@
 
     <!-- User Debt-->
     <string name="user_debt_pay_via_wallet">Pay via Wallet</string>
-    <string name="user_debt_settle_balance_message">Please settle your outstanding balance of \u20B9%s before a new transaction</string>
-    <string name="user_debt_settle_balance_message_fresh">Please settle your outstanding balance of \u20B9%s before a new transaction</string>
+    <string name="user_debt_settle_balance_message">Please settle your outstanding balance of &currency;%s before a new transaction</string>
+    <string name="user_debt_settle_balance_message_fresh">Please settle your outstanding balance of &currency;%s before a new transaction</string>
 
 
     <!-- NL Signup Multiple Accounts-->
@@ -272,8 +270,8 @@
     <string name="connection_lost_title">CONNECTION LOST</string>
     <string name="connection_lost_desc">Oops! Your Internet is not working.\nPlease try again.</string>
     <string name="connection_lost_try_again">TRY AGAIN</string>
-    <string name="delivery_charges_with_value">Delivery Charges \u20B9%s</string>
-    <string name="minimum_order_with_value">Minimum order \u20B9%s for free delivery</string>
+    <string name="delivery_charges_with_value">Delivery Charges &currency;%s</string>
+    <string name="minimum_order_with_value">Minimum order &currency;%s for free delivery</string>
 
     <string-array name="CountryCodes">
         <item>+93,AF</item>
@@ -694,7 +692,7 @@
     <string name="enter_destination">Enter Destination</string>
     <string name="destination_required">Destination required</string>
     <string name="add_paytm_money_help_text">Pay for &appname; with a Mobile Wallet</string>
-    <string name="convenience_charge_rupees_format">Convenience Charge: \u20B9%s</string>
+    <string name="convenience_charge_colon">Convenience Charge:</string>
     <string name="base_fare">Base Fare</string>
     <string name="want_to_refer_a_driver">Want to refer a Driver?</string>
     <string name="promotions">Promotions</string>
@@ -895,7 +893,7 @@
     <string name="search_3dot">Search...</string>
     <string name="more_info">More info</string>
     <string name="previous_vendor_cart_message_format">You have added some items in cart from %s.\nAre you sure you want to clear the cart?</string>
-    <string name="minimum_order_amount_is_format">Minimum order amount is \u20B9%s</string>
+    <string name="minimum_order_amount_is_format">Minimum order amount is &currency;%s</string>
     <string name="request_a_ride">Request a ride</string>
     <string name="move_to_your_location">Move to your location</string>
     <string name="no_menus_available">No menus available</string>
@@ -930,31 +928,8 @@
     signup
     <string name="mobile_string">Mobile Number</string>
 
-    <string name="rupees_symbol">\u20B9</string>
 
 
-    //
-    Home
-    page
-    strings
-
-    // otp
-    strings
-
-    //forgot
-    password
-    screen
-
-
-    // app
-    policies
-    url
-
-
-    //
-    select
-    contact
-    strings
     <string name="mobile_contact">Type a name or mobile number</string>
     <string name="amount_string">Enter amount</string>
     <string name="message_string">Add a message (optional)</string>
@@ -1049,21 +1024,20 @@
     <string name="free_delivery">Free Delivery</string>
 
     <string name="delivers_in">Delivers in</string>
-    <string name="minimum_order_rupee_format">Min Order \u20B9%s</string>
-    <string name="minimum_order_rupee_short_format"> \u2022 Min  \u20B9%s</string>
-    <string name="rupee_format">\u20B9%s</string>
+    <string name="minimum_order_rupee_format">Min Order &currency;%s</string>
+    <string name="minimum_order_rupee_short_format"> \u2022 Min  &currency;%s</string>
     <string name="jugnoo_star">&appname; star</string>
     <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for JUGNOO STARS.</string>
     <string name="no">No</string>
     <string name="did_you_know">Did you know?</string>
     <string name="star_description">You can now avail unlimited FREE delivery, special discounts and much more!</string>
     <string name="click_to_find">Click to find out how…</string>
-    <string name="away_from_free_delivery_value_format">Just \u20B9%s away from FREE delivery</string>
+    <string name="away_from_free_delivery_value_format">Just &currency;%s away from FREE delivery</string>
     <string name="membership_plan">Current plan</string>
     <string name="expires_on">Expires on</string>
     <string name="savings_meter">Savings Meter</string>
     <string name="star_savings">Star Savings</string>
-    <string name="you_will_receive_cashback_on_order">You’ll receive \u20B9%s cashback on this order</string>
+    <string name="you_will_receive_cashback_on_order">You’ll receive &currency;%s cashback on this order</string>
     <string name="star_savings_no_priority_tip">Star Savings: No Priority Tip on this ride</string>
     <string name="become_a_jugnoo_star">Become a jugnoo star</string>
     <string name="add_to_avail_unlimited_free_deliveries">Add to avail unlimited free deliveries</string>
@@ -1287,7 +1261,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="no_reviews_yet">No reviews yet!</string>
     <string name="be_the_first_one_to_add">Be the first one to add…</string>
-    <string name="label_checkout_request">Please accept a collect request of <b>\u20B9%s</b> from %s in your UPI app.</string>
+    <string name="label_checkout_request">Please accept a collect request of <b>&currency;%s</b> from %s in your UPI app.</string>
     <string name="label_cancel_payment">Please give us a reason before we cancel the payment.</string>
     <string name="label_below_icici_payment_edt">You will receive a collect request from %s in the UPI app you used to create your VPA.</string>
     <string name="error_enter_virtual_payment_address">Please enter a virtual payment address.</string>
@@ -1345,7 +1319,7 @@
     <string name="reorder_no_items_available">Sorry, none of the items in your cart are available at the restaurant. To order from the same restaurant, Press \'Edit Order\'. If you\'d like to order from another restaurant, Press \'Change\'.</string>
     <string name="edit_order">Edit Order</string>
     <string name="change_order">Change</string>
-    <string name="min_order_checkout">Please add more items to your cart to reach minimum order amount of \u20B9%s.</string>
+    <string name="min_order_checkout">Please add more items to your cart to reach minimum order amount of &currency;%s.</string>
     <string name="label_cancel_edit_order">Click on cancel to edit your order</string>
     <string name="fugu_support_title">CHAT</string>
     <string name="error_no_rating">Please select a rating</string>
