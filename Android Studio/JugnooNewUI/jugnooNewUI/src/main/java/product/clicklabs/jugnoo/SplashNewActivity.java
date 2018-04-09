@@ -2339,7 +2339,18 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 						codesToFilter.add("BD");
 						codesToFilter.add("IN");
 						countryPicker.filterCountries(codesToFilter);
-						tvCountryCode.setText(Utils.getCountryCodeFromCountryIso(SplashNewActivity.this, codesToFilter.get(0)));
+						if(codesToFilter.size() > 0) {
+							tvCountryCode.setText(Utils.getCountryCodeFromCountryIso(SplashNewActivity.this, codesToFilter.get(0)));
+						} else {
+							tvCountryCode.setText("");
+						}
+						if(codesToFilter.size() > 1){
+							rlCountryCode.setEnabled(true);
+							tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_vector, 0);
+						} else {
+							rlCountryCode.setEnabled(false);
+							tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+						}
 
 					}catch (Exception e){
 						e.printStackTrace();
