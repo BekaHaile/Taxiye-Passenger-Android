@@ -8368,16 +8368,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
 
                 @Override
-                public void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge) {
+                public void onFareEstimateSuccess(String currency, String minFare, String maxFare, double convenienceCharge) {
                     try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
                     textViewTotalFare.setText(getString(R.string.total_fare_colon));
-                    textViewTotalFareValue.setText(getString(R.string.rupee) + "" + minFare + " - " +
-                            getString(R.string.rupee) + "" + maxFare);
+                    textViewTotalFareValue.setText(Utils.formatCurrencyValue(currency, minFare) + " - " +
+                            Utils.formatCurrencyValue(currency, maxFare));
                     if (convenienceCharge > 0) {
                         textViewIncludes.setVisibility(View.VISIBLE);
                         textViewIncludes.setText("Convenience Charges "
-                                + getResources().getString(R.string.rupee)
-                                + " " + Utils.getMoneyDecimalFormat().format(convenienceCharge));
+                                + Utils.formatCurrencyValue(currency, convenienceCharge));
                     } else {
                         textViewIncludes.setVisibility(View.GONE);
                         textViewIncludes.setText("");
@@ -8385,7 +8384,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
 
                 @Override
-                public void onPoolSuccess(double fare, double rideDistance, String rideDistanceUnit,
+                public void onPoolSuccess(String currency, double fare, double rideDistance, String rideDistanceUnit,
                                           double rideTime, String rideTimeUnit, final int poolFareId,
                                           double convenienceCharge, String text) {
                     Log.v("Pool Fare value is ", "--> " + fare);

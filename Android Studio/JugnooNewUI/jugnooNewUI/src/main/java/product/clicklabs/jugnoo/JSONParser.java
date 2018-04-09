@@ -660,24 +660,17 @@ public class JSONParser implements Constants {
     }
 
     public ReferralMessages parseReferralMessages(LoginResponse.UserData userData) {
-        String referralMessage = "Share your referral code " + Data.userData.referralCode +
-                " with your friends and they will get a FREE ride because of your referral and once they have used Jugnoo, you will earn a FREE ride (up to Rs. 100) as well.";
         String referralSharingMessage = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
-                " Use this referral code: " + Data.userData.referralCode + " to get FREE ride up to Rs. 100." +
+                " Use this referral code: " + Data.userData.referralCode + " to get FREE ride" +
                 "\nDownload it from here: http://smarturl.it/jugnoo";
         String fbShareCaption = "Use " + Data.userData.referralCode + " as code & get a FREE ride";
         String fbShareDescription = "Try Jugnoo app to call an auto at your doorsteps with just a tap.";
         String referralCaption = "<center><font face=\"verdana\" size=\"2\">Invite <b>friends</b> and<br/>get <b>FREE rides</b></font></center>";
-        int referralCaptionEnabled = 0;
         String referralEmailSubject = "Hey! Have you used Jugnoo Autos yet?";
-		String referralPopupText = "Up to Rs. 100 in Jugnoo Cash";
         String referralShortMessage = "", referralMoreInfoMessage = "";
         String title = Constants.FB_LINK_SHARE_NAME;
 
         try {
-            if (userData.getReferralMessage() != null) {
-                referralMessage = userData.getReferralMessage();
-            }
             if (userData.getReferralSharingMessage() != null) {
                 referralSharingMessage = userData.getReferralSharingMessage();
             }
@@ -694,9 +687,6 @@ public class JSONParser implements Constants {
             if(userData.getReferralEmailSubject() != null){
                 referralEmailSubject = userData.getReferralEmailSubject();
             }
-			if (userData.getReferralPopupText() != null) {
-				referralPopupText = userData.getReferralPopupText();
-			}
             if(userData.getInviteEarnShortMsg() != null){
                 referralShortMessage = userData.getInviteEarnShortMsg();
             }
@@ -710,8 +700,8 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
 
-        ReferralMessages referralMessages = new ReferralMessages(referralMessage, referralSharingMessage, fbShareCaption, fbShareDescription, referralCaption, referralCaptionEnabled,
-            referralEmailSubject, referralPopupText, referralShortMessage, referralMoreInfoMessage, title);
+        ReferralMessages referralMessages = new ReferralMessages(referralSharingMessage, fbShareCaption, fbShareDescription,
+            referralEmailSubject, referralShortMessage, referralMoreInfoMessage, title);
 
         return referralMessages;
     }
@@ -1271,7 +1261,7 @@ public class JSONParser implements Constants {
             options.add(new CancelOption("Booked another auto"));
 
             Data.autoData.setCancelOptionsList(new CancelOptionsList(options, "Cancellation of a ride more than 5 minutes after the driver is allocated " +
-                    "will lead to cancellation charges of Rs. 20", ""));
+                    "will lead to cancellation charges of \u20B9 20", ""));
 
             LoginResponse.Cancellation jCancellation = autos.getCancellation();
             String message = jCancellation.getMessage();

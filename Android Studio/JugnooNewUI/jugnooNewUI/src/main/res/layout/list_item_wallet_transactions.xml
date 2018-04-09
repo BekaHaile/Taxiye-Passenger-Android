@@ -52,7 +52,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="43px"
-                    android:text="Rs. 100"
+                    android:text="100"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_38" />
             </RelativeLayout>

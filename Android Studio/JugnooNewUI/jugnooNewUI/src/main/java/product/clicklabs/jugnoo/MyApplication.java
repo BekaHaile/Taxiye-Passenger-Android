@@ -429,6 +429,9 @@ public class MyApplication extends Application {
 	}
 
 
+	public Locale getCurrentLocale(){
+		return getResources().getConfiguration().locale;
+	}
 
 
 }
