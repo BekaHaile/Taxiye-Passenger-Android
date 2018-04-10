@@ -1156,13 +1156,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
 
             textViewPaytmValue.setText(String.format(activity.getResources()
-                    .getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
+                    .getString(R.string.rupees_value_format), Data.userData.getPaytmBalanceStr()));
             textViewPaytmValue.setTextColor(Data.userData.getPaytmBalanceColor(activity));
             textViewMobikwikValue.setText(String.format(activity.getResources()
-                    .getString(R.string.rupees_value_format_without_space), Data.userData.getMobikwikBalanceStr()));
+                    .getString(R.string.rupees_value_format), Data.userData.getMobikwikBalanceStr()));
             textViewMobikwikValue.setTextColor(Data.userData.getMobikwikBalanceColor(activity));
             textViewFreeChargeValue.setText(String.format(activity.getResources()
-                    .getString(R.string.rupees_value_format_without_space), Data.userData.getFreeChargeBalanceStr()));
+                    .getString(R.string.rupees_value_format), Data.userData.getFreeChargeBalanceStr()));
             textViewFreeChargeValue.setTextColor(Data.userData.getFreeChargeBalanceColor(activity));
 
             if (Data.userData.getPaytmEnabled() == 1) {

@@ -19,7 +19,6 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
@@ -89,10 +88,8 @@ public class SlidingBottomFareFragment extends Fragment implements GAAction, GAC
 
     public void update(){
         try {
-            textViewKMValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                    Utils.getMoneyDecimalFormat().format(Data.autoData.getFareStructure().farePerKm)));
-            textViewMinValue.setText(String.format(activity.getResources().getString(R.string.rupees_value_format_without_space),
-                    Utils.getMoneyDecimalFormat().format(Data.autoData.getFareStructure().farePerMin)));
+            textViewKMValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerKm));
+            textViewMinValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerMin));
 
 
             textViewThreshold.setVisibility(View.GONE);

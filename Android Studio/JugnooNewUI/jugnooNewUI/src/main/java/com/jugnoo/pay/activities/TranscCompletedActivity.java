@@ -234,7 +234,7 @@ public class TranscCompletedActivity extends BaseActivity {
     private void setData() {
         try {
             tvTransTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.getCurrentTime()));
-            textViewDebitValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), requestObj.getAmount()));
+            textViewDebitValue.setText(String.format(getResources().getString(R.string.rupees_value_format), requestObj.getAmount()));
             toolbarTitleTxt.setText(getResources().getString(R.string.transaction_id_number_format, orderId));
             if((requestObj != null) && !requestObj.getMessage().equalsIgnoreCase("")) {
 				msgTxt.setText(requestObj.getMessage());

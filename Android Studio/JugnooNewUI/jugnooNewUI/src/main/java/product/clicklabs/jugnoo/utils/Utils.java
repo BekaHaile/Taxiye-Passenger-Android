@@ -68,8 +68,10 @@ import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -344,6 +346,7 @@ public class Utils implements GAAction, GACategory{
         phoneNo = phoneNo.replace("-", "");
         phoneNo = phoneNo.replace(".", "");
         phoneNo = phoneNo.replace(countryCode, "");
+		phoneNo = phoneNo.replace("+", "");
         return phoneNo;
     }
 
@@ -1086,6 +1089,22 @@ public class Utils implements GAAction, GACategory{
 	public static boolean isRTL(Context context){
 		Configuration config = context.getResources().getConfiguration();
 		return (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
+	}
+
+	public static String formatCurrencyValue(String currency, double value){
+		if(TextUtils.isEmpty(currency)){
+			currency = "INR";
+		}
+		NumberFormat format = NumberFormat.getCurrencyInstance(MyApplication.getInstance().getCurrentLocale());
+		format.setCurrency(Currency.getInstance(currency));
+		return format.format(value);
+	}
+	public static String formatCurrencyValue(String currency, String value){
+		try {
+			return formatCurrencyValue(currency, Double.parseDouble(value));
+		} catch (NumberFormatException e) {
+			return value;
+		}
 	}
 }
 

@@ -2335,16 +2335,11 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
 
 						// TODO: 08/04/18 from server
-						ArrayList<String> codesToFilter = new ArrayList<>();
-						codesToFilter.add("BD");
-						codesToFilter.add("IN");
-						countryPicker.filterCountries(codesToFilter);
-						if(codesToFilter.size() > 0) {
-							tvCountryCode.setText(Utils.getCountryCodeFromCountryIso(SplashNewActivity.this, codesToFilter.get(0)));
-						} else {
-							tvCountryCode.setText("");
-						}
-						if(codesToFilter.size() > 1){
+//						ArrayList<String> codesToFilter = new ArrayList<>();
+//						codesToFilter.add("BD");
+//						codesToFilter.add("IN");
+//						countryPicker.filterCountries(codesToFilter);
+						if(countryPicker.getAllCountries().size() > 1){
 							rlCountryCode.setEnabled(true);
 							tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_vector, 0);
 						} else {
@@ -4407,7 +4402,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 			phoneNoToFillInInHouseLogin = previousLoginPhone;
 			if(phoneNoToFillInInHouseLogin==null || phoneNoToFillInInHouseLogin.trim().length()==0){
  				phoneNoToFillInInHouseLogin = 	OwnerInfo.OwnerPhone(this);
- 				if(!phoneNoToFillInInHouseLogin.startsWith("+")){
+ 				if(phoneNoToFillInInHouseLogin != null && !phoneNoToFillInInHouseLogin.startsWith("+")){
 					phoneNoToFillInInHouseLogin = "+"+phoneNoToFillInInHouseLogin;
 				}
 			}

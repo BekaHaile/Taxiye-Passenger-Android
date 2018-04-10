@@ -82,7 +82,7 @@ public class BecomeStarAdapter extends BaseAdapter {
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		final MainViewHolder mHolder = ((MainViewHolder) holder);
 		try {
-				mHolder.tvPickupName.setText(String.format(context.getResources().getString(R.string.rupees_value_format_without_space),
+				mHolder.tvPickupName.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
 						String.valueOf(subItems.get(position).getAmount()))+"/"+subItems.get(position).getPlanString());
 
 		} catch (Exception e) {

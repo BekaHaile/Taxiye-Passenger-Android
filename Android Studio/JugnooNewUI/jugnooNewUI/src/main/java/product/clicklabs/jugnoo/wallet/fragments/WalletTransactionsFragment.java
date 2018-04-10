@@ -280,7 +280,8 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 													DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(jTransactionI.optString("date"))),
 													"", "", jTransactionI.optDouble("amount"),
 													paytm, mobikwik, freecharge, pay, jTransactionI.optInt("status", 0),
-													jTransactionI.optString("name", "")));
+													jTransactionI.optString("name", ""),
+													jTransactionI.optString(Constants.KEY_CURRENCY)));
 										} else {
 											transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
 													jTransactionI.getInt("txn_type"),
@@ -288,7 +289,8 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 													jTransactionI.getString("txn_date"),
 													jTransactionI.getString("txn_text"),
 													jTransactionI.getDouble("amount"),
-													paytm, mobikwik, freecharge, pay, 0, ""));
+													paytm, mobikwik, freecharge, pay, 0, "",
+													jTransactionI.optString(Constants.KEY_CURRENCY)));
 										}
 									}
 

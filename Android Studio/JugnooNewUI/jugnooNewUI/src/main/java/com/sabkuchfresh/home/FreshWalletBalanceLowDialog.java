@@ -60,9 +60,9 @@ public class FreshWalletBalanceLowDialog {
 			try {
 				if(Double.parseDouble(amount)<0) {
 					amount = amount.replaceAll("-", "");
-					textViewLessAmountValue.setText(activity.getResources().getString(R.string.rupees_minus_value_format_without_space, amount));
+					textViewLessAmountValue.setText("-"+activity.getResources().getString(R.string.rupees_value_format, amount));
 				} else {
-					textViewLessAmountValue.setText(activity.getResources().getString(R.string.rupees_value_format_without_space, amount));
+					textViewLessAmountValue.setText(activity.getResources().getString(R.string.rupees_value_format, amount));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

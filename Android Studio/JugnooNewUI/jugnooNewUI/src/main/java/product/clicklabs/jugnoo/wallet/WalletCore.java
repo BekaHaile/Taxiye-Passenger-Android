@@ -377,13 +377,13 @@ public class WalletCore {
 	public String getPaymentOptionBalanceText(int paymentOption){
 		try {
 			if(paymentOption == PaymentOption.PAYTM.getOrdinal()){
-				return String.format(context.getResources().getString(R.string.rupees_value_format_without_space),
+				return String.format(context.getResources().getString(R.string.rupees_value_format),
 						Data.userData.getPaytmBalanceStr());
 			} else if(paymentOption == PaymentOption.MOBIKWIK.getOrdinal()){
-				return String.format(context.getResources().getString(R.string.rupees_value_format_without_space),
+				return String.format(context.getResources().getString(R.string.rupees_value_format),
 						Data.userData.getMobikwikBalanceStr());
 			} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()){
-                return String.format(context.getResources().getString(R.string.rupees_value_format_without_space),
+                return String.format(context.getResources().getString(R.string.rupees_value_format),
                         Data.userData.getFreeChargeBalanceStr());
             } else if(paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()){
 				return getRazorpayName(context);
