@@ -241,7 +241,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4px"
                             android:gravity="center"
-                            android:text="@string/rupees_value_format_without_space"
+                            android:text="@string/rupees_value_format"
                             android:textAllCaps="true"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_26"/>

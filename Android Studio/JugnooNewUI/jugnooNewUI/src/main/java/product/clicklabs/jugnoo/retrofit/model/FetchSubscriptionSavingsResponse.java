@@ -30,6 +30,9 @@ public class FetchSubscriptionSavingsResponse {
 	@SerializedName("expired_data")
 	@Expose
 	private ExpiredData expiredData;
+	@SerializedName("currency")
+	@Expose
+	private String currency;
 
 	public Integer getFlag() {
 		return flag;
@@ -77,6 +80,14 @@ public class FetchSubscriptionSavingsResponse {
 
 	public void setExpiredData(ExpiredData expiredData) {
 		this.expiredData = expiredData;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 
 	public class UpgradeDatum {

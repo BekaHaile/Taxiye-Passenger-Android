@@ -2202,7 +2202,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         } else if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                             textViewMinOrderVis = View.VISIBLE;
                             textViewMinOrder.setText(getString(R.string.minimum_order) + " "
-                                    + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
+                                    + getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
                         } else if (totalQuantity > 0 && getVendorOpened().getShowFreeDeliveryText() == 1
                                 && totalPrice < getVendorOpened().getDeliveryAmountThreshold()) {
                             textViewMinOrderVis = View.VISIBLE;

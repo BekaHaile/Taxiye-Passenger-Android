@@ -73,17 +73,16 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 	//private int userVerified = 0;
 	private String linkedWalletErrorMsg = "";
 
-	public static boolean intentFromRegister = true, backFromMissedCall;
+	public static boolean intentFromRegister = true;
 	public static EmailRegisterData emailRegisterData;
 	public static FacebookRegisterData facebookRegisterData;
 	public static GoogleRegisterData googleRegisterData;
 	private boolean giveAMissedCall;
-	private String signupBy = "", email = "", password = "";
+	private String signupBy = "", email = "", password = "", countryCode = "";
 
 	private RelativeLayout rlOTPContainer;
 	private boolean runAfterDelay;
 	private boolean onlyDigits;
-	public static boolean phoneNoLogin = false;
 	int duration = 500, otpLength = 4;
 	private ProgressDialog missedCallDialog;
 
@@ -123,7 +122,9 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
                 if(email.length() > 0){
                     onlyDigits = Utils.checkIfOnlyDigits(email);
                 }
-
+				if(getIntent().hasExtra(Constants.KEY_COUNTRY_CODE)){
+					countryCode = getIntent().getStringExtra(Constants.KEY_COUNTRY_CODE);
+				}
             }
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -285,7 +286,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		tvCallMe.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				initiateOTPCallAsync(OTPConfirmScreen.this, textViewOtpNumber.getText().toString());
+				initiateOTPCallAsync(OTPConfirmScreen.this, textViewOtpNumber.getText().toString(), countryCode);
 				startTimerForRetry();
 			}
 		});
@@ -404,56 +405,8 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		MyApplication.getInstance().getLocationFetcher().connect(locationUpdate, 1000);
 		HomeActivity.checkForAccessTokenChange(this);
 
-		try {
-			if(giveAMissedCall) {
-				giveAMissedCall = false;
-				//buttonVerify.performClick();
-				missedCallDialog = DialogPopup.showLoadingDialogNewInstance(OTPConfirmScreen.this, getString(R.string.loading));
-				//rlProgress.setVisibility(View.VISIBLE);
-				if (signupBy.equalsIgnoreCase("email")) {
-					if (onlyDigits) {
-						email = "+91" + email;
-						//sendLoginValues(OTPConfirmScreen.this, email, password, true, false);
-						apiLoginUsingOtp(OTPConfirmScreen.this, "99999", email);
-					} else {
-						sendLoginValues(OTPConfirmScreen.this, email, password, false, false);
-					}
-				} else if (signupBy.equalsIgnoreCase("facebook")) {
-					sendFacebookLoginValues(OTPConfirmScreen.this);
-				} else if (signupBy.equalsIgnoreCase("google")) {
-					sendGoogleLoginValues(OTPConfirmScreen.this);
-				}
-				// api call
-				//handler.postDelayed(runnable, 5000);
-			}
-			if(backFromMissedCall){
-				backFromMissedCall = false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
-
-	Runnable runnable = new Runnable() {
-		@Override
-		public void run() {
-			runAfterDelay = true;
-			if(signupBy.equalsIgnoreCase("email")){
-				if(onlyDigits){
-					email = "+91"+email;
-					//sendLoginValues(OTPConfirmScreen.this, email, password, true, false);
-					apiLoginUsingOtp(OTPConfirmScreen.this, "99999", email);
-				} else{
-					sendLoginValues(OTPConfirmScreen.this, email, password, false, false);
-				}
-			} else if(signupBy.equalsIgnoreCase("facebook")){
-				sendFacebookLoginValues(OTPConfirmScreen.this);
-			} else if(signupBy.equalsIgnoreCase("google")){
-				sendGoogleLoginValues(OTPConfirmScreen.this);
-			}
-		}
-	};
 
 
     public static boolean checkIfRegisterDataNull(Activity activity){
@@ -492,9 +445,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				missedCallDialog.dismiss();
 			}
 			DialogPopup.alertPopup(OTPConfirmScreen.this, "", getResources().getString(R.string.we_could_not_verify));
-			//rlProgress.setVisibility(View.VISIBLE);
-			//progressBar.setVisibility(View.GONE);
-			//tvProgress.setText(getResources().getString(R.string.we_could_not_verify));
 		}
 	}
 
@@ -507,7 +457,8 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
 				Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
-				params.put("phone_no", "+91"+Utils.retrievePhoneNumberTenChars(phoneNumber));
+				params.put("phone_no", phoneNumber);
+				params.put(KEY_COUNTRY_CODE, countryCode);
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
 				params.put("device_name", MyApplication.getInstance().deviceName());
 				params.put("os_version", MyApplication.getInstance().osVersion());
@@ -609,7 +560,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
 			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
-			params.put("phone_no", "+91"+phoneNumber);
+			params.put("phone_no", phoneNumber);
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
 			params.put("device_name", MyApplication.getInstance().deviceName());
 			params.put("os_version", MyApplication.getInstance().osVersion());
@@ -700,7 +651,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
                 params.put("fb_access_token", facebookRegisterData.fbAccessToken);
                 params.put("fb_mail", facebookRegisterData.fbUserEmail);
                 params.put("username", facebookRegisterData.fbUserName);
-				params.put("phone_no", "+91"+Utils.retrievePhoneNumberTenChars(facebookRegisterData.phoneNo));
+				params.put("phone_no", facebookRegisterData.phoneNo);
 
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
                 params.put("device_name", MyApplication.getInstance().deviceName());
@@ -803,7 +754,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 				params.put("user_google_id", googleRegisterData.id);
 				params.put("email", googleRegisterData.email);
 				params.put("google_access_token", googleRegisterData.googleAccessToken);
-				params.put("phone_no", "+91"+Utils.retrievePhoneNumberTenChars(googleRegisterData.phoneNo));
+				params.put("phone_no", googleRegisterData.phoneNo);
 
 				params.put("device_token", MyApplication.getInstance().getDeviceToken());
 				params.put("device_name", MyApplication.getInstance().deviceName());
@@ -896,7 +847,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 	/**
 	 * ASync for initiating OTP Call from server
 	 */
-	public void initiateOTPCallAsync(final Activity activity, String phoneNo) {
+	public void initiateOTPCallAsync(final Activity activity, String phoneNo, String countryCode) {
 		if (MyApplication.getInstance().isOnline()) {
 
 			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
@@ -904,7 +855,7 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			HashMap<String, String> params = new HashMap<>();
 
 			params.put(KEY_PHONE_NO, phoneNo);
-			Log.i("phone_no", ">" + phoneNo);
+			params.put(KEY_COUNTRY_CODE, countryCode);
 
 			new HomeUtil().putDefaultParams(params);
 			RestClient.getApiService().sendOtpViaCall(params, new Callback<SettleUserDebt>() {
@@ -966,11 +917,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 			MyApplication.getInstance().getAppSwitcher().switchApp(OTPConfirmScreen.this,
 					Prefs.with(OTPConfirmScreen.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
 					Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude), SplashNewActivity.openHomeSwitcher);
-//			Intent intent = new Intent(OTPConfirmScreen.this, HomeActivity.class);
-//			intent.setData(Data.splashIntentUri);
-//			startActivity(intent);
-//			overridePendingTransition(R.anim.right_in, R.anim.right_out);
-//			ActivityCompat.finishAffinity(this);
 		} else if(hasFocus && backToSplashOboarding){
 			overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			finish();
@@ -984,30 +930,12 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 
 
 	public void performBackPressed(){
-//			if (intentFromRegister) {
-//				Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
-//				intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.SIGNUP.getOrdinal());
-//				intent.putExtra(KEY_BACK_FROM_OTP, true);
-//				startActivity(intent);
-//			} else {
-//				Intent intent = new Intent(OTPConfirmScreen.this, SplashNewActivity.class);
-//				intent.putExtra(KEY_SPLASH_STATE, SplashNewActivity.State.LOGIN.getOrdinal());
-//				intent.putExtra(KEY_BACK_FROM_OTP, true);
-//				startActivity(intent);
-//			}
 			finish();
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
 	}
 
 	@Override
 	protected void onDestroy() {
-		try{
-			if(handler != null){
-				handler.removeCallbacks(runnable);
-			}
-		} catch(Exception e){
-			e.printStackTrace();
-		}
 		super.onDestroy();
         ASSL.closeActivity(relative);
         System.gc();
@@ -1562,39 +1490,6 @@ public class OTPConfirmScreen extends BaseActivity implements  Constants{
 		}
 	}
 
-
-	private void giveAMissCall(){
-		try {
-			Utils.disableSMSReceiver(OTPConfirmScreen.this);
-			if(missedCallDialog != null) {
-				missedCallDialog.dismiss();
-			}
-			if(!"".equalsIgnoreCase(Prefs.with(OTPConfirmScreen.this).getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
-				DialogPopup.alertPopupTwoButtonsWithListeners(OTPConfirmScreen.this, "",
-						getResources().getString(R.string.give_missed_call_dialog_text),
-						getResources().getString(R.string.call_us),
-						getResources().getString(R.string.cancel),
-						new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								giveAMissedCall = true;
-								Utils.openCallIntent(OTPConfirmScreen.this, Prefs.with(OTPConfirmScreen.this)
-										.getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-								backFromMissedCall = true;
-							}
-						},
-						new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-
-							}
-						}, false, false
-				);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	private Runnable runnableRetryBlock;
 	private int secondsLeftForRetry = 15;

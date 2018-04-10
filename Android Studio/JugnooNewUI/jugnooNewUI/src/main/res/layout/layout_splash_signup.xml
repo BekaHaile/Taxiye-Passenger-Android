@@ -170,7 +170,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="84px"
                         android:gravity="center_vertical"
-                        android:text="@string/nl_signup_plus91"
+                        android:text="+91"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_34" />
 

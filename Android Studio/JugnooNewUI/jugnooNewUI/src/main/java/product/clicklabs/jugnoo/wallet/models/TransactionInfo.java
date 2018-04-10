@@ -41,9 +41,12 @@ public class TransactionInfo {
 	@SerializedName("name")
 	@Expose
 	private String name;
+	@SerializedName("currency")
+	@Expose
+	private String currency;
 	
 	public TransactionInfo(int transactionId, int transactionType, String time, String date, String transactionText,
-						   double amount, int paytm, int mobikwik, int freecharge, int pay, int status, String name){
+						   double amount, int paytm, int mobikwik, int freecharge, int pay, int status, String name, String currency){
 		this.transactionId = transactionId;
 		this.transactionType = transactionType;
 		this.time = time;
@@ -56,6 +59,7 @@ public class TransactionInfo {
 		this.pay = pay;
 		this.status = status;
 		this.name = name;
+		this.currency = currency;
 	}
 	
 	@Override
@@ -98,5 +102,13 @@ public class TransactionInfo {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 }

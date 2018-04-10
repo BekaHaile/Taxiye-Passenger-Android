@@ -362,14 +362,14 @@ public class JugnooStarSubscribedActivity extends RazorpayBaseActivity implement
         return textView;
     }
 
-    private void setTotalSavingsValueText(LinearLayout llSavingsValue, int savingValue){
+    private void setTotalSavingsValueText(LinearLayout llSavingsValue, int savingValue, String currency){
         llSavingsValue.removeAllViews();
         char[] digits = String.valueOf(savingValue).toCharArray();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins((int)(ASSL.Xscale()*3f), 0, (int)(ASSL.Xscale()*3f), 0);
         params.setMarginStart((int)(ASSL.Xscale()*3f));
         params.setMarginEnd((int)(ASSL.Xscale()*3f));
-        llSavingsValue.addView(getDigitTextView(getString(R.string.rupee), false), params);
+        llSavingsValue.addView(getDigitTextView(currency, false), params);
         for(char digit : digits){
             llSavingsValue.addView(getDigitTextView(String.valueOf(digit), false), params);
         }
@@ -397,7 +397,7 @@ public class JugnooStarSubscribedActivity extends RazorpayBaseActivity implement
                             if (savingsResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 llSavingsValue.removeAllViews();
                                 subscriptionSavingsResponse = savingsResponse;
-                                setTotalSavingsValueText(llSavingsValue, savingsResponse.getTotalSavings());
+                                setTotalSavingsValueText(llSavingsValue, savingsResponse.getTotalSavings(), savingsResponse.getCurrency());
                                 setUpgradeView(savingsResponse);
                                 if(savingsResponse.getRenewalData() != null) {
                                     setRenewView(savingsResponse);

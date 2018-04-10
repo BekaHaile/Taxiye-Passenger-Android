@@ -289,14 +289,14 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		try{
 			orderPaymentModes();
 			if(Data.userData != null){
-				textViewJugnooCashBalanceValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())));
+				textViewJugnooCashBalanceValue.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())));
 				textViewJugnooCashBalanceValue.setTextColor(Data.userData.getJugnooBalanceColor(paymentActivity));
 
 				if(Data.userData.getPaytmEnabled() == 1){
 					textViewPaytmBalance.setText(getResources().getString(R.string.paytm_wallet));
 					textViewPaytmBalanceValue.setVisibility(View.VISIBLE);
 					textViewPaytmBalanceValue.setText(String.format(paymentActivity.getResources()
-							.getString(R.string.rupees_value_format_without_space), Data.userData.getPaytmBalanceStr()));
+							.getString(R.string.rupees_value_format), Data.userData.getPaytmBalanceStr()));
 					textViewPaytmBalanceValue.setTextColor(Data.userData.getPaytmBalanceColor(paymentActivity));
 				} else{
 					textViewPaytmBalance.setText(getResources().getString(R.string.nl_add_paytm_wallet));
@@ -307,7 +307,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 					textViewMobiKwik.setText(getResources().getString(R.string.mobikwik_wallet));
 					textViewMobiKwikBalanceValue.setVisibility(View.VISIBLE);
 					textViewMobiKwikBalanceValue.setText(String.format(paymentActivity.getResources()
-							.getString(R.string.rupees_value_format_without_space), Data.userData.getMobikwikBalanceStr()));
+							.getString(R.string.rupees_value_format), Data.userData.getMobikwikBalanceStr()));
 					textViewMobiKwikBalanceValue.setTextColor(Data.userData.getMobikwikBalanceColor(paymentActivity));
 				} else{
 					textViewMobiKwik.setText(getResources().getString(R.string.add_mobikwik_wallet));
@@ -318,7 +318,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
                     textViewFreeCharge.setText(getResources().getString(R.string.freecharge_wallet));
                     textViewFreeChargeBalanceValue.setVisibility(View.VISIBLE);
                     textViewFreeChargeBalanceValue.setText(String.format(paymentActivity.getResources()
-                            .getString(R.string.rupees_value_format_without_space), Data.userData.getFreeChargeBalanceStr()));
+                            .getString(R.string.rupees_value_format), Data.userData.getFreeChargeBalanceStr()));
                     textViewFreeChargeBalanceValue.setTextColor(Data.userData.getFreeChargeBalanceColor(paymentActivity));
                 } else{
                     textViewFreeCharge.setText(getResources().getString(R.string.add_freecharge_wallet));

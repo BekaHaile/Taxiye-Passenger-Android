@@ -82,11 +82,9 @@ public class RideOrderShortView {
 				textViewDriverCarNumber.setText(endRideData.driverCarNumber);
 				textViewTripTotal.setText(R.string.trip_total);
 				if("".equalsIgnoreCase(endRideData.getTripTotal())){
-					textViewTripTotalValue.setText(context.getString(R.string.rupees_value_format,
-							Utils.getMoneyDecimalFormat().format(endRideData.fare)));
+					textViewTripTotalValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.fare));
 				} else{
-					textViewTripTotalValue.setText(context.getString(R.string.rupees_value_format,
-							endRideData.getTripTotal()));
+					textViewTripTotalValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.getTripTotal()));
 				}
 				textViewDate.setText(context.getString(R.string.date_colon_format, endRideData.getEngagementDate()));
 				textViewStart.append(" " + endRideData.pickupTime);

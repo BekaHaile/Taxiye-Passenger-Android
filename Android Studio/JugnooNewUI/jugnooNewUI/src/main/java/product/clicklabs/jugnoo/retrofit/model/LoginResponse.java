@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.sabkuchfresh.datastructure.FatafatTutorialData;
 import com.sabkuchfresh.datastructure.PopupData;
+import com.sabkuchfresh.datastructure.SearchSuggestion;
 import com.sabkuchfresh.retrofit.model.PaymentGatewayModeConfig;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.Store;
@@ -19,7 +20,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
-import com.sabkuchfresh.datastructure.SearchSuggestion;
 import product.clicklabs.jugnoo.datastructure.SignupTutorial;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
@@ -837,6 +837,9 @@ public class LoginResponse {
 		@SerializedName("referral_popup_content")
 		@Expose
 		private PlaceOrderResponse.ReferralPopupContent referralPopupContent;
+		@SerializedName("currency")
+		@Expose
+		private String currency;
 
 		public List<Driver> getDrivers() {
 			return drivers;
@@ -999,6 +1002,14 @@ public class LoginResponse {
 
 		public void setReferralPopupContent(PlaceOrderResponse.ReferralPopupContent referralPopupContent) {
 			this.referralPopupContent = referralPopupContent;
+		}
+
+		public String getCurrency() {
+			return currency;
+		}
+
+		public void setCurrency(String currency) {
+			this.currency = currency;
 		}
 	}
 
