@@ -27,6 +27,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.country.picker.Country;
+import com.country.picker.CountryPicker;
+import com.country.picker.OnCountryPickerListener;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.PhoneNumber;
@@ -80,7 +83,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class AccountActivity extends BaseFragmentActivity implements GAAction, GACategory {
+public class AccountActivity extends BaseFragmentActivity implements GAAction, GACategory, OnCountryPickerListener {
 
     private final String TAG = "View Account";
 
@@ -96,6 +99,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
     ImageView imageViewProfileImage;
 	EditText editTextUserName, editTextEmail, editTextPhone;
+	TextView tvCountryCode;
     LinearLayout linearLayoutPhone;
     ImageView imageViewEditProfile, ivEditPhone, imageViewEditProfileSave;
 
@@ -133,6 +137,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     private RelativeLayout rlMain;
     private TextView tvAbout;
     private TextView textViewAddressBook;
+    private CountryPicker countryPicker;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -158,10 +163,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Fonts.mavenMedium(this));
 		editTextEmail = (EditText) findViewById(R.id.editTextEmail); editTextEmail.setTypeface(Fonts.mavenMedium(this));
 		editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.mavenMedium(this));
+        tvCountryCode = (TextView) findViewById(R.id.tvCountryCode); tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
         linearLayoutPhone = (LinearLayout) findViewById(R.id.linearLayoutPhone);
         imageViewEditProfile = (ImageView) findViewById(R.id.imageViewEditProfile);
         imageViewEditProfileSave = (ImageView) findViewById(R.id.imageViewEditProfileSave); imageViewEditProfileSave.setVisibility(View.GONE);
-        ((TextView)findViewById(R.id.textViewPhone91)).setTypeface(Fonts.mavenMedium(this));
         textViewPasswordSave = (TextView) findViewById(R.id.textViewPasswordSave); textViewPasswordSave.setTypeface(Fonts.mavenMedium(this));
         linearLayoutPasswordSave = (LinearLayout) findViewById(R.id.linearLayoutPasswordSave);
         ivEditPhone = (ImageView) findViewById(R.id.ivEditPhone);
@@ -338,8 +343,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             @Override
             public void onClick(View v) {
                 Log.v("phone click", "phone click");
-                PhoneNumber phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(editTextPhone.getText().toString().trim()), getString(R.string.country_iso));
-                //startFbAccountKit(phoneNumber);
+                PhoneNumber phoneNumber = new PhoneNumber(Data.userData.getCountryCode(),
+                        Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo, Data.userData.getCountryCode()),
+                        Utils.getCountryIsoFromCode(AccountActivity.this, Data.userData.getCountryCode()));
                 fbAccountKit.startFbAccountKit(phoneNumber);
             }
         });
@@ -379,6 +385,16 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 }
             }
         });
+        countryPicker =
+                new CountryPicker.Builder().with(this)
+                        .listener(this)
+                        .build();
+        tvCountryCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                countryPicker.showDialog(getSupportFragmentManager());
+            }
+        });
 
         imageViewEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -399,7 +415,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         String nameChanged = editTextUserName.getText().toString().trim();
                         String emailChanged = editTextEmail.getText().toString().trim();
                         String phoneNoChanged = editTextPhone.getText().toString().trim();
-                        phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged);
+                        String countryCode = tvCountryCode.getText().toString();
+                        phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged, countryCode);
                         if ("".equalsIgnoreCase(nameChanged)) {
                             editTextUserName.requestFocus();
                             editTextUserName.setError(getResources().getString(R.string.username_empty_error));
@@ -420,8 +437,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 z&& Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged)) {
                             Utils.showToast(AccountActivity.this, getString(R.string.nothing_changed));
                         }*/ else {
-                            updateUserProfileAPI(AccountActivity.this, Utils.capEachWord(nameChanged), emailChanged, "+91" + phoneNoChanged,
-                                    !Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged));
+                            updateUserProfileAPI(AccountActivity.this, Utils.capEachWord(nameChanged), emailChanged, countryCode + phoneNoChanged,
+                                    !Data.userData.phoneNo.equalsIgnoreCase(countryCode + phoneNoChanged), countryCode);
                         }
                     } else {
                         toggleProfileOptions(false);
@@ -432,8 +449,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         editTextEmail.setEnabled(true);
                         editTextEmail.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         editTextPhone.setEnabled(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1);
+                        tvCountryCode.setEnabled(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1);
                         if(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1) {
                             linearLayoutPhone.setBackgroundResource(R.drawable.bg_white_orange_bb);
+                            tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_vector, 0);
                         }
                         //buttonEditProfile.setText(getResources().getString(R.string.save_changes));
                         imageViewEditProfile.setVisibility(View.GONE);
@@ -830,6 +849,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 			editTextUserName.setEnabled(false); editTextUserName.setBackgroundResource(R.drawable.background_white);
             editTextEmail.setEnabled(false); editTextEmail.setBackgroundResource(R.drawable.background_white);
             editTextPhone.setEnabled(false); linearLayoutPhone.setBackgroundResource(R.drawable.background_white);
+            tvCountryCode.setEnabled(false); tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
             editTextUserName.setError(null);
             editTextEmail.setError(null);
             editTextPhone.setError(null);
@@ -845,7 +865,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             } else {
                 editTextEmail.setText("");
             }
-			editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
+			editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo, Data.userData.getCountryCode()));
+            tvCountryCode.setText(Data.userData.getCountryCode());
 
 			try{
 				if(!"".equalsIgnoreCase(Data.userData.userImage)){
@@ -946,7 +967,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
 	public void updateUserProfileAPI(final Activity activity, final String updatedName,
                                      final String updatedEmail, final String updatedPhone,
-                                     final boolean phoneUpdated) {
+                                     final boolean phoneUpdated, final String countryCode) {
 		if(MyApplication.getInstance().isOnline()) {
 
 			DialogPopup.showLoadingDialog(activity, getString(R.string.updating));
@@ -959,6 +980,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             params.put(Constants.KEY_UPDATED_USER_NAME, updatedName);
             params.put(Constants.KEY_UPDATED_USER_EMAIL, updatedEmail);
             params.put(Constants.KEY_UPDATED_PHONE_NO, updatedPhone);
+            params.put(Constants.KEY_UPDATED_COUNTRY_CODE, countryCode);
 
             new HomeUtil().putDefaultParams(params);
             RestClient.getApiService().updateUserProfile(params, new Callback<SettleUserDebt>() {
@@ -1001,6 +1023,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 if(phoneUpdated) {
                                     Intent intent = new Intent(activity, PhoneNoOTPConfirmScreen.class);
                                     intent.putExtra("phone_no_verify", updatedPhone);
+                                    intent.putExtra(Constants.KEY_COUNTRY_CODE, countryCode);
                                     activity.startActivity(intent);
                                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                                 } else{
@@ -1059,12 +1082,14 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     String userName = jObj.getString("user_name");
                                     String email = jObj.getString("user_email");
                                     String phoneNo = jObj.getString("phone_no");
+                                    String countryCode = jObj.optString(Constants.KEY_COUNTRY_CODE, Data.userData.getCountryCode());
                                     int emailVerificationStatus = jObj.getInt("email_verification_status");
 
                                     updateSubscriptionMessage(userName);
                                     Data.userData.userName = userName;
                                     Data.userData.phoneNo = phoneNo;
                                     Data.userData.userEmail = email;
+                                    Data.userData.setCountryCode(countryCode);
                                     Data.userData.emailVerificationStatus = emailVerificationStatus;
 
                                     setUserData();
@@ -1089,57 +1114,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
 
 
-
-	public void sendEmailVerifyLink(final Activity activity) {
-		if(MyApplication.getInstance().isOnline()) {
-
-			DialogPopup.showLoadingDialog(activity, getString(R.string.updating));
-
-			HashMap<String, String> params = new HashMap<>();
-            params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
-            params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-            params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
-
-            new HomeUtil().putDefaultParams(params);
-            RestClient.getApiService().sendVerifyEmailLink(params, new Callback<SettleUserDebt>() {
-                @Override
-                public void success(SettleUserDebt settleUserDebt, Response response) {
-                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.i(TAG, "sendVerifyEmailLink response = " + responseStr);
-                    DialogPopup.dismissLoadingDialog();
-                    try {
-                        JSONObject jObj = new JSONObject(responseStr);
-                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                            int flag = jObj.getInt("flag");
-                            if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
-                                String error = jObj.getString("error");
-                                DialogPopup.dialogBanner(activity, error);
-                            } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                String message = jObj.getString("message");
-                                DialogPopup.dialogBanner(activity, message);
-                            } else {
-                                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
-                            }
-                        }
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
-                        DialogPopup.dismissLoadingDialog();
-                    }
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.e(TAG, "sendVerifyEmailLink error="+error.toString());
-                    DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
-                }
-            });
-		}
-		else {
-			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
-		}
-	}
 
 
 	void logoutAsync(final Activity activity) {
@@ -1541,7 +1515,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 DialogPopup.alertPopup(activity, "", error);
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                 Data.userData.phoneNo = jObj.optString("phone_no");
-                                editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo));
+                                Data.userData.setCountryCode(jObj.optString(Constants.KEY_COUNTRY_CODE, Data.userData.getCountryCode()));
+                                editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo, Data.userData.getCountryCode()));
+                                tvCountryCode.setText(Data.userData.getCountryCode());
                                 DialogPopup.alertPopup(activity, "", message);
                             } else {
                                 DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
@@ -1670,5 +1646,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             accountMenuItemsAdapter.toggleMenuItems(isEnable);
         }
 
+    }
+
+    @Override
+    public void onSelectCountry(Country country) {
+        tvCountryCode.setText(country.getDialCode());
     }
 }

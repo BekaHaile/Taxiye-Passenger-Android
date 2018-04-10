@@ -28,6 +28,7 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
     Context context;
 
     ArrayList<DiscountType> discountTypes;
+    String currency;
 
     public EndRideDiscountsAdapter(Context context) {
         this.context = context;
@@ -50,8 +51,9 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
         return position;
     }
 
-	public synchronized void setList(ArrayList<DiscountType> discountTypes){
+	public synchronized void setList(ArrayList<DiscountType> discountTypes, String currency){
 		this.discountTypes = discountTypes;
+		this.currency = currency;
 		notifyDataSetChanged();
 	}
 
@@ -80,14 +82,12 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
 
         if(discountType.getReferenceId() == 0) {
             holder.textViewDiscount.setText("- " + discountType.name);
-            holder.textViewDiscountValue.setText(String.format(context.getResources()
-                            .getString(R.string.rupees_minus_value_format_without_space),
+            holder.textViewDiscountValue.setText("-"+String.format(context.getResources()
+                            .getString(R.string.rupees_value_format),
                     Utils.getMoneyDecimalFormat().format(discountType.value)));
         } else{
             holder.textViewDiscount.setText(discountType.getName());
-            holder.textViewDiscountValue.setText(String.format(context.getResources()
-                            .getString(R.string.rupees_value_format_without_space),
-                    Utils.getMoneyDecimalFormat().format(discountType.value)));
+            holder.textViewDiscountValue.setText(Utils.formatCurrencyValue(currency, discountType.value));
         }
 
         return convertView;

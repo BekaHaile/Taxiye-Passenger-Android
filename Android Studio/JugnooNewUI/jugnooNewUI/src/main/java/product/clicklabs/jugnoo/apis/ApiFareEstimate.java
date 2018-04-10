@@ -115,8 +115,8 @@ public class ApiFareEstimate {
         void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText, double distanceValue, double timeValue);
         void onRetry();
         void onNoRetry();
-        void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge);
-        void onPoolSuccess(double fare, double rideDistance, String rideDistanceUnit,
+        void onFareEstimateSuccess(String currency, String minFare, String maxFare, double convenienceCharge);
+        void onPoolSuccess(String currency, double fare, double rideDistance, String rideDistanceUnit,
                            double rideTime, String rideTimeUnit, int poolFareId, double convenienceCharge,
                            String text);
         void onDirectionsFailure();
@@ -161,8 +161,9 @@ public class ApiFareEstimate {
                                 int flag = jObj.getInt("flag");
                                 String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                    String currency = jObj.optString(Constants.KEY_CURRENCY);
                                     if(jObj.has("pool_fare_id")){
-                                        callback.onPoolSuccess(jObj.optDouble("fare", 0), jObj.optDouble("ride_distance", 0),
+                                        callback.onPoolSuccess(currency, jObj.optDouble("fare", 0), jObj.optDouble("ride_distance", 0),
                                                 jObj.optString("ride_distance_unit"), jObj.optDouble("ride_time", 0),
                                                 jObj.optString("ride_time_unit"), jObj.optInt("pool_fare_id", 0),
                                                 jObj.optDouble(Constants.KEY_CONVENIENCE_CHARGE, 0), jObj.optString("text", ""));
@@ -170,7 +171,7 @@ public class ApiFareEstimate {
                                         String minFare = jObj.getString("min_fare");
                                         String maxFare = jObj.getString("max_fare");
                                         double convenienceCharge = jObj.optDouble(Constants.KEY_CONVENIENCE_CHARGE, 0);
-                                        callback.onFareEstimateSuccess(minFare, maxFare, convenienceCharge);
+                                        callback.onFareEstimateSuccess(currency, minFare, maxFare, convenienceCharge);
                                     }
 
 

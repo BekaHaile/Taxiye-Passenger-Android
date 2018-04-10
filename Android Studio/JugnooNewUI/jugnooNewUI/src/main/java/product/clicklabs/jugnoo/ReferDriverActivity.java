@@ -83,7 +83,7 @@ public class ReferDriverActivity extends BaseActivity  {
             @Override
             public void onClick(View v) {
                 if((!editTextName.getText().toString().isEmpty()) && (!editTextPhone.getText().toString().isEmpty())){
-                    if((editTextPhone.getText().toString().length() == 10)){
+                    if(Utils.validPhoneNumber(editTextPhone.getText().toString())){
                         referDriver();
                     }else {
                         editTextPhone.requestFocus();

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+    <!ENTITY appname "Jugnoo White">
+    <!ENTITY currency "\u20B9">
+    ]>
 <resources>
 
-    <string name="app_name">Jugnoo White</string>
+    <string name="app_name">&appname;</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
@@ -27,14 +31,14 @@
 
 
 
-    <string name="rupee">\u20B9</string>
+    <string name="rupee">&currency;</string>
 
-    <string name="rupee_0">\u20B90</string>
+    <string name="rupee_0">&currency;0</string>
 
 
     <!-- \n\nPeople with autos can offer rides to users who find taxis a bit too expensive. -->
 
-    <string name="about_1_text">Jugnoo helps you provide a friendly and affordable ride within the Chandigarh tricity area.\nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.</string>
+    <string name="about_1_text">&appname; helps you provide a friendly and affordable ride within the Chandigarh tricity area.\nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.</string>
 
 
     <string name="password">Password</string>
@@ -48,7 +52,7 @@
 
     <string name="ok">OK</string>
 
-    <string name="phone_number">Phone Number</string>
+    <string name="phone_number">Phone No.</string>
     <string name="enter_phone_number">Enter phone number</string>
     <string name="confirm">Confirm</string>
     <string name="confirm_address">Confirm Address</string>
@@ -103,21 +107,21 @@
     <string name="cancelled_too_many_rides">Oops! You have cancelled\ntoo many rides.</string>
     <string name="resume_after_24_hours">Your ride booking will resume\nafter 24 hours.</string>
     <string name="ride_summary_bad_text">Apologies for the inconvenience caused. We regret any difficulty you faced with us. Please let us know about the issue.</string>
-    <string name="no_current_offer_popup_text">Get free rides by referring Jugnoo to friends.Every successful referral gets you a free ride.</string>
-    <string name="end_ride_with_image_text">Gift your friend a Jugnoo transaction worth 50 &amp; Get one for yourself as well. </string>
+    <string name="no_current_offer_popup_text">Get free rides by referring &appname; to friends.Every successful referral gets you a free ride.</string>
+    <string name="end_ride_with_image_text">Gift your friend a &appname; transaction worth 50 &amp; Get one for yourself as well. </string>
 
 
     <!-- wallet screen-->
-    <string name="first_amount">\u20B9599</string>
-    <string name="middle_amount">\u20B9999</string>
-    <string name="last_amount">\u20B91999</string>
+    <string name="first_amount">&currency;599</string>
+    <string name="middle_amount">&currency;999</string>
+    <string name="last_amount">&currency;1999</string>
     <!--string used in activity_add_jugnoo_cash-->
     <string name="pay_now">Pay Now</string>
 
     <!-- validation Strings -->
 
-    <string name="amount_range">Recharge amount should be between Rs. 1 - Rs. 5000</string>
-    <string name="free_ride_desc">Send friends free rides and \n you\'ll get one too, up to \u20B9100!</string>
+    <string name="amount_range">Recharge amount should be between &currency; 1 - &currency; 5000</string>
+    <string name="free_ride_desc">Send friends free rides and \n you\'ll get one too, up to &currency;100!</string>
     <string name="fare_note">Note: This is just an estimate. Actual cost, time and distance may vary</string>
 
 
@@ -130,8 +134,7 @@
     <string name="thanks_for_ordering_with_us">Thanks for ordering with us</string>
 
 
-    <!-- Jugnoo Jeanie Strings-->
-    <string name="jugnoo_jeanie">Jugnoo Jeanie</string>
+    <string name="jugnoo_jeanie">&appname; Jeanie</string>
 
     <!-- Account Settings Strings -->
     <string name="add_home">Add Home</string>
@@ -156,9 +159,7 @@
     <string name="star_required">* Required</string>
     <string name="leave_a_comment">Leave a comment</string>
     <string name="what_could_we_improve">What could we improve?</string>
-    <string name="rupees_value_format">\u20B9%s</string>
-    <string name="rupees_value_format_without_space">\u20B9%s</string>
-    <string name="rupees_minus_value_format_without_space">-\u20B9%s</string>
+    <string name="rupees_value_format">&currency;%s</string>
     <string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
     <string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
     <string name="review_must_be_in">Review must be in 300 letters.</string>
@@ -229,7 +230,6 @@
     <string name="nl_signup_name">Name</string>
     <string name="nl_signup_email">Email</string>
     <string name="nl_signup_promocode">Promocode (optional)</string>
-    <string name="nl_signup_plus91">+91</string>
 
 
     <!-- NL OTP-->
@@ -244,8 +244,8 @@
 
     <!-- User Debt-->
     <string name="user_debt_pay_via_wallet">Pay via Wallet</string>
-    <string name="user_debt_settle_balance_message">Please settle your outstanding balance of \u20B9%s before a new transaction</string>
-    <string name="user_debt_settle_balance_message_fresh">Please settle your outstanding balance of \u20B9%s before a new transaction</string>
+    <string name="user_debt_settle_balance_message">Please settle your outstanding balance of &currency;%s before a new transaction</string>
+    <string name="user_debt_settle_balance_message_fresh">Please settle your outstanding balance of &currency;%s before a new transaction</string>
 
 
     <!-- NL Signup Multiple Accounts-->
@@ -263,7 +263,6 @@
 
     <string name="debug">Debug</string>
 
-    <!-- Jugnoo Fresh -->
 
 
     <string name="no_results_found">No results found</string>
@@ -271,216 +270,216 @@
     <string name="connection_lost_title">CONNECTION LOST</string>
     <string name="connection_lost_desc">Oops! Your Internet is not working.\nPlease try again.</string>
     <string name="connection_lost_try_again">TRY AGAIN</string>
-    <string name="delivery_charges_with_value">Delivery Charges \u20B9%s</string>
-    <string name="minimum_order_with_value">Minimum order \u20B9%s for free delivery</string>
+    <string name="delivery_charges_with_value">Delivery Charges &currency;%s</string>
+    <string name="minimum_order_with_value">Minimum order &currency;%s for free delivery</string>
 
     <string-array name="CountryCodes">
-        <item>93,AF</item>
-        <item>355,AL</item>
-        <item>213,DZ</item>
-        <item>376,AD</item>
-        <item>244,AO</item>
-        <item>672,AQ</item>
-        <item>54,AR</item>
-        <item>374,AM</item>
-        <item>297,AW</item>
-        <item>61,AU</item>
-        <item>43,AT</item>
-        <item>994,AZ</item>
-        <item>973,BH</item>
-        <item>880,BD</item>
-        <item>375,BY</item>
-        <item>32,BE</item>
-        <item>501,BZ</item>
-        <item>229,BJ</item>
-        <item>975,BT</item>
-        <item>591,BO</item>
-        <item>387,BA</item>
-        <item>267,BW</item>
-        <item>55,BR</item>
-        <item>673,BN</item>
-        <item>359,BG</item>
-        <item>226,BF</item>
-        <item>95,MM</item>
-        <item>257,BI</item>
-        <item>855,KH</item>
-        <item>237,CM</item>
-        <item>1,CA</item>
-        <item>238,CV</item>
-        <item>236,CF</item>
-        <item>235,TD</item>
-        <item>56,CL</item>
-        <item>86,CN</item>
-        <item>61,CX</item>
-        <item>61,CC</item>
-        <item>57,CO</item>
-        <item>269,KM</item>
-        <item>242,CG</item>
-        <item>243,CD</item>
-        <item>682,CK</item>
-        <item>506,CR</item>
-        <item>385,HR</item>
-        <item>53,CU</item>
-        <item>357,CY</item>
-        <item>420,CZ</item>
-        <item>45,DK</item>
-        <item>253,DJ</item>
-        <item>670,TL</item>
-        <item>593,EC</item>
-        <item>20,EG</item>
-        <item>503,SV</item>
-        <item>240,GQ</item>
-        <item>291,ER</item>
-        <item>372,EE</item>
-        <item>251,ET</item>
-        <item>500,FK</item>
-        <item>298,FO</item>
-        <item>679,FJ</item>
-        <item>358,FI</item>
-        <item>33,FR</item>
-        <item>689,PF</item>
-        <item>241,GA</item>
-        <item>220,GM</item>
-        <item>995,GE</item>
-        <item>49,DE</item>
-        <item>233,GH</item>
-        <item>350,GI</item>
-        <item>30,GR</item>
-        <item>299,GL</item>
-        <item>502,GT</item>
-        <item>224,GN</item>
-        <item>245,GW</item>
-        <item>592,GY</item>
-        <item>509,HT</item>
-        <item>504,HN</item>
-        <item>852,HK</item>
-        <item>36,HU</item>
-        <item>91,IN</item>
-        <item>62,ID</item>
-        <item>98,IR</item>
-        <item>964,IQ</item>
-        <item>353,IE</item>
-        <item>44,IM</item>
-        <item>972,IL</item>
-        <item>39,IT</item>
-        <item>225,CI</item>
-        <item>81,JP</item>
-        <item>962,JO</item>
-        <item>7,KZ</item>
-        <item>254,KE</item>
-        <item>686,KI</item>
-        <item>965,KW</item>
-        <item>996,KG</item>
-        <item>856,LA</item>
-        <item>371,LV</item>
-        <item>961,LB</item>
-        <item>266,LS</item>
-        <item>231,LR</item>
-        <item>218,LY</item>
-        <item>423,LI</item>
-        <item>370,LT</item>
-        <item>352,LU</item>
-        <item>853,MO</item>
-        <item>389,MK</item>
-        <item>261,MG</item>
-        <item>265,MW</item>
-        <item>60,MY</item>
-        <item>960,MV</item>
-        <item>223,ML</item>
-        <item>356,MT</item>
-        <item>692,MH</item>
-        <item>222,MR</item>
-        <item>230,MU</item>
-        <item>262,YT</item>
-        <item>52,MX</item>
-        <item>691,FM</item>
-        <item>373,MD</item>
-        <item>377,MC</item>
-        <item>976,MN</item>
-        <item>382,ME</item>
-        <item>212,MA</item>
-        <item>258,MZ</item>
-        <item>264,NA</item>
-        <item>674,NR</item>
-        <item>977,NP</item>
-        <item>31,NL</item>
-        <item>599,AN</item>
-        <item>687,NC</item>
-        <item>64,NZ</item>
-        <item>505,NI</item>
-        <item>227,NE</item>
-        <item>234,NG</item>
-        <item>683,NU</item>
-        <item>850,KP</item>
-        <item>47,NO</item>
-        <item>968,OM</item>
-        <item>92,PK</item>
-        <item>680,PW</item>
-        <item>507,PA</item>
-        <item>675,PG</item>
-        <item>595,PY</item>
-        <item>51,PE</item>
-        <item>63,PH</item>
-        <item>870,PN</item>
-        <item>48,PL</item>
-        <item>351,PT</item>
-        <item>1,PR</item>
-        <item>974,QA</item>
-        <item>40,RO</item>
-        <item>7,RU</item>
-        <item>250,RW</item>
-        <item>590,BL</item>
-        <item>685,WS</item>
-        <item>378,SM</item>
-        <item>239,ST</item>
-        <item>966,SA</item>
-        <item>221,SN</item>
-        <item>381,RS</item>
-        <item>248,SC</item>
-        <item>232,SL</item>
-        <item>65,SG</item>
-        <item>421,SK</item>
-        <item>386,SI</item>
-        <item>677,SB</item>
-        <item>252,SO</item>
-        <item>27,ZA</item>
-        <item>82,KR</item>
-        <item>34,ES</item>
-        <item>94,LK</item>
-        <item>290,SH</item>
-        <item>508,PM</item>
-        <item>249,SD</item>
-        <item>597,SR</item>
-        <item>268,SZ</item>
-        <item>46,SE</item>
-        <item>41,CH</item>
-        <item>963,SY</item>
-        <item>886,TW</item>
-        <item>992,TJ</item>
-        <item>255,TZ</item>
-        <item>66,TH</item>
-        <item>228,TG</item>
-        <item>690,TK</item>
-        <item>676,TO</item>
-        <item>216,TN</item>
-        <item>90,TR</item>
-        <item>993,TM</item>
-        <item>688,TV</item>
-        <item>971,AE</item>
-        <item>256,UG</item>
-        <item>44,GB</item>
-        <item>380,UA</item>
-        <item>598,UY</item>
-        <item>1,US</item>
-        <item>998,UZ</item>
-        <item>678,VU</item>
-        <item>39,VA</item>
-        <item>58,VE</item>
-        <item>84,VN</item>
-        <item>681,WF</item>
-        <item>967,YE</item>
-        <item>260,ZM</item>
-        <item>263,ZW</item>
+        <item>+93,AF</item>
+        <item>+355,AL</item>
+        <item>+213,DZ</item>
+        <item>+376,AD</item>
+        <item>+244,AO</item>
+        <item>+672,AQ</item>
+        <item>+54,AR</item>
+        <item>+374,AM</item>
+        <item>+297,AW</item>
+        <item>+61,AU</item>
+        <item>+43,AT</item>
+        <item>+994,AZ</item>
+        <item>+973,BH</item>
+        <item>+880,BD</item>
+        <item>+375,BY</item>
+        <item>+32,BE</item>
+        <item>+501,BZ</item>
+        <item>+229,BJ</item>
+        <item>+975,BT</item>
+        <item>+591,BO</item>
+        <item>+387,BA</item>
+        <item>+267,BW</item>
+        <item>+55,BR</item>
+        <item>+673,BN</item>
+        <item>+359,BG</item>
+        <item>+226,BF</item>
+        <item>+95,MM</item>
+        <item>+257,BI</item>
+        <item>+855,KH</item>
+        <item>+237,CM</item>
+        <item>+1,CA</item>
+        <item>+238,CV</item>
+        <item>+236,CF</item>
+        <item>+235,TD</item>
+        <item>+56,CL</item>
+        <item>+86,CN</item>
+        <item>+61,CX</item>
+        <item>+61,CC</item>
+        <item>+57,CO</item>
+        <item>+269,KM</item>
+        <item>+242,CG</item>
+        <item>+243,CD</item>
+        <item>+682,CK</item>
+        <item>+506,CR</item>
+        <item>+385,HR</item>
+        <item>+53,CU</item>
+        <item>+357,CY</item>
+        <item>+420,CZ</item>
+        <item>+45,DK</item>
+        <item>+253,DJ</item>
+        <item>+670,TL</item>
+        <item>+593,EC</item>
+        <item>+20,EG</item>
+        <item>+503,SV</item>
+        <item>+240,GQ</item>
+        <item>+291,ER</item>
+        <item>+372,EE</item>
+        <item>+251,ET</item>
+        <item>+500,FK</item>
+        <item>+298,FO</item>
+        <item>+679,FJ</item>
+        <item>+358,FI</item>
+        <item>+33,FR</item>
+        <item>+689,PF</item>
+        <item>+241,GA</item>
+        <item>+220,GM</item>
+        <item>+995,GE</item>
+        <item>+49,DE</item>
+        <item>+233,GH</item>
+        <item>+350,GI</item>
+        <item>+30,GR</item>
+        <item>+299,GL</item>
+        <item>+502,GT</item>
+        <item>+224,GN</item>
+        <item>+245,GW</item>
+        <item>+592,GY</item>
+        <item>+509,HT</item>
+        <item>+504,HN</item>
+        <item>+852,HK</item>
+        <item>+36,HU</item>
+        <item>+91,IN</item>
+        <item>+62,ID</item>
+        <item>+98,IR</item>
+        <item>+964,IQ</item>
+        <item>+353,IE</item>
+        <item>+44,IM</item>
+        <item>+972,IL</item>
+        <item>+39,IT</item>
+        <item>+225,CI</item>
+        <item>+81,JP</item>
+        <item>+962,JO</item>
+        <item>+7,KZ</item>
+        <item>+254,KE</item>
+        <item>+686,KI</item>
+        <item>+965,KW</item>
+        <item>+996,KG</item>
+        <item>+856,LA</item>
+        <item>+371,LV</item>
+        <item>+961,LB</item>
+        <item>+266,LS</item>
+        <item>+231,LR</item>
+        <item>+218,LY</item>
+        <item>+423,LI</item>
+        <item>+370,LT</item>
+        <item>+352,LU</item>
+        <item>+853,MO</item>
+        <item>+389,MK</item>
+        <item>+261,MG</item>
+        <item>+265,MW</item>
+        <item>+60,MY</item>
+        <item>+960,MV</item>
+        <item>+223,ML</item>
+        <item>+356,MT</item>
+        <item>+692,MH</item>
+        <item>+222,MR</item>
+        <item>+230,MU</item>
+        <item>+262,YT</item>
+        <item>+52,MX</item>
+        <item>+691,FM</item>
+        <item>+373,MD</item>
+        <item>+377,MC</item>
+        <item>+976,MN</item>
+        <item>+382,ME</item>
+        <item>+212,MA</item>
+        <item>+258,MZ</item>
+        <item>+264,NA</item>
+        <item>+674,NR</item>
+        <item>+977,NP</item>
+        <item>+31,NL</item>
+        <item>+599,AN</item>
+        <item>+687,NC</item>
+        <item>+64,NZ</item>
+        <item>+505,NI</item>
+        <item>+227,NE</item>
+        <item>+234,NG</item>
+        <item>+683,NU</item>
+        <item>+850,KP</item>
+        <item>+47,NO</item>
+        <item>+968,OM</item>
+        <item>+92,PK</item>
+        <item>+680,PW</item>
+        <item>+507,PA</item>
+        <item>+675,PG</item>
+        <item>+595,PY</item>
+        <item>+51,PE</item>
+        <item>+63,PH</item>
+        <item>+870,PN</item>
+        <item>+48,PL</item>
+        <item>+351,PT</item>
+        <item>+1,PR</item>
+        <item>+974,QA</item>
+        <item>+40,RO</item>
+        <item>+7,RU</item>
+        <item>+250,RW</item>
+        <item>+590,BL</item>
+        <item>+685,WS</item>
+        <item>+378,SM</item>
+        <item>+239,ST</item>
+        <item>+966,SA</item>
+        <item>+221,SN</item>
+        <item>+381,RS</item>
+        <item>+248,SC</item>
+        <item>+232,SL</item>
+        <item>+65,SG</item>
+        <item>+421,SK</item>
+        <item>+386,SI</item>
+        <item>+677,SB</item>
+        <item>+252,SO</item>
+        <item>+27,ZA</item>
+        <item>+82,KR</item>
+        <item>+34,ES</item>
+        <item>+94,LK</item>
+        <item>+290,SH</item>
+        <item>+508,PM</item>
+        <item>+249,SD</item>
+        <item>+597,SR</item>
+        <item>+268,SZ</item>
+        <item>+46,SE</item>
+        <item>+41,CH</item>
+        <item>+963,SY</item>
+        <item>+886,TW</item>
+        <item>+992,TJ</item>
+        <item>+255,TZ</item>
+        <item>+66,TH</item>
+        <item>+228,TG</item>
+        <item>+690,TK</item>
+        <item>+676,TO</item>
+        <item>+216,TN</item>
+        <item>+90,TR</item>
+        <item>+993,TM</item>
+        <item>+688,TV</item>
+        <item>+971,AE</item>
+        <item>+256,UG</item>
+        <item>+44,GB</item>
+        <item>+380,UA</item>
+        <item>+598,UY</item>
+        <item>+1,US</item>
+        <item>+998,UZ</item>
+        <item>+678,VU</item>
+        <item>+39,VA</item>
+        <item>+58,VE</item>
+        <item>+84,VN</item>
+        <item>+681,WF</item>
+        <item>+967,YE</item>
+        <item>+260,ZM</item>
+        <item>+263,ZW</item>
     </string-array>
 
     <string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,</string>
@@ -489,7 +488,7 @@
 
     <string name="paytm">Paytm</string>
     <string name="cash">Cash</string>
-    <string name="jugnoo_cash">Jugnoo Cash</string>
+    <string name="jugnoo_cash">&appname; Cash</string>
     <string name="add_cash">ADD CASH</string>
 
     <string name="paytm_coupon_selected_but_paytm_not_added">Please add Paytm Wallet to avail the selected coupon</string>
@@ -530,9 +529,9 @@
     <string name="tnc_apply">T&amp;C Apply</string>
     <string name="tnc">T&amp;C</string>
     <string name="tnc_applied">*T&amp;C Applied</string>
-    <string name="jugnoo_cash_tnc">1. Jugnoo Cash if present would be the first source of deduction for your ride fare.\n
-		2. Jugnoo Cash added till January 21, 2016 would expire on March 31, 2016.\n
-		3. Jugnoo Cash added after January 21, 2016 will expire after one month of crediting.</string>
+    <string name="jugnoo_cash_tnc">1. &appname; Cash if present would be the first source of deduction for your ride fare.\n
+		2. &appname; Cash added till January 21, 2016 would expire on March 31, 2016.\n
+		3. &appname; Cash added after January 21, 2016 will expire after one month of crediting.</string>
 
     <!-- Support Screen-->
     <string name="issue_with_the_recent_ride">Issue with the recent ride?</string>
@@ -563,7 +562,7 @@
 
     <string name="priority_tip_format">Priority Tip %sx</string>
 
-    <string name="call_jugnoo">Call Jugnoo</string>
+    <string name="call_jugnoo">Call &appname;</string>
     <string name="star_please_fill_required_information">* Please fill required information</string>
 
 
@@ -573,7 +572,7 @@
     <string name="in_app_customer_support">In App Customer Support</string>
     <string name="emergency_mode_enabled">Emergency Mode Enabled</string>
     <string name="emergency_mode_enabled_title">You have enabled emergency.</string>
-    <string name="emergency_mode_enabled_message">We have sent your location to your\nemergency contacts and Jugnoo support.</string>
+    <string name="emergency_mode_enabled_message">We have sent your location to your\nemergency contacts and &appname; support.</string>
     <string name="call_police">Call Police</string>
     <string name="call_emergency_contact">Call Emergency Contact</string>
     <string name="call_your_contacts">Call Your Contacts</string>
@@ -586,7 +585,7 @@
     <string name="delete">Delete</string>
     <string name="send">Send</string>
     <string name="send_invites">Send invites</string>
-    <string name="send_invites_2">to friends who haven\'t tried Jugnoo</string>
+    <string name="send_invites_2">to friends who haven\'t tried &appname;</string>
     <string name="delete_emergency_contact_message">Are you sure you want to delete this contact from your emergency list?</string>
     <string name="type_a_name_or_mobile_number">Type a name or a mobile number</string>
     <string name="or_call_directly">or Call directly</string>
@@ -594,9 +593,9 @@
     <string name="send_ride_status_no_contacts_message">Please select some contacts first</string>
     <string name="send_ride_status_more_contacts_message_format">You have selected more than %1$s contacts, we will send ride status to only %2$s contacts at once.</string>
     <string name="configure_your_emergency_contacts">Configure your\nemergency contacts</string>
-    <string name="inform_your_friends">Inform your friends and family\nabout your current location everytime\nyou ride with Jugnoo</string>
+    <string name="inform_your_friends">Inform your friends and family\nabout your current location everytime\nyou ride with &appname;</string>
     <string name="everything_is_alright_caps">EVERYTHING IS ALRIGHT</string>
-    <string name="you_have_disabled_jugnoo_emergency">You have disabled the Jugnoo\nEmergency mode</string>
+    <string name="you_have_disabled_jugnoo_emergency">You have disabled the &appname;\nEmergency mode</string>
     <string name="please_select_some_contacts_first">Please select some contacts first</string>
 
     <string name="vs">vs</string>
@@ -605,7 +604,7 @@
     <string name="str_new">New</string>
     <string name="play_predict_win">Play, Predict &amp; Win</string>
     <string name="team_vs_team_format">%1$s Vs %2$s</string>
-    <string name="t20_terms">Guess the winner of today T20 match after your ride starts and win exciting Offers from Jugnoo</string>
+    <string name="t20_terms">Guess the winner of today T20 match after your ride starts and win exciting Offers from &appname;</string>
     <string name="who_do_you_think_will_win_today">Who do you think will win today?</string>
     <string name="team_not_selected_error">Please select a team</string>
 
@@ -657,9 +656,9 @@
     <string name="delivery_date">Delivery Date</string>
     <string name="delivery_slot">Delivery Slot</string>
     <string name="place_order_confirmation">Are you sure you want to place your order?</string>
-    <string name="thank_you_for_placing_order">Thank you for placing your order\nwith Jugnoo Grocery!</string>
-    <string name="thank_you_for_placing_order_meals">Thank you for placing your order\nwith Jugnoo Meals!</string>
-    <string name="thank_you_for_placing_order_grocery">Thank you for placing your order\nwith Jugnoo Grocery!</string>
+    <string name="thank_you_for_placing_order">Thank you for placing your order\nwith &appname; Grocery!</string>
+    <string name="thank_you_for_placing_order_meals">Thank you for placing your order\nwith &appname; Meals!</string>
+    <string name="thank_you_for_placing_order_grocery">Thank you for placing your order\nwith &appname; Grocery!</string>
     <string name="thank_you_for_placing_order_menus_format">Order placed with %s.\nWe will send you the confirmation once your order is accepted.</string>
     <string name="your_order_id">Your Order ID:</string>
     <string name="will_be_delivered_between">will be delivered between</string>
@@ -672,11 +671,11 @@
     <string name="refer_a_driver">Refer a Driver</string>
     <string name="came_across_auto_driver">Riding with a driver\nnot aware of jugnoo yet?</string>
     <string name="kindly_recommend_us_to_them">Kindly recommend us to them.</string>
-    <string name="if_they_are_interested">Please help us improve Jugnoo\nand increase driver income.\nWin! Win!</string>
+    <string name="if_they_are_interested">Please help us improve &appname;\nand increase driver income.\nWin! Win!</string>
     <string name="name_of_driver">Name of Driver</string>
     <string name="contact_number">Contact Number</string>
     <string name="refer">Refer</string>
-    <string name="want_free_rides">Get Free Jugnoo Cash</string>
+    <string name="want_free_rides">Get Free &appname; Cash</string>
 
     <string name="inbox">Inbox</string>
     <string name="play">Play</string>
@@ -692,8 +691,8 @@
     <string name="pay_for_your_rides_using">Pay for your rides using</string>
     <string name="enter_destination">Enter Destination</string>
     <string name="destination_required">Destination required</string>
-    <string name="add_paytm_money_help_text">Pay for Jugnoo with a Mobile Wallet</string>
-    <string name="convenience_charge_rupees_format">Convenience Charge: \u20B9%s</string>
+    <string name="add_paytm_money_help_text">Pay for &appname; with a Mobile Wallet</string>
+    <string name="convenience_charge_colon">Convenience Charge:</string>
     <string name="base_fare">Base Fare</string>
     <string name="want_to_refer_a_driver">Want to refer a Driver?</string>
     <string name="promotions">Promotions</string>
@@ -811,7 +810,7 @@
     <string name="freecharge_no_cash">You do not have money in your\nFreeCharge Account</string>
 
     <string name="yes">Yes</string>
-    <string name="rate_app_dialog_title">Do you find Jugnoo useful?</string>
+    <string name="rate_app_dialog_title">Do you find &appname; useful?</string>
     <string name="rate_app_dialog_message">We would appreciate if you could rate us on the Play Store</string>
     <string name="rate_now">Rate Now</string>
     <string name="not_now">Not Now</string>
@@ -827,7 +826,7 @@
     <string name="could_not_find_address">Could not find address</string>
     <string name="address_book">Address Book</string>
     <string name="enter_topup_card_code">Enter Topup Card code</string>
-    <string name="recharge_jc_topup_info">Recharge Jugnoo Cash with Topup Card</string>
+    <string name="recharge_jc_topup_info">Recharge &appname; Cash with Topup Card</string>
     <string name="topup_code_empty">Topup code empty</string>
     <string name="address_delete_confirm_message">Are you sure you want to delete this address?</string>
     <string name="saved_places">Saved Places</string>
@@ -869,10 +868,10 @@
     <string name="select_an_offer">Select an Offer</string>
     <string name="hi_username_format">Hi %s!</string>
     <string name="we_have_these_offerings">Following services are available at your location.\nPlease select a service:</string>
-    <string name="you_can_always_navigate">You can always navigate between various\nservices using Jugnoo Jeanie.</string>
+    <string name="you_can_always_navigate">You can always navigate between various\nservices using &appname; Jeanie.</string>
 
 
-    <string name="jugnoo_offerings">Jugnoo Offerings</string>
+    <string name="jugnoo_offerings">&appname; Offerings</string>
     <string name="side_menu">Side menu</string>
     <string name="chat_with_driver">chat with driver</string>
     <string name="bad_feedback">bad feedback</string>
@@ -894,7 +893,7 @@
     <string name="search_3dot">Search...</string>
     <string name="more_info">More info</string>
     <string name="previous_vendor_cart_message_format">You have added some items in cart from %s.\nAre you sure you want to clear the cart?</string>
-    <string name="minimum_order_amount_is_format">Minimum order amount is \u20B9%s</string>
+    <string name="minimum_order_amount_is_format">Minimum order amount is &currency;%s</string>
     <string name="request_a_ride">Request a ride</string>
     <string name="move_to_your_location">Move to your location</string>
     <string name="no_menus_available">No menus available</string>
@@ -929,31 +928,8 @@
     signup
     <string name="mobile_string">Mobile Number</string>
 
-    <string name="rupees_symbol">\u20B9</string>
 
 
-    //
-    Home
-    page
-    strings
-
-    // otp
-    strings
-
-    //forgot
-    password
-    screen
-
-
-    // app
-    policies
-    url
-
-
-    //
-    select
-    contact
-    strings
     <string name="mobile_contact">Type a name or mobile number</string>
     <string name="amount_string">Enter amount</string>
     <string name="message_string">Add a message (optional)</string>
@@ -1005,14 +981,14 @@
     <string name="credit_to">Credit to</string>
     <string name="wallet_transactions">Wallet Transactions</string>
     <string name="payment_transactions">Payment Transactions</string>
-    <string name="amount_range_error">Amount should be Rs. 1 to 1,00,000</string>
+    <string name="amount_range_error">Amount should be &currency; 1 to 1,00,000</string>
     <string name="fill_your_amount">Please fill your amount</string>
     <string name="register">Register</string>
     <string name="pay_transactions">Pay Transactions</string>
     <string name="change_mpin">Change MPIN</string>
     <string name="reset_pay_account">Reset Pay Account</string>
     <string name="account_management">Account Management</string>
-    <string name="jugnoo_pay">Jugnoo Pay</string>
+    <string name="jugnoo_pay">&appname; Pay</string>
     <string name="reset_account_alert_message">After resetting the account, your Payment address will be erased and you will be logged out of the app. Are you sure you want to proceed ?</string>
     <string name="delivery_before_colon">Delivery before:</string>
     <string name="oh_no_what_went_wrong">Oh no, what went wrong?</string>
@@ -1025,7 +1001,7 @@
     <string name="no_loading_money">No loading of money in wallets</string>
     <string name="bank_grade_security">Bank grade security</string>
     <string name="make_payment_with_mpin">Make payments with your MPIN on \nsecure NPCI platform</string>
-    <string name="phone_number_registered_with_jugnoo">The phone number registered \nwith Jugnoo should be linked to \nyour bank account.</string>
+    <string name="phone_number_registered_with_jugnoo">The phone number registered \nwith &appname; should be linked to \nyour bank account.</string>
     <string name="registered_number_should_be">The registered number should be \nthe default/preferred sim for SMS \nand calls for regular updates</string>
     <string name="GotIt">Got It</string>
 
@@ -1048,21 +1024,20 @@
     <string name="free_delivery">Free Delivery</string>
 
     <string name="delivers_in">Delivers in</string>
-    <string name="minimum_order_rupee_format">Min Order \u20B9%s</string>
-    <string name="minimum_order_rupee_short_format"> \u2022 Min  \u20B9%s</string>
-    <string name="rupee_format">\u20B9%s</string>
-    <string name="jugnoo_star">Jugnoo star</string>
+    <string name="minimum_order_rupee_format">Min Order &currency;%s</string>
+    <string name="minimum_order_rupee_short_format"> \u2022 Min  &currency;%s</string>
+    <string name="jugnoo_star">&appname; star</string>
     <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for JUGNOO STARS.</string>
     <string name="no">No</string>
     <string name="did_you_know">Did you know?</string>
     <string name="star_description">You can now avail unlimited FREE delivery, special discounts and much more!</string>
     <string name="click_to_find">Click to find out how…</string>
-    <string name="away_from_free_delivery_value_format">Just \u20B9%s away from FREE delivery</string>
+    <string name="away_from_free_delivery_value_format">Just &currency;%s away from FREE delivery</string>
     <string name="membership_plan">Current plan</string>
     <string name="expires_on">Expires on</string>
     <string name="savings_meter">Savings Meter</string>
     <string name="star_savings">Star Savings</string>
-    <string name="you_will_receive_cashback_on_order">You’ll receive \u20B9%s cashback on this order</string>
+    <string name="you_will_receive_cashback_on_order">You’ll receive &currency;%s cashback on this order</string>
     <string name="star_savings_no_priority_tip">Star Savings: No Priority Tip on this ride</string>
     <string name="become_a_jugnoo_star">Become a jugnoo star</string>
     <string name="add_to_avail_unlimited_free_deliveries">Add to avail unlimited free deliveries</string>
@@ -1109,7 +1084,7 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="zoom_view">zoom_view_transition</string>
-    <string name="star_could_not_be_added">Jugnoo star couldn\'t be added. Please try next time.</string>
+    <string name="star_could_not_be_added">&appname; star couldn\'t be added. Please try next time.</string>
     <string name="claim_gift">Claim gift</string>
     <string name="auto_renewal">Auto Renewal</string>
     <string name="upgrade_now">Upgrade Now</string>
@@ -1140,7 +1115,7 @@
     <string name="view_more">View more</string>
     <string name="view_less">View less</string>
     <string name="or_login_with">Or login with</string>
-    <string name="welcome_to_jugnoo">Welcome to Jugnoo</string>
+    <string name="welcome_to_jugnoo">Welcome to &appname;</string>
     <string name="or_signup_with">Or signup with</string>
     <string name="enter_otp_recieved_on">Enter OTP received on:</string>
     <string name="autodetecting_otp_sent_to">Autodetecting OTP sent to</string>
@@ -1286,7 +1261,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="no_reviews_yet">No reviews yet!</string>
     <string name="be_the_first_one_to_add">Be the first one to add…</string>
-    <string name="label_checkout_request">Please accept a collect request of <b>\u20B9%s</b> from %s in your UPI app.</string>
+    <string name="label_checkout_request">Please accept a collect request of <b>&currency;%s</b> from %s in your UPI app.</string>
     <string name="label_cancel_payment">Please give us a reason before we cancel the payment.</string>
     <string name="label_below_icici_payment_edt">You will receive a collect request from %s in the UPI app you used to create your VPA.</string>
     <string name="error_enter_virtual_payment_address">Please enter a virtual payment address.</string>
@@ -1344,7 +1319,7 @@
     <string name="reorder_no_items_available">Sorry, none of the items in your cart are available at the restaurant. To order from the same restaurant, Press \'Edit Order\'. If you\'d like to order from another restaurant, Press \'Change\'.</string>
     <string name="edit_order">Edit Order</string>
     <string name="change_order">Change</string>
-    <string name="min_order_checkout">Please add more items to your cart to reach minimum order amount of \u20B9%s.</string>
+    <string name="min_order_checkout">Please add more items to your cart to reach minimum order amount of &currency;%s.</string>
     <string name="label_cancel_edit_order">Click on cancel to edit your order</string>
     <string name="fugu_support_title">CHAT</string>
     <string name="error_no_rating">Please select a rating</string>
@@ -1431,7 +1406,7 @@
     <string name="upload_photo">Upload Photo</string>
     <string name="tap_to_upload_photo">Tap here to upload a photo for your order</string>
 
-    
+
     <!-- Fatafat how it works -->
     <string name="txt_how_it_works">How it works</string>
     <string name="txt_what_do_you_need">What do you need?</string>
@@ -1466,16 +1441,15 @@
     <string name="phone_number_add_store">PHONE NO.</string>
     <string name="add_photos">Add Photos</string>
     <string name="upload_a_photo">Upload photos</string>
-    <string name="label_add_store_text"><b>Suggest a missing store to Jugnoo</b></string>
-    <string name="label_add_store_text_oh_snap"><b>Suggest a store to Jugnoo</b></string>
+    <string name="label_add_store_text"><b>Suggest a missing store to &appname;</b></string>
+    <string name="label_add_store_text_oh_snap"><b>Suggest a store to &appname;</b></string>
     <string name="btn_text_suggest_store">Suggest a missing store</string>
     <string name="hint_spinner_add_store">- Select Category -</string>
     <string name="store_address">Store\'s Address</string>
     <string name="enter_store_phone_number">Enter store\'s phone number</string>
     <string name="title_suggest_store">SUGGEST A STORE</string>
 
-    <!-- Jugnoo Connections -->
-    <string name="txt_jugnoo_connections">Your Jugnoo Connections</string>
+    <string name="txt_jugnoo_connections">Your &appname; Connections</string>
     <string name="txt_new_message">New Message</string>
     <string name="min_order_strip_merchant_info">Min. Order Amount %s</string>
     <string name="txt_check_pending_transactions">Check Your Pending Transactions</string>
@@ -1490,7 +1464,7 @@
     <string name="txt_suggestions">Suggestions</string>
     <string name="txt_recent_searches">Recent Searches</string>
     <string name="txt_related_to">Related to \"%s\"</string>
-    <string name="jugnoo_taxi">Jugnoo Taxi</string>
+    <string name="jugnoo_taxi">&appname; Taxi</string>
     <string name="faqs">FAQs</string>
     <string name="we_could_not_find_this_post">We could not find this post right now</string>
     <string name="closing_in_format">Closing in %1$s %2$s</string>
@@ -1501,7 +1475,6 @@
     <string name="please_enter_email">Please enter email id</string>
     <string name="please_enter_phone_number">Please enter phone number</string>
     <string name="please_enter_password">Please enter password</string>
-    <string name="country_code">+91</string>
     <string name="password_must_be_atleast_six">Password must be of atleast six characters</string>
     <string name="please_enter_valid_email_id">Please enter valid email id</string>
     <string name="login_cancelled">Login Cancelled</string>
@@ -1511,7 +1484,6 @@
     <string name="please_enter_password_to_continue">Please enter password to continue.</string>
     <string name="code_cant_be_empty">Code can\'t be empty</string>
     <string name="code_not_matched">Code not matched</string>
-    <string name="country_iso">IND</string>
     <string name="no_transactions_currently">No transactions currently</string>
     <string name="some_error_occured">Some error occurred</string>
     <string name="error">Error</string>
@@ -1575,7 +1547,7 @@
     <string name="whatsapp_not_installed">WhatsApp not Installed</string>
     <string name="choose_email_client">Choose an Email client:</string>
     <string name="share_with">Share with...</string>
-    <string name="you_havent_tried_app_yet">You haven\'t tried Jugnoo yet.</string>
+    <string name="you_havent_tried_app_yet">You haven\'t tried &appname; yet.</string>
     <string name="some_error_occured_tap_to_retry">Some error occurred, tap to retry</string>
     <string name="no_connection_tap_to_retry">No internet connection, tap to retry</string>
     <string name="discounts">Discounts</string>
@@ -1661,7 +1633,7 @@
     <string name="service_deleted">Service Deleted</string>
     <string name="service_ignored">Service Ignored</string>
     <string name="service_seen_by_agent">Service seen by agent</string>
-    <string name="pay_unsuccessful_message">Your payment via Jugnoo Pay was unsuccessful. In case, any money was debited from your bank account, it will be auto-credited in some time.</string>
+    <string name="pay_unsuccessful_message">Your payment via &appname; Pay was unsuccessful. In case, any money was debited from your bank account, it will be auto-credited in some time.</string>
     <string name="cannot_upload_more_images">Cannot upload more images</string>
     <string name="edit_post">Edit Post</string>
     <string name="edit_review">Edit Review</string>
@@ -1712,7 +1684,7 @@
     <string name="margherita_npizza">Margherita  Pizza</string>
     <string name="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww">wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww</string>
     <string name="_91">+91</string>
-    <string name="explore_more_from_jugnoo">Explore more from Jugnoo</string>
+    <string name="explore_more_from_jugnoo">Explore more from &appname;</string>
     <string name="what_would_you_like_to_ndo_today">What would you like to do today?</string>
     <string name="orange">Orange</string>
     <string name="ah">ah</string>
@@ -1733,7 +1705,7 @@
     <string name="convenience_charge">Convenience Charge</string>
     <string name="final_fare">Final Fare</string>
     <string name="to_be_paid_camel_case">To Be Paid</string>
-    <string name="rs_20">Rs. 20</string>
+    <string name="rs_20">&currency; 20</string>
     <string name="_20_kms">20 kms</string>
     <string name="wait">Wait</string>
     <string name="_20_min">20 min</string>
@@ -1752,7 +1724,7 @@
     <string name="min_caps">MIN</string>
     <string name="your_treat_to_beat_heat_nis_on_the_way">Your treat to beat heat is on the way.</string>
     <string name="order_fruits_amp_veggies_nwhile_you_ride"><![CDATA[Order fruits & veggies while you ride]]></string>
-    <string name="jugnoo_fresh_will_get_them_ndelivered_to">Jugnoo Fresh will get them delivered to</string>
+    <string name="jugnoo_fresh_will_get_them_ndelivered_to">&appname; Fresh will get them delivered to</string>
     <string name="order_now">Order Now</string>
     <string name="name_with_colon">Name:</string>
     <string name="user1">User1</string>
@@ -1763,10 +1735,10 @@
     <string name="monthly">Monthly</string>
     <string name="_2388">2388</string>
     <string name="annual">Annual</string>
-    <string name="jugnoo_star_camel_case">Jugnoo Star</string>
+    <string name="jugnoo_star_camel_case">&appname; Star</string>
     <string name="_199">199</string>
     <string name="_00">00</string>
-    <string name="retry_with_jugnoo_pay">Retry with Jugnoo Pay</string>
+    <string name="retry_with_jugnoo_pay">Retry with &appname; Pay</string>
     <string name="plus">+</string>
     <string name="_2_5_x">2.5 X</string>
     <string name="account">Account</string>
@@ -1774,7 +1746,7 @@
     <string name="new_zealand">NEW ZEALAND</string>
     <string name="_02_00pm_06_00pm">02:00PM-06:00PM</string>
     <string name="today">TODAY</string>
-    <string name="gift_your_friends_nrs_50">Gift your friends  Rs. 50</string>
+    <string name="gift_your_friends_nrs_50">Gift your friends  &currency; 50</string>
     <string name="_10_00_am_12_00_pm">10:00 AM - 12:00 PM</string>
     <string name="no_current_notifications">No Current Notifications</string>
     <string name="driver_is_late">Driver is late</string>
@@ -1792,7 +1764,7 @@
     <string name="handle">Handle</string>
     <string name="car_number">Car Number</string>
     <string name="driver_nenroute">Driver Enroute</string>
-    <string name="rs_0100">Rs. 0100</string>
+    <string name="rs_0100">&currency; 0100</string>
     <string name="_1_0x">1.0x</string>
     <string name="_1">1</string>
     <string name="enter_your_email_id_or_phone_number">Enter your Email ID or Phone number</string>
@@ -1841,7 +1813,7 @@
     <string name="do_you_really_want_to_delete_this_post_if_you_delete_once_it_will_no_longer_be_available">Do you really want to delete this post? If you delete once it will no longer be available.</string>
     <string name="no_current_offers">No Current Offers</string>
     <string name="_1_like_1_share">1 Like | 1 Share</string>
-    <string name="flat_rs_30_off">Flat Rs.30 Off</string>
+    <string name="flat_rs_30_off">Flat &currency;30 Off</string>
     <string name="new_delhi">New Delhi</string>
     <string name="some_text">some text</string>
     <string name="_1_nmin">1 min</string>
@@ -1871,13 +1843,13 @@
     <string name="others">Others</string>
     <string name="please_specify_the_reason">Please specify the reason</string>
     <string name="required">* Required</string>
-    <string name="cancellation_of_a_ride_more_than_5_minutes_nafter_the_driver_is_allocated_will_lead_to_ncancellation_charges_of_rs_20">Cancellation of a ride more than 5 minutes after the driver is allocated will lead to cancellation charges of Rs. 20</string>
+    <string name="cancellation_of_a_ride_more_than_5_minutes_nafter_the_driver_is_allocated_will_lead_to_ncancellation_charges_of_rs_20">Cancellation of a ride more than 5 minutes after the driver is allocated will lead to cancellation charges of &currency; 20</string>
     <string name="fare_estimate">FARE ESTIMATE</string>
-    <string name="convenience_charges_rs_10">Convenience charges Rs.10</string>
+    <string name="convenience_charges_rs_10">Convenience charges &currency;10</string>
     <string name="type_city_name">Type City Name</string>
     <string name="use_current_location">Use Current Location</string>
     <string name="trending_cities">TRENDING CITIES</string>
-    <string name="finding_a_jugnoo_driver">Finding a Jugnoo driver...</string>
+    <string name="finding_a_jugnoo_driver">Finding a &appname; driver...</string>
     <string name="show_more_camel_case">Show More</string>
     <string name="post">Post</string>
     <string name="please_confirm_delivery_address">Please confirm delivery address.</string>
@@ -1901,5 +1873,11 @@
     <string name="description">Description</string>
     <string name="booking_accepted">Booking Accepted</string>
     <string name="pro_nassigned">Pro Assigned</string>
+
+    <string name="error_listener_not_set">Listener is not set you will not receive any callback for country picked!</string>
+    <string name="error_no_countries_found">No Countries Found! Did you call build()</string>
+    <string name="search">Search</string>
+    <string name="country_picker_header">Select country</string>
+    <string name="no_country_found">No country found</string>
 
 </resources>

@@ -35,7 +35,8 @@ public class DriverInfo {
 	private VehicleIconSet vehicleIconSet;
 	private ArrayList<String> fellowRiders = new ArrayList<>();
 	private int operatorId;
-	
+	private String currency;
+
 	public DriverInfo(String userId){
 		this.userId = userId;
 	}
@@ -65,7 +66,7 @@ public class DriverInfo {
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
 			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
-					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId){
+					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId, String currency){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -94,6 +95,7 @@ public class DriverInfo {
 		this.bearing = bearing;
 		this.chatEnabled = chatEnabled;
 		this.operatorId = operatorId;
+		this.currency = currency;
 	}
 
 	//for last ride data
@@ -255,5 +257,13 @@ public class DriverInfo {
 
 	public void setOperatorId(int operatorId) {
 		this.operatorId = operatorId;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 }

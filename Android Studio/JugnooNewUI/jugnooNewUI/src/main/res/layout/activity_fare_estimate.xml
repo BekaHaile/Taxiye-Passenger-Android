@@ -286,7 +286,7 @@
             android:layout_above="@+id/textViewConvenienceCharge"
             android:layout_marginBottom="0px"
             android:gravity="center"
-            android:text="Rs.100 - Rs.200"
+            android:text="100 - 200"
             android:textColor="@color/text_color"
             android:textSize="66px"
 
