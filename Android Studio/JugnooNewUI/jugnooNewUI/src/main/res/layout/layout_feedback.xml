@@ -522,6 +522,7 @@
                 android:layout_marginEnd="44px"
                 android:layout_marginTop="30px"
                 android:gravity="center"
+                android:visibility="gone"
                 android:text="@string/end_ride_with_image_text"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_32" />
