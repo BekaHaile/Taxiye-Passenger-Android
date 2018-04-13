@@ -99,8 +99,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			setPlaySound(builder, playSound);
 
             builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
-            builder.setSmallIcon(R.drawable.notification_icon);
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_notif));
+            builder.setSmallIcon(R.drawable.ic_notif);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= 16){
 				builder.setPriority(Notification.PRIORITY_HIGH);
@@ -192,9 +192,9 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			setPlaySound(builder, playSound);
             builder.setWhen(when);
 
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_notif));
 
-            builder.setSmallIcon(R.drawable.notification_icon);
+            builder.setSmallIcon(R.drawable.ic_notif);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= 16){
 				builder.setPriority(Notification.PRIORITY_HIGH);
@@ -268,11 +268,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				Drawable drawable = context.getResources().getDrawable(R.drawable.circle_theme_size);
 				builder.setLargeIcon(drawableToBitmapPlusText(context, drawable, eta, 16));
 			} else{
-				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_notif));
 			}
 
 //			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
-			builder.setSmallIcon(R.drawable.notification_icon);
+			builder.setSmallIcon(R.drawable.ic_notif);
 
 			Intent intentCall = new Intent(context, CallActivity.class);
 			intentCall.putExtra(context.getResources().getString(R.string.call_number), callNumber);
@@ -330,8 +330,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
             builder.setTicker(message);
 			setPlaySound(builder, playSound);
             builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
-            builder.setSmallIcon(R.drawable.notification_icon);
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_notif));
+            builder.setSmallIcon(R.drawable.ic_notif);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
 				builder.setPriority(Notification.PRIORITY_HIGH);
@@ -371,8 +371,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 	public void onMessageReceived(RemoteMessage remoteMessage) {
 		try {
 			if (fuguNotificationConfig.isFuguNotification(remoteMessage.getData())) {
-				fuguNotificationConfig.setLargeIcon(R.drawable.ic_launcher);
-                fuguNotificationConfig.setSmallIcon(R.drawable.notification_icon);
+				fuguNotificationConfig.setLargeIcon(R.drawable.ic_notif);
+                fuguNotificationConfig.setSmallIcon(R.drawable.ic_notif);
 
 
                 if(Build.VERSION.SDK_INT >= 16){

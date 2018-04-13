@@ -19,19 +19,15 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 public class AboutActivity extends BaseActivity {
 
+    private final String TAG = "About";
     RelativeLayout relative;
-
     TextView textViewTitle;
     ImageView imageViewBack;
-
     RelativeLayout relativeLayoutRateUs, relativeLayoutLikeUs, relativeLayoutTNC, relativeLayoutPrivacy, relativeLayoutAbout;
     TextView textViewRateUs, textViewLikeUs, textViewTNC, textViewPrivacy, textViewAbout;
-
-
-    String facebookPageId = "252184564966458";
-//    String facebookPageName = "ridejugnoo";
-    String facebookPageName = "jugnoose";
-    private final String  TAG = "About";
+    String facebookPageId = "jingoridestuktukmlangoni";
+    //    String facebookPageName = "ridejugnoo";
+    String facebookPageName = "jingoridestuktukmlangoni";
     Bundle bundle;
 
     @Override
@@ -57,6 +53,9 @@ public class AboutActivity extends BaseActivity {
         relativeLayoutTNC = (RelativeLayout) findViewById(R.id.relativeLayoutTNC);
         relativeLayoutPrivacy = (RelativeLayout) findViewById(R.id.relativeLayoutPrivacy);
         relativeLayoutAbout = (RelativeLayout) findViewById(R.id.relativeLayoutAbout);
+        relativeLayoutAbout.setVisibility(View.GONE);
+        relativeLayoutPrivacy.setVisibility(View.GONE);
+        relativeLayoutTNC.setVisibility(View.GONE);
 
         textViewRateUs = (TextView) findViewById(R.id.textViewRateUs);
         textViewRateUs.setTypeface(Fonts.mavenLight(this));
@@ -77,7 +76,7 @@ public class AboutActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
+                intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=production.jingos.customer"));
                 startActivity(intent);
             }
         });
@@ -91,7 +90,9 @@ public class AboutActivity extends BaseActivity {
                     if (Utils.appInstalledOrNot(AboutActivity.this, "com.facebook.katana")) {
                         try {
                             getPackageManager().getPackageInfo("com.facebook.katana", 0);
-                            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/" + facebookPageId));
+                            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/" + facebookPageName));
+
+//                            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/" + facebookPageId));
                         } catch (Exception e) {
                             intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/" + facebookPageName));
                         }

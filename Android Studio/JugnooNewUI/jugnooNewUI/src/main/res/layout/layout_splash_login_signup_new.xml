@@ -49,10 +49,10 @@
 
                 <ImageView
                     android:id="@+id/imageViewJugnooLogo"
-                    android:layout_width="81dp"
-                    android:layout_height="81dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/ic_taxi_logo"
+                    android:src="@drawable/splash_logo"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:tag="@string/dont_touch_me"
@@ -63,7 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:text="@string/jugnoo_taxi"
+                    android:text="@string/app_name"
                     android:textAllCaps="true"
                     android:textStyle="bold"
                     android:layout_below="@+id/imageViewJugnooLogo"
