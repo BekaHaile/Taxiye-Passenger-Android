@@ -357,6 +357,8 @@ public class WalletCore {
             return R.drawable.ic_freecharge_small;
         } else if(paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()){
             return R.drawable.ic_cards_grey;
+        }else if(paymentOption == PaymentOption.MPESA.getOrdinal()){
+            return R.drawable.ic_mpesa_small;
         } else {
 			return R.drawable.ic_cash_small;
 		}
@@ -387,6 +389,8 @@ public class WalletCore {
                         Data.userData.getFreeChargeBalanceStr());
             } else if(paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()){
 				return getRazorpayName(context);
+            }else if(paymentOption == PaymentOption.MPESA.getOrdinal()){
+				return context.getResources().getString(R.string.mpesa);
             } else {
 				return context.getResources().getString(R.string.cash);
 			}
@@ -752,7 +756,8 @@ public class WalletCore {
 				&& paymentOptionInt != PaymentOption.PAYTM.getOrdinal()
 				&& paymentOptionInt != PaymentOption.MOBIKWIK.getOrdinal()
 				&& paymentOptionInt != PaymentOption.FREECHARGE.getOrdinal()
-				&& paymentOptionInt != PaymentOption.RAZOR_PAY.getOrdinal()) {
+				&& paymentOptionInt != PaymentOption.RAZOR_PAY.getOrdinal()
+				&& paymentOptionInt != PaymentOption.MPESA.getOrdinal()) {
 			try {
 				PaymentModeConfigData paymentModeConfigDataDefault = null;
 				for (PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas()) {
@@ -969,6 +974,14 @@ public class WalletCore {
                 }
 
             }
+			else if(paymentOption == PaymentOption.MPESA){
+//				if(Data.autoData.getPickupPaymentOption() == PaymentOption.PAYTM.getOrdinal()){
+//					FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
+//				}
+				Data.autoData.setPickupPaymentOption(PaymentOption.MPESA.getOrdinal());
+				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+//				FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "cash");
+			}
 			else {
 				Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
 				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();

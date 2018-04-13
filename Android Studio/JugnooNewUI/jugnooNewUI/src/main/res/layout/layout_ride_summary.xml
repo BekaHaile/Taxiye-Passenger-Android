@@ -425,6 +425,35 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/relativeLayoutPaidUsingMpesa"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6px">
+
+                            <TextView
+                                android:id="@+id/textViewEndRideMpesa"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="30px"
+                                android:gravity="center_vertical"
+                                android:text="@string/mpesa_wallet"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26" />
+
+
+                            <TextView
+                                android:id="@+id/textViewEndRideMpesaValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
+                                android:text="0"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
                             android:id="@+id/rlPaidUsingRazorpay"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
