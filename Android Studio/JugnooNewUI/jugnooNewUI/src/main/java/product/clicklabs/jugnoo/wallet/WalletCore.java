@@ -421,6 +421,8 @@ public class WalletCore {
                 return context.getResources().getString(R.string.freecharge);
             } else if(paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()){
                 return getPaymentOptionBalanceText(paymentOption);
+            } else if(paymentOption == PaymentOption.MPESA.getOrdinal()){
+                return context.getString(R.string.mpesa);
             } else {
 				return context.getResources().getString(R.string.cash);
 			}
@@ -537,9 +539,13 @@ public class WalletCore {
 				activity.startActivity(intent);
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
-			else if (Data.userData.getPaytmEnabled() != 1
+			else if ((paymentOption == PaymentOption.PAYTM.getOrdinal()
+					|| paymentOption == PaymentOption.MOBIKWIK.getOrdinal()
+					|| paymentOption == PaymentOption.FREECHARGE.getOrdinal())
+					&&
+					(Data.userData.getPaytmEnabled() != 1
 					|| Data.userData.getMobikwikEnabled() != 1
-					|| Data.userData.getFreeChargeEnabled() != 1) {
+					|| Data.userData.getFreeChargeEnabled() != 1)) {
 				Intent intent = new Intent(activity, PaymentActivity.class);
 				intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
 				intent.putExtra(Constants.KEY_WALLET_TYPE, paymentOption);
@@ -569,101 +575,6 @@ public class WalletCore {
 	}
 
 	public ArrayList<PaymentModeConfigData> getPaymentModeConfigDatas() {
-
-//		for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
-//			paymentModeConfigData.setPriority(0);
-//			if(paymentModeConfigData.getEnabled() == 1){
-//				if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()
-//						&& userData.getPaytmEnabled() == 1) {
-//					paymentModeConfigData.incrementPriority();
-//					if(userData.getPaytmBalance() > 0){
-//						paymentModeConfigData.incrementPriority();
-//						if(userData.getPaytmBalance() > userData.getMobikwikBalance()
-//								&& userData.getPaytmBalance() > userData.getFreeChargeBalance()){
-//							paymentModeConfigData.incrementPriority();
-//							paymentModeConfigData.incrementPriority();
-//						} else if(userData.getPaytmBalance() > userData.getMobikwikBalance()
-//								|| userData.getPaytmBalance() > userData.getFreeChargeBalance()){
-//							paymentModeConfigData.incrementPriority();
-//						}
-//					}
-//					if(Prefs.with(context).getInt(Constants.SP_LAST_ADDED_WALLET, 0) == PaymentOption.PAYTM.getOrdinal()){
-//						paymentModeConfigData.incrementPriority();
-//					}
-//					if(Prefs.with(context).getInt(Constants.SP_LAST_USED_WALLET, 0) == PaymentOption.PAYTM.getOrdinal()){
-//						paymentModeConfigData.incrementPriority();
-//					}
-//					if(Prefs.with(context).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0) == PaymentOption.PAYTM.getOrdinal()){
-//						paymentModeConfigData.incrementPriority();
-//					}
-//				}
-//				else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()
-//						&& userData.getMobikwikEnabled() == 1) {
-//					paymentModeConfigData.incrementPriority();
-//					if(userData.getMobikwikBalance() > 0){
-//						paymentModeConfigData.incrementPriority();
-//						if(userData.getMobikwikBalance() > userData.getPaytmBalance()
-//								&& userData.getMobikwikBalance() > userData.getFreeChargeBalance()){
-//							paymentModeConfigData.incrementPriority();
-//							paymentModeConfigData.incrementPriority();
-//						} else if(userData.getMobikwikBalance() > userData.getPaytmBalance()
-//								|| userData.getMobikwikBalance() > userData.getFreeChargeBalance()){
-//							paymentModeConfigData.incrementPriority();
-//						}
-//					}
-//					if(Prefs.with(context).getInt(Constants.SP_LAST_ADDED_WALLET, 0) == PaymentOption.MOBIKWIK.getOrdinal()){
-//						paymentModeConfigData.incrementPriority();
-//					}
-//					if(Prefs.with(context).getInt(Constants.SP_LAST_USED_WALLET, 0) == PaymentOption.MOBIKWIK.getOrdinal()){
-//						paymentModeConfigData.incrementPriority();
-//					}
-//					if(Prefs.with(context).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0) == PaymentOption.MOBIKWIK.getOrdinal()){
-//						paymentModeConfigData.incrementPriority();
-//					}
-//				}
-//				else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()
-//						&& userData.getFreeChargeEnabled() == 1) {
-//					paymentModeConfigData.incrementPriority();
-//					if(userData.getFreeChargeBalance() > 0){
-//						paymentModeConfigData.incrementPriority();
-//						if(userData.getFreeChargeBalance() > userData.getPaytmBalance()
-//								&& userData.getFreeChargeBalance() > userData.getMobikwikBalance()){
-//							paymentModeConfigData.incrementPriority();
-//							paymentModeConfigData.incrementPriority();
-//						} else if(userData.getFreeChargeBalance() > userData.getPaytmBalance()
-//								|| userData.getFreeChargeBalance() > userData.getMobikwikBalance()){
-//							paymentModeConfigData.incrementPriority();
-//						}
-//					}
-//					if(Prefs.with(context).getInt(Constants.SP_LAST_ADDED_WALLET, 0) == PaymentOption.FREECHARGE.getOrdinal()){
-//						paymentModeConfigData.incrementPriority();
-//					}
-//					if(Prefs.with(context).getInt(Constants.SP_LAST_USED_WALLET, 0) == PaymentOption.FREECHARGE.getOrdinal()){
-//						paymentModeConfigData.incrementPriority();
-//					}
-//					if(Prefs.with(context).getInt(Constants.SP_LAST_MONEY_ADDED_WALLET, 0) == PaymentOption.FREECHARGE.getOrdinal()){
-//						paymentModeConfigData.incrementPriority();
-//					}
-//				}
-//			}
-//		}
-//
-//		Collections.sort(paymentModeConfigDatas, new Comparator<PaymentModeConfigData>() {
-//			@Override
-//			public int compare(PaymentModeConfigData lhs, PaymentModeConfigData rhs) {
-//				if(lhs.getPriority() == rhs.getPriority()){
-//					return 0;
-//				}
-//				else if(lhs.getPriority() > rhs.getPriority()){
-//					return -1;
-//				}
-//				else{
-//					return 1;
-//				}
-//			}
-//		});
-//		Log.e("paymentModeConfigDatas", ">"+paymentModeConfigDatas);
-
 		return paymentModeConfigDatas;
 	}
 
@@ -723,16 +634,12 @@ public class WalletCore {
 							&& Data.getPayData().getPay().getHasVpa() == 1) {
 						paymentModeConfigDataDefault = paymentModeConfigData;
 						break;
-					}  else if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()) {
-						paymentModeConfigDataDefault = paymentModeConfigData;
-						break;
-					} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.UPI_RAZOR_PAY.getOrdinal()) {
-						paymentModeConfigDataDefault = paymentModeConfigData;
-						break;
-					}else if (paymentModeConfigData.getPaymentOption() == PaymentOption.ICICI_UPI.getOrdinal()) {
-						paymentModeConfigDataDefault = paymentModeConfigData;
-						break;
-					}else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
+					}  else if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()
+							|| paymentModeConfigData.getPaymentOption() == PaymentOption.UPI_RAZOR_PAY.getOrdinal()
+							|| paymentModeConfigData.getPaymentOption() == PaymentOption.ICICI_UPI.getOrdinal()
+							|| paymentModeConfigData.getPaymentOption() == PaymentOption.MPESA.getOrdinal()
+							|| paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()
+							) {
 						paymentModeConfigDataDefault = paymentModeConfigData;
 						break;
 					}
@@ -809,6 +716,8 @@ public class WalletCore {
 			return PaymentOption.UPI_RAZOR_PAY;
 		} else if(PaymentOption.ICICI_UPI.getOrdinal() == paymentOption){
 			return PaymentOption.ICICI_UPI;
+		} else if(PaymentOption.MPESA.getOrdinal() == paymentOption){
+			return PaymentOption.MPESA;
 		}else{
 			return PaymentOption.CASH;
 		}

@@ -211,6 +211,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
             unSelected2.setImageResource(R.drawable.ic_radio_button_normal);
             unSelected3.setImageResource(R.drawable.ic_radio_button_normal);
             unSelected4.setImageResource(R.drawable.ic_radio_button_normal);
+            unSelected5.setImageResource(R.drawable.ic_radio_button_normal);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -278,6 +279,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
             ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
             if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
                 linearLayoutWalletContainer.removeAllViews();
+                // TODO: 14/04/18 remove this
                 linearLayoutWalletContainer.addView(relativeLayoutMpesa);
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
                     if (paymentModeConfigData.getEnabled() == 1) {
@@ -288,7 +290,8 @@ public class PaymentOptionDialog implements View.OnClickListener {
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
                         }
-//                        else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
+                        // TODO: 14/04/18 uncomment this check when server starts sending mpesa config
+//                        else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MPESA.getOrdinal()) {
 //                            linearLayoutWalletContainer.addView(linearLayoutMpesa);
 //                        }
                         else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {

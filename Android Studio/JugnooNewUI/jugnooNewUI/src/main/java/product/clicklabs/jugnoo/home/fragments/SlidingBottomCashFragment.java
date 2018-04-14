@@ -245,14 +245,18 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
             if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
                 linearLayoutWalletContainer.removeAllViews();
+                // TODO: 14/04/18 remove this
                 linearLayoutWalletContainer.addView(relativeLayoutMpesa);
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
                     if (paymentModeConfigData.getEnabled() == 1) {
                         if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutPaytm);
-                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MPESA.getOrdinal()) {
-                            linearLayoutWalletContainer.addView(relativeLayoutMpesa);
-                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
+                        }
+                        // TODO: 14/04/18 uncomment this check when server starts sending mpesa config
+//                        else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MPESA.getOrdinal()) {
+//                            linearLayoutWalletContainer.addView(relativeLayoutMpesa);
+//                        }
+                        else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);

@@ -62,7 +62,7 @@ public class UserData {
 	private double freeChargeBalance = -1;
 
 	private int mPesaEnabled;
-	private double mPesaBalance = -1;
+	private double mPesaBalance = 0;
 
 	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, deliveryCustomerEnabled,
 			inviteFriendButton, payEnabled, feedEnabled, prosEnabled,autosEnabled;
@@ -1133,5 +1133,21 @@ public class UserData {
 
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
+	}
+
+	public int getmPesaEnabled() {
+		return mPesaEnabled;
+	}
+
+	public void setmPesaEnabled(int mPesaEnabled) {
+		this.mPesaEnabled = mPesaEnabled;
+	}
+
+	public double getmPesaBalance() {
+		return mPesaBalance;
+	}
+
+	public void setmPesaBalance(double mPesaBalance) {
+		this.mPesaBalance = mPesaBalance;
 	}
 }
