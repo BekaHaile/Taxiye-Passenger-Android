@@ -2338,11 +2338,6 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 						//"login_channel": 0 //0-Default fbAccountKit, 1-Inhouse apis
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
 
-						// TODO: 08/04/18 from server
-//						ArrayList<String> codesToFilter = new ArrayList<>();
-//						codesToFilter.add("BD");
-//						codesToFilter.add("IN");
-//						countryPicker.filterCountries(codesToFilter);
 						if(countryPicker.getAllCountries().size() > 1){
 							rlCountryCode.setEnabled(true);
 							tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_vector, 0);
