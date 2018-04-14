@@ -385,8 +385,11 @@ public interface Constants {
 
     String KEY_MOBIKWIK_ENABLED = "mobikwik_enabled";
     String KEY_MOBIKWIK_BALANCE = "mobikwik_balance";
+    String KEY_MPESA_ENABLED = "mpesa_enabled";
+    String KEY_MPESA_BALANCE = "mpesa_balance";
     String KEY_PAYTM = "paytm";
     String KEY_MOBIKWIK = "mobikwik";
+    String KEY_MPESA = "mpesa";
     String KEY_RAZORPAY = "razorpay";
     String KEY_UPI_RAZORPAY = "upi_razorpay";
     String KEY_BALANCE = "balance";
@@ -397,6 +400,7 @@ public interface Constants {
     String KEY_WALLET_BALANCE = "wallet_balance";
     String KEY_WALLET_TRANSACTIONS = "wallet_transactions";
     String KEY_PAID_USING_MOBIKWIK = "paid_using_mobikwik";
+    String KEY_PAID_USING_MPESA = "paid_using_mpesa";
     String KEY_PAYMENT_MODE_CONFIG_DATA = "payment_mode_config_data";
     String KEY_ENABLED = "enabled";
     String KEY_JUGNOO_CASH = "jugnoo_cash";
@@ -738,6 +742,7 @@ public interface Constants {
     String KEY_SUPPORT_CATEGORY = "support_category";
     String SP_PAYTM_LAST_BALANCE = "sp_paytm_last_balance";
     String SP_MOBIKWIK_LAST_BALANCE = "sp_mobikwik_last_balance";
+    String SP_MPESA_LAST_BALANCE = "sp_mpesa_last_balance";
     String SP_FREECHARGE_LAST_BALANCE = "sp_freecharge_last_balance";
     String KEY_ICICI_UPI = "upi_icici";
     String PLACE_ORDER_DATA = "place_order_response";

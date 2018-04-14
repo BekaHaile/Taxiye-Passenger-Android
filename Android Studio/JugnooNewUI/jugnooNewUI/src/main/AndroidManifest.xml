@@ -298,7 +298,7 @@
 
         <receiver android:name=".PushPendingCallsReceiver">
             <intent-filter>
-                <action android:name="product.clicklabs.jugnoo.PUSH_PENDING_CALLS"/>
+                <action android:name="product.clicklabs.jugnoo.white.PUSH_PENDING_CALLS"/>
             </intent-filter>
         </receiver>
 

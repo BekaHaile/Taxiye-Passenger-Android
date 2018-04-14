@@ -57,7 +57,7 @@
                 >
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="179dp"
                     android:layout_height="100px"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
@@ -67,13 +67,12 @@
                         android:layout_width="33px"
                         android:layout_height="33px"
                         android:src="@drawable/ic_radio_button_normal"
-                        android:tag="mwar"/>
+                        android:tag="mwar" />
 
                     <ImageView
                         style="@style/payment_option_icon_small"
-                        android:src="@drawable/ic_paytm_small"
                         android:layout_marginStart="10px"
-                        />
+                        android:src="@drawable/ic_paytm_small" />
 
                     <TextView
                         android:id="@+id/textViewPaytm"
@@ -82,7 +81,7 @@
                         android:layout_marginStart="10px"
                         android:text="@string/paytm_wallet"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:textSize="@dimen/text_size_34" />
 
                 </LinearLayout>
 
@@ -199,6 +198,57 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:text="200"
+                    android:textColor="@color/theme_green_color"
+                    android:textSize="@dimen/text_size_34"/>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/relativeLayoutMpesa"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/nl_button_size"
+                android:layout_marginStart="36px"
+                android:layout_marginEnd="36px"
+                android:layout_marginTop="10px"
+                android:visibility="visible"
+
+                >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="100px"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageViewRadioMpesa"
+                        android:layout_width="33px"
+                        android:layout_height="33px"
+                        android:src="@drawable/ic_radio_button_normal"
+                        android:tag="mwar"/>
+
+                    <ImageView
+                        style="@style/payment_option_icon_small"
+                        android:src="@drawable/ic_mpesa_small"
+                        android:layout_marginStart="10px"
+                        />
+
+                    <TextView
+                        android:id="@+id/textViewMpesa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10px"
+                        android:text="@string/mpesa_wallet"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textViewMpesaValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:textColor="@color/theme_green_color"
                     android:textSize="@dimen/text_size_34"/>
 
