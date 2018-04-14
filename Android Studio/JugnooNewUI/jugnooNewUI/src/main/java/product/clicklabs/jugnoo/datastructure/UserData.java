@@ -61,6 +61,9 @@ public class UserData {
 	private int freeChargeEnabled;
 	private double freeChargeBalance = -1;
 
+	private int mPesaEnabled;
+	private double mPesaBalance = 0;
+
 	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, deliveryCustomerEnabled,
 			inviteFriendButton, payEnabled, feedEnabled, prosEnabled,autosEnabled;
 
@@ -117,7 +120,7 @@ public class UserData {
 					int cToDReferralEnabled,
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
 					String fatafatUrlLink,
-					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
+					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled,int mPesaEnabled, int notificationPreferenceEnabled,
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled,
 					int payEnabled, int feedEnabled, int prosEnabled, int deliveryCustomerEnabled,
 					int inviteFriendButton, String defaultClientId,
@@ -181,6 +184,7 @@ public class UserData {
 		this.paytmEnabled = paytmEnabled;
 		this.mobikwikEnabled = mobikwikEnabled;
 		this.freeChargeEnabled = freeChargeEnabled;
+		this.mPesaEnabled = mPesaEnabled;
 
 		this.autosEnabled = autosEnabled;
 		this.mealsEnabled = mealsEnabled;
@@ -1129,5 +1133,21 @@ public class UserData {
 
 	public void setCountryCode(String countryCode) {
 		this.countryCode = countryCode;
+	}
+
+	public int getmPesaEnabled() {
+		return mPesaEnabled;
+	}
+
+	public void setmPesaEnabled(int mPesaEnabled) {
+		this.mPesaEnabled = mPesaEnabled;
+	}
+
+	public double getmPesaBalance() {
+		return mPesaBalance;
+	}
+
+	public void setmPesaBalance(double mPesaBalance) {
+		this.mPesaBalance = mPesaBalance;
 	}
 }

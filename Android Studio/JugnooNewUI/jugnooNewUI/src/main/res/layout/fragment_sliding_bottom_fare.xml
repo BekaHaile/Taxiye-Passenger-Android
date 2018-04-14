@@ -14,27 +14,29 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="240px"
-            android:layout_height="match_parent">
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10px">
 
             <TextView
                 android:id="@+id/textViewKM"
-                android:layout_width="150px"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/nl_per_km"
                 android:layout_marginTop="20px"
                 android:gravity="center_horizontal"
-                android:layout_alignParentEnd="true"
+                android:layout_centerHorizontal="true"
                 android:textSize="@dimen/text_size_32"
                 android:textColor="@color/text_color_light"/>
 
             <TextView
                 android:id="@+id/textViewKMValue"
-                android:layout_width="150px"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewKM"
+                android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
-                android:layout_alignParentEnd="true"
                 android:text="@string/_3"
                 android:textSize="@dimen/text_size_38"
                 android:textColor="@color/text_color"/>
@@ -42,7 +44,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="240px"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
             <ImageView
@@ -85,27 +87,29 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="240px"
-            android:layout_height="match_parent">
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="5px">
 
             <TextView
                 android:id="@+id/textViewMin"
-                android:layout_width="150px"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/nl_per_min"
                 android:layout_marginTop="20px"
                 android:gravity="center_horizontal"
-                android:layout_alignParentStart="true"
+                android:layout_centerHorizontal="true"
                 android:textSize="@dimen/text_size_32"
                 android:textColor="@color/text_color_light"/>
 
             <TextView
                 android:id="@+id/textViewMinValue"
-                android:layout_width="150px"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewMin"
                 android:gravity="center_horizontal"
-                android:layout_alignParentStart="true"
+                android:layout_centerHorizontal="true"
                 android:text="@string/_3"
                 android:textSize="@dimen/text_size_38"
                 android:textColor="@color/text_color"/>

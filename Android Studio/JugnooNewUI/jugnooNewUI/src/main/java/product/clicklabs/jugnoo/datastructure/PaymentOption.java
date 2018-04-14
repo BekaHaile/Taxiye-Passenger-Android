@@ -8,7 +8,8 @@ public enum PaymentOption {
 	JUGNOO_PAY(5), // payment gateway
 	RAZOR_PAY(6),
 	UPI_RAZOR_PAY(786),
-	ICICI_UPI(7);
+	ICICI_UPI(7),
+	MPESA(8);
 
 	private int ordinal;
 
