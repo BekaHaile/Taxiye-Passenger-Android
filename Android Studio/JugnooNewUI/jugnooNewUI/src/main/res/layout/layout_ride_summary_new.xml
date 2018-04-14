@@ -199,12 +199,13 @@
                 >
 
                 <TextView
+                    android:id="@+id/tvPayOnlineIn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_16"
                     android:textAllCaps="true"
-                    android:text="@string/pay_online"
+                    android:text="@string/pay_via_format"
                     app:typekitFont="@string/maven"
                     android:drawableStart="@drawable/ic_cards"
                     android:gravity="center_vertical"

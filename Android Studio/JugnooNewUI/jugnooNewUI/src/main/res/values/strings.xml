@@ -1882,5 +1882,6 @@
     <string name="search">Search</string>
     <string name="country_picker_header">Select country</string>
     <string name="no_country_found">No country found</string>
+    <string name="pay_via_format">Pay via %s</string>
 
 </resources>

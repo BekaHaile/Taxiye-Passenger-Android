@@ -94,6 +94,9 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.FuguCustomActionModel;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.TransactionUtils;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
@@ -192,6 +195,7 @@ import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
+import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -354,7 +358,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             imageViewPaymentModeConfirm, imageViewRideEndWithImage;
     private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
     private LinearLayout llPayOnline;
-    private TextView tvPayOnline;
+    private TextView tvPayOnline, tvPayOnlineIn;
 
 
 
@@ -818,6 +822,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewThumbsUp = (TextView) findViewById(R.id.textViewThumbsUp); textViewThumbsUp.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         llPayOnline = (LinearLayout) findViewById(R.id.llPayOnline);
         tvPayOnline = (TextView) findViewById(R.id.tvPayOnline); tvPayOnline.setTypeface(tvPayOnline.getTypeface(), Typeface.BOLD);
+        tvPayOnlineIn = (TextView) findViewById(R.id.tvPayOnlineIn);
 
         rlChatDriver = (RelativeLayout) findViewById(R.id.rlChatDriver);
         bChatDriver = (Button) findViewById(R.id.bChatDriver); bChatDriver.setOnClickListener(this);
@@ -1666,8 +1671,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onClick(View v) {
                 try {
                     if(Data.autoData.getEndRideData() != null) {
-						linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.ONLINE_PAYMENT);
-						GAUtils.event(RIDES, RIDE+END, ONLINE_PAYMENT);
+
+                        if(Data.autoData.getEndRideData().toPay > 0
+                                && Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.MPESA.getOrdinal()
+                                && Data.autoData.getEndRideData().getShowPaymentOptions() == 1){
+
+                            initiateRideEndPaymentAPI(Data.autoData.getEndRideData().engagementId, PaymentOption.MPESA.getOrdinal());
+                            GAUtils.event(RIDES, RIDE+END, ONLINE_PAYMENT);
+                        }
+
 					}
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2916,6 +2928,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
                             });
                         }
+                        tvPayOnlineIn.setText(getString(R.string.pay_via_format,
+                                MyApplication.getInstance().getWalletCore().getMPesaName(this)));
 
                     } else {
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -9931,5 +9945,73 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public MenuBar getMenuBar() {
         return menuBar;
+    }
+
+    public void initiateRideEndPaymentAPI(String engagementId, final int paymentOption) {
+
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
+        params.put(Constants.KEY_PREFERRED_PAYMENT_MODE, String.valueOf(paymentOption));
+
+        new ApiCommon<PaymentResponse>(this).showLoader(true).execute(params, ApiName.INITIATE_RIDE_END_PAYMENT,
+                new APICommonCallback<PaymentResponse>() {
+                    @Override
+                    public boolean onNotConnected() {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onException(Exception e) {
+                        return false;
+
+                    }
+
+                    @Override
+                    public void onSuccess(final PaymentResponse response, String message, int flag) {
+                        try {
+                            if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                                if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
+                                    PaymentResponse.PaymentData paymentData = response.getData().getPaymentData();
+                                    rideEndPaymentSuccess(paymentData.getRemaining(), message);
+                                }
+                            } else {
+                                DialogPopup.alertPopup(HomeActivity.this, "", message);
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.connection_lost_please_try_again));
+                        }
+                    }
+
+                    @Override
+                    public boolean onError(PaymentResponse feedCommonResponse, String message, int flag) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onFailure(RetrofitError error) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onNegativeClick() {
+
+                    }
+                });
+    }
+
+    private void rideEndPaymentSuccess(double remaining, String message) {
+        if (Data.autoData != null && Data.autoData.getEndRideData() != null) {
+            Data.autoData.getEndRideData().setShowPaymentOptions(0);
+            Data.autoData.getEndRideData().toPay = remaining;
+        }
+        DialogPopup.alertPopupWithListener(this, "", message, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    updateRideEndPayment();
+                    setUserData();
+            }
+        });
     }
 }
