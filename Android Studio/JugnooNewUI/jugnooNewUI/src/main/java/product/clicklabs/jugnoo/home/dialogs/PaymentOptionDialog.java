@@ -290,6 +290,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
                         }
                         else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MPESA.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutMpesa);
+                            textViewMpesa.setText(paymentModeConfigData.getDisplayName());
                         }
                         else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
                             linearLayoutWalletContainer.addView(linearLayoutCash);

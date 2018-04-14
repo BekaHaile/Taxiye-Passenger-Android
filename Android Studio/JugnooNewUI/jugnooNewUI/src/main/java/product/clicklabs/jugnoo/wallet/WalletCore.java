@@ -390,7 +390,7 @@ public class WalletCore {
             } else if(paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()){
 				return getRazorpayName(context);
             }else if(paymentOption == PaymentOption.MPESA.getOrdinal()){
-				return context.getResources().getString(R.string.mpesa);
+				return getMPesaName(context);
             } else {
 				return context.getResources().getString(R.string.cash);
 			}
@@ -404,6 +404,16 @@ public class WalletCore {
 		String name = context.getString(R.string.card);
 		for(PaymentModeConfigData configData : getPaymentModeConfigDatas()){
 			if(configData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()){
+				name = configData.getDisplayName();
+				break;
+			}
+		}
+		return name;
+	}
+	public String getMPesaName(Context context) {
+		String name = context.getString(R.string.mpesa);
+		for(PaymentModeConfigData configData : getPaymentModeConfigDatas()){
+			if(configData.getPaymentOption() == PaymentOption.MPESA.getOrdinal()){
 				name = configData.getDisplayName();
 				break;
 			}
@@ -659,12 +669,9 @@ public class WalletCore {
 	 * @return payment option with highest order coming from server in case of payment option not known to rides
 	 */
 	public int validatePaymentOptionForRidesOffering(int paymentOptionInt) {
-		if (paymentOptionInt != PaymentOption.CASH.getOrdinal()
-				&& paymentOptionInt != PaymentOption.PAYTM.getOrdinal()
-				&& paymentOptionInt != PaymentOption.MOBIKWIK.getOrdinal()
-				&& paymentOptionInt != PaymentOption.FREECHARGE.getOrdinal()
-				&& paymentOptionInt != PaymentOption.RAZOR_PAY.getOrdinal()
-				&& paymentOptionInt != PaymentOption.MPESA.getOrdinal()) {
+		if (paymentOptionInt == PaymentOption.PAYTM.getOrdinal()
+				&& paymentOptionInt == PaymentOption.MOBIKWIK.getOrdinal()
+				&& paymentOptionInt == PaymentOption.FREECHARGE.getOrdinal()) {
 			try {
 				PaymentModeConfigData paymentModeConfigDataDefault = null;
 				for (PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas()) {
@@ -690,11 +697,11 @@ public class WalletCore {
 				if (paymentModeConfigDataDefault != null) {
 					return paymentModeConfigDataDefault.getPaymentOption();
 				} else {
-					return PaymentOption.CASH.getOrdinal();
+					return paymentOptionInt;
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				return PaymentOption.CASH.getOrdinal();
+				return paymentOptionInt;
 			}
 		} else {
 			return paymentOptionInt;

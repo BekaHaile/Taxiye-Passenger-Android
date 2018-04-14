@@ -252,6 +252,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                         }
                         else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MPESA.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutMpesa);
+                            textViewMpesa.setText(paymentModeConfigData.getDisplayName());
                         }
                         else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
