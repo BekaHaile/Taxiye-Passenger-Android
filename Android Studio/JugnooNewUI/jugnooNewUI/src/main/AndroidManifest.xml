@@ -30,7 +30,7 @@
 
 
     <permission
-        android:name="product.clicklabs.jugnoo..white.permission.MAPS_RECEIVE"
+        android:name="product.clicklabs.jugnoo.white.permission.MAPS_RECEIVE"
         android:protectionLevel="signature"/>
 
     <uses-feature
