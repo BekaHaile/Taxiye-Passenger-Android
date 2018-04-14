@@ -181,21 +181,21 @@ public class HomeUtil {
 		params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
 		params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 		params.put(Constants.KEY_LOGIN_TYPE, String.valueOf(0));
-		params.put(Constants.KEY_CUSTOMER_PACKAGE_NAME, MyApplication.getInstance().getPackageName());
+		params.put(Constants.KEY_OPERATOR_TOKEN, MyApplication.getInstance().getString(R.string.operator_token));
 	}
 
 	public static void addDefaultParams(Map<String, String> params){
 		params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
 		params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
 		params.put(Constants.KEY_LOGIN_TYPE, String.valueOf(0));
-		params.put(Constants.KEY_CUSTOMER_PACKAGE_NAME, MyApplication.getInstance().getPackageName());
+		params.put(Constants.KEY_OPERATOR_TOKEN, MyApplication.getInstance().getString(R.string.operator_token));
 	}
 
 	public void putDefaultParamsMultipart(MultipartTypedOutput multipartTypedOutput){
 		multipartTypedOutput.addPart(Constants.KEY_APP_VERSION, new TypedString(String.valueOf(MyApplication.getInstance().appVersion())));
 		multipartTypedOutput.addPart(Constants.KEY_DEVICE_TYPE, new TypedString(String.valueOf(Data.DEVICE_TYPE)));
 		multipartTypedOutput.addPart(Constants.KEY_LOGIN_TYPE, new TypedString(String.valueOf(0)));
-		multipartTypedOutput.addPart(Constants.KEY_CUSTOMER_PACKAGE_NAME, new TypedString(MyApplication.getInstance().getPackageName()));
+		multipartTypedOutput.addPart(Constants.KEY_OPERATOR_TOKEN, new TypedString(MyApplication.getInstance().getString(R.string.operator_token)));
 	}
 
 	public ArrayList<SearchResult> getSavedPlacesWithHomeWork(Activity activity){
