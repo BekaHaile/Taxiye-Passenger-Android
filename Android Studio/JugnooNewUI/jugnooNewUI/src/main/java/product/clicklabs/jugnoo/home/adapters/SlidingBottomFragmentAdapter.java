@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.fragments.SlidingBottomCashFragment;
 import product.clicklabs.jugnoo.home.fragments.SlidingBottomFareFragment;
-import product.clicklabs.jugnoo.home.fragments.SlidingBottomOffersFragment;
 
 /**
  * Created by Ankit on 12/29/15.
@@ -30,15 +29,16 @@ public class SlidingBottomFragmentAdapter extends FragmentPagerAdapter {
 			case 1:
 				return new SlidingBottomFareFragment();
 
-			case 2:
-				return new SlidingBottomOffersFragment();
+//			case 2:
+//				return new SlidingBottomOffersFragment();
 		}
 		return null;
 	}
 
 	@Override
 	public int getCount() {
-		return 3;
+//		return 3;
+		return 2;
 	}
 
 	@Override
