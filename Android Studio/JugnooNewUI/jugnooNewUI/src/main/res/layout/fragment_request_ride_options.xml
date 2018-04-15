@@ -80,7 +80,9 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="25px"
             android:layout_marginTop="25px"
-            android:src="@color/grey_light"/>
+            android:src="@color/grey_light"
+            android:visibility="gone"
+            />
 
         <TextView
             android:id="@+id/textViewOffersMode"
@@ -93,7 +95,9 @@
             android:text="@string/nl_offers"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_28"/>
+            android:textSize="@dimen/text_size_28"
+            android:visibility="gone"
+            />
 
         <ImageView
             android:layout_width="2px"
@@ -251,7 +255,9 @@
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:layout_marginStart="-1dp"
-                        android:src="@color/stroke_light_grey_alpha"/>
+                        android:src="@color/stroke_light_grey_alpha"
+                        android:visibility="gone"
+                        />
 
                     <TextView
                         android:id="@+id/textViewOffers"
@@ -265,7 +271,9 @@
                         android:text="@string/nl_offers"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26"/>
+                        android:textSize="@dimen/text_size_26"
+                        android:visibility="gone"
+                        />
 
                 </LinearLayout>
 
