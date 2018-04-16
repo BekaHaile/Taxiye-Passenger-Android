@@ -77,37 +77,37 @@
     <style name="Animations"/>
 
     <style name="Animations.LoadingDialogFade">
-        <item name="@android:windowEnterAnimation">
+        <item name="android:windowEnterAnimation">
             @anim/fade_in
         </item>
-        <item name="@android:windowExitAnimation">
+        <item name="android:windowExitAnimation">
             @anim/fade_out
         </item>
     </style>
 
     <style name="Animations.LoadingDialogScale">
-        <item name="@android:windowEnterAnimation">
+        <item name="android:windowEnterAnimation">
             @anim/scale_in
         </item>
-        <item name="@android:windowExitAnimation">
+        <item name="android:windowExitAnimation">
             @anim/scale_out
         </item>
     </style>
 
     <style name="Animations.TopInBottomOut">
-        <item name="@android:windowEnterAnimation">
+        <item name="android:windowEnterAnimation">
             @anim/top_in
         </item>
-        <item name="@android:windowExitAnimation">
+        <item name="android:windowExitAnimation">
             @anim/top_out
         </item>
     </style>
 
     <style name="Animations.BottomInBottomOut">
-        <item name="@android:windowEnterAnimation">
+        <item name="android:windowEnterAnimation">
             @anim/bottom_in
         </item>
-        <item name="@android:windowExitAnimation">
+        <item name="android:windowExitAnimation">
             @anim/bottom_out
         </item>
     </style>
@@ -454,10 +454,10 @@
 
 
     <style name="Animations.LoadingDialogDown">
-        <item name="@android:windowEnterAnimation">
+        <item name="android:windowEnterAnimation">
             @anim/slide_up
         </item>
-        <item name="@android:windowExitAnimation">
+        <item name="android:windowExitAnimation">
             @anim/slide_down
         </item>
     </style>
