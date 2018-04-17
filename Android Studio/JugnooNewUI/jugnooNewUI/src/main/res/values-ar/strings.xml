@@ -48,7 +48,6 @@
     <string name="ok">OK</string>
 
     <string name="phone_number">Phone No.</string>
-    <string name="enter_phone_number">Enter phone number</string>
     <string name="confirm">Confirm</string>
     <string name="confirm_address">Confirm Address</string>
     <string name="confirm_request">Confirm Request</string>
@@ -156,8 +155,6 @@
     <string name="leave_a_comment">Leave a comment</string>
     <string name="what_could_we_improve">What could we improve?</string>
     <string name="rupees_value_format">\u20B9%s</string>
-    <string name="rupees_value_format_without_space">\u20B9%s</string>
-    <string name="rupees_minus_value_format_without_space">-\u20B9%s</string>
     <string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
     <string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
     <string name="review_must_be_in">Review must be in 300 letters.</string>
@@ -520,7 +517,6 @@
 
     <string name="loading">Loading...</string>
 
-    <string name="give_missed_call_dialog_text">No OTP? Don\'t worry. Just give us a missed call and we will verify your identity.</string>
     <string name="call_us">Call Us</string>
     <string name="no_driver_nearby_try_again">No drivers nearby.\nPlease try after some time</string>
     <string name="couldnt_find_drivers_nearby">Cannot find drivers nearby</string>
@@ -691,7 +687,6 @@
     <string name="enter_destination">أدخل الوجهة</string>
     <string name="destination_required">الوجهة المطلوبة</string>
     <string name="add_paytm_money_help_text">Pay for Jugnoo with a Mobile Wallet</string>
-    <string name="convenience_charge_rupees_format">Convenience Charge: \u20B9%s</string>
     <string name="base_fare">Base Fare</string>
     <string name="want_to_refer_a_driver">Want to refer a Driver?</string>
     <string name="promotions">Promotions</string>
@@ -865,9 +860,6 @@
     <string name="selecting_a_pickup_spot">Selecting a pickup spot will save you time and make it easier to find your driver.</string>
     <string name="no_available_offers">No Available Offers</string>
     <string name="select_an_offer">Select an Offer</string>
-    <string name="hi_username_format">Hi %s!</string>
-    <string name="we_have_these_offerings">Following services are available at your location.\nPlease select a service:</string>
-    <string name="you_can_always_navigate">You can always navigate between various\nservices using Jugnoo Jeanie.</string>
 
 
     <string name="jugnoo_offerings">Jugnoo Offerings</string>
@@ -926,8 +918,6 @@
     //
     signup
     <string name="mobile_string">رقم الهاتف المحمول</string>
-
-    <string name="rupees_symbol">\u20B9</string>
 
 
     //
@@ -1027,7 +1017,6 @@
     <string name="registered_number_should_be">The registered number should be \nthe default/preferred sim for SMS \nand calls for regular updates</string>
     <string name="GotIt">Got It</string>
 
-    <string name="accept_online_payment">Accept Online Payment</string>
     <string name="close_to_saved_location">We noticed your request location is very close to a saved location.\nDo you want to request\npickup there?</string>
     <string name="close_to_point_of_interest">We noticed your request location is very close to a point of interest.\nDo you want to request\npickup there?</string>
     <string name="yes_update_pickup_location">Yes, update pickup location</string>
@@ -1048,7 +1037,6 @@
     <string name="delivers_in">Delivers in</string>
     <string name="minimum_order_rupee_format">Min Order \u20B9%s</string>
     <string name="minimum_order_rupee_short_format"> \u2022 Min  \u20B9%s</string>
-    <string name="rupee_format">\u20B9%s</string>
     <string name="jugnoo_star">Jugnoo star</string>
     <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for JUGNOO STARS.</string>
     <string name="no">No</string>
@@ -1091,7 +1079,6 @@
     <string name="your_order_will_be_delivered_between">Your order will be delivered between</string>
     <string name="could_not_find_favorite_restaurant">Couldn’t find your favourite restaurant yet?</string>
     <string name="could_not_find_favorite_restaurant_format">Couldn’t find your favourite %s yet?</string>
-    <string name="could_not_find_favorite_restaurant_format_new_line">Couldn’t find your \n favourite %s yet?</string>
     <string name="why_not_recommend_it">Why not recommend it!</string>
     <string name="restaurant_name_star">Restaurant Name*</string>
     <string name="restaurant_name_star_format">%s Name*</string>
@@ -1377,7 +1364,6 @@
     <string name="submit_your_review">Submit Your Review</string>
     <string name="locate">Locate</string>
     <string name="please_enter_some_desc">Please tell us what you need.</string>
-    <string name="please_select_a_pickup_address">Please select a pickup address</string>
     <string name="label_anywhere">Anywhere</string>
     <string name="add_delivery_address">Select Delivery Address</string>
     <string name="avenir">avenir</string>
@@ -1396,7 +1382,6 @@
     <string name="swipe_right_to_pay"><![CDATA[Swipe right to pay >>]]></string>
     <string name="card">Card</string>
     <string name="montserrat_m">Montserrat Medium</string>
-    <string name="order_via_chat">Order Via Chat</string>
     <string name="anywhere_hint">Tell us what you need to get done. e.g. \n- Food from your favorite restaurants
 \n- Get medicine from a chemist shop
 \n- Send cakes or flowers to loved ones
@@ -1407,9 +1392,7 @@
     <string name="action_create_custom_order">Custom order</string>
     <string name="label_custom_order">Get anything delivered anywhere by \n  placing a custom order.</string>
     <string name="label_fav_restaurant">Couldn’t find your \n favourite store yet?</string>
-    <string name="label_fav_restaurant_format">Couldn’t find your \n favourite %s yet?</string>
     <string name="label_or_above_order_via_fatafat">- OR -</string>
-    <string name="fatafat_banner_string" />
 
     <plurals name="like_suffix">
         <item quantity="one">%d Like</item>
@@ -1433,9 +1416,7 @@
     <!-- Fatafat how it works -->
     <string name="txt_how_it_works">How it works</string>
     <string name="txt_what_do_you_need">What do you need?</string>
-    <string name="txt_describe_your_task">Describe your Task</string>
     <string name="no_value_delivery_charges">--</string>
-    <string name="your_location">Your Location</string>
 
     <string name="title_fatafat_home_page">All Stores</string>
     <string name="label_promo">Promo Code</string>
@@ -1452,7 +1433,6 @@
     <string name="txt_timings">Store timings</string>
     <string name="txt_notes">Additional notes</string>
     <string name="hint_enter_notes">Provide any additional information</string>
-    <string name="txt_suggest_store">Suggest Store</string>
     <string name="hint_timings">Enter opening and closing time</string>
     <string name="add_store">Add Store</string>
     <string name="swipe_right_to_add">Swipe right to add</string>
@@ -1462,11 +1442,9 @@
     <string name="please_select_a_category">Please select a category</string>
     <string name="tap_to_upload_photo_store">Add photos of store front or menu</string>
     <string name="phone_number_add_store">PHONE NO.</string>
-    <string name="add_photos">Add Photos</string>
     <string name="upload_a_photo">Upload photos</string>
     <string name="label_add_store_text"><b>Suggest a missing store to Jugnoo</b></string>
     <string name="label_add_store_text_oh_snap"><b>Suggest a store to Jugnoo</b></string>
-    <string name="btn_text_suggest_store">Suggest a missing store</string>
     <string name="hint_spinner_add_store">- Select Category -</string>
     <string name="store_address">Store\'s Address</string>
     <string name="enter_store_phone_number">Enter store\'s phone number</string>
@@ -1476,7 +1454,6 @@
     <string name="txt_jugnoo_connections">Your Jugnoo Connections</string>
     <string name="txt_new_message">New Message</string>
     <string name="min_order_strip_merchant_info">Min. Order Amount %s</string>
-    <string name="txt_check_pending_transactions">Check Your Pending Transactions</string>
     <string name="txt_contacts_syncing">Your contacts are syncing&#8230;</string>
     <string name="txt_no_jugnoo_connections">No jugnoo connections!</string>
 
@@ -1502,7 +1479,6 @@
     <string name="password_must_be_atleast_six">Password must be of atleast six characters</string>
     <string name="please_enter_valid_email_id">الرجاء إدخال بريد إلكتروني صحيح</string>
     <string name="login_cancelled">Login Cancelled</string>
-    <string name="success_colon_format">Success: %s</string>
     <string name="unknown_response_type">Unknown response type</string>
     <string name="confirm_debug_password">Confirm Debug Password</string>
     <string name="please_enter_password_to_continue">Please enter password to continue.</string>
