@@ -1598,7 +1598,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 				linearLayoutLoginSignupButtons.setVisibility(View.VISIBLE);
 				linearLayoutNoNet.setVisibility(View.GONE);
 
-				ivBottom.setVisibility(View.INVISIBLE);
+				ivBottom.setVisibility(View.VISIBLE);
 
 				llContainer.setVisibility(View.VISIBLE);
 				rlSplashLogo.setVisibility(View.VISIBLE);

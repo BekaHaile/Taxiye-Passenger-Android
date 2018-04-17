@@ -140,8 +140,9 @@ public class AppSwitcher {
 					}
 				}
 
-				// TODO: 04/04/18 force open rides offering
-				clientId = Config.getAutosClientId();
+				if(activity.getResources().getBoolean(R.bool.force_open_autos)) {
+					clientId = Config.getAutosClientId();
+				}
 
 				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);

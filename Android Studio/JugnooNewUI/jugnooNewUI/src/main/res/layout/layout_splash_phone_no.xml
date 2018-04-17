@@ -11,14 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:src="@drawable/bg_top_2"
-        android:tag="mwar"
-        android:visibility="invisible"/>
+        android:tag="mwar" />
 
     <ImageView
         android:id="@+id/ivLogoP"
-        android:layout_width="81dp"
-        android:layout_height="81dp"
-        android:src="@drawable/ic_taxi_logo"
+        android:layout_width="@dimen/splash_logo_width"
+        android:layout_height="@dimen/splash_logo_height"
+        android:src="@drawable/splash_logo_icon_drawable"
         android:tag="@string/dont_touch_me"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"/>
@@ -32,6 +31,7 @@
         android:textAllCaps="true"
         android:textStyle="bold"
         android:layout_below="@+id/ivLogoP"
+        android:visibility="@integer/show_splash_logo_text"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:tag="@string/dont_touch_me"
@@ -152,7 +152,6 @@
         android:layout_height="@dimen/px_160"
         android:layout_alignParentBottom="true"
         android:src="@drawable/splash_bottom_building_bg2"
-        android:tag="mwar"
-        android:visibility="invisible"/>
+        android:tag="mwar" />
 
 </RelativeLayout>

@@ -57,7 +57,7 @@
                 >
 
                 <LinearLayout
-                    android:layout_width="179dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="100px"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
@@ -67,12 +67,13 @@
                         android:layout_width="33px"
                         android:layout_height="33px"
                         android:src="@drawable/ic_radio_button_normal"
-                        android:tag="mwar" />
+                        android:tag="mwar"/>
 
                     <ImageView
                         style="@style/payment_option_icon_small"
+                        android:src="@drawable/ic_paytm_small"
                         android:layout_marginStart="10px"
-                        android:src="@drawable/ic_paytm_small" />
+                        />
 
                     <TextView
                         android:id="@+id/textViewPaytm"
@@ -81,7 +82,7 @@
                         android:layout_marginStart="10px"
                         android:text="@string/paytm_wallet"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_34" />
+                        android:textSize="@dimen/text_size_34"/>
 
                 </LinearLayout>
 

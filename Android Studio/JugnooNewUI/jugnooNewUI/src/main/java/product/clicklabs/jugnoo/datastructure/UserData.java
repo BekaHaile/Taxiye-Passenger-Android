@@ -211,24 +211,11 @@ public class UserData {
 		this.showTutorial = showTutorial;
 		this.signupOnboarding = signupOnboarding;
 
-		onlyAutosEnabled();
+
 
 	}
 
-	private void onlyAutosEnabled() {
-		this.autosEnabled = 1;
-		this.mealsEnabled = 0;
-		this.freshEnabled = 0;
-		this.groceryEnabled = 0;
-		this.menusEnabled = 0;
-		this.payEnabled = 0;
-		this.deliveryEnabled = 0;
-		this.feedEnabled = 0;
-		this.prosEnabled = 0;
-		this.deliveryCustomerEnabled = 0;
-		this.defaultClientId = Config.getAutosClientId();
-		this.integratedJugnooEnabled = 0;
-	}
+
 
 	private void checkUserImage(){
 		if(userImage == null
@@ -676,7 +663,7 @@ public class UserData {
 	}
 
 	public void setMealsEnabled(int mealsEnabled) {
-		this.mealsEnabled = 0;
+		this.mealsEnabled = mealsEnabled;
 	}
 
 	public int getFreshEnabled() {
@@ -684,7 +671,7 @@ public class UserData {
 	}
 
 	public void setFreshEnabled(int freshEnabled) {
-		this.freshEnabled = 0;
+		this.freshEnabled = freshEnabled;
 	}
 
 	public int getGroceryEnabled() {
@@ -692,7 +679,7 @@ public class UserData {
 	}
 
 	public void setGroceryEnabled(int groceryEnabled) {
-		this.groceryEnabled = 0;
+		this.groceryEnabled = groceryEnabled;
 	}
 
 	public int getDeliveryEnabled() {
@@ -700,7 +687,7 @@ public class UserData {
 	}
 
 	public void setDeliveryEnabled(int deliveryEnabled) {
-		this.deliveryEnabled = 0;
+		this.deliveryEnabled = deliveryEnabled;
 	}
 
 	public int getInviteFriendButton() {
@@ -965,7 +952,7 @@ public class UserData {
 	}
 
 	public void setMenusEnabled(int menusEnabled) {
-		this.menusEnabled = 0;
+		this.menusEnabled = menusEnabled;
 	}
 
 	public int getPayEnabled() {
@@ -973,7 +960,7 @@ public class UserData {
 	}
 
 	public void setPayEnabled(int payEnabled) {
-		this.payEnabled = 0;
+		this.payEnabled = payEnabled;
 	}
 
 
@@ -1064,7 +1051,7 @@ public class UserData {
 	}
 
 	public void setFeedEnabled(int feedEnabled) {
-		this.feedEnabled = 0;
+		this.feedEnabled = feedEnabled;
 	}
 
 	public int getExpandJeanie() {
@@ -1112,15 +1099,15 @@ public class UserData {
 	}
 
 	public void setProsEnabled(int prosEnabled) {
-		this.prosEnabled = 0;
+		this.prosEnabled = prosEnabled;
 	}
 
 	public void setDeliveryCustomerEnabled(Integer deliveryCustomerEnabled) {
-		this.deliveryCustomerEnabled = 0;
+		this.deliveryCustomerEnabled = deliveryCustomerEnabled;
 	}
 
 	public void setAutosEnabled(Integer autosEnabled) {
-		this.autosEnabled = 1;
+		this.autosEnabled = autosEnabled;
 	}
 
 	public boolean isRidesAndFatafatEnabled(){

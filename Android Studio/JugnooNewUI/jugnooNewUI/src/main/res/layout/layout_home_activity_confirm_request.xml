@@ -83,7 +83,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="-1dp"
                     android:src="@color/stroke_light_grey_alpha"
-                    android:visibility="gone"
+                    android:visibility="@integer/is_autos_offers_enabled"
                     />
 
                 <RelativeLayout
@@ -92,7 +92,7 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_transparent_menu_item_selector_color_trrb_selector"
-                    android:visibility="gone">
+                    android:visibility="@integer/is_autos_offers_enabled">
 
                     <ImageView
                         android:layout_width="30px"

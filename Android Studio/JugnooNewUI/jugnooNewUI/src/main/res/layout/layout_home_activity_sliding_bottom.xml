@@ -97,7 +97,7 @@
                 android:layout_marginBottom="25px"
                 android:layout_marginTop="25px"
                 android:src="@color/stroke_color_light"
-                android:visibility="gone"/>
+                android:visibility="@integer/is_autos_offers_enabled"/>
 
             <LinearLayout
                 android:id="@+id/linearLayoutOffers"
@@ -107,7 +107,7 @@
                 android:background="@color/white"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone"
+                android:visibility="@integer/is_autos_offers_enabled"
                 >
 
                 <TextView

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.fragments.SlidingBottomCashFragment;
 import product.clicklabs.jugnoo.home.fragments.SlidingBottomFareFragment;
+import product.clicklabs.jugnoo.home.fragments.SlidingBottomOffersFragment;
 
 /**
  * Created by Ankit on 12/29/15.
@@ -15,9 +16,11 @@ import product.clicklabs.jugnoo.home.fragments.SlidingBottomFareFragment;
 public class SlidingBottomFragmentAdapter extends FragmentPagerAdapter {
 
 	private Context context;
+	private boolean isOffersEnabled;
 	public SlidingBottomFragmentAdapter(Context context, FragmentManager fm) {
 		super(fm);
 		this.context = context;
+		isOffersEnabled = context.getResources().getInteger(R.integer.is_autos_offers_enabled)!=context.getResources().getInteger(R.integer.view_gone);
 	}
 
 	@Override
@@ -29,16 +32,15 @@ public class SlidingBottomFragmentAdapter extends FragmentPagerAdapter {
 			case 1:
 				return new SlidingBottomFareFragment();
 
-//			case 2:
-//				return new SlidingBottomOffersFragment();
+			case 2:
+				return new SlidingBottomOffersFragment();
 		}
 		return null;
 	}
 
 	@Override
 	public int getCount() {
-//		return 3;
-		return 2;
+		return isOffersEnabled?3:2;
 	}
 
 	@Override

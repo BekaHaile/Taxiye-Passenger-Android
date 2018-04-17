@@ -18,9 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/px_160"
             android:src="@drawable/bg_top_2"
-            android:tag="mwar"
-            android:visibility="invisible"
-            />
+            android:tag="mwar" />
 
 
         <LinearLayout
@@ -222,9 +220,7 @@
             android:layout_height="@dimen/px_160"
            android:layout_gravity="bottom"
             android:src="@drawable/splash_bottom_building_bg2"
-            android:tag="mwar"
-            android:visibility="invisible"
-            />
+            android:tag="mwar" />
 
     </LinearLayout>
 

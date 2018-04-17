@@ -28,9 +28,8 @@ public class AboutActivity extends BaseActivity {
     TextView textViewRateUs, textViewLikeUs, textViewTNC, textViewPrivacy, textViewAbout;
 
 
-    String facebookPageId = "252184564966458";
-//    String facebookPageName = "ridejugnoo";
-    String facebookPageName = "jugnoose";
+    String facebookPageId;
+    String facebookPageName;
     private final String  TAG = "About";
     Bundle bundle;
 
@@ -44,7 +43,8 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-
+        facebookPageId = getString(R.string.facebook_page_id);
+        facebookPageName = getString(R.string.facebook_page_name);
         relative = (RelativeLayout) findViewById(R.id.relative);
         new ASSL(this, (ViewGroup) relative, 1134, 720, false);
 
