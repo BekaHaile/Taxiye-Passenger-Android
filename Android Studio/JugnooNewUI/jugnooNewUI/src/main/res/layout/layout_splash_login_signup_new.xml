@@ -47,10 +47,10 @@
 
                 <ImageView
                     android:id="@+id/imageViewJugnooLogo"
-                    android:layout_width="81dp"
-                    android:layout_height="81dp"
+                    android:layout_width="@dimen/splash_logo_width"
+                    android:layout_height="@dimen/splash_logo_height"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/ic_taxi_logo"
+                    android:src="@drawable/splash_logo_icon_drawable"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:tag="@string/dont_touch_me"
@@ -68,6 +68,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="5dp"
                     android:tag="@string/dont_touch_me"
+                    android:visibility="@integer/show_splash_logo_text"
                     />
 
                 <ImageView
