@@ -284,11 +284,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/textViewConvenienceCharge"
-            android:layout_marginBottom="0px"
             android:gravity="center"
             android:text="100 - 200"
             android:textColor="@color/text_color"
-            android:textSize="66px"
+            android:textSize="28sp"
+            android:tag="@string/dont_touch_me"
 
             />
 
