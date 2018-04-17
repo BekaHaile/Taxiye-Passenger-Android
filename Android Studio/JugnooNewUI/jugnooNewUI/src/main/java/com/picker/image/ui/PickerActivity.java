@@ -717,7 +717,7 @@ public class PickerActivity extends AppCompatActivity {
 
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "com.jugnoo.fileprovider", photoFile);
+                Uri photoURI = FileProvider.getUriForFile(this, getString(R.string.file_provider_name), photoFile);
 
                 List<ResolveInfo> resolvedIntentActivities = getPackageManager().queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
                 for (ResolveInfo resolvedIntentInfo : resolvedIntentActivities) {

@@ -5846,7 +5846,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-                                    JSONParser.parseRateAppFlagContent(jObj);
+                                    JSONParser.parseRateAppFlagContent(activity, jObj);
 
                                     Data.userData.updateWalletBalances(jObj, false);
                                     MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(jObj);

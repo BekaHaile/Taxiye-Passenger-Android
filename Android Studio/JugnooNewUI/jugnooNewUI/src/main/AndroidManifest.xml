@@ -107,7 +107,7 @@
 
                 <data
                     android:host="app"
-                    android:scheme="jugnooautos"/>
+                    android:scheme="@string/app_scheme"/>
             </intent-filter>
         </activity>
         <activity
@@ -490,7 +490,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.jugnoo.fileprovider.white"
+            android:authorities="@string/file_provider_name"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -518,23 +518,23 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
-                    android:host="www.jugnoo.in"
+                    android:host="@string/app_host_name"
                     android:pathPrefix="/menus"
                     android:scheme="https"/>
                 <data
-                    android:host="www.jugnoo.in"
+                    android:host="@string/app_host_name"
                     android:pathPrefix="/meals"
                     android:scheme="https"/>
                 <data
-                    android:host="www.jugnoo.in"
+                    android:host="@string/app_host_name"
                     android:pathPrefix="/fatafat"
                     android:scheme="https"/>
                 <data
-                    android:host="www.jugnoo.in"
+                    android:host="@string/app_host_name"
                     android:pathPrefix="/asklocal"
                     android:scheme="https"/>
                 <data
-                    android:host="www.jugnoo.in"
+                    android:host="@string/app_host_name"
                     android:pathPrefix="/rides"
                     android:scheme="https"/>
             </intent-filter>

@@ -391,7 +391,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 							}
 						}, activity.getVendorOpened().getName(),
-								"https://jugnoo.in",
+								activity.getString(R.string.web_landing_page),
 								activity.getVendorOpened().getImage(),
 								BranchMetricsUtils.BRANCH_CHANNEL_MENUS_REVIEW_SHARE,
 								map);

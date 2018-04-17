@@ -162,7 +162,7 @@ public class GamePredictWebViewFragment extends Fragment implements  Constants {
 			}
 
 			String host = uri.getHost(); //Host is null when user clicked on email, phone number, ...
-			if (host != null && host.equals("jugnoo.in")) {
+			if (host != null && host.equals(getString(R.string.app_domain))) {
 				// This is my web site, so do not override; let my WebView load the page
 				return false;
 			}

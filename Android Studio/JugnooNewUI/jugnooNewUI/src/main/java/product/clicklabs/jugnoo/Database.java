@@ -17,8 +17,8 @@ import java.util.ArrayList;
 public class Database {																	// class for handling database related activities
 
 	private static Database dbInstance;
-	
-	private static final String DATABASE_NAME = "jugnoo_database";						// declaring database variables
+
+	private static String DATABASE_NAME;
 
 	private static final int DATABASE_VERSION = 2;
 
@@ -89,6 +89,7 @@ public class Database {																	// class for handling database related a
 	}
 	
 	private Database(Context context) {
+		DATABASE_NAME = context.getString(R.string.db_name);
 		dbHelper = new DbHelper(context);
 		database = dbHelper.getWritableDatabase();
 		createAllTables(database);

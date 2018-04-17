@@ -669,7 +669,7 @@
 
 
     <string name="refer_a_driver">Refer a Driver</string>
-    <string name="came_across_auto_driver">Riding with a driver\nnot aware of jugnoo yet?</string>
+    <string name="came_across_auto_driver">Riding with a driver\nnot aware of &appname; yet?</string>
     <string name="kindly_recommend_us_to_them">Kindly recommend us to them.</string>
     <string name="if_they_are_interested">Please help us improve &appname;\nand increase driver income.\nWin! Win!</string>
     <string name="name_of_driver">Name of Driver</string>
@@ -758,7 +758,7 @@
 
 
     <string name="jugnoo_pokemon">POKEMON RADAR</string>
-    <string name="jugnoo_fab">JUGNOO JEANIE</string>
+    <string name="jugnoo_fab">&appname; Jeanie</string>
 
 
     <!--For fresh Application-->
@@ -1023,7 +1023,7 @@
     <string name="minimum_order_rupee_format">Min Order &currency;%s</string>
     <string name="minimum_order_rupee_short_format"> \u2022 Min  &currency;%s</string>
     <string name="jugnoo_star">&appname; star</string>
-    <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for JUGNOO STARS.</string>
+    <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for &appname; STARS.</string>
     <string name="no">No</string>
     <string name="did_you_know">Did you know?</string>
     <string name="star_description">You can now avail unlimited FREE delivery, special discounts and much more!</string>
@@ -1035,7 +1035,7 @@
     <string name="star_savings">Star Savings</string>
     <string name="you_will_receive_cashback_on_order">You’ll receive &currency;%s cashback on this order</string>
     <string name="star_savings_no_priority_tip">Star Savings: No Priority Tip on this ride</string>
-    <string name="become_a_jugnoo_star">Become a jugnoo star</string>
+    <string name="become_a_jugnoo_star">Become a &appname; star</string>
     <string name="add_to_avail_unlimited_free_deliveries">Add to avail unlimited free deliveries</string>
     <string name="total">Total</string>
     <string name="sub_total">Sub Total</string>
@@ -1439,7 +1439,7 @@
     <string name="txt_new_message">New Message</string>
     <string name="min_order_strip_merchant_info">Min. Order Amount %s</string>
     <string name="txt_contacts_syncing">Your contacts are syncing&#8230;</string>
-    <string name="txt_no_jugnoo_connections">No jugnoo connections!</string>
+    <string name="txt_no_jugnoo_connections">No &appname; connections!</string>
 
     <string-array name="search_tab_names">
         <item>Items</item>
@@ -1791,7 +1791,6 @@
     <string name="cashback_nabc">cashback abc</string>
     <string name="get_a_ride">GET A RIDE</string>
     <string name="ac_nservice_nand_repair">AC  Service  and Repair</string>
-    <string name="jugnoo_in">******@jugnoo.in</string>
     <string name="_999">******999</string>
     <string name="do_you_really_want_to_delete_this_post_if_you_delete_once_it_will_no_longer_be_available">Do you really want to delete this post? If you delete once it will no longer be available.</string>
     <string name="no_current_offers">No Current Offers</string>

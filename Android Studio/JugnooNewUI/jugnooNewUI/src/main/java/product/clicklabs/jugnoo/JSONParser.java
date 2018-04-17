@@ -289,7 +289,7 @@ public class JSONParser implements Constants {
             if(loginUserData.getSupportNumber() != null){
 				Config.saveSupportNumber(context, loginUserData.getSupportNumber());
 			}
-            Data.userData.setReferralMessages(parseReferralMessages(loginUserData));
+            Data.userData.setReferralMessages(parseReferralMessages(context, loginUserData));
             performUserAppMonitoring(context, userData);
 
 //            if(Prefs.with(context).getString(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, "").equals("")) {
@@ -501,7 +501,7 @@ public class JSONParser implements Constants {
         JSONObject jUserStatusObject = jObj.getJSONObject(KEY_AUTOS).getJSONObject(KEY_STATUS);
         String resp = parseCurrentUserStatus(context, loginResponse.getAutos().getCurrentUserStatus(), jUserStatusObject);
 
-        parseRateAppFlagContent(jUserDataObject);
+        parseRateAppFlagContent(context, jUserDataObject);
 
         parseCancellationReasons(loginResponse.getAutos());
         parseFeedbackReasonArrayList(loginResponse.getAutos());
@@ -660,16 +660,16 @@ public class JSONParser implements Constants {
         }
     }
 
-    public ReferralMessages parseReferralMessages(LoginResponse.UserData userData) {
-        String referralSharingMessage = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
+    public ReferralMessages parseReferralMessages(Context context, LoginResponse.UserData userData) {
+        String referralSharingMessage = "Hey, \nUse "+context.getString(R.string.app_name)+" app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
                 " Use this referral code: " + Data.userData.referralCode + " to get FREE ride" +
-                "\nDownload it from here: http://smarturl.it/jugnoo";
+                "\nDownload it from here: "+context.getString(R.string.smart_url);
         String fbShareCaption = "Use " + Data.userData.referralCode + " as code & get a FREE ride";
-        String fbShareDescription = "Try Jugnoo app to call an auto at your doorsteps with just a tap.";
+        String fbShareDescription = "Try "+context.getString(R.string.app_name)+" app to call an auto at your doorsteps with just a tap.";
         String referralCaption = "<center><font face=\"verdana\" size=\"2\">Invite <b>friends</b> and<br/>get <b>FREE rides</b></font></center>";
-        String referralEmailSubject = "Hey! Have you used Jugnoo Autos yet?";
+        String referralEmailSubject = "Hey! Have you used "+context.getString(R.string.app_name)+" yet?";
         String referralShortMessage = "", referralMoreInfoMessage = "";
-        String title = Constants.FB_LINK_SHARE_NAME;
+        String title = context.getString(R.string.app_name);
 
         try {
             if (userData.getReferralSharingMessage() != null) {
@@ -1415,7 +1415,7 @@ public class JSONParser implements Constants {
     }
 
 
-    public static RateAppDialogContent parseRateAppDialogContent(JSONObject jObj){
+    public static RateAppDialogContent parseRateAppDialogContent(Context context, JSONObject jObj){
         try{
             JSONObject jRA = jObj.getJSONObject(KEY_RATE_APP_DIALOG_CONTENT);
             return new RateAppDialogContent(jRA.getString(KEY_TITLE),
@@ -1427,11 +1427,11 @@ public class JSONParser implements Constants {
         } catch(Exception e){
             e.printStackTrace();
             return new RateAppDialogContent("Glad you liked our services",
-                    "Do you find Jugnoo useful?\nIf yes, we would appreciate if you could rate us on the Play Store",
+                    "Do you find "+context.getString(R.string.app_name)+" useful?\nIf yes, we would appreciate if you could rate us on the Play Store",
                     "Rate Now",
                     "Not Now",
                     "Never Ask Again",
-                    "https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo") ;
+                    "https://play.google.com/store/apps/details?id="+BuildConfig.APPLICATION_ID) ;
         }
     }
 
@@ -1486,13 +1486,13 @@ public class JSONParser implements Constants {
 
 
 
-    public static void parseRateAppFlagContent(JSONObject jsonObject){
+    public static void parseRateAppFlagContent(Context context, JSONObject jsonObject){
         try {
             if (jsonObject.has(KEY_RATE_APP)) {
                 Data.userData.setCustomerRateAppFlag(jsonObject.getInt(KEY_RATE_APP));
             }
             if(jsonObject.has(KEY_RATE_APP_DIALOG_CONTENT)){
-                Data.userData.setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jsonObject));
+                Data.userData.setRateAppDialogContent(JSONParser.parseRateAppDialogContent(context,jsonObject));
             }
             if(Data.userData.getCustomerRateAppFlag() == 1){
                 if(Data.autoData != null) {

@@ -1237,7 +1237,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 				@Override
 				public void onClick(View v) {
 					try {
-						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
+						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terms_of_use_url)));
 						startActivity(browserIntent);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1249,7 +1249,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 				@Override
 				public void onClick(View v) {
 					try {
-						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
+						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terms_of_use_url)));
 						startActivity(browserIntent);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -2457,7 +2457,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 				public void onClick(View view) {
 					dialog.dismiss();
 					Intent intent = new Intent(Intent.ACTION_VIEW);
-					intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
+					intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="+BuildConfig.APPLICATION_ID));
 					activity.startActivity(intent);
 					ActivityCompat.finishAffinity(activity);
 				}
@@ -3616,7 +3616,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 //                    }
                     Log.e("body", "=" + body);
                     try {
-                        if (body.contains("Jugnoo")) {
+                        if (body.contains(getString(R.string.app_name))) {
                             String[] codeArr = body.split("code ");
                             String[] spaceArr = codeArr[1].split(" ");
                             String rCode = spaceArr[0];
@@ -4320,10 +4320,10 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
                         String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
                         Log.i(TAG, "sms body=>" + body);
                         try {
-                            if (body.contains(DOMAIN_SHARE_JUGNOO_IN)) {
+                            if (body.contains(getString(R.string.branch_domain))) {
                                 String[] arr = body.split(" ");
                                 for (String str : arr) {
-                                    if (str.contains(DOMAIN_SHARE_JUGNOO_IN)) {
+                                    if (str.contains(getString(R.string.branch_domain))) {
                                         if (str.charAt(str.length() - 1) == '.') {
                                             str = str.substring(0, str.length() - 1);
                                         }

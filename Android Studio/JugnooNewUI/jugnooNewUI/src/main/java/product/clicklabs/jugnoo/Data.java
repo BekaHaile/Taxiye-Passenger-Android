@@ -46,8 +46,6 @@ import product.clicklabs.jugnoo.utils.Prefs;
  */
 public class Data {
 
-    public static final String DRIVER_APP_PACKAGE = "product.clicklabs.jugnoo.driver";
-
 
     public static boolean linkFoundOnce = false;
 
@@ -568,9 +566,9 @@ public class Data {
         int APP_TYPE = 1;
 
         if (Config.getConfigMode() == ConfigMode.LIVE) {
-            FuguConfig.init(APP_TYPE, context.getString(R.string.fugu_key), context, "live", userData,"com.jugnoo.fileprovider");
+            FuguConfig.init(APP_TYPE, context.getString(R.string.fugu_key), context, "live", userData,context.getString(R.string.file_provider_name));
         } else {
-            FuguConfig.init(APP_TYPE, context.getString(R.string.fugu_key_test), context, "test", userData,"com.jugnoo.fileprovider");
+            FuguConfig.init(APP_TYPE, context.getString(R.string.fugu_key_test), context, "test", userData,context.getString(R.string.file_provider_name));
         }
 
         FuguConfig.getInstance().setHomeUpIndicatorDrawableId(R.drawable.ic_back_selector);
