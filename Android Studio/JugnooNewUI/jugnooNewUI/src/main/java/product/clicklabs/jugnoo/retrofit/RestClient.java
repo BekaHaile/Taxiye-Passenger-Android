@@ -72,7 +72,7 @@ public class RestClient {
             public void log(String message) {
             }
         };
-        if(!BuildConfig.DEBUG_MODE) {
+        if(!BuildConfig.DEBUG) {
             builder.setLog(fooLog);
         }
     }

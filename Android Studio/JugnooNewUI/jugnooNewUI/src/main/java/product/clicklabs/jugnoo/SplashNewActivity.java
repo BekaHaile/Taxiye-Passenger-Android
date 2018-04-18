@@ -617,6 +617,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 			((TextView)findViewById(R.id.tvJugnooTaxiS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 			((TextView)findViewById(R.id.tvJugnooTaxiLS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 			((TextView)findViewById(R.id.tvJugnooTaxiP)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
+			((TextView)findViewById(R.id.tvJugnooTaxiNoNet)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 			rlCountryCode = (LinearLayout) findViewById(R.id.rlCountryCode);
 			tvCountryCode = (TextView) findViewById(R.id.tvCountryCode);
 

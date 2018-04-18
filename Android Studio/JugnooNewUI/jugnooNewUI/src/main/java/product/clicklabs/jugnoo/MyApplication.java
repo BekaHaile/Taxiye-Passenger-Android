@@ -9,6 +9,7 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.multidex.MultiDex;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -79,7 +80,6 @@ public class MyApplication extends Application {
         /**
          Edited by Parminder Singh on 1/30/17 at 3:47 PM
          **/
-
         Typekit.getInstance()
                 .add("maven", Typekit.createFromAsset(this, "fonts/maven_pro_medium.ttf"))
                 .add(getString(R.string.maven_r), Typekit.createFromAsset(this, "fonts/maven_pro_regular.otf"))
