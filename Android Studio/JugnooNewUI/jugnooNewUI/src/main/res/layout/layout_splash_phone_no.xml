@@ -20,7 +20,7 @@
         android:src="@drawable/splash_logo_icon_drawable"
         android:tag="@string/dont_touch_me"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="@dimen/splash_logo_top_margin"/>
 
     <TextView
         android:id="@+id/tvJugnooTaxiP"
@@ -72,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:includeFontPadding="false"
-                android:text="+91"
+                android:hint="@string/code"
                 android:textColor="@color/text_color"
                 android:textSize="17sp"
                 android:drawableEnd="@drawable/ic_arrow_down_vector"

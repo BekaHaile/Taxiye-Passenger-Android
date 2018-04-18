@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -416,6 +417,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         String emailChanged = editTextEmail.getText().toString().trim();
                         String phoneNoChanged = editTextPhone.getText().toString().trim();
                         String countryCode = tvCountryCode.getText().toString();
+                        if(TextUtils.isEmpty(countryCode)){
+                            Utils.showToast(AccountActivity.this, getString(R.string.please_select_country_code));
+                            return;
+                        }
                         phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged, countryCode);
                         if ("".equalsIgnoreCase(nameChanged)) {
                             editTextUserName.requestFocus();

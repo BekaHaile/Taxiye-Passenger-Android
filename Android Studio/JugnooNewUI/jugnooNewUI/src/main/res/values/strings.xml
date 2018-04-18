@@ -1864,5 +1864,7 @@
     <string name="jugnoo_cash_added">&appname; Cash added</string>
     <string name="finding_a_driver">Finding a &appname; driver...</string>
     <string name="confirm_ride_request">Confirm Ride Request</string>
+    <string name="please_select_country_code">Please select country code</string>
+    <string name="code">Code</string>
 
 </resources>

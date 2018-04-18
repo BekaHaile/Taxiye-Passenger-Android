@@ -780,6 +780,10 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 				public void onClick(View v) {
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextPhoneNumber);
 					String phoneNumber = editTextPhoneNumber.getText().toString().trim();
+					if(TextUtils.isEmpty(getCountryCodeSelected())){
+						Utils.showToast(SplashNewActivity.this, getString(R.string.please_select_country_code));
+						return;
+					}
 					if ("".equalsIgnoreCase(phoneNumber)) {
 						editTextPhoneNumber.requestFocus();
 						editTextPhoneNumber.setError(getResources().getString(R.string.nl_login_phone_empty_error));
