@@ -9016,12 +9016,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         return bounceScale;
     }
 
-    public void setVehicleTypeSelected(int position) {
+    public void setVehicleTypeSelected(int position, boolean userClicked) {
         int oldVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
         int oldOperatorId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId();
         int oldRegionId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId();
         int oldRideType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType();
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
+        int newVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
         if(Data.autoData.getRegions().size() == 1) {
             imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
@@ -9051,16 +9052,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         PromoCoupon selectedCoupon = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
 
-        if(selectedCoupon==null || selectedCoupon.getId()==-1 || !selectedCoupon.isVehicleTypeExists(getVehicleTypeSelected(), getOperatorIdSelected())){
-            PromoCoupon defaultCoupon = Data.userData.getDefaultCoupon(getVehicleTypeSelected(), getOperatorIdSelected(), HomeActivity.this);
+        if(!(userClicked && oldVehicleType==newVehicleType)){//do not change promo if user clicked on same vehicle Type
+            if(selectedCoupon==null || selectedCoupon.getId()==-1 || !selectedCoupon.isVehicleTypeExists(getVehicleTypeSelected(), getOperatorIdSelected())){
+                PromoCoupon defaultCoupon = Data.userData.getDefaultCoupon(getVehicleTypeSelected(), getOperatorIdSelected(), HomeActivity.this);
 
-            if(defaultCoupon!=null){
-                slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(defaultCoupon);
+                if(defaultCoupon!=null){
+                    slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(defaultCoupon);
 
-            }else{
-                slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(-1);
+                }else{
+                    slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(-1);
+                }
             }
         }
+
         showPoolInforBar(false);
         slidingBottomPanel.getRequestRideOptionsFragment().updateOffersCount();
     }

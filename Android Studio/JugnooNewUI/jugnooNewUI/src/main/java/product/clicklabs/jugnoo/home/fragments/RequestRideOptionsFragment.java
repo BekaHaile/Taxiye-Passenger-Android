@@ -377,7 +377,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 updateSupplyUI(Data.autoData.getRegions().size());
                 //updatePoolInfoText();
             } else if(Data.autoData.getRegions().size() > 0){
-                activity.setVehicleTypeSelected(0);
+                activity.setVehicleTypeSelected(0, false);
                 regionSelected = Data.autoData.getRegions().get(0);
                 updateSupplyUI(Data.autoData.getRegions().size());
             } else{

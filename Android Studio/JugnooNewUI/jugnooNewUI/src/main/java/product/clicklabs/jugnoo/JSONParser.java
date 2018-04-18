@@ -106,7 +106,7 @@ public class JSONParser implements Constants {
 
         String userName = userData.optString("user_name", "");
         String phoneNo = userData.optString("phone_no", "");
-        String countryCode = userData.optString(Constants.KEY_COUNTRY_CODE, "+91");
+        String countryCode = "+" + userData.optString(Constants.KEY_COUNTRY_CODE, "91");
         String userImage = userData.optString("user_image", "");
         String referralCode = userData.optString(KEY_REFERRAL_CODE, "");
         double jugnooBalance = userData.optDouble(KEY_JUGNOO_BALANCE, 0);

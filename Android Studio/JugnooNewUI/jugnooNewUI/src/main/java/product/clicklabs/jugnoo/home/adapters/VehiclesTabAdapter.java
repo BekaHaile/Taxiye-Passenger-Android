@@ -87,7 +87,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             @Override
             public void onClick(View v) {
                 int position = (int) v.getTag();
-                activity.setVehicleTypeSelected(position);
+                activity.setVehicleTypeSelected(position, true);
                 try {
                     GAUtils.event(RIDES, HOME, regions.get(position).getRegionName()+" "+CLICKED);
                 } catch (Exception e) {
