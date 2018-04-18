@@ -52,4 +52,5 @@
     <string name="app_scheme">jugnooautos</string>
 
     <string name="pictures_path">Jugnoo/Jugnoo Pictures</string>
+    <bool name="force_inhouse_login">false</bool>
 </resources>
