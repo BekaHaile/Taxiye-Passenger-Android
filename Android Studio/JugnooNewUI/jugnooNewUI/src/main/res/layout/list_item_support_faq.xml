@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="30px"
         android:maxLines="2"
-        android:text="Account"
+        android:text="@string/account"
         android:textColor="@color/text_color_light_selector"
         android:textSize="@dimen/text_size_30"
 

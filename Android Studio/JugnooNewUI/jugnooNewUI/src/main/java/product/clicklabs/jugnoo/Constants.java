@@ -100,7 +100,7 @@ public interface Constants {
     String KEY_PROMO_SUCCESS = "promo_success";
     String KEY_PROMO_MESSAGE = "promo_message";
 
-    String ACTION_LOADING_COMPLETE = "product.clicklabs.jugnoo.ACTION_LOADING_COMPLETE";
+    String ACTION_LOADING_COMPLETE = BuildConfig.APPLICATION_ID+".ACTION_LOADING_COMPLETE";
 
     String KEY_SPLASH_STATE = "splash_state";
     String KEY_FORGOT_LOGIN_EMAIL = "forgot_login_email";
@@ -126,10 +126,8 @@ public interface Constants {
     String KEY_REFERRAL_CODE = "referral_code";
     String KEY_REFERRAL_CODE_ENTERED = "referral_code_entered";
     String KEY_BRANCH_REFERRING_USER_NAME = "referring_user_name";
-    String FB_LINK_SHARE_NAME = "Jugnoo";
 
 
-    String DOMAIN_SHARE_JUGNOO_IN = "share.jugnoo.in";
 
     String KEY_BRANCH_DESKTOP_URL = "branch_desktop_url";
     String KEY_BRANCH_ANDROID_URL = "branch_android_url";
@@ -226,7 +224,7 @@ public interface Constants {
     String KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL = "customer_location_update_interval";
     String SP_CURRENT_STATE = "current_state";
     String SP_CHAT_CLOSE = "chat_close";
-    String ACTION_LOCATION_UPDATE = "jugnoo.ACTION_LOCATION_UPDATE";
+    String ACTION_LOCATION_UPDATE = BuildConfig.APPLICATION_ID+".ACTION_LOCATION_UPDATE";
     String KEY_ONE_SHOT = "one_shot";
     String KEY_EMERGENCY_LOC = "emergency_loc";
     String SP_CURRENT_ENGAGEMENT_ID = "current_engagement_id";
@@ -385,8 +383,11 @@ public interface Constants {
 
     String KEY_MOBIKWIK_ENABLED = "mobikwik_enabled";
     String KEY_MOBIKWIK_BALANCE = "mobikwik_balance";
+    String KEY_MPESA_ENABLED = "mpesa_enabled";
+    String KEY_MPESA_BALANCE = "mpesa_balance";
     String KEY_PAYTM = "paytm";
     String KEY_MOBIKWIK = "mobikwik";
+    String KEY_MPESA = "mpesa";
     String KEY_RAZORPAY = "razorpay";
     String KEY_UPI_RAZORPAY = "upi_razorpay";
     String KEY_BALANCE = "balance";
@@ -397,6 +398,7 @@ public interface Constants {
     String KEY_WALLET_BALANCE = "wallet_balance";
     String KEY_WALLET_TRANSACTIONS = "wallet_transactions";
     String KEY_PAID_USING_MOBIKWIK = "paid_using_mobikwik";
+    String KEY_PAID_USING_MPESA = "paid_using_mpesa";
     String KEY_PAYMENT_MODE_CONFIG_DATA = "payment_mode_config_data";
     String KEY_ENABLED = "enabled";
     String KEY_JUGNOO_CASH = "jugnoo_cash";
@@ -659,10 +661,10 @@ public interface Constants {
     String KEY_ACCOUNT_KIT_VERSION = "account_kit_version";
     String KEY_RIDE_ACCEPTED = "ride_accepted";
     String KEY_FINISH_ACTIVITY = "finish_activity";
-    String ACTION_FINISH_ACTIVITY = "product.clicklabs.jugnoo.finish_activity";
+    String ACTION_FINISH_ACTIVITY = BuildConfig.APPLICATION_ID+".finish_activity";
     String KEY_MENU_SIGNUP_TUTORIAL = "menu_signup_tutorial";
     String KEY_POST_ID = "post_id";
-    String ACTION_CONTACTS_UPLOADED = "product.clicklabs.jugnoo.ACTION_CONTACTS_UPLOADED";
+    String ACTION_CONTACTS_UPLOADED = BuildConfig.APPLICATION_ID+".ACTION_CONTACTS_UPLOADED";
     String KEY_UPLOADED = "uploaded";
     String KEY_COMMENT_CONTENT = "comment_content";
     String KEY_RESTAURANT_INFO = "restaurant_info";
@@ -738,6 +740,7 @@ public interface Constants {
     String KEY_SUPPORT_CATEGORY = "support_category";
     String SP_PAYTM_LAST_BALANCE = "sp_paytm_last_balance";
     String SP_MOBIKWIK_LAST_BALANCE = "sp_mobikwik_last_balance";
+    String SP_MPESA_LAST_BALANCE = "sp_mpesa_last_balance";
     String SP_FREECHARGE_LAST_BALANCE = "sp_freecharge_last_balance";
     String KEY_ICICI_UPI = "upi_icici";
     String PLACE_ORDER_DATA = "place_order_response";
@@ -852,11 +855,16 @@ public interface Constants {
     // fugu custom action
     String FUGU_CUSTOM_ACTION_PAYLOAD = "FUGU_CUSTOM_ACTION_PAYLOAD";
     String FUGU_CACHE_CLEARED = "FUGU_CACHE_CLEARED";//since data model was changed in fugu after jugnoo version 358 we had to ensure the old caches are cleared as it created conflict and ANR
-    String FUGU_CUSTOM_REQUEST_CODE = "product.clicklabs.jugnoo.CUSTOM_DATA_REQUEST_CODE";
+    String FUGU_CUSTOM_REQUEST_CODE = BuildConfig.APPLICATION_ID+".CUSTOM_DATA_REQUEST_CODE";
     int FUGU_CUSTOM_RESULT_CODE = 0x1010 ;
 
     String KEY_REFFERAL_CODE = "refferal_code";
     String KEY_PROMO_CODE = "promo_code";
     String PAYER_USER_IDENTIFIER = "payer_user_identifier";
     String PAYEE_PHONE_NUMBER="payee_phone_no";
+    String KEY_OPERATOR_ID="operator_id";
+    String KEY_OPERATOR_TOKEN = "operator_token";
+    String KEY_COUNTRY_CODE = "country_code";
+    String KEY_UPDATED_COUNTRY_CODE = "updated_country_code";
+    String KEY_CUSTOMER_PACKAGE_NAME = "customer_package_name";
 }

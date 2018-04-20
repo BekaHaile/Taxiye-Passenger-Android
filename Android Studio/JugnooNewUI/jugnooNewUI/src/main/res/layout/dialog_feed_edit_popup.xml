@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_marginLeft="@dimen/spacing_small"
-    android:layout_marginRight="@dimen/spacing_small"
+    android:layout_marginStart="@dimen/spacing_small"
+    android:layout_marginEnd="@dimen/spacing_small"
     android:layout_height="@dimen/height_popup_edit_feed">
     <View
         android:id="@+id/arrow_up"
         android:visibility="visible"
         android:background="@drawable/background_popup_edit_feed"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:layout_marginTop="-10dp"
-        android:layout_marginRight="12.5dp"
+        android:layout_marginEnd="12.5dp"
         android:layout_width="20dp"
         android:layout_height="20dp"/>
 
@@ -29,11 +29,11 @@
             android:id="@+id/tv_edit_post"
             style="@style/text_feed_popup"
             android:background="@drawable/background_white_grey_light_selector"
-            android:drawableLeft="@drawable/ic_feed_edit_icon"
+            android:drawableStart="@drawable/ic_feed_edit_icon"
             android:drawablePadding="@dimen/spacing_normal"
-            android:gravity="center|left"
+            android:gravity="center|start"
 
-            android:text="Edit Post"
+            android:text="@string/edit_post"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:textColor="@color/feed_grey_text"
@@ -50,11 +50,11 @@
             android:id="@+id/tv_delete_post"
             style="@style/text_feed_popup"
             android:background="@drawable/background_white_grey_light_selector"
-            android:drawableLeft="@drawable/ic_delete_feed"
+            android:drawableStart="@drawable/ic_delete_feed"
             android:drawablePadding="@dimen/spacing_normal"
-            android:gravity="center|left"
+            android:gravity="center|start"
 
-            android:text="Delete Post"
+            android:text="@string/delete_post"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:textColor="@color/feed_grey_text"
@@ -65,11 +65,11 @@
     <View
         android:id="@+id/arrow_down"
         android:background="@drawable/background_popup_edit_feed"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:layout_marginBottom="-10dp"
         android:rotation="180"
         android:visibility="gone"
-        android:layout_marginRight="12.5dp"
+        android:layout_marginEnd="12.5dp"
         android:layout_width="20dp"
         android:layout_height="20dp"/>
 

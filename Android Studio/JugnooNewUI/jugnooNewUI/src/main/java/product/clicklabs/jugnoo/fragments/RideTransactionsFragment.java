@@ -120,7 +120,7 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 												null, -1, -1, "");
 									}
 								} else {
-									DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+									DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 								}
 							} else if (historyData.getProductType() == ProductType.FRESH.getOrdinal()
 									|| historyData.getProductType() == ProductType.MEALS.getOrdinal()
@@ -285,17 +285,17 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 									totalRides = jObj.getInt("history_size");
 									rideInfosList.addAll(historyResponse.getData());
 
-									updateListData("You haven't tried Jugnoo yet.", false);
+									updateListData(getString(R.string.you_havent_tried_app_yet), false);
 
 								} else {
-									updateListData("Some error occurred, tap to retry", true);
+									updateListData(getString(R.string.some_error_occured_tap_to_retry), true);
 								}
 							} else {
-								updateListData("Some error occurred, tap to retry", true);
+								updateListData(getString(R.string.some_error_occured_tap_to_retry), true);
 							}
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							updateListData("Some error occurred, tap to retry", true);
+							updateListData(getString(R.string.some_error_occured_tap_to_retry), true);
 						}
 						swipeRefreshLayout.setRefreshing(false);
 					}
@@ -303,13 +303,13 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 					@Override
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "getRecentRidesAPI error="+error.toString());
-						updateListData("Some error occurred, tap to retry", true);
+						updateListData(getString(R.string.some_error_occured_tap_to_retry), true);
 						swipeRefreshLayout.setRefreshing(false);
 					}
 				});
 			}
 			else {
-				updateListData("No internet connection, tap to retry", true);
+				updateListData(getString(R.string.no_connection_tap_to_retry), true);
 				swipeRefreshLayout.setRefreshing(false);
 			}
 		} catch (Exception e) {

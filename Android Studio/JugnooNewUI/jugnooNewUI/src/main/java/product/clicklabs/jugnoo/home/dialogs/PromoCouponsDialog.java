@@ -32,7 +32,6 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.NonScrollListView;
 
 /**
  * Created by shankar on 5/2/16.
@@ -50,11 +49,12 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 	private LinearLayout linearLayoutNoCurrentOffers;
 	private TextView textViewNoCurrentOffers, tvAvailableOffers;
 	private ImageView imageViewOffers, ivNoOffer;
-	private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
+	private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "");
 	private PromoCoupon couponSelectedWhenDialogShown;
 	private boolean onDialogOpenPromoSelectOperation;
 	public PromoCouponsDialog(Activity activity, Callback callback) {
 		this.activity = activity;
+		noSelectionCoupon = new CouponInfo(-1, activity.getString(R.string.dont_apply_coupon_on_this_ride));
 		this.callback = callback;
 	}
 

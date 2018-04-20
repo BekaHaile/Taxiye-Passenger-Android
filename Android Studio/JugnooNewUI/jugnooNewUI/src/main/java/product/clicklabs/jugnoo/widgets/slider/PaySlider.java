@@ -44,8 +44,8 @@ public abstract class PaySlider {
         ButterKnife.bind(this,view);
         llPayViewContainer.setVisibility(View.VISIBLE);
         rlSliderContainer.setVisibility(View.VISIBLE);
-        tvSlide.setText("CONFIRM");
-        sliderText.setText("Swipe right to confirm >>");
+        tvSlide.setText(tvSlide.getContext().getString(R.string.confirm).toUpperCase());
+        sliderText.setText(R.string.swipe_to_confirm);
         setUpPayBar();
         paramsF = (RelativeLayout.LayoutParams) tvSlide.getLayoutParams();
     }
@@ -74,6 +74,7 @@ public abstract class PaySlider {
                     case MotionEvent.ACTION_MOVE:
                         if((event.getRawX()-getRelativeSliderLeftMargin()) > (tvSlide.getWidth()/2) && (event.getRawX()-getRelativeSliderLeftMargin()) < relativeLayoutSlider.getWidth()-(tvSlide.getWidth()/2)){
                             paramsF.leftMargin = (int) layoutX(event.getRawX()-getRelativeSliderLeftMargin());
+                            paramsF.setMarginStart((int) layoutX(event.getRawX()-getRelativeSliderLeftMargin()));
                             relativeLayoutSlider.updateViewLayout(tvSlide, paramsF);
                             sliderText.setVisibility(View.VISIBLE);
                             float percent = (event.getRawX()-getRelativeSliderLeftMargin()) / (relativeLayoutSlider.getWidth()-tvSlide.getWidth());
@@ -90,7 +91,7 @@ public abstract class PaySlider {
                         if ((event.getRawX()-getRelativeSliderLeftMargin()) < (relativeLayoutSlider.getWidth()-(tvSlide.getWidth()/2))*0.6f) {
                             setSlideInitial();
                         } else{
-                            animateSliderButton(paramsF.leftMargin, relativeLayoutSlider.getWidth()-tvSlide.getWidth());
+                            animateSliderButton(paramsF.getMarginStart(), relativeLayoutSlider.getWidth()-tvSlide.getWidth());
                             relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_confirm_color_bg);
                             rlSliderContainer.setBackgroundResource(R.color.slider_green);
                             sliderText.setVisibility(View.GONE);
@@ -107,7 +108,7 @@ public abstract class PaySlider {
     }
 
     public void setSlideInitial(){
-        animateSliderButton(paramsF.leftMargin, 0);
+        animateSliderButton(paramsF.getMarginStart(), 0);
         rlSliderContainer.setBackgroundResource(R.drawable.bg_rectangle_gradient_normal);
         relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_color_bg);
         sliderText.setVisibility(View.VISIBLE);
@@ -133,6 +134,7 @@ public abstract class PaySlider {
             public void onAnimationEnd(Animation animation) {
                 tvSlide.clearAnimation();
                 paramsF.leftMargin = (int) newMargin;
+                paramsF.setMarginStart((int) newMargin);
                 relativeLayoutSlider.updateViewLayout(tvSlide, paramsF);
                 tvSlide.setEnabled(true);
             }
@@ -148,7 +150,7 @@ public abstract class PaySlider {
     }
 
     public void fullAnimate(){
-        animateSliderButton(paramsF.leftMargin, relativeLayoutSlider.getWidth()-tvSlide.getWidth());
+        animateSliderButton(paramsF.getMarginStart(), relativeLayoutSlider.getWidth()-tvSlide.getWidth());
         relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_confirm_color_bg);
         rlSliderContainer.setBackgroundResource(R.color.slider_green);
         sliderText.setVisibility(View.GONE);
@@ -156,11 +158,11 @@ public abstract class PaySlider {
     }
     private float getRelativeSliderLeftMargin(){
         RelativeLayout.LayoutParams relativeParams = (RelativeLayout.LayoutParams)relativeLayoutSlider.getLayoutParams();
-        return relativeParams.leftMargin;
+        return relativeParams.getMarginStart();
     }
 
     public boolean isSliderInIntialStage(){
-        return paramsF.leftMargin==0;
+        return paramsF.getMarginStart()==0;
     }
 
     private float layoutX(float rawX){

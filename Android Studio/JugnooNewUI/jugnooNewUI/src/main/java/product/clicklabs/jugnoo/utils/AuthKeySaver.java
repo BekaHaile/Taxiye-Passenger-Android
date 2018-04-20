@@ -8,12 +8,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import product.clicklabs.jugnoo.BuildConfig;
+
 public class AuthKeySaver {
 	
 	public static final String NOT_FOUND = "not_found";
 	
 	public static File getAuthFolder(){
-		String strFolder = Environment.getExternalStorageDirectory() + "/Android/data/.jugnoo_auth";
+		String strFolder = Environment.getExternalStorageDirectory() + "/Android/data/."+ BuildConfig.APP_DB_ID+"_auth";
 		File folder = new File(strFolder);
 		if(!folder.exists()){
 			folder.mkdirs();

@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="9px"
                     android:gravity="center"
-                    android:text="200"
+                    android:text="@string/_200"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_30" />
@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5px"
                     android:gravity="center"
-                    android:text="NA"
+                    android:text="@string/na"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_30" />
 
@@ -96,7 +96,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="25px"
                 android:layout_marginTop="25px"
-                android:src="@color/stroke_color_light" />
+                android:src="@color/stroke_color_light"
+                android:visibility="@integer/is_autos_offers_enabled"/>
 
             <LinearLayout
                 android:id="@+id/linearLayoutOffers"
@@ -105,7 +106,9 @@
                 android:layout_weight="1"
                 android:background="@color/white"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="@integer/is_autos_offers_enabled"
+                >
 
                 <TextView
                     android:id="@+id/textViewOffers"

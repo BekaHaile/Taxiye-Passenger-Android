@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Data;
@@ -62,7 +62,7 @@ public class PriorityTipDialog {
             dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_TopInBottomOut;
             dialog.setContentView(R.layout.dialog_priority_tip);
 
-            FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+            RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
             new ASSL(activity, frameLayout, 1134, 720, true);
 
             WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
@@ -189,8 +189,8 @@ public class PriorityTipDialog {
                         dialog.dismiss();
                         callback.onConfirmed(true);
                     } else{
-                        DialogPopup.dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE,
-                                Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+                        DialogPopup.dialogNoInternet(activity, activity.getString(R.string.connection_lost_title),
+                                activity.getString(R.string.connection_lost_desc), new Utils.AlertCallBackWithButtonsInterface() {
                                     @Override
                                     public void positiveClick(View v) {
                                         btnOk.performClick();

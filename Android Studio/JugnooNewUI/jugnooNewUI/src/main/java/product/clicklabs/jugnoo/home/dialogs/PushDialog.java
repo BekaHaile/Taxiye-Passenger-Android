@@ -52,7 +52,7 @@ public class PushDialog {
 				if("".equalsIgnoreCase(picture)){
 					picture = jObj.optString(Constants.KEY_IMAGE, "");
 				}
-				String buttonText = jObj.optString(Constants.KEY_BUTTON_TEXT, "Button");
+				String buttonText = jObj.optString(Constants.KEY_BUTTON_TEXT, activity.getString(R.string.ok));
 				final String url = jObj.optString(Constants.KEY_URL, "");
 
 				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);

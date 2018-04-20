@@ -12,8 +12,8 @@
         android:text="@string/checkout_our_different_services_from_here"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_40"
-        android:layout_marginLeft="@dimen/px_60"
-        android:layout_marginRight="@dimen/px_60"
+        android:layout_marginStart="@dimen/px_60"
+        android:layout_marginEnd="@dimen/px_60"
         android:layout_above="@+id/ivArrow"
         android:layout_marginBottom="@dimen/px_20"
         android:gravity="center"
@@ -25,7 +25,7 @@
         android:layout_width="91px"
         android:layout_height="328px"
         android:layout_above="@+id/ivJeanie"
-        android:layout_marginLeft="100px"
+        android:layout_marginStart="100px"
         android:src="@drawable/ic_arrow_signup_tutorial"
         android:tag="mwar"/>
 
@@ -36,7 +36,7 @@
         android:layout_height="@dimen/px_120"
         android:src="@drawable/ic_jeanie_signup_tutorial"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="@dimen/px_45"
+        android:layout_marginStart="@dimen/px_45"
         android:layout_marginBottom="@dimen/px_235"
         android:tag="mwar"/>
 

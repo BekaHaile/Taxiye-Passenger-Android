@@ -162,7 +162,7 @@ public class PaymentFragment extends Fragment {
     public void apiFetchPaymentAddress() {
         try {
             if (MyApplication.getInstance().isOnline()) {
-                CallProgressWheel.showLoadingDialog(getActivity(), "Loading...");
+                CallProgressWheel.showLoadingDialog(getActivity(), getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
@@ -229,7 +229,7 @@ public class PaymentFragment extends Fragment {
     public void apiDeletePaymentAddress(final String vpa) {
         try {
             if (MyApplication.getInstance().isOnline()) {
-                CallProgressWheel.showLoadingDialog(getActivity(), "Loading...");
+                CallProgressWheel.showLoadingDialog(getActivity(), getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_VPA, vpa);

@@ -16,12 +16,12 @@
             android:layout_width="600px"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingRight="30px"
-            android:paddingLeft="30px"
+            android:paddingEnd="30px"
+            android:paddingStart="30px"
             android:paddingTop="20px"
             android:paddingBottom="20px"
-            android:layout_toRightOf="@+id/imageViewCancelOptionCheck"
-            android:text="Driver is late"
+            android:layout_toEndOf="@+id/imageViewCancelOptionCheck"
+            android:text="@string/driver_is_late"
             android:textColor="@color/text_color"
             android:textSize="30px" />
 
@@ -29,9 +29,9 @@
             android:id="@+id/imageViewCancelOptionCheck"
             android:layout_width="24px"
             android:layout_height="24px"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="40px"
+            android:layout_marginStart="40px"
             android:src="@drawable/check_box_checked"
             android:tag="mwar"
              />

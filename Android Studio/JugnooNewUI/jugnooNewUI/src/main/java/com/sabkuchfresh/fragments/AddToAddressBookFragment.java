@@ -412,14 +412,14 @@ public class AddToAddressBookFragment extends Fragment {
                 if(editTextLabel.getVisibility() == View.GONE){
                     editTextLabel.setVisibility(View.VISIBLE);
                 }
-                editTextLabel.setError("Required field");
+                editTextLabel.setError(getString(R.string.required_field));
 
                 return false;
             }
         }
         if(editTextFlatNumber.getText().toString().trim().length() == 0){
             editTextFlatNumber.requestFocus();
-            editTextFlatNumber.setError("Required field");
+            editTextFlatNumber.setError(getString(R.string.required_field));
             return false;
         }
         return true;

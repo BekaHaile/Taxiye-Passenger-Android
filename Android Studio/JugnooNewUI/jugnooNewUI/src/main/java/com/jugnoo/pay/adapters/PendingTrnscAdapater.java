@@ -199,7 +199,7 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
     // to cancel a particular transaction
     private void cancelTranscApi(int orderId, final int pos) {
         if (MyApplication.getInstance().isOnline()) {
-            CallProgressWheel.showLoadingDialog(activity, "Please wait..");
+            CallProgressWheel.showLoadingDialog(activity, activity.getString(R.string.please_wait));
             AccessTokenRequest accessTokenRequest = new AccessTokenRequest();
             accessTokenRequest.setAccess_token(accessToken);
             accessTokenRequest.setOrder_id(orderId);
@@ -217,18 +217,18 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
                     CallProgressWheel.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
 
     }
@@ -238,7 +238,7 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
     // to decline a particular transaction
     private void declineTranscApi(int orderId, final int pos) {
         if (MyApplication.getInstance().isOnline()) {
-            CallProgressWheel.showLoadingDialog(activity, "Please wait..");
+            CallProgressWheel.showLoadingDialog(activity, activity.getString(R.string.please_wait));
             AccessTokenRequest accessTokenRequest = new AccessTokenRequest();
             accessTokenRequest.setAccess_token(accessToken);
             accessTokenRequest.setOrder_id(orderId);
@@ -256,18 +256,18 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
                     CallProgressWheel.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
 
     }
@@ -276,7 +276,7 @@ public class PendingTrnscAdapater extends RecyclerView.Adapter<PendingTrnscAdapa
     public void apiRemindUser(final int orderId, final int pos) {
         try {
             if (MyApplication.getInstance().isOnline()) {
-                CallProgressWheel.showLoadingDialog(activity, "Loading...");
+                CallProgressWheel.showLoadingDialog(activity, activity.getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());

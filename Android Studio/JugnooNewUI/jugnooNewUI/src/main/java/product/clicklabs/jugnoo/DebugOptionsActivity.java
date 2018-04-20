@@ -219,7 +219,7 @@ public class DebugOptionsActivity extends BaseActivity {
                     String customUrl = editTextCustom.getText().toString().trim();
                     if ("".equalsIgnoreCase(customUrl)) {
                         editTextCustom.requestFocus();
-                        editTextCustom.setError("Please enter something");
+                        editTextCustom.setError(getString(R.string.please_enter_something));
                         stop = true;
                     } else {
                         selectedServer = customUrl;
@@ -238,7 +238,7 @@ public class DebugOptionsActivity extends BaseActivity {
                     String customUrl = editTextCustomFresh.getText().toString().trim();
                     if ("".equalsIgnoreCase(customUrl)) {
                         editTextCustomFresh.requestFocus();
-                        editTextCustomFresh.setError("Please enter something");
+                        editTextCustomFresh.setError(getString(R.string.please_enter_something));
                         stop = true;
                     } else {
                         selectedServerFresh = customUrl;
@@ -253,7 +253,7 @@ public class DebugOptionsActivity extends BaseActivity {
                     String customUrl = editTextCustomMenus.getText().toString().trim();
                     if ("".equalsIgnoreCase(customUrl)) {
                         editTextCustomMenus.requestFocus();
-                        editTextCustomMenus.setError("Please enter something");
+                        editTextCustomMenus.setError(getString(R.string.please_enter_something));
                         stop = true;
                     } else {
                         selectedServerMenus = customUrl;
@@ -268,7 +268,7 @@ public class DebugOptionsActivity extends BaseActivity {
                     String customUrl = editTextCustomFatafat.getText().toString().trim();
                     if ("".equalsIgnoreCase(customUrl)) {
                         editTextCustomFatafat.requestFocus();
-                        editTextCustomFatafat.setError("Please enter something");
+                        editTextCustomFatafat.setError(getString(R.string.please_enter_something));
                         stop = true;
                     } else {
                         selectedServerFatafat = customUrl;
@@ -398,7 +398,7 @@ public class DebugOptionsActivity extends BaseActivity {
                 String customUrl = editTextCustom.getText().toString().trim();
                 if ("".equalsIgnoreCase(customUrl)) {
                     editTextCustom.requestFocus();
-                    editTextCustom.setError("Please enter something");
+                    editTextCustom.setError(getString(R.string.please_enter_something));
                 } else {
                     selectedServer = customUrl;
                     setServerUI(selectedServer);
@@ -443,7 +443,7 @@ public class DebugOptionsActivity extends BaseActivity {
                 String customUrl = editTextCustomFresh.getText().toString().trim();
                 if ("".equalsIgnoreCase(customUrl)) {
                     editTextCustomFresh.requestFocus();
-                    editTextCustomFresh.setError("Please enter something");
+                    editTextCustomFresh.setError(getString(R.string.please_enter_something));
                 } else {
                     selectedServerFresh = customUrl;
                     setFreshServerUI(selectedServerFresh);
@@ -487,7 +487,7 @@ public class DebugOptionsActivity extends BaseActivity {
                 String customUrl = editTextCustomMenus.getText().toString().trim();
                 if ("".equalsIgnoreCase(customUrl)) {
                     editTextCustomMenus.requestFocus();
-                    editTextCustomMenus.setError("Please enter something");
+                    editTextCustomMenus.setError(getString(R.string.please_enter_something));
                 } else {
                     selectedServerMenus = customUrl;
                     setMenusServerUI(selectedServerMenus);
@@ -530,7 +530,7 @@ public class DebugOptionsActivity extends BaseActivity {
                 String customUrl = editTextCustomFatafat.getText().toString().trim();
                 if ("".equalsIgnoreCase(customUrl)) {
                     editTextCustomFatafat.requestFocus();
-                    editTextCustomFatafat.setError("Please enter something");
+                    editTextCustomFatafat.setError(getString(R.string.please_enter_something));
                 } else {
                     selectedServerFatafat = customUrl;
                     setFatafatServerUI(selectedServerFatafat);

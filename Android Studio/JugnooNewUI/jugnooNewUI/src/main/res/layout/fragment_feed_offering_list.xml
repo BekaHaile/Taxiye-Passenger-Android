@@ -55,7 +55,7 @@
                     android:layout_marginTop="@dimen/dp_40"
                     android:gravity="center"
                     android:lineSpacingExtra="5dp"
-                    android:text="AskLocal is empty!\nBE FIRST ONE TO ADD A POST..."
+                    android:text="@string/asklocal_is_empty_nbe_first_one_to_add_a_post"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_16"
                     app:typekitFont="maven" />

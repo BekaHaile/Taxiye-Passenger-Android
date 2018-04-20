@@ -7,8 +7,8 @@
     android:background="@android:color/white"
     android:layout_gravity="center"
     android:maxHeight="400dp"
-    android:layout_marginLeft="40px"
-    android:layout_marginRight="40px"
+    android:layout_marginStart="40px"
+    android:layout_marginEnd="40px"
     android:layout_marginTop="40px"
     android:layout_marginBottom="40px"
     android:orientation="vertical"
@@ -23,7 +23,7 @@
         android:gravity="center"
         android:textSize="35px"
         android:layout_marginBottom="20px"
-        android:text="Price update: \n Discount slot expired"
+        android:text="@string/price_update_n_discount_slot_expired"
         android:textColor="@color/text_color"
         app:typekitFont="maven" />
 
@@ -34,7 +34,7 @@
         android:gravity="center"
         android:textSize="26px"
         android:layout_marginBottom="20px"
-        android:text="Kindly review your cart"
+        android:text="@string/kindly_review_your_cart"
         android:textColor="@color/text_color"
         app:typekitFont="maven" />
 
@@ -69,12 +69,12 @@
             android:id="@+id/btn_cancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40px"
-            android:layout_marginRight="10px"
+            android:layout_marginStart="40px"
+            android:layout_marginEnd="10px"
             android:layout_weight="1"
             android:textColor="@color/text_selector_back_icici"
             android:background="@drawable/selector_back_icici"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textSize="28px"
             app:typekitFont="maven" />
 
@@ -82,11 +82,11 @@
             android:id="@+id/btn_confirm"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10px"
-            android:layout_marginRight="40px"
+            android:layout_marginStart="10px"
+            android:layout_marginEnd="40px"
             android:layout_weight="1"
             android:background="@drawable/capsule_theme_color_selector"
-            android:text="Confirm"
+            android:text="@string/confirm"
             android:textColor="@color/white"
             android:textSize="28px"
             app:typekitFont="maven" />

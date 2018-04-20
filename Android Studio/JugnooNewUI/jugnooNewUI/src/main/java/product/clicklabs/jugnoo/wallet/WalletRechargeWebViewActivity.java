@@ -114,7 +114,7 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Utils.showToast(this, "Some Error");
+            Utils.showToast(this, getString(R.string.some_error_occured));
         }
     }
 

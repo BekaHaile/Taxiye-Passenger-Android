@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/ivSuperCategoryImage"
                 android:layout_marginBottom="@dimen/px_15"
-                android:layout_marginLeft="@dimen/px_18"
+                android:layout_marginStart="@dimen/px_18"
                 android:text="@string/produce"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_26" />

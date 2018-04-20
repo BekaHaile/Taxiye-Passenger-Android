@@ -32,8 +32,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="25px"
-                    android:layout_marginLeft="@dimen/px_34"
-                    android:layout_marginRight="@dimen/px_34"
+                    android:layout_marginStart="@dimen/px_34"
+                    android:layout_marginEnd="@dimen/px_34"
                     android:gravity="center"
                     android:text="@string/close_to_saved_location"
                     android:textColor="@color/text_color"
@@ -53,8 +53,8 @@
                         android:id="@+id/viewSep"
                         android:layout_width="match_parent"
                         android:layout_height="2px"
-                        android:layout_marginLeft="@dimen/px_46"
-                        android:layout_marginRight="@dimen/px_46"
+                        android:layout_marginStart="@dimen/px_46"
+                        android:layout_marginEnd="@dimen/px_46"
                         android:background="@color/bg_divider_saved_location" />
 
                     <include layout="@layout/list_item_search_item" />

@@ -45,7 +45,7 @@
                 android:textSize="@dimen/sp_13"
                 android:visibility="visible"
                 app:typekitFont="@string/maven"
-                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginStart="@dimen/dp_5"
                 />
 
         </LinearLayout>

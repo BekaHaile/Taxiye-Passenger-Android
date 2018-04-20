@@ -20,8 +20,8 @@
         android:id="@+id/tv_confirm_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/bg_address_confirm"
         android:gravity="center"
@@ -57,15 +57,15 @@
             android:layout_height="@dimen/dp_17"
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dp_21"
+            android:layout_marginStart="@dimen/dp_21"
             android:src="@drawable/ic_new_fresh_location"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_11"
-            android:layout_toLeftOf="@+id/ivEditLoc"
-            android:layout_toRightOf="@+id/ivLoc"
+            android:layout_marginStart="@dimen/dp_11"
+            android:layout_toStartOf="@+id/ivEditLoc"
+            android:layout_toEndOf="@+id/ivLoc"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -95,9 +95,9 @@
             android:id="@+id/ivEditLoc"
             android:layout_width="@dimen/dp_30"
             android:layout_height="@dimen/dp_30"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_10"
             android:padding="@dimen/dp_7"
             android:src="@drawable/edit_icon_normal"
             android:tag="mwar"

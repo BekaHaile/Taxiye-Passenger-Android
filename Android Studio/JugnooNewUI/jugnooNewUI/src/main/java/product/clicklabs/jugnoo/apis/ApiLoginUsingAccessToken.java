@@ -48,7 +48,7 @@ public class ApiLoginUsingAccessToken {
 		if (MyApplication.getInstance().isOnline()) {
 
 			if(showDialog) {
-				DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.showLoadingDialog(activity, activity.getString(R.string.loading));
 			}
 
 			Data.loginLatitude = latitude;

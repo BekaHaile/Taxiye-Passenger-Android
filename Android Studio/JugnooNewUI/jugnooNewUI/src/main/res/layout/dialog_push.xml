@@ -23,8 +23,8 @@
             android:layout_height="306px"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8px"
-            android:layout_marginLeft="8px"
-            android:layout_marginRight="8px"
+            android:layout_marginStart="8px"
+            android:layout_marginEnd="8px"
             android:src="@drawable/ic_notification_placeholder"
             android:tag="mwar"
             android:scaleType="centerCrop"
@@ -36,10 +36,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="36px"
-            android:layout_marginLeft="20px"
-            android:layout_marginRight="20px"
+            android:layout_marginStart="20px"
+            android:layout_marginEnd="20px"
             android:gravity="center"
-            android:text="Order fruits &amp; veggies\nwhile you ride"
+            android:text="@string/order_fruits_amp_veggies_nwhile_you_ride"
             android:textColor="@color/text_color_dark"
             android:textSize="@dimen/text_size_34"
             android:textAllCaps="true"
@@ -48,8 +48,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:layout_marginLeft="74px"
-            android:layout_marginRight="74px"
+            android:layout_marginStart="74px"
+            android:layout_marginEnd="74px"
             android:layout_marginTop="30px"
             android:layout_marginBottom="30px"
             android:background="@color/text_color_light"
@@ -62,11 +62,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:text="Jugnoo Fresh will get them\ndelivered to "
+            android:text="@string/jugnoo_fresh_will_get_them_ndelivered_to"
             android:textColor="@color/text_color_dark"
             android:textSize="@dimen/text_size_26"
-            android:layout_marginLeft="20px"
-            android:layout_marginRight="20px"
+            android:layout_marginStart="20px"
+            android:layout_marginEnd="20px"
             />
 
         <Button
@@ -75,7 +75,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40px"
             android:layout_marginBottom="40px"
-            android:text="Order Now"/>
+            android:text="@string/order_now"/>
 
     </LinearLayout>
 

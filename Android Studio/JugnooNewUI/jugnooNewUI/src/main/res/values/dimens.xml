@@ -90,7 +90,7 @@
 
     <!-- end ride screen dimensions -->
     <dimen name="end_ride_fare_value_text_size">
-        80px
+        45px
     </dimen>
     <dimen name="end_ride_fare_title_text_size">
         26px

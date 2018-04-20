@@ -414,36 +414,8 @@ public class Utils {
     }
 
 
-    public static String retrievePhoneNumberTenChars(String phoneNo){
-        phoneNo = phoneNo.replace(" ", "");
-        phoneNo = phoneNo.replace("(", "");
-        phoneNo = phoneNo.replace("/", "");
-        phoneNo = phoneNo.replace(")", "");
-        phoneNo = phoneNo.replace("N", "");
-        phoneNo = phoneNo.replace(",", "");
-        phoneNo = phoneNo.replace("*", "");
-        phoneNo = phoneNo.replace(";", "");
-        phoneNo = phoneNo.replace("#", "");
-        phoneNo = phoneNo.replace("-", "");
-        phoneNo = phoneNo.replace(".", "");
-        if(phoneNo.length() >= 10){
-            phoneNo = phoneNo.substring(phoneNo.length()-10, phoneNo.length());
-        }
-        return phoneNo;
-    }
-
     public static boolean validPhoneNumber(String phoneNo){
-        if(phoneNo.length() >= 10){
-            if(phoneNo.charAt(0) == '0' || phoneNo.contains("+")){
-                return false;
-            }
-            else{
-                return isPhoneValid(phoneNo);
-            }
-        }
-        else{
-            return false;
-        }
+		return product.clicklabs.jugnoo.utils.Utils.validPhoneNumber(phoneNo);
     }
 
 
@@ -459,13 +431,10 @@ public class Utils {
 
 
     public static boolean isPhoneValid(CharSequence phone) {
-        return android.util.Patterns.PHONE.matcher(phone).matches();
+		return product.clicklabs.jugnoo.utils.Utils.isPhoneValid(phone);
     }
 
 
-    public static boolean isEmailValid(CharSequence email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
 
 
 
@@ -714,7 +683,7 @@ public class Utils {
 
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
             builder.setAutoCancel(true);
-            builder.setContentTitle("Autos");
+            builder.setContentTitle(context.getString(R.string.app_name));
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
             builder.setContentText(message);
             builder.setTicker(message);
@@ -727,8 +696,8 @@ public class Utils {
 //            }
 
             builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher));
-            builder.setSmallIcon(R.drawable.notification_icon);
+            builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher));
+            builder.setSmallIcon(R.mipmap.notification_icon);
             builder.setContentIntent(intent);
 
 

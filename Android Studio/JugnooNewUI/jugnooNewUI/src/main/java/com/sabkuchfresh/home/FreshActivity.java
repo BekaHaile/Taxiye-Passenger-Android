@@ -805,8 +805,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             int paddingBottom = (int) (marginBottom * scale + 0.5f);
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) rlfabViewFatafat.getLayoutParams();
             layoutParams.leftMargin = 0 ;
+            layoutParams.setMarginStart(0);
             layoutParams.topMargin= 0;
             layoutParams.rightMargin = (int) (40f * ASSL.Yscale());
+            layoutParams.setMarginEnd((int) (40f * ASSL.Yscale()));
             layoutParams.bottomMargin = paddingBottom;
             rlfabViewFatafat.setLayoutParams(layoutParams);
             rlfabViewFatafat.invalidate();;
@@ -1947,7 +1949,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
             rlfabViewFatafat.setVisibility(View.GONE);
-            topBar.imageViewBack.setPadding(padding, padding, padding, padding);
+            topBar.imageViewBack.setPaddingRelative(padding, padding, padding, padding);
             topBar.getLlTopBarDeliveryAddress().setVisibility(deliveryAddressInTopBarVisibility);
 
             if(visMinOrder != 1) {
@@ -2008,11 +2010,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         if(center){
             topBar.title.setGravity(Gravity.CENTER);
             titleLayoutParams.setMargins(0, 0, (int) (ASSL.Xscale() * 50f), 0);
+            titleLayoutParams.addRule(RelativeLayout.START_OF, 0);
+            titleLayoutParams.setMarginStart(0);
+            titleLayoutParams.setMarginEnd((int) (ASSL.Xscale() * 50f));
         } else {
-            topBar.title.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+            topBar.title.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
             titleLayoutParams.setMargins((int) (ASSL.Xscale() * 20f), 0, 0, 0);
-            titleLayoutParams.addRule(RelativeLayout.LEFT_OF, topBar.getLlSearchCart().getId());
-            topBar.title.setPadding(0, 0, 0, 0);
+            titleLayoutParams.addRule(RelativeLayout.START_OF, topBar.getLlSearchCart().getId());
+            titleLayoutParams.setMarginStart((int) (ASSL.Xscale() * 20f));
+            titleLayoutParams.setMarginEnd(0);
+            topBar.title.setPaddingRelative(0, 0, 0, 0);
         }
         topBar.title.setLayoutParams(titleLayoutParams);
     }
@@ -2195,7 +2202,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         } else if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                             textViewMinOrderVis = View.VISIBLE;
                             textViewMinOrder.setText(getString(R.string.minimum_order) + " "
-                                    + getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
+                                    + getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
                         } else if (totalQuantity > 0 && getVendorOpened().getShowFreeDeliveryText() == 1
                                 && totalPrice < getVendorOpened().getDeliveryAmountThreshold()) {
                             textViewMinOrderVis = View.VISIBLE;
@@ -2448,6 +2455,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         RelativeLayout.LayoutParams paramsF = (RelativeLayout.LayoutParams) tvSlide.getLayoutParams();
         paramsF.leftMargin = 0;
+        paramsF.setMarginStart(0);
         relativeLayoutSlider.updateViewLayout(tvSlide, paramsF);
     }
 
@@ -3642,7 +3650,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         if (isMenusOrDeliveryOpen() && getVendorOpened() != null) {
 
             if(getVendorOpened().getOutOfRadius()==1 && isDeliveryOpenInBackground()){
-                FreshCheckoutMergedFragment.orderViaFatafat(FreshCheckoutMergedFragment.prepareItemsInCartForMenus(this,null),null,
+                FreshCheckoutMergedFragment.orderViaFatafat(this, FreshCheckoutMergedFragment.prepareItemsInCartForMenus(this,null),null,
                         this,updateCartValuesGetTotalPrice().first);
                 return;
             }
@@ -4431,8 +4439,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             int paddingBottom = (int) (padding * scale + 0.5f);
             CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) rlfabViewFatafat.getLayoutParams();
             layoutParams.leftMargin = 0 ;
+            layoutParams.setMarginStart(0) ;
             layoutParams.topMargin= 0;
             layoutParams.rightMargin = (int) (40f * ASSL.Yscale());
+            layoutParams.setMarginEnd((int) (40f * ASSL.Yscale()));
             layoutParams.bottomMargin = paddingBottom;
             rlfabViewFatafat.setLayoutParams(layoutParams);
             rlfabViewFatafat.invalidate();;
@@ -4799,7 +4809,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
             AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
-            builderSingle.setTitle("Call");
+            builderSingle.setTitle(R.string.call);
 
             final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
             arrayAdapter.addAll(arr);
@@ -4866,7 +4876,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
                 @Override
                 public void noNet() {
-                    DialogPopup.alertPopup(FreshActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG);
+                    DialogPopup.alertPopup(FreshActivity.this, getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc));
                 }
 
                 @Override
@@ -5431,7 +5441,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void startRazorPayPayment(JSONObject options, boolean isUPA) {
         Checkout checkout = new Checkout();
-        checkout.setImage(R.drawable.ic_launcher);
+        checkout.setImage(R.mipmap.ic_launcher);
         try {
             options.remove(Constants.KEY_AUTH_ORDER_ID);
 
@@ -5582,7 +5592,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             vCheckoutShadow.startAnimation(animation);
 
             if(getFreshHomeFragment() != null && getFreshHomeFragment().getRvFreshSuper() != null){
-                getFreshHomeFragment().getRvFreshSuper().setPadding(0, 0, 0, llCheckoutBar.getMeasuredHeight()+((int)(ASSL.Yscale()*240.0f) - llCheckoutBar.getMeasuredHeight()));
+                getFreshHomeFragment().getRvFreshSuper().setPaddingRelative(0, 0, 0, llCheckoutBar.getMeasuredHeight()+((int)(ASSL.Yscale()*240.0f) - llCheckoutBar.getMeasuredHeight()));
             }
 
             if(textViewMinOrder.getVisibility() == View.VISIBLE) {
@@ -5602,7 +5612,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             vCheckoutShadow.startAnimation(animation);
 
             if(getFreshHomeFragment() != null && getFreshHomeFragment().getRvFreshSuper() != null){
-                getFreshHomeFragment().getRvFreshSuper().setPadding(0, 0, 0, (int)(ASSL.Yscale()*240.0f));
+                getFreshHomeFragment().getRvFreshSuper().setPaddingRelative(0, 0, 0, (int)(ASSL.Yscale()*240.0f));
             }
 
             if(textViewMinOrder.getVisibility() == View.VISIBLE) {
@@ -5763,8 +5773,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.dp_11), getResources().getDimensionPixelSize(R.dimen.dp_11));
             if(i==0){
                 params.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_5), 0, 0, 0);
+                params.setMarginStart(getResources().getDimensionPixelSize(R.dimen.dp_5));
+                params.setMarginEnd(0);
             } else {
                 params.setMargins(getResources().getDimensionPixelSize(R.dimen.dp_1), 0, 0, 0);
+                params.setMarginStart(getResources().getDimensionPixelSize(R.dimen.dp_1));
+                params.setMarginEnd(0);
             }
 
             int color;

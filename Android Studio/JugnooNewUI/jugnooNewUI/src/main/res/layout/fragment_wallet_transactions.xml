@@ -11,13 +11,13 @@
         android:id="@+id/topBar"
         android:layout_width="@dimen/screen_width"
         android:layout_height="@dimen/top_bar_height"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="@color/white">
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:text="WALLET TRANSACTIONS"
+            android:text="@string/wallet_transactions_caps"
             android:textSize="@dimen/text_size_36"
             style="@style/title"/>
 
@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="No Transactions Currently"
+                android:text="@string/no_transactions_currently_camel_case"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_32"
                 android:layout_marginTop="30px"

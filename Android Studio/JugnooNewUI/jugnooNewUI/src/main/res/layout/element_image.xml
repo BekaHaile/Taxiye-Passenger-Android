@@ -23,7 +23,7 @@
         android:id="@+id/image_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|right"
+        android:layout_gravity="top|end"
         android:background="@color/alter_image_check_color"
         android:contentDescription="@string/image_check"
         android:focusable="false"

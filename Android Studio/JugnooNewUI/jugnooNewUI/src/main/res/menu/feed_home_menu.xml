@@ -6,13 +6,13 @@
     <item
         android:id="@+id/item_location"
         android:icon="@drawable/ic_feed_location_grey_background"
-        android:title="Change City"
+        android:title="@string/change_city"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/item_notification"
         android:icon="@drawable/ic_feed_notification_with_count"
-        android:title="View Notifications"
+        android:title="@string/view_notifications"
         app:showAsAction="always" />
 
 

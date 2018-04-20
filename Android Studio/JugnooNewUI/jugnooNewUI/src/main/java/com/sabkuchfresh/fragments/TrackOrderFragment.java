@@ -620,7 +620,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 											if(minutes>1){
 												minutes = minutes/60;
 											}
-											setEtaText(String.valueOf(minutes),"min");
+											setEtaText(String.valueOf(minutes),getString(R.string.min));
 
 										}
 
@@ -826,7 +826,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 	private final float HOME_MARKER_ZINDEX = 2.0f;
 	public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng, String value,String suffix){
 		MarkerOptions markerOptions = new MarkerOptions();
-		markerOptions.title("Pickup location");
+		markerOptions.title(getString(R.string.pickup_location));
 		markerOptions.snippet("");
 		markerOptions.position(latLng);
 		markerOptions.zIndex(HOME_MARKER_ZINDEX);

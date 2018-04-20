@@ -28,9 +28,8 @@ public class AboutActivity extends BaseActivity {
     TextView textViewRateUs, textViewLikeUs, textViewTNC, textViewPrivacy, textViewAbout;
 
 
-    String facebookPageId = "252184564966458";
-//    String facebookPageName = "ridejugnoo";
-    String facebookPageName = "jugnoose";
+    String facebookPageId;
+    String facebookPageName;
     private final String  TAG = "About";
     Bundle bundle;
 
@@ -44,7 +43,8 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-
+        facebookPageId = getString(R.string.facebook_page_id);
+        facebookPageName = getString(R.string.facebook_page_name);
         relative = (RelativeLayout) findViewById(R.id.relative);
         new ASSL(this, (ViewGroup) relative, 1134, 720, false);
 
@@ -77,7 +77,7 @@ public class AboutActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
+                intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="+BuildConfig.APPLICATION_ID));
                 startActivity(intent);
             }
         });
@@ -103,7 +103,7 @@ public class AboutActivity extends BaseActivity {
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Utils.showToast(AboutActivity.this, "Facebook app not enabled");
+                    Utils.showToast(AboutActivity.this, getString(R.string.facebook_not_installed));
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setData(Uri.parse("https://www.facebook.com/" + facebookPageName));
                     startActivity(intent);

@@ -21,7 +21,6 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.Events;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
@@ -102,7 +101,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
     private void getNotificationStatus() {
         try {
             if (MyApplication.getInstance().isOnline()) {
-                DialogPopup.showLoadingDialog(activity, "Loading...");
+                DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -146,7 +145,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
                 });
             } else {
                 DialogPopup.dialogNoInternet(activity,
-                        Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                        activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
                         new Utils.AlertCallBackWithButtonsInterface() {
                             @Override
                             public void positiveClick(View v) {
@@ -176,7 +175,7 @@ public class NotificationSettingFragment extends Fragment implements Notificatio
     public void updateNotificationPreferenceStatus(final String name, final int status, final int position) {
         try {
             if (MyApplication.getInstance().isOnline()) {
-                DialogPopup.showLoadingDialog(activity, "Loading...");
+                DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());

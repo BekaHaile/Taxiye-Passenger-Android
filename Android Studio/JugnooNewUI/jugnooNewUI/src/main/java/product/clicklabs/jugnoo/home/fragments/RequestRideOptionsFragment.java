@@ -83,7 +83,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     private Region regionSelected = null;
     private static PromoCoupon selectedCoupon = null;
-    private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "Don't apply coupon on this ride");
+    private PromoCoupon noSelectionCoupon = new CouponInfo(-1, "");
 
 
     /*public RelativeLayout getRelativeLayoutPoolInfoBar() {
@@ -93,6 +93,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_request_ride_options, container, false);
+        noSelectionCoupon = new CouponInfo(-1, getString(R.string.dont_apply_coupon_on_this_ride));
+
         activity = (HomeActivity) getActivity();
         linearLayoutSlidingBottom = (LinearLayout) rootView.findViewById(R.id.linearLayoutSlidingBottom);
         try {
@@ -359,8 +361,10 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
             if(Data.autoData.getRegions().size() > 1){
                 boolean matched = false;
                 for (int i=0; i<Data.autoData.getRegions().size(); i++) {
-                    if(Data.autoData.getRegions().get(i).getRegionId().equals(getRegionSelected().getRegionId())
-                            && Data.autoData.getRegions().get(i).getVehicleType().equals(getRegionSelected().getVehicleType())){
+                    if(Data.autoData.getRegions().get(i).getOperatorId() == getRegionSelected().getOperatorId()
+                            && Data.autoData.getRegions().get(i).getRegionId().equals(getRegionSelected().getRegionId())
+                            && Data.autoData.getRegions().get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
+                            ){
                         regionSelected = Data.autoData.getRegions().get(i);
                         matched = true;
                         break;
@@ -373,7 +377,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 updateSupplyUI(Data.autoData.getRegions().size());
                 //updatePoolInfoText();
             } else if(Data.autoData.getRegions().size() > 0){
-                activity.setVehicleTypeSelected(0);
+                activity.setVehicleTypeSelected(0, false);
                 regionSelected = Data.autoData.getRegions().get(0);
                 updateSupplyUI(Data.autoData.getRegions().size());
             } else{
@@ -411,8 +415,10 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     public void updateFareStructureUI(){
         try {
             for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
-                if (Data.autoData.getRegions().get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
-                        && Data.autoData.getRegions().get(i).getRideType().equals(getRegionSelected().getRideType())) {
+                if (Data.autoData.getRegions().get(i).getOperatorId() == getRegionSelected().getOperatorId()
+                        && Data.autoData.getRegions().get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
+                        && Data.autoData.getRegions().get(i).getRideType().equals(getRegionSelected().getRideType())
+                        ) {
                     Data.autoData.setFareStructure(Data.autoData.getRegions().get(i).getFareStructure());
                     break;
                 }
@@ -464,7 +470,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     public boolean setSelectedCoupon(int position) {
         PromoCoupon promoCoupon;
-        if (position > -1 && position < Data.userData.getCoupons(ProductType.AUTO, activity).size() && Data.userData.getCoupons(ProductType.AUTO, activity).get(position).isVehicleTypeExists(activity.getVehicleTypeSelected())) {
+        if (position > -1 && position < Data.userData.getCoupons(ProductType.AUTO, activity).size()
+                && Data.userData.getCoupons(ProductType.AUTO, activity).get(position)
+                .isVehicleTypeExists(activity.getVehicleTypeSelected(), activity.getOperatorIdSelected())) {
             promoCoupon = Data.userData.getCoupons(ProductType.AUTO, activity).get(position);
             GAUtils.event(RIDES, HOME+OFFER+SELECTED, promoCoupon.getTitle());
         } else {
@@ -480,7 +488,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     }
 
     public void setSelectedCoupon(PromoCoupon promoCoupon){
-        if(promoCoupon!=null && promoCoupon.isVehicleTypeExists(activity.getVehicleTypeSelected())){
+        if(promoCoupon!=null && promoCoupon.isVehicleTypeExists(activity.getVehicleTypeSelected(), activity.getOperatorIdSelected())){
             selectedCoupon = promoCoupon;
 
         }else{
@@ -634,7 +642,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                     if(((isCouponInfo && pc instanceof CouponInfo) || (!isCouponInfo && pc instanceof PromotionInfo))
                             && pc.getId() == promoCouponId) {
                         if (pc.getIsValid() == 1 && setSelectedCoupon(i)) {
-                            Utils.showToast(activity, activity.getString(R.string.offer_auto_applied_message_format, "ride"), Toast.LENGTH_LONG);
+                            Utils.showToast(activity, activity.getString(R.string.offer_auto_applied_message_format, getString(R.string.ride)), Toast.LENGTH_LONG);
                         }
                         couponSelected = true;
                         break;

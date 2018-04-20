@@ -4,4 +4,5 @@
     <integer name="num_columns_albums">2</integer>
     <integer name="time_category_anim_close">200</integer>
     <integer name="time_category_anim_open">200</integer>
+    <integer name="locale_mirror_flip">0</integer>
 </resources>

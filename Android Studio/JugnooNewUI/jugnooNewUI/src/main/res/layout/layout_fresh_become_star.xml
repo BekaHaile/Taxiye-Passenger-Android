@@ -4,8 +4,8 @@
     android:id="@+id/cvBecomeStar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/px_20"
-    android:layout_marginRight="@dimen/px_20"
+    android:layout_marginStart="@dimen/px_20"
+    android:layout_marginEnd="@dimen/px_20"
     android:layout_marginTop="@dimen/px_20"
     android:visibility="visible"
     card_view:cardBackgroundColor="@color/white"
@@ -19,7 +19,7 @@
             <!--android:id="@+id/ivStar"-->
             <!--android:layout_width="@dimen/px_80"-->
             <!--android:layout_height="@dimen/px_80"-->
-            <!--android:layout_marginLeft="@dimen/px_25"-->
+            <!--android:layout_marginStart="@dimen/px_25"-->
             <!--android:layout_marginTop="@dimen/px_22"-->
             <!--android:src="@drawable/star" />-->
 
@@ -34,9 +34,9 @@
             android:id="@+id/llStarContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14px"
+            android:layout_marginStart="14px"
             android:layout_marginTop="@dimen/px_20"
-            android:layout_toRightOf="@+id/ivStar"
+            android:layout_toEndOf="@+id/ivStar"
             android:orientation="vertical">
 
             <TextView
@@ -68,8 +68,8 @@
             <RelativeLayout
                 android:layout_width="480px"
                 android:layout_height="@dimen/px_60"
-                android:layout_marginLeft="@dimen/px_30"
-                android:layout_marginRight="@dimen/px_15"
+                android:layout_marginStart="@dimen/px_30"
+                android:layout_marginEnd="@dimen/px_15"
                 android:layout_marginTop="@dimen/px_20"
                 android:background="@drawable/background_white_rounded_bordered"
                 android:padding="@dimen/px_5"
@@ -90,9 +90,9 @@
                     android:id="@+id/ivArrow"
                     android:layout_width="19px"
                     android:layout_height="12px"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/px_20"
+                    android:layout_marginEnd="@dimen/px_20"
                     android:src="@drawable/dropdown_checkout_triangle"
                     android:tag="mwar" />
 
@@ -104,11 +104,11 @@
                 android:layout_width="118px"
                 android:layout_height="60px"
                 android:layout_above="@+id/imageViewSep"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20px"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="20px"
                 android:layout_marginTop="@dimen/px_20"
                 android:background="@drawable/button_theme"
-                android:text="ADD"
+                android:text="@string/add_caps"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_32"
                 android:visibility="visible" />

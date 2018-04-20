@@ -134,7 +134,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         if(promoCoupon!=null && promoCoupon.getId()!=-1 ){
             tvCouponApplied.setVisibility(View.VISIBLE);
-            tvCouponApplied.setText("Coupon Applied: " + promoCoupon.getTitle());
+            tvCouponApplied.setText(getString(R.string.coupon_applied_format, promoCoupon.getTitle()));
         }else{
             tvCouponApplied.setVisibility(View.GONE);
 
@@ -281,14 +281,14 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
 
                             MarkerOptions markerOptionsS = new MarkerOptions();
-                            markerOptionsS.title("Start");
+                            markerOptionsS.title(getString(R.string.start));
                             markerOptionsS.position(sourceLatLng);
                             markerOptionsS.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
                                     assl, R.drawable.pin_ball_start)));
                             mapLite.addMarker(markerOptionsS);
 
                             MarkerOptions markerOptionsE = new MarkerOptions();
-                            markerOptionsE.title("Start");
+                            markerOptionsE.title(getString(R.string.start));
                             markerOptionsE.position(destLatLng);
                             markerOptionsE.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
                                     assl, R.drawable.pin_ball_end)));
@@ -336,31 +336,26 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 }
 
                 @Override
-                public void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge) {
+                public void onFareEstimateSuccess(String currency, String minFare, String maxFare, double convenienceCharge) {
 
-                    textViewEstimateFare.setText(getResources().getString(R.string.rupee) + "" + minFare + " - " +
-                            getResources().getString(R.string.rupee) + "" + maxFare);
+                    textViewEstimateFare.setText(Utils.formatCurrencyValue(currency, minFare) + " - " +
+                            Utils.formatCurrencyValue(currency, maxFare));
 
                     if (convenienceCharge > 0) {
-                        textViewConvenienceCharge.setText("Convenience Charges "
-                                + getResources().getString(R.string.rupee)
-                                + " " + Utils.getMoneyDecimalFormat().format(convenienceCharge));
+                        textViewConvenienceCharge.setText(getString(R.string.convenience_charge_colon) + " " + Utils.formatCurrencyValue(currency, convenienceCharge));
                     } else {
                         textViewConvenienceCharge.setText("");
                     }
                 }
 
                 @Override
-                public void onPoolSuccess(double fare, double rideDistance, String rideDistanceUnit,
+                public void onPoolSuccess(String currency, double fare, double rideDistance, String rideDistanceUnit,
                                           double rideTime, String rideTimeUnit, int poolFareId, double convenienceCharge,
                                           String text) {
-                    textViewEstimateFare.setText(getResources().getString(R.string.rupee)
-                            + "" + Utils.getMoneyDecimalFormat().format(fare));
+                    textViewEstimateFare.setText(Utils.formatCurrencyValue(currency, fare));
 
                     if (convenienceCharge > 0) {
-                        textViewConvenienceCharge.setText("Convenience Charges "
-                                + getResources().getString(R.string.rupee)
-                                + " " + Utils.getMoneyDecimalFormat().format(convenienceCharge));
+                        textViewConvenienceCharge.setText(getString(R.string.convenience_charge_colon) + " " + Utils.formatCurrencyValue(currency, convenienceCharge));
                     } else {
                         textViewConvenienceCharge.setText("");
                     }
@@ -459,7 +454,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
     @Override
     public void onPlaceSearchPre() {
-        DialogPopup.showLoadingDialog(FareEstimateActivity.this, "Loading...");
+        DialogPopup.showLoadingDialog(FareEstimateActivity.this, getString(R.string.loading));
     }
 
     @Override

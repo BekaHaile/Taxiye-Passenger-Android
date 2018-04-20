@@ -71,8 +71,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@+id/llShadowPeek"
-                        android:layout_marginLeft="28px"
-                        android:layout_marginRight="28px"
+                        android:layout_marginStart="28px"
+                        android:layout_marginEnd="28px"
                         android:layout_marginTop="26px"
                         android:orientation="vertical"
                         app:cardBackgroundColor="@color/white"
@@ -97,8 +97,8 @@
                                 android:layout_centerHorizontal="true"
                                 android:gravity="center"
                                 android:orientation="horizontal"
-                                android:paddingLeft="40px"
-                                android:paddingRight="40px">
+                                android:paddingStart="40px"
+                                android:paddingEnd="40px">
 
                                 <ImageView
                                     android:id="@+id/ivStatus0"
@@ -158,13 +158,13 @@
                                 android:id="@+id/tvStatus0"
                                 android:layout_width="120px"
                                 android:layout_height="wrap_content"
-                                android:layout_alignLeft="@+id/llOrderPath"
+                                android:layout_alignStart="@+id/llOrderPath"
                                 android:layout_below="@+id/llOrderPath"
-                                android:layout_marginLeft="-6px"
+                                android:layout_marginStart="-6px"
                                 android:layout_marginTop="15px"
                                 android:gravity="center"
                                 android:maxLines="2"
-                                android:text="Statu0"
+                                android:text="@string/status0"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_22"
                                 android:visibility="visible"/>
@@ -174,12 +174,12 @@
                                 android:layout_width="120px"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/llOrderPath"
-                                android:layout_marginLeft="45px"
+                                android:layout_marginStart="45px"
                                 android:layout_marginTop="15px"
-                                android:layout_toRightOf="@+id/tvStatus0"
+                                android:layout_toEndOf="@+id/tvStatus0"
                                 android:gravity="center"
                                 android:maxLines="2"
-                                android:text="Status1"
+                                android:text="@string/status1"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_22"
                                 android:visibility="visible"/>
@@ -189,12 +189,12 @@
                                 android:layout_width="120px"
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/llOrderPath"
-                                android:layout_marginLeft="40px"
+                                android:layout_marginStart="40px"
                                 android:layout_marginTop="15px"
-                                android:layout_toRightOf="@+id/tvStatus1"
+                                android:layout_toEndOf="@+id/tvStatus1"
                                 android:gravity="center"
                                 android:maxLines="2"
-                                android:text="Status2"
+                                android:text="@string/status2"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_22"
                                 android:visibility="visible"/>
@@ -203,13 +203,13 @@
                                 android:id="@+id/tvStatus3"
                                 android:layout_width="120px"
                                 android:layout_height="wrap_content"
-                                android:layout_alignRight="@+id/llOrderPath"
+                                android:layout_alignEnd="@+id/llOrderPath"
                                 android:layout_below="@+id/llOrderPath"
-                                android:layout_marginRight="-10px"
+                                android:layout_marginEnd="-10px"
                                 android:layout_marginTop="15px"
                                 android:gravity="center"
                                 android:maxLines="2"
-                                android:text="Status3"
+                                android:text="@string/status3"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_22"
                                 android:visibility="visible"/>
@@ -233,8 +233,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="80px"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="28px"
-                        android:layout_marginRight="28px"
+                        android:layout_marginStart="28px"
+                        android:layout_marginEnd="28px"
                         android:layout_marginTop="20px"
                         android:visibility="visible">
 
@@ -253,7 +253,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_toRightOf="@+id/tvOrderStatusLabel"
+                            android:layout_toEndOf="@+id/tvOrderStatusLabel"
                             android:text=""
                             android:textAllCaps="true"
                             android:textColor="@color/text_color"
@@ -264,8 +264,8 @@
                             android:layout_width="34px"
                             android:layout_height="34px"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="10px"
-                            android:layout_toRightOf="@+id/tvOrderStatusVal"
+                            android:layout_marginStart="10px"
+                            android:layout_toEndOf="@+id/tvOrderStatusVal"
                             android:src="@drawable/ic_order_status_green"
                             android:tag="mwar"
                             android:visibility="gone"/>
@@ -278,8 +278,8 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="80px"
-                        android:layout_marginLeft="28px"
-                        android:layout_marginRight="28px">
+                        android:layout_marginStart="28px"
+                        android:layout_marginEnd="28px">
 
                         <TextView
                             android:id="@+id/tvOrderTime"
@@ -296,7 +296,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_toRightOf="@+id/tvOrderTime"
+                            android:layout_toEndOf="@+id/tvOrderTime"
                             android:text=""
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_28"/>
@@ -304,15 +304,15 @@
 
                     <View
                         style="@style/HorizontalDivider"
-                        android:layout_marginLeft="28px"
-                        android:layout_marginRight="28px"
+                        android:layout_marginStart="28px"
+                        android:layout_marginEnd="28px"
                         />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="28px"
-                        android:layout_marginRight="28px">
+                        android:layout_marginStart="28px"
+                        android:layout_marginEnd="28px">
 
                         <TextView
                             android:id="@+id/tvDeliveryTime"
@@ -330,8 +330,8 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginTop="20px"
-                            android:layout_toLeftOf="@+id/imageViewCallRestaurant"
-                            android:layout_toRightOf="@+id/tvDeliveryTime"
+                            android:layout_toStartOf="@+id/imageViewCallRestaurant"
+                            android:layout_toEndOf="@+id/tvDeliveryTime"
                             android:text=""
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_28"/>
@@ -341,7 +341,7 @@
                             android:layout_width="33px"
                             android:layout_height="33px"
                             android:layout_marginTop="20px"
-                            android:layout_toRightOf="@+id/tvDeliveryTime"
+                            android:layout_toEndOf="@+id/tvDeliveryTime"
                             android:src="@drawable/ic_restaurant"
                             android:tag="mwar"
                             android:visibility="gone"/>
@@ -350,8 +350,8 @@
                             android:id="@+id/imageViewCallRestaurant"
                             android:layout_width="99px"
                             android:layout_height="99px"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="0px"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="0px"
                             android:layout_marginTop="15px"
                             android:src="@drawable/ic_call_vendor"
                             android:tag="mwar"
@@ -368,14 +368,14 @@
 
                     <View
                         style="@style/HorizontalDivider"
-                        android:layout_marginLeft="28px"
-                        android:layout_marginRight="28px"/>
+                        android:layout_marginStart="28px"
+                        android:layout_marginEnd="28px"/>
 
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="28px"
-                        android:layout_marginRight="28px"
+                        android:layout_marginStart="28px"
+                        android:layout_marginEnd="28px"
                         android:minHeight="80px">
 
                         <TextView
@@ -392,7 +392,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20px"
-                            android:layout_toRightOf="@+id/tvDeliveryTo"
+                            android:layout_toEndOf="@+id/tvDeliveryTo"
                             android:orientation="vertical">
 
                             <LinearLayout
@@ -414,8 +414,8 @@
                                     android:id="@+id/tvDelveryPlace"
                                     android:layout_width="200px"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="10px"
-                                    android:text="HOME"
+                                    android:layout_marginStart="10px"
+                                    android:text="@string/home_caps"
                                     android:textAllCaps="true"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_28"/>
@@ -427,7 +427,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_below="@+id/llDeliveryPlace"
                                 android:layout_centerVertical="true"
-                                android:layout_toRightOf="@+id/tvDeliveryTo"
+                                android:layout_toEndOf="@+id/tvDeliveryTo"
                                 android:paddingTop="5px"
                                 android:text=""
                                 android:textColor="@color/text_color"
@@ -441,12 +441,12 @@
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="28px"
-                        android:layout_marginRight="28px"
+                        android:layout_marginStart="28px"
+                        android:layout_marginEnd="28px"
                         android:layout_marginTop="26px"
                         android:orientation="vertical"
-                        android:paddingLeft="4px"
-                        android:paddingRight="4px"
+                        android:paddingStart="4px"
+                        android:paddingEnd="4px"
                         app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="8px"
                         app:cardPreventCornerOverlap="true"
@@ -464,15 +464,15 @@
                                 <View
                                     style="@style/HorizontalDividerLight"
                                     android:layout_alignParentBottom="true"
-                                    android:layout_marginLeft="@dimen/px_34"
-                                    android:layout_marginRight="@dimen/px_34"/>
+                                    android:layout_marginStart="@dimen/px_34"
+                                    android:layout_marginEnd="@dimen/px_34"/>
 
                                 <TextView
                                     android:id="@+id/tvItemSummary"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
-                                    android:layout_marginLeft="@dimen/px_34"
+                                    android:layout_marginStart="@dimen/px_34"
                                     android:text="@string/items_summary"
                                     android:textAllCaps="true"
                                     android:textColor="@color/text_color"
@@ -482,9 +482,9 @@
                                     android:id="@+id/tvItemsQuantityVal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
+                                    android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
-                                    android:layout_marginRight="@dimen/px_34"
+                                    android:layout_marginEnd="@dimen/px_34"
                                     android:text=""
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_28"/>
@@ -506,12 +506,12 @@
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="28px"
-                        android:layout_marginRight="28px"
+                        android:layout_marginStart="28px"
+                        android:layout_marginEnd="28px"
                         android:layout_marginTop="26px"
                         android:orientation="vertical"
-                        android:paddingLeft="4px"
-                        android:paddingRight="4px"
+                        android:paddingStart="4px"
+                        android:paddingEnd="4px"
                         app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="8px"
                         app:cardPreventCornerOverlap="true"
@@ -527,7 +527,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="92px"
                                 android:gravity="center_vertical"
-                                android:paddingLeft="@dimen/px_34"
+                                android:paddingStart="@dimen/px_34"
                                 android:text="@string/bill_summary"
                                 android:textAllCaps="true"
                                 android:textColor="@color/text_color"
@@ -535,8 +535,8 @@
 
                             <View
                                 style="@style/HorizontalDividerLight"
-                                android:layout_marginLeft="@dimen/px_34"
-                                android:layout_marginRight="@dimen/px_34"/>
+                                android:layout_marginStart="@dimen/px_34"
+                                android:layout_marginEnd="@dimen/px_34"/>
 
                             <LinearLayout
                                 android:id="@+id/llExtraCharges"
@@ -553,7 +553,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="@dimen/px_26"
-                                    android:layout_marginLeft="40px"
+                                    android:layout_marginStart="40px"
                                     android:layout_marginTop="@dimen/px_26"
                                     android:text="@string/total_amount"
                                     android:textColor="@color/theme_color"
@@ -565,9 +565,9 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="@dimen/px_26"
-                                    android:layout_marginRight="@dimen/px_30"
+                                    android:layout_marginEnd="@dimen/px_30"
                                     android:layout_marginTop="@dimen/px_26"
-                                    android:layout_toLeftOf="@+id/tvTotalAmountVal"
+                                    android:layout_toStartOf="@+id/tvTotalAmountVal"
                                     android:text="@string/rupee_0"
                                     android:textColor="@color/text_color_light"
                                     android:textSize="@dimen/text_size_40"
@@ -578,9 +578,9 @@
                                     android:id="@+id/tvTotalAmountVal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
+                                    android:layout_alignParentEnd="true"
                                     android:layout_marginBottom="@dimen/px_26"
-                                    android:layout_marginRight="30px"
+                                    android:layout_marginEnd="30px"
                                     android:layout_marginTop="@dimen/px_26"
                                     android:text="@string/rupee_0"
                                     android:textColor="@color/theme_color"
@@ -594,8 +594,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/tvTotalAmount"
                                     android:layout_marginBottom="@dimen/px_26"
-                                    android:layout_marginLeft="@dimen/px_40"
-                                    android:layout_marginRight="@dimen/px_40"
+                                    android:layout_marginStart="@dimen/px_40"
+                                    android:layout_marginEnd="@dimen/px_40"
                                     android:text="@string/rupee_0"
                                     android:textColor="@color/text_color_light"
                                     android:textSize="@dimen/text_size_24"
@@ -614,12 +614,12 @@
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="28px"
-                        android:layout_marginRight="28px"
+                        android:layout_marginStart="28px"
+                        android:layout_marginEnd="28px"
                         android:layout_marginTop="26px"
                         android:orientation="vertical"
-                        android:paddingLeft="4px"
-                        android:paddingRight="4px"
+                        android:paddingStart="4px"
+                        android:paddingEnd="4px"
                         app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="8px"
                         app:cardPreventCornerOverlap="true"
@@ -636,7 +636,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="92px"
                                 android:gravity="center_vertical"
-                                android:paddingLeft="@dimen/px_34"
+                                android:paddingStart="@dimen/px_34"
                                 android:text="@string/payment_summary"
                                 android:textAllCaps="true"
                                 android:textColor="@color/text_color"
@@ -644,8 +644,8 @@
 
                             <View
                                 style="@style/HorizontalDividerLight"
-                                android:layout_marginLeft="@dimen/px_34"
-                                android:layout_marginRight="@dimen/px_34"/>
+                                android:layout_marginStart="@dimen/px_34"
+                                android:layout_marginEnd="@dimen/px_34"/>
 
                             <RelativeLayout
                                 android:id="@+id/rlWalletDeducted"
@@ -657,7 +657,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
-                                    android:layout_marginLeft="@dimen/px_40"
+                                    android:layout_marginStart="@dimen/px_40"
                                     android:tag="mwar"
                                     android:text="@string/cash"
                                     android:textColor="@color/text_color"
@@ -668,10 +668,10 @@
                                     android:id="@+id/tvAmountPayableVal"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_alignParentRight="true"
+                                    android:layout_alignParentEnd="true"
                                     android:layout_centerVertical="true"
                                     android:layout_marginBottom="@dimen/px_26"
-                                    android:layout_marginRight="@dimen/px_34"
+                                    android:layout_marginEnd="@dimen/px_34"
                                     android:layout_marginTop="@dimen/px_30"
                                     android:text="@string/rupee_0"
                                     android:textColor="@color/text_color"
@@ -682,8 +682,8 @@
                                     android:id="@+id/vDividerPayment"
                                     style="@style/HorizontalDividerDotted"
                                     android:layout_below="@+id/tvAmountPayableVal"
-                                    android:layout_marginLeft="@dimen/px_40"
-                                    android:layout_marginRight="@dimen/px_40"/>
+                                    android:layout_marginStart="@dimen/px_40"
+                                    android:layout_marginEnd="@dimen/px_40"/>
 
                             </RelativeLayout>
 
@@ -712,8 +712,8 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/linearLayoutReceipt"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="28px"
-                        android:layout_marginRight="28px"
+                        android:layout_marginStart="28px"
+                        android:layout_marginEnd="28px"
                         android:layout_marginTop="40px"
                         android:gravity="center"
                         android:orientation="horizontal"
@@ -754,8 +754,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginLeft="28px"
-                        android:layout_marginRight="28px"
+                        android:layout_marginStart="28px"
+                        android:layout_marginEnd="28px"
                         android:layout_marginTop="40px"
                         android:gravity="center"
                         android:orientation="horizontal"

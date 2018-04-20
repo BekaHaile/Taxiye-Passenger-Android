@@ -31,9 +31,9 @@
         android:textSize="@dimen/text_size_28"
         android:padding="@dimen/px_10"
         app:typekitFont="maven"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/px_30"
-        android:layout_marginRight="@dimen/px_22"/>
+        android:layout_marginEnd="@dimen/px_22"/>
 
     <Button
         android:id="@+id/bNext"

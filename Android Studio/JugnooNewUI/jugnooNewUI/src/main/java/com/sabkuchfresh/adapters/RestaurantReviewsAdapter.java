@@ -360,14 +360,14 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 								if(TextUtils.isEmpty(content)){
 									StringBuilder sb = new StringBuilder();
 									if(review1.getIsEditable() == 1){
-										sb.append("Here's my experience of ");
+										sb.append(activity.getString(R.string.here_my_experience_of)+" ");
 									} else {
-										sb.append("Have a look at this experience of ");
+										sb.append(activity.getString(R.string.have_a_look_at_this_experience)+" ");
 									}
 									sb.append(activity.getVendorOpened().getName())
 											.append(", ")
 											.append(activity.getVendorOpened().getAddress())
-											.append(" @ Jugnoo!\n\n");
+											.append(" @ "+activity.getString(R.string.app_name)+"!\n\n");
 									if(!TextUtils.isEmpty(review1.getReviewDesc())){
 										sb.append(review1.getReviewDesc()).append("\n");
 									}
@@ -376,7 +376,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 								}
 
 								ReferralActions.genericShareDialog(activity, null,
-										"Sharing experience of "+activity.getVendorOpened().getName()+" @ Jugnoo!",
+										activity.getString(R.string.sharing_experience_of)+" "+activity.getVendorOpened().getName()+" @ "+activity.getString(R.string.app_name)+"!",
 										content, link, activity.getVendorOpened().getImage(), true,
 										new ReferralActions.ShareDialogCallback() {
 											@Override
@@ -391,7 +391,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 							}
 						}, activity.getVendorOpened().getName(),
-								"https://jugnoo.in",
+								activity.getString(R.string.web_landing_page),
 								activity.getVendorOpened().getImage(),
 								BranchMetricsUtils.BRANCH_CHANNEL_MENUS_REVIEW_SHARE,
 								map);

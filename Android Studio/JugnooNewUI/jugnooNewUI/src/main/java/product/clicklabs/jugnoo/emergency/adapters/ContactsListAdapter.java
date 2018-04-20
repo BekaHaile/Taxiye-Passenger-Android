@@ -113,7 +113,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
                         selectedCount++;
                         callback.contactClicked(position, contactBeans.get(position));
                     } else {
-                        Utils.showToast(activity, "You can add only three contacts.");
+                        Utils.showToast(activity, activity.getString(R.string.you_can_add_only_three_contacts));
                     }
                     notifyDataSetChanged();
                 } else if (ListMode.EMERGENCY_CONTACTS == getListMode()) {

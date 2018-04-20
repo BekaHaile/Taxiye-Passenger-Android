@@ -11,6 +11,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
@@ -22,6 +23,7 @@ import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 public class UserData {
 	public String userIdentifier, accessToken, authKey, userName, userEmail, userImage, referralCode, phoneNo, jugnooFbBanner;
+	private String countryCode;
 	public int emailVerificationStatus;
 	private double jugnooBalance;
 	public int showJugnooJeanie;
@@ -58,6 +60,9 @@ public class UserData {
 
 	private int freeChargeEnabled;
 	private double freeChargeBalance = -1;
+
+	private int mPesaEnabled;
+	private double mPesaBalance = 0;
 
 	private int notificationPreferenceEnabled = 0, mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, deliveryCustomerEnabled,
 			inviteFriendButton, payEnabled, feedEnabled, prosEnabled,autosEnabled;
@@ -115,12 +120,12 @@ public class UserData {
 					int cToDReferralEnabled,
 					String city, String cityReg, int referralLeaderboardEnabled, int referralActivityEnabled,
 					String fatafatUrlLink,
-					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled, int notificationPreferenceEnabled,
+					int paytmEnabled, int mobikwikEnabled, int freeChargeEnabled,int mPesaEnabled, int notificationPreferenceEnabled,
 					int mealsEnabled, int freshEnabled, int deliveryEnabled, int groceryEnabled, int menusEnabled,
 					int payEnabled, int feedEnabled, int prosEnabled, int deliveryCustomerEnabled,
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
-					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding, int autosEnabled){
+					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding, int autosEnabled, String countryCode){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -131,6 +136,7 @@ public class UserData {
 		this.userImage = userImage;
 		this.referralCode = referralCode;
 		this.phoneNo = phoneNo;
+		this.countryCode = countryCode;
 		this.jugnooBalance = jugnooBalance;
 
 		this.jugnooFbBanner = jugnooFbBanner;
@@ -178,6 +184,7 @@ public class UserData {
 		this.paytmEnabled = paytmEnabled;
 		this.mobikwikEnabled = mobikwikEnabled;
 		this.freeChargeEnabled = freeChargeEnabled;
+		this.mPesaEnabled = mPesaEnabled;
 
 		this.autosEnabled = autosEnabled;
 		this.mealsEnabled = mealsEnabled;
@@ -203,7 +210,12 @@ public class UserData {
 		this.showOfferDialog = showOfferDialog;
 		this.showTutorial = showTutorial;
 		this.signupOnboarding = signupOnboarding;
+
+
+
 	}
+
+
 
 	private void checkUserImage(){
 		if(userImage == null
@@ -824,8 +836,9 @@ public class UserData {
 		ArrayList<PromoCoupon> invalidPC = new ArrayList<>();
 		if(activity instanceof HomeActivity){
 			int currentVehicleTypeSelected = ((HomeActivity) activity).getVehicleTypeSelected();
+			int currentOperatorId = ((HomeActivity) activity).getOperatorIdSelected();
 			for(PromoCoupon pc : coupons){
-				if (!pc.isVehicleTypeExists(currentVehicleTypeSelected)){
+				if (!pc.isVehicleTypeExists(currentVehicleTypeSelected, currentOperatorId)){
 					continue;
 				}
 				if (pc.getIsValid() == 1) {
@@ -867,12 +880,12 @@ public class UserData {
 
 		return coupons;
 	}
-	public PromoCoupon getDefaultCoupon(int vehicleType, HomeActivity homeActivity){
+	public PromoCoupon getDefaultCoupon(int vehicleType, int operatorId, HomeActivity homeActivity){
 		ArrayList<PromoCoupon> promoCoupons = getCoupons(ProductType.AUTO,homeActivity) ;
 		if(promoCoupons!=null){
 
 			for(PromoCoupon promoCoupon: promoCoupons){
-				  if(promoCoupon.getIsSelected()==1 && promoCoupon.isVehicleTypeExists(vehicleType))
+				  if(promoCoupon.getIsSelected()==1 && promoCoupon.isVehicleTypeExists(vehicleType, operatorId))
 				  	return promoCoupon;
 			}
 		}
@@ -1101,4 +1114,27 @@ public class UserData {
 		return getDeliveryCustomerEnabled() == 1;
 	}
 
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
+
+	public int getmPesaEnabled() {
+		return mPesaEnabled;
+	}
+
+	public void setmPesaEnabled(int mPesaEnabled) {
+		this.mPesaEnabled = mPesaEnabled;
+	}
+
+	public double getmPesaBalance() {
+		return mPesaBalance;
+	}
+
+	public void setmPesaBalance(double mPesaBalance) {
+		this.mPesaBalance = mPesaBalance;
+	}
 }

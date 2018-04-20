@@ -93,8 +93,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewTo.setText(R.string.to_colon);
                 holder.textViewToValue.setText(orderHistory.getDropAddress());
                 holder.textViewDetails.setText(R.string.details_colon);
-                holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
-                        Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
+                holder.textViewAmount.setText(Utils.formatCurrencyValue(orderHistory.getCurrency(), orderHistory.getAmount()));
                 holder.imageViewProductType.setImageResource(R.drawable.ic_rides);
                 holder.imageViewProductType.setBackgroundResource(R.drawable.circle_theme);
 
@@ -117,7 +116,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     } catch (Exception e) {
                         holder.textViewStatusValue.setTextColor(ContextCompat.getColor(activity, R.color.text_color_blue));
                     }
-                    holder.textViewDetailsValue.setText(orderHistory.getDate() + ", " + decimalFormat.format(orderHistory.getDistance()) + " km, " + decimalFormatNoDec.format(orderHistory.getRideTime()) + " min");
+                    holder.textViewDetailsValue.setText(orderHistory.getDate() + ", " + decimalFormat.format(orderHistory.getDistance()) + " "+activity.getString(R.string.km)+", " + decimalFormatNoDec.format(orderHistory.getRideTime()) + " "+activity.getString(R.string.min));
                     holder.relativeLayoutTo.setVisibility(View.VISIBLE);
 //                    holder.ivOrderStatusIcon.setImageResource(R.drawable.ic_tick_copy);
                 } else {
@@ -162,7 +161,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.textViewDetailsValue.setText(orderHistory.getExpectedDeliveryDate() + ", " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime(), false) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime(), false));
                 }
 
-                holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space, Utils.getMoneyDecimalFormat().format(orderHistory.getDiscountedAmount())));
+                holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(orderHistory.getDiscountedAmount())));
 
 
 
@@ -199,7 +198,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
             else if(orderHistory.getProductType() == ProductType.PROS.getOrdinal()){
                 holder.textViewStatus.setText(R.string.status_colon);
-                holder.textViewStatusValue.setText(ProsCatalogueAdapter.getProsOrderState(orderHistory.getJobStatus()).second);
+                holder.textViewStatusValue.setText(ProsCatalogueAdapter.getProsOrderState(activity, orderHistory.getJobStatus()).second);
                 try{
                     holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
                 } catch (Exception e){
@@ -213,7 +212,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 android.util.Pair<String, String> pair = orderHistory.getProductNameAndJobAmount();
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormatTZ(orderHistory.getJobTime())
                         +", "+pair.first);
-                holder.textViewAmount.setText(!TextUtils.isEmpty(pair.second)?activity.getString(R.string.rupees_value_format, pair.second):"-");
+
+                holder.textViewAmount.setText(!TextUtils.isEmpty(pair.second)?Utils.formatCurrencyValue(orderHistory.getCurrency(), pair.second):"-");
                 holder.imageViewProductType.setImageResource(R.drawable.ic_pros_grey);
                 holder.imageViewProductType.setImageResource(R.drawable.ic_pros);
                 holder.imageViewProductType.setBackgroundResource(R.drawable.circle_pink_pros_fab);
@@ -238,7 +238,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(orderHistory.getCreatedAt())));
 
                 if(orderHistory.getAmount()!=0){
-                    holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format_without_space,
+                    holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format,
                             Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
                 }
                 else {

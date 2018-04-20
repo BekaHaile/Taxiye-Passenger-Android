@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="num_columns_images">3</integer>
+    <integer name="num_columns_albums">2</integer>
+    <integer name="time_category_anim_close">200</integer>
+    <integer name="time_category_anim_open">200</integer>
+    <integer name="locale_mirror_flip">180</integer>
+</resources>

@@ -54,8 +54,8 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_color"
                     android:gravity="center"
-                    android:paddingLeft="@dimen/px_20"
-                    android:paddingRight="@dimen/px_20"
+                    android:paddingStart="@dimen/px_20"
+                    android:paddingEnd="@dimen/px_20"
                     android:textSize="@dimen/text_size_30"
                     android:text="@string/your_order_will_be_delivered_between"
                     />
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_34"
-                    android:text="02:00PM-06:00PM"
+                    android:text="@string/_02_00pm_06_00pm"
                     android:layout_marginTop="@dimen/px_4"
                     />
 
@@ -81,9 +81,9 @@
                         android:layout_height="@dimen/px_2"
                         android:background="@color/stroke_color_dark"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/px_46"
-                        android:layout_marginRight="@dimen/px_46"
-                        android:layout_toLeftOf="@+id/tvOrderDayVal"
+                        android:layout_marginStart="@dimen/px_46"
+                        android:layout_marginEnd="@dimen/px_46"
+                        android:layout_toStartOf="@+id/tvOrderDayVal"
                         />
                     
                     <TextView
@@ -93,19 +93,19 @@
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_24"
                         android:textAllCaps="true"
-                        android:text="TODAY"
+                        android:text="@string/today"
                         android:layout_centerHorizontal="true"
                         />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/px_2"
-                        android:layout_toRightOf="@+id/tvOrderDayVal"
+                        android:layout_toEndOf="@+id/tvOrderDayVal"
                         android:background="@color/stroke_color_dark"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/px_46"
-                        android:layout_marginRight="@dimen/px_46"
-                        android:layout_alignParentRight="true"
+                        android:layout_marginStart="@dimen/px_46"
+                        android:layout_marginEnd="@dimen/px_46"
+                        android:layout_alignParentEnd="true"
                         />
 
                 </RelativeLayout>
@@ -128,11 +128,11 @@
                     android:id="@+id/tvReferralHeading"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_margin="@dimen/px_40"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_36"
-                    android:gravity="right"
+                    android:gravity="end"
                     />
 
             </RelativeLayout>
@@ -143,11 +143,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/px_32"
-                android:layout_marginRight="@dimen/px_32"
+                android:layout_marginStart="@dimen/px_32"
+                android:layout_marginEnd="@dimen/px_32"
                 android:layout_marginTop="@dimen/px_40"
                 android:gravity="center_vertical"
-                android:text="Gift your friends \nRs. 50"
+                android:text="@string/gift_your_friends_nrs_50"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_32"
                 />
@@ -171,7 +171,7 @@
                     android:id="@+id/bSendGift"
                     style="@style/ButtonTheme"
                     android:layout_width="@dimen/px_346"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:text="@string/send_free_gift"
                     android:textAllCaps="true"
                     android:textSize="@dimen/text_size_30"/>

@@ -241,6 +241,8 @@ public class FreshSuperCategoriesAdapter extends RecyclerView.Adapter<RecyclerVi
                 View tab = ((ViewGroup) pagerHolder.tabDots.getChildAt(0)).getChildAt(i);
                 ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
                 p.setMargins(20, 0, 0, 0);
+                p.setMarginStart(20);
+                p.setMarginEnd(0);
                 tab.requestLayout();
             }
             if(offerList.size() == 1){

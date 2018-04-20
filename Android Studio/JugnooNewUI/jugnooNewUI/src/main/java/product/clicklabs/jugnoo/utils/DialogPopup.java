@@ -20,7 +20,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -36,8 +35,8 @@ public class DialogPopup {
 	private static boolean ifOtherDialog(Activity activity, String message,
 										 final View.OnClickListener positiveListener,
 										 final View.OnClickListener negativeListener, boolean cancellable){
-		if(message.contains(Data.CHECK_INTERNET_MSG)){
-			dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+		if(message.contains(activity.getString(R.string.connection_lost_desc))){
+			dialogNoInternet(activity, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
 					new Utils.AlertCallBackWithButtonsInterface() {
 						@Override
 						public void positiveClick(View v) {
@@ -60,8 +59,8 @@ public class DialogPopup {
 					}, cancellable, true);
 			return false;
 		}
-		else if(message.contains(Data.SERVER_NOT_RESOPNDING_MSG)){
-			dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+		else if(message.contains(activity.getString(R.string.connection_lost_please_try_again))){
+			dialogNoInternet(activity, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
 					new Utils.AlertCallBackWithButtonsInterface() {
 						@Override
 						public void positiveClick(View v) {
@@ -84,8 +83,8 @@ public class DialogPopup {
 					}, cancellable, true);
 			return false;
 		}
-		else if(message.contains(Data.SERVER_ERROR_MSG)){
-			dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+		else if(message.contains(activity.getString(R.string.connection_lost_please_try_again))){
+			dialogNoInternet(activity, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
 					new Utils.AlertCallBackWithButtonsInterface() {
 						@Override
 						public void positiveClick(View v) {
@@ -184,7 +183,7 @@ public class DialogPopup {
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_no_internet);
 
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, false);
 
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
@@ -323,12 +322,14 @@ public class DialogPopup {
 				RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) relativeLayoutInner.getLayoutParams();
 				int margin = (int) (30.0f * Math.min(ASSL.Xscale(), ASSL.Yscale()));
 				params.setMargins(margin, margin, margin, margin);
+				params.setMarginStart(margin);
+				params.setMarginEnd(margin);
 				relativeLayoutInner.setLayoutParams(params);
 			}
 			if(leftOriented) {
-				textMessage.setGravity(Gravity.LEFT);
+				textMessage.setGravity(Gravity.START);
 				LinearLayout.LayoutParams layoutParams1 = (LinearLayout.LayoutParams) textMessage.getLayoutParams();
-				layoutParams1.gravity=Gravity.LEFT;
+				layoutParams1.gravity=Gravity.START;
 				textMessage.setLayoutParams(layoutParams1);
 			}
 			textHead.setText(title);
@@ -529,7 +530,7 @@ public class DialogPopup {
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 				dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
-				FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+				RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 				new ASSL(activity, frameLayout, 1134, 720, true);
 
 				WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
@@ -628,7 +629,7 @@ public class DialogPopup {
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_upload_contacts);
 
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
 
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
@@ -891,14 +892,14 @@ public class DialogPopup {
 				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
 		   	 
 		        // Setting Dialog Title
-		        alertDialogPrepare.setTitle("Google Play Services Error");
+		        alertDialogPrepare.setTitle(R.string.google_play_services_error);
 		        alertDialogPrepare.setCancelable(false);
 		 
 		        // Setting Dialog Message
-		        alertDialogPrepare.setMessage("Google Play services not found or outdated. Please install Google Play Services?");
+		        alertDialogPrepare.setMessage(R.string.google_play_services_outdated_please_update);
 		 
 		        // On pressing Settings button
-		        alertDialogPrepare.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		        alertDialogPrepare.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 		            public void onClick(DialogInterface dialog,int which) {
 		            	dialog.dismiss();
                         try {
@@ -915,7 +916,7 @@ public class DialogPopup {
 		        });
 		 
 		        // on pressing cancel button
-		        alertDialogPrepare.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		        alertDialogPrepare.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 		            public void onClick(DialogInterface dialog, int which) {
 		            	dialog.dismiss();
 		            	mContext.finish();
@@ -957,14 +958,14 @@ public class DialogPopup {
 				AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
 		   	 
 		        // Setting Dialog Title
-		        alertDialogPrepare.setTitle("Location Settings");
+		        alertDialogPrepare.setTitle(R.string.location_settings);
 		        alertDialogPrepare.setCancelable(false);
 		 
 		        // Setting Dialog Message
-		        alertDialogPrepare.setMessage("Location is not enabled. Do you want to enable it from settings menu?");
+		        alertDialogPrepare.setMessage(R.string.location_not_enabled_enable_from_settings);
 		 
 		        // On pressing Settings button
-		        alertDialogPrepare.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+		        alertDialogPrepare.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
 		            public void onClick(DialogInterface dialog,int which) {
 		            	Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 		            	mContext.startActivity(intent);
@@ -993,14 +994,14 @@ public class DialogPopup {
                 AlertDialog.Builder alertDialogPrepare = new AlertDialog.Builder(mContext);
 
                 // Setting Dialog Title
-                alertDialogPrepare.setTitle("Location Settings");
+                alertDialogPrepare.setTitle(R.string.location_settings);
                 alertDialogPrepare.setCancelable(false);
 
                 // Setting Dialog Message
-                alertDialogPrepare.setMessage("GPS Location is not enabled. Do you want to enable it from settings menu?");
+                alertDialogPrepare.setMessage(R.string.gps_not_enabled_enable_from_settings);
 
                 // On pressing Settings button
-                alertDialogPrepare.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                alertDialogPrepare.setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int which) {
                         Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         mContext.startActivity(intent);

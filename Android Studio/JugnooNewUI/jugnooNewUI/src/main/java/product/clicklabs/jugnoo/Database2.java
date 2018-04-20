@@ -44,7 +44,7 @@ public class Database2 {                                                        
 
     private static Database2 dbInstance;
 
-    private static final String DATABASE_NAME = "jugnoo_database2";                        // declaring database variables
+    private static String DATABASE_NAME;                        // declaring database variables
 
     private static final int DATABASE_VERSION = 2;
 
@@ -258,6 +258,7 @@ public class Database2 {                                                        
     }
 
     private Database2(Context context) {
+        DATABASE_NAME = context.getString(R.string.db_name)+"2";
         dbHelper = new DbHelper(context);
         database = dbHelper.getWritableDatabase();
         createAllTables(database);

@@ -179,7 +179,7 @@ public class WalletTopupFragment extends Fragment {
 	private void topupJCAPI(final String code) {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
-				DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.showLoadingDialog(activity, activity.getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -204,7 +204,7 @@ public class WalletTopupFragment extends Fragment {
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						}
 					}
 
@@ -212,12 +212,12 @@ public class WalletTopupFragment extends Fragment {
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "paytmAddMoney error=" + error.toString());
 						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 					}
 				});
 			}
 			else{
-				DialogPopup.dialogNoInternet(activity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+				DialogPopup.dialogNoInternet(activity, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
 						new Utils.AlertCallBackWithButtonsInterface() {
 							@Override
 							public void positiveClick(View view) {

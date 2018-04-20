@@ -48,7 +48,7 @@
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/switch_handle"
-            android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_marginStart="@dimen/spacing_normal"
             android:theme="@style/ThemeSwitch"
 
             android:layout_width="wrap_content"
@@ -58,9 +58,9 @@
 
         <TextView
             android:id="@+id/tv_switch_label"
-            android:text="Handle"
+            android:text="@string/handle"
             android:textColor="@color/feed_grey_text"
-            android:layout_marginLeft="@dimen/spacing_dimin"
+            android:layout_marginStart="@dimen/spacing_dimin"
             android:ellipsize="end"
             android:textSize="@dimen/font_normal"
             app:typekitFont="@string/maven_r"
@@ -83,7 +83,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
 
@@ -94,8 +93,8 @@
         <EditText
             android:background="@null"
             android:id="@+id/edt_my_comment"
-            android:paddingLeft="@dimen/spacing_normal"
-            android:paddingRight="@dimen/spacing_small"
+            android:paddingStart="@dimen/spacing_normal"
+            android:paddingEnd="@dimen/spacing_small"
             app:typekitFont="@string/maven_r"
             android:paddingTop="@dimen/spacing_normal"
             android:paddingBottom="@dimen/spacing_normal"
@@ -110,7 +109,7 @@
             android:textColorHint="@color/feed_grey_hint_color"
             android:textColor="@color/feed_grey_text"
             android:inputType="textMultiLine|textCapSentences"
-            android:gravity="top|left"
+            android:gravity="top|start"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:maxHeight="150dp"
@@ -122,7 +121,7 @@
             android:layout_width="42.5dp"
             android:layout_height="20dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
             android:visibility="gone"
             android:background="@android:color/transparent"
             android:padding="10dp"
@@ -142,9 +141,9 @@
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Post"
-            android:paddingLeft="@dimen/spacing_large"
-            android:paddingRight="@dimen/spacing_large"
+            android:paddingStart="@dimen/spacing_large"
+            android:paddingEnd="@dimen/spacing_large"
+            android:text="@string/post"
             android:paddingBottom="@dimen/spacing_normal"
             android:textAllCaps="false"
             android:textColor="@color/text_color_selector"
@@ -160,9 +159,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:layout_toLeftOf="@id/submitDivider"
-            android:gravity="right"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@id/submitDivider"
+            android:gravity="end"
             android:maxLines="1"
             android:text="500"
             android:textColor="@color/text_color_light"

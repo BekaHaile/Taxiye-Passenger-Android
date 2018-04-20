@@ -32,8 +32,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
             android:layout_marginTop="@dimen/spacing_normal"
             android:gravity="center"
             android:text="@string/feed_claim_handle_description"
@@ -46,8 +46,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_large"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp">
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp">
 
             <EditText
                 android:id="@+id/edt_claim_handle"
@@ -69,7 +69,7 @@
                 android:id="@+id/iv_refresh_suggestions"
                 android:layout_marginTop="5dp"
                 android:padding="@dimen/spacing_tiny"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:src="@drawable/ic_refresh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
@@ -83,15 +83,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/spacing_normal"
-            android:layout_marginLeft="@dimen/spacing_large"
-            android:layout_marginRight="@dimen/spacing_large"
+            android:layout_marginStart="@dimen/spacing_large"
+            android:layout_marginEnd="@dimen/spacing_large"
             android:layout_marginTop="@dimen/spacing_dimin"
             android:textColor="@color/feed_red"
             android:maxLines="1"
             android:ellipsize="end"
             android:textSize="@dimen/font_small"
             android:drawablePadding="3dp"
-            android:drawableLeft="@drawable/ic_exclamation"
+            android:drawableStart="@drawable/ic_exclamation"
             android:visibility="invisible"
             app:typekitFont="maven" />
 
@@ -101,8 +101,8 @@
             android:id="@+id/layout_suggestions"
             android:visibility="gone"
             android:layout_gravity="center"
-            android:layout_marginRight="@dimen/spacing_normal"
-            android:layout_marginLeft="@dimen/spacing_normal"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:layout_marginStart="@dimen/spacing_normal"
             android:layout_marginBottom="@dimen/spacing_large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -114,8 +114,8 @@
                 android:background="@drawable/bg_feed_handle_suggestions"
                 android:fillViewport="true"
                 android:scrollbars="none"
-                android:paddingRight="@dimen/spacing_small"
-                android:paddingLeft="@dimen/spacing_small"
+                android:paddingEnd="@dimen/spacing_small"
+                android:paddingStart="@dimen/spacing_small"
                 android:layout_below="@+id/label_suggestions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -137,8 +137,8 @@
                     android:paddingBottom="@dimen/spacing_extra_tiny"
                     android:paddingTop="@dimen/spacing_extra_tiny"
                     android:textColor="@color/feed_grey_text"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
                     android:gravity="center"
                     app:typekitFont="maven"
                     android:background="@drawable/bg_suggestion_handle_text"
@@ -147,8 +147,8 @@
                     android:id="@+id/tv_suggestion_2"
                     android:layout_width="wrap_content"
                     android:minWidth="92dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
                     android:maxLines="1"
 
                     android:paddingBottom="@dimen/spacing_extra_tiny"
@@ -156,8 +156,8 @@
                     android:textColor="@color/feed_grey_text"
                     android:gravity="center"
                     app:typekitFont="maven"
-                    android:layout_marginLeft="@dimen/spacing_extra_tiny"
-                    android:layout_marginRight="@dimen/spacing_extra_tiny"
+                    android:layout_marginStart="@dimen/spacing_extra_tiny"
+                    android:layout_marginEnd="@dimen/spacing_extra_tiny"
                     android:background="@drawable/bg_suggestion_handle_text"
                     android:layout_height="wrap_content" />
                 <TextView
@@ -167,8 +167,8 @@
                     android:maxLines="1"
                     android:gravity="center"
                     app:typekitFont="maven"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
                     android:paddingBottom="@dimen/spacing_extra_tiny"
                     android:paddingTop="@dimen/spacing_extra_tiny"
                     android:textColor="@color/feed_grey_text"
@@ -181,11 +181,11 @@
             </HorizontalScrollView>
             <TextView
                 android:background="@color/feed_grey_background_light"
-                android:paddingRight="5dp"
-                android:paddingLeft="5dp"
+                android:paddingEnd="5dp"
+                android:paddingStart="5dp"
                 android:id="@id/label_suggestions"
                 android:textAllCaps="true"
-                android:layout_marginLeft="@dimen/spacing_small"
+                android:layout_marginStart="@dimen/spacing_small"
                 android:layout_marginBottom="-10dp"
                 app:typekitFont="@string/maven_r"
                 android:textColor="@color/text_color_hint"
@@ -202,10 +202,10 @@
             android:layout_gravity="bottom"
             android:id="@+id/btn_reserve_spot"
             style="@style/Feed.Button.Green"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
             android:layout_marginBottom="@dimen/spacing_normal"
-            android:text="Submit" />
+            android:text="@string/submit" />
 
     </LinearLayout>
 </ScrollView>

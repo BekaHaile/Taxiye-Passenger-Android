@@ -127,7 +127,7 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
         else if(new Validator().validateEmail(((SelectContactActivity)getActivity()).getSearchET().getText().toString()))
         {
             SelectUser newData = new SelectUser();
-            newData.setName("VPA address");
+            newData.setName(getString(R.string.vpa_address));
             newData.setPhone(((SelectContactActivity)getActivity()).getSearchET().getText().toString());
             newData.setAmount("");
             data.setOrderId("0");
@@ -161,7 +161,7 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
             super.onPreExecute();
             selectUsers.clear();
             Prefs.with(getActivity()).save(SharedPreferencesName.USER_CONTACTS, "");
-            CallProgressWheel.showLoadingDialog(getActivity(), "Please wait..");
+            CallProgressWheel.showLoadingDialog(getActivity(), getString(R.string.please_wait));
         }
 
         @Override

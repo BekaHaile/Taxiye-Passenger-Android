@@ -145,7 +145,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 						break;
 
 					case R.id.buttonCallPolice:
-						Utils.openCallIntent(activity, "100");
+						Utils.openCallIntent(activity, getString(R.string.police_number));
 						break;
 
 					case R.id.buttonCallEmergencyContact:

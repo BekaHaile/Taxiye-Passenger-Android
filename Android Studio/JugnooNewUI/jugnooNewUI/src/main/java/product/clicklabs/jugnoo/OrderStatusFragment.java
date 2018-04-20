@@ -439,7 +439,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         try {
             if (MyApplication.getInstance().isOnline()) {
 
-                DialogPopup.showLoadingDialog(activity, "Loading...");
+                DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -519,7 +519,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         if(!TextUtils.isEmpty(datum.getDeliveryTime())){
             tv3r.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum.getDeliveryTime())));
         } else {
-            tv3r.setText("ASAP");
+            tv3r.setText(R.string.asap);
         }
 
         SearchResult searchResultFrom = homeUtil.getNearBySavedAddress(activity,
@@ -706,11 +706,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
     private void setFragTitle() {
         if (activity instanceof RideTransactionsActivity) {
-            ((RideTransactionsActivity) activity).setTitle("Order #" + orderId);
+            ((RideTransactionsActivity) activity).setTitle(getString(R.string.order_hash_format, String.valueOf(orderId)));
         } else if (activity instanceof SupportActivity) {
-            ((SupportActivity) activity).setTitle("Order #" + orderId);
+            ((SupportActivity) activity).setTitle(getString(R.string.order_hash_format, String.valueOf(orderId)));
         } else if (activity instanceof FreshActivity) {
-            ((FreshActivity) activity).getTopBar().title.setText("Order #" + orderId);
+            ((FreshActivity) activity).getTopBar().title.setText(getString(R.string.order_hash_format, String.valueOf(orderId)));
         }
     }
 
@@ -721,7 +721,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         try {
             if (MyApplication.getInstance().isOnline()) {
 
-                DialogPopup.showLoadingDialog(activity, "Loading...");
+                DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -1165,21 +1165,29 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         }
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tvPaymentMethodVal.getLayoutParams();
-        tvPaymentMethodVal.setPadding(0, 0, 0, 0);
+        tvPaymentMethodVal.setPaddingRelative(0, 0, 0, 0);
         tvPaymentMethodVal.setText("");
         tvPaymentMethodVal.setBackgroundResource(R.drawable.background_transparent);
         if (datum1.getPaymentMode() == PaymentOption.PAYTM.getOrdinal()) {
             params.setMargins((int) (ASSL.Xscale() * 10f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 10f));
+            params.setMarginEnd(0);
             tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_paytm_small);
         } else if (datum1.getPaymentMode() == PaymentOption.MOBIKWIK.getOrdinal()) {
             params.setMargins((int) (ASSL.Xscale() * 25f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 25f));
+            params.setMarginEnd(0);
             tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_mobikwik_small);
         } else if (datum1.getPaymentMode() == PaymentOption.FREECHARGE.getOrdinal()) {
             params.setMargins((int) (ASSL.Xscale() * 30f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 30f));
+            params.setMarginEnd(0);
             tvPaymentMethodVal.setBackgroundResource(R.drawable.ic_freecharge_small);
         } else if (datum1.getPaymentMode() == PaymentOption.JUGNOO_PAY.getOrdinal()) {
             tvPaymentMethodVal.setText(R.string.jugnoo_pay);
             params.setMargins((int) (ASSL.Xscale() * 35f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 35f));
+            params.setMarginEnd(0);
         } else if (datum1.getPaymentMode() == PaymentOption.RAZOR_PAY.getOrdinal()) {
             if (!TextUtils.isEmpty(datum1.getOtherPaymentModeText())) {
                 tvPaymentMethodVal.setText(datum1.getOtherPaymentModeText());
@@ -1187,8 +1195,12 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 tvPaymentMethodVal.setText(R.string.other_payment_mode);
             }
             params.setMargins((int) (ASSL.Xscale() * 35f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 35f));
+            params.setMarginEnd(0);
         } else if(datum1.getPaymentMode()==PaymentOption.ICICI_UPI.getOrdinal()){
             params.setMargins((int) (ASSL.Xscale() * 34f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 34f));
+            params.setMarginEnd(0);
             params.height= (int) (ASSL.minRatio() * 35f);
             params.width= (int) (ASSL.minRatio() * 90f);
             tvPaymentMethodVal.setBackgroundResource(R.drawable.upi_logo);
@@ -1245,7 +1257,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                     .commitAllowingStateLoss();
                         }
                     } else {
-                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Are you sure you want to cancel this order?", getResources().getString(R.string.ok),
+                        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", getString(R.string.are_you_sure_cancel_order), getResources().getString(R.string.ok),
                                 getResources().getString(R.string.cancel), new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -1348,7 +1360,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
     public void saveHistoryCardToSP(HistoryResponse.Datum orderHistory) {
         try {
-            DialogPopup.showLoadingDialog(activity, "Please wait...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.please_wait));
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -1410,7 +1422,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                             datum1.setCancellable(0);
 
                             Intent intent = new Intent(Data.LOCAL_BROADCAST);
-                            intent.putExtra("message", "Order cancelled, refresh inventory");
+                            intent.putExtra("message", getString(R.string.order_cancelled_refresh_inventory));
                             intent.putExtra("open_type", 10);
                             LocalBroadcastManager.getInstance(activity).sendBroadcast(intent);
 

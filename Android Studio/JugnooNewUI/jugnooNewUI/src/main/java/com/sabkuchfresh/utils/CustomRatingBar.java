@@ -206,7 +206,7 @@ public class CustomRatingBar extends LinearLayout {
         ImageView v = new ImageView(getContext());
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         params.weight = 1;
-        v.setPadding((int) mStarPadding, 0, (int) mStarPadding, 0);
+        v.setPaddingRelative((int) mStarPadding, 0, (int) mStarPadding, 0);
         v.setAdjustViewBounds(true);
         v.setScaleType(ImageView.ScaleType.FIT_CENTER);
         v.setLayoutParams(params);

@@ -129,12 +129,7 @@ public class MenuBar {
         } else{
             textViewUserName.setVisibility(View.GONE);
         }
-		try {
-            textViewViewPhone.setText(Data.userData.phoneNo.replaceFirst("\\+91",""));
-
-        } catch (Exception e){
-            textViewViewPhone.setText(Data.userData.phoneNo);
-        }
+		textViewViewPhone.setText(Data.userData.phoneNo);
 		float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 		if(activity instanceof HomeActivity && ((HomeActivity)activity).activityResumed){
             if(!"".equalsIgnoreCase(Data.userData.userImage)) {

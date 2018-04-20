@@ -194,7 +194,7 @@ public class CheckoutRequestPaymentDialog extends Dialog {
         Window window = getWindow();
         WindowManager.LayoutParams wlp = getWindow().getAttributes();
         setCancelable(false);
-        wlp.gravity = Gravity.LEFT | Gravity.TOP;
+        wlp.gravity = Gravity.START | Gravity.TOP;
         wlp.height = WindowManager.LayoutParams.MATCH_PARENT;
         wlp.width = WindowManager.LayoutParams.MATCH_PARENT;
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//to avoid black background during animation

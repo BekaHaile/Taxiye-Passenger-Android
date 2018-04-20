@@ -16,9 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
-import com.sabkuchfresh.retrofit.model.menus.CustomizeItem;
-import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
-import com.sabkuchfresh.retrofit.model.menus.CustomizeOption;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
 import com.sabkuchfresh.utils.AppConstant;
@@ -217,10 +214,14 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		if(TextUtils.isEmpty(mcv.getCustomizeText())){
 			mHolder.textViewItemCustomizeText.setVisibility(View.GONE);
 			paramsName.setMargins(0, 0, 0, (int)(ASSL.Yscale() * 25.0f));
+			paramsName.setMarginStart(0);
+			paramsName.setMarginEnd(0);
 		} else {
 			mHolder.textViewItemCustomizeText.setVisibility(View.VISIBLE);
 			mHolder.textViewItemCustomizeText.setText(mcv.getCustomizeText());
 			paramsName.setMargins(0, 0, 0, (int)(ASSL.Yscale() * 10.0f));
+			paramsName.setMarginStart(0);
+			paramsName.setMarginEnd(0);
 		}
 		mHolder.textViewItemName.setLayoutParams(paramsName);
 

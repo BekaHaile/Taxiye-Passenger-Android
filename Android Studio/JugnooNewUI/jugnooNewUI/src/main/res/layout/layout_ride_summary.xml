@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayoutRideSummary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,7 +23,7 @@
         <ImageView
             android:layout_width="53px"
             android:layout_height="900px"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:background="@drawable/ic_ride_summary_line"
             android:rotation="180" />
 
@@ -31,8 +32,8 @@
             android:layout_height="892px"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="4px"
-            android:layout_marginLeft="-6px"
-            android:layout_marginRight="-6px"
+            android:layout_marginStart="-6px"
+            android:layout_marginEnd="-6px"
             android:layout_marginTop="4px"
             android:background="@drawable/background_white_top_bottom_border"
             android:orientation="vertical">
@@ -54,21 +55,21 @@
                         android:layout_width="39px"
                         android:layout_height="43px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="42px"
-                        android:layout_marginRight="10px"
+                        android:layout_marginStart="42px"
+                        android:layout_marginEnd="10px"
                         android:src="@drawable/driver_icon_end_ride"
                         android:tag="mwar" />
 
                     <TextView
                         android:id="@+id/textViewEndRideDriverName"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="10px"
-                        android:layout_toRightOf="@+id/imageViewEndRideDriverIcon"
+                        android:layout_marginEnd="10px"
+                        android:layout_toEndOf="@+id/imageViewEndRideDriverIcon"
                         android:gravity="center_vertical"
                         android:maxLines="2"
-                        android:text="Driver Name"
+                        android:text="@string/driver_name"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_28" />
                 </RelativeLayout>
@@ -76,28 +77,28 @@
                 <RelativeLayout
                     android:layout_width="280px"
                     android:layout_height="100px"
-                    android:layout_alignParentRight="true">
+                    android:layout_alignParentEnd="true">
 
                     <ImageView
                         android:id="@+id/imageViewEndRideAutoIcon"
                         android:layout_width="53px"
                         android:layout_height="53px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10px"
+                        android:layout_marginStart="10px"
                         android:src="@drawable/ic_auto_grey"
                         android:tag="mwar" />
 
                     <TextView
                         android:id="@+id/textViewEndRideDriverCarNumber"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="8px"
-                        android:layout_marginRight="5px"
-                        android:layout_toRightOf="@+id/imageViewEndRideAutoIcon"
+                        android:layout_marginStart="8px"
+                        android:layout_marginEnd="5px"
+                        android:layout_toEndOf="@+id/imageViewEndRideAutoIcon"
                         android:gravity="center_vertical"
                         android:maxLines="2"
-                        android:text="Car Number"
+                        android:text="@string/car_number"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_28" />
                 </RelativeLayout>
@@ -114,7 +115,7 @@
                 android:layout_width="560px"
                 android:layout_height="70px"
                 android:gravity="center"
-                android:text="Ride Summary"
+                android:text="@string/ride_summary"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_28" />
@@ -156,23 +157,23 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideFare"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="30px"
+                                android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
-                                android:text="Fare"
+                                android:text="@string/fare"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
 
                             <TextView
                                 android:id="@+id/textViewEndRideFareValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="40px"
-                                android:gravity="center_vertical|right"
-                                android:text="0"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
+                                android:text="@string/_0"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
                         </RelativeLayout>
@@ -187,23 +188,23 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideLuggageCharge"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="30px"
+                                android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
-                                android:text="Luggage Charge"
+                                android:text="@string/luggage_charge"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
 
                             <TextView
                                 android:id="@+id/textViewEndRideLuggageChargeValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="40px"
-                                android:gravity="center_vertical|right"
-                                android:text="0"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
+                                android:text="@string/_0"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
                         </RelativeLayout>
@@ -217,22 +218,22 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideConvenienceCharge"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="30px"
+                                android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
-                                android:text="Convenience Charge"
+                                android:text="@string/convenience_charge"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
 
                             <TextView
                                 android:id="@+id/textViewEndRideConvenienceChargeValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="40px"
-                                android:gravity="center_vertical|right"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
                                 android:text="0"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
@@ -247,22 +248,22 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideDiscount"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="30px"
+                                android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
-                                android:text="Discount"
+                                android:text="@string/discount"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
 
                             <TextView
                                 android:id="@+id/textViewEndRideDiscountValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="40px"
-                                android:gravity="center_vertical|right"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
                                 android:text="0"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
@@ -286,21 +287,21 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideFinalFare"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="30px"
+                                android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
-                                android:text="Final Fare"
+                                android:text="@string/final_fare"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
                             <TextView
                                 android:id="@+id/textViewEndRideFinalFareValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="40px"
-                                android:gravity="center_vertical|right"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
                                 android:text="0"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
@@ -315,22 +316,22 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideJugnooCash"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="30px"
+                                android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
-                                android:text="Jugnoo Cash"
+                                android:text="@string/jugnoo_cash"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
 
                             <TextView
                                 android:id="@+id/textViewEndRideJugnooCashValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="40px"
-                                android:gravity="center_vertical|right"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
                                 android:text="0"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
@@ -344,9 +345,9 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRidePaytm"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="30px"
+                                android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
                                 android:text="@string/paytm_wallet"
                                 android:textColor="@color/text_color"
@@ -355,11 +356,11 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRidePaytmValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="40px"
-                                android:gravity="center_vertical|right"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
                                 android:text="0"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
@@ -373,9 +374,9 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideMobikwik"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="30px"
+                                android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
                                 android:text="@string/mobikwik_wallet"
                                 android:textColor="@color/text_color"
@@ -384,11 +385,11 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideMobikwikValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="40px"
-                                android:gravity="center_vertical|right"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
                                 android:text="0"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
@@ -402,9 +403,9 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideFreeCharge"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="30px"
+                                android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
                                 android:text="@string/freecharge_wallet"
                                 android:textColor="@color/text_color"
@@ -413,11 +414,40 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideFreeChargeValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="40px"
-                                android:gravity="center_vertical|right"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
+                                android:text="0"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutPaidUsingMpesa"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6px">
+
+                            <TextView
+                                android:id="@+id/textViewEndRideMpesa"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="30px"
+                                android:gravity="center_vertical"
+                                android:text="@string/mpesa_wallet"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26" />
+
+
+                            <TextView
+                                android:id="@+id/textViewEndRideMpesaValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
                                 android:text="0"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
@@ -431,9 +461,9 @@
 
                             <TextView
                                 android:id="@+id/tvEndRideRazorpay"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="30px"
+                                android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
                                 android:text="@string/card"
                                 android:textColor="@color/text_color"
@@ -443,11 +473,11 @@
 
                             <TextView
                                 android:id="@+id/tvEndRideRazorpayValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="40px"
-                                android:gravity="center_vertical|right"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
                                 android:text="0"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26"
@@ -462,22 +492,23 @@
 
                             <TextView
                                 android:id="@+id/textViewEndRideToBePaid"
-                                android:layout_width="340px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="30px"
+                                android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
-                                android:text="To Be Paid"
+                                android:text="@string/to_be_paid_camel_case"
                                 android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_30" />
+                                android:textSize="@dimen/text_size_30"
+                                tools:ignore="HardcodedText" />
 
 
                             <TextView
                                 android:id="@+id/textViewEndRideToBePaidValue"
-                                android:layout_width="200px"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
-                                android:layout_marginRight="40px"
-                                android:gravity="center_vertical|right"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
                                 android:text="0"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_30" />
@@ -514,7 +545,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:gravity="center"
-                                android:text="Base Fare"
+                                android:text="@string/base_fare"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
@@ -525,7 +556,7 @@
                                 android:layout_gravity="center_horizontal"
                                 android:gravity="center"
                                 android:singleLine="true"
-                                android:text="Rs. 20"
+                                android:text="@string/rs_20"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
                         </LinearLayout>
@@ -548,7 +579,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:gravity="center"
-                                android:text="Distance"
+                                android:text="@string/distance"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
@@ -559,7 +590,7 @@
                                 android:layout_gravity="center_horizontal"
                                 android:gravity="center"
                                 android:singleLine="true"
-                                android:text="20 kms"
+                                android:text="@string/_20_kms"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
                         </LinearLayout>
@@ -590,7 +621,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
                                     android:gravity="center"
-                                    android:text="Wait"
+                                    android:text="@string/wait"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_26" />
 
@@ -601,7 +632,7 @@
                                     android:layout_gravity="center_horizontal"
                                     android:gravity="center"
                                     android:singleLine="true"
-                                    android:text="20 min"
+                                    android:text="@string/_20_min"
                                     android:textColor="@color/text_color"
                                     android:textSize="@dimen/text_size_26" />
                             </LinearLayout>
@@ -617,7 +648,7 @@
                             android:id="@+id/linearLayoutEndRideTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_weight="1"
                             android:orientation="vertical"
                             android:visibility="visible">
@@ -628,7 +659,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:gravity="center"
-                                android:text="Time"
+                                android:text="@string/time"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
@@ -639,7 +670,7 @@
                                 android:layout_gravity="center_horizontal"
                                 android:gravity="center"
                                 android:singleLine="true"
-                                android:text="20 min"
+                                android:text="@string/_20_min"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
                         </LinearLayout>
@@ -663,7 +694,7 @@
                         android:layout_marginTop="20px"
                         android:gravity="center"
                         android:singleLine="true"
-                        android:text="Priority Tip 1x"
+                        android:text="@string/priority_tip_1x"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_26"/>
 
@@ -695,7 +726,9 @@
                             android:layout_height="44px"
                             android:layout_centerHorizontal="true"
                             android:src="@drawable/start_end_icon"
-                            android:tag="mwar" />
+                            android:tag="mwar"
+                            android:rotationY="@integer/locale_mirror_flip"
+                            />
 
                         <LinearLayout
                             android:layout_width="280px"
@@ -710,7 +743,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:gravity="center"
-                                android:text="Start"
+                                android:text="@string/start"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
@@ -722,7 +755,7 @@
                                 android:layout_marginTop="4px"
                                 android:gravity="center"
                                 android:singleLine="true"
-                                android:text="00:00 AM"
+                                android:text="@string/_00_00_am"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
@@ -731,12 +764,12 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginLeft="10px"
-                                android:layout_marginRight="10px"
+                                android:layout_marginStart="10px"
+                                android:layout_marginEnd="10px"
                                 android:layout_marginTop="14px"
                                 android:gravity="center_horizontal"
                                 android:maxLines="5"
-                                android:text="Sector 37, Chandigarh\nIndia"
+                                android:text="@string/sector_37_chandigarh_nindia"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_24" />
                         </LinearLayout>
@@ -744,7 +777,7 @@
                         <LinearLayout
                             android:layout_width="280px"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_below="@+id/imageViewStartEnd"
                             android:layout_marginTop="10px"
                             android:orientation="vertical">
@@ -755,7 +788,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
                                 android:gravity="center"
-                                android:text="End"
+                                android:text="@string/end"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
@@ -767,7 +800,7 @@
                                 android:layout_marginTop="4px"
                                 android:gravity="center"
                                 android:maxLines="2"
-                                android:text="00:00 AM"
+                                android:text="@string/_00_00_am"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
@@ -776,12 +809,12 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginLeft="10px"
-                                android:layout_marginRight="10px"
+                                android:layout_marginStart="10px"
+                                android:layout_marginEnd="10px"
                                 android:layout_marginTop="14px"
                                 android:gravity="center_horizontal"
                                 android:maxLines="5"
-                                android:text="Sector 28, Chandigarh\nIndia"
+                                android:text="@string/sector_28_chandigarh_nindia"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_24" />
                         </LinearLayout>

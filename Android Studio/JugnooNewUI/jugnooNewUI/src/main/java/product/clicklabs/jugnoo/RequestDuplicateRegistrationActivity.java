@@ -146,7 +146,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
                 //textViewRegisterPhoneValue.setText(OTPConfirmScreen.emailRegisterData.phoneNo);
 				textViewRegisterPhoneValue.setText(Data.kitPhoneNumber);
             }
-            editTextMessage.setHint("You have already created " + Data.previousAccountInfoList.size() + " accounts from this device. Please explain the reason for creating a new account.");
+            editTextMessage.setHint(getString(R.string.you_have_already_created_multiple_accounts_format, String.valueOf(Data.previousAccountInfoList.size())));
         } catch(Exception e){
             e.printStackTrace();
             performBackPressed();
@@ -226,7 +226,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 	public void submitDuplicateRegistrationRequestAPI(final Activity activity, String messageStr, String name, String email, String phone) {
 		if (MyApplication.getInstance().isOnline()) {
 			
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 			
 			HashMap<String, String> params = new HashMap<>();
 
@@ -257,7 +257,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 //						public void onFailure(Throwable arg3) {
 //							Log.e("request fail", arg3.toString());
 //							DialogPopup.dismissLoadingDialog();
-//							DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//							DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 //						}
 //
 //						@Override
@@ -294,7 +294,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 //								}
 //							}  catch (Exception exception) {
 //								exception.printStackTrace();
-//								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 //							}
 //							DialogPopup.dismissLoadingDialog();
 //						}
@@ -338,7 +338,7 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 						}
 					}  catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 					}
 					DialogPopup.dismissLoadingDialog();
 				}
@@ -347,13 +347,13 @@ public class RequestDuplicateRegistrationActivity extends BaseActivity {
 				public void failure(RetrofitError error) {
 					Log.e("request fail", error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 	}
 

@@ -129,7 +129,7 @@
 
         <RelativeLayout
             android:id="@+id/rlMenuLabelfatat"
-            android:layout_gravity="right|bottom"
+            android:layout_gravity="end|bottom"
             android:layout_width="wrap_content"
             android:tag="DontTouchMe"
             android:layout_height="wrap_content">
@@ -151,7 +151,7 @@
                         android:id="@+id/menuLabelFatafat"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:contentDescription="@string/fatafat"
                         android:tag="DontTouchMe"
@@ -172,7 +172,7 @@
                         android:background="@drawable/ic_fatafat_chat_icon_background"
                         android:layout_width="wrap_content"
                         android:padding="13.5dp"
-                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_fatafat_chat_new"
                         android:layout_height="wrap_content" />
@@ -181,9 +181,9 @@
                     <TextView
                         android:id="@+id/tv_fatafat_icon_desc"
                         android:layout_centerVertical="true"
-                        android:text="Custom Order"
+                        android:text="@string/custom_order"
                         android:textAllCaps="true"
-                        android:layout_toRightOf="@id/menuLabelFatafat"
+                        android:layout_toEndOf="@id/menuLabelFatafat"
                         android:visibility="visible"
                         app:typekitFont="@string/maven"
                         android:maxLines="1"

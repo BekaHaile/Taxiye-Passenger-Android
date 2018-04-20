@@ -170,7 +170,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 				SelectedLocation selectedLocation = (SelectedLocation) adapterList.get(position);
 				((ChangeLocationViewHolder) holder).textViewLocation.setText(selectedLocation.getCityName());
-				((ChangeLocationViewHolder) holder).tvLabel.setText(selectedLocation.isCity()?"City":"Location");
+				((ChangeLocationViewHolder) holder).tvLabel.setText(selectedLocation.isCity()?R.string.city:R.string.location);
 
 			}
         } catch (Exception e) {
@@ -204,7 +204,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (feedDetail.getFeedType() != FeedDetail.FeedType.REVIEW && !TextUtils.isEmpty(feedDetail.getUserName()) &&!TextUtils.isEmpty(feedDetail.getOwnerName())) {
                         showUserActivity = true;
 
-                        userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s review.");
+                        userActivityTitle = new SpannableString(activity.getString(R.string.users_review_format, feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName()));
                         userActivityTitle.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         userActivityTitle.setSpan(BOLD_SPAN_2, feedDetail.getUserName().length() + feedDetail.getFeedType().getValue().length(), userActivityTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         if (!TextUtils.isEmpty(feedDetail.getUserImage()))
@@ -280,7 +280,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (feedDetail.getFeedType() != FeedDetail.FeedType.POST && !TextUtils.isEmpty(feedDetail.getUserName()) &&!TextUtils.isEmpty(feedDetail.getOwnerName())) {
                         showUserActivity = true;
 
-                        userActivityTitle = new SpannableString(feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName() + "'s post.");
+                        userActivityTitle = new SpannableString(activity.getString(R.string.users_post_format, feedDetail.getUserName() + feedDetail.getFeedType().getValue() + feedDetail.getOwnerName()));
                         userActivityTitle.setSpan(BOLD_SPAN, 0, feedDetail.getUserName().length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         userActivityTitle.setSpan(BOLD_SPAN_2, feedDetail.getUserName().length() + feedDetail.getFeedType().getValue().length(), userActivityTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                         if (!TextUtils.isEmpty(feedDetail.getUserImage()))
@@ -352,7 +352,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
             //set Like Count and comment count
-            String likeSuffix = feedDetail.getLikeCount() > 1 ? " Likes" : " Like";
+            String likeSuffix = feedDetail.getLikeCount() > 1 ? " "+activity.getString(R.string.likes) : " "+activity.getString(R.string.like);
             SpannableString likeText;
             if(feedDetail.getLikeCount()>0){
                 //bold like Count
@@ -364,7 +364,7 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
             holder.tvLike.setText(likeText);
 
-            String commentSuffix = feedDetail.getCommentCount() > 1 ? " Replies" : " Reply";
+            String commentSuffix = " " + (feedDetail.getCommentCount() > 1 ? activity.getString(R.string.replies) : activity.getString(R.string.reply));
             SpannableString commentText;
             if(feedDetail.getCommentCount()>0){
                 //bold comment Count
@@ -394,7 +394,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.layoutActualPost.getLayoutParams();
                 layoutParams.setMargins(FeedUtils.dpToPx(12),0,FeedUtils.dpToPx(20),FeedUtils.dpToPx(12));
-                holder.layoutActualPost.setPadding(0,FeedUtils.dpToPx(20),0,0);
+                layoutParams.setMarginStart(FeedUtils.dpToPx(12));
+                layoutParams.setMarginEnd(FeedUtils.dpToPx(20));
+                holder.layoutActualPost.setPaddingRelative(0,FeedUtils.dpToPx(20),0,0);
                 holder.layoutActualPost.setLayoutParams(layoutParams);
            /* if (userImage != null)
                 Picasso.with(activity).load(userImage).resize(FeedUtils.convertDpToPx(activity, 50), FeedUtils.convertDpToPx(activity, 50)).centerCrop().transform(new CircleTransform()).into(holder.ivUserProfilePic);*/
@@ -405,7 +407,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.layoutActualPost.getLayoutParams();
                 layoutParams.setMargins(0,0,0,0);
-                holder.layoutActualPost.setPadding(0,FeedUtils.dpToPx(20),0,0);
+                layoutParams.setMarginStart(0);
+                layoutParams.setMarginEnd(0);
+                holder.layoutActualPost.setPaddingRelative(0,FeedUtils.dpToPx(20),0,0);
                 holder.layoutActualPost.setLayoutParams(layoutParams);
             }
 
@@ -454,6 +458,8 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     View tab = ((ViewGroup) holder.tabDots.getChildAt(0)).getChildAt(i);
                     ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
                     p.setMargins(activity.getResources().getDimensionPixelSize(R.dimen.dp_4), 0, 0, 0);
+                    p.setMarginStart(activity.getResources().getDimensionPixelSize(R.dimen.dp_4));
+                    p.setMarginEnd(0);
                     tab.requestLayout();
                 }
                 holder.tabDots.setVisibility(reviewImages.size() > 1 ? View.VISIBLE : View.GONE);
@@ -579,9 +585,9 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return null;
 
 
-        String likeSuffix = likeCount > 1 ? " Likes " : " Like ";
+        String likeSuffix = " " + activity.getString(likeCount > 1 ?  R.string.likes : R.string.like) + " ";
         likeSuffix=likeCount>0? likeCount+likeSuffix:"";
-        String commentSuffix = commentCount > 1 ? " Replies " : " Reply ";
+        String commentSuffix = " " + activity.getString(commentCount > 1 ?  R.string.replies : R.string.reply) + " ";
         commentSuffix=commentCount>0?commentCount+commentSuffix:"";
         String divider = likeCount!=0 && commentCount!=0 ?activity.getString(R.string.bullet) + " ":"";
 

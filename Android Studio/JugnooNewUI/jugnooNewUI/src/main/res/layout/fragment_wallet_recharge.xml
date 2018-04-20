@@ -12,13 +12,13 @@
         android:id="@+id/topBar"
         android:layout_width="@dimen/screen_width"
         android:layout_height="@dimen/top_bar_height"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="@color/white">
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:text="PAYTM WALLET"
+            android:text="@string/paytm_wallet_caps"
             style="@style/title" />
 
         <ImageView
@@ -29,11 +29,11 @@
             android:id="@+id/textViewTitleEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10px"
+            android:layout_marginEnd="10px"
             android:padding="15px"
-            android:text="EDIT"
+            android:text="@string/edit_caps"
             android:textColor="@color/text_color_light_selector"
             android:textSize="30.6px" />
     </RelativeLayout>
@@ -105,9 +105,9 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="50px"
+                        android:layout_marginStart="50px"
                         android:gravity="center"
-                        android:text="Current Balance"
+                        android:text="@string/current_balance"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
 
@@ -116,12 +116,12 @@
                         android:id="@+id/textViewCurrentBalanceValue"
                         android:layout_width="250px"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginRight="50px"
-                        android:gravity="right"
-                        android:text="5000"
+                        android:layout_marginEnd="50px"
+                        android:gravity="end"
+                        android:text="@string/_5000"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
 
@@ -144,11 +144,11 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="2px"
-                            android:layout_marginRight="24px"
-                            android:layout_marginLeft="38px"
+                            android:layout_marginEnd="24px"
+                            android:layout_marginStart="38px"
                             android:background="@color/stroke_color_light"
                             android:layout_centerVertical="true"
-                            android:layout_toLeftOf="@+id/textViewAddCash"
+                            android:layout_toStartOf="@+id/textViewAddCash"
                             />
 
                         <TextView
@@ -164,12 +164,12 @@
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="2px"
-                            android:layout_marginLeft="24px"
-                            android:layout_marginRight="38px"
+                            android:layout_marginStart="24px"
+                            android:layout_marginEnd="38px"
                             android:background="@color/stroke_color_light"
                             android:layout_centerVertical="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_toRightOf="@+id/textViewAddCash"
+                            android:layout_alignParentEnd="true"
+                            android:layout_toEndOf="@+id/textViewAddCash"
                             />
 
                     </RelativeLayout>
@@ -194,7 +194,7 @@
                             android:text="@string/first_amount"
                             android:textColor="@color/text_color_theme_color_selector"
                             android:textSize="@dimen/text_size_32"
-                            android:layout_marginRight="34px"
+                            android:layout_marginEnd="34px"
                             />
 
 
@@ -208,7 +208,7 @@
                             android:text="@string/middle_amount"
                             android:textColor="@color/text_color_theme_color_selector"
                             android:textSize="@dimen/text_size_32"
-                            android:layout_marginRight="34px" />
+                            android:layout_marginEnd="34px" />
 
 
                         <Button
@@ -235,12 +235,12 @@
                         android:background="@color/transparent"
                         android:digits="0123456789"
                         android:ems="10"
-                        android:hint="Enter Amount"
+                        android:hint="@string/enter_amount"
                         android:inputType="number|textNoSuggestions"
                         android:maxLength="5"
                         android:gravity="center"
-                        android:paddingLeft="25px"
-                        android:paddingRight="25px"
+                        android:paddingStart="25px"
+                        android:paddingEnd="25px"
                         android:singleLine="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"

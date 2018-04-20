@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:animateLayoutChanges="true"
     android:splitMotionEvents="false"
-    android:visibility="gone">
+    android:visibility="visible">
 
 
     <ImageView
@@ -24,7 +24,6 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
         <ImageView
@@ -48,14 +47,29 @@
 
                 <ImageView
                     android:id="@+id/imageViewJugnooLogo"
-                    android:layout_width="@dimen/px_387"
-                    android:layout_height="@dimen/px_97"
+                    android:layout_width="@dimen/splash_logo_width"
+                    android:layout_height="@dimen/splash_logo_height"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/logo_big"
+                    android:src="@drawable/splash_logo_icon_drawable"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
-                    android:tag="mwar"
+                    android:tag="@string/dont_touch_me"
                     android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tvJugnooTaxiLS"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:text="@string/jugnoo_taxi"
+                    android:textAllCaps="true"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/imageViewJugnooLogo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"
+                    android:tag="@string/dont_touch_me"
+                    android:visibility="@integer/show_splash_logo_text"
+                    />
 
                 <ImageView
                     android:id="@+id/imageViewDebug1"
@@ -66,7 +80,7 @@
                     android:id="@+id/imageViewDebug2"
                     android:layout_width="180px"
                     android:layout_height="120px"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_alignParentEnd="true"/>
 
                 <ImageView
                     android:id="@+id/imageViewDebug3"
@@ -115,9 +129,9 @@
                     android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/px_20"
+                    android:layout_marginStart="@dimen/px_20"
                     android:textSize="@dimen/text_size_32"
-                    android:layout_toRightOf="@+id/ivMobileNumber"
+                    android:layout_toEndOf="@+id/ivMobileNumber"
                     app:typekitFont="maven"/>
 
             </RelativeLayout>
@@ -187,9 +201,9 @@
                         android:text="@string/nl_login_facebook"
                         android:textColor="#3b5998"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/px_20"
+                        android:layout_marginStart="@dimen/px_20"
                         android:textSize="@dimen/text_size_32"
-                        android:layout_toRightOf="@+id/bFacebook"
+                        android:layout_toEndOf="@+id/bFacebook"
                         app:typekitFont="maven"/>
 
                 </RelativeLayout>
@@ -198,7 +212,7 @@
                     android:id="@+id/rlLSGoogle"
                     android:layout_width="268px"
                     android:layout_height="@dimen/splash_button_height"
-                    android:layout_marginLeft="@dimen/px_20"
+                    android:layout_marginStart="@dimen/px_20"
                     android:gravity="center_horizontal"
                     android:background="@drawable/capsule_login_button_selector">
 
@@ -221,9 +235,9 @@
                         android:text="@string/nl_login_google"
                         android:textColor="@color/text_color"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/px_20"
+                        android:layout_marginStart="@dimen/px_20"
                         android:textSize="@dimen/text_size_32"
-                        android:layout_toRightOf="@+id/bGoogle"
+                        android:layout_toEndOf="@+id/bGoogle"
                         app:typekitFont="maven"/>
 
                 </RelativeLayout>

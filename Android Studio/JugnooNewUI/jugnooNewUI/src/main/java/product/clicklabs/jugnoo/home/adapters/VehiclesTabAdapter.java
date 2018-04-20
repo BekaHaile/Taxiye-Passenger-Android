@@ -51,8 +51,10 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         holder.textViewVehicleName.setText(region.getRegionName());
         holder.relative.setTag(position);
 
-        boolean selected = region.getVehicleType().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getVehicleType())
-                && region.getRegionId().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRegionId());
+        boolean selected = region.getOperatorId() == activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getOperatorId()
+                && region.getVehicleType().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getVehicleType())
+                && region.getRegionId().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRegionId())
+                ;
 
         if(region.getCustomerFareFactor() > 1.0){
             holder.imageViewMultipleSurge.setVisibility(View.VISIBLE);
@@ -85,7 +87,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             @Override
             public void onClick(View v) {
                 int position = (int) v.getTag();
-                activity.setVehicleTypeSelected(position);
+                activity.setVehicleTypeSelected(position, true);
                 try {
                     GAUtils.event(RIDES, HOME, regions.get(position).getRegionName()+" "+CLICKED);
                 } catch (Exception e) {

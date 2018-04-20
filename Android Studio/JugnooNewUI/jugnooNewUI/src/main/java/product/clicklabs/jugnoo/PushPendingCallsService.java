@@ -76,7 +76,7 @@ public class PushPendingCallsService extends Service {
 
 
     public static final int PUSH_PENDING_CALLS_PI_REQUEST_CODE = 112;
-    public static final String PUSH_PENDING_CALLS = "product.clicklabs.jugnoo.PUSH_PENDING_CALLS";
+    public static final String PUSH_PENDING_CALLS = BuildConfig.APPLICATION_ID+".PUSH_PENDING_CALLS";
     public static final long ALARM_REPEAT_INTERVAL = 60000;
 
 

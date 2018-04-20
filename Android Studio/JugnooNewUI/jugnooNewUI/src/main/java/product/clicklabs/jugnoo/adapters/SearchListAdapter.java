@@ -511,7 +511,7 @@ public class SearchListAdapter extends BaseAdapter{
                     searchListActionsHandler.onPlaceSearchPost(searchResult);
                 }
                 else{
-                    DialogPopup.alertPopup((Activity) context, "", Data.CHECK_INTERNET_MSG);
+                    DialogPopup.alertPopup((Activity) context, "", context.getString(R.string.connection_lost_desc));
                     searchListActionsHandler.onPlaceSearchError();
                 }
             }

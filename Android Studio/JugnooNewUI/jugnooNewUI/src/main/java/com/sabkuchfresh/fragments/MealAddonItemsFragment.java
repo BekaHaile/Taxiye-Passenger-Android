@@ -125,7 +125,7 @@ public class MealAddonItemsFragment extends Fragment implements GACategory, GAAc
         listViewCharges = (NonScrollListView) rootView.findViewById(R.id.listViewCharges);
         listViewCharges.setVisibility(View.GONE);
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
-        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, "Review Cart", false,
+        freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, false,
                 new FreshCartItemsAdapter.Callback() {
                     @Override
                     public void onPlusClicked(int position, SubItem subItem) {

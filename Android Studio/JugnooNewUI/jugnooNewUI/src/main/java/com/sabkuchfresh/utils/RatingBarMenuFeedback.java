@@ -260,19 +260,19 @@ public class RatingBarMenuFeedback extends LinearLayout {
                 if (i == mCurrentScore) {
                     switch (i) {
                         case 1:
-                            mStarsViews[i - 1].setText("Terrible");
+                            mStarsViews[i - 1].setText(getContext().getString(R.string.terrible));
                             break;
                         case 2:
-                            mStarsViews[i - 1].setText("Bad");
+                            mStarsViews[i - 1].setText(getContext().getString(R.string.bad_only));
                             break;
                         case 3:
-                            mStarsViews[i - 1].setText("Okay");
+                            mStarsViews[i - 1].setText(getContext().getString(R.string.okay));
                             break;
                         case 4:
-                            mStarsViews[i - 1].setText("Good");
+                            mStarsViews[i - 1].setText(getContext().getString(R.string.good));
                             break;
                         case 5:
-                            mStarsViews[i - 1].setText("Great");
+                            mStarsViews[i - 1].setText(getContext().getString(R.string.great));
                             break;
                     }
                 } else {
@@ -289,7 +289,9 @@ public class RatingBarMenuFeedback extends LinearLayout {
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.weight = 1;
         params.leftMargin = (int) (viewMargin > 0 ? viewMargin : (ASSL.Xscale() * 5.0f));
+        params.setMarginStart((int) (viewMargin > 0 ? viewMargin : (ASSL.Xscale() * 5.0f)));
         params.rightMargin = (int) (viewMargin > 0 ? viewMargin : (ASSL.Xscale() * 5.0f));
+        params.setMarginEnd((int) (viewMargin > 0 ? viewMargin : (ASSL.Xscale() * 5.0f)));
         params.bottomMargin = (int) (viewMargin > 0 ? viewMargin : (ASSL.Yscale() * 25.0f));
         params.topMargin = (int) (viewMargin > 0 ? viewMargin : (ASSL.Yscale() * 25.0f));
         v.setGravity(Gravity.CENTER);
@@ -299,7 +301,7 @@ public class RatingBarMenuFeedback extends LinearLayout {
         v.setTextColor(belowTextColor > 0 ? belowTextColor : ContextCompat.getColor(getContext(), R.color.text_color));
         v.setLayoutParams(params);
         v.setCompoundDrawablesWithIntrinsicBounds(0, mStarOffResource, 0, 0);
-        v.setPadding((int)mStarPadding, (int)mStarPadding, (int)mStarPadding, (int)mStarPadding);
+        v.setPaddingRelative((int)mStarPadding, (int)mStarPadding, (int)mStarPadding, (int)mStarPadding);
         return v;
     }
 

@@ -144,8 +144,8 @@ public class CommonMethods {
                 if (ActivityCompat.shouldShowRequestPermissionRationale((Activity) context, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                     AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
                     alertBuilder.setCancelable(true);
-                    alertBuilder.setTitle("Permission necessary");
-                    alertBuilder.setMessage("External storage permission is necessary");
+                    alertBuilder.setTitle(context.getString(R.string.permission_necessary));
+                    alertBuilder.setMessage(context.getString(R.string.external_storage_permission_is_necessary));
                     alertBuilder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
                         public void onClick(DialogInterface dialog, int which) {
@@ -297,8 +297,8 @@ public class CommonMethods {
         } catch (Exception ex){}
         if ( !gps_enabled && !network_enabled ){
             AlertDialog.Builder dialog = new AlertDialog.Builder(ctx);
-            dialog.setMessage("Turn on your location services to fetch your current location");
-            dialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            dialog.setMessage(ctx.getString(R.string.turn_on_location_service));
+            dialog.setPositiveButton(ctx.getString(R.string.ok), new DialogInterface.OnClickListener() {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -307,7 +307,7 @@ public class CommonMethods {
                     ctx.startActivity(intent);
                 }
             });
-            dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            dialog.setNegativeButton(ctx.getString(R.string.cancel), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();

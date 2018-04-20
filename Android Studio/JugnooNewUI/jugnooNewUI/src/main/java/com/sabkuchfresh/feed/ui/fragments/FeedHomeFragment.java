@@ -448,6 +448,8 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 rlNoReviews.setVisibility(feedbackResponse.getFeeds() == null || feedbackResponse.getFeeds().size() == 0 ? View.VISIBLE : View.GONE);
                 RelativeLayout.LayoutParams paramsIvNoFeeds = (RelativeLayout.LayoutParams) ivNoFeeds.getLayoutParams();
                 paramsIvNoFeeds.setMargins(0, 0, 0, activity.getResources().getDimensionPixelSize(R.dimen.dp_minus_40));
+                paramsIvNoFeeds.setMarginStart(0);
+                paramsIvNoFeeds.setMarginEnd(0);
                 ivNoFeeds.setLayoutParams(paramsIvNoFeeds);
 
 

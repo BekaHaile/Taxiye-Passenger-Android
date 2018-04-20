@@ -126,13 +126,13 @@ public class ImagesThumbnailAdapter extends RecyclerView.Adapter<ImagesThumbnail
 
             holder.thumbnail.setColorFilter(mPickOptions.checkedImageOverlayColor);
             final int padding = mRecyclerView.getContext().getResources().getDimensionPixelSize(R.dimen.image_checked_padding);
-            holder.itemView.setPadding(padding, padding, padding, padding);
+            holder.itemView.setPaddingRelative(padding, padding, padding, padding);
         } else {
 
             holder.check.setBackgroundColor(mPickOptions.imageCheckColor);
             holder.itemView.setBackgroundColor(mPickOptions.imageBackgroundColor);
             holder.thumbnail.setColorFilter(Color.TRANSPARENT);
-            holder.itemView.setPadding(0, 0, 0, 0);
+            holder.itemView.setPaddingRelative(0, 0, 0, 0);
         }
 
         if (mPickOptions.pickMode == Picker.PickMode.SINGLE_IMAGE) {

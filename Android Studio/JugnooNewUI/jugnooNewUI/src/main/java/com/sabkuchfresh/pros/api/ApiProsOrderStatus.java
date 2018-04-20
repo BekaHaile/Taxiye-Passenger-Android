@@ -41,7 +41,7 @@ public class ApiProsOrderStatus {
 	public void getOrderData(final Activity activity, final int jobId) {
 		try {
 			if (MyApplication.getInstance().isOnline()) {
-				DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.showLoadingDialog(activity, activity.getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_JOB_ID, String.valueOf(jobId));

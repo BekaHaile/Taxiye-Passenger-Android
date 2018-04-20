@@ -61,6 +61,9 @@ public class PromotionInfo extends PromoCoupon implements Serializable{
 	@SerializedName("allowed_vehicles")
 	@Expose
 	private ArrayList<Integer> allowedVehicles;
+	@SerializedName("operator_id")
+	@Expose
+	private int operatorId;
 
 	@SerializedName("show_promo_box")
 	@Expose
@@ -288,4 +291,11 @@ public class PromotionInfo extends PromoCoupon implements Serializable{
 		return endOn;
 	}
 
+	public int getOperatorId() {
+		return operatorId;
+	}
+
+	public void setOperatorId(int operatorId) {
+		this.operatorId = operatorId;
+	}
 }

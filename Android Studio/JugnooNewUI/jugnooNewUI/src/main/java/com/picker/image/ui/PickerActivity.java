@@ -271,7 +271,7 @@ public class PickerActivity extends AppCompatActivity {
 
 
         if (sCheckedImages != null && sCheckedImages.size() >= mPickOptions.limit) {
-            Snackbar.make(coordinatorLayout, "You cannot select more than "+ mPickOptions.limit  +" image(s)", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            Snackbar.make(coordinatorLayout, getString(R.string.you_cant_select_more_images_format, String.valueOf(mPickOptions.limit)), Snackbar.LENGTH_LONG).setAction(getString(R.string.action), null).show();
             return;
         }
 
@@ -446,7 +446,7 @@ public class PickerActivity extends AppCompatActivity {
             imageEntry.isPicked = true;
             sCheckedImages.add(imageEntry);
         } else {
-            Snackbar.make(coordinatorLayout, "You cannot select more than "+ mPickOptions.limit  +" image(s)", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            Snackbar.make(coordinatorLayout, getString(R.string.you_cant_select_more_images_format, String.valueOf(mPickOptions.limit)), Snackbar.LENGTH_LONG).setAction(getString(R.string.action), null).show();
 //            Toast.makeText(this, R.string.you_cant_check_more_images, Toast.LENGTH_SHORT).show();
             Log.i("onPickImage", "You can't check more images");
         }
@@ -679,7 +679,7 @@ public class PickerActivity extends AppCompatActivity {
 
     private File createDirectory() {
         File directory1 = Environment.getExternalStorageDirectory();
-        String appName = "Jugnoo";
+        String appName = getString(R.string.app_name);
         String appDirectory = directory1.getAbsolutePath() + File.separator + appName;
         File fileAppDirectory = new File(appDirectory);
         if (!fileAppDirectory.exists()) {
@@ -710,14 +710,14 @@ public class PickerActivity extends AppCompatActivity {
             } catch (IOException ex) {
                 // Error occurred while creating the File
                 ex.printStackTrace();
-                Toast.makeText(this, "Camera is not accessible", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.camera_is_not_accessible), Toast.LENGTH_SHORT).show();
             }
 
 
 
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "com.jugnoo.fileprovider", photoFile);
+                Uri photoURI = FileProvider.getUriForFile(this, getString(R.string.file_provider_name), photoFile);
 
                 List<ResolveInfo> resolvedIntentActivities = getPackageManager().queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
                 for (ResolveInfo resolvedIntentInfo : resolvedIntentActivities) {

@@ -27,7 +27,7 @@
         android:layout_below="@id/progress_wheel"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="loading"
+        android:text="@string/loading_without_dots"
         android:textColor="#ffffff"
         android:textSize="15sp" />
 
