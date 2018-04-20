@@ -15,7 +15,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.dialogs.CheckoutPriceMismatchDialog;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
@@ -43,20 +42,18 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 	private Activity context;
 	private LayoutInflater mInflater;
 	private List<SubItem> subItems;
-	private String categoryName;
 	private Callback callback;
 	private boolean checkForCouponApplied;
 	private int appType;
 	private UserCheckoutResponse.SubscriptionInfo subscription;
 	private FreshCheckoutMergedFragment freshCheckoutMergedFragment;
 
-	public FreshCartItemsAdapter(Activity context, ArrayList<SubItem> subItems, String categoryName, boolean checkForCouponApplied,
+	public FreshCartItemsAdapter(Activity context, ArrayList<SubItem> subItems, boolean checkForCouponApplied,
 								 Callback callback, Fragment fragment) {
 		this.context = context;
 		this.subItems = subItems;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.callback = callback;
-		this.categoryName = categoryName;
 		this.checkForCouponApplied = checkForCouponApplied;
 		appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
 		if(fragment instanceof FreshCheckoutMergedFragment)
@@ -187,10 +184,18 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 			RelativeLayout.LayoutParams paramsLLC = (RelativeLayout.LayoutParams) mHolder.linearLayoutContent.getLayoutParams();
 			if(mHolder.imageViewFoodType.getVisibility() == View.VISIBLE && mHolder.imageViewItemImage.getVisibility() == View.GONE){
 				paramsFT.setMargins(0, (int)(ASSL.Yscale()*25f), 0, 0);
+				paramsFT.setMarginStart(0);
+				paramsFT.setMarginEnd(0);
 				paramsLLC.setMargins((int)(ASSL.Xscale()*20f), 0, 0, 0);
+				paramsLLC.setMarginStart((int)(ASSL.Xscale()*20f));
+				paramsLLC.setMarginEnd(0);
 			} else {
 				paramsFT.setMargins((int)(ASSL.Xscale()*2f), (int)(ASSL.Yscale()*2f), 0, 0);
+				paramsFT.setMarginStart((int)(ASSL.Xscale()*2f));
+				paramsFT.setMarginEnd(0);
 				paramsLLC.setMargins((int)(ASSL.Xscale()*30f), 0, 0, 0);
+				paramsLLC.setMarginStart((int)(ASSL.Xscale()*30f));
+				paramsLLC.setMarginEnd(0);
 			}
 			mHolder.imageViewFoodType.setLayoutParams(paramsFT);
 			mHolder.linearLayoutContent.setLayoutParams(paramsLLC);

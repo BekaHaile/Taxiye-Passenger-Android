@@ -279,7 +279,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
 
-				DialogPopup.showLoadingDialog(activity, "Loading...");
+				DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -311,7 +311,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 							}
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						}
 						DialogPopup.dismissLoadingDialog();
 					}
@@ -320,12 +320,12 @@ public class AddEmergencyContactsFragment extends Fragment {
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 					}
 				});
 			}
 			else {
-				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

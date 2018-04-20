@@ -11,7 +11,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -24,6 +23,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -46,7 +46,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -54,6 +53,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.country.picker.Country;
+import com.country.picker.CountryPicker;
+import com.country.picker.OnCountryPickerListener;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.accountkit.AccountKit;
@@ -80,7 +82,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import io.branch.referral.Branch;
@@ -119,13 +120,14 @@ import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.UserEmailFetcher;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class SplashNewActivity extends BaseActivity implements  Constants, GAAction, GACategory {
+public class SplashNewActivity extends AppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
 
 	//adding drop location
 
@@ -199,6 +201,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	public static String loginResponseStr;
 	private RelativeLayout rlLoginSignupNew, rlMobileNumber, rlLSFacebook, rlLSGoogle, rlPhoneLogin;
 	public static LoginResponse loginResponseData;
+	//private CountryCodePicker countryCodePicker;
+	LinearLayout rlCountryCode;
+	private TextView tvCountryCode;
+	private CountryPicker countryPicker;
 
 
 	public void resetFlags() {
@@ -235,6 +241,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 //		FlurryAgent.onEndSession(this);
 	}
 
+	@Override
+	protected void attachBaseContext(Context newBase) {
+		super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+	}
 
 	@Override
 	public void onStart() {
@@ -429,11 +439,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 //			FlurryAgent.init(this, Config.getFlurryKey());
 
 
-			Locale locale = new Locale("en");
-			Locale.setDefault(locale);
-			Configuration config = new Configuration();
-			config.locale = locale;
-			getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+//			Locale locale = new Locale("en");
+//			Locale.setDefault(locale);
+//			Configuration config = new Configuration();
+//			config.locale = locale;
+//			getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 
 
 			setContentView(R.layout.activity_splash_new);
@@ -604,6 +614,33 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			rlPhoneLogin = (RelativeLayout) findViewById(R.id.rlPhoneLogin);
 			btnPhoneLogin = (Button) findViewById(R.id.btnPhoneLogin);
 
+			((TextView)findViewById(R.id.tvJugnooTaxiS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
+			((TextView)findViewById(R.id.tvJugnooTaxiLS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
+			((TextView)findViewById(R.id.tvJugnooTaxiP)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
+			((TextView)findViewById(R.id.tvJugnooTaxiNoNet)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
+			rlCountryCode = (LinearLayout) findViewById(R.id.rlCountryCode);
+			tvCountryCode = (TextView) findViewById(R.id.tvCountryCode);
+
+			countryPicker =
+					new CountryPicker.Builder().with(this)
+							.listener(this)
+							.build();
+
+			tvCountryCode.setText(Utils.getCountryCode(this));
+//			countryPicker = CountryPicker.newInstance("Select Country");
+//			countryPicker.setListener(this);
+//			Country country = countryPicker.getUserCountryInfo(this);
+//			tvCountryCode.setText(country.getDialCode());
+//			countryCodePicker = (CountryCodePicker)findViewById(R.id.ccp);
+//
+//
+//			countryCodePicker.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+//				@Override
+//				public void onCountrySelected() {
+//
+//					countryCodePicker.setDefaultCountryUsingPhoneCode(Integer.parseInt(countryCodePicker.getSelectedCountryCode()));
+//				}
+//			});
 
 			root.setOnClickListener(onClickListenerKeybordHide);
 
@@ -733,36 +770,37 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				}
 			});
 
+			rlCountryCode.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					countryPicker.showDialog(getSupportFragmentManager());
+				}
+			});
 			btnPhoneLogin.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextPhoneNumber);
 					String phoneNumber = editTextPhoneNumber.getText().toString().trim();
+					if(TextUtils.isEmpty(getCountryCodeSelected())){
+						Utils.showToast(SplashNewActivity.this, getString(R.string.please_select_country_code));
+						return;
+					}
 					if ("".equalsIgnoreCase(phoneNumber)) {
 						editTextPhoneNumber.requestFocus();
 						editTextPhoneNumber.setError(getResources().getString(R.string.nl_login_phone_empty_error));
 					} else{
 						boolean onlyDigits = Utils.checkIfOnlyDigits(phoneNumber);
 						if (onlyDigits) {
-							phoneNumber = Utils.retrievePhoneNumberTenChars(phoneNumber);
+							phoneNumber = Utils.retrievePhoneNumberTenChars(phoneNumber, getCountryCodeSelected());
 							if (!Utils.validPhoneNumber(phoneNumber)) {
 								editTextPhoneNumber.requestFocus();
 								editTextPhoneNumber.setError(getResources().getString(R.string.invalid_phone_error));
 							} else {
-								phoneNumber = "+91" + phoneNumber;
-								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber);
+								phoneNumber = getCountryCodeSelected() + phoneNumber;
+								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber, getCountryCodeSelected());
 							}
 						}
 					}
-
-//					Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
-//					intent.putExtra("show_timer", 0);
-//					intent.putExtra(LINKED_WALLET, LinkedWalletStatus.NO_WALLET.getOrdinal());
-//					intent.putExtra("signup_by", signUpBy);
-//					intent.putExtra("email", editTextEmail.getText().toString().trim());
-//					intent.putExtra("otp_length", "4");
-//					startActivity(intent);
-//					overridePendingTransition(R.anim.right_in, R.anim.right_out);
 				}
 			});
 
@@ -896,52 +934,17 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					} else{
 						boolean onlyDigits = Utils.checkIfOnlyDigits(phoneNumber);
 						if (onlyDigits) {
-							phoneNumber = Utils.retrievePhoneNumberTenChars(phoneNumber);
+							phoneNumber = Utils.retrievePhoneNumberTenChars(phoneNumber, getCountryCodeSelected());
 							if (!Utils.validPhoneNumber(phoneNumber)) {
 								editTextEmail.requestFocus();
 								editTextEmail.setError(getResources().getString(R.string.invalid_phone_error));
 							} else {
-								phoneNumber = "+91" + phoneNumber;
-								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber);
+								phoneNumber = getCountryCodeSelected() + phoneNumber;
+								apiGenerateLoginOtp(SplashNewActivity.this, phoneNumber, getCountryCodeSelected());
 							}
 						}
 					}
 
-
-					/*FeedUtils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
-					String email = editTextEmail.getText().toString().trim();
-					String password = editTextPassword.getText().toString().trim();
-					if ("".equalsIgnoreCase(email)) {
-						editTextEmail.requestFocus();
-						editTextEmail.setError(getResources().getString(R.string.nl_login_phone_empty_error));
-					} else {
-						if ("".equalsIgnoreCase(password)) {
-							editTextPassword.requestFocus();
-							editTextPassword.setError(getResources().getString(R.string.nl_login_empty_password_error));
-						} else {
-							boolean onlyDigits = FeedUtils.checkIfOnlyDigits(email);
-							if (onlyDigits) {
-								email = FeedUtils.retrievePhoneNumberTenChars(email);
-								if (!FeedUtils.validPhoneNumber(email)) {
-									editTextEmail.requestFocus();
-									editTextEmail.setError(getResources().getString(R.string.invalid_phone_error));
-								} else {
-									email = "+91" + email;
-									sendLoginValues(SplashNewActivity.this, email, password, true);
-									phoneNoLogin = true;
-								}
-							} else {
-								if (FeedUtils.isEmailValid(email)) {
-									enteredEmail = email;
-									sendLoginValues(SplashNewActivity.this, email, password, false);
-									phoneNoLogin = false;
-								} else {
-									editTextEmail.requestFocus();
-									editTextEmail.setError("Please enter valid email");
-								}
-							}
-						}
-					}*/
 				}
 			});
 			editTextEmail.addTextChangedListener(new TextWatcher() {
@@ -979,7 +982,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						facebookLoginHelper.openFacebookSession();
 					} else {
 						DialogPopup.dialogNoInternet(SplashNewActivity.this,
-								Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+								getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc),
 								new Utils.AlertCallBackWithButtonsInterface() {
 									@Override
 									public void positiveClick(View v) {
@@ -1008,7 +1011,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 					} else{
 						DialogPopup.dialogNoInternet(SplashNewActivity.this,
-								Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+								getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc),
 								new Utils.AlertCallBackWithButtonsInterface() {
 									@Override
 									public void positiveClick(View v) {
@@ -1124,28 +1127,28 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 					if ("".equalsIgnoreCase(name) || (name.startsWith("."))) {
 						editTextSName.requestFocus();
-						editTextSName.setError("Please enter name");
+						editTextSName.setError(getString(R.string.please_enter_name));
 					} else if (!Utils.hasAlphabets(name)) {
 						editTextSName.requestFocus();
-						editTextSName.setError("Please enter at least one alphabet");
+						editTextSName.setError(getString(R.string.please_enter_one_alphabet));
 					} else {
 						if ("".equalsIgnoreCase(emailId)) {
 							editTextSEmail.requestFocus();
-							editTextSEmail.setError("Please enter email id");
+							editTextSEmail.setError(getString(R.string.please_enter_email));
 						} else {
 							if ("".equalsIgnoreCase(phoneNo)) {
 								editTextSPhone.requestFocus();
-								editTextSPhone.setError("Please enter phone number");
+								editTextSPhone.setError(getString(R.string.please_enter_phone_number));
 							} else {
-								phoneNo = Utils.retrievePhoneNumberTenChars(phoneNo);
+								phoneNo = Utils.retrievePhoneNumberTenChars(phoneNo, Utils.getCountryCode(SplashNewActivity.this));
 								if (!Utils.validPhoneNumber(phoneNo)) {
 									editTextSPhone.requestFocus();
-									editTextSPhone.setError("Please enter valid phone number");
+									editTextSPhone.setError(getString(R.string.please_enter_valid_phone));
 								} else {
-									phoneNo = "+91" + phoneNo;
+									phoneNo = Utils.getCountryCode(SplashNewActivity.this) + phoneNo;
 									if ("".equalsIgnoreCase(password)) {
 										editTextSPassword.requestFocus();
-										editTextSPassword.setError("Please enter password");
+										editTextSPassword.setError(getString(R.string.please_enter_password));
 									} else {
 										if ((linkedWallet == LinkedWalletStatus.NO_WALLET.getOrdinal() && Utils.isEmailValid(emailId))
 												||
@@ -1168,12 +1171,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 												}
 											} else {
 												editTextSPassword.requestFocus();
-												editTextSPassword.setError("Password must be of atleast six characters");
+												editTextSPassword.setError(getString(R.string.password_must_be_atleast_six));
 											}
 
 										} else {
 											editTextSEmail.requestFocus();
-											editTextSEmail.setError("Please enter valid email id");
+											editTextSEmail.setError(getString(R.string.please_enter_valid_email_id));
 										}
 
 									}
@@ -1239,7 +1242,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				@Override
 				public void onClick(View v) {
 					try {
-						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
+						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terms_of_use_url)));
 						startActivity(browserIntent);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1251,7 +1254,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				@Override
 				public void onClick(View v) {
 					try {
-						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.jugnoo.in/#/terms"));
+						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terms_of_use_url)));
 						startActivity(browserIntent);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1325,6 +1328,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
 				params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
 				params.setMargins(0, (int)(ASSL.Yscale()*150), 0, 0);
+				params.setMarginStart(0);
+				params.setMarginEnd(0);
 				llLoginContainer.setLayoutParams(params);
 			}
 
@@ -1333,6 +1338,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
 				params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
 				params.setMargins(0, 0, 0, 0);
+				params.setMarginStart(0);
+				params.setMarginEnd(0);
 				llLoginContainer.setLayoutParams(params);
 			}
 		}));
@@ -1375,7 +1382,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				AccountKitActivity.ResponseType.CODE);
 		configurationBuilder.setTheme(R.style.AppLoginTheme_Salmon);
 		configurationBuilder.setTitleType(AccountKitActivity.TitleType.LOGIN);
-		configurationBuilder.setDefaultCountryCode("+91");
+		configurationBuilder.setDefaultCountryCode(getCountryCodeSelected());
 		if(phoneNumber != null && !phoneNumber.toString().equalsIgnoreCase("")) {
 			configurationBuilder.setInitialPhoneNumber(phoneNumber);
 		}
@@ -1699,7 +1706,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				imageViewBack.setVisibility(View.VISIBLE);
 				llContainer.setVisibility(View.VISIBLE);
 				rlPhoneLogin.setVisibility(View.VISIBLE);
-				editTextPhoneNumber.setText(Utils.retrievePhoneNumberTenChars(phoneNoToFillInInHouseLogin));
+				editTextPhoneNumber.setText(Utils.retrievePhoneNumberTenChars(phoneNoToFillInInHouseLogin, Utils.getCountryCode(this)));
 				animRightToLeft(rlLoginSignupNew, rlPhoneLogin, duration);
 
 				break;
@@ -2131,24 +2138,23 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 sendGoogleLoginValues(this);
             }
         } else if (requestCode == FRAMEWORK_REQUEST_CODE){
-            final String toastMessage;
+			String toastMessage = null;
             final AccountKitLoginResult loginResult = AccountKit.loginResultWithIntent(data);
             if (loginResult == null || loginResult.wasCancelled()) {
-                toastMessage = "Login Cancelled";
+                toastMessage = getString(R.string.login_cancelled);
             } else if (loginResult.getError() != null) {
                 toastMessage = loginResult.getError().getErrorType().getMessage();
             } else {
                 String authorizationCode = loginResult.getAuthorizationCode();
-                final long tokenRefreshIntervalInSeconds =
-                        loginResult.getTokenRefreshIntervalInSeconds();
                 if (authorizationCode != null) {
-                    toastMessage = "Success:" + authorizationCode;
                     apiLoginUsingFbAccountKit(SplashNewActivity.this, loginResult.getAuthorizationCode());
                 } else {
-                    toastMessage = "Unknown response type";
+                    toastMessage = getString(R.string.unknown_response_type);
                 }
             }
-            //Toast.makeText(this,toastMessage,Toast.LENGTH_LONG).show();
+            if(toastMessage != null) {
+				Utils.showToast(this, toastMessage);
+			}
         }
         else{
             callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -2337,6 +2343,14 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						//"login_channel": 0 //0-Default fbAccountKit, 1-Inhouse apis
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
 
+						if(countryPicker.getAllCountries().size() > 1){
+							rlCountryCode.setEnabled(true);
+							tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_vector, 0);
+						} else {
+							rlCountryCode.setEnabled(false);
+							tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+						}
+
 					}catch (Exception e){
 						e.printStackTrace();
 					}
@@ -2405,7 +2419,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, false);
 
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
@@ -2448,7 +2462,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				public void onClick(View view) {
 					dialog.dismiss();
 					Intent intent = new Intent(Intent.ACTION_VIEW);
-					intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo"));
+					intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="+BuildConfig.APPLICATION_ID));
 					activity.startActivity(intent);
 					ActivityCompat.finishAffinity(activity);
 				}
@@ -2596,7 +2610,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
 			dialog.setContentView(R.layout.dialog_edittext_confirm);
 
-			FrameLayout frameLayout = (FrameLayout) dialog.findViewById(R.id.rv);
+			RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
 			new ASSL(activity, frameLayout, 1134, 720, true);
 
 			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
@@ -2613,8 +2627,8 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			final EditText etCode = (EditText) dialog.findViewById(R.id.etCode);
 			etCode.setTypeface(Fonts.mavenMedium(activity));
 
-			textHead.setText("Confirm Debug Password");
-			textMessage.setText("Please enter password to continue.");
+			textHead.setText(R.string.confirm_debug_password);
+			textMessage.setText(R.string.please_enter_password_to_continue);
 
 			textHead.setVisibility(View.GONE);
 			textMessage.setVisibility(View.GONE);
@@ -2629,7 +2643,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					String code = etCode.getText().toString().trim();
 					if ("".equalsIgnoreCase(code)) {
 						etCode.requestFocus();
-						etCode.setError("Code can't be empty.");
+						etCode.setError(getString(R.string.code_cant_be_empty));
 					} else {
 						if (Config.getDebugPassword().equalsIgnoreCase(code)) {
 							dialog.dismiss();
@@ -2638,7 +2652,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 							ActivityCompat.finishAffinity(activity);
 						} else {
 							etCode.requestFocus();
-							etCode.setError("Code not matched.");
+							etCode.setError(getString(R.string.code_not_matched));
 						}
 					}
 				}
@@ -2831,15 +2845,16 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		}
 	}
 
-	private void apiGenerateLoginOtp(final Activity activity, final String phoneNumber){
+	private void apiGenerateLoginOtp(final Activity activity, final String phoneNumber, final String countryCode){
 		if(MyApplication.getInstance().isOnline()){
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 			HashMap<String, String> params = new HashMap<>();
 
 			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
 			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
 
 			params.put("phone_no", phoneNumber);
+			params.put(Constants.KEY_COUNTRY_CODE, countryCode);
 			params.put("device_token", MyApplication.getInstance().getDeviceToken());
 			params.put("device_name", MyApplication.getInstance().deviceName());
 			params.put("os_version", MyApplication.getInstance().osVersion());
@@ -2895,7 +2910,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								SplashNewActivity.this.referralCode = referralCode;
 								SplashNewActivity.this.accessToken = "";
 								Data.kitPhoneNumber = jObj.optString("kit_phone_no");
-								SplashNewActivity.parseDataSendToMultipleAccountsScreen(activity, jObj, name, emailId, phoneNo, password, referralCode, accessToken);
+								SplashNewActivity.parseDataSendToMultipleAccountsScreen(activity, jObj, name, emailId, phoneNumber, password, referralCode, accessToken);
 							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
 								String error = jObj.getString("error");
 								DialogPopup.alertPopup(activity, "", error);
@@ -2921,11 +2936,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 									signUpBy = "email";
 									Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER, jObj.optString("knowlarity_missed_call_number", ""));
 
-									otpScreenIntentAlongDataSet(1, LinkedWalletStatus.NO_WALLET.getOrdinal(), phoneNumber);
+									otpScreenIntentAlongDataSet(1, LinkedWalletStatus.NO_WALLET.getOrdinal(), phoneNumber, countryCode);
 								}
-								DialogPopup.showLoadingDialog(activity, "Loading...");
+								DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 							} else {
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
@@ -2940,11 +2955,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingEmailOrPhoneNo error=" + error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 		} else{
-			DialogPopup.alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(SplashNewActivity.this, "", activity.getString(R.string.connection_lost_desc));
 		}
 	}
 
@@ -2963,7 +2978,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				e.printStackTrace();
 			}
 		if(MyApplication.getInstance().isOnline()) {
-			final ProgressDialog missedCallDialog = DialogPopup.showLoadingDialogNewInstance(SplashNewActivity.this, "Loading...");
+			final ProgressDialog missedCallDialog = DialogPopup.showLoadingDialogNewInstance(SplashNewActivity.this, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -3075,7 +3090,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 									}
 								}
 							} else {
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
 							if (missedCallDialog != null) {
 								missedCallDialog.dismiss();
@@ -3088,7 +3103,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 					} catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						if (missedCallDialog != null) {
 							missedCallDialog.dismiss();
 						}
@@ -3101,12 +3116,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 					if (missedCallDialog != null) {
 						missedCallDialog.dismiss();
 					}
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
@@ -3117,7 +3132,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		if (MyApplication.getInstance().isOnline()) {
 			resetFlags();
 
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -3200,9 +3215,9 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 
 								}
-								DialogPopup.showLoadingDialog(activity, "Loading...");
+								DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 							} else {
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
 							DialogPopup.dismissLoadingDialog();
 						} else {
@@ -3211,7 +3226,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 					} catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						DialogPopup.dismissLoadingDialog();
 					}
 				}
@@ -3220,13 +3235,13 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingFacebook error=" + error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
@@ -3234,7 +3249,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	public void sendGoogleLoginValues(final Activity activity) {
 		if (MyApplication.getInstance().isOnline()) {
 			resetFlags();
-			DialogPopup.showLoadingDialog(activity, "Loading...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -3315,10 +3330,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 									loginDataFetched = true;
 
 								}
-								DialogPopup.showLoadingDialog(activity, "Loading...");
+								DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 							}
 							else{
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
 							DialogPopup.dismissLoadingDialog();
 						}
@@ -3328,7 +3343,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 					}  catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						DialogPopup.dismissLoadingDialog();
 					}
 				}
@@ -3337,49 +3352,21 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingGoogle error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
 
 
-	/**
-	 * Send intent to otp screen by making required data objects
-	 * flag 0 for email, 1 for Facebook
-	 */
-	public void sendIntentToOtpScreen() {
-		if (State.LOGIN == state) {
-			DialogPopup.alertPopupWithListener(SplashNewActivity.this, "", otpErrorMsg, new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					DialogPopup.dismissAlertPopup();
-					otpScreenIntentAlongDataSet(0, linkedWallet, emailId);
-				}
-			});
-		} else if (State.SIGNUP == state) {
-			OTPConfirmScreen.intentFromRegister = true;
-			generateOTPRegisterData(name, emailId, phoneNo, password, referralCode, accessToken);
-			Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
-			intent.putExtra("show_timer", 1);
-			intent.putExtra(LINKED_WALLET_MESSAGE, linkedWalletErrorMsg);
-			intent.putExtra(LINKED_WALLET, linkedWallet);
-			intent.putExtra("signup_by", signUpBy);
-			intent.putExtra("email", editTextSEmail.getText().toString().trim());
-			intent.putExtra("password", editTextSPassword.getText().toString().trim());
-			startActivity(intent);
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
-		}
-	}
 
 
-	private void otpScreenIntentAlongDataSet(int showTimer, int linkedWallet, String phone){
+	private void otpScreenIntentAlongDataSet(int showTimer, int linkedWallet, String phone, String countryCode){
 		OTPConfirmScreen.intentFromRegister = false;
 		Intent intent = new Intent(SplashNewActivity.this, OTPConfirmScreen.class);
 		if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
@@ -3405,6 +3392,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 		intent.putExtra("signup_by", signUpBy);
 		intent.putExtra("email", phone);
+		intent.putExtra(Constants.KEY_COUNTRY_CODE, countryCode);
 		intent.putExtra("show_timer", showTimer);
 		intent.putExtra(LINKED_WALLET, linkedWallet);
 		intent.putExtra("otp_length", String.valueOf(4));
@@ -3466,17 +3454,17 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			if (getIntent().hasExtra(KEY_BACK_FROM_OTP)) {
 				if (RegisterationType.FACEBOOK == registerationType) {
 					editTextSPromo.setText(OTPConfirmScreen.facebookRegisterData.referralCode);
-					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.facebookRegisterData.phoneNo));
+					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.facebookRegisterData.phoneNo, getCountryCodeSelected()));
 					editTextSPassword.setText(OTPConfirmScreen.facebookRegisterData.password);
 				} else if (RegisterationType.GOOGLE == registerationType) {
 					editTextSPromo.setText(OTPConfirmScreen.googleRegisterData.referralCode);
-					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.googleRegisterData.phoneNo));
+					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.googleRegisterData.phoneNo, getCountryCodeSelected()));
 					editTextSPassword.setText(OTPConfirmScreen.googleRegisterData.password);
 				} else {
 					editTextSName.setText(OTPConfirmScreen.emailRegisterData.name);
 					editTextSEmail.setText(OTPConfirmScreen.emailRegisterData.emailId);
 					editTextSPromo.setText(OTPConfirmScreen.emailRegisterData.referralCode);
-					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.emailRegisterData.phoneNo));
+					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(OTPConfirmScreen.emailRegisterData.phoneNo, getCountryCodeSelected()));
 					editTextSPassword.setText(OTPConfirmScreen.emailRegisterData.password);
 				}
 
@@ -3550,7 +3538,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 			}
 			else if(RegisterationType.EMAIL == SplashNewActivity.registerationType){
 				if(Utils.checkIfOnlyDigits(emailNeedRegister)){
-					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(emailNeedRegister));
+					editTextSPhone.setText(Utils.retrievePhoneNumberTenChars(emailNeedRegister, getCountryCodeSelected()));
 				} else{
 					if(emailNeedRegister.equalsIgnoreCase("")){
 						String ownerEmail = UserEmailFetcher.getEmail(SplashNewActivity.this);
@@ -3633,7 +3621,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 //                    }
                     Log.e("body", "=" + body);
                     try {
-                        if (body.contains("Jugnoo")) {
+                        if (body.contains(getString(R.string.app_name))) {
                             String[] codeArr = body.split("code ");
                             String[] spaceArr = codeArr[1].split(" ");
                             String rCode = spaceArr[0];
@@ -3669,7 +3657,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                  final String password, final int linkedWallet) {
         if (MyApplication.getInstance().isOnline()) {
             resetFlags();
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
             HashMap<String, String> params = new HashMap<>();
 
@@ -3754,7 +3742,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                     SplashNewActivity.this.emailId = emailId;
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                 } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                                 }
                                 DialogPopup.dismissLoadingDialog();
                             }
@@ -3763,7 +3751,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         DialogPopup.dismissLoadingDialog();
                     }
                 }
@@ -3772,12 +3760,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "registerUsingEmail error=" + error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
 
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
 
     }
@@ -3790,7 +3778,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
             , final int linkedWallet) {
         if (MyApplication.getInstance().isOnline()) {
             resetFlags();
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
             HashMap<String, String> params = new HashMap<>();
 
@@ -3871,7 +3859,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                 } else if(ApiResponseFlags.AUTH_VERIFICATION_SUCCESSFUL.getOrdinal() == flag){
 									sendFacebookLoginValues(SplashNewActivity.this);
 								} else{
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                                 }
                                 DialogPopup.dismissLoadingDialog();
                             }
@@ -3881,7 +3869,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                     } catch (Exception exception) {
                         exception.printStackTrace();
                         DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 }
 
@@ -3889,12 +3877,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "registerUsingFacebook error=" + error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
 
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
     }
 
@@ -3905,7 +3893,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
     public void sendGoogleSignupValues(final Activity activity, final String referralCode, final String phoneNo, final String password, final int linkedWallet) {
         if (MyApplication.getInstance().isOnline()) {
             resetFlags();
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
             HashMap<String, String> params = new HashMap<>();
 
@@ -3979,7 +3967,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                     SplashNewActivity.this.linkedWallet = LinkedWalletStatus.PAYTM_WALLET_ERROR.getOrdinal();
                                     parseOTPSignUpData(jObj, password, referralCode, linkedWallet);
                                 } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                                 }
                                 DialogPopup.dismissLoadingDialog();
                             }
@@ -3989,7 +3977,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                     } catch (Exception exception) {
                         exception.printStackTrace();
                         DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 }
 
@@ -3997,12 +3985,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "registerUsingGoogle error=" + error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
 
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
     }
 
@@ -4067,7 +4055,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 	private void apiClaimGift(){
 		if (MyApplication.getInstance().isOnline()) {
-			DialogPopup.showLoadingDialog(SplashNewActivity.this, "Loading...");
+			DialogPopup.showLoadingDialog(SplashNewActivity.this, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 			params.put("user_id", refreeUserId);
@@ -4099,7 +4087,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				}
 			});
 		} else{
-			DialogPopup.alertPopup(SplashNewActivity.this, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(SplashNewActivity.this, "", getString(R.string.connection_lost_desc));
 		}
 	}
 
@@ -4127,7 +4115,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 	public void verifyOtpViaEmail(final Activity activity, final String email, final String phoneNo, String otp) {
         if (MyApplication.getInstance().isOnline()) {
 
-            final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, "Loading...");
+            final ProgressDialog progressDialog = DialogPopup.showLoadingDialogNewInstance(activity, getString(R.string.loading));
 
             HashMap<String, String> params = new HashMap<>();
 
@@ -4182,7 +4170,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                                             loginResponse, LoginVia.EMAIL_OTP, new LatLng(Data.loginLatitude, Data.loginLongitude));
                                     loginDataFetched = true;
                                 }
-								DialogPopup.showLoadingDialog(activity, "Loading...");
+								DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
                             } else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
                                 String error = jObj.getString("error");
                                 DialogPopup.alertPopup(activity, "", error);
@@ -4201,7 +4189,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                     if (progressDialog != null) progressDialog.dismiss();
                 }
@@ -4210,11 +4198,11 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "verifyOtp error=" + error);
                     if (progressDialog != null) progressDialog.dismiss();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
     }
 
@@ -4222,7 +4210,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 									 final String updatedName, final String updatedEmail,
 									 final String referralCode) {
 		if(MyApplication.getInstance().isOnline()) {
-			DialogPopup.showLoadingDialog(activity, "Updating...");
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
 			HashMap<String, String> params = new HashMap<>();
 
@@ -4259,7 +4247,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 								String message = jObj.optString("message", "");
 								Utils.showToast(activity, message);
 							} else {
-								DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
 							loginDataFetched = true;
 							new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
@@ -4279,7 +4267,7 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 						}
 					} catch (Exception exception) {
 						exception.printStackTrace();
-						DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						DialogPopup.dismissLoadingDialog();
 					}
 				}
@@ -4288,12 +4276,12 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "updateUserProfile error="+error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 				}
 			});
 		}
 		else {
-			DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+			DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 		}
 
 	}
@@ -4337,10 +4325,10 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
                         String body = cursor.getString(cursor.getColumnIndexOrThrow("body"));
                         Log.i(TAG, "sms body=>" + body);
                         try {
-                            if (body.contains(DOMAIN_SHARE_JUGNOO_IN)) {
+                            if (body.contains(getString(R.string.branch_domain))) {
                                 String[] arr = body.split(" ");
                                 for (String str : arr) {
-                                    if (str.contains(DOMAIN_SHARE_JUGNOO_IN)) {
+                                    if (str.contains(getString(R.string.branch_domain))) {
                                         if (str.charAt(str.length() - 1) == '.') {
                                             str = str.substring(0, str.length() - 1);
                                         }
@@ -4414,10 +4402,16 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 
 	String phoneNoToFillInInHouseLogin = "";
 	private void goToLoginUsingPhone(String previousLoginPhone){
+		if(getResources().getBoolean(R.bool.force_inhouse_login)) {
+			Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, 1);
+		}
 		if(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1){
 			phoneNoToFillInInHouseLogin = previousLoginPhone;
 			if(phoneNoToFillInInHouseLogin==null || phoneNoToFillInInHouseLogin.trim().length()==0){
  				phoneNoToFillInInHouseLogin = 	OwnerInfo.OwnerPhone(this);
+ 				if(phoneNoToFillInInHouseLogin != null && !phoneNoToFillInInHouseLogin.startsWith("+")){
+					phoneNoToFillInInHouseLogin = "+"+phoneNoToFillInInHouseLogin;
+				}
 			}
 			if(phoneNoToFillInInHouseLogin==null){
 				phoneNoToFillInInHouseLogin="";
@@ -4427,10 +4421,18 @@ public class SplashNewActivity extends BaseActivity implements  Constants, GAAct
 		} else {
 			PhoneNumber phoneNumber = null;
 			if(!TextUtils.isEmpty(previousLoginPhone)) {
-				phoneNumber = new PhoneNumber("+91", Utils.retrievePhoneNumberTenChars(previousLoginPhone), "IND");
+				phoneNumber = new PhoneNumber(Utils.getCountryCode(this), Utils.retrievePhoneNumberTenChars(previousLoginPhone, Utils.getCountryCode(this)), Utils.getSimCountryIso(this));
 			}
 			fbAccountKit.startFbAccountKit(phoneNumber);
 		}
 	}
+	@Override
+	public void onSelectCountry(Country country) {
+		tvCountryCode.setText(country.getDialCode());
+		//countryPicker.dismiss();
+	}
 
+	private String getCountryCodeSelected(){
+		return tvCountryCode.getText().toString();
+	}
 }

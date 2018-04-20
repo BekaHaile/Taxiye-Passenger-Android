@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="20px"
-    android:layout_marginLeft="20px"
-    android:layout_marginRight="20px"
+    android:layout_marginStart="20px"
+    android:layout_marginEnd="20px"
     card_view:cardBackgroundColor="@color/white"
     card_view:cardCornerRadius="4px"
     android:visibility="visible"
@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/ivStar"
+            android:layout_toEndOf="@+id/ivStar"
             android:orientation="vertical"
             >
 

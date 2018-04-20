@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5px"
                 android:gravity="center"
-                android:text="NA"
+                android:text="@string/na"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_28"/>
@@ -80,7 +80,9 @@
             android:layout_height="match_parent"
             android:layout_marginBottom="25px"
             android:layout_marginTop="25px"
-            android:src="@color/grey_light"/>
+            android:src="@color/grey_light"
+            android:visibility="@integer/is_autos_offers_enabled"
+            />
 
         <TextView
             android:id="@+id/textViewOffersMode"
@@ -93,7 +95,9 @@
             android:text="@string/nl_offers"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_28"/>
+            android:textSize="@dimen/text_size_28"
+            android:visibility="@integer/is_autos_offers_enabled"
+            />
 
         <ImageView
             android:layout_width="2px"
@@ -167,8 +171,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14px"
-                android:layout_marginLeft="30px"
-                android:layout_marginRight="30px"
+                android:layout_marginStart="30px"
+                android:layout_marginEnd="30px"
                 android:layout_marginTop="10px"
                 android:layout_below="@+id/llStarSavings"
                 android:background="@drawable/background_white_rounded_bordered"
@@ -213,7 +217,7 @@
                     <ImageView
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="-1dp"
+                        android:layout_marginStart="-1dp"
                         android:src="@color/stroke_light_grey_alpha"/>
 
                     <LinearLayout
@@ -241,7 +245,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4px"
                             android:gravity="center"
-                            android:text="@string/rupees_value_format_without_space"
+                            android:text="@string/rupees_value_format"
                             android:textAllCaps="true"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/text_size_26"/>
@@ -250,8 +254,10 @@
                     <ImageView
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="-1dp"
-                        android:src="@color/stroke_light_grey_alpha"/>
+                        android:layout_marginStart="-1dp"
+                        android:src="@color/stroke_light_grey_alpha"
+                        android:visibility="@integer/is_autos_offers_enabled"
+                        />
 
                     <TextView
                         android:id="@+id/textViewOffers"
@@ -265,15 +271,17 @@
                         android:text="@string/nl_offers"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26"/>
+                        android:textSize="@dimen/text_size_26"
+                        android:visibility="@integer/is_autos_offers_enabled"
+                        />
 
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:layout_marginLeft="5px"
-                    android:layout_marginRight="5px"
+                    android:layout_marginStart="5px"
+                    android:layout_marginEnd="5px"
                     android:layout_marginTop="-1dp"
                     android:background="@color/stroke_light_grey_alpha"/>
 
@@ -311,7 +319,7 @@
                     android:layout_width="50px"
                     android:layout_height="50px"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="14px"
+                    android:layout_marginStart="14px"
                     android:src="@drawable/star"
                     />
 
@@ -320,8 +328,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="14px"
-                    android:layout_toRightOf="@+id/ivStar"
+                    android:layout_marginStart="14px"
+                    android:layout_toEndOf="@+id/ivStar"
                     android:text="@string/star_savings_no_priority_tip"
                     android:textColor="@color/theme_color"
                     android:textSize="@dimen/text_size_24"
@@ -377,9 +385,9 @@
                     android:id="@+id/imageViewSurgeSmall"
                     android:layout_width="26px"
                     android:layout_height="26px"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="8px"
+                    android:layout_marginStart="8px"
                     android:src="@drawable/ic_surge_grey_white_bg"
                     android:tag="mwar"/>
 
@@ -387,17 +395,17 @@
                     android:id="@+id/imageViewSurgeSep"
                     android:layout_width="2px"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="3px"
-                    android:layout_toRightOf="@+id/imageViewSurgeSmall"
+                    android:layout_marginStart="3px"
+                    android:layout_toEndOf="@+id/imageViewSurgeSmall"
                     android:src="@color/text_color_light"/>
 
                 <LinearLayout
                     android:layout_width="44px"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="2px"
-                    android:layout_marginRight="2px"
-                    android:layout_toRightOf="@+id/imageViewSurgeSep"
+                    android:layout_marginStart="2px"
+                    android:layout_marginEnd="2px"
+                    android:layout_toEndOf="@+id/imageViewSurgeSep"
                     android:gravity="center"
                     android:orientation="horizontal">
 

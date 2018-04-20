@@ -170,7 +170,7 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 	public void updateListData(String message, boolean errorOccurred){
         Log.e("errorOccurred", "errorOccurred = " + errorOccurred);
 		if(errorOccurred){
-			DialogPopup.alertPopupTwoButtonsWithListeners(paymentActivity, "", message, "Retry", "Cancel",
+			DialogPopup.alertPopupTwoButtonsWithListeners(paymentActivity, "", message, getString(R.string.retry), getString(R.string.cancel),
 					new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
@@ -280,7 +280,8 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 													DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(jTransactionI.optString("date"))),
 													"", "", jTransactionI.optDouble("amount"),
 													paytm, mobikwik, freecharge, pay, jTransactionI.optInt("status", 0),
-													jTransactionI.optString("name", "")));
+													jTransactionI.optString("name", ""),
+													jTransactionI.optString(Constants.KEY_CURRENCY)));
 										} else {
 											transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
 													jTransactionI.getInt("txn_type"),
@@ -288,7 +289,8 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 													jTransactionI.getString("txn_date"),
 													jTransactionI.getString("txn_text"),
 													jTransactionI.getDouble("amount"),
-													paytm, mobikwik, freecharge, pay, 0, ""));
+													paytm, mobikwik, freecharge, pay, 0, "",
+													jTransactionI.optString(Constants.KEY_CURRENCY)));
 										}
 									}
 
@@ -297,17 +299,17 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 									}
 									paymentActivity.updateWalletFragment();
 
-									updateListData("No transactions currently", false);
+									updateListData(getString(R.string.no_transactions_currently), false);
 								} else {
-									updateListData("Some error occurred", true);
+									updateListData(getString(R.string.some_error_occured), true);
 								}
 							} else {
-								updateListData("Some error occurred", true);
+								updateListData(getString(R.string.some_error_occured), true);
 							}
 
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							updateListData("Some error occurred", true);
+							updateListData(getString(R.string.some_error_occured), true);
 						}
 						imageViewJugnooAnimation.setVisibility(View.GONE);
 						jugnooAnimation.stop();
@@ -318,7 +320,7 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 						Log.e(TAG, "getTransactionHistory error="+error.toString());
 						imageViewJugnooAnimation.setVisibility(View.GONE);
 						jugnooAnimation.stop();
-						updateListData("Some error occurred", true);
+						updateListData(getString(R.string.some_error_occured), true);
 					}
 				};
 

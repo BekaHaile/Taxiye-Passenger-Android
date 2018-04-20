@@ -112,7 +112,7 @@ public class UserDebtDialog {
 							}
 						} catch (Exception exception) {
 							exception.printStackTrace();
-							DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						}
 						DialogPopup.dismissLoadingDialog();
 					}
@@ -120,12 +120,12 @@ public class UserDebtDialog {
 					@Override
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "adjustUserDebt error"+error.toString());
-						DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 						DialogPopup.dismissLoadingDialog();
 					}
 				});
 			} else{
-				DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+				DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

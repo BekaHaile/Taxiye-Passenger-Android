@@ -20,8 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp">
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -33,7 +33,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Lorem ipsum dolor"
+                android:text="@string/lorem_ipsum_dolor"
                 android:gravity="center"
                 android:textSize="18sp"
                 android:textColor="@color/grey_black_light"
@@ -42,7 +42,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt"
+                android:text="@string/lorem_ipsum_dolor_sit_amet_consectetur_adipisicing_elit_sed_do_eiusmod_tempor_incididunt"
                 android:gravity="center"
                 android:textColor="@color/grey_light_more"/>
 
@@ -60,7 +60,7 @@
                     android:textColor="@color/text_color"
                     android:hint="@string/enter_ifsc_code"
                     android:textColorHint="@color/text_color_hint"
-                    android:paddingLeft="8dp"
+                    android:paddingStart="8dp"
                     android:inputType="textCapWords"
                     android:lines="1"
                     android:textCursorDrawable="@drawable/cursor_black"
@@ -78,13 +78,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorPrimary"
-                    android:text="Click here" android:textSize="15sp"
+                    android:text="@string/click_here" android:textSize="15sp"
                     android:clickable="true" />
                 <TextView
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="to search for IFSC code"/>
+                    android:text="@string/to_search_for_ifsc_code"/>
 
             </LinearLayout>
 
@@ -102,7 +102,7 @@
                     android:textColor="@color/text_color"
                     android:hint="@string/enter_acc_holder_name"
                     android:textColorHint="@color/text_color_hint"
-                    android:paddingLeft="8dp"
+                    android:paddingStart="8dp"
                     android:inputType="textCapWords"
                     android:textCursorDrawable="@drawable/cursor_black"
                     android:lines="1"
@@ -124,7 +124,7 @@
                     android:textColor="@color/text_color"
                     android:hint="@string/enter_acc_number"
                     android:textColorHint="@color/text_color_hint"
-                    android:paddingLeft="8dp"
+                    android:paddingStart="8dp"
                     android:inputType="textCapWords"
                     android:textCursorDrawable="@drawable/cursor_black"
                     android:lines="1"
@@ -146,7 +146,7 @@
                     android:textColor="@color/text_color"
                     android:hint="@string/confirm_acc_number"
                     android:textColorHint="@color/text_color_hint"
-                    android:paddingLeft="8dp"
+                    android:paddingStart="8dp"
                     android:inputType="textCapWords"
                     android:textCursorDrawable="@drawable/cursor_black"
                     android:lines="1"

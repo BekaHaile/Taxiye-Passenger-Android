@@ -226,7 +226,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     activity.startActivity(intent);
                 } else {
                     DialogPopup.dialogNoInternet(activity,
-                            Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                            activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
                             new Utils.AlertCallBackWithButtonsInterface() {
                                 @Override
                                 public void positiveClick(View v) {

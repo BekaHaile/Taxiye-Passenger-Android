@@ -1,6 +1,5 @@
 package com.sabkuchfresh.pros.ui.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
@@ -49,10 +48,10 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 		this.callback = callback;
 		this.recyclerView = recyclerView;
 		this.possibleStatus = new ArrayList<>();
-		this.possibleStatus.add("Booking\nReceived");
-		this.possibleStatus.add("Pro\nAssigned");
-		this.possibleStatus.add("Service\nStarted");
-		this.possibleStatus.add("Service\nFinished");
+		this.possibleStatus.add(context.getString(R.string.booking_n_received));
+		this.possibleStatus.add(context.getString(R.string.pro_n_assigned));
+		this.possibleStatus.add(context.getString(R.string.service_n_started));
+		this.possibleStatus.add(context.getString(R.string.service_n_finished));
 	}
 
 	public synchronized void setList(List<ProsCatalogueData.ProsCatalogueDatum> elements,
@@ -114,7 +113,7 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 					}
 				}
 				showPossibleStatus(possibleStatus, recentOrder.getJobStatus(), statusHolder);
-				statusHolder.tvServiceName.setText(recentOrder.getJobNameSplitted()+" (Service #"+recentOrder.getJobId()+")");
+				statusHolder.tvServiceName.setText(recentOrder.getJobNameSplitted()+" ("+context.getString(R.string.service_hash)+recentOrder.getJobId()+")");
 				statusHolder.tvServiceDateTime.setText(context.getString(R.string.service_date_colon_format,
 						DateOperations.convertDateViaFormatTZ(recentOrder.getJobPickupDatetime())));
 			} catch (Exception e) {
@@ -132,7 +131,7 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 			ProsCatalogueData.ProsCatalogueDatum prosCatalogueDatum = prosCatalogueDatumList.get(position);
 			ViewHolderCategory holder = ((ViewHolderCategory) mholder);
 			holder.tvSuperCategoryName.setText(prosCatalogueDatum.getName());
-			holder.llRoot.setPadding(setSideMargins?gridItemsMargin:0,setTopMargin?gridItemsMargin:0
+			holder.llRoot.setPaddingRelative(setSideMargins?gridItemsMargin:0,setTopMargin?gridItemsMargin:0
 									,setSideMargins?gridItemsMargin:0,gridItemsMargin);
 
 			try {
@@ -211,7 +210,7 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 		int selectedSize = context.getResources().getDimensionPixelSize(R.dimen.dp_17);
 
 		// status conversion
-		status = getProsOrderState(status).first;
+		status = getProsOrderState(context, status).first;
 
 		switch (possibleStatus.size()) {
 			case 4:
@@ -354,42 +353,42 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 	}
 
 
-	public static Pair<Integer, String> getProsOrderState(int status){
+	public static Pair<Integer, String> getProsOrderState(Context context, int status){
 		String statusName = "";
 		if(status == ProsOrderStatus.UNASSIGNED.getOrdinal()
 				|| status == ProsOrderStatus.DECLINE.getOrdinal()
 				|| status == ProsOrderStatus.UPCOMING.getOrdinal()){
 			status = 0;
-			statusName = "Booking Received";
+			statusName = context.getString(R.string.booking_received);
 		} else if(status == ProsOrderStatus.ACCEPTED.getOrdinal()
 				|| status == ProsOrderStatus.STARTED.getOrdinal()){
 			status = 1;
-			statusName = "Pro Assigned";
+			statusName = context.getString(R.string.pro_assigned);
 		} else if(status == ProsOrderStatus.ARRIVED.getOrdinal()){
 			status = 2;
-			statusName = "Service Started";
+			statusName = context.getString(R.string.service_started);
 		} else if(status == ProsOrderStatus.ENDED.getOrdinal()){
 			status = 3;
-			statusName = "Service Finished";
+			statusName = context.getString(R.string.service_finished);
 		}
 		else if(status == ProsOrderStatus.FAILED.getOrdinal()){
-			statusName = "Service Failed";
+			statusName = context.getString(R.string.service_failed);
 		}
 		else if(status == ProsOrderStatus.DECLINE.getOrdinal()){
 			status = 0;
-			statusName = "Service Declined";
+			statusName = context.getString(R.string.service_declined);
 		}
 		else if(status == ProsOrderStatus.CANCEL.getOrdinal()){
-			statusName = "Service Cancelled";
+			statusName = context.getString(R.string.service_cancelled);
 		}
 		else if(status == ProsOrderStatus.DELETED.getOrdinal()){
-			statusName = "Service Deleted";
+			statusName = context.getString(R.string.service_deleted);
 		}
 		else if(status == ProsOrderStatus.IGNORED.getOrdinal()){
-			statusName = "Service Ignored";
+			statusName = context.getString(R.string.service_ignored);
 		}
 		else if(status == ProsOrderStatus.SEEN_BY_AGENT.getOrdinal()){
-			statusName = "Service seen by agent";
+			statusName = context.getString(R.string.service_seen_by_agent);
 		}
 		return new Pair<>(status, statusName);
 	}

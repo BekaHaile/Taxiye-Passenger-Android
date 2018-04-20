@@ -12,8 +12,8 @@
         android:layout_width="21px"
         android:layout_height="37px"
         android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30px"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30px"
         android:src="@drawable/ic_arrow_orange"
         android:tag="mwar" />
 
@@ -25,16 +25,16 @@
         android:text=""
         android:textColor="@color/text_color_light_selector"
         android:textSize="@dimen/text_size_30"
-        android:layout_marginLeft="20px"
-        android:layout_marginRight="20px"
+        android:layout_marginStart="20px"
+        android:layout_marginEnd="20px"
         android:layout_centerVertical="true"
         />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_marginLeft="2px"
-        android:layout_marginRight="2px"
+        android:layout_marginStart="2px"
+        android:layout_marginEnd="2px"
         android:background="@color/stroke_color_light"
         android:layout_alignParentBottom="true"
         />

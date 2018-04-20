@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:id="@+id/rv"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
@@ -9,7 +9,7 @@ android:splitMotionEvents="false" >
 <RelativeLayout
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center"
+    android:layout_centerInParent="true"
     android:layout_margin="50px"
     android:background="@drawable/background_white_rounded_bordered"
     android:splitMotionEvents="false" >
@@ -30,9 +30,9 @@ android:splitMotionEvents="false" >
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="30px"
             android:gravity="center"
-            android:paddingLeft="40px"
-            android:paddingRight="40px"
-            android:text="Alert"
+            android:paddingStart="40px"
+            android:paddingEnd="40px"
+            android:text="@string/alert"
             android:textColor="@color/text_color"
             android:textSize="34px"
             android:visibility="gone" />
@@ -47,9 +47,9 @@ android:splitMotionEvents="false" >
             android:gravity="center"
             android:lineSpacingExtra="10px"
             android:maxHeight="800px"
-            android:paddingLeft="40px"
-            android:paddingRight="40px"
-            android:text="Message"
+            android:paddingStart="40px"
+            android:paddingEnd="40px"
+            android:text="@string/message"
             android:textColor="@color/text_color"
             android:textSize="30px" />
 
@@ -69,10 +69,10 @@ android:splitMotionEvents="false" >
                 android:id="@+id/btnOk"
                 android:layout_width="307px"
                 android:layout_height="90px"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:background="@drawable/button_white_grey_brr_selector"
                 android:singleLine="true"
-                android:text="OK"
+                android:text="@string/ok"
                 android:textColor="@color/text_color"
                 android:textSize="34px" />
 
@@ -88,10 +88,10 @@ android:splitMotionEvents="false" >
                 android:layout_width="307px"
                 android:layout_height="90px"
                 android:layout_alignParentTop="true"
-                android:layout_toLeftOf="@+id/imageView1"
+                android:layout_toStartOf="@+id/imageView1"
                 android:background="@drawable/button_white_grey_blr_selector"
                 android:singleLine="true"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:textColor="@color/text_color"
                 android:textSize="34px" />
         </RelativeLayout>
@@ -99,4 +99,4 @@ android:splitMotionEvents="false" >
     </LinearLayout>
 </RelativeLayout>
 
-</FrameLayout>
+</RelativeLayout>

@@ -25,7 +25,7 @@
                 android:layout_width="35px"
                 android:layout_height="35px"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/px_35"
+                android:layout_marginStart="@dimen/px_35"
                 android:layout_centerVertical="true"
                 android:tag="mwar"
                 android:src="@drawable/ic_default_store" />
@@ -33,9 +33,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="@dimen/px_22"
-                android:layout_toRightOf="@+id/ivLoc"
-                android:layout_toLeftOf="@+id/ivEditLoc"
+                android:layout_marginStart="@dimen/px_22"
+                android:layout_toEndOf="@+id/ivLoc"
+                android:layout_toStartOf="@+id/ivEditLoc"
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
@@ -66,9 +66,9 @@
                 android:id="@+id/ivEditStore"
                 android:layout_width="60px"
                 android:layout_height="60px"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="20px"
+                android:layout_marginEnd="20px"
                 android:padding="15px"
                 android:src="@drawable/edit_icon_selector"
                 android:tag="mwar"
@@ -96,8 +96,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/layout_offer_title"
-            android:layout_marginLeft="36px"
-            android:layout_marginRight="36px"
+            android:layout_marginStart="36px"
+            android:layout_marginEnd="36px"
             android:visibility="gone" />
 
 

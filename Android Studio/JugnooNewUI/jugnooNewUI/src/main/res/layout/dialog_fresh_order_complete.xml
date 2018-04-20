@@ -31,8 +31,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="3px"
-            android:layout_marginRight="3px"
+            android:layout_marginStart="3px"
+            android:layout_marginEnd="3px"
             android:layout_marginBottom="3px"
             android:background="@drawable/button_white_br"
             android:orientation="vertical"
@@ -44,8 +44,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="40px"
-                android:layout_marginLeft="15px"
-                android:layout_marginRight="15px"
+                android:layout_marginStart="15px"
+                android:layout_marginEnd="15px"
                 android:gravity="center"
                 android:text="@string/thank_you_for_placing_order"
                 android:textColor="@color/text_color_dark"
@@ -73,10 +73,10 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:layout_toLeftOf="@+id/textViewOrderDeliverySlot"
+                    android:layout_toStartOf="@+id/textViewOrderDeliverySlot"
                     android:background="@color/text_color_hint"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginRight="20px"
+                    android:layout_marginStart="20px"
+                    android:layout_marginEnd="20px"
                     android:layout_marginTop="20px"
                     />
 
@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:gravity="center"
-                    android:text="Delivery Slot"
+                    android:text="@string/delivery_slot"
                     android:textColor="@color/text_color_dark"
                     android:textSize="@dimen/text_size_34"
                     android:lineSpacingExtra="@dimen/dp_4"
@@ -95,10 +95,10 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:layout_toRightOf="@+id/textViewOrderDeliverySlot"
+                    android:layout_toEndOf="@+id/textViewOrderDeliverySlot"
                     android:background="@color/text_color_hint"
-                    android:layout_marginLeft="20px"
-                    android:layout_marginRight="20px"
+                    android:layout_marginStart="20px"
+                    android:layout_marginEnd="20px"
                     android:layout_marginTop="20px"
                     />
 
@@ -134,18 +134,18 @@
                     android:layout_width="94px"
                     android:layout_height="94px"
                     android:tag="mwar"
-                    android:layout_marginLeft="@dimen/px_20"
+                    android:layout_marginStart="@dimen/px_20"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_star_place_order"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/ivStar"
-                    android:layout_toLeftOf="@+id/ivArrow"
+                    android:layout_toEndOf="@+id/ivStar"
+                    android:layout_toStartOf="@+id/ivArrow"
                     android:layout_marginTop="@dimen/px_20"
                     android:layout_marginBottom="@dimen/px_20"
-                    android:layout_marginLeft="@dimen/px_20"
+                    android:layout_marginStart="@dimen/px_20"
                     android:orientation="vertical">
 
                     <TextView
@@ -180,9 +180,9 @@
                     android:id="@+id/ivArrow"
                     android:layout_width="12px"
                     android:layout_height="21px"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/px_20"
+                    android:layout_marginEnd="@dimen/px_20"
                     android:rotation="180"
                     android:background="@drawable/ic_back_selector"/>
 

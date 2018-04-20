@@ -450,7 +450,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						updateSavedPlacesLists();
 						showSearchLayout();
 					} else {
-						textViewAddHome.setText("Add Home");
+						textViewAddHome.setText(R.string.add_home);
 					}
 
 				} else if (requestCode == Constants.REQUEST_CODE_ADD_WORK) {
@@ -460,7 +460,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						updateSavedPlacesLists();
 						showSearchLayout();
 					} else{
-						textViewAddWork.setText("Add Work");
+						textViewAddWork.setText(R.string.add_work);
 					}
 				}
 
@@ -776,8 +776,10 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			// position on right bottom
 			rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
 			rlp.addRule(RelativeLayout.CENTER_VERTICAL, RelativeLayout.TRUE);
-			rlp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
+			rlp.addRule(RelativeLayout.ALIGN_PARENT_END, RelativeLayout.TRUE);
 			rlp.setMargins(0, 0, 40, 0);
+			rlp.setMarginStart(0);
+			rlp.setMarginEnd(40);
 			locationButton.setLayoutParams(rlp);
 		} catch (Exception e) {
 			e.printStackTrace();

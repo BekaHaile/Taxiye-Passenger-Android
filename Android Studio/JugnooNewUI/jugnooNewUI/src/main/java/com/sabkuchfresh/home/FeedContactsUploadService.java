@@ -23,6 +23,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
@@ -89,7 +90,7 @@ public class FeedContactsUploadService extends IntentService {
 								contactBean.setName(name);
 								contactBean.setPhone(phone);
 								contactBean.setEmail(email);
-								if (phone != null && (phone.length() >= 10)) {
+								if (phone != null && Utils.validPhoneNumber(phone)) {
 									contactList.add(contactBean);
 								}
 							}

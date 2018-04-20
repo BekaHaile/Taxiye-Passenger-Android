@@ -210,7 +210,7 @@ public class SendMoneyActivity extends BaseActivity {
     void setData() {
         contactNameTxt.setText(contactDetails.getName());
         if (new Validator().validateEmail(contactDetails.getPhone())) {
-            contactDetails.setPhone("+91"+Utils.retrievePhoneNumberTenChars(contactDetails.getPhone()));
+            contactDetails.setPhone(contactDetails.getPhone());
             contactMobileTxt.setText(contactDetails.getPhone());
         } else {
             contactMobileTxt.setText(contactDetails.getPhone());
@@ -251,7 +251,7 @@ public class SendMoneyActivity extends BaseActivity {
     private void callingSendMoneyApi() {
         try {
             if (MyApplication.getInstance().isOnline()) {
-				CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstant.PLEASE);
+				CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, getString(R.string.please_wait));
 				SendMoneyRequest request = new SendMoneyRequest();
 
 				if (Utils.isPhoneValid(contactDetails.getPhone())) {
@@ -282,18 +282,18 @@ public class SendMoneyActivity extends BaseActivity {
 							}
                         } catch (Exception e) {
                             e.printStackTrace();
-                            retryDialogSendMoneyApi(Data.SERVER_ERROR_MSG);
+                            retryDialogSendMoneyApi(getString(R.string.connection_lost_please_try_again));
                         }
                     }
 
 					@Override
 					public void failure(RetrofitError error) {
                         CallProgressWheel.dismissLoadingDialog();
-                        retryDialogSendMoneyApi(Data.SERVER_NOT_RESOPNDING_MSG);
+                        retryDialogSendMoneyApi(getString(R.string.connection_lost_please_try_again));
 					}
 				});
 			} else {
-				retryDialogSendMoneyApi(Data.CHECK_INTERNET_MSG);
+				retryDialogSendMoneyApi(getString(R.string.connection_lost_desc));
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -374,7 +374,7 @@ public class SendMoneyActivity extends BaseActivity {
     private void callingRequestMoneyApi() {
         try {
             if (MyApplication.getInstance().isOnline()) {
-				CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, AppConstant.PLEASE);
+				CallProgressWheel.showLoadingDialog(SendMoneyActivity.this, getString(R.string.please_wait));
 				final SendMoneyRequest request = new SendMoneyRequest();
 
 				if (Utils.isPhoneValid(contactDetails.getPhone())) {
@@ -417,18 +417,18 @@ public class SendMoneyActivity extends BaseActivity {
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
-							retryDialogRequestMoneyApi(Data.SERVER_ERROR_MSG);
+							retryDialogRequestMoneyApi(getString(R.string.connection_lost_please_try_again));
 						}
 					}
 
 					@Override
 					public void failure(RetrofitError error) {
 						CallProgressWheel.dismissLoadingDialog();
-						retryDialogRequestMoneyApi(Data.SERVER_NOT_RESOPNDING_MSG);
+						retryDialogRequestMoneyApi(getString(R.string.connection_lost_please_try_again));
 					}
 				});
 			} else {
-				retryDialogRequestMoneyApi(Data.CHECK_INTERNET_MSG);
+				retryDialogRequestMoneyApi(getString(R.string.connection_lost_desc));
 			}
         } catch (Exception e) {
             e.printStackTrace();

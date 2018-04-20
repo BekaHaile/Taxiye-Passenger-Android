@@ -13,9 +13,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
-import com.sabkuchfresh.datastructure.PopupData;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
-import com.sabkuchfresh.retrofit.model.Store;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,7 +86,7 @@ public class JSONParser implements Constants {
     }
 
     public static String getServerMessage(JSONObject jObj) {
-        String message = Data.SERVER_ERROR_MSG;
+        String message = MyApplication.getInstance().getString(R.string.connection_lost_please_try_again);
         try {
             if (jObj.has("message")) {
                 message = jObj.getString("message");
@@ -108,6 +106,7 @@ public class JSONParser implements Constants {
 
         String userName = userData.optString("user_name", "");
         String phoneNo = userData.optString("phone_no", "");
+        String countryCode = "+" + userData.optString(Constants.KEY_COUNTRY_CODE, "91");
         String userImage = userData.optString("user_image", "");
         String referralCode = userData.optString(KEY_REFERRAL_CODE, "");
         double jugnooBalance = userData.optDouble(KEY_JUGNOO_BALANCE, 0);
@@ -209,6 +208,7 @@ public class JSONParser implements Constants {
         int paytmEnabled = userData.optInt(KEY_PAYTM_ENABLED, 0);
         int mobikwikEnabled = userData.optInt(KEY_MOBIKWIK_ENABLED, 0);
         int freeChargeEnabled = userData.optInt(KEY_FREECHARGE_ENABLED, 0);
+        int mPesaEnabled = userData.optInt(KEY_MPESA_ENABLED, 1);
 
         int autosEnabled = userData.optInt(KEY_AUTOS_ENABLED, 0);
         int mealsEnabled = userData.optInt(KEY_MEALS_ENABLED, 0);
@@ -242,11 +242,11 @@ public class JSONParser implements Constants {
                 gamePredictEnable, gamePredictUrl, gamePredictIconUrl, gamePredictName, gamePredictNew,
                 cToDReferralEnabled,
                 city, cityReg, referralLeaderboardEnabled, referralActivityEnabled,
-                fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled, notificationPreferenceEnabled,
+                fatafatUrlLink, paytmEnabled, mobikwikEnabled, freeChargeEnabled,mPesaEnabled, notificationPreferenceEnabled,
                 mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled, feedEnabled, prosEnabled,
                 deliveryCustomerEnabled,inviteFriendButton, defaultClientId, integratedJugnooEnabled,
                 topupCardEnabled, showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled, showJeanieHelpText,
-                showOfferDialog, showTutorial, signupOnboarding,autosEnabled);
+                showOfferDialog, showTutorial, signupOnboarding,autosEnabled, countryCode);
 
         Data.userData.setSubscriptionData(loginUserData.getSubscriptionData());
         Data.userData.setShowJugnooStarInAcccount(loginUserData.getShowJugnooStarInAccount());
@@ -289,7 +289,7 @@ public class JSONParser implements Constants {
             if(loginUserData.getSupportNumber() != null){
 				Config.saveSupportNumber(context, loginUserData.getSupportNumber());
 			}
-            Data.userData.setReferralMessages(parseReferralMessages(loginUserData));
+            Data.userData.setReferralMessages(parseReferralMessages(context, loginUserData));
             performUserAppMonitoring(context, userData);
 
 //            if(Prefs.with(context).getString(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, "").equals("")) {
@@ -501,7 +501,7 @@ public class JSONParser implements Constants {
         JSONObject jUserStatusObject = jObj.getJSONObject(KEY_AUTOS).getJSONObject(KEY_STATUS);
         String resp = parseCurrentUserStatus(context, loginResponse.getAutos().getCurrentUserStatus(), jUserStatusObject);
 
-        parseRateAppFlagContent(jUserDataObject);
+        parseRateAppFlagContent(context, jUserDataObject);
 
         parseCancellationReasons(loginResponse.getAutos());
         parseFeedbackReasonArrayList(loginResponse.getAutos());
@@ -612,10 +612,11 @@ public class JSONParser implements Constants {
 								fareStructure.getFarePerWaitingMin(),
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
 								fareStructure.getDisplayBaseFare(),
-								fareStructure.getDisplayFareText());
+								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(), autos.getCurrency());
 						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
 							try {
-								if (Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
+								if (Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
+                                        && Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
 										&& Data.autoData.getRegions().get(i).getRideType().equals(fareStructure.getRideType())
 										) {
 									Data.autoData.getRegions().get(i).setFareStructure(fareStructure1);
@@ -648,7 +649,7 @@ public class JSONParser implements Constants {
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){
-        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null, null);
+        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null, null, 0, null);
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getFareStructure(){
@@ -659,25 +660,18 @@ public class JSONParser implements Constants {
         }
     }
 
-    public ReferralMessages parseReferralMessages(LoginResponse.UserData userData) {
-        String referralMessage = "Share your referral code " + Data.userData.referralCode +
-                " with your friends and they will get a FREE ride because of your referral and once they have used Jugnoo, you will earn a FREE ride (up to Rs. 100) as well.";
-        String referralSharingMessage = "Hey, \nUse Jugnoo app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
-                " Use this referral code: " + Data.userData.referralCode + " to get FREE ride up to Rs. 100." +
-                "\nDownload it from here: http://smarturl.it/jugnoo";
+    public ReferralMessages parseReferralMessages(Context context, LoginResponse.UserData userData) {
+        String referralSharingMessage = "Hey, \nUse "+context.getString(R.string.app_name)+" app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
+                " Use this referral code: " + Data.userData.referralCode + " to get FREE ride" +
+                "\nDownload it from here: "+context.getString(R.string.smart_url);
         String fbShareCaption = "Use " + Data.userData.referralCode + " as code & get a FREE ride";
-        String fbShareDescription = "Try Jugnoo app to call an auto at your doorsteps with just a tap.";
+        String fbShareDescription = "Try "+context.getString(R.string.app_name)+" app to call an auto at your doorsteps with just a tap.";
         String referralCaption = "<center><font face=\"verdana\" size=\"2\">Invite <b>friends</b> and<br/>get <b>FREE rides</b></font></center>";
-        int referralCaptionEnabled = 0;
-        String referralEmailSubject = "Hey! Have you used Jugnoo Autos yet?";
-		String referralPopupText = "Up to Rs. 100 in Jugnoo Cash";
+        String referralEmailSubject = "Hey! Have you used "+context.getString(R.string.app_name)+" yet?";
         String referralShortMessage = "", referralMoreInfoMessage = "";
-        String title = Constants.FB_LINK_SHARE_NAME;
+        String title = context.getString(R.string.app_name);
 
         try {
-            if (userData.getReferralMessage() != null) {
-                referralMessage = userData.getReferralMessage();
-            }
             if (userData.getReferralSharingMessage() != null) {
                 referralSharingMessage = userData.getReferralSharingMessage();
             }
@@ -694,9 +688,6 @@ public class JSONParser implements Constants {
             if(userData.getReferralEmailSubject() != null){
                 referralEmailSubject = userData.getReferralEmailSubject();
             }
-			if (userData.getReferralPopupText() != null) {
-				referralPopupText = userData.getReferralPopupText();
-			}
             if(userData.getInviteEarnShortMsg() != null){
                 referralShortMessage = userData.getInviteEarnShortMsg();
             }
@@ -710,8 +701,8 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
 
-        ReferralMessages referralMessages = new ReferralMessages(referralMessage, referralSharingMessage, fbShareCaption, fbShareDescription, referralCaption, referralCaptionEnabled,
-            referralEmailSubject, referralPopupText, referralShortMessage, referralMoreInfoMessage, title);
+        ReferralMessages referralMessages = new ReferralMessages(referralSharingMessage, fbShareCaption, fbShareDescription,
+            referralEmailSubject, referralShortMessage, referralMoreInfoMessage, title);
 
         return referralMessages;
     }
@@ -732,7 +723,8 @@ public class JSONParser implements Constants {
             Data.autoData.setDropAddress("");
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
-                    jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no")));
+                    jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"),
+                    jDriverInfo.optInt(KEY_OPERATOR_ID, 0)));
             int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
             String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
             Data.autoData.getAssignedDriverInfo().setVehicleType(vehicleType);
@@ -848,15 +840,18 @@ public class JSONParser implements Constants {
         String tripTotal = jLastRideData.optString(KEY_TRIP_TOTAL, "");
 
         int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
+        int operatorId = jLastRideData.optInt(KEY_OPERATOR_ID, 0);
         String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
         String engagementDate = jLastRideData.optString("engagement_date", "");
 
         double paidUsingMobikwik = jLastRideData.optDouble(KEY_PAID_USING_MOBIKWIK, 0);
+        double paidUsingMpesa = jLastRideData.optDouble(KEY_PAID_USING_MPESA, 0);
         double paidUsingFreeCharge = jLastRideData.optDouble(KEY_PAID_USING_FREECHARGE, 0);
         double paidUsingRazorpay = jLastRideData.optDouble(KEY_PAID_USING_RAZORPAY, 0);
 
         int totalRide = jLastRideData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 0);
         int status = jLastRideData.optInt(Constants.KEY_STATUS, EngagementStatus.ENDED.getOrdinal());
+        String currency = jLastRideData.optString(Constants.KEY_CURRENCY);
 
         String supportNumber = jLastRideData.optString(KEY_SUPPORT_NUMBER, "");
 
@@ -878,10 +873,10 @@ public class JSONParser implements Constants {
 				rideTime, waitTime,
 				baseFare, fareFactor, discountTypes, waitingChargesApplicable, paidUsingPaytm,
                 rideDate, phoneNumber, tripTotal, vehicleType, iconSet, isPooled,
-                sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge,paidUsingRazorpay, totalRide, status, supportNumber
+                sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge,paidUsingMpesa,paidUsingRazorpay, totalRide, status, supportNumber
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
-                showPaymentOptions, paymentOption);
+                showPaymentOptions, paymentOption, operatorId, currency);
 	}
 
 
@@ -916,7 +911,6 @@ public class JSONParser implements Constants {
             new HomeUtil().putDefaultParams(nameValuePairs);
             Response response = RestClient.getApiService().getCurrentUserStatus(nameValuePairs);
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
-            Log.i(TAG, "getCurrentUserStatus response="+responseStr);
             if (response == null || responseStr == null) {
                 return Constants.SERVER_TIMEOUT;
             } else {
@@ -940,7 +934,6 @@ public class JSONParser implements Constants {
 
 
     public String parseCurrentUserStatus(Context context, int currentUserStatus, JSONObject jObject1) {
-		Log.e("parseCurrentUserStatus jObject1", "="+jObject1);
         String returnResponse = "";
 
         if (currentUserStatus == 2) {
@@ -963,6 +956,8 @@ public class JSONParser implements Constants {
             ArrayList<String> fellowRiders = new ArrayList<>();
             PlaceOrderResponse.ReferralPopupContent referralPopupContent = null;
             FuguChannelData fuguChannelData = new FuguChannelData();
+            int operatorId = 0;
+            String currency = null;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1025,6 +1020,8 @@ public class JSONParser implements Constants {
                             pickupLongitude = jObject.getString("pickup_longitude");
                             pickupAddress = jObject.optString(KEY_PICKUP_LOCATION_ADDRESS, "");
                             chatEnabled = jObject.optInt("chat_enabled", 0);
+                            operatorId = jObject.optInt(KEY_OPERATOR_ID, 0);
+                            currency = jObject.optString(KEY_CURRENCY);
 
                             try {
                                 if(jObject.has(KEY_OP_DROP_LATITUDE) && jObject.has(KEY_OP_DROP_LONGITUDE)) {
@@ -1043,7 +1040,7 @@ public class JSONParser implements Constants {
                                 freeRide = jObject.getInt("free_ride");
                             }
 
-                            promoName = getPromoName(jObject);
+                            promoName = getPromoName(context, jObject);
 
                             if (jObject.has("eta")) {
                                 eta = jObject.getString("eta");
@@ -1147,7 +1144,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);
@@ -1178,8 +1175,8 @@ public class JSONParser implements Constants {
     }
 
 
-    public static String getPromoName(JSONObject jObject) {
-        String promoName = Data.NO_PROMO_APPLIED;
+    public static String getPromoName(Context context, JSONObject jObject) {
+        String promoName = context.getString(R.string.no_promo_code_applied);
         try {
             String coupon = "", promotion = "";
             try {
@@ -1203,7 +1200,7 @@ public class JSONParser implements Constants {
             } else if (!"".equalsIgnoreCase(promotion)) {
                 promoName = promotion;
             } else {
-                promoName = Data.NO_PROMO_APPLIED;
+                promoName = context.getString(R.string.no_promo_code_applied);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1248,7 +1245,8 @@ public class JSONParser implements Constants {
                     int vehicleType = driver.getVehicleType() == null ? VEHICLE_AUTO : driver.getVehicleType();
                     String brandingStatus = driver.getBrandingStatus();
                     Data.autoData.getDriverInfos().add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage,
-                            phoneNo, rating, carNumber, 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(), brandingStatus));
+                            phoneNo, rating, carNumber, 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(),
+                            brandingStatus, driver.getOperatorId()));
                 }
             }
         } catch (Exception e) {
@@ -1266,7 +1264,7 @@ public class JSONParser implements Constants {
             options.add(new CancelOption("Booked another auto"));
 
             Data.autoData.setCancelOptionsList(new CancelOptionsList(options, "Cancellation of a ride more than 5 minutes after the driver is allocated " +
-                    "will lead to cancellation charges of Rs. 20", ""));
+                    "will lead to cancellation charges of \u20B9 20", ""));
 
             LoginResponse.Cancellation jCancellation = autos.getCancellation();
             String message = jCancellation.getMessage();
@@ -1417,7 +1415,7 @@ public class JSONParser implements Constants {
     }
 
 
-    public static RateAppDialogContent parseRateAppDialogContent(JSONObject jObj){
+    public static RateAppDialogContent parseRateAppDialogContent(Context context, JSONObject jObj){
         try{
             JSONObject jRA = jObj.getJSONObject(KEY_RATE_APP_DIALOG_CONTENT);
             return new RateAppDialogContent(jRA.getString(KEY_TITLE),
@@ -1429,11 +1427,11 @@ public class JSONParser implements Constants {
         } catch(Exception e){
             e.printStackTrace();
             return new RateAppDialogContent("Glad you liked our services",
-                    "Do you find Jugnoo useful?\nIf yes, we would appreciate if you could rate us on the Play Store",
+                    "Do you find "+context.getString(R.string.app_name)+" useful?\nIf yes, we would appreciate if you could rate us on the Play Store",
                     "Rate Now",
                     "Not Now",
                     "Never Ask Again",
-                    "https://play.google.com/store/apps/details?id=product.clicklabs.jugnoo") ;
+                    "https://play.google.com/store/apps/details?id="+BuildConfig.APPLICATION_ID) ;
         }
     }
 
@@ -1488,13 +1486,13 @@ public class JSONParser implements Constants {
 
 
 
-    public static void parseRateAppFlagContent(JSONObject jsonObject){
+    public static void parseRateAppFlagContent(Context context, JSONObject jsonObject){
         try {
             if (jsonObject.has(KEY_RATE_APP)) {
                 Data.userData.setCustomerRateAppFlag(jsonObject.getInt(KEY_RATE_APP));
             }
             if(jsonObject.has(KEY_RATE_APP_DIALOG_CONTENT)){
-                Data.userData.setRateAppDialogContent(JSONParser.parseRateAppDialogContent(jsonObject));
+                Data.userData.setRateAppDialogContent(JSONParser.parseRateAppDialogContent(context,jsonObject));
             }
             if(Data.userData.getCustomerRateAppFlag() == 1){
                 if(Data.autoData != null) {

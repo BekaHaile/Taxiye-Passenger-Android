@@ -63,7 +63,7 @@ public class RazorpayBaseActivity extends BaseAppCompatActivity implements Payme
 
     public void startRazorPayPayment(JSONObject options, boolean isUPI) {
         Checkout checkout = new Checkout();
-        checkout.setImage(R.drawable.ic_launcher);
+        checkout.setImage(R.mipmap.ic_launcher);
         try {
             options.remove(Constants.KEY_AUTH_ORDER_ID);
 

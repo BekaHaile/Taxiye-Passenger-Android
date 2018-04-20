@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40px"
+        android:layout_marginStart="40px"
         android:layout_marginTop="50px"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -28,7 +28,7 @@
             android:id="@+id/textViewEmergencyContacts"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20px"
+            android:layout_marginStart="20px"
             android:text="@string/emergency_contacts"
             android:textAllCaps="true"
             android:textColor="@color/theme_color"
@@ -41,8 +41,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="2px"
-        android:layout_marginLeft="40px"
-        android:layout_marginRight="40px"
+        android:layout_marginStart="40px"
+        android:layout_marginEnd="40px"
         android:layout_marginTop="20px"
         android:background="@color/theme_color"
         />

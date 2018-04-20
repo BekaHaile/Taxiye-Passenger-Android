@@ -148,7 +148,7 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 			@Override
 			public void run() {
 				try {
-					rlRoot.setPadding(0, 0, 0, activity.rlAddToCart.getMeasuredHeight());
+					rlRoot.setPaddingRelative(0, 0, 0, activity.rlAddToCart.getMeasuredHeight());
 					Utils.hideSoftKeyboard(activity, activity.getTopBar().etSearch);
 				} catch (Exception e) {
 					e.printStackTrace();

@@ -74,7 +74,7 @@ public class FeedImagesPagerDialog extends DialogFragment {
         View rootView = inflater.inflate(R.layout.layout_feed_images_pager, container, false);
         ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.vpImages);
         ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages = (ArrayList<FetchFeedbackResponse.ReviewImage>) getArguments().getSerializable(IMAGES_TO_SHOW);
-        viewPager.setPadding(0, 20, 0, 20);
+        viewPager.setPaddingRelative(0, 20, 0, 20);
         viewPager.setAdapter(new DisplayImagesPager(getActivity(), reviewImages));
         viewPager.setCurrentItem(getArguments().getInt(POSITION_TO_OPEN));
         WindowManager.LayoutParams layoutParams = getDialog().getWindow().getAttributes();

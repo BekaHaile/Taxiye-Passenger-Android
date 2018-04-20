@@ -13,14 +13,14 @@
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/dp_15"
         android:paddingBottom="@dimen/dp_15"
-        android:paddingLeft="@dimen/dp_5"
-        android:paddingRight="@dimen/dp_5"
-        android:text="A - Z"
+        android:paddingStart="@dimen/dp_5"
+        android:paddingEnd="@dimen/dp_5"
+        android:text="@string/a_z"
         android:textColor="@color/text_color"
         android:textSize="@dimen/sp_13"
-        android:layout_marginLeft="@dimen/dp_15"
-        android:layout_marginRight="@dimen/dp_15"
-        android:drawableRight="@drawable/ic_fresh_sort_tick_svg"
+        android:layout_marginStart="@dimen/dp_15"
+        android:layout_marginEnd="@dimen/dp_15"
+        android:drawableEnd="@drawable/ic_fresh_sort_tick_svg"
         app:typekitFont="maven"
         android:background="?attr/selectableItemBackground"
         />
@@ -29,8 +29,8 @@
         android:id="@+id/viewDivider"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_1"
-        android:layout_marginRight="@dimen/dp_15"
-        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginEnd="@dimen/dp_15"
+        android:layout_marginStart="@dimen/dp_15"
         android:background="@color/stroke_light_grey_alpha"/>
 
 

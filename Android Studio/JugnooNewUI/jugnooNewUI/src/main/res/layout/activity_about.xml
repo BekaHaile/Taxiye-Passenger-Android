@@ -60,8 +60,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/px_110"
-                    android:text="Rate us on Play Store"
+                    android:text="@string/rate_us_on_play_store"
+                    android:layout_marginStart="@dimen/px_110"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 
@@ -97,8 +97,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/px_110"
-                    android:text="Like us on Facebook"
+                    android:layout_marginStart="@dimen/px_110"
+                    android:text="@string/like_us_on_facebook"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 
@@ -133,8 +133,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/px_110"
-                    android:text="Terms and Conditions"
+                    android:layout_marginStart="@dimen/px_110"
+                    android:text="@string/terms_and_conditions"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 
@@ -169,8 +169,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/px_110"
-                    android:text="Privacy Policy"
+                    android:layout_marginStart="@dimen/px_110"
+                    android:text="@string/privacy_policy"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 

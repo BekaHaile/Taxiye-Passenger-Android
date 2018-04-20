@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -372,13 +371,23 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             if(mHolder.imageViewFoodType.getVisibility() == View.VISIBLE && mHolder.imageViewItemImage.getVisibility() == View.GONE){
                 if(mHolder.textViewMoreInfo.getVisibility() == View.VISIBLE){
                     paramsFT.setMargins((int)(ASSL.Xscale()*2f), (int)(ASSL.Yscale()*2f), 0, 0);
+                    paramsFT.setMarginStart((int)(ASSL.Xscale()*2f));
+                    paramsFT.setMarginEnd(0);
                 } else {
                     paramsFT.setMargins(0, (int)(ASSL.Yscale()*25f), 0, 0);
+                    paramsFT.setMarginStart(0);
+                    paramsFT.setMarginEnd(0);
                 }
                 paramsLLC.setMargins((int)(ASSL.Xscale()*20f), 0, 0, 0);
+                paramsLLC.setMarginStart((int)(ASSL.Xscale()*20f));
+                paramsLLC.setMarginEnd(0);
             } else {
                 paramsFT.setMargins((int)(ASSL.Xscale()*2f), (int)(ASSL.Yscale()*2f), 0, 0);
+                paramsFT.setMarginStart((int)(ASSL.Xscale()*2f));
+                paramsFT.setMarginEnd(0);
                 paramsLLC.setMargins((int)(ASSL.Xscale()*30f), 0, 0, 0);
+                paramsLLC.setMarginStart((int)(ASSL.Xscale()*30f));
+                paramsLLC.setMarginEnd(0);
             }
             mHolder.imageViewFoodType.setLayoutParams(paramsFT);
             mHolder.linearLayoutContent.setLayoutParams(paramsLLC);

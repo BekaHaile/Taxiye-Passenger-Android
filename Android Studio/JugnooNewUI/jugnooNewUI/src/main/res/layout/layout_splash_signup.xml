@@ -37,8 +37,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="464px"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="30px"
-                android:layout_marginRight="30px"
+                android:layout_marginStart="30px"
+                android:layout_marginEnd="30px"
                 android:layout_marginTop="90px"
                 android:orientation="vertical">
 
@@ -51,7 +51,7 @@
                         android:layout_width="18px"
                         android:layout_height="27px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="36px"
+                        android:layout_marginStart="36px"
                         android:src="@drawable/ic_user_email"
                         android:tag="mhar" />
 
@@ -60,16 +60,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="88px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="64px"
-                        android:layout_toLeftOf="@+id/textViewSNameRequired"
+                        android:layout_marginStart="64px"
+                        android:layout_toStartOf="@+id/textViewSNameRequired"
                         android:background="#0000"
                         android:digits="@string/digits_characters_numbers"
                         android:gravity="center_vertical"
                         android:hint="@string/nl_signup_name"
                         android:inputType="textNoSuggestions|textCapWords"
                         android:maxLength="50"
-                        android:paddingLeft="20px"
-                        android:paddingRight="20px"
+                        android:paddingStart="20px"
+                        android:paddingEnd="20px"
                         android:singleLine="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
@@ -80,9 +80,9 @@
                         android:id="@+id/textViewSNameRequired"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="30px"
+                        android:layout_marginEnd="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
                         android:textSize="@dimen/text_size_22" />
@@ -92,8 +92,8 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:layout_marginLeft="@dimen/px_20"
-                    android:layout_marginRight="@dimen/px_20"
+                    android:layout_marginStart="@dimen/px_20"
+                    android:layout_marginEnd="@dimen/px_20"
                     android:src="@color/grey_light" />
 
                 <RelativeLayout
@@ -105,7 +105,7 @@
                         android:layout_width="27px"
                         android:layout_height="23px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="36px"
+                        android:layout_marginStart="36px"
                         android:src="@drawable/ic_email"
                         android:tag="mhar" />
 
@@ -114,14 +114,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="88px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="64px"
-                        android:layout_toLeftOf="@+id/textViewSEmailRequired"
+                        android:layout_marginStart="64px"
+                        android:layout_toStartOf="@+id/textViewSEmailRequired"
                         android:background="#0000"
                         android:gravity="center_vertical"
                         android:hint="@string/nl_signup_email"
                         android:inputType="textEmailAddress"
-                        android:paddingLeft="20px"
-                        android:paddingRight="20px"
+                        android:paddingStart="20px"
+                        android:paddingEnd="20px"
                         android:singleLine="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
@@ -132,9 +132,9 @@
                         android:id="@+id/textViewSEmailRequired"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="30px"
+                        android:layout_marginEnd="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
                         android:textSize="@dimen/text_size_22" />
@@ -144,8 +144,8 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:layout_marginLeft="@dimen/px_20"
-                    android:layout_marginRight="@dimen/px_20"
+                    android:layout_marginStart="@dimen/px_20"
+                    android:layout_marginEnd="@dimen/px_20"
                     android:src="@color/grey_light" />
 
                 <RelativeLayout
@@ -157,7 +157,7 @@
                         android:layout_width="27px"
                         android:layout_height="27px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="36px"
+                        android:layout_marginStart="36px"
                         android:src="@drawable/ic_phone"
                         android:tag="mhar" />
 
@@ -166,9 +166,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="84px"
+                        android:layout_marginStart="84px"
                         android:gravity="center_vertical"
-                        android:text="@string/nl_signup_plus91"
+                        android:text="+91"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_34" />
 
@@ -177,15 +177,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="88px"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/textViewSPhoneRequired"
-                        android:layout_toRightOf="@+id/textViewSPhone91"
+                        android:layout_toStartOf="@+id/textViewSPhoneRequired"
+                        android:layout_toEndOf="@+id/textViewSPhone91"
                         android:background="#0000"
                         android:gravity="center_vertical"
                         android:hint="@string/phone_number"
                         android:inputType="number"
                         android:maxLength="10"
-                        android:paddingLeft="20px"
-                        android:paddingRight="20px"
+                        android:paddingStart="20px"
+                        android:paddingEnd="20px"
                         android:singleLine="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
@@ -196,9 +196,9 @@
                         android:id="@+id/textViewSPhoneRequired"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="30px"
+                        android:layout_marginEnd="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
                         android:textSize="@dimen/text_size_22" />
@@ -208,8 +208,8 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:layout_marginLeft="@dimen/px_20"
-                    android:layout_marginRight="@dimen/px_20"
+                    android:layout_marginStart="@dimen/px_20"
+                    android:layout_marginEnd="@dimen/px_20"
                     android:src="@color/grey_light" />
 
                 <RelativeLayout
@@ -221,7 +221,7 @@
                         android:layout_width="18px"
                         android:layout_height="27px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="36px"
+                        android:layout_marginStart="36px"
                         android:src="@drawable/ic_password"
                         android:tag="mhar" />
 
@@ -230,15 +230,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="88px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="64px"
-                        android:layout_toLeftOf="@+id/textViewSPasswordRequired"
+                        android:layout_marginStart="64px"
+                        android:layout_toStartOf="@+id/textViewSPasswordRequired"
                         android:background="#0000"
                         android:gravity="center_vertical"
                         android:hint="@string/password"
                         android:inputType="textPassword"
                         android:maxLength="20"
-                        android:paddingLeft="20px"
-                        android:paddingRight="20px"
+                        android:paddingStart="20px"
+                        android:paddingEnd="20px"
                         android:singleLine="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
@@ -249,9 +249,9 @@
                         android:id="@+id/textViewSPasswordRequired"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="30px"
+                        android:layout_marginEnd="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
                         android:textSize="@dimen/text_size_22" />
@@ -270,15 +270,15 @@
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="2px"
-                        android:layout_marginLeft="@dimen/px_20"
-                        android:layout_marginRight="@dimen/px_20"
+                        android:layout_marginStart="@dimen/px_20"
+                        android:layout_marginEnd="@dimen/px_20"
                         android:src="@color/grey_light" />
 
                     <ImageView
                         android:layout_width="27px"
                         android:layout_height="27px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="36px"
+                        android:layout_marginStart="36px"
                         android:src="@drawable/ic_promocode"
                         android:tag="mhar" />
 
@@ -287,15 +287,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="88px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="64px"
+                        android:layout_marginStart="64px"
                         android:background="#0000"
                         android:capitalize="characters"
                         android:digits="@string/digits_characters_numbers"
                         android:gravity="center_vertical"
                         android:hint="@string/nl_signup_promocode"
                         android:inputType="textCapCharacters|textNoSuggestions"
-                        android:paddingLeft="20px"
-                        android:paddingRight="20px"
+                        android:paddingStart="20px"
+                        android:paddingEnd="20px"
                         android:singleLine="true"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
@@ -311,8 +311,8 @@
                 android:id="@+id/linearLayoutWalletContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="30px"
-                android:layout_marginRight="30px"
+                android:layout_marginStart="30px"
+                android:layout_marginEnd="30px"
                 android:layout_marginTop="20px"
                 android:background="@drawable/background_white_shadow"
                 android:orientation="vertical"
@@ -322,7 +322,7 @@
                     android:id="@+id/textViewLinkWalletMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="30px"
+                    android:layout_marginStart="30px"
                     android:layout_marginTop="30px"
                     android:text="@string/link_mobile_wallet_message"
                     android:textColor="@color/text_color"
@@ -332,8 +332,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10px"
-                    android:layout_marginLeft="30px"
-                    android:layout_marginRight="20px"
+                    android:layout_marginStart="30px"
+                    android:layout_marginEnd="20px"
                     android:layout_marginTop="10px">
 
                     <LinearLayout
@@ -346,7 +346,7 @@
                             android:id="@+id/linearLayoutPaytm"
                             android:layout_width="190px"
                             android:layout_height="70px"
-                            android:layout_marginRight="10px"
+                            android:layout_marginEnd="10px"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -359,7 +359,7 @@
 
                             <ImageView
                                 style="@style/payment_option_icon_small"
-                                android:layout_marginLeft="0px"
+                                android:layout_marginStart="0px"
                                 android:src="@drawable/ic_paytm_small" />
                         </LinearLayout>
 
@@ -367,7 +367,7 @@
                             android:id="@+id/linearLayoutMobikwik"
                             android:layout_width="190px"
                             android:layout_height="70px"
-                            android:layout_marginRight="10px"
+                            android:layout_marginEnd="10px"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -380,7 +380,7 @@
 
                             <ImageView
                                 style="@style/payment_option_icon_small"
-                                android:layout_marginLeft="0px"
+                                android:layout_marginStart="0px"
                                 android:src="@drawable/ic_mobikwik_small" />
                         </LinearLayout>
 
@@ -388,7 +388,7 @@
                             android:id="@+id/linearLayoutFreeCharge"
                             android:layout_width="190px"
                             android:layout_height="70px"
-                            android:layout_marginRight="10px"
+                            android:layout_marginEnd="10px"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -401,7 +401,7 @@
 
                             <ImageView
                                 style="@style/payment_option_icon_small"
-                                android:layout_marginLeft="0px"
+                                android:layout_marginStart="0px"
                                 android:src="@drawable/ic_freecharge_small" />
                         </LinearLayout>
 
@@ -409,7 +409,7 @@
                             android:id="@+id/linearLayoutNone"
                             android:layout_width="190px"
                             android:layout_height="70px"
-                            android:layout_marginRight="10px"
+                            android:layout_marginEnd="10px"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -424,7 +424,7 @@
                                 android:id="@+id/textViewNone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="10px"
+                                android:layout_marginStart="10px"
                                 android:text="@string/none"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
@@ -439,8 +439,8 @@
                 android:id="@+id/linearLayoutWalletOption"
                 android:layout_width="match_parent"
                 android:layout_height="90px"
-                android:layout_marginLeft="30px"
-                android:layout_marginRight="30px"
+                android:layout_marginStart="30px"
+                android:layout_marginEnd="30px"
                 android:background="@drawable/background_white_rounded_white_dark_bordered"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -449,7 +449,7 @@
                     android:id="@+id/imageViewWalletOptionCheck"
                     android:layout_width="40px"
                     android:layout_height="40px"
-                    android:layout_marginLeft="30px"
+                    android:layout_marginStart="30px"
                     android:src="@drawable/checkbox_signup_checked"
                     android:tag="mwar" />
 
@@ -457,7 +457,7 @@
                     android:id="@+id/textViewWalletOptionMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20px"
+                    android:layout_marginStart="20px"
                     android:text="@string/use_mobile_wallet_powered_by_format"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_28" />
@@ -487,7 +487,7 @@
                 <ImageView
                     android:layout_width="@dimen/px_50"
                     android:layout_height="2px"
-                    android:layout_marginRight="25px"
+                    android:layout_marginEnd="25px"
                     android:src="@color/grey_light" />
 
                 <TextView
@@ -502,7 +502,7 @@
                 <ImageView
                     android:layout_width="@dimen/px_50"
                     android:layout_height="2px"
-                    android:layout_marginLeft="20px"
+                    android:layout_marginStart="20px"
                     android:src="@color/grey_light" />
 
             </LinearLayout>
@@ -538,9 +538,9 @@
                         android:text="@string/nl_login_facebook"
                         android:textColor="#3b5998"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/px_20"
+                        android:layout_marginStart="@dimen/px_20"
                         android:textSize="@dimen/text_size_32"
-                        android:layout_toRightOf="@+id/bFacebook"
+                        android:layout_toEndOf="@+id/bFacebook"
                         app:typekitFont="maven"/>
 
                 </RelativeLayout>
@@ -549,7 +549,7 @@
                     android:id="@+id/buttonGoogleSignup"
                     android:layout_width="268px"
                     android:layout_height="@dimen/splash_button_height"
-                    android:layout_marginLeft="@dimen/px_20"
+                    android:layout_marginStart="@dimen/px_20"
                     android:gravity="center_horizontal"
                     android:background="@drawable/capsule_login_button_selector">
 
@@ -571,9 +571,9 @@
                         android:text="@string/nl_login_google"
                         android:textColor="@color/text_color"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/px_20"
+                        android:layout_marginStart="@dimen/px_20"
                         android:textSize="@dimen/text_size_32"
-                        android:layout_toRightOf="@+id/bGoogle"
+                        android:layout_toEndOf="@+id/bGoogle"
                         app:typekitFont="maven"/>
 
                 </RelativeLayout>

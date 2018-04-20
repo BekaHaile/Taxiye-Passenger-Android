@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginTop="10px"
-            android:text="No Current Offers"
+            android:text="@string/no_current_offers"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_24" />
 

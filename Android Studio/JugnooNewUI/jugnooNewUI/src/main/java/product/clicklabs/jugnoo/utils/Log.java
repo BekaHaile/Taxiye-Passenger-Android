@@ -5,6 +5,8 @@ import android.os.Environment;
 import java.io.File;
 import java.io.FileWriter;
 
+import product.clicklabs.jugnoo.BuildConfig;
+
 /**
  * Custom log class overrides Android Log
  * @author shankar
@@ -67,7 +69,7 @@ public class Log {
 	
 	
 	static String LOG_FILE = "LOGFILE";
-	static String APP_NAME = "Jugnoo";
+	static String APP_NAME = BuildConfig.APP_DB_ID;
 	
 	public static void writeLogToFile(final String filePrefix, final String response) {
 		if(WRITE_TO_FILE_IN){
@@ -107,7 +109,7 @@ public class Log {
 	
 	public static File getPathLogFolder(){
 		try {
-			String strFolder = Environment.getExternalStorageDirectory() + "/JugnooData";
+			String strFolder = Environment.getExternalStorageDirectory() + "/"+ BuildConfig.APP_DB_ID +"Data";
 			File folder = new File(strFolder);
 			if(!folder.exists()){
 				folder.mkdirs();

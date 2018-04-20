@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="50px"
+            android:layout_marginStart="50px"
             android:gravity="center_horizontal"
             android:orientation="vertical"
             >
@@ -26,7 +26,7 @@
                 android:id="@+id/textViewDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="19"
+                android:text="@string/_19"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_50"
                 />
@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3px"
-                android:text="MAR"
+                android:text="@string/mar"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_28"
                 android:textAllCaps="true"
@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3px"
-                android:text="19:30"
+                android:text="@string/_19_30"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_22"
                 />
@@ -60,8 +60,8 @@
             android:layout_width="474px"
             android:layout_height="2px"
             android:layout_above="@+id/relativeLayoutTeamInfo"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="70px"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="70px"
             android:background="@color/text_color_light"
             />
 
@@ -69,9 +69,9 @@
             android:id="@+id/relativeLayoutTeamInfo"
             android:layout_width="474px"
             android:layout_height="86px"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="70px"
+            android:layout_marginEnd="70px"
             android:background="@color/sliding_bottom_bg_color"
             >
 
@@ -80,7 +80,7 @@
                 android:layout_width="84px"
                 android:layout_height="50px"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="8px"
+                android:layout_marginStart="8px"
                 android:src="@drawable/ic_t20_flag"
                 />
 
@@ -89,10 +89,10 @@
                 android:layout_width="100px"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="10px"
-                android:layout_toLeftOf="@+id/textViewVS"
+                android:layout_marginEnd="10px"
+                android:layout_toStartOf="@+id/textViewVS"
                 android:gravity="center"
-                android:text="IND"
+                android:text="@string/ind"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_36"
                 />
@@ -112,10 +112,10 @@
                 android:layout_width="100px"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="10px"
-                android:layout_toRightOf="@+id/textViewVS"
+                android:layout_marginStart="10px"
+                android:layout_toEndOf="@+id/textViewVS"
                 android:gravity="center"
-                android:text="PAK"
+                android:text="@string/pak"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_36"
                 />
@@ -125,9 +125,9 @@
                 android:id="@+id/imageViewTeam2Flag"
                 android:layout_width="84px"
                 android:layout_height="50px"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="8px"
+                android:layout_marginEnd="8px"
                 android:src="@drawable/ic_t20_flag"
                 />
 
@@ -137,9 +137,9 @@
         <ImageView
             android:layout_width="474px"
             android:layout_height="2px"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_below="@+id/relativeLayoutTeamInfo"
-            android:layout_marginRight="70px"
+            android:layout_marginEnd="70px"
             android:background="@color/text_color_light"
             />
 
@@ -167,7 +167,7 @@
             android:textSize="@dimen/text_size_28"
             android:textAllCaps="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="60px"
+            android:layout_marginStart="60px"
             />
 
 
@@ -175,13 +175,13 @@
             android:id="@+id/textViewYourGuessValue"
             android:layout_width="400px"
             android:layout_height="wrap_content"
-            android:text="SOUTH AFRICA"
+            android:text="@string/south_africa"
             android:textColor="@color/theme_color"
             android:textSize="@dimen/text_size_36"
             android:textAllCaps="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="40px"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="40px"
             android:gravity="center"
             />
 

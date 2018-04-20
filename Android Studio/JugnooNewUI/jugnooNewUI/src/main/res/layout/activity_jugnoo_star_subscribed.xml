@@ -63,7 +63,7 @@
                         android:id="@+id/ivStarInfo"
                         android:layout_width="@dimen/px_42"
                         android:layout_height="@dimen/px_42"
-                        android:layout_toRightOf="@+id/tvSavingsMeter"
+                        android:layout_toEndOf="@+id/tvSavingsMeter"
                         android:padding="@dimen/px_10"
                         android:src="@drawable/ic_star_info"
                         android:tag="mwar" />
@@ -112,10 +112,10 @@
                         android:id="@+id/tvExpiredTitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/px_10"
-                        android:layout_toRightOf="@+id/ivExpireWarning"
+                        android:layout_marginStart="@dimen/px_10"
+                        android:layout_toEndOf="@+id/ivExpireWarning"
                         android:gravity="center"
-                        android:text="Your star status has expired."
+                        android:text="@string/your_star_status_has_expired"
                         android:textColor="#d0021b"
                         android:textSize="@dimen/text_size_30" />
 
@@ -138,8 +138,8 @@
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/px_100"
-                            android:layout_marginLeft="@dimen/px_28"
-                            android:layout_marginRight="@dimen/px_28"
+                            android:layout_marginStart="@dimen/px_28"
+                            android:layout_marginEnd="@dimen/px_28"
                             android:gravity="center_vertical">
 
                             <TextView
@@ -154,9 +154,9 @@
                                 android:id="@+id/tvCurrentPlanValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_toRightOf="@id/tvCurrentPlan"
-                                android:layout_alignParentRight="true"
-                                android:gravity="right"
+                                android:layout_toEndOf="@id/tvCurrentPlan"
+                                android:layout_alignParentEnd="true"
+                                android:gravity="end"
                                 android:text=""
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_30" />
@@ -171,8 +171,8 @@
                             android:id="@+id/rlExpire"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/px_100"
-                            android:layout_marginLeft="@dimen/px_28"
-                            android:layout_marginRight="@dimen/px_28"
+                            android:layout_marginStart="@dimen/px_28"
+                            android:layout_marginEnd="@dimen/px_28"
                             android:gravity="center_vertical">
 
                             <TextView
@@ -186,10 +186,10 @@
                             <TextView
                                 android:id="@+id/tvExpiresOnValue"
                                 android:layout_width="wrap_content"
-                                android:layout_toRightOf="@id/tvExpiresOn"
-                                android:gravity="right"
+                                android:layout_toEndOf="@id/tvExpiresOn"
+                                android:gravity="end"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
                                 android:text=""
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_30" />
@@ -200,8 +200,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/px_100"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginLeft="@dimen/px_28"
-                            android:layout_marginRight="@dimen/px_28"
+                            android:layout_marginStart="@dimen/px_28"
+                            android:layout_marginEnd="@dimen/px_28"
                             android:background="@color/white"
                             android:visibility="gone">
 
@@ -214,7 +214,7 @@
                                 android:id="@+id/tvAutoRenewal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
                                 android:layout_centerVertical="true"
                                 android:gravity="center"
                                 android:text="@string/auto_renewal"
@@ -225,7 +225,7 @@
                                 android:id="@+id/ivAutoRenewalSwitch"
                                 android:layout_width="77px"
                                 android:layout_height="50px"
-                                android:layout_alignParentRight="true"
+                                android:layout_alignParentEnd="true"
                                 android:layout_centerVertical="true"
                                 android:src="@drawable/jugnoo_sticky_off"
                                 android:tag="mwar" />
@@ -260,7 +260,7 @@
                                         android:layout_width="@dimen/px_50"
                                         android:layout_height="@dimen/px_50"
                                         android:layout_centerVertical="true"
-                                        android:layout_marginLeft="@dimen/px_50"
+                                        android:layout_marginStart="@dimen/px_50"
                                         android:src="@drawable/ic_radio_button_normal"
                                         android:tag="mwar" />
 
@@ -268,8 +268,8 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_centerVertical="true"
-                                        android:layout_marginLeft="@dimen/px_24"
-                                        android:layout_toRightOf="@+id/ivRadio1"
+                                        android:layout_marginStart="@dimen/px_24"
+                                        android:layout_toEndOf="@+id/ivRadio1"
                                         android:orientation="vertical">
 
 
@@ -279,7 +279,7 @@
                                             android:layout_height="wrap_content"
                                             android:ellipsize="end"
                                             android:maxLines="1"
-                                            android:text="Monthly"
+                                            android:text="@string/monthly"
                                             android:textColor="@color/text_color"
                                             android:textSize="@dimen/text_size_36" />
 
@@ -295,7 +295,7 @@
                                                 android:layout_marginBottom="-10px"
                                                 android:ellipsize="end"
                                                 android:maxLines="1"
-                                                android:text="2388"
+                                                android:text="@string/_2388"
                                                 android:textColor="@color/text_color"
                                                 android:textSize="@dimen/text_size_24"
                                                 android:visibility="gone" />
@@ -327,7 +327,7 @@
                                         android:layout_width="@dimen/px_50"
                                         android:layout_height="@dimen/px_50"
                                         android:layout_centerVertical="true"
-                                        android:layout_marginLeft="@dimen/px_25"
+                                        android:layout_marginStart="@dimen/px_25"
                                         android:src="@drawable/ic_radio_button_normal"
                                         android:tag="mwar" />
 
@@ -335,8 +335,8 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_centerVertical="true"
-                                        android:layout_marginLeft="@dimen/px_24"
-                                        android:layout_toRightOf="@+id/ivRadio2"
+                                        android:layout_marginStart="@dimen/px_24"
+                                        android:layout_toEndOf="@+id/ivRadio2"
                                         android:orientation="vertical">
 
 
@@ -346,7 +346,7 @@
                                             android:layout_height="wrap_content"
                                             android:ellipsize="end"
                                             android:maxLines="1"
-                                            android:text="Annual"
+                                            android:text="@string/annual"
                                             android:textColor="@color/text_color"
                                             android:textSize="@dimen/text_size_36" />
 
@@ -400,11 +400,11 @@
 
                 <TextView
                     android:id="@+id/tvBenefits"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/px_40"
-                    android:layout_marginLeft="@dimen/px_40"
-                    android:text="BENEFITS"
+                    android:layout_marginStart="@dimen/px_40"
+                    android:text="@string/benefits"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_28"
                     android:visibility="gone" />
@@ -430,8 +430,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:paddingLeft="@dimen/px_40"
-                android:paddingRight="@dimen/px_40"
+                android:paddingStart="@dimen/px_40"
+                android:paddingEnd="@dimen/px_40"
                 android:visibility="visible">
 
                 <TextView

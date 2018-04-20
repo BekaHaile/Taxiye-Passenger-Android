@@ -97,6 +97,8 @@ public class PromotionsAdapter extends RecyclerView.Adapter<PromotionsAdapter.Vi
 		}
 		RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) holder.relative.getLayoutParams();
 		layoutParams.setMargins(paddingL, layoutParams.topMargin, paddingR, layoutParams.bottomMargin);
+		layoutParams.setMarginStart(paddingL);
+		layoutParams.setMarginEnd(paddingR);
 		holder.relative.setLayoutParams(layoutParams);
 
 	}

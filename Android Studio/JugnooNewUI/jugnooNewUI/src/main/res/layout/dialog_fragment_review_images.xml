@@ -24,8 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="18dp"
-        android:layout_marginLeft="20dp"
-        android:text="1 Like | 1 Share"
+        android:layout_marginStart="20dp"
+        android:text="@string/_1_like_1_share"
         android:textColor="@color/white"
         android:textSize="12sp"
         app:typekitFont="maven" />
@@ -34,12 +34,12 @@
         android:id="@+id/ivClose"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:padding="5dp"
         android:src="@drawable/ic_add_grey_bg_selector"
         android:rotation="45"
         android:layout_marginTop="7dp"
-        android:layout_marginRight="14dp"
+        android:layout_marginEnd="14dp"
         />
 
 

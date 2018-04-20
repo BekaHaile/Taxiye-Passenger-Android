@@ -18,7 +18,7 @@
             android:tag="mwar"
             android:src="@drawable/ic_auto_grey"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="30px"
+            android:layout_marginStart="30px"
             />
 
 
@@ -26,11 +26,11 @@
             android:id="@+id/textViewIssueWithRide"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/imageViewProductType"
+            android:layout_toEndOf="@+id/imageViewProductType"
             android:textColor="@color/text_color_light_selector"
             android:text="@string/issue_with_the_recent_ride"
             android:textSize="@dimen/text_size_32"
-            android:layout_marginLeft="20px"
+            android:layout_marginStart="20px"
             android:layout_centerVertical="true"
             />
 
@@ -40,9 +40,9 @@
             android:layout_height="30px"
             android:tag="mwar"
             android:src="@drawable/ic_arrow_orange_bold"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="36px"
+            android:layout_marginEnd="36px"
             />
 
         <ImageView
@@ -64,7 +64,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_toLeftOf="@+id/relativeLayoutDriverImage"
+            android:layout_toStartOf="@+id/relativeLayoutDriverImage"
             >
 
             <TextView
@@ -73,11 +73,11 @@
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:textColor="@color/text_color_light"
-                android:text="Driver Name"
+                android:text="@string/driver_name"
                 android:textSize="@dimen/text_size_30"
                 android:gravity="center"
-                android:layout_marginLeft="10px"
-                android:layout_marginRight="20px"
+                android:layout_marginStart="10px"
+                android:layout_marginEnd="20px"
                 />
 
             <TextView
@@ -86,10 +86,10 @@
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:textColor="@color/text_color"
-                android:text="PB65AC0123"
+                android:text="@string/pb65ac0123"
                 android:textSize="@dimen/text_size_30"
-                android:layout_marginLeft="10px"
-                android:layout_marginRight="20px"
+                android:layout_marginStart="10px"
+                android:layout_marginEnd="20px"
                 android:layout_gravity="center"
                 />
 
@@ -100,8 +100,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/relativeLayoutDriverImage"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/relativeLayoutDriverImage"
             >
 
             <TextView
@@ -112,8 +112,8 @@
                 android:textColor="@color/text_color_light"
                 android:text="@string/trip_total"
                 android:textSize="@dimen/text_size_30"
-                android:layout_marginRight="10px"
-                android:layout_marginLeft="10px"
+                android:layout_marginEnd="10px"
+                android:layout_marginStart="10px"
                 />
 
             <TextView
@@ -124,8 +124,8 @@
                 android:textColor="@color/text_color"
                 android:text="@string/rupee_0"
                 android:textSize="@dimen/text_size_44"
-                android:layout_marginRight="10px"
-                android:layout_marginLeft="10px"
+                android:layout_marginEnd="10px"
+                android:layout_marginStart="10px"
                 />
 
         </LinearLayout>
@@ -179,7 +179,7 @@
             android:textColor="@color/text_color_light"
             android:text="@string/start"
             android:textSize="@dimen/text_size_24"
-            android:layout_marginLeft="80px"
+            android:layout_marginStart="80px"
             android:layout_marginTop="26px"
             />
 
@@ -187,7 +187,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginLeft="45px"
+            android:layout_marginStart="45px"
             android:layout_marginTop="20px"
             android:gravity="center_horizontal"
             android:layout_below="@+id/textViewDate"
@@ -223,7 +223,7 @@
             android:layout_marginTop="10px"
             android:layout_marginBottom="30px"
             android:layout_below="@+id/textViewDate"
-            android:layout_marginLeft="80px"
+            android:layout_marginStart="80px"
             >
 
             <TextView
@@ -243,7 +243,7 @@
                 android:text="@string/sample_address"
                 android:textSize="@dimen/text_size_24"
                 android:layout_marginTop="5px"
-                android:layout_marginRight="20px"
+                android:layout_marginEnd="20px"
                 />
 
 
@@ -265,7 +265,7 @@
                 android:text="@string/sample_address"
                 android:textSize="@dimen/text_size_24"
                 android:layout_marginTop="5px"
-                android:layout_marginRight="20px"
+                android:layout_marginEnd="20px"
                 />
 
 
@@ -291,11 +291,11 @@
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:textColor="@color/text_color_blue"
-            android:text="Status"
+            android:text="@string/status"
             android:textSize="@dimen/text_size_30"
             android:gravity="center"
-            android:layout_marginLeft="94px"
-            android:layout_marginRight="20px"
+            android:layout_marginStart="94px"
+            android:layout_marginEnd="20px"
             android:layout_marginBottom="8px"
             />
 
@@ -310,7 +310,7 @@
                 android:tag="mwar"
                 android:src="@drawable/ic_support_location_pin"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="44px"
+                android:layout_marginStart="44px"
                 />
 
             <TextView
@@ -319,11 +319,11 @@
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:textColor="@color/text_color"
-                android:text="PB65AC0123"
+                android:text="@string/pb65ac0123"
                 android:textSize="@dimen/text_size_30"
-                android:layout_marginLeft="24px"
-                android:layout_marginRight="36px"
-                android:layout_toRightOf="@+id/imageViewOrderLocPin"
+                android:layout_marginStart="24px"
+                android:layout_marginEnd="36px"
+                android:layout_toEndOf="@+id/imageViewOrderLocPin"
                 android:layout_centerVertical="true"
                 />
         </RelativeLayout>

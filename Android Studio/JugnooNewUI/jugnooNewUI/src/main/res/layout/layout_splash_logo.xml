@@ -3,7 +3,7 @@
     android:id="@+id/rlSplashLogo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="gone">
+    android:visibility="visible">
 
 
     <ImageView
@@ -28,14 +28,29 @@
 
             <ImageView
                 android:id="@+id/imageViewJugnooLogo"
-                android:layout_width="386px"
-                android:layout_height="96px"
+                android:layout_width="@dimen/splash_logo_width"
+                android:layout_height="@dimen/splash_logo_height"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/logo_big"
+                android:background="@drawable/splash_logo_icon_drawable"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                android:tag="mhar"
+                android:tag="@string/dont_touch_me"
                 android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tvJugnooTaxiS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="@string/jugnoo_taxi"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:layout_below="@+id/imageViewJugnooLogo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:visibility="@integer/show_splash_logo_text"
+                android:tag="@string/dont_touch_me"
+                />
 
         </RelativeLayout>
 

@@ -12,7 +12,7 @@
         android:id="@+id/relativeLayoutMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/rlQuantitySel"
+        android:layout_toStartOf="@+id/rlQuantitySel"
         >
 
         <RelativeLayout
@@ -21,7 +21,7 @@
             android:layout_height="120px"
             android:layout_centerVertical="true"
             android:layout_marginBottom="20px"
-            android:layout_marginLeft="30px"
+            android:layout_marginStart="30px"
             android:layout_marginTop="20px"
             >
 
@@ -40,7 +40,7 @@
                 android:id="@+id/imageViewFoodType"
                 android:layout_width="41px"
                 android:layout_height="41px"
-                android:layout_marginLeft="2px"
+                android:layout_marginStart="2px"
                 android:layout_marginTop="2px"
                 android:src="@drawable/veg"
                 android:tag="mwar"
@@ -56,9 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginBottom="34px"
-            android:layout_marginLeft="35px"
+            android:layout_marginStart="35px"
             android:layout_marginTop="34px"
-            android:layout_toRightOf="@+id/relativeLayoutItemImage"
+            android:layout_toEndOf="@+id/relativeLayoutItemImage"
             android:orientation="vertical">
 
             <TextView
@@ -104,10 +104,10 @@
         android:id="@+id/rlQuantitySel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginBottom="20px"
-        android:layout_marginRight="20px"
+        android:layout_marginEnd="20px"
         android:orientation="horizontal"
         >
 
@@ -122,8 +122,8 @@
         android:layout_width="match_parent"
         android:layout_height="2px"
         android:layout_below="@+id/relativeLayoutMain"
-        android:layout_marginLeft="140px"
-        android:layout_marginRight="34px"
+        android:layout_marginStart="140px"
+        android:layout_marginEnd="34px"
         android:background="@color/stroke_light_grey_alpha"/>
 
 </RelativeLayout>

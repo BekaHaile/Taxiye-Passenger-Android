@@ -46,12 +46,5 @@ public class AppConstant {
     public static String URL = "url";
 
     // custom dialog strings
-    public static String CANCEL = "CANCEL";
-    public static String OK = "OK";
-    public static String NO = "NO";
-    public static String YES = "YES";
-    public static String PLEASE ="Please wait..";
-    public static String LOG_OUT = "LOGOUT";
-    public static String REGISTER = "REGISTER";
 
 }

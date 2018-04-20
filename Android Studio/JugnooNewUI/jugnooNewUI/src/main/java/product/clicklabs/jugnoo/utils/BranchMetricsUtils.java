@@ -80,7 +80,7 @@ public class BranchMetricsUtils {
                     .setCanonicalIdentifier("item/12345")
 
                             // The canonical URL for SEO purposes (optional)
-                    .setCanonicalUrl("https://jugnoo.in")
+                    .setCanonicalUrl(context.getString(R.string.web_landing_page))
 
                             // This is where you define the open graph structure and how the object will appear on Facebook or in a deepview
                     .setTitle(title)
@@ -160,7 +160,7 @@ public class BranchMetricsUtils {
                 .setCanonicalIdentifier("item/12345")
 
                 // The canonical URL for SEO purposes (optional)
-                .setCanonicalUrl("https://jugnoo.in")
+                .setCanonicalUrl(context.getString(R.string.web_landing_page))
 
                 // This is where you define the open graph structure and how the object will appear on Facebook or in a deepview
                 .setTitle(title)

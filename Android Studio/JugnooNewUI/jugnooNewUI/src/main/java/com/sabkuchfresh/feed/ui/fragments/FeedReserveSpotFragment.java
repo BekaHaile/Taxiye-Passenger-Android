@@ -151,7 +151,8 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
         TextView v = new TextView(getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.rightMargin = FeedUtils.dpToPx(4.0f);
-        v.setPadding(FeedUtils.dpToPx(6), FeedUtils.dpToPx(8f), FeedUtils.dpToPx(6), FeedUtils.dpToPx(8f));
+        params.setMarginEnd(FeedUtils.dpToPx(4.0f));
+        v.setPaddingRelative(FeedUtils.dpToPx(6), FeedUtils.dpToPx(8f), FeedUtils.dpToPx(6), FeedUtils.dpToPx(8f));
         v.setGravity(Gravity.CENTER);
         v.setBackgroundResource(R.drawable.background_white_rounded_bordered);
         v.setTypeface(Fonts.mavenRegular(getContext()), Typeface.BOLD);
@@ -176,13 +177,13 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
         {
             GAUtils.event(FEED, WAITLIST, RESERVE_MY_SPOT+CLICKED);
             if(Data.longitude==0||Data.latitude==0){
-                Toast.makeText(activity, "Please turn on your location to register.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, getString(R.string.please_turn_on_location), Toast.LENGTH_SHORT).show();
                 return;
             }
 
             String handleText = etCreateHandle.getText().toString().trim();
             if(Data.getFeedData().showCreateHandle() && handleText.length() == 0){
-				Toast.makeText(activity, "Please enter handle of your choice", Toast.LENGTH_SHORT).show();
+				Toast.makeText(activity, getString(R.string.please_enter_handle_of_your_choice), Toast.LENGTH_SHORT).show();
 				return;
 			}
 

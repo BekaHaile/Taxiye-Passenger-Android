@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <integer name="view_visible">0</integer>
+    <integer name="view_invisible">1</integer>
+    <integer name="view_gone">2</integer>
+
+
+    <!--Other things to change
+        1. google-services.json
+        2. Doc entity in strings.xml
+        3. application_id in build.gradle
+    -->
+
+
+    <!--
+        Icons to change:
+            ic_taxi_logo => ic_splash_logo
+            ic_launcher
+            notification_icon
+    -->
+
+
+    <string name="operator_token">d7f228ce89b10cb02ec9fccdb47355d5</string>
+    <string name="support_number">+919023121121</string>
+    <string name="police_number">+100</string>
+    <string name="facebook_page_id">252184564966458</string>
+    <string name="facebook_page_name">jugnoose</string>
+
+
+    <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
+    <integer name="show_referal_on_end_ride">@integer/view_visible</integer>
+    <bool name="force_open_autos">false</bool>
+
+
+    <dimen name="splash_logo_width">207dp</dimen>
+    <dimen name="splash_logo_height">53dp</dimen>
+    <dimen name="splash_logo_top_margin">125dp</dimen>
+    <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
+    <integer name="show_splash_logo_text">@integer/view_gone</integer>
+
+    <string name="file_provider_name">com.jugnoo.fileprovider</string>
+    <string name="web_landing_page">https://jugnoo.in</string>
+    <string name="smart_url">http://smarturl.it/jugnoo</string>
+    <string name="db_name">jugnoo_database</string>
+    <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
+    <string name="app_domain">jugnoo.in</string>
+    <string name="app_host_name">www.jugnoo.in</string>
+    <string name="label_name">jugnoo</string>
+    <string name="branch_domain">share.jugnoo.in</string>
+    <string name="app_scheme">jugnooautos</string>
+
+    <string name="pictures_path">Jugnoo/Jugnoo Pictures</string>
+    <bool name="force_inhouse_login">false</bool>
+</resources>

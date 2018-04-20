@@ -22,10 +22,12 @@ public class FareStructure {
     private boolean fromServer;
     private String displayBaseFare;
     private String displayFareText;
+    private int operatorId;
+    private String currency;
 
 
     public FareStructure(double fixedFare, double thresholdDistance, double farePerKm, double farePerMin, double freeMinutes, double farePerWaitingMin, double fareThresholdWaitingTime,
-						 double convenienceCharge, boolean fromServer, String displayBaseFare, String displayFareText){
+						 double convenienceCharge, boolean fromServer, String displayBaseFare, String displayFareText, int operatorId, String currency){
         this.fixedFare = fixedFare;
         this.thresholdDistance = thresholdDistance;
         this.farePerKm = farePerKm;
@@ -38,6 +40,8 @@ public class FareStructure {
         this.fromServer = fromServer;
         this.displayBaseFare = displayBaseFare;
         this.displayFareText = displayFareText;
+        this.operatorId = operatorId;
+        this.currency = currency;
     }
 
 
@@ -51,8 +55,7 @@ public class FareStructure {
 
     public String getDisplayBaseFare(Context context) {
         if(displayBaseFare == null){
-            return context.getResources().getString(R.string.rupees_value_format_without_space,
-                    Utils.getMoneyDecimalFormatWithoutFloat().format(fixedFare));
+            return Utils.formatCurrencyValue(currency, fixedFare);
         } else{
             return displayBaseFare;
         }
@@ -74,8 +77,8 @@ public class FareStructure {
         String convenienceThresholdText = "";
         try {
             if(convenienceCharge > 0){
-                convenienceThresholdText = context.getResources().getString(R.string.convenience_charge_rupees_format,
-                        Utils.getMoneyDecimalFormat().format(convenienceCharge));
+                convenienceThresholdText = context.getResources().getString(R.string.convenience_charge_colon) + " " +
+                        Utils.formatCurrencyValue(currency, convenienceCharge);
             }
 
             if(thresholdDistance > 1.0){
@@ -107,5 +110,17 @@ public class FareStructure {
 
     public void setDisplayFareText(String displayFareText) {
         this.displayFareText = displayFareText;
+    }
+
+    public int getOperatorId() {
+        return operatorId;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

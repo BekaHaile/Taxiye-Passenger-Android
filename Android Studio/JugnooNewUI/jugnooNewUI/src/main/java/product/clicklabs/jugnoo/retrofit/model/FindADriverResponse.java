@@ -126,6 +126,9 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
     @SerializedName("points_of_interest")
     @Expose
     private List<FetchUserAddressResponse.Address> pointsOfInterestAddresses = new ArrayList<FetchUserAddressResponse.Address>();
+    @SerializedName("currency")
+    @Expose
+    private String currency;
 
     public List<CouponInfo> getDeliveryCoupons() {
         return deliveryCoupons;
@@ -481,4 +484,11 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
     }
 
 
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 }

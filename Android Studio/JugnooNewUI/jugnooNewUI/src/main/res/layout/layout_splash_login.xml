@@ -25,7 +25,6 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
         <ImageView
@@ -83,9 +82,9 @@
                         android:text="@string/nl_login_facebook"
                         android:textColor="#3b5998"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/px_20"
+                        android:layout_marginStart="@dimen/px_20"
                         android:textSize="@dimen/text_size_32"
-                        android:layout_toRightOf="@+id/bFacebook"
+                        android:layout_toEndOf="@+id/bFacebook"
                         app:typekitFont="maven"/>
 
                 </RelativeLayout>
@@ -94,7 +93,7 @@
                     android:id="@+id/buttonGoogleLogin"
                     android:layout_width="268px"
                     android:layout_height="@dimen/splash_button_height"
-                    android:layout_marginLeft="@dimen/px_20"
+                    android:layout_marginStart="@dimen/px_20"
                     android:gravity="center_horizontal"
                     android:background="@drawable/capsule_login_button_selector">
 
@@ -116,9 +115,9 @@
                         android:text="@string/nl_login_google"
                         android:textColor="@color/text_color"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/px_20"
+                        android:layout_marginStart="@dimen/px_20"
                         android:textSize="@dimen/text_size_32"
-                        android:layout_toRightOf="@+id/bGoogle"
+                        android:layout_toEndOf="@+id/bGoogle"
                         app:typekitFont="maven"/>
 
                 </RelativeLayout>
@@ -135,7 +134,7 @@
                 <ImageView
                     android:layout_width="@dimen/px_50"
                     android:layout_height="2px"
-                    android:layout_marginRight="25px"
+                    android:layout_marginEnd="25px"
                     android:src="@color/grey_light" />
 
                 <TextView
@@ -150,7 +149,7 @@
                 <ImageView
                     android:layout_width="@dimen/px_50"
                     android:layout_height="2px"
-                    android:layout_marginLeft="20px"
+                    android:layout_marginStart="20px"
                     android:src="@color/grey_light" />
 
             </LinearLayout>
@@ -159,8 +158,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="@dimen/px_30"
-                android:layout_marginRight="@dimen/px_30"
+                android:layout_marginStart="@dimen/px_30"
+                android:layout_marginEnd="@dimen/px_30"
                 android:layout_marginTop="@dimen/px_40"
                 android:orientation="vertical">
 
@@ -173,7 +172,7 @@
                         android:layout_width="@dimen/px_30"
                         android:layout_height="@dimen/px_30"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="36px"
+                        android:layout_marginStart="36px"
                         android:src="@drawable/ic_phone"
                         android:tag="mhar" />
 
@@ -182,16 +181,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="88px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10px"
-                        android:layout_toLeftOf="@+id/textViewEmailRequired"
-                        android:layout_toRightOf="@+id/imageViewEmail"
+                        android:layout_marginStart="10px"
+                        android:layout_toStartOf="@+id/textViewEmailRequired"
+                        android:layout_toEndOf="@+id/imageViewEmail"
                         android:background="#0000"
                         android:completionThreshold="1"
                         android:gravity="center_vertical"
                         android:hint="@string/phone_number"
                         android:inputType="number"
-                        android:paddingLeft="20px"
-                        android:paddingRight="20px"
+                        android:paddingStart="20px"
+                        android:paddingEnd="20px"
                         android:maxLines="1"
                         android:maxLength="10"
                         android:ellipsize="end"
@@ -204,9 +203,9 @@
                         android:id="@+id/textViewEmailRequired"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="30px"
+                        android:layout_marginEnd="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
                         android:textSize="@dimen/text_size_22" />
@@ -217,8 +216,8 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="2px"
-                    android:layout_marginLeft="@dimen/px_20"
-                    android:layout_marginRight="@dimen/px_20"
+                    android:layout_marginStart="@dimen/px_20"
+                    android:layout_marginEnd="@dimen/px_20"
                     android:src="@color/grey_light" />
 
 
@@ -232,7 +231,7 @@
                         android:layout_width="18px"
                         android:layout_height="27px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="36px"
+                        android:layout_marginStart="36px"
                         android:src="@drawable/ic_password"
                         android:tag="mhar" />
 
@@ -241,15 +240,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="88px"
                         android:layout_centerVertical="true"
-                        android:layout_marginLeft="10px"
-                        android:layout_toLeftOf="@+id/textViewPasswordRequired"
-                        android:layout_toRightOf="@+id/imageViewPassword"
+                        android:layout_marginStart="10px"
+                        android:layout_toStartOf="@+id/textViewPasswordRequired"
+                        android:layout_toEndOf="@+id/imageViewPassword"
                         android:background="#0000"
                         android:gravity="center_vertical"
                         android:hint="@string/password"
                         android:inputType="textPassword"
-                        android:paddingLeft="20px"
-                        android:paddingRight="20px"
+                        android:paddingStart="20px"
+                        android:paddingEnd="20px"
                         android:singleLine="true"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
@@ -260,9 +259,9 @@
                         android:id="@+id/textViewPasswordRequired"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="30px"
+                        android:layout_marginEnd="30px"
                         android:text="@string/nl_splash_required"
                         android:textColor="@color/text_color_hint"
                         android:textSize="@dimen/text_size_22" />

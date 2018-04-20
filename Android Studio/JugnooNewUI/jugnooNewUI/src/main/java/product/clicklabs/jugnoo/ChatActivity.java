@@ -130,7 +130,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 								sendChat(input.getText().toString().trim());
 							}
 						} else{
-							DialogPopup.alertPopup(ChatActivity.this, "", Data.CHECK_INTERNET_MSG);
+							DialogPopup.alertPopup(ChatActivity.this, "", getString(R.string.connection_lost_desc));
 						}
 
                         return true;
@@ -199,7 +199,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 						sendChat(input.getText().toString().trim());
 					}
 				} else{
-					DialogPopup.alertPopup(ChatActivity.this, "", Data.CHECK_INTERNET_MSG);
+					DialogPopup.alertPopup(ChatActivity.this, "", getString(R.string.connection_lost_desc));
 				}
 				break;
 			case R.id.ivCallDriver:
@@ -265,7 +265,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 	private void loadDiscussions(){
 		if (!MyApplication.getInstance().isOnline()) {
 			DialogPopup.dialogNoInternet(ChatActivity.this,
-					Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+					getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc),
 					new Utils.AlertCallBackWithButtonsInterface() {
 						@Override
 						public void positiveClick(View v) {
@@ -338,12 +338,12 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 					@Override
 					public void failure(RetrofitError error) {
 						//DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 					}
 				});
 
             } else {
-                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -394,7 +394,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 				});
 
             } else {
-                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
             }
         } catch (Exception e) {
             e.printStackTrace();

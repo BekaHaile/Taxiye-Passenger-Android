@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="13px"
-        android:layout_marginLeft="25px"
-        android:layout_marginRight="25px"
+        android:layout_marginStart="25px"
+        android:layout_marginEnd="25px"
         android:layout_marginTop="12px"
         card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="@dimen/button_corner_radius">
@@ -34,7 +34,7 @@
                     android:id="@+id/imageViewNotifCircle"
                     android:layout_width="27px"
                     android:layout_height="28px"
-                    android:layout_marginLeft="25px"
+                    android:layout_marginStart="25px"
                     android:layout_marginTop="25px"
                     android:src="@drawable/ic_notification_circle"
                     android:tag="mwar" />
@@ -44,30 +44,30 @@
                     android:id="@+id/linearLayoutText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="25px"
-                    android:layout_toRightOf="@+id/imageViewNotifCircle"
+                    android:layout_marginStart="25px"
+                    android:layout_toEndOf="@+id/imageViewNotifCircle"
                     android:orientation="vertical">
 
 
                     <TextView
                         android:id="@+id/textViewTitle"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="30px"
+                        android:layout_marginEnd="30px"
                         android:layout_marginTop="20px"
-                        android:text="Title"
+                        android:text="@string/title"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
 
 
                     <TextView
                         android:id="@+id/textViewDescription"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10px"
-                        android:layout_marginRight="30px"
+                        android:layout_marginEnd="30px"
                         android:layout_marginTop="5px"
-                        android:text="Hello"
+                        android:text="@string/hello"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_28" />
 
@@ -77,8 +77,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10px"
-                        android:layout_marginRight="10px"
-                        android:text="18 May, 2016"
+                        android:layout_marginEnd="10px"
+                        android:text="@string/_18_may_2016"
                         android:textColor="@color/text_color_light"
                         android:textSize="@dimen/text_size_24" />
                 </LinearLayout>

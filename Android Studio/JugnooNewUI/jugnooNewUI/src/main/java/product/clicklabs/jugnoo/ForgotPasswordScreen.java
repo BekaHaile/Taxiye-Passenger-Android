@@ -122,14 +122,14 @@ public class ForgotPasswordScreen extends BaseActivity  {
 
                 if ("".equalsIgnoreCase(email)) {
                     editTextEmail.requestFocus();
-                    editTextEmail.setError("Please enter email or phone number");
+                    editTextEmail.setError(getString(R.string.please_enter_email_or_phone));
                 } else {
                     boolean onlyDigits = Utils.checkIfOnlyDigits(email);
                     if (onlyDigits) {
-                        email = Utils.retrievePhoneNumberTenChars(email);
+                        email = Utils.retrievePhoneNumberTenChars(email, Utils.getCountryCode(ForgotPasswordScreen.this));
                         if (!Utils.validPhoneNumber(email)) {
                             editTextEmail.requestFocus();
-                            editTextEmail.setError("Please enter valid phone number");
+                            editTextEmail.setError(getString(R.string.please_enter_valid_phone));
                         } else {
                             email = "+91" + email;
                             forgotPasswordAsync(ForgotPasswordScreen.this, email, true);
@@ -139,7 +139,7 @@ public class ForgotPasswordScreen extends BaseActivity  {
                             forgotPasswordAsync(ForgotPasswordScreen.this, email, false);
                         } else {
                             editTextEmail.requestFocus();
-                            editTextEmail.setError("Please enter valid email");
+                            editTextEmail.setError(getString(R.string.please_enter_valid_email_id));
                         }
                     }
 
@@ -209,7 +209,7 @@ public class ForgotPasswordScreen extends BaseActivity  {
     public void forgotPasswordAsync(final Activity activity, final String email, boolean isPhoneNumber) {
         if (MyApplication.getInstance().isOnline()) {
 
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
             HashMap<String, String> params = new HashMap<>();
 
@@ -251,7 +251,7 @@ public class ForgotPasswordScreen extends BaseActivity  {
 //                            }
 //                        } catch (Exception exception) {
 //                            exception.printStackTrace();
-//                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+//                            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 //                        }
 //                        DialogPopup.dismissLoadingDialog();
 //                    }
@@ -261,7 +261,7 @@ public class ForgotPasswordScreen extends BaseActivity  {
 //                    public void onFailure(Throwable arg3) {
 //                        Log.e("request fail", arg3.toString());
 //                        DialogPopup.dismissLoadingDialog();
-//                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 //                    }
 //
 //                });
@@ -292,7 +292,7 @@ public class ForgotPasswordScreen extends BaseActivity  {
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                     DialogPopup.dismissLoadingDialog();
                 }
@@ -301,12 +301,12 @@ public class ForgotPasswordScreen extends BaseActivity  {
                 public void failure(RetrofitError error) {
                     Log.e("request fail", error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
 
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
 
     }

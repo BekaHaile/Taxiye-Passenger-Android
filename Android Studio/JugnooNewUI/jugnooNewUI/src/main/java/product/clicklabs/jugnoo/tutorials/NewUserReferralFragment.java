@@ -86,7 +86,7 @@ public class NewUserReferralFragment extends Fragment {
                     apiApplyReferralCode(activity, promoCode);
                 } else {
                     etPromoCode.requestFocus();
-                    etPromoCode.setError("Code can't be empty");
+                    etPromoCode.setError(getString(R.string.code_cant_be_empty));
                 }
             }
         });
@@ -111,7 +111,7 @@ public class NewUserReferralFragment extends Fragment {
         try {
             if(!HomeActivity.checkIfUserDataNull(activity)) {
                 if (MyApplication.getInstance().isOnline()) {
-                    DialogPopup.showLoadingDialog(activity, "Loading...");
+                    DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
                     HashMap<String, String> params = new HashMap<>();
                     params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -136,11 +136,11 @@ public class NewUserReferralFragment extends Fragment {
                                     Utils.showToast(activity, message);
                                     openCompleteProfile();
                                 } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                                 }
                             } catch (Exception exception) {
                                 exception.printStackTrace();
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 
                             }
                             DialogPopup.dismissLoadingDialog();
@@ -150,12 +150,12 @@ public class NewUserReferralFragment extends Fragment {
                         public void failure(RetrofitError error) {
                             Log.e(TAG, "enterCode error="+error.toString());
                             DialogPopup.dismissLoadingDialog();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         }
                     });
                 } else {
                     DialogPopup.dialogNoInternet(activity,
-                            Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                            activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
                             new Utils.AlertCallBackWithButtonsInterface() {
                                 @Override
                                 public void positiveClick(View v) {

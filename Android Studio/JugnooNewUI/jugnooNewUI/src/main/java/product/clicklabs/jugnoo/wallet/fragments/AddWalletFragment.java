@@ -170,7 +170,7 @@ public class AddWalletFragment extends Fragment {
 				String otp = editTextOTP.getText().toString().trim();
 				if ("".equalsIgnoreCase(otp)) {
 					editTextOTP.requestFocus();
-					editTextOTP.setError("Please enter OTP");
+					editTextOTP.setError(getString(R.string.please_enter_otp));
 				} else {
 					sendOTP(editTextOTP.getText().toString().trim());
 					Utils.hideSoftKeyboard(paymentActivity, editTextOTP);
@@ -303,7 +303,7 @@ public class AddWalletFragment extends Fragment {
 	public void generateOTP(final boolean retry) {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
-				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
+				DialogPopup.showLoadingDialog(paymentActivity, getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -332,7 +332,7 @@ public class AddWalletFragment extends Fragment {
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
-							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(paymentActivity, "", getString(R.string.connection_lost_please_try_again));
 						}
 					}
 
@@ -340,7 +340,7 @@ public class AddWalletFragment extends Fragment {
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "requestOtp error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(paymentActivity, "", getString(R.string.connection_lost_please_try_again));
 					}
 				};
 
@@ -353,7 +353,7 @@ public class AddWalletFragment extends Fragment {
 					RestClient.getApiService().freeChargeRequestOtp(params, callback);
                 }
 			} else{
-				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+				DialogPopup.dialogNoInternet(paymentActivity, getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc),
 						new Utils.AlertCallBackWithButtonsInterface() {
 							@Override
 							public void positiveClick(View view) {
@@ -379,7 +379,7 @@ public class AddWalletFragment extends Fragment {
 	private void sendOTP(final String otp) {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
-				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
+				DialogPopup.showLoadingDialog(paymentActivity, getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -424,7 +424,7 @@ public class AddWalletFragment extends Fragment {
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
-							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(paymentActivity, "", getString(R.string.connection_lost_please_try_again));
 						}
 					}
 
@@ -432,7 +432,7 @@ public class AddWalletFragment extends Fragment {
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "loginWithOtp error=" + error.toString());
 						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(paymentActivity, "", getString(R.string.connection_lost_please_try_again));
 					}
 				};
 
@@ -445,7 +445,7 @@ public class AddWalletFragment extends Fragment {
                     RestClient.getApiService().freeChargeLoginWithOtp(params, callback);
                 }
 			} else{
-				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+				DialogPopup.dialogNoInternet(paymentActivity, getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc),
 						new Utils.AlertCallBackWithButtonsInterface() {
 							@Override
 							public void positiveClick(View view) {

@@ -35,7 +35,7 @@
         <ImageView
             android:layout_width="90px"
             android:layout_height="81px"
-            android:layout_marginLeft="7px"
+            android:layout_marginStart="7px"
             android:src="@drawable/ic_menu_category_selector"
             android:tag="mwar"/>
 
@@ -45,8 +45,8 @@
             android:layout_height="81px"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:paddingLeft="14px"
-            android:text="Categories"
+            android:paddingStart="14px"
+            android:text="@string/categories"
             android:textColor="@color/text_color_white_theme_selector"
             android:textSize="@dimen/text_size_38"/>
 
@@ -85,19 +85,19 @@
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="30px"
+                android:layout_marginStart="30px"
                 android:src="@drawable/ic_menu_category_auto_selector"
                 android:tag="mwar"
                 />
 
             <TextView
                 android:id="@+id/textViewAutos"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="81px"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
 
-                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:paddingStart="@dimen/menu_text_margin_offerings"
                 android:text="@string/rides"
                 android:textColor="@color/text_color_white_theme_selector"
                 android:textSize="@dimen/text_size_38"/>
@@ -119,18 +119,18 @@
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="30px"
+                android:layout_marginStart="30px"
                 android:src="@drawable/ic_menu_category_meals_selector"
                 android:tag="mwar"/>
 
             <TextView
                 android:id="@+id/textViewMeals"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="81px"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/menu_text_margin_offerings"
-                android:text="Meals"
+                android:paddingStart="@dimen/menu_text_margin_offerings"
+                android:text="@string/meals"
                 android:textColor="@color/text_color_white_theme_selector"
                 android:textSize="@dimen/text_size_38"/>
 
@@ -151,17 +151,17 @@
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="30px"
+                android:layout_marginStart="30px"
                 android:src="@drawable/ic_menu_category_fresh_selector"
                 android:tag="mwar"/>
 
             <TextView
                 android:id="@+id/textViewFresh"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="81px"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:paddingStart="@dimen/menu_text_margin_offerings"
                 android:text="@string/fatafat"
                 android:textColor="@color/text_color_white_theme_selector"
                 android:textSize="@dimen/text_size_38"/>
@@ -184,17 +184,17 @@
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="30px"
+                android:layout_marginStart="30px"
                 android:src="@drawable/ic_menu_category_grocery_selector"
                 android:tag="mwar"/>
 
             <TextView
                 android:id="@+id/textViewGrocery"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="81px"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:paddingStart="@dimen/menu_text_margin_offerings"
                 android:text="@string/grocery"
                 android:textColor="@color/text_color_white_theme_selector"
                 android:textSize="@dimen/text_size_38"/>
@@ -217,17 +217,17 @@
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="30px"
+                android:layout_marginStart="30px"
                 android:src="@drawable/ic_menu_category_menus_selector"
                 android:tag="mwar" />
 
             <TextView
                 android:id="@+id/textViewMenus"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="81px"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:paddingStart="@dimen/menu_text_margin_offerings"
                 android:text="@string/menus"
                 android:textColor="@color/text_color_white_theme_selector"
                 android:textSize="@dimen/text_size_38"/>
@@ -248,17 +248,17 @@
             <ImageView
                 android:layout_width="44px"
                 android:layout_height="50px"
-                android:layout_marginLeft="34px"
+                android:layout_marginStart="34px"
                 android:src="@drawable/ic_menu_category_delivery_customer_selector"
                 android:tag="mwar"/>
 
             <TextView
                 android:id="@+id/textViewDeliveryCustomer"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="81px"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:paddingStart="@dimen/menu_text_margin_offerings"
                 android:text="@string/delivery_new_name"
                 app:typekitFont="@string/maven_r"
                 android:textColor="@color/text_color_white_theme_selector"
@@ -281,7 +281,7 @@
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="30px"
+                android:layout_marginStart="30px"
                 android:src="@drawable/ic_menu_category_pay_selector"
                 android:tag="mwar"
                 android:layout_gravity="center_vertical"
@@ -289,11 +289,11 @@
 
             <TextView
                 android:id="@+id/textViewPay"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="81px"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:paddingStart="@dimen/menu_text_margin_offerings"
                 android:text="@string/pay"
                 android:textColor="@color/text_color_white_theme_selector"
                 android:textSize="@dimen/text_size_38"/>
@@ -315,7 +315,7 @@
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="30px"
+                android:layout_marginStart="30px"
                 android:padding="5px"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_menu_category_anywhere_selector"
@@ -323,11 +323,11 @@
 
             <TextView
                 android:id="@+id/textViewFeed"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="81px"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:paddingStart="@dimen/menu_text_margin_offerings"
                 android:text="@string/fatafat_offering_name"
                 android:textColor="@color/text_color_white_theme_selector"
                 android:textSize="@dimen/text_size_38"/>
@@ -349,17 +349,17 @@
             <ImageView
                 android:layout_width="56px"
                 android:layout_height="56px"
-                android:layout_marginLeft="30px"
+                android:layout_marginStart="30px"
                 android:src="@drawable/ic_menu_category_pros_selector"
                 android:tag="mwar"/>
 
             <TextView
                 android:id="@+id/textViewPros"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="81px"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/menu_text_margin_offerings"
+                android:paddingStart="@dimen/menu_text_margin_offerings"
                 android:text="@string/pros"
                 android:textColor="@color/text_color_white_theme_selector"
                 android:textSize="@dimen/text_size_38"/>
@@ -369,8 +369,8 @@
         <View
 
             android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/px_30"
-            android:layout_marginRight="@dimen/px_30"
+            android:layout_marginStart="@dimen/px_30"
+            android:layout_marginEnd="@dimen/px_30"
             android:layout_marginTop="@dimen/px_30"
             android:background="@color/grey_light_alpha"
             android:layout_height="2px"/>

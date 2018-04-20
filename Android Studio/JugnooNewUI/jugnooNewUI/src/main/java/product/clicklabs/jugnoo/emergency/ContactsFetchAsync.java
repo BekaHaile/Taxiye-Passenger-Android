@@ -2,9 +2,12 @@ package product.clicklabs.jugnoo.emergency;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
+
+import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -73,12 +76,12 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 							String phone = pCur
 									.getString(pCur
 											.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-							String type = getContactTypeString(pCur.getString(
+							String type = getContactTypeString(activity, pCur.getString(
 									pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE)));
 
 							phone = phone.replace(" ","");
 							phone = phone.replace("-", "");
-							if (phone != null && (phone.length() >= 10)) {
+							if (phone != null && Utils.validPhoneNumber(phone)) {
 								contactBeans.add(new ContactBean(name, phone, type, ContactBean.ContactBeanViewType.CONTACT));
 							}
 						}
@@ -118,21 +121,21 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 	}
 
 
-	private String getContactTypeString(String type){
+	private String getContactTypeString(Context context, String type){
 		try {
 			int typeInt = Integer.parseInt(type);
 			if(typeInt == ContactsContract.CommonDataKinds.Phone.TYPE_HOME){
-				return "Home";
+				return context.getString(R.string.home);
 			} else if(typeInt == ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE){
-				return "Mobile";
+				return context.getString(R.string.mobile);
 			} else if(typeInt == ContactsContract.CommonDataKinds.Phone.TYPE_WORK){
-				return "Work";
+				return context.getString(R.string.work);
 			} else{
-				return "Other";
+				return context.getString(R.string.other);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "Mobile";
+			return context.getString(R.string.mobile);
 		}
 	}
 

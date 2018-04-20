@@ -14,7 +14,7 @@
         >
 
         <LinearLayout
-            android:gravity="left"
+            android:gravity="start"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:descendantFocusability="blocksDescendants"
@@ -27,23 +27,23 @@
             <RelativeLayout
                 android:layout_marginTop="@dimen/dp_15"
                 android:layout_marginBottom="@dimen/dp_15"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/tvMerchantName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bittu Delux Dhaba"
+                    android:text="@string/bittu_delux_dhaba"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_20"
                     android:maxLines="3"
                     android:ellipsize="end"
                     app:typekitFont="@string/maven"
-                    android:layout_toLeftOf="@+id/tvReviewCount"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginRight="@dimen/dp_6"
+                    android:layout_toStartOf="@+id/tvReviewCount"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="@dimen/dp_6"
                     />
 
                 <TextView
@@ -51,13 +51,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawablePadding="3dp"
-                    android:drawableLeft="@drawable/ic_star_yellow_20"
+                    android:drawableStart="@drawable/ic_star_yellow_20"
                     android:background="?android:attr/selectableItemBackground"
-                    android:text="3.5"
+                    android:text="@string/_3_5"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_18"
                     app:typekitFont="@string/maven_r"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     />
 
             </RelativeLayout>
@@ -69,14 +69,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_15"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:autoLink="web"
-                android:drawableLeft="@drawable/ic_location_merchant"
+                android:drawableStart="@drawable/ic_location_merchant"
                 android:drawablePadding="@dimen/dp_10"
                 android:gravity="center_vertical"
                 android:background="?android:attr/selectableItemBackground"
-                android:text="SCF-128, phase 7, mohali, Sahibzada Ajit Singh Nagar, 160062"
+                android:text="@string/scf_128_phase_7_mohali_sahibzada_ajit_singh_nagar_160062"
                 android:textColor="@color/text_color"
                 android:textColorLink="@color/text_color_link"
                 android:textSize="@dimen/sp_14"
@@ -90,21 +90,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_15"
                 android:autoLink="web"
-                android:drawableLeft="@drawable/ic_merchant_tags"
+                android:drawableStart="@drawable/ic_merchant_tags"
                 android:drawablePadding="@dimen/dp_10"
                 android:gravity="center_vertical"
-                android:text="Kabab . Chicken "
+                android:text="@string/kabab_chicken"
                 android:textColor="@color/text_color"
                 android:textColorLink="@color/text_color_link"
                 android:textSize="@dimen/sp_13"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 app:typekitFont="@string/maven_r"
                 />
 
             <LinearLayout
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:layout_marginBottom="@dimen/dp_20"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -115,10 +115,10 @@
                     android:id="@+id/tvOpenStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_merchant_timings"
+                    android:drawableStart="@drawable/ic_merchant_timings"
                     android:drawablePadding="@dimen/dp_10"
                     android:gravity="center_vertical"
-                    android:text="Open Now"
+                    android:text="@string/open_now"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_13"
                     app:typekitFont="maven"
@@ -140,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="@dimen/dp_10"
                     android:gravity="center_vertical"
-                    android:text="09:00 PM - 10:00 PM"
+                    android:text="@string/_09_00_pm_10_00_pm"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/sp_13"
                     app:typekitFont="maven"
@@ -154,23 +154,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dp_20"
-                android:drawableLeft="@drawable/ic_merchant_call"
+                android:drawableStart="@drawable/ic_merchant_call"
                 android:background="?android:attr/selectableItemBackground"
                 android:drawablePadding="@dimen/dp_10"
                 android:gravity="center_vertical"
                 android:textColor="@color/text_color"
                 android:textColorLink="@color/text_color_link"
                 android:textSize="@dimen/sp_13"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 app:typekitFont="@string/maven_r"
                 />
 
 
             <LinearLayout
                 android:id="@+id/llMerchantMinOrderStrip"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:orientation="horizontal"
                 android:background="?android:attr/selectableItemBackground"
                 android:visibility="gone"
@@ -181,7 +181,7 @@
                 <ImageView
                     android:src="@drawable/ic_merchant_min_order"
                     android:layout_width="16dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_height="16dp" />
                 <TextView
                     android:id="@+id/tvMerchantMinOrder"
@@ -204,8 +204,8 @@
 
             <RelativeLayout
                 android:visibility="gone"
-                android:layout_marginLeft="@dimen/dp_15"
-                android:layout_marginRight="@dimen/dp_15"
+                android:layout_marginStart="@dimen/dp_15"
+                android:layout_marginEnd="@dimen/dp_15"
                 android:layout_marginBottom="@dimen/dp_10"
                 android:id="@+id/layout_order_details"
                 android:paddingTop="10dp"
@@ -219,32 +219,32 @@
 
                 <TextView
                     android:id="@+id/label_delivers_in"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:layout_toLeftOf="@+id/view_center_order"
+                    android:layout_toStartOf="@+id/view_center_order"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
                     app:typekitFont="@string/maven"
                     android:textColor="@color/text_color_less_light"
                     android:layout_marginBottom="5dp"
-                    android:text="Delivery"/>
+                    android:text="@string/delivery"/>
 
 
                 <TextView
                     android:id="@+id/tv_delivers_in"
-                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:layout_below="@id/label_delivers_in"
-                    android:layout_toLeftOf="@id/view_center_order"
+                    android:layout_toStartOf="@id/view_center_order"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     app:typekitFont="@string/maven"
                     android:textColor="@color/text_color"
-                    android:text="25 - 45 min"/>
+                    android:text="@string/_25_45_min"/>
 
                 <View
                     android:id="@id/view_center_order"
@@ -257,31 +257,31 @@
 
                 <TextView
                     android:id="@+id/label_min_order_amt"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
-                    android:layout_toRightOf="@id/view_center_order"
+                    android:layout_toEndOf="@id/view_center_order"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
                     android:textColor="@color/text_color_less_light"
                     app:typekitFont="@string/maven"
                     android:layout_marginBottom="5dp"
-                    android:text="Min. Order Amount"/>
+                    android:text="@string/min_order_amount"/>
 
                 <TextView
                     android:id="@+id/tv_min_order_amt"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:layout_below="@id/label_min_order_amt"
-                    android:layout_toRightOf="@id/view_center_order"
+                    android:layout_toEndOf="@id/view_center_order"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     app:typekitFont="@string/maven"
                     android:textColor="@color/text_color"
-                    android:text="150"/>
+                    android:text="@string/_150"/>
             </RelativeLayout>
 
 
@@ -291,8 +291,8 @@
                 android:paddingTop="15dp"
                 android:gravity="center"
                 android:visibility="gone"
-                android:layout_marginLeft="@dimen/dp_15"
-                android:layout_marginRight="@dimen/dp_15"
+                android:layout_marginStart="@dimen/dp_15"
+                android:layout_marginEnd="@dimen/dp_15"
                 android:layout_marginBottom="@dimen/dp_15"
                 android:background="@drawable/bg_merchant_order_details"
                 android:layout_width="match_parent"
@@ -302,7 +302,7 @@
                 <ImageView
                     android:src="@drawable/ic_merchant_offer_active"
                     android:layout_width="20dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_height="20dp" />
 
                 <TextView
@@ -313,7 +313,7 @@
                     android:drawablePadding="@dimen/dp_10"
                     android:layout_gravity="center"
                     android:gravity="center_vertical"
-                    android:text="20% off on selected orders"
+                    android:text="@string/_20_off_on_selected_orders"
                     android:textColor="@color/text_color_selector"
                     android:textColorLink="@color/text_color_link"
                     android:textSize="@dimen/sp_14"
@@ -336,8 +336,8 @@
                 android:id="@+id/tvOutOfRadiusFatafatBanner"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:paddingLeft="18dp"
-                android:paddingRight="18dp"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
                 android:textSize="14.5sp"
                 app:typekitFont="maven"
                 android:layout_marginBottom="15dp"
@@ -512,8 +512,8 @@
                 android:layout_height="wrap_content">
                 
                 <TextView
-                    android:text="Photos"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
+                    android:text="@string/photos"
                     android:layout_marginBottom="8dp"
                     android:id="@+id/photos_count"
                     app:typekitFont="@string/maven"
@@ -530,7 +530,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view_photos"
                     android:layout_marginTop="10dp"
-                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
                     android:descendantFocusability="blocksDescendants"
                     android:layout_marginBottom="10dp"
                     android:layout_width="wrap_content"
@@ -553,7 +553,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/dp_10"
-                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginStart="@dimen/dp_20"
                     android:layout_marginTop="@dimen/dp_10"
                     android:text="@string/reviews_and_ratings"
                     android:textColor="@color/text_color"
@@ -567,9 +567,9 @@
                     xmlns:wheel="http://schemas.android.com/apk/res-auto"
                     android:layout_width="@dimen/dp_30"
                     android:layout_height="@dimen/dp_30"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/dp_15"
+                    android:layout_marginEnd="@dimen/dp_15"
                     wheel:matProg_barColor="@color/theme_color"
                     wheel:matProg_barWidth="3dp"
                     wheel:matProg_fillRadius="true"
@@ -593,9 +593,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="@dimen/dp_20"
-                android:layout_marginLeft="@dimen/dp_10"
                 android:layout_marginStart="@dimen/dp_10"
-                android:layout_marginRight="@dimen/dp_14"
                 android:layout_marginEnd="@dimen/dp_14"
                 android:gravity="center">
 
@@ -626,7 +624,6 @@
                             android:textSize="38sp"
                             android:textColor="@color/text_color"
                             android:layout_marginStart="@dimen/dp_5"
-                            android:layout_marginLeft="@dimen/dp_5"
                             app:typekitFont="@string/maven_r"
                             tools:text="4.5"/>
 
@@ -727,7 +724,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_20"
-                        android:layout_marginLeft="@dimen/dp_20"
                         android:text="@string/you_reviewed_this_place"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/sp_14"
@@ -739,7 +735,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/dp_20"
-                        android:layout_marginLeft="@dimen/dp_20"
                         android:layout_marginTop="@dimen/dp_5"
                         android:orientation="horizontal"
                         >
@@ -774,7 +769,6 @@
                         android:text="@string/btn_edit_review"
                         android:textColor="@color/theme_color"
                         android:drawableStart="@drawable/ic_edit_review_icon"
-                        android:drawableLeft="@drawable/ic_edit_review_icon"
                         android:textAllCaps="true"
                         android:gravity="center"
                         app:typekitFont="@string/maven"
@@ -789,8 +783,8 @@
                 android:id="@+id/etReview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_15"
-                android:layout_marginRight="@dimen/dp_15"
+                android:layout_marginStart="@dimen/dp_15"
+                android:layout_marginEnd="@dimen/dp_15"
                 android:layout_marginTop="@dimen/dp_4"
                 android:background="@drawable/bg_menu_item_selector_color_r_extra"
                 android:hint="@string/tell_us_about_exp"
@@ -806,20 +800,20 @@
                 android:overScrollMode="always"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical"
-                android:gravity="left"
+                android:gravity="start"
                 />
 
             <TextView
                 android:id="@+id/tvReviewTextCount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
                 android:textSize="@dimen/sp_9"
                 android:textColor="@color/text_color_hint"
-                android:text="500"
+                android:text="@string/_500"
                 android:layout_marginTop="-15dp"
                 android:layout_marginBottom="@dimen/dp_15"
-                android:gravity="right"
+                android:gravity="end"
                 android:visibility="gone"
                 app:typekitFont="@string/maven"
                 />
@@ -847,8 +841,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginBottom="@dimen/dp_4"
-                android:layout_marginLeft="@dimen/dp_15"
-                android:layout_marginRight="@dimen/dp_15"
+                android:layout_marginStart="@dimen/dp_15"
+                android:layout_marginEnd="@dimen/dp_15"
                 android:layout_marginTop="@dimen/dp_4"
                 android:visibility="gone"
                 android:background="@color/stroke_light_grey_alpha"
@@ -866,7 +860,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/dp_10"
-                android:paddingLeft="@dimen/dp_20"
+                android:paddingStart="@dimen/dp_20"
                 android:paddingBottom="@dimen/dp_10"
                 android:text="@string/no_reviews_yet_be_first"
                 android:textColor="@color/text_color"

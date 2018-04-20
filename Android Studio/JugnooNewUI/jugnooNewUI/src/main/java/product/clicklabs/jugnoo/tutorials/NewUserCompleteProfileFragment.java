@@ -106,7 +106,7 @@ public class NewUserCompleteProfileFragment extends Fragment{
                     facebookLoginHelper.openFacebookSession();
                 } else {
                     DialogPopup.dialogNoInternet(activity,
-                            Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                            activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
                             new Utils.AlertCallBackWithButtonsInterface() {
                                 @Override
                                 public void positiveClick(View v) {
@@ -135,7 +135,7 @@ public class NewUserCompleteProfileFragment extends Fragment{
 
                 } else{
                     DialogPopup.dialogNoInternet(activity,
-                            Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                            activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
                             new Utils.AlertCallBackWithButtonsInterface() {
                                 @Override
                                 public void positiveClick(View v) {
@@ -165,7 +165,7 @@ public class NewUserCompleteProfileFragment extends Fragment{
                     etEmail.setError(activity.getResources().getString(R.string.email_empty_error));
                 } else if (!Utils.isEmailValid(etEmail.getText().toString())) {
                     etEmail.requestFocus();
-                    etEmail.setError("Please enter valid email");
+                    etEmail.setError(getString(R.string.please_enter_valid_email_id));
                 } else {
                     apiUpdateUserProfile(activity, etName.getText().toString(), etEmail.getText().toString());
                 }
@@ -212,7 +212,7 @@ public class NewUserCompleteProfileFragment extends Fragment{
                                      final String updatedEmail) {
         if(MyApplication.getInstance().isOnline()) {
 
-            DialogPopup.showLoadingDialog(activity, "Updating...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.updating));
 
             HashMap<String, String> params = new HashMap<>();
 
@@ -253,12 +253,12 @@ public class NewUserCompleteProfileFragment extends Fragment{
                                 Utils.showToast(activity, jObj.optString("message"));
                                 openWalletFragment();
                             } else {
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                             }
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         DialogPopup.dismissLoadingDialog();
                     }
                 }
@@ -267,12 +267,12 @@ public class NewUserCompleteProfileFragment extends Fragment{
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "updateUserProfile error="+error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
         }
         else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
     }
 

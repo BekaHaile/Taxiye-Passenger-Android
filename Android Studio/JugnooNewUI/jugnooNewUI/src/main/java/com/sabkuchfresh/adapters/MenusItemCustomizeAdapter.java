@@ -3,18 +3,13 @@ package com.sabkuchfresh.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StrikethroughSpan;
 import android.text.style.StyleSpan;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -174,7 +169,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             int gravity, visibilityDesc;
 //            RelativeLayout.LayoutParams paramsFT = (RelativeLayout.LayoutParams) mHolder.imageViewFoodType.getLayoutParams();
             if(!TextUtils.isEmpty(item.getItemDetails())){
-//                gravity = Gravity.LEFT;
+//                gravity = Gravity.START;
                 visibilityDesc = View.VISIBLE;
 //                paramsFT.setMargins(paramsFT.leftMargin, (int)(ASSL.Yscale() * 30f), paramsFT.rightMargin, paramsFT.bottomMargin);
             } else {
@@ -308,6 +303,8 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 bottomMargin = (int)(-8.0f*ASSL.Yscale());
             }
             layoutParams.setMargins((int) (25.0f*ASSL.Xscale()), topMargin, (int)(25.0f*ASSL.Xscale()), bottomMargin);
+            layoutParams.setMarginStart((int) (25.0f*ASSL.Xscale()));
+            layoutParams.setMarginEnd((int)(25.0f*ASSL.Xscale()));
             mHolder.cvRoot.setLayoutParams(layoutParams);
 
             mHolder.tvCustomizeOptionItemName.setText(customizeOption.getCustomizeOptionName());

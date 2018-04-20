@@ -77,37 +77,37 @@
     <style name="Animations"/>
 
     <style name="Animations.LoadingDialogFade">
-        <item name="@android:windowEnterAnimation">
+        <item name="android:windowEnterAnimation">
             @anim/fade_in
         </item>
-        <item name="@android:windowExitAnimation">
+        <item name="android:windowExitAnimation">
             @anim/fade_out
         </item>
     </style>
 
     <style name="Animations.LoadingDialogScale">
-        <item name="@android:windowEnterAnimation">
+        <item name="android:windowEnterAnimation">
             @anim/scale_in
         </item>
-        <item name="@android:windowExitAnimation">
+        <item name="android:windowExitAnimation">
             @anim/scale_out
         </item>
     </style>
 
     <style name="Animations.TopInBottomOut">
-        <item name="@android:windowEnterAnimation">
+        <item name="android:windowEnterAnimation">
             @anim/top_in
         </item>
-        <item name="@android:windowExitAnimation">
+        <item name="android:windowExitAnimation">
             @anim/top_out
         </item>
     </style>
 
     <style name="Animations.BottomInBottomOut">
-        <item name="@android:windowEnterAnimation">
+        <item name="android:windowEnterAnimation">
             @anim/bottom_in
         </item>
-        <item name="@android:windowExitAnimation">
+        <item name="android:windowExitAnimation">
             @anim/bottom_out
         </item>
     </style>
@@ -272,10 +272,10 @@
         <item name="android:textSize">
             @dimen/text_size_34
         </item>
-        <item name="android:paddingLeft">
+        <item name="android:paddingStart">
             @dimen/px_40
         </item>
-        <item name="android:paddingRight">
+        <item name="android:paddingEnd">
             @dimen/px_40
         </item>
         <item name="android:textAllCaps">
@@ -303,12 +303,15 @@
         <item name="android:scaleType">
             centerInside
         </item>
-        <item name="android:layout_marginLeft">
+        <item name="android:layout_marginStart">
             10px
         </item>
         <item name="android:background">@drawable/white_selector</item>
         <item name="android:tag">
             mwar
+        </item>
+        <item name="android:rotationY">
+            @integer/locale_mirror_flip
         </item>
 
     </style>
@@ -335,6 +338,9 @@
         <item name="android:tag">
             mwar
         </item>
+        <item name="android:rotationY">
+            @integer/locale_mirror_flip
+        </item>
     </style>
 
 
@@ -345,7 +351,7 @@
         <item name="android:layout_height">
             73px
         </item>
-        <item name="android:layout_alignRight">
+        <item name="android:layout_alignEnd">
             @+id/linearLayoutInner
         </item>
         <item name="android:layout_alignTop">
@@ -363,13 +369,13 @@
         <item name="android:tag">
             mwar
         </item>
-        <item name="android:paddingLeft">
+        <item name="android:paddingStart">
             10px
         </item>
         <item name="android:paddingBottom">
             10px
         </item>
-        <item name="android:layout_marginRight">
+        <item name="android:layout_marginEnd">
             -20px
         </item>
         <item name="android:layout_marginTop">
@@ -448,10 +454,10 @@
 
 
     <style name="Animations.LoadingDialogDown">
-        <item name="@android:windowEnterAnimation">
+        <item name="android:windowEnterAnimation">
             @anim/slide_up
         </item>
-        <item name="@android:windowExitAnimation">
+        <item name="android:windowExitAnimation">
             @anim/slide_down
         </item>
     </style>
@@ -797,10 +803,10 @@
         <item name="android:paddingBottom">
             @dimen/spacing_small
         </item>
-        <item name="android:paddingLeft">
+        <item name="android:paddingStart">
             @dimen/spacing_large
         </item>
-        <item name="android:paddingRight">
+        <item name="android:paddingEnd">
             @dimen/spacing_large
         </item>
         <item name="android:paddingTop">
@@ -915,7 +921,7 @@
         <item name="android:textSize">@dimen/sp_20</item>
         <item name="android:textColor">@color/text_color</item>
         <item name="android:padding">@dimen/dp_10</item>
-        <item name="android:layout_marginLeft">@dimen/dp_2</item>
+        <item name="android:layout_marginStart">@dimen/dp_2</item>
         <item name="android:layout_marginTop">@dimen/dp_4</item>
         <item name="android:background">@drawable/bg_white_layer_shadow</item>
     </style>

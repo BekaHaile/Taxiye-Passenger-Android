@@ -926,10 +926,10 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     private void setSearcHintText() {
         if(activity.getCategoryOpened()!=null && activity.getCategoryIdOpened()>0){
-            activity.getTopBar().etSearch.setHint("Search in " + activity.getCategoryOpened().getCategoryName());
+            activity.getTopBar().etSearch.setHint(getString(R.string.search_in_format, activity.getCategoryOpened().getCategoryName()));
 
         }else{
-            activity.getTopBar().etSearch.setHint("Search..");
+            activity.getTopBar().etSearch.setHint(R.string.search_3dot);
 
         }
     }

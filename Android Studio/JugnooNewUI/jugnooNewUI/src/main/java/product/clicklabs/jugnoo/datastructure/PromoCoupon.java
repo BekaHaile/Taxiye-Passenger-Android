@@ -23,6 +23,7 @@ public abstract class PromoCoupon implements Serializable {
 	public abstract String getInvalidMessage();
 	public abstract String getExpiryDate();
 	public abstract ArrayList<Integer> getAllowedVehicles();
+	public abstract int getOperatorId();
 	public abstract boolean showPromoBox();
 	public abstract String messageToDisplay();
 	public abstract boolean isPromoApplied();
@@ -52,9 +53,13 @@ public abstract class PromoCoupon implements Serializable {
 		return false;
 	}
 
-	public boolean isVehicleTypeExists(int vehicleType){
-		if(getAllowedVehicles()==null || getAllowedVehicles().size()<=0)
+	public boolean isVehicleTypeExists(int vehicleType, int operatorId){
+		if(operatorId != getOperatorId()){
+			return false;
+		}
+		if(getAllowedVehicles()==null || getAllowedVehicles().size()<=0) {
 			return true;
+		}
 
 		for(Integer vehicleTypeAllowed:getAllowedVehicles()){
 			if(vehicleType==vehicleTypeAllowed){

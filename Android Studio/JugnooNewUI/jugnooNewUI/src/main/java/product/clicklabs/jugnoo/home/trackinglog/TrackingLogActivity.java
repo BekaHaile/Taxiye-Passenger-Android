@@ -238,7 +238,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
     public void customerFetchRideLogAPI(final Activity activity, final String engagementId) {
         if(MyApplication.getInstance().isOnline()) {
 
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
             HashMap<String, String> params = new HashMap<>();
             params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -266,7 +266,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                                 if(trackingLogReponse.getIosData() != null
                                         && trackingLogReponse.getIosData().size() > 0){
                                     TrackingLogReponse.Datum datum = trackingLogReponse.new Datum();
-                                    datum.setLabel("iOS Data");
+                                    datum.setLabel(getString(R.string.ios_data));
                                     datum.setViewType(TrackingLogReponse.ViewType.LABEL);
                                     data.add(datum);
                                     for(TrackingLogReponse.Datum datum1 : trackingLogReponse.getIosData()){
@@ -278,7 +278,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                                 if(trackingLogReponse.getAndroidData() != null
                                         && trackingLogReponse.getAndroidData().size() > 0){
                                     TrackingLogReponse.Datum datum = trackingLogReponse.new Datum();
-                                    datum.setLabel("Android Data");
+                                    datum.setLabel(getString(R.string.android_data));
                                     datum.setViewType(TrackingLogReponse.ViewType.LABEL);
                                     data.add(datum);
                                     for(TrackingLogReponse.Datum datum1 : trackingLogReponse.getAndroidData()){
@@ -292,16 +292,16 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                                     switchScreenState(state);
                                     trackingLogDataAdapter.notifyDataSetChanged();
                                 } else{
-                                    DialogPopup.alertPopup(activity, "", "No data available");
+                                    DialogPopup.alertPopup(activity, "", getString(R.string.no_data_available));
                                 }
 
                             } else {
-                                DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                             }
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         DialogPopup.dismissLoadingDialog();
                     }
                 }
@@ -310,12 +310,12 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                 public void failure(RetrofitError error) {
                     Log.e(TAG, "customerFetchRideLog error=" + error.toString());
                     DialogPopup.dismissLoadingDialog();
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
         }
         else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
         }
 
     }
@@ -357,7 +357,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                     JSONObject jTrackingLog0 = jTrackingLogs.getJSONObject(0);
 
                     MarkerOptions markerOptions = new MarkerOptions();
-                    markerOptions.title("driver");
+                    markerOptions.title(getString(R.string.driver));
                     markerOptions.position(new LatLng(jTrackingLog0.getDouble(Constants.KEY_LAT), jTrackingLog0.getDouble(Constants.KEY_LONG)));
                     markerOptions.anchor(0.5f, 0.5f);
                     markerOptions.zIndex(1);
@@ -404,7 +404,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
 			}
         } catch (Exception e) {
             e.printStackTrace();
-            Utils.showToast(this, "Some error occured "+e.getLocalizedMessage()+":"+e.getMessage()+":"+e.getCause());
+            Utils.showToast(this, getString(R.string.some_error_occured)+" "+e.getLocalizedMessage()+":"+e.getMessage()+":"+e.getCause());
         }
     }
 

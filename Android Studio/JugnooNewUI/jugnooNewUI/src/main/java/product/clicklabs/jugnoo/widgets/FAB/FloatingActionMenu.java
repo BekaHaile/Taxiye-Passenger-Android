@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -123,7 +122,7 @@ public class FloatingActionMenu extends ViewGroup {
         return dpAsPixels;
     }
     public void setMenuLabelsRightTestPadding(int paddingBottom,FloatingActionMenu floatingActionMenu){
-        floatingActionMenu.setPadding(0, 0, (int) (40f * ASSL.Yscale()), paddingBottom);
+        floatingActionMenu.setPaddingRelative(0, 0, (int) (40f * ASSL.Yscale()), paddingBottom);
     }
 
     public interface OnMenuToggleListener {
@@ -148,6 +147,11 @@ public class FloatingActionMenu extends ViewGroup {
         mButtonSpacing = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_buttonSpacing, mButtonSpacing);
         mLabelsMargin = attr.getDimensionPixelSize(R.styleable.FloatingActionMenu_menu_labels_margin, mLabelsMargin);
         mLabelsPosition = attr.getInt(R.styleable.FloatingActionMenu_menu_labels_position, LABELS_POSITION_LEFT);
+
+        if(Utils.isRTL(context)){
+            mLabelsPosition = mLabelsPosition == LABELS_POSITION_LEFT ? LABELS_POSITION_RIGHT : LABELS_POSITION_LEFT;
+        }
+
         mLabelsShowAnimation = attr.getResourceId(R.styleable.FloatingActionMenu_menu_labels_showAnimation,
                 mLabelsPosition == LABELS_POSITION_LEFT ? R.anim.fab_slide_in_from_right : R.anim.fab_slide_in_from_left);
         mLabelsHideAnimation = attr.getResourceId(R.styleable.FloatingActionMenu_menu_labels_hideAnimation,
@@ -364,7 +368,7 @@ public class FloatingActionMenu extends ViewGroup {
             }
         }
 
-        width = Math.max(mMaxButtonWidth, maxLabelWidth + mLabelsMargin) + getPaddingLeft() + getPaddingRight();
+        width = Math.max(mMaxButtonWidth, maxLabelWidth + mLabelsMargin) + getPaddingStart() + getPaddingEnd();
 
         height += mButtonSpacing * (mButtonsCount - 1) + getPaddingTop() + getPaddingBottom();
         height = adjustForOvershoot(height);
@@ -383,8 +387,8 @@ public class FloatingActionMenu extends ViewGroup {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         int buttonsHorizontalCenter = mLabelsPosition == LABELS_POSITION_LEFT
-                ? r - l - mMaxButtonWidth / 2 - getPaddingRight()
-                : mMaxButtonWidth / 2 + getPaddingLeft();
+                ? r - l - mMaxButtonWidth / 2 - getPaddingEnd()
+                : mMaxButtonWidth / 2 + getPaddingStart();
         boolean openUp = mOpenDirection == OPEN_UP;
 
         int menuButtonTop = openUp
@@ -538,7 +542,7 @@ public class FloatingActionMenu extends ViewGroup {
                 top += fab.getShadowRadius() + Math.abs(fab.getShadowYOffset());
             }
 
-            label.setPadding(
+            label.setPaddingRelative(
                     left,
                     top,
                     mLabelsPaddingLeft,

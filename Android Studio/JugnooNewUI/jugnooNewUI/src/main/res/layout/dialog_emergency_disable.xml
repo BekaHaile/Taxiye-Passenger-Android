@@ -36,8 +36,8 @@
             android:layout_marginBottom="35px"
             android:layout_marginTop="20px"
             android:gravity="center"
-            android:paddingLeft="40px"
-            android:paddingRight="40px"
+            android:paddingStart="40px"
+            android:paddingEnd="40px"
             android:text="@string/you_have_disabled_jugnoo_emergency"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_30" />
@@ -53,7 +53,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="0px"
             android:background="@drawable/button_white_grey_br_selector"
-            android:text="OK"
+            android:text="@string/ok"
             android:textColor="@color/text_color"
             android:textSize="30px"/>
 

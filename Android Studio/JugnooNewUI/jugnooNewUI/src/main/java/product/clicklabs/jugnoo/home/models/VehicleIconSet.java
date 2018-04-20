@@ -84,6 +84,13 @@ public enum VehicleIconSet {
 			R.drawable.ic_erickshaw_request_pressed,
 			R.drawable.ic_erickshaw_grey),
 
+
+	TRANSPORT("TRANSPORT", R.drawable.ic_transport_tab_normal, R.drawable.ic_transport_tab_selected,
+			R.drawable.ic_transport_marker,
+			R.drawable.ic_transport_request_normal,
+			R.drawable.ic_transport_request_pressed,
+			R.drawable.ic_transport_tab_normal),
+
 	;
 
 

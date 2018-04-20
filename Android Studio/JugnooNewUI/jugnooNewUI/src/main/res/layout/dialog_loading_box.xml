@@ -11,6 +11,6 @@
         android:layout_width="@dimen/px_150"
         android:layout_height="@dimen/px_150"
         android:tag="mwar"
-        android:contentDescription="Animation" />
+        android:contentDescription="@string/animation" />
 
 </RelativeLayout>

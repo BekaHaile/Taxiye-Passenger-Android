@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:text="TODAY"
+            android:text="@string/today"
             android:gravity="center"
             android:textAllCaps="true"
             android:textColor="@color/text_color_light"
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
-            android:text="10:00 AM - 12:00 PM"
+            android:text="@string/_10_00_am_12_00_pm"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_22"
             android:gravity="center"
@@ -55,7 +55,7 @@
         android:layout_width="1dp"
         android:layout_height="match_parent"
         android:src="@color/stroke_light_grey_alpha"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         />
 
 </RelativeLayout>

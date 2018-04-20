@@ -2457,6 +2457,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     mapTopPadding = 200.0f;
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) centreLocationRl.getLayoutParams();
                     params.setMargins(0, (int) (ASSL.Yscale() * mapTopPadding), 0, 0);
+                    params.setMarginStart(0);
+                    params.setMarginEnd(0);
                     centreLocationRl.setLayoutParams(params);
                 }else {
                     mapTopPadding = 100.0f;
@@ -2666,7 +2668,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
 
                     } else {
-                        DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+                        DialogPopup.dialogNoInternet(HomeActivity.this, getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc), new Utils.AlertCallBackWithButtonsInterface() {
                             @Override
                             public void positiveClick(View v) {
                                 imageViewRideNow.performClick();
@@ -2891,7 +2893,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             Data.autoData.getFeedbackReasons().get(i).checked = false;
                         }
                         feedbackReasonsAdapter.notifyDataSetChanged();
-                        textViewRSTotalFareValue.setText(String.format(getString(R.string.rupees_value_format_without_space),"" + Utils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().finalFare)));
+                        textViewRSTotalFareValue.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), Data.autoData.getEndRideData().finalFare));
                         /*imageViewThumbsUp.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_up));
                         imageViewThumbsDown.startAnimation(AnimationUtils.loadAnimation(HomeActivity.this, R.anim.translate_down));
                         textViewThumbsUp.setVisibility(View.INVISIBLE);
@@ -3123,7 +3125,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             textViewCancellation.setVisibility(View.GONE);
                         }
 
-                        textViewFindingDriver.setText("Finding a Jugnoo driver...");
+                        textViewFindingDriver.setText(R.string.finding_a_driver);
                         initialCancelRideBtn.setVisibility(View.GONE);
                         try {
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -3523,8 +3525,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public int updateRideEndPayment() {
         try {
-            textViewRSCashPaidValue.setText(String.format(getString(R.string.rupees_value_format_without_space),
-					"" + Utils.getMoneyDecimalFormat().format(Data.autoData.getEndRideData().toPay)));
+            textViewRSCashPaidValue.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), Data.autoData.getEndRideData().toPay));
             int onlinePaymentVisibility = (Data.autoData.getEndRideData().toPay > 0 &&
                     (Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.CASH.getOrdinal()
                     || Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal())
@@ -3560,13 +3561,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void setMargins (View view, int left, int top, int right, int bottom) {
-        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-            p.setMargins(left, top, right, bottom);
-            view.requestLayout();
-        }
-    }
 
 
     private void setFabViewAtRide(PassengerScreenMode mode){
@@ -3863,7 +3857,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 fragToCheck = getStarSubscriptionCheckoutFragment();
                 fragToAdd = StarSubscriptionCheckoutFragment.newInstance(Integer.parseInt(Data.autoData.getEndRideData().engagementId),
                         Data.autoData.getEndRideData().finalFare,
-                        Data.autoData.getEndRideData().toPay);
+                        Data.autoData.getEndRideData().toPay,
+                        Data.autoData.getEndRideData().getCurrency());
                 tag = StarSubscriptionCheckoutFragment.class.getName();
                 title = getResources().getString(R.string.pay_online);
             }
@@ -4054,7 +4049,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewInRideDriverCarNumber.setText("");
             }
 
-            if (!Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().promoName)) {
+            if (!getString(R.string.no_promo_code_applied).equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().promoName)) {
                 relativeLayoutInRideInfo.setVisibility(View.VISIBLE);
                 textViewInRidePromoName.setText(Data.autoData.getAssignedDriverInfo().promoName);
             } else {
@@ -4225,7 +4220,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (Data.autoData.getReferAllStatus() == 0
                         && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
                         && dialogUploadContacts == null
-                        && Data.NO_PROMO_APPLIED.equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().promoName)) {
+                        && getString(R.string.no_promo_code_applied).equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().promoName)) {
                     drawerLayout.closeDrawer(GravityCompat.START);
                     dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
                             Data.autoData.getReferAllTitle(),
@@ -5127,7 +5122,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
 
         if(!lastSelectedCouponExits) {
-            getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(Data.userData.getDefaultCoupon(getVehicleTypeSelected(),HomeActivity.this));
+            getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(Data.userData
+                    .getDefaultCoupon(getVehicleTypeSelected(), getOperatorIdSelected(),HomeActivity.this));
         }
 
 
@@ -5350,12 +5346,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     if (map != null) {
                         setDropLocationMarker();
                         clearMarkersDriversFindADriver();
+                        int regionDriversCount = 0;
                         for (int i = 0; i < Data.autoData.getDriverInfos().size(); i++) {
-                            if(region.getVehicleType().equals(Data.autoData.getDriverInfos().get(i).getVehicleType())
-                                    && Data.autoData.getDriverInfos().get(i).getRegionIds().contains(region.getRegionId())) {
+                            if(Data.autoData.getDriverInfos().get(i).getOperatorId() == region.getOperatorId()
+                                    && region.getVehicleType().equals(Data.autoData.getDriverInfos().get(i).getVehicleType())
+                                    && Data.autoData.getDriverInfos().get(i).getRegionIds().contains(region.getRegionId())
+                                    ) {
                                 Data.autoData.getDriverInfos().get(i).setVehicleIconSet(region.getVehicleIconSet().getName());
                                 markersDriversFindADriver.add(addDriverMarkerForCustomer(Data.autoData.getDriverInfos().get(i),
                                         region.getVehicleIconSet().getIconMarker()));
+                                regionDriversCount++;
                             }
                         }
                         if (!mapTouchedOnce) {
@@ -5363,7 +5363,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             mapTouchedOnce = true;
                         }
 
-                        if (Data.autoData.getDriverInfos().size() == 0) {
+                        if (regionDriversCount == 0) {
                             textViewCentrePinETA.setText("-");
                         } else {
                             textViewCentrePinETA.setText(region.getEta());
@@ -5450,8 +5450,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
             DriverInfo firstDriverInfo = null;
             for(DriverInfo driverInfo : Data.autoData.getDriverInfos()){
-                if(driverInfo.getVehicleType() == region.getVehicleType()
-                        && driverInfo.getRegionIds().contains(region.getRegionId())){
+                if(driverInfo.getOperatorId() == region.getOperatorId()
+                        && driverInfo.getVehicleType() == region.getVehicleType()
+                        && driverInfo.getRegionIds().contains(region.getRegionId())
+                        ){
                     firstDriverInfo = driverInfo;
                     break;
                 }
@@ -5654,10 +5656,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
-
+                        int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
                         if (!jObj.isNull("error")) {
                             String errorMessage = jObj.getString("error");
-                            if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
+                            if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
                                 HomeActivity.logoutUser(activity);
                             } else {
                                 DialogPopup.alertPopupWithListener(activity, "", errorMessage,
@@ -5673,7 +5675,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 }
 
@@ -5689,8 +5691,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUEST + CANCELLED);
             }
         } else {
-            //DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
-            DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+            //DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
+            DialogPopup.dialogNoInternet(HomeActivity.this, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc), new Utils.AlertCallBackWithButtonsInterface() {
                 @Override
                 public void positiveClick(View v) {
                     cancelCustomerRequestAsync(HomeActivity.this);
@@ -5844,7 +5846,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-                                    JSONParser.parseRateAppFlagContent(jObj);
+                                    JSONParser.parseRateAppFlagContent(activity, jObj);
 
                                     Data.userData.updateWalletBalances(jObj, false);
                                     MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(jObj);
@@ -5860,12 +5862,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     setUserData();
 
                                 } else {
-                                    endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
+                                    endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
                                 }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            endRideRetryDialog(activity, engagementId, Data.SERVER_ERROR_MSG);
+                            endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
                         }
                     }
 
@@ -5873,11 +5875,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     public void failure(RetrofitError error) {
                         Log.e(TAG, "getRideSummary error="+error);
                         DialogPopup.dismissLoadingDialog();
-                        endRideRetryDialog(activity, engagementId, Data.SERVER_NOT_RESOPNDING_MSG);
+                        endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
                     }
                 });
             } else {
-                endRideRetryDialog(activity, engagementId, Data.CHECK_INTERNET_MSG);
+                endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_desc));
             }
         }
     }
@@ -5951,7 +5953,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
 //                        DialogPopup.dismissLoadingDialog();
                     progressWheel.setVisibility(View.GONE);
@@ -5962,11 +5964,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Log.e(TAG, "addDropLocation error="+error.toString());
 //                        DialogPopup.dismissLoadingDialog();
                     progressWheel.setVisibility(View.GONE);
-                    DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                 }
             });
         } else {
-            DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
             progressWheel.setVisibility(View.GONE);
         }
     }
@@ -6009,7 +6011,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                 if (!jObj.isNull("error")) {
                                     String errorMessage = jObj.getString("error");
-                                    if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
+                                    int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
+                                    if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
                                         HomeActivity.logoutUser(HomeActivity.this);
                                     }
                                 } else {
@@ -6504,7 +6507,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
             dialog.setContentView(R.layout.dialog_custom_two_buttons);
 
-            new ASSL(activity, (FrameLayout) dialog.findViewById(R.id.rv), 1134, 720, true);
+            new ASSL(activity, (RelativeLayout) dialog.findViewById(R.id.rv), 1134, 720, true);
 
             WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
             layoutParams.dimAmount = 0.6f;
@@ -6519,7 +6522,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             textMessage.setTypeface(Fonts.mavenMedium(activity));
 
             textHead.setVisibility(View.VISIBLE);
-            textHead.setText("Chalo Jugnoo Se");
+            textHead.setText(R.string.confirm_ride_request);
 
 
             final Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
@@ -6630,8 +6633,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 return true;
             }
         } else{
-            DialogPopup.dialogNoInternet(HomeActivity.this, Data.CHECK_INTERNET_TITLE,
-                    Data.CHECK_INTERNET_MSG, new Utils.AlertCallBackWithButtonsInterface() {
+            DialogPopup.dialogNoInternet(HomeActivity.this, getString(R.string.connection_lost_title),
+                    getString(R.string.connection_lost_desc), new Utils.AlertCallBackWithButtonsInterface() {
                         @Override
                         public void positiveClick(View v) {
                             requestRideDriverCheck();
@@ -6654,9 +6657,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private int getFilteredDrivers(){
         int driversCount = 0;
         for(DriverInfo driverInfo : Data.autoData.getDriverInfos()){
-            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
+            if(driverInfo.getOperatorId() == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId()
+                    && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
                     && driverInfo.getRegionIds() != null
-                    && driverInfo.getRegionIds().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())){
+                    && driverInfo.getRegionIds().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
+                    ){
                 driversCount++;
             }
         }
@@ -6899,7 +6904,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 eta = jObj.getString("eta");
             }
             String driverRating = jObj.getString("rating");
-            String promoName = JSONParser.getPromoName(jObj);
+            String promoName = JSONParser.getPromoName(this, jObj);
 
             Data.autoData.setPickupLatLng(new LatLng(pickupLatitude, pickupLongitude));
             Data.autoData.setPickupAddress(jObj.optString(KEY_PICKUP_LOCATION_ADDRESS, Data.autoData.getPickupAddress()));
@@ -6928,12 +6933,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Schedule scheduleT20 = JSONParser.parseT20Schedule(jObj);
 
             int vehicleType = jObj.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
+            int operatorId = jObj.optInt(KEY_OPERATOR_ID, 0);
             String iconSet = jObj.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+            String currency = jObj.optString(KEY_CURRENCY);
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
-                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled));
+                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);
@@ -7390,6 +7397,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 nameValuePairs.put(Constants.KEY_PREFERRED_PAYMENT_MODE, "" + Data.autoData.getPickupPaymentOption());
                                 nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(slidingBottomPanel
                                         .getRequestRideOptionsFragment().getRegionSelected().getVehicleType()));
+                                nameValuePairs.put(KEY_OPERATOR_ID, String.valueOf(slidingBottomPanel
+                                        .getRequestRideOptionsFragment().getRegionSelected().getOperatorId()));
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
                                         .getRequestRideOptionsFragment().getRegionSelected().getRegionId()));
 
@@ -7423,7 +7432,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-//											DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+//											DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                                         }
                                     });
                                 } else {
@@ -7432,7 +7441,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                         if (!jObj.isNull("error")) {
                                             final String errorMessage = jObj.getString("error");
                                             final int flag = jObj.getInt("flag");
-                                            if (Data.INVALID_ACCESS_TOKEN.equalsIgnoreCase(errorMessage.toLowerCase())) {
+                                            if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
                                                 cancelTimerRequestRide();
                                                 HomeActivity.logoutUser(HomeActivity.this);
                                             } else {
@@ -7774,7 +7783,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         setUserData();
                     }
                     DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this,
-                            "Jugnoo Cash added",
+                            getString(R.string.jugnoo_cash_added),
                             message,
                             "Check Balance", "Call Support",
                             new OnClickListener() {
@@ -8054,7 +8063,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     public void run() {
                                         try {
                                             if (showDialogs) {
-                                                DialogPopup.alertPopup(HomeActivity.this, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                                                DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.connection_lost_please_try_again));
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -8360,16 +8369,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
 
                 @Override
-                public void onFareEstimateSuccess(String minFare, String maxFare, double convenienceCharge) {
+                public void onFareEstimateSuccess(String currency, String minFare, String maxFare, double convenienceCharge) {
                     try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
                     textViewTotalFare.setText(getString(R.string.total_fare_colon));
-                    textViewTotalFareValue.setText(getString(R.string.rupee) + "" + minFare + " - " +
-                            getString(R.string.rupee) + "" + maxFare);
+                    textViewTotalFareValue.setText(Utils.formatCurrencyValue(currency, minFare) + " - " +
+                            Utils.formatCurrencyValue(currency, maxFare));
                     if (convenienceCharge > 0) {
                         textViewIncludes.setVisibility(View.VISIBLE);
                         textViewIncludes.setText("Convenience Charges "
-                                + getResources().getString(R.string.rupee)
-                                + " " + Utils.getMoneyDecimalFormat().format(convenienceCharge));
+                                + Utils.formatCurrencyValue(currency, convenienceCharge));
                     } else {
                         textViewIncludes.setVisibility(View.GONE);
                         textViewIncludes.setText("");
@@ -8377,14 +8385,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
 
                 @Override
-                public void onPoolSuccess(double fare, double rideDistance, String rideDistanceUnit,
+                public void onPoolSuccess(String currency, double fare, double rideDistance, String rideDistanceUnit,
                                           double rideTime, String rideTimeUnit, final int poolFareId,
                                           double convenienceCharge, String text) {
                     Log.v("Pool Fare value is ", "--> " + fare);
                     jugnooPoolFareId = poolFareId;
 
                     textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
-                    textViewTotalFareValue.setText(" " +String.format(getResources().getString(R.string.rupees_value_format_without_space), (int)fare));
+                    textViewTotalFareValue.setText(Utils.formatCurrencyValue(currency, fare));
 
                     textViewIncludes.setVisibility(View.VISIBLE);
                     textViewIncludes.setText(text);
@@ -8537,7 +8545,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                     } catch (Exception exception) {
                         exception.printStackTrace();
-                        //DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                        //DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 }
 
@@ -8639,14 +8647,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                         relativeLayoutGreat.setVisibility(View.GONE);
                                     }
                                 } else {
-                                    DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                                    DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                                     relativeLayoutGreat.setVisibility(View.GONE);
                                 }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             relativeLayoutGreat.setVisibility(View.GONE);
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         }
                     }
 
@@ -8655,12 +8663,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         Log.e(TAG, "rateTheDriver error="+error.toString());
                         relativeLayoutGreat.setVisibility(View.GONE);
                         DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 });
             } else {
                 DialogPopup.dialogNoInternet(HomeActivity.this,
-                        Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+                        activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc),
                         new Utils.AlertCallBackWithButtonsInterface() {
                             @Override
                             public void positiveClick(View v) {
@@ -9008,17 +9016,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         return bounceScale;
     }
 
-    public void setVehicleTypeSelected(int position) {
+    public void setVehicleTypeSelected(int position, boolean userClicked) {
         int oldVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
+        int oldOperatorId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId();
         int oldRegionId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId();
         int oldRideType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType();
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
+        int newVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
         if(Data.autoData.getRegions().size() == 1) {
             imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
         } else {
-            if (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(oldVehicleType)
-                    || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId().equals(oldRegionId)) {
+            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId() != oldOperatorId
+                    || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(oldVehicleType)
+                    || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId().equals(oldRegionId)
+                    ) {
                 if(oldRideType == RideTypeValue.POOL.getOrdinal()
                         && textViewDestSearch.getText().toString()
                         .equalsIgnoreCase(getResources().getString(R.string.enter_destination))) {
@@ -9039,24 +9051,29 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         // if it exists for that vehicle type, if it cannot find anything it then sets the coupon to null
 
         PromoCoupon selectedCoupon = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
-        int vehicleTypeSelected = getVehicleTypeSelected();
 
-        if(selectedCoupon==null || selectedCoupon.getId()==-1 || !selectedCoupon.isVehicleTypeExists(vehicleTypeSelected)){
-            PromoCoupon defaultCoupon = Data.userData.getDefaultCoupon(getVehicleTypeSelected(),HomeActivity.this);
+        if(!(userClicked && oldVehicleType==newVehicleType)){//do not change promo if user clicked on same vehicle Type
+            if(selectedCoupon==null || selectedCoupon.getId()==-1 || !selectedCoupon.isVehicleTypeExists(getVehicleTypeSelected(), getOperatorIdSelected())){
+                PromoCoupon defaultCoupon = Data.userData.getDefaultCoupon(getVehicleTypeSelected(), getOperatorIdSelected(), HomeActivity.this);
 
-            if(defaultCoupon!=null){
-                slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(defaultCoupon);
+                if(defaultCoupon!=null){
+                    slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(defaultCoupon);
 
-            }else{
-                slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(-1);
+                }else{
+                    slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(-1);
+                }
             }
         }
+
         showPoolInforBar(false);
         slidingBottomPanel.getRequestRideOptionsFragment().updateOffersCount();
     }
 
     public int getVehicleTypeSelected(){
         return  slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
+    }
+    public int getOperatorIdSelected(){
+        return  slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId();
     }
 
     private SelectorBitmapLoader selectorBitmapLoader;

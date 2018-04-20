@@ -340,8 +340,10 @@ public class FloatingActionButton extends ImageButton {
     public void setLayoutParams(ViewGroup.LayoutParams params) {
         if (params instanceof ViewGroup.MarginLayoutParams && mUsingElevationCompat) {
             ((ViewGroup.MarginLayoutParams) params).leftMargin += getShadowX();
+            ((ViewGroup.MarginLayoutParams) params).setMarginStart(((ViewGroup.MarginLayoutParams) params).getMarginStart() + getShadowX());
             ((ViewGroup.MarginLayoutParams) params).topMargin += getShadowY();
             ((ViewGroup.MarginLayoutParams) params).rightMargin += getShadowX();
+            ((ViewGroup.MarginLayoutParams) params).setMarginEnd((((ViewGroup.MarginLayoutParams) params).getMarginEnd()) + getShadowX());
             ((ViewGroup.MarginLayoutParams) params).bottomMargin += getShadowY();
         }
         super.setLayoutParams(params);
@@ -1311,14 +1313,14 @@ public class FloatingActionButton extends ImageButton {
     public void setLabelColors(int colorNormal, int colorPressed, int colorRipple) {
         Label label = getLabelView();
 
-        int left = label.getPaddingLeft();
+        int start = label.getPaddingStart();
         int top = label.getPaddingTop();
-        int right = label.getPaddingRight();
+        int end = label.getPaddingEnd();
         int bottom = label.getPaddingBottom();
 
         label.setColors(colorNormal, colorPressed, colorRipple);
         label.updateBackground();
-        label.setPadding(left, top, right, bottom);
+        label.setPaddingRelative(start, top, end, bottom);
     }
 
     public void setLabelTextColor(int color) {

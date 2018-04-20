@@ -8,8 +8,8 @@
         android:id="@+id/llMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/px_26"
-        android:layout_marginRight="@dimen/px_26"
+        android:layout_marginStart="@dimen/px_26"
+        android:layout_marginEnd="@dimen/px_26"
         android:layout_marginBottom="@dimen/px_13"
         android:layout_marginTop="@dimen/px_13"
         android:orientation="horizontal">
@@ -19,7 +19,7 @@
             android:layout_width="98px"
             android:layout_height="98px"
             android:layout_marginBottom="22px"
-            android:layout_marginLeft="22px"
+            android:layout_marginStart="22px"
             android:layout_marginTop="22px"
             android:background="@drawable/circle_white_stroke_grey"
             android:tag="mwar">
@@ -38,14 +38,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="20px"
-            android:layout_marginLeft="16px"
-            android:layout_marginRight="20px"
+            android:layout_marginStart="16px"
+            android:layout_marginEnd="20px"
             android:layout_marginTop="20px"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvOfferingName"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/autos"
                 android:textAllCaps="true"
@@ -54,7 +54,7 @@
 
             <TextView
                 android:id="@+id/tvOfferingBenefits"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7px"
                 android:text="ajhdjkas"

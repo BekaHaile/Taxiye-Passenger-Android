@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.config.Config;
@@ -89,7 +90,7 @@ public class TrackingLogHelper {
 
 	private File getTrackingLogFolder(){
 		try {
-			String strFolder = Environment.getExternalStorageDirectory() + "/Android/data/.jugnoo_auth/tracking_log";
+			String strFolder = Environment.getExternalStorageDirectory() + "/Android/data/." + BuildConfig.APP_DB_ID + "_auth/tracking_log";
 			File folder = new File(strFolder);
 			if(!folder.exists()){
 				folder.mkdirs();

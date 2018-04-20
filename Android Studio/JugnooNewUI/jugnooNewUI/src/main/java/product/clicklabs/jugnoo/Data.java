@@ -46,13 +46,10 @@ import product.clicklabs.jugnoo.utils.Prefs;
  */
 public class Data {
 
-    public static final String DRIVER_APP_PACKAGE = "product.clicklabs.jugnoo.driver";
-
 
     public static boolean linkFoundOnce = false;
 
 
-    public static final String INVALID_ACCESS_TOKEN = "invalid access token";
     public static final String NO_PROMO_APPLIED = "No Promo Code applied";
 
     public static final String SHARED_PREF_NAME = "myPref";
@@ -73,10 +70,6 @@ public class Data {
     public static Activity context = null;
 
 
-    public static final String SERVER_ERROR_MSG = "Connection lost. Please try again later.";
-    public static final String SERVER_NOT_RESOPNDING_MSG = "Connection lost. Please try again later.";
-    public static final String CHECK_INTERNET_TITLE = "CONNECTION LOST";
-    public static final String CHECK_INTERNET_MSG = "Oops! Your Internet is not working.\nPlease try again.";
 
 
     public static double latitude = 0, longitude = 0;
@@ -573,9 +566,9 @@ public class Data {
         int APP_TYPE = 1;
 
         if (Config.getConfigMode() == ConfigMode.LIVE) {
-            FuguConfig.init(APP_TYPE, context.getString(R.string.fugu_key), context, "live", userData,"com.jugnoo.fileprovider");
+            FuguConfig.init(APP_TYPE, context.getString(R.string.fugu_key), context, "live", userData,context.getString(R.string.file_provider_name));
         } else {
-            FuguConfig.init(APP_TYPE, context.getString(R.string.fugu_key_test), context, "test", userData,"com.jugnoo.fileprovider");
+            FuguConfig.init(APP_TYPE, context.getString(R.string.fugu_key_test), context, "test", userData,context.getString(R.string.file_provider_name));
         }
 
         FuguConfig.getInstance().setHomeUpIndicatorDrawableId(R.drawable.ic_back_selector);

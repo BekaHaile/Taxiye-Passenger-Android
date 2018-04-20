@@ -82,9 +82,7 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
 
             if(transactionInfo.getPay() == 0){
                 holder.textViewTransactionDate.setText(transactionInfo.date);
-                holder.textViewTransactionAmount.setText(String.format(context.getResources()
-                                .getString(R.string.rupees_value_format_without_space),
-                        Utils.getMoneyDecimalFormat().format(transactionInfo.amount)));
+                holder.textViewTransactionAmount.setText(Utils.formatCurrencyValue(transactionInfo.getCurrency(), transactionInfo.amount));
                 holder.textViewTransactionTime.setText(transactionInfo.time);
                 holder.textViewTransactionType.setText(transactionInfo.transactionText);
 
@@ -109,8 +107,7 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             }
             else if(transactionInfo.getPay() == 1){
                 holder.textViewTransactionDate.setText(transactionInfo.getName());
-                holder.textViewTransactionAmount.setText(context.getResources().getString(R.string.rupees_value_format_without_space,
-                        Utils.getMoneyDecimalFormat().format(transactionInfo.amount)));
+                holder.textViewTransactionAmount.setText(Utils.formatCurrencyValue(transactionInfo.getCurrency(), transactionInfo.amount));
                 holder.textViewTransactionTime.setText(transactionInfo.time);
 
                 Pair<Integer, Integer> pair = homeUtils.getTransactionTypeStringColor(transactionInfo);

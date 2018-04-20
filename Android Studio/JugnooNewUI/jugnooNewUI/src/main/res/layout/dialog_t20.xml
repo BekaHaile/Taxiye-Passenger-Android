@@ -116,7 +116,7 @@
                         android:layout_width="24px"
                         android:layout_height="24px"
                         android:src="@drawable/check_box_checked"
-                        android:layout_marginLeft="20px"
+                        android:layout_marginStart="20px"
                         android:tag="mwar" />
 
 
@@ -124,10 +124,10 @@
                         android:id="@+id/textViewTeam1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="NEW ZEALAND"
+                        android:text="@string/new_zealand"
                         android:padding="10px"
-                        android:layout_marginLeft="10px"
-                        android:layout_marginRight="10px"
+                        android:layout_marginStart="10px"
+                        android:layout_marginEnd="10px"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_28" />
 
@@ -140,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginLeft="40px">
+                    android:layout_marginStart="40px">
 
 
                     <ImageView
@@ -148,7 +148,7 @@
                         android:layout_width="24px"
                         android:layout_height="24px"
                         android:src="@drawable/check_box_unchecked"
-                        android:layout_marginLeft="20px"
+                        android:layout_marginStart="20px"
                         android:tag="mwar" />
 
 
@@ -156,10 +156,10 @@
                         android:id="@+id/textViewTeam2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SOUTH AFRICA"
+                        android:text="@string/south_africa"
                         android:padding="10px"
-                        android:layout_marginLeft="10px"
-                        android:layout_marginRight="10px"
+                        android:layout_marginStart="10px"
+                        android:layout_marginEnd="10px"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_28" />
 

@@ -23,6 +23,9 @@ public class Region {
 	@SerializedName("region_id")
 	@Expose
 	private Integer regionId;
+	@SerializedName("operator_id")
+	@Expose
+	private int operatorId;
 	@SerializedName("ride_type")
 	@Expose
 	private Integer rideType;
@@ -100,6 +103,14 @@ public class Region {
 
 	public void setShowFareEstimate(int showFareEstimate) {
 		this.showFareEstimate = showFareEstimate;
+	}
+
+	public int getOperatorId() {
+		return operatorId;
+	}
+
+	public void setOperatorId(int operatorId) {
+		this.operatorId = operatorId;
 	}
 
 	public class OfferTexts {

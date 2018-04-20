@@ -365,7 +365,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                         }
                     }
                     showPossibleStatus(possibleStatus, recentOrder.getStatus(), statusHolder);
-                    statusHolder.tvOrderIdValue.setText("Order: #"+recentOrder.getOrderId().toString());
+                    statusHolder.tvOrderIdValue.setText(activity.getString(R.string.order_hash_format, recentOrder.getOrderId().toString()));
                     statusHolder.tvDeliveryTime.setText(recentOrder.getEndTime());
 
                     statusHolder.tvViewOrder.setTag(position);
@@ -432,6 +432,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             statusHolder.tvOrderNotDelivered.setText(R.string.dig_in_enjoy_food_experience_feedback);
                         }
                         paramsTV.setMargins(paramsTV.leftMargin, marginTop, paramsTV.rightMargin, paramsTV.bottomMargin);
+                        paramsTV.setMarginStart(paramsTV.getMarginStart());
+                        paramsTV.setMarginEnd(paramsTV.getMarginEnd());
                         statusHolder.tvOrderNotDelivered.setLayoutParams(paramsTV);
                     } else {
                         statusHolder.rlOrderNotDelivered.setVisibility(View.GONE);
@@ -481,10 +483,14 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     paramsCloseTime.addRule(RelativeLayout.BELOW, mHolder.textViewMinimumOrder.getId());
                     paramsCloseTime.setMargins(paramsCloseTime.leftMargin, (int)(ASSL.Yscale() * 14f), (int)(ASSL.Xscale() * 14f),
                             paramsCloseTime.bottomMargin);
+                    paramsCloseTime.setMarginStart(paramsCloseTime.getMarginStart());
+                    paramsCloseTime.setMarginEnd((int)(ASSL.Xscale() * 14f));
 
                     paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 23f), paramsDelivery.rightMargin,
                             (int)(ASSL.Yscale() * 26f));
-                    paramsDelivery.addRule(RelativeLayout.RIGHT_OF, mHolder.textViewRestaurantCloseTime.getId());
+                    paramsDelivery.setMarginStart(paramsDelivery.getMarginStart());
+                    paramsDelivery.setMarginEnd(paramsDelivery.getMarginEnd());
+                    paramsDelivery.addRule(RelativeLayout.END_OF, mHolder.textViewRestaurantCloseTime.getId());
                     mHolder.imageViewRestaurantImage.setColorFilter(BW_FILTER);
                     mHolder.tvOffer.getBackground().setColorFilter(BW_FILTER);
                     mHolder.textViewMinimumOrder.setTextColor(ContextCompat.getColor(activity,R.color.text_color));
@@ -496,20 +502,26 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
                     // restaurant about to close
                     if (minutes <= vendor.getBufferTime() && minutes > 0) {
-                        mHolder.textViewRestaurantCloseTime.setText("Closing in " + minutes + (minutes>1?" mins":" min"));
+                        mHolder.textViewRestaurantCloseTime.setText(activity.getString(R.string.closing_in_format, String.valueOf(minutes), activity.getString(minutes>1?R.string.mins:R.string.min)));
                         paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 14f), paramsDelivery.rightMargin,
                                 (int)(ASSL.Yscale() * 14f));
+                        paramsDelivery.setMarginStart(paramsDelivery.getMarginStart());
+                        paramsDelivery.setMarginEnd(paramsDelivery.getMarginEnd());
                     }
                     // restaurant is open
                     else {
                         visibilityCloseTime = View.GONE;
                         paramsDelivery.setMargins(paramsDelivery.leftMargin, (int)(ASSL.Yscale() * 14f), paramsDelivery.rightMargin,
                                 (int)(ASSL.Yscale() * 26f));
+                        paramsDelivery.setMarginStart(paramsDelivery.getMarginStart());
+                        paramsDelivery.setMarginEnd(paramsDelivery.getMarginEnd());
                     }
-                    paramsDelivery.addRule(RelativeLayout.RIGHT_OF, mHolder.imageViewRestaurantImage.getId());
+                    paramsDelivery.addRule(RelativeLayout.END_OF, mHolder.imageViewRestaurantImage.getId());
                     paramsCloseTime.addRule(RelativeLayout.BELOW, mHolder.textViewDelivery.getId());
                     paramsCloseTime.setMargins(paramsCloseTime.leftMargin, visDeliveryTime != View.VISIBLE ? (int)(ASSL.Yscale() * 14f) : 0, 0,
                             paramsCloseTime.bottomMargin);
+                    paramsCloseTime.setMarginStart(paramsCloseTime.getMarginStart());
+                    paramsCloseTime.setMarginEnd(0);
                 }
                 mHolder.textViewRestaurantCloseTime.setVisibility(visibilityCloseTime);
                 mHolder.textViewRestaurantCloseTime.setLayoutParams(paramsCloseTime);
@@ -636,6 +648,8 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     View tab = ((ViewGroup) holderOffers.tabDots.getChildAt(0)).getChildAt(i);
                     ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
                     p.setMargins(activity.getResources().getDimensionPixelSize(R.dimen.dp_4), 0, 0, 0);
+                    p.setMarginStart(activity.getResources().getDimensionPixelSize(R.dimen.dp_4));
+                    p.setMarginEnd(0);
                     tab.requestLayout();
                 }
                 if(bannerInfos.size() == 1){
@@ -1361,7 +1375,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
-                            DialogPopup.alertPopup(activity, "", Data.SERVER_ERROR_MSG);
+                            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                         }
                         DialogPopup.dismissLoadingDialog();
                     }
@@ -1369,11 +1383,11 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     @Override
                     public void failure(RetrofitError error) {
                         DialogPopup.dismissLoadingDialog();
-                        DialogPopup.alertPopup(activity, "", Data.SERVER_NOT_RESOPNDING_MSG);
+                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                     }
                 });
             } else {
-                DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1385,7 +1399,7 @@ public class MenusRestaurantAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         activity.addStarsToLayout(llRatingStars, rating,
                 R.drawable.ic_half_star_green_grey, R.drawable.ic_star_grey);
         llRatingStars.addView(tvReviewCount);
-        tvReviewCount.setText(activity.getVendorOpened().getReviewCount()+" Ratings");
+        tvReviewCount.setText(activity.getString(R.string.ratings_format, String.valueOf(activity.getVendorOpened().getReviewCount())));
     }
 
 

@@ -159,7 +159,7 @@ public abstract class ImageSelectFragment extends Fragment {
             return;
 
         if(imageSelected!=null && imageSelected.size()>=maxNoImages) {
-            Toast.makeText(activity, "Cannot upload more images", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, getString(R.string.cannot_upload_more_images), Toast.LENGTH_SHORT).show();
             return;
         }
 

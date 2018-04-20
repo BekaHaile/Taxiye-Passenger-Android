@@ -107,7 +107,7 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 					}
 					GAUtils.event(SIDE_MENU, FREE_GIFT, MORE_SHARING_OPTIONS+CLICKED);
 				} else{
-					DialogPopup.alertPopup(activity, "", Data.CHECK_INTERNET_MSG);
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 				}
 			}
 		});
@@ -169,9 +169,9 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 
 		try {
 			tvReferralCodeValue.setText(Data.userData.referralCode);
-			textViewDesc.setText(Data.userData.getReferralMessages().referralShortMessage+ " Details");
+			textViewDesc.setText(Data.userData.getReferralMessages().referralShortMessage+" "+getString(R.string.details));
 
-			SpannableString ss = new SpannableString(Data.userData.getReferralMessages().referralShortMessage+"\n Details");
+			SpannableString ss = new SpannableString(Data.userData.getReferralMessages().referralShortMessage+"\n "+getString(R.string.details));
 			ClickableSpan clickableSpan = new ClickableSpan() {
 				@Override
 				public void onClick(View textView) {

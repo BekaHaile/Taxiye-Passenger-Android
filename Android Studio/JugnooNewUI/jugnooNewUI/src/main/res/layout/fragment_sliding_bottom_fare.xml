@@ -14,35 +14,37 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="240px"
-            android:layout_height="match_parent">
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10px">
 
             <TextView
                 android:id="@+id/textViewKM"
-                android:layout_width="150px"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/nl_per_km"
                 android:layout_marginTop="20px"
                 android:gravity="center_horizontal"
-                android:layout_alignParentRight="true"
+                android:layout_centerHorizontal="true"
                 android:textSize="@dimen/text_size_32"
                 android:textColor="@color/text_color_light"/>
 
             <TextView
                 android:id="@+id/textViewKMValue"
-                android:layout_width="150px"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewKM"
+                android:layout_centerHorizontal="true"
                 android:gravity="center_horizontal"
-                android:text="3"
-                android:layout_alignParentRight="true"
+                android:text="@string/_3"
                 android:textSize="@dimen/text_size_38"
                 android:textColor="@color/text_color"/>
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="240px"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
             <ImageView
@@ -71,7 +73,7 @@
                     android:id="@+id/textViewPriorityTipValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="1.25X"
+                    android:text="@string/_1_25x"
                     android:gravity="center"
                     android:textSize="@dimen/text_size_30"
                     android:layout_marginBottom="20px"
@@ -85,28 +87,30 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="240px"
-            android:layout_height="match_parent">
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="5px">
 
             <TextView
                 android:id="@+id/textViewMin"
-                android:layout_width="150px"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/nl_per_min"
                 android:layout_marginTop="20px"
                 android:gravity="center_horizontal"
-                android:layout_alignParentLeft="true"
+                android:layout_centerHorizontal="true"
                 android:textSize="@dimen/text_size_32"
                 android:textColor="@color/text_color_light"/>
 
             <TextView
                 android:id="@+id/textViewMinValue"
-                android:layout_width="150px"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewMin"
                 android:gravity="center_horizontal"
-                android:text="3"
-                android:layout_alignParentLeft="true"
+                android:layout_centerHorizontal="true"
+                android:text="@string/_3"
                 android:textSize="@dimen/text_size_38"
                 android:textColor="@color/text_color"/>
 
@@ -118,11 +122,11 @@
         android:id="@+id/textViewThreshold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="test\nabc"
+        android:text="@string/test_nabc"
         android:gravity="center"
         android:layout_marginTop="-10px"
-        android:layout_marginLeft="27px"
-        android:layout_marginRight="27px"
+        android:layout_marginStart="27px"
+        android:layout_marginEnd="27px"
         android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_26"/>
 
@@ -136,8 +140,8 @@
         android:textAllCaps="true"
         android:background="@drawable/background_white_rounded_bordered"
         android:layout_marginTop="10px"
-        android:layout_marginLeft="27px"
-        android:layout_marginRight="27px"
+        android:layout_marginStart="27px"
+        android:layout_marginEnd="27px"
         android:textSize="@dimen/text_size_34"
         android:textColor="@color/text_color"/>
 </LinearLayout>

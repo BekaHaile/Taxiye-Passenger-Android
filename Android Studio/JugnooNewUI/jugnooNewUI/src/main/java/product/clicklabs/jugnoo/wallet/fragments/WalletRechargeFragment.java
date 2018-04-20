@@ -183,9 +183,9 @@ public class WalletRechargeFragment extends Fragment {
 		});
 
 
-		buttonAmount1.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), amount1));
-		buttonAmount2.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), amount2));
-		buttonAmount3.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format_without_space), amount3));
+		buttonAmount1.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format), amount1));
+		buttonAmount2.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format), amount2));
+		buttonAmount3.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format), amount3));
 
 		buttonAmount1.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -238,7 +238,7 @@ public class WalletRechargeFragment extends Fragment {
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					editTextAmount.setError("Enter valid amount");
+					editTextAmount.setError(getString(R.string.enter_valid_amount));
 				}
 			}
 		});
@@ -416,7 +416,7 @@ public class WalletRechargeFragment extends Fragment {
 	private void addBalance(final String amount) {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
-				DialogPopup.showLoadingDialog(paymentActivity, "Adding Balance...");
+				DialogPopup.showLoadingDialog(paymentActivity, getString(R.string.adding_balance));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -437,7 +437,7 @@ public class WalletRechargeFragment extends Fragment {
 							} catch (Exception e) {
 								DialogPopup.dismissLoadingDialog();
 								e.printStackTrace();
-								DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(paymentActivity, "", getString(R.string.connection_lost_please_try_again));
 							}
 						}
 
@@ -445,7 +445,7 @@ public class WalletRechargeFragment extends Fragment {
 						public void failure(RetrofitError error) {
 							Log.e(TAG, "paytmAddMoney error=" + error.toString());
 							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(paymentActivity, "", getString(R.string.connection_lost_please_try_again));
 						}
 					});
 				} else {
@@ -475,7 +475,7 @@ public class WalletRechargeFragment extends Fragment {
 							} catch (Exception e) {
 								DialogPopup.dismissLoadingDialog();
 								e.printStackTrace();
-								DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+								DialogPopup.alertPopup(paymentActivity, "", getString(R.string.connection_lost_please_try_again));
 							}
 						}
 
@@ -483,7 +483,7 @@ public class WalletRechargeFragment extends Fragment {
 						public void failure(RetrofitError error) {
 							Log.e(TAG, openWalletType+"AddMoney error=" + error.toString());
 							DialogPopup.dismissLoadingDialog();
-							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(paymentActivity, "", getString(R.string.connection_lost_please_try_again));
 						}
 					};
 
@@ -496,7 +496,7 @@ public class WalletRechargeFragment extends Fragment {
 				}
 			}
 			else{
-				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+				DialogPopup.dialogNoInternet(paymentActivity, getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc),
 						new Utils.AlertCallBackWithButtonsInterface() {
 							@Override
 							public void positiveClick(View view) {
@@ -523,7 +523,7 @@ public class WalletRechargeFragment extends Fragment {
 	private void removeWallet() {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
-				DialogPopup.showLoadingDialog(paymentActivity, "Loading...");
+				DialogPopup.showLoadingDialog(paymentActivity, getString(R.string.loading));
 				HashMap<String, String> params = new HashMap<>();
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -560,7 +560,7 @@ public class WalletRechargeFragment extends Fragment {
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
-							DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+							DialogPopup.alertPopup(paymentActivity, "", getString(R.string.connection_lost_please_try_again));
 						}
 						DialogPopup.dismissLoadingDialog();
 					}
@@ -569,7 +569,7 @@ public class WalletRechargeFragment extends Fragment {
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "deleteWallet error="+error.toString());
 						DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(paymentActivity, "", Data.SERVER_ERROR_MSG);
+						DialogPopup.alertPopup(paymentActivity, "", getString(R.string.connection_lost_please_try_again));
 					}
 				};
 
@@ -582,7 +582,7 @@ public class WalletRechargeFragment extends Fragment {
                     RestClient.getApiService().freechargeUnlink(params, callback);
                 }
 			} else{
-				DialogPopup.dialogNoInternet(paymentActivity, Data.CHECK_INTERNET_TITLE, Data.CHECK_INTERNET_MSG,
+				DialogPopup.dialogNoInternet(paymentActivity, getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc),
 						new Utils.AlertCallBackWithButtonsInterface() {
 							@Override
 							public void positiveClick(View view) {

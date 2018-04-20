@@ -34,7 +34,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="40px"
             android:gravity="center"
-            android:text="Your treat to beat heat\nis on the way."
+            android:text="@string/your_treat_to_beat_heat_nis_on_the_way"
             android:textColor="@color/text_color_dark"
             android:textSize="@dimen/text_size_30"
             />

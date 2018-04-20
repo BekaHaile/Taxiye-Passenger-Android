@@ -68,7 +68,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
     RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
             relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm,
-            relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay;
+            relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay,relativeLayoutPaidUsingMpesa;
     LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
     RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare, relativeLayoutFinalFare;
     NonScrollListView listViewEndRideDiscounts;
@@ -78,7 +78,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             textViewEndRideMobikwikValue, textViewEndRideFreeChargeValue,
             textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
             textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue,
-            tvIncludeToll, tvEndRideRazorpay, tvEndRideRazorpayValue;
+            tvIncludeToll, tvEndRideRazorpay, tvEndRideRazorpayValue,textViewEndRideMpesaValue;
     TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
     Button buttonEndRideOk;
     EndRideDiscountsAdapter endRideDiscountsAdapter;
@@ -210,6 +210,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
             textViewEndRideMobikwikValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideFreeChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideFreeChargeValue);
             textViewEndRideFreeChargeValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideMpesaValue = (TextView) rootView.findViewById(R.id.textViewEndRideMpesaValue);
+            textViewEndRideMpesaValue.setTypeface(Fonts.mavenRegular(activity));
             tvEndRideRazorpay = (TextView) rootView.findViewById(R.id.tvEndRideRazorpay); tvEndRideRazorpay.setTypeface(Fonts.mavenLight(activity));
             tvEndRideRazorpayValue = (TextView) rootView.findViewById(R.id.tvEndRideRazorpayValue); tvEndRideRazorpayValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideToBePaidValue = (TextView) rootView.findViewById(R.id.textViewEndRideToBePaidValue);
@@ -235,6 +237,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             relativeLayoutPaidUsingPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingPaytm);
             relativeLayoutPaidUsingMobikwik = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingMobikwik);
             relativeLayoutPaidUsingFreeCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingFreeCharge);
+            relativeLayoutPaidUsingMpesa = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingMpesa);
             rlPaidUsingRazorpay = (RelativeLayout) rootView.findViewById(R.id.rlPaidUsingRazorpay);
             linearLayoutEndRideTime = (LinearLayout) rootView.findViewById(R.id.linearLayoutEndRideTime);
             relativeLayoutEndRideWaitTime = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideWaitTime);
@@ -382,7 +385,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
                     relativeLayoutFare.setVisibility(View.VISIBLE);
                     linearLayoutRideDetail.setVisibility(View.VISIBLE);
                     relativeLayoutFinalFare.setVisibility(View.VISIBLE);
-                    textViewEndRideFareValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.fare)));
+                    textViewEndRideFareValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.fare));
                 } else {
                     relativeLayoutFare.setVisibility(View.GONE);
                     linearLayoutRideDetail.setVisibility(View.GONE);
@@ -391,14 +394,14 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
                 if (Utils.compareDouble(endRideData.luggageCharge, 0) > 0) {
                     relativeLayoutLuggageCharge.setVisibility(View.VISIBLE);
-                    textViewEndRideLuggageChargeValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.luggageCharge)));
+                    textViewEndRideLuggageChargeValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.luggageCharge));
                 } else {
                     relativeLayoutLuggageCharge.setVisibility(View.GONE);
                 }
 
                 if (Utils.compareDouble(endRideData.convenienceCharge, 0) > 0) {
                     relativeLayoutConvenienceCharge.setVisibility(View.VISIBLE);
-                    textViewEndRideConvenienceChargeValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.convenienceCharge)));
+                    textViewEndRideConvenienceChargeValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.convenienceCharge));
                 } else {
                     relativeLayoutConvenienceCharge.setVisibility(View.GONE);
                 }
@@ -421,7 +424,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
                 if (endRideData.discountTypes.size() > 0) {
                     listViewEndRideDiscounts.setVisibility(View.VISIBLE);
-                    endRideDiscountsAdapter.setList(endRideData.discountTypes);
+                    endRideDiscountsAdapter.setList(endRideData.discountTypes, endRideData.getCurrency());
                     textViewEndRideDiscountValue.setVisibility(View.GONE);
                     relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
                     textViewEndRideDiscount.setVisibility(View.GONE);
@@ -429,7 +432,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
                     for (int i = 0; i < endRideData.discountTypes.size(); i++) {
                         if (endRideData.discountTypes.get(i).getReferenceId() == 0) {
                             textViewEndRideDiscount.setVisibility(View.VISIBLE);
-                            textViewEndRideDiscount.setText("Discounts");
+                            textViewEndRideDiscount.setText(R.string.discounts);
                             break;
                         }
                     }
@@ -449,14 +452,14 @@ public class RideSummaryFragment extends Fragment implements Constants {
 					listViewEndRideDiscounts.setVisibility(View.GONE);
 					textViewEndRideDiscount.setText(endRideData.discountTypes.get(0).name);
 					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
-					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), FeedUtils.getMoneyDecimalFormat().format(endRideData.discount)));
+					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format), FeedUtils.getMoneyDecimalFormat().format(endRideData.discount)));
 					relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
 				}
 				else{
 					listViewEndRideDiscounts.setVisibility(View.GONE);
 					textViewEndRideDiscount.setText("Discounts");
 					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
-					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), FeedUtils.getMoneyDecimalFormat().format(endRideData.discount)));
+					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format), FeedUtils.getMoneyDecimalFormat().format(endRideData.discount)));
 					if(endRideData.discount > 0){
 						relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
 					} else{
@@ -465,50 +468,50 @@ public class RideSummaryFragment extends Fragment implements Constants {
 				}*/
 
 
-                textViewEndRideFinalFareValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.finalFare)));
+                textViewEndRideFinalFareValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.finalFare));
                 if(Utils.compareDouble(endRideData.fare, endRideData.finalFare) == 0){
                     relativeLayoutFinalFare.setVisibility(View.GONE);
                 }
 
                 if (Utils.compareDouble(endRideData.paidUsingWallet, 0) > 0) {
                     relativeLayoutPaidUsingJugnooCash.setVisibility(View.VISIBLE);
-                    textViewEndRideJugnooCashValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.paidUsingWallet)));
+                    textViewEndRideJugnooCashValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.paidUsingWallet));
                 } else {
                     relativeLayoutPaidUsingJugnooCash.setVisibility(View.GONE);
                 }
                 if (Utils.compareDouble(endRideData.paidUsingPaytm, 0) > 0) {
                     relativeLayoutPaidUsingPaytm.setVisibility(View.VISIBLE);
-                    textViewEndRidePaytmValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.paidUsingPaytm)));
+                    textViewEndRidePaytmValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.paidUsingPaytm));
                 } else {
                     relativeLayoutPaidUsingPaytm.setVisibility(View.GONE);
                 }
                 if(Utils.compareDouble(endRideData.paidUsingMobikwik, 0) > 0){
                     relativeLayoutPaidUsingMobikwik.setVisibility(View.VISIBLE);
-                    textViewEndRideMobikwikValue.setText(String.format(getResources()
-                                    .getString(R.string.rupees_value_format_without_space),
-                            Utils.getMoneyDecimalFormat().format(endRideData.paidUsingMobikwik)));
+                    textViewEndRideMobikwikValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.paidUsingMobikwik));
                 } else{
                     relativeLayoutPaidUsingMobikwik.setVisibility(View.GONE);
                 }
                 if(Utils.compareDouble(endRideData.paidUsingFreeCharge, 0) > 0){
                     relativeLayoutPaidUsingFreeCharge.setVisibility(View.VISIBLE);
-                    textViewEndRideFreeChargeValue.setText(String.format(getResources()
-                                    .getString(R.string.rupees_value_format_without_space),
-                            Utils.getMoneyDecimalFormat().format(endRideData.paidUsingFreeCharge)));
+                    textViewEndRideFreeChargeValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.paidUsingFreeCharge));
                 } else{
                     relativeLayoutPaidUsingFreeCharge.setVisibility(View.GONE);
                 }
+                if(Utils.compareDouble(endRideData.paidUsingMpesa, 0) > 0){
+                    relativeLayoutPaidUsingMpesa.setVisibility(View.VISIBLE);
+                    textViewEndRideMpesaValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.paidUsingMpesa));
+                } else{
+                    relativeLayoutPaidUsingMpesa.setVisibility(View.GONE);
+                }
                 if(Utils.compareDouble(endRideData.paidUsingRazorpay, 0) > 0){
                     rlPaidUsingRazorpay.setVisibility(View.VISIBLE);
-                    tvEndRideRazorpay.setText(MyApplication.getInstance().getWalletCore().getRazorpayName());
-                    tvEndRideRazorpayValue.setText(String.format(getResources()
-                                    .getString(R.string.rupees_value_format_without_space),
-                            Utils.getMoneyDecimalFormat().format(endRideData.paidUsingRazorpay)));
+                    tvEndRideRazorpay.setText(MyApplication.getInstance().getWalletCore().getRazorpayName(activity));
+                    tvEndRideRazorpayValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.paidUsingRazorpay));
                 } else{
                     rlPaidUsingRazorpay.setVisibility(View.GONE);
                 }
 
-                textViewEndRideToBePaidValue.setText(String.format(getResources().getString(R.string.rupees_value_format_without_space), Utils.getMoneyDecimalFormat().format(endRideData.toPay)));
+                textViewEndRideToBePaidValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.toPay));
 
                 if (!rideCancelled && (endRideData.fareFactor > 1 || endRideData.fareFactor < 1)) {
                     textViewEndRideFareFactorValue.setVisibility(View.VISIBLE);
@@ -517,28 +520,28 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 }
 
                 textViewEndRideFareFactorValue.setText(String.format(getResources().getString(R.string.priority_tip_format), decimalFormat.format(endRideData.fareFactor)));
-                textViewEndRideBaseFareValue.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(endRideData.baseFare)));
+                textViewEndRideBaseFareValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.baseFare));
                 double totalDistanceInKm = endRideData.distance;
                 String kmsStr = "";
                 if (totalDistanceInKm > 1) {
-                    kmsStr = "kms";
+                    kmsStr = getString(R.string.kms);
                 } else {
-                    kmsStr = "km";
+                    kmsStr = getString(R.string.km);
                 }
                 textViewEndRideDistanceValue.setText("" + decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
                 if (endRideData.rideTime > -1) {
                     linearLayoutEndRideTime.setVisibility(View.VISIBLE);
-                    textViewEndRideTimeValue.setText(decimalFormatNoDecimal.format(endRideData.rideTime) + " min");
+                    textViewEndRideTimeValue.setText(decimalFormatNoDecimal.format(endRideData.rideTime) + " "+getString(R.string.min));
                 } else {
                     linearLayoutEndRideTime.setVisibility(View.GONE);
                 }
                 if (endRideData.waitingChargesApplicable == 1 || endRideData.waitTime > 0) {
                     relativeLayoutEndRideWaitTime.setVisibility(View.VISIBLE);
-                    textViewEndRideWaitTimeValue.setText(decimalFormatNoDecimal.format(endRideData.waitTime) + " min");
-                    textViewEndRideTime.setText("Total");
+                    textViewEndRideWaitTimeValue.setText(decimalFormatNoDecimal.format(endRideData.waitTime) + " "+getString(R.string.min));
+                    textViewEndRideTime.setText(R.string.total);
                 } else {
                     relativeLayoutEndRideWaitTime.setVisibility(View.GONE);
-                    textViewEndRideTime.setText("Time");
+                    textViewEndRideTime.setText(R.string.time);
                 }
 
                 if(rideCancelled){

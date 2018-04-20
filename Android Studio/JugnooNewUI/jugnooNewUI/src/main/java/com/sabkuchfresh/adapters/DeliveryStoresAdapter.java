@@ -81,17 +81,17 @@ public class DeliveryStoresAdapter extends RecyclerView.Adapter<DeliveryStoresAd
             }
             int bottom = mHolder.llContainer.getPaddingBottom();
             int top = mHolder.llContainer.getPaddingTop();
-            int right = mHolder.llContainer.getPaddingRight();
-            int left = mHolder.llContainer.getPaddingLeft();
+            int right = mHolder.llContainer.getPaddingEnd();
+            int left = mHolder.llContainer.getPaddingStart();
             if(store.getIsSelected() == 1){
                 mHolder.ivRadio.setImageResource(R.drawable.radio_active);
                 mHolder.ivRadio.setImageResource(R.drawable.radio_active);
                 mHolder.llContainer.setBackgroundResource(R.drawable.bg_white_layer_shadow);
-                mHolder.llContainer.setPadding(left, top, right, bottom);
+                mHolder.llContainer.setPaddingRelative(left, top, right, bottom);
             } else{
                 mHolder.ivRadio.setImageResource(R.drawable.radio_deactive);
                 mHolder.llContainer.setBackgroundResource(R.drawable.bg_white_transparent_layer_shadow);
-                mHolder.llContainer.setPadding(left, top, right, bottom);
+                mHolder.llContainer.setPaddingRelative(left, top, right, bottom);
             }
 
         } catch (Exception e) {

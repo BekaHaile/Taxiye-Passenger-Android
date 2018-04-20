@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.google.gson.annotations.SerializedName;
 import com.picker.image.model.ImageEntry;
-import com.picker.image.util.Util;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.ui.adapters.FeedAddPostPagerAdapter;
@@ -194,9 +193,9 @@ public class FeedAddPostFragment extends Fragment implements View.OnClickListene
 
 
                 if (feedDetail.getFeedType() == FeedDetail.FeedType.POST)
-                    activity.getTopBar().title.setText("Edit Post");
+                    activity.getTopBar().title.setText(R.string.edit_post);
                 else if (feedDetail.getFeedType() == FeedDetail.FeedType.REVIEW)
-                    activity.getTopBar().title.setText("Edit Review");
+                    activity.getTopBar().title.setText(R.string.edit_review);
 
             }
 

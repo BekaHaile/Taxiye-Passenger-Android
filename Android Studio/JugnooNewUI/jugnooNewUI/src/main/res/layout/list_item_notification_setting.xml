@@ -9,10 +9,10 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginBottom="20px"
-        android:layout_marginLeft="30px"
-        android:layout_marginRight="50px"
+        android:layout_marginStart="30px"
+        android:layout_marginEnd="50px"
         android:layout_marginTop="20px"
-        android:layout_toLeftOf="@+id/imageViewStatus"
+        android:layout_toStartOf="@+id/imageViewStatus"
         android:orientation="vertical">
 
         <TextView
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="No Current Notifications"
+            android:text="@string/no_current_notifications"
             android:textColor="@color/stroke_color_dark"
             android:textSize="@dimen/text_size_26" />
 
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:lineSpacingExtra="5px"
-            android:text="No Current Notifications"
+            android:text="@string/no_current_notifications"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_28" />
 
@@ -40,9 +40,9 @@
         android:id="@+id/imageViewStatus"
         android:layout_width="77px"
         android:layout_height="50px"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10px"
+        android:layout_marginEnd="10px"
         android:src="@drawable/jugnoo_sticky_off"
         android:tag="mwar" />
 
