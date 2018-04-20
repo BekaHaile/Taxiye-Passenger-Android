@@ -77,6 +77,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
         this.drawerLayout = drawerLayout;
     }
 
+    public void setList(ArrayList<MenuInfo> menuInfos){
+        this.menuList = menuInfos;
+        notifyDataSetChanged();
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_HEADER) {

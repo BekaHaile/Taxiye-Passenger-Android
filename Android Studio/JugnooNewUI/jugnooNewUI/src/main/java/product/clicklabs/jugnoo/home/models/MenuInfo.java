@@ -47,13 +47,12 @@ public class MenuInfo {
     @SerializedName("show_in_account")
     private int showInAccount;
 
-    public MenuInfo(String tag, String name, int isNew, String icon, String iconHighlighted, String iconNormal){
+    /**
+     * for matching with list
+     * @param tag tag value
+     */
+    public MenuInfo(String tag){
         this.tag = tag;
-        this.name = name;
-        this.isNew = isNew;
-        this.icon = icon;
-        this.iconHighlighted = iconHighlighted;
-        this.iconNormal = iconNormal;
     }
 
     public String getTag() {
@@ -102,5 +101,10 @@ public class MenuInfo {
 
     public void setIconNormal(String iconNormal) {
         this.iconNormal = iconNormal;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof MenuInfo && ((MenuInfo)obj).tag.equalsIgnoreCase(tag);
     }
 }

@@ -921,6 +921,9 @@ public class JSONParser implements Constants {
                         || PassengerScreenMode.P_RIDE_END == HomeActivity.passengerScreenMode) {
                     Gson gson = new Gson();
                     FindADriverResponse findADriverResponse = gson.fromJson(responseStr, FindADriverResponse.class);
+                    if(Data.autoData != null){
+                        findADriverResponse.setIsRazorpayEnabled(Data.autoData.getIsRazorpayEnabled());
+                    }
                     apiFindADriver.parseFindADriverResponse(findADriverResponse);
                 }
 

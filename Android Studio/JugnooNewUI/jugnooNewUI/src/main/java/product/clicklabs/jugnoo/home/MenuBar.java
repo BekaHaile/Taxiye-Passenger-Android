@@ -82,13 +82,7 @@ public class MenuBar {
 
 
 
-			ArrayList<MenuInfo> itemsToShow = new ArrayList<>();
-			for(MenuInfo menuInfo: Data.userData.getMenuInfoList())
-			{
-				if(!menuInfo.getShowInAccount()){
-					itemsToShow.add(menuInfo);
-				}
-			}
+			ArrayList<MenuInfo> itemsToShow = getSideMenuList();
 
 			menuAdapter = new MenuAdapter(itemsToShow, activity, drawerLayout);
 
@@ -201,16 +195,26 @@ public class MenuBar {
 
 	public void setUserData(){
 		try {
-			menuAdapter.notifyDataSetChanged();
+			menuAdapter.setList(getSideMenuList());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	private ArrayList<MenuInfo> getSideMenuList(){
+		ArrayList<MenuInfo> itemsToShow = new ArrayList<>();
+		for(MenuInfo menuInfo: Data.userData.getMenuInfoList()) {
+			if(!menuInfo.getShowInAccount()){
+				itemsToShow.add(menuInfo);
+			}
+		}
+		return itemsToShow;
+	}
+
 
 	public void setupFreshUI(){
 		try {
-			menuAdapter.notifyDataSetChanged();
+			menuAdapter.setList(getSideMenuList());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

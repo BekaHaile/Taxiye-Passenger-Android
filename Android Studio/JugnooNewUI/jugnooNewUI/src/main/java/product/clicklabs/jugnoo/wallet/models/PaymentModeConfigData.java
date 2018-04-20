@@ -53,6 +53,11 @@ public class PaymentModeConfigData {
 		this.upiCashbackValue = upiCashbackValue;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof PaymentModeConfigData && paymentOption == ((PaymentModeConfigData)obj).paymentOption;
+	}
+
 	public String getName() {
 		return name;
 	}

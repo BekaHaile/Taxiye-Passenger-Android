@@ -180,6 +180,7 @@ import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.dialogs.SavedAddressPickupDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
+import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
@@ -2495,7 +2496,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (UserMode.PASSENGER == userMode &&
                         (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode) &&
                         map != null &&
-                        HomeActivity.this.hasWindowFocus() && !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
+                        !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
                     Data.autoData.setPickupLatLng(map.getCameraPosition().target);
                     if (!dontCallRefreshDriver && Data.autoData.getPickupLatLng() != null) {
                         findDriversETACall(false, false, false);
@@ -5049,6 +5050,35 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             buttonConfirmRequest.setEnabled(true);
                             slidingBottomPanel.updatePaymentOptions();
                         }
+
+                        @Override
+                        public void updateWalletConfig() {
+                            if(Data.userData != null) {
+                                slidingBottomPanel.updatePaymentOptions();
+                            }
+                        }
+
+                        @Override
+                        public void updateSideMenu(ArrayList<MenuInfo> menuInfos) {
+                            if(Data.userData != null && menuInfos != null && menuInfos.size() > 0) {
+                                /*
+                                 * hack for preserving jugnoo star MenuInfo if it was there in Login api
+                                 * For Parminder
+                                 */
+                                MenuInfo menuInfoStar = null;
+                                int index = Data.userData.getMenuInfoList().indexOf(new MenuInfo(MenuInfoTags.JUGNOO_STAR.getTag()));
+                                if(index > -1){
+                                    menuInfoStar = Data.userData.getMenuInfoList().get(index);
+                                }
+                                Data.userData.setMenuInfoList(menuInfos);
+                                if(Data.userData.getMenuInfoList().indexOf(new MenuInfo(MenuInfoTags.JUGNOO_STAR.getTag())) < 0
+                                        && menuInfoStar != null && Data.userData.getMenuInfoList().size() >= index){
+                                    Data.userData.getMenuInfoList().add(index, menuInfoStar);
+                                }
+
+                                menuBar.setUserData();
+                            }
+                        }
                     });
         }
         return apiFindADriver;
@@ -5087,7 +5117,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         public void run() {
                             dontCallRefreshDriver = false;
                         }
-                    }, 300);
+                    }, 50);
                     updateImageViewRideNowIcon();
                     setupFreshUI();
                     setupInAppCampaignUI();
@@ -9243,9 +9273,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             String textToShow = "";
 
 
-            if(!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")){
+            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts() != null
+                    && !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")){
                 textToShow = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1();
-            } else if(!TextUtils.isEmpty(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2())){
+            } else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts() != null
+                    && !TextUtils.isEmpty(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2())){
                 textToShow = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2();
             }
             boolean isCustomCouponText = false;
@@ -9262,7 +9294,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             textToShow = textToShow.trim();
             if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
-                    (!slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) && !isCustomCouponText){
+                    (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts() != null
+                            && !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) && !isCustomCouponText){
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
                 setFabMarginInitial(false, isSlidingPanelCollapsing);
                 textViewPoolInfo1.setText(textToShow);

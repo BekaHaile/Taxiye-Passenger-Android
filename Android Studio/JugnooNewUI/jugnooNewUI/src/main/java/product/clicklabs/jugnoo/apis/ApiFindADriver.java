@@ -4,15 +4,19 @@ import android.text.TextUtils;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -86,6 +90,8 @@ public class ApiFindADriver {
 						String resp = new String(((TypedByteArray) response.getBody()).getBytes());
 						Log.e(TAG, "findADriverCall response=" + resp);
 
+						MyApplication.getInstance().getWalletCore().updatePaymentModeConfigDatas(new JSONObject(resp));
+
 						double fareFactorOld = ApiFindADriver.this.regionSelected.getCustomerFareFactor();
 						double driverFareFactorOld = ApiFindADriver.this.regionSelected.getDriverFareFactor();
 
@@ -122,6 +128,8 @@ public class ApiFindADriver {
 						e.printStackTrace();
 					}
 					if(callback != null) {
+						callback.updateSideMenu((ArrayList<MenuInfo>) findADriverResponse.getMenuInfoList());
+						callback.updateWalletConfig();
 						callback.onFinish();
 					}
 				}
@@ -174,11 +182,7 @@ public class ApiFindADriver {
 				Data.autoData.setFarAwayCity(findADriverResponse.getFarAwayCity());
 			}
 
-			// using -1 as razorPayEnables does not come in getUserCurrentStatus api which uses this
-			// same function to parse response
-			if (findADriverResponse.getIsRazorpayEnabled()!=-1) {
-				Data.autoData.setIsRazorpayEnabled(findADriverResponse.getIsRazorpayEnabled());
-			}
+			Data.autoData.setIsRazorpayEnabled(findADriverResponse.getIsRazorpayEnabled());
 
 			Data.autoData.setCampaigns(findADriverResponse.getCampaigns());
 
@@ -488,6 +492,8 @@ public class ApiFindADriver {
 		void continueRequestRide(boolean confirmedScreenOpened, boolean savedAddressUsed);
 		void stopRequestRide(boolean confirmedScreenOpened);
 		void onFinish();
+		void updateWalletConfig();
+		void updateSideMenu(ArrayList<MenuInfo> menuInfos);
 	}
 
 }

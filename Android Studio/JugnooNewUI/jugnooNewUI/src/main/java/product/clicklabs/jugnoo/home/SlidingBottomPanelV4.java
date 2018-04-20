@@ -198,7 +198,7 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
         try {
             for(Region region : Data.autoData.getRegions()){
                 if(region.getRideType() == RideTypeValue.POOL.getOrdinal() &&
-                        (!region.getOfferTexts().getText1().equalsIgnoreCase(""))){
+                        (region.getOfferTexts() != null && !region.getOfferTexts().getText1().equalsIgnoreCase(""))){
                     //slidingUpPanelLayout.setPanelHeight(heightWithBar);
                     slidingUpPanelLayout.setPanelHeight(heightWithourBar);
                     try {

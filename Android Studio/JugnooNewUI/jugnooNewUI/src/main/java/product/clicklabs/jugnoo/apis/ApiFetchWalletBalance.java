@@ -57,6 +57,8 @@ public class ApiFetchWalletBalance {
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_CLIENT_ID, isFromFatafatChatPay? Config.getFeedClientId():Config.getLastOpenedClientId(activity));
 				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
+				params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
+				params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
 
 				final long startTime = System.currentTimeMillis();
 				final ProgressDialog finalProgressDialog = progressDialog;

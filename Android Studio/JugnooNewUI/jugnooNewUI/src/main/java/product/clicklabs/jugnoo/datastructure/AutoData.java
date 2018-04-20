@@ -515,6 +515,9 @@ public class AutoData {
     public boolean isRazorpayEnabled() {
         return isRazorpayEnabled == 1;
     }
+    public int getIsRazorpayEnabled() {
+        return isRazorpayEnabled;
+    }
 
     public void setIsRazorpayEnabled(int isRazorpayEnabled) {
         this.isRazorpayEnabled = isRazorpayEnabled;

@@ -12,6 +12,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 
@@ -35,7 +36,7 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
     private Integer priorityTipCategory;
     @SerializedName("is_razorpay_enabled")
     @Expose
-    private int isRazorpayEnabled = -1;
+    private int isRazorpayEnabled;
     @SerializedName("far_away_city")
     @Expose
     private String farAwayCity;
@@ -129,6 +130,9 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
     @SerializedName("currency")
     @Expose
     private String currency;
+    @SerializedName("menu")
+    @Expose
+    private List<MenuInfo> menuInfoList;
 
     public List<CouponInfo> getDeliveryCoupons() {
         return deliveryCoupons;
@@ -490,5 +494,13 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public List<MenuInfo> getMenuInfoList() {
+        return menuInfoList;
+    }
+
+    public void setMenuInfoList(List<MenuInfo> menuInfoList) {
+        this.menuInfoList = menuInfoList;
     }
 }

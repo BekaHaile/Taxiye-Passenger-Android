@@ -584,6 +584,27 @@ public class WalletCore {
 		}
 	}
 
+	public void updatePaymentModeConfigDatas(JSONObject jObj){
+		try{
+			JSONArray jsonArray = jObj.getJSONArray(Constants.KEY_PAYMENT_MODE_CONFIG_DATA);
+			if(jsonArray.length() == 0){
+				return;
+			}
+			for(int i=0; i<jsonArray.length(); i++){
+				JSONObject ji = jsonArray.getJSONObject(i);
+				PaymentModeConfigData paymentModeConfigData = new PaymentModeConfigData(ji.getString(Constants.KEY_NAME),
+						ji.getInt(Constants.KEY_ENABLED), ji.optString(KEY_OFFER_TEXT, null), ji.optString(KEY_DISPLAY_NAME, null),
+						ji.optString(KEY_UPI_HANDLE, null),ji.optString(KEY_JUGNOO_VPA_HANDLE,null),
+						ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""));
+				paymentModeConfigDatas.set(paymentModeConfigDatas.indexOf(paymentModeConfigData), paymentModeConfigData);
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+
+
 	public ArrayList<PaymentModeConfigData> getPaymentModeConfigDatas() {
 		return paymentModeConfigDatas;
 	}
