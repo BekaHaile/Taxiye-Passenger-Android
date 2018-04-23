@@ -88,7 +88,6 @@ public class ApiFindADriver {
 				public void success(FindADriverResponse findADriverResponse, Response response) {
 					try {
 						String resp = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.e(TAG, "findADriverCall response=" + resp);
 
 						MyApplication.getInstance().getWalletCore().updatePaymentModeConfigDatas(new JSONObject(resp));
 
@@ -229,8 +228,7 @@ public class ApiFindADriver {
 				if(findADriverResponse.getCommonCoupons() != null) {
                     Data.userData.getPromoCoupons().addAll(findADriverResponse.getCommonCoupons());
                 }
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Exception ignored) {
 			}
 
 			// for Auto promo and coupons
@@ -249,8 +247,7 @@ public class ApiFindADriver {
 				if(findADriverResponse.getAutosCoupons() != null) {
                     Data.autoData.getPromoCoupons().addAll(findADriverResponse.getAutosCoupons());
                 }
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Exception ignored) {
 			}
 
 			// for Fresh promo and coupons
@@ -266,8 +263,7 @@ public class ApiFindADriver {
 				if(findADriverResponse.getFreshCoupons() != null) {
                     Data.getFreshData().getPromoCoupons().addAll(findADriverResponse.getFreshCoupons());
                 }
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Exception ignored) {
 			}
 
 			// for Meals promo and coupons
@@ -283,8 +279,7 @@ public class ApiFindADriver {
 				if(findADriverResponse.getMealsCoupons() != null) {
                     Data.getMealsData().getPromoCoupons().addAll(findADriverResponse.getMealsCoupons());
                 }
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Exception ignored) {
 			}
 
 			try {
@@ -299,7 +294,7 @@ public class ApiFindADriver {
 				if(findADriverResponse.getGroceryCoupons() != null) {
 					Data.getGroceryData().getPromoCoupons().addAll(findADriverResponse.getGroceryCoupons());
 				}
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 
 			try {
@@ -314,8 +309,7 @@ public class ApiFindADriver {
 				if(findADriverResponse.getMenusCoupons() != null) {
 					Data.getMenusData().getPromoCoupons().addAll(findADriverResponse.getMenusCoupons());
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Exception ignored) {
 			}
 
 			try {
@@ -330,8 +324,7 @@ public class ApiFindADriver {
 				if(findADriverResponse.getDeliveryCustomerCoupons() != null) {
 					Data.getDeliveryCustomerData().getPromoCoupons().addAll(findADriverResponse.getDeliveryCustomerCoupons());
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Exception ignored) {
 			}
 
 			try {
@@ -346,7 +339,7 @@ public class ApiFindADriver {
 				if(findADriverResponse.getPayCoupons() != null) {
 					Data.getPayData().getPromoCoupons().addAll(findADriverResponse.getPayCoupons());
 				}
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 
 			// for Dodo promo and coupons
@@ -362,7 +355,7 @@ public class ApiFindADriver {
 				if(findADriverResponse.getDeliveryCoupons() != null) {
                     Data.getDeliveryData().getPromoCoupons().addAll(findADriverResponse.getDeliveryCoupons());
                 }
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 
 
@@ -431,7 +424,7 @@ public class ApiFindADriver {
 				Data.userData.getPointsOfInterestAddresses().clear();
 				Data.userData.getPointsOfInterestAddresses().addAll(findADriverResponse.getPointsOfInterestAddresses());
 			}
-		} catch (Exception e){}
+		} catch (Exception ignored){}
 	}
 
 	public  static void parseResponseForOfferingsEnabled(OfferingsVisibilityResponse.OfferingsVisibilityData findADriverResponse) {

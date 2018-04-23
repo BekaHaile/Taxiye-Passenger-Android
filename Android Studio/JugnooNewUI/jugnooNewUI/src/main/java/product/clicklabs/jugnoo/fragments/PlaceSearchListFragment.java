@@ -179,6 +179,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		String text = bundle.getString(KEY_SEARCH_FIELD_TEXT, "");
 		String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, "");
 		int searchMode = bundle.getInt(KEY_SEARCH_MODE, PlaceSearchMode.PICKUP.getOrdinal());
+		editTextSearch.setText(text);
+		editTextSearch.setHint(hint);
 
 		searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient, searchMode,
 				new SearchListAdapter.SearchListActionsHandler() {
@@ -268,16 +270,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		listViewSearch.setAdapter(searchListAdapter);
 
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				if(editTextSearch.getText().length() == 0 || editTextSearch.getText().toString().equalsIgnoreCase(" ")) {
-					editTextSearch.setText("");
-					editTextSearch.setText(" ");
-					editTextSearch.setText("");
-				}
-			}
-		},500);
 
 
 		relativeLayoutAddHome.setOnClickListener(new View.OnClickListener() {
@@ -310,16 +302,14 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		} else{
 			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_green);
 		}
-		editTextSearch.setText(text);
-		editTextSearch.setHint(hint);
-		new Handler().post(new Runnable() {
+		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				editTextSearch.requestFocus();
 				editTextSearch.setSelection(editTextSearch.getText().length());
 				Utils.showSoftKeyboard(activity, editTextSearch);
 			}
-		});
+		}, 200);
 
 		ImageView imageViewShadow = (ImageView) rootView.findViewById(R.id.imageViewShadow);
 		if(activity instanceof HomeActivity){

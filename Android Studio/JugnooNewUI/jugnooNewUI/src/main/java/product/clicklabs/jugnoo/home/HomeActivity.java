@@ -5091,8 +5091,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 confirmedScreenOpened, savedAddressUsed);
     }
 
-    private void
-    findADriverFinishing(boolean showPoolIntro, boolean useServerDefaultCoupon){
+    private void findADriverFinishing(boolean showPoolIntro, boolean useServerDefaultCoupon){
         //fabViewTest.setFABButtons();
         if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
             try {
@@ -5111,13 +5110,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (relativeLayoutLocationError.getVisibility() == View.GONE) {
                     showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
                     homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map);
-                    dontCallRefreshDriver = true;
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            dontCallRefreshDriver = false;
-                        }
-                    }, 50);
+                    dontCallRefreshDriver = false;
+
                     updateImageViewRideNowIcon();
                     setupFreshUI();
                     setupInAppCampaignUI();

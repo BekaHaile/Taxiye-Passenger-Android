@@ -27,9 +27,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
@@ -37,8 +35,6 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
-import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -148,32 +144,32 @@ public class SearchListAdapter extends BaseAdapter{
         }
     }
 
-    public synchronized void setResults(ArrayList<SearchResult> autoCompleteSearchResults) {
+    public void setResults(ArrayList<SearchResult> autoCompleteSearchResults) {
         this.searchResults.clear();
         this.searchResults.addAll(autoCompleteSearchResults);
-        try {
-            if(context instanceof HomeActivity && editTextForSearch.getText().length() == 0){
-                String json;
-                if(SearchListAdapter.this.searchMode == PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal()){
-                    json = Prefs.with(context).getString(SPLabels.LAST_DESTINATION, "");
-                } else{
-                    json = Prefs.with(context).getString(SPLabels.LAST_PICK_UP, "");
-                }
-                Type type = new TypeToken<ArrayList<SearchResult>>() {}.getType();
-                ArrayList<SearchResult> lastPickUp = new Gson().fromJson(json, type);
-
-				if(favLocationsCount < 5){
-					int locationsToAdd = 5 - favLocationsCount;
-					locationsToAdd = locationsToAdd > lastPickUp.size() ? lastPickUp.size() : locationsToAdd;
-					for(int i=0; i<locationsToAdd; i++){
-						lastPickUp.get(i).setType(SearchResult.Type.LAST_SAVED);
-						searchResults.add(lastPickUp.get(i));
-					}
-				}
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if(context instanceof HomeActivity && editTextForSearch.getText().length() == 0){
+//                String json;
+//                if(SearchListAdapter.this.searchMode == PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal()){
+//                    json = Prefs.with(context).getString(SPLabels.LAST_DESTINATION, "");
+//                } else{
+//                    json = Prefs.with(context).getString(SPLabels.LAST_PICK_UP, "");
+//                }
+//                Type type = new TypeToken<ArrayList<SearchResult>>() {}.getType();
+//                ArrayList<SearchResult> lastPickUp = new Gson().fromJson(json, type);
+//
+//				if(favLocationsCount < 5){
+//					int locationsToAdd = 5 - favLocationsCount;
+//					locationsToAdd = locationsToAdd > lastPickUp.size() ? lastPickUp.size() : locationsToAdd;
+//					for(int i=0; i<locationsToAdd; i++){
+//						lastPickUp.get(i).setType(SearchResult.Type.LAST_SAVED);
+//						searchResults.add(lastPickUp.get(i));
+//					}
+//				}
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         this.notifyDataSetChanged();
     }
 
@@ -318,7 +314,7 @@ public class SearchListAdapter extends BaseAdapter{
     }
 
     @Override
-    public synchronized void notifyDataSetChanged() {
+    public void notifyDataSetChanged() {
         if (searchResults.size() > 1) {
             if (searchResults.contains(new SearchResult(context.getResources()
                     .getString(R.string.no_results_found), "", "", 0, 0))) {
@@ -340,7 +336,7 @@ public class SearchListAdapter extends BaseAdapter{
 
     private boolean refreshingAutoComplete = false;
 
-    private synchronized void getSearchResults(final String searchText, final LatLng latLng) {
+    private void getSearchResults(final String searchText, final LatLng latLng) {
         try {
 			if (!refreshingAutoComplete) {
 				searchListActionsHandler.onSearchPre();
@@ -379,7 +375,7 @@ public class SearchListAdapter extends BaseAdapter{
         }
     }
 
-	private synchronized void recallSearch(final String searchText){
+	private void recallSearch(final String searchText){
 		((Activity)context).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -388,7 +384,7 @@ public class SearchListAdapter extends BaseAdapter{
 		});
 	}
 
-	private synchronized void setSearchResultsToList() {
+	private void setSearchResultsToList() {
 		((Activity) context).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -408,7 +404,7 @@ public class SearchListAdapter extends BaseAdapter{
     }
 
 
-	private synchronized void addFavoriteLocations(String searchText){
+	private void addFavoriteLocations(String searchText){
 		try {
             if(showSavedPlaces && editTextForSearch.getText().length() > 0) {
 				favLocationsCount = 0;
@@ -473,7 +469,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 
 
-    private synchronized void getSearchResultFromPlaceId(final String placeName, final String placeAddress, final String placeId) {
+    private void getSearchResultFromPlaceId(final String placeName, final String placeAddress, final String placeId) {
 		try {
 			searchListActionsHandler.onPlaceSearchPre();
 			Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
@@ -503,7 +499,7 @@ public class SearchListAdapter extends BaseAdapter{
 		}
 	}
 
-    private synchronized void sendSearchResult(final SearchResult searchResult) {
+    private void sendSearchResult(final SearchResult searchResult) {
         ((Activity)context).runOnUiThread(new Runnable() {
             @Override
             public void run() {
