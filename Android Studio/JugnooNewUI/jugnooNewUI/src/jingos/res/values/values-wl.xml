@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <integer name="view_visible">0</integer>
+    <integer name="view_invisible">1</integer>
+    <integer name="view_gone">2</integer>
+
+
+    <!--Other things to change
+        1. google-services.json
+        2. Doc entity in strings.xml
+        3. application_id in build.gradle
+    -->
+
+
+    <!--
+        Icons to change:
+            ic_taxi_logo => ic_splash_logo
+            ic_launcher
+            notification_icon
+    -->
+
+    <string name="google_maps_api_key">AIzaSyDWJIBt2XjtRvhHC9mpSyD6otrmpMMSr9s</string>
+    <string name="google_maps_api_server_key">AIzaSyC3NVQc-v2UY4qcHmj93ZZR5EsvTOvCo8Q</string>
+    <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
+    <string name="fb_app_id">251198292011565</string>
+    <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
+    <string name="ak_login_protocol_scheme">ak782131025144439</string>
+    <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
+
+
+
+
+
+    <string name="operator_token">839f5be8cced4d17ad3e6264762136fe</string>
+    <string name="support_number">+2549023121121</string>
+    <string name="police_number">+911</string>
+    <string name="facebook_page_id">jingoridestuktukmlangoni</string>
+    <string name="facebook_page_name">jingoridestuktukmlangoni</string>
+
+
+    <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
+    <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
+    <bool name="force_open_autos">true</bool>
+
+
+    <dimen name="splash_logo_width">135dp</dimen>
+    <dimen name="splash_logo_height">168dp</dimen>
+    <dimen name="splash_logo_top_margin">100dp</dimen>
+    <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
+    <integer name="show_splash_logo_text">@integer/view_gone</integer>
+
+    <string name="file_provider_name">com.jingo.fileprovider</string>
+    <string name="web_landing_page">https://jugnoo.in</string>
+    <string name="smart_url">http://smarturl.it/jugnoo</string>
+    <string name="db_name">jingo_database</string>
+    <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
+    <string name="app_domain">jugnoo.in</string>
+    <string name="app_host_name">www.jugnoo.in</string>
+    <string name="branch_domain">share.jugnoo.in</string>
+    <string name="app_scheme">jingo</string>
+
+    <string name="pictures_path">Jingo/Jingo Pictures</string>
+    <bool name="force_inhouse_login">true</bool>
+    <bool name="force_mpesa_payment">true</bool>
+</resources>
