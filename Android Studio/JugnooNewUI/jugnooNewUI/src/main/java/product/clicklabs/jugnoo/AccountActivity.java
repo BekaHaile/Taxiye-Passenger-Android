@@ -1088,6 +1088,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     String email = jObj.getString("user_email");
                                     String phoneNo = jObj.getString("phone_no");
                                     String countryCode = jObj.optString(Constants.KEY_COUNTRY_CODE, Data.userData.getCountryCode());
+                                    if(!countryCode.contains("+")){
+                                        countryCode = "+"+countryCode;
+                                    }
                                     int emailVerificationStatus = jObj.getInt("email_verification_status");
 
                                     updateSubscriptionMessage(userName);
