@@ -1861,6 +1861,7 @@
     <string name="search">Search</string>
     <string name="country_picker_header">Select country</string>
     <string name="no_country_found">No country found</string>
+    <string name="pay_via_format">Pay via %s</string>
     <string name="jugnoo_cash_added">&appname; Cash added</string>
     <string name="finding_a_driver">Finding a &appname; driver...</string>
     <string name="confirm_ride_request">Confirm Ride Request</string>

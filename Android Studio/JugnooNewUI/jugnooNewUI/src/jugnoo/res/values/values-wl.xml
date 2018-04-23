@@ -53,4 +53,5 @@
 
     <string name="pictures_path">Jugnoo/Jugnoo Pictures</string>
     <bool name="force_inhouse_login">false</bool>
+    <bool name="force_mpesa_payment">false</bool>
 </resources>
