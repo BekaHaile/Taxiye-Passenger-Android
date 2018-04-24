@@ -867,4 +867,5 @@ public interface Constants {
     String KEY_COUNTRY_CODE = "country_code";
     String KEY_UPDATED_COUNTRY_CODE = "updated_country_code";
     String KEY_CUSTOMER_PACKAGE_NAME = "customer_package_name";
+    String KEY_REVERSE_BID = "reverse_bid";
 }

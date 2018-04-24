@@ -70,6 +70,9 @@ public class Region {
 	@SerializedName("show_fare_estimate")
 	@Expose
 	private int showFareEstimate;
+	@SerializedName("reverse_bidding_enabled")
+	@Expose
+	private int reverseBid;
 
 	private boolean isDefault = false;
 
@@ -111,6 +114,14 @@ public class Region {
 
 	public void setOperatorId(int operatorId) {
 		this.operatorId = operatorId;
+	}
+
+	public int getReverseBid() {
+		return reverseBid;
+	}
+
+	public void setReverseBid(int reverseBid) {
+		this.reverseBid = reverseBid;
 	}
 
 	public class OfferTexts {
