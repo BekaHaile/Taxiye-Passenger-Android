@@ -727,7 +727,19 @@ public class UserData {
 	}
 
 	public void setMenuInfoList(ArrayList<MenuInfo> menuInfoList) {
-		this.menuInfoList = menuInfoList;
+    	ArrayList<MenuInfo> menuInfos = new ArrayList<>();
+    	for(MenuInfo menuInfo : menuInfoList){
+    		if(!menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())
+					&& !menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())
+					&& !menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.JUGNOO_STAR.getTag())
+					&& !menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FUGU_SUPPORT.getTag())
+					&& !menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES.getTag())
+					&& !menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())
+					){
+				menuInfos.add(menuInfo);
+			}
+		}
+		this.menuInfoList = menuInfos;
 	}
 
 	public ReferralMessages getReferralMessages() {
