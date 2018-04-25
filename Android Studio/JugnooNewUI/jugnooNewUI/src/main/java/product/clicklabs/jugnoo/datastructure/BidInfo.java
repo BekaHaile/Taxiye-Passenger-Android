@@ -17,7 +17,7 @@ public class BidInfo {
 	@SerializedName("accept_distance")
 	@Expose
 	private double distance;
-	@SerializedName("rating")
+	@SerializedName("driver_rating")
 	@Expose
 	private double rating;
 

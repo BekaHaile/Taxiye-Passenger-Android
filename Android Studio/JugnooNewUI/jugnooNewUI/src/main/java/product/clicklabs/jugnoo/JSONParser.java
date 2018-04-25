@@ -1738,7 +1738,7 @@ public class JSONParser implements Constants {
                             object.optDouble(Constants.KEY_BID_VALUE),
                             object.optString(Constants.KEY_CURRENCY),
                             object.optDouble(Constants.KEY_ACCEPT_DISTANCE),
-                            object.optDouble(Constants.KEY_RATING)));
+                            object.optDouble(Constants.KEY_DRIVER_RATING)));
                 }
             }
         } catch (Exception ignored){

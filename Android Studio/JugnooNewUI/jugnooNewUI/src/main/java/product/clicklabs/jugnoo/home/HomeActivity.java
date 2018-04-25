@@ -2576,6 +2576,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void finalRequestRideTimerStart() {
         try {
             Data.autoData.setcSessionId("");
+            Data.autoData.setBidInfos(null);
             Data.autoData.setcEngagementId("");
             dropLocationSearchText = "";
 
@@ -9868,7 +9869,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void updateBidsView() {
         bidsPlacedAdapter.setList(Data.autoData.getBidInfos());
-        textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.bids_received);
+        textViewFindingDriver.setVisibility(bidsPlacedAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
     private TrackingLogHelper trackingLogHelper;

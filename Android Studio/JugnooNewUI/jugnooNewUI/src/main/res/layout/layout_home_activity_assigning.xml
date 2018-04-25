@@ -77,6 +77,7 @@
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
                     android:layout_marginTop="20px"
+                    android:layout_marginBottom="20px"
                     android:text="@string/cancel_request"/>
 
             </LinearLayout>
