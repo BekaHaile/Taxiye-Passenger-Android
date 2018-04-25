@@ -840,6 +840,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
                         notificationManager(this, title, message1, playSound);
 
 
+                    } else if(PushFlags.BID_RECEIVED.getOrdinal()==flag){
+						Intent intent = new Intent(Data.LOCAL_BROADCAST);
+						intent.putExtra(Constants.KEY_FLAG, flag);
+						intent.putExtra(Constants.KEY_MESSAGE, message);
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
                     }
 
 					incrementPushCounter(jObj, flag);

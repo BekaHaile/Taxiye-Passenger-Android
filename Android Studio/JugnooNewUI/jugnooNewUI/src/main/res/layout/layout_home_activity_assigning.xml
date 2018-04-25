@@ -5,16 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
-    android:visibility="gone">
-
-    <ImageView
-        android:layout_width="68dp"
-        android:layout_height="68dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="20dp"
-        android:tag="DontTouchMe"
-        android:visibility="gone" />
+    android:visibility="visible">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,51 +13,32 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/imageViewPokemonOnOffAssigning"
-            android:layout_width="90px"
-            android:layout_height="90px"
-            android:layout_marginBottom="36px"
-            android:layout_marginStart="56px"
-            android:src="@drawable/ic_poke_on_off_button"
-            android:tag="mwar"
-            android:visibility="visible" />
-
-
         <RelativeLayout
             android:id="@+id/linearLayoutAssigningButtons"
             android:layout_width="match_parent"
-            android:layout_height="224px"
-            android:layout_above="@+id/textViewCancellation"
+            android:layout_height="wrap_content"
+            android:minHeight="112dp"
             android:background="@color/white"
             android:splitMotionEvents="false">
 
-            <fr.castorflex.android.smoothprogressbar.SmoothProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                                       android:layout_width="match_parent"
-                android:layout_height="10px"
-                android:layout_alignParentTop="true"
+            <ProgressBar
+                android:id="@+id/pbAssigning"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="14dp"
                 android:indeterminate="true"
-                android:paddingBottom="0px"
-                android:paddingTop="0px"
-                app:spb_colors="@array/gplus_colors"
-                app:spb_generate_background_with_colors="false"
-                app:spb_mirror_mode="true"
-                app:spb_progressiveStart_activated="true"
-                app:spb_progressiveStart_speed="1.5"
-                app:spb_progressiveStop_speed="3.4"
-                app:spb_reversed="true"
-                app:spb_sections_count="1"
-                app:spb_speed="2.2"
-                app:spb_stroke_separator_length="8px"
-                app:spb_stroke_width="10px" />
+                android:indeterminateBehavior="cycle"
+                android:indeterminateTint="@color/theme_color"
+                android:tag="@string/dont_touch_me"
+                android:layout_marginTop="-3dp"
+                />
 
             <LinearLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_below="@+id/pbAssigning">
 
                 <TextView
                     android:id="@+id/textViewFindingDriver"
@@ -80,6 +52,17 @@
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_34" />
 
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvBidsIncoming"
+                    android:layout_width="wrap_content"
+                    android:layout_height="90dp"
+                    android:tag="@string/dont_touch_me"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"
+                    ></android.support.v7.widget.RecyclerView>
+                
                 <ImageView
                     android:id="@+id/findDriverJugnooAnimation"
                     android:layout_width="@dimen/jugnoo_anim_loading_height"
@@ -94,7 +77,7 @@
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
                     android:layout_marginTop="20px"
-                    android:text="@string/cancel_request" />
+                    android:text="@string/cancel_request"/>
 
             </LinearLayout>
 

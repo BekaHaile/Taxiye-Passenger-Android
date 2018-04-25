@@ -31,6 +31,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
@@ -137,6 +139,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RazorpayBaseActivity;
 import product.clicklabs.jugnoo.RideCancellationActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.adapters.BidsPlacedAdapter;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiCampaignAvailRequest;
@@ -149,6 +152,7 @@ import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
+import product.clicklabs.jugnoo.datastructure.BidInfo;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
@@ -237,7 +241,7 @@ import retrofit.mime.TypedByteArray;
 public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
-        GACategory, GAAction{
+        GACategory, GAAction, BidsPlacedAdapter.Callback{
 
 
     private final String TAG = "Home Screen";
@@ -294,7 +298,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     RelativeLayout assigningLayout;
     TextView textViewFindingDriver;
     Button initialCancelRideBtn;
-    public RelativeLayout relativeLayoutAssigningDropLocationParent, linearLayoutAssigningButtons;
+    public RelativeLayout relativeLayoutAssigningDropLocationParent;
     private RelativeLayout relativeLayoutAssigningDropLocationClick, relativeLayoutDestinationHelp, relativeLayoutConfirmBottom, relativeLayoutConfirmRequest;
     private TextView textViewAssigningDropLocationClick, textViewDestHelp, textViewFellowRider;
     ProgressWheel progressBarAssigningDropLocation;
@@ -464,7 +468,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private int shakeAnim = 0;
 
     private PokestopHelper pokestopHelper;
-    ImageView imageViewPokemonOnOffInitial, imageViewPokemonOnOffConfirm, imageViewPokemonOnOffAssigning, imageViewPokemonOnOffEngaged;
+    ImageView imageViewPokemonOnOffInitial, imageViewPokemonOnOffConfirm, imageViewPokemonOnOffEngaged;
     private Bundle bundle;
     public float scale = 0f;
     private boolean rideNowClicked = false;
@@ -505,6 +509,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     Gson gson = new Gson();
     private boolean addressPopulatedFromDifferentOffering;
 
+
+    private RecyclerView rvBidsIncoming;
+    private BidsPlacedAdapter bidsPlacedAdapter;
 
     @SuppressLint("NewApi")
     @Override
@@ -718,7 +725,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         initialCancelRideBtn.setTypeface(Fonts.mavenRegular(this));
         findDriverJugnooAnimation = (ImageView) findViewById(R.id.findDriverJugnooAnimation);
         jugnooAnimation = (AnimationDrawable) findDriverJugnooAnimation.getBackground();
-        linearLayoutAssigningButtons = (RelativeLayout) findViewById(R.id.linearLayoutAssigningButtons);
+        rvBidsIncoming = (RecyclerView) findViewById(R.id.rvBidsIncoming);
+        rvBidsIncoming.setHasFixedSize(false);
+        rvBidsIncoming.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        bidsPlacedAdapter = new BidsPlacedAdapter(this, rvBidsIncoming, this);
+        rvBidsIncoming.setAdapter(bidsPlacedAdapter);
+        rvBidsIncoming.setVisibility(View.GONE);
 
 
         relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
@@ -957,7 +969,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         imageViewPokemonOnOffInitial = (ImageView) findViewById(R.id.imageViewPokemonOnOffInitial); imageViewPokemonOnOffInitial.setVisibility(View.GONE);
         imageViewPokemonOnOffConfirm = (ImageView) findViewById(R.id.imageViewPokemonOnOffConfirm); imageViewPokemonOnOffConfirm.setVisibility(View.GONE);
-        imageViewPokemonOnOffAssigning = (ImageView) findViewById(R.id.imageViewPokemonOnOffAssigning); imageViewPokemonOnOffAssigning.setVisibility(View.GONE);
         imageViewPokemonOnOffEngaged = (ImageView) findViewById(R.id.imageViewPokemonOnOffEngaged); imageViewPokemonOnOffEngaged.setVisibility(View.GONE);
 
         fabViewIntial = (View)findViewById(R.id.fabViewIntial);
@@ -1298,11 +1309,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
 
-        linearLayoutAssigningButtons.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
 
         initialCancelRideBtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -1708,7 +1714,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         };
         imageViewPokemonOnOffInitial.setOnClickListener(onClickListenerPokeOnOff);
         imageViewPokemonOnOffConfirm.setOnClickListener(onClickListenerPokeOnOff);
-        imageViewPokemonOnOffAssigning.setOnClickListener(onClickListenerPokeOnOff);
         imageViewPokemonOnOffEngaged.setOnClickListener(onClickListenerPokeOnOff);
 
 
@@ -3135,6 +3140,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         jugnooAnimation.start();
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.VISIBLE);
+                        rvBidsIncoming.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
@@ -3144,6 +3150,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
 
                         textViewFindingDriver.setText(R.string.finding_a_driver);
+                        updateBidsView();
                         initialCancelRideBtn.setVisibility(View.GONE);
                         try {
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -7541,6 +7548,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     }
                                                 }
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
+                                                // TODO: 25/04/18 request_ride bids
+//                                                Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
+//                                                updateBidsView();
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag
                                                     || ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag
                                                     || ApiResponseFlags.RIDE_ARRIVED.getOrdinal() == flag) {
@@ -9739,16 +9749,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     && Prefs.with(this).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1){
                 //imageViewPokemonOnOffInitial.setVisibility(View.VISIBLE);
                 //imageViewPokemonOnOffConfirm.setVisibility(View.VISIBLE);
-                //imageViewPokemonOnOffAssigning.setVisibility(View.VISIBLE);
                 //imageViewPokemonOnOffEngaged.setVisibility(View.VISIBLE);
 
                 ImageView imageView = null;
                 if(mode == PassengerScreenMode.P_REQUEST_FINAL || mode == PassengerScreenMode.P_DRIVER_ARRIVED
                         || mode == PassengerScreenMode.P_IN_RIDE){
                     imageView = imageViewPokemonOnOffEngaged;
-                }
-                else if(mode == PassengerScreenMode.P_ASSIGNING){
-                    imageView = imageViewPokemonOnOffAssigning;
                 }
                 else if(mode == PassengerScreenMode.P_INITIAL){
                     if(confirmedScreenOpened){
@@ -9768,7 +9774,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else{
                 imageViewPokemonOnOffInitial.setVisibility(View.GONE);
                 imageViewPokemonOnOffConfirm.setVisibility(View.GONE);
-                imageViewPokemonOnOffAssigning.setVisibility(View.GONE);
                 imageViewPokemonOnOffEngaged.setVisibility(View.GONE);
             }
         } catch (Exception e) {
@@ -9844,6 +9849,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 tvChatCount.setText(String.valueOf(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 1)));
                             } else if (Constants.OPEN_DEEP_INDEX == flag) {
                                 deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
+                            } else if(PushFlags.BID_RECEIVED.getOrdinal() == flag) {
+                                if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
+                                    String message = intent.getStringExtra(Constants.KEY_MESSAGE);
+                                    JSONObject jObj = new JSONObject(message);
+                                    Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
+                                    updateBidsView();
+                                }
                             }
                         }
                     } catch (Exception e) {
@@ -9853,6 +9865,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             });
         }
     };
+
+    private void updateBidsView() {
+        bidsPlacedAdapter.setList(Data.autoData.getBidInfos());
+        textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.bids_received);
+    }
 
     private TrackingLogHelper trackingLogHelper;
     private TrackingLogHelper getTrackingLogHelper(){
@@ -10049,5 +10066,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     setUserData();
             }
         });
+    }
+
+    @Override
+    public void onBidClicked(BidInfo bidInfo) {
+
     }
 }
