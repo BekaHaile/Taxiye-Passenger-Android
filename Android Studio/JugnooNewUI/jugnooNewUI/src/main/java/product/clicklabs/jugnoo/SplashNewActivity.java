@@ -4302,13 +4302,17 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if (!s.equalsIgnoreCase("")) {
-                if (!SplashNewActivity.this.isFinishing()) {
-                    Utils.openUrl(SplashNewActivity.this, s);
-                    Data.linkFoundOnce = true;
-                }
-            }
-        }
+			try {
+				if (!s.equalsIgnoreCase("")) {
+					if (!SplashNewActivity.this.isFinishing()) {
+						Utils.openUrl(SplashNewActivity.this, s);
+						Data.linkFoundOnce = true;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
         private String getSmsFindVerificationLink(long diff) {
             String link = "";
@@ -4329,6 +4333,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
                                 String[] arr = body.split(" ");
                                 for (String str : arr) {
                                     if (str.contains(getString(R.string.branch_domain))) {
+										str = str.substring(str.indexOf("http"));
                                         if (str.charAt(str.length() - 1) == '.') {
                                             str = str.substring(0, str.length() - 1);
                                         }
@@ -4337,7 +4342,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
                                     }
                                 }
                             }
-                        } catch (Exception e) {
+                        } catch (Exception ignored) {
                         }
                         if (!link.equalsIgnoreCase("")) {
                             break;
