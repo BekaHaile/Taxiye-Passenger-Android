@@ -212,6 +212,9 @@ public class HistoryResponse {
         @SerializedName("vehicle_type")
         @Expose
         private Integer vehicleType;
+        @SerializedName("icon_set")
+        @Expose
+        private String iconSet;
         @SerializedName("ride_type")
         @Expose
         private Integer rideType;
@@ -1127,6 +1130,17 @@ public class HistoryResponse {
 
         public void setCurrency(String currency) {
             this.currency = currency;
+        }
+
+        public String getIconSet() {
+            if(iconSet == null){
+                iconSet = "";
+            }
+            return iconSet;
+        }
+
+        public void setIconSet(String iconSet) {
+            this.iconSet = iconSet;
         }
     }
 

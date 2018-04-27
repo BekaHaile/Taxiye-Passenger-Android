@@ -64,7 +64,7 @@ public class HomeUtil {
 		params.put(Constants.KEY_LAST_PUSH_TIME_DIFF, String.valueOf(diff));
 	}
 
-	public VehicleIconSet getVehicleIconSet(String name){
+	public static VehicleIconSet getVehicleIconSet(String name){
 		if(VehicleIconSet.YELLOW_AUTO.getName().equalsIgnoreCase(name)){
 			return VehicleIconSet.YELLOW_AUTO;
 		}

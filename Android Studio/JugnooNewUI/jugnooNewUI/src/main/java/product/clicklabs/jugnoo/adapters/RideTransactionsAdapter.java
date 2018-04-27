@@ -21,6 +21,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
+import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -100,7 +101,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 try {
                     int vehicleType = orderHistory.getVehicleType();
                     int rideType = orderHistory.getRideType();
-                   holder.imageViewProductType.setImageResource(getVehicleTypeDrawable(vehicleType, rideType));
+                   holder.imageViewProductType.setImageResource(getVehicleTypeDrawable(vehicleType, rideType, orderHistory.getIconSet()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -368,7 +369,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     }
 
-    private int getVehicleTypeDrawable(int vehicleType, int rideType) {
+    private int getVehicleTypeDrawable(int vehicleType, int rideType, String iconSet) {
         if (vehicleType == VehicleTypeValue.AUTOS.getOrdinal()) {
             if (rideType == RideTypeValue.POOL.getOrdinal()) {
                 return R.drawable.ic_pool_white;
@@ -391,7 +392,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             return R.drawable.ic_copter_white;
         } else if (vehicleType == VehicleTypeValue.ERICKSHAW.getOrdinal()) {
             return R.drawable.ic_erickshaw_white;
-        } else if (vehicleType == VehicleTypeValue.TRANSPORT.getOrdinal()) {
+        } else if (vehicleType == VehicleTypeValue.TRANSPORT.getOrdinal()
+                || iconSet.equalsIgnoreCase(VehicleIconSet.TRANSPORT.getName())) {
             return R.drawable.ic_transport_white;
         } else {
             return R.drawable.ic_rides;
