@@ -96,6 +96,7 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.FuguCustomActionModel;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
@@ -10071,6 +10072,37 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onBidClicked(BidInfo bidInfo) {
+        selectBidAPI(String.valueOf(bidInfo.getEngagementId()));
+    }
 
+    public void selectBidAPI(String engagementId) {
+
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
+
+        new ApiCommon<FeedCommonResponse>(this).showLoader(true).execute(params, ApiName.SELECT_BID,
+                new APICommonCallback<FeedCommonResponse>() {
+
+                    @Override
+                    public void onSuccess(final FeedCommonResponse response, String message, int flag) {
+                        try {
+                            if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+
+                            } else {
+                                DialogPopup.alertPopup(HomeActivity.this, "", message);
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.connection_lost_please_try_again));
+                        }
+                    }
+
+                    @Override
+                    public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        return false;
+                    }
+
+                });
     }
 }

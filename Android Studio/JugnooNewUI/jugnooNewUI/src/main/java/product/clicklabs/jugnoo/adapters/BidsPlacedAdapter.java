@@ -73,9 +73,9 @@ public class BidsPlacedAdapter extends RecyclerView.Adapter<BidsPlacedAdapter.My
 
     @Override
     public void onClickItem(View viewClicked, View parentView) {
-        if(viewClicked.getId()==R.id.rb_reason){
+        if(viewClicked.getId()==R.id.llRoot){
             int position = recyclerView.getChildAdapterPosition(parentView);
-            if(position!= RecyclerView.NO_POSITION){
+            if(position != RecyclerView.NO_POSITION){
 				callback.onBidClicked(bidInfos.get(position));
             }
         }

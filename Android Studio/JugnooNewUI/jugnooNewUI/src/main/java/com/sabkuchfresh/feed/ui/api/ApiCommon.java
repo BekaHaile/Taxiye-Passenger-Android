@@ -254,6 +254,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case FETCH_CONTACTS:
                 RestClient.getFatafatApiService().fetchContacts(params,callback);
                 break;
+            case SELECT_BID:
+                RestClient.getApiService().selectTheBid(params, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 
