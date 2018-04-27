@@ -656,10 +656,10 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             for(PromoCoupon pc : pcRides){
                 int id  = R.drawable.ic_promo_all;
                 if(pc.getAllowedVehicles()!=null && pc.getAllowedVehicles().size()==1){
-                    if(pc.getAllowedVehicles().get(0).equals(VehicleTypeValue.AUTOS.getOrdinal())){
-                        id = R.drawable.ic_promo_rides;
-                    }else if(pc.getAllowedVehicles().get(0).equals(VehicleTypeValue.TAXI.getOrdinal())){
+                    if(pc.getAllowedVehicles().get(0).equals(VehicleTypeValue.TAXI.getOrdinal())){
                         id = R.drawable.ic_taxi_gradient;
+                    } else {
+                        id = R.drawable.ic_promo_rides;
                     }
                 }
 

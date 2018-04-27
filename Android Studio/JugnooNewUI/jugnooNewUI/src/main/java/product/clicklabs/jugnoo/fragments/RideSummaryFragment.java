@@ -407,12 +407,11 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 }
 
                 if (endRideData.getIsPooled() == 1) {
-                    if(endRideData.getVehicleType() == VehicleTypeValue.AUTOS.getOrdinal()){
-                        imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_history_pool);
-                    }
-                    else if(endRideData.getVehicleType() == VehicleTypeValue.TAXI.getOrdinal()){
+                    if(endRideData.getVehicleType() == VehicleTypeValue.TAXI.getOrdinal()){
                         imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_history_carpool);
                         tvIncludeToll.setVisibility(View.VISIBLE);
+                    } else {
+                        imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_history_pool);
                     }
                 }
 

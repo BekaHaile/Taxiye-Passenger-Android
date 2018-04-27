@@ -391,6 +391,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             return R.drawable.ic_copter_white;
         } else if (vehicleType == VehicleTypeValue.ERICKSHAW.getOrdinal()) {
             return R.drawable.ic_erickshaw_white;
+        } else if (vehicleType == VehicleTypeValue.TRANSPORT.getOrdinal()) {
+            return R.drawable.ic_transport_white;
         } else {
             return R.drawable.ic_rides;
         }
