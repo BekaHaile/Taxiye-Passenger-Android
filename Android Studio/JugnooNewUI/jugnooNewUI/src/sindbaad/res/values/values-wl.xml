@@ -62,7 +62,7 @@
     <string name="app_scheme">sindbaad</string>
 
     <string name="pictures_path">Sindbaad/Sindbaad Pictures</string>
-    <bool name="force_inhouse_login">true</bool>
+    <bool name="force_inhouse_login">false</bool>
     <bool name="force_mpesa_payment">false</bool>
     <bool name="show_about">false</bool>
 </resources>

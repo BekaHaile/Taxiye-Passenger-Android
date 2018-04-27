@@ -11,7 +11,6 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
@@ -727,19 +726,7 @@ public class UserData {
 	}
 
 	public void setMenuInfoList(ArrayList<MenuInfo> menuInfoList) {
-    	ArrayList<MenuInfo> menuInfos = new ArrayList<>();
-    	for(MenuInfo menuInfo : menuInfoList){
-    		if(!menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())
-					&& !menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())
-					&& !menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.JUGNOO_STAR.getTag())
-					&& !menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FUGU_SUPPORT.getTag())
-					&& !menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES.getTag())
-					&& !menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())
-					){
-				menuInfos.add(menuInfo);
-			}
-		}
-		this.menuInfoList = menuInfos;
+		this.menuInfoList = menuInfoList;
 	}
 
 	public ReferralMessages getReferralMessages() {
