@@ -208,7 +208,9 @@ public class TabbedSearchFragment extends Fragment {
 
         MenusResponse menusResponse = new MenusResponse();
         menusResponse.setVendors(null);
-        menusResponse.setSuggestionsList(Data.getDeliveryCustomerData().getRecentSearches());
+        if(Data.getDeliveryCustomerData() != null) {
+            menusResponse.setSuggestionsList(Data.getDeliveryCustomerData().getRecentSearches());
+        }
 
         // send hasMorePages as true to avoid adding the suggest store layout
         deliveryHomeAdapter.setList(menusResponse, false, true);

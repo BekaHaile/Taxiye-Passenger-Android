@@ -30,7 +30,7 @@
                 android:indeterminateBehavior="cycle"
                 android:indeterminateTint="@color/theme_color"
                 android:tag="@string/dont_touch_me"
-                android:layout_marginTop="-3dp"
+                android:layout_marginTop="-6dp"
                 />
 
             <LinearLayout

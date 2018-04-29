@@ -7183,7 +7183,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     protected void onStop() {
         try {
-            mGoogleApiClient.disconnect();
+            if(mGoogleApiClient != null) {
+                mGoogleApiClient.disconnect();
+            }
             super.onStop();
 //            FlurryAgent.onEndSession(this);
         } catch (Exception e) {
@@ -7550,9 +7552,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     }
                                                 }
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
-                                                // TODO: 25/04/18 request_ride bids
-//                                                Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
-//                                                updateBidsView();
+                                                if(jObj.has(Constants.KEY_BIDS)) {
+													Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
+													runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            try {
+                                                                updateBidsView();
+                                                            } catch (Exception e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+                                                    });
+												}
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag
                                                     || ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag
                                                     || ApiResponseFlags.RIDE_ARRIVED.getOrdinal() == flag) {
@@ -9870,7 +9882,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void updateBidsView() {
         bidsPlacedAdapter.setList(Data.autoData.getBidInfos());
-        textViewFindingDriver.setVisibility(bidsPlacedAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.select_a_bid);
     }
 
     private TrackingLogHelper trackingLogHelper;
