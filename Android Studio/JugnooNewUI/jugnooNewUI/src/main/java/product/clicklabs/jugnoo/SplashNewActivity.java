@@ -4302,13 +4302,17 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if (!s.equalsIgnoreCase("")) {
-                if (!SplashNewActivity.this.isFinishing()) {
-                    Utils.openUrl(SplashNewActivity.this, s);
-                    Data.linkFoundOnce = true;
-                }
-            }
-        }
+			try {
+				if (!s.equalsIgnoreCase("")) {
+					if (!SplashNewActivity.this.isFinishing()) {
+						Utils.openUrl(SplashNewActivity.this, s);
+						Data.linkFoundOnce = true;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
         private String getSmsFindVerificationLink(long diff) {
             String link = "";

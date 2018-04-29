@@ -1851,5 +1851,9 @@
     <string name="confirm_ride_request">Confirm Ride Request</string>
     <string name="please_select_country_code">Please select country code</string>
     <string name="code">Code</string>
+    <string name="hash_format">#%s</string>
+    <string name="distance_km_away_format">%skm away</string>
+    <string name="distance_m_away_format">%sm away</string>
+    <string name="bids_received">Bids received</string>
 
 </resources>

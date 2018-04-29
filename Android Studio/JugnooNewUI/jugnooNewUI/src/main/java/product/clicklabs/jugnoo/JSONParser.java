@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AutoData;
+import product.clicklabs.jugnoo.datastructure.BidInfo;
 import product.clicklabs.jugnoo.datastructure.CancelOption;
 import product.clicklabs.jugnoo.datastructure.CancelOptionsList;
 import product.clicklabs.jugnoo.datastructure.DiscountType;
@@ -961,6 +962,7 @@ public class JSONParser implements Constants {
             FuguChannelData fuguChannelData = new FuguChannelData();
             int operatorId = 0;
             String currency = null;
+            ArrayList<BidInfo> bidInfos = new ArrayList<>();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -998,6 +1000,7 @@ public class JSONParser implements Constants {
                         Data.autoData.setPickupLatLng(new LatLng(assigningLatitude, assigningLongitude));
                         Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""));
                         parseDropLatLng(jObject1);
+                        bidInfos = JSONParser.parseBids(Constants.KEY_BIDS, jObject1);
 
                         engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
                     } else if (ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag) {
@@ -1120,6 +1123,7 @@ public class JSONParser implements Constants {
             } else if (Data.P_ASSIGNING.equalsIgnoreCase(screenMode)) {
                 HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
                 Data.autoData.setcSessionId(sessionId);
+                Data.autoData.setBidInfos(bidInfos);
                 Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
                 clearSPData(context);
             } else {
@@ -1721,6 +1725,25 @@ public class JSONParser implements Constants {
         public void setFuguTags(ArrayList<String> fuguTags) {
             this.fuguTags = fuguTags;
         }
+    }
+
+    public static ArrayList<BidInfo> parseBids(String arrayKeyName, JSONObject jsonObject){
+        ArrayList<BidInfo> bidInfos = new ArrayList<>();
+        try{
+            if(jsonObject.has(arrayKeyName)){
+                JSONArray jsonArray = jsonObject.getJSONArray(arrayKeyName);
+                for(int i=0; i<jsonArray.length(); i++){
+                    JSONObject object = jsonArray.getJSONObject(i);
+                    bidInfos.add(new BidInfo(object.optInt(Constants.KEY_ENGAGEMENT_ID),
+                            object.optDouble(Constants.KEY_BID_VALUE),
+                            object.optString(Constants.KEY_CURRENCY),
+                            object.optDouble(Constants.KEY_ACCEPT_DISTANCE),
+                            object.optDouble(Constants.KEY_DRIVER_RATING)));
+                }
+            }
+        } catch (Exception ignored){
+        }
+        return bidInfos;
     }
 
 }

@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.retrofit;
 
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.retrofit.model.PurchaseSubscriptionResponse;
 
 import java.util.Map;
@@ -591,5 +592,10 @@ public interface ApiService {
     @POST("/fetch_offering_availability")
     void fetchOfferingsVisibility(@FieldMap Map<String, String> params,
                                 Callback<OfferingsVisibilityResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/select_the_bid")
+    void selectTheBid(@FieldMap Map<String, String> params,
+                                Callback<FeedCommonResponse> callback);
 
 }
