@@ -52,7 +52,7 @@ public class ReferralActions  {
                                 Intent intent = new Intent(android.content.Intent.ACTION_SEND);
                                 intent.setPackage("com.facebook.orca");
                                 intent.setType("text/plain");
-                                intent.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralMessages().referralSharingMessage + "\n" + link);
+                                intent.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralMessages().referralSharingMessage + " " + link);
                                 activity.startActivity(intent);
                             } else {
 
@@ -131,7 +131,7 @@ public class ReferralActions  {
                         for(ResolveInfo info : activities){
                             if(info.activityInfo.packageName.contains("com.whatsapp")){
                                 intent.setClassName(info.activityInfo.packageName, info.activityInfo.name);
-                                intent.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralMessages().referralSharingMessage + "\n"
+                                intent.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralMessages().referralSharingMessage + " "
                                         + link);
                                 activity.startActivity(intent);
                                 break;
@@ -167,7 +167,7 @@ public class ReferralActions  {
                 public void onBranchLinkCreated(String link) {
                     Uri sms_uri = Uri.parse("smsto:");
                     Intent sms_intent = new Intent(Intent.ACTION_SENDTO, sms_uri);
-                    sms_intent.putExtra("sms_body", Data.userData.getReferralMessages().referralSharingMessage + "\n"
+                    sms_intent.putExtra("sms_body", Data.userData.getReferralMessages().referralSharingMessage + " "
                             + link);
                     activity.startActivity(sms_intent);
                 }
@@ -199,7 +199,7 @@ public class ReferralActions  {
                     Intent email = new Intent(Intent.ACTION_SEND);
                     email.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
                     email.putExtra(Intent.EXTRA_SUBJECT, Data.userData.getReferralMessages().referralEmailSubject);
-                    email.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralMessages().referralSharingMessage + "\n"
+                    email.putExtra(Intent.EXTRA_TEXT, Data.userData.getReferralMessages().referralSharingMessage + " "
                             + link); //
                     email.setType("message/rfc822");
                     activity.startActivity(Intent.createChooser(email, activity.getString(R.string.choose_email_client)));
@@ -229,7 +229,7 @@ public class ReferralActions  {
                 public void onBranchLinkCreated(String link) {
                     genericShareDialog(activity, callbackManager,
                             Data.userData.getReferralMessages().referralEmailSubject,
-                            Data.userData.getReferralMessages().referralSharingMessage + "\n" + link,
+                            Data.userData.getReferralMessages().referralSharingMessage + " " + link,
                             link);
                 }
 
@@ -485,7 +485,7 @@ public class ReferralActions  {
             ShareLinkContent linkContent = builder1.build();
             shareDialog.show(linkContent);
         } else {
-            shareIntent(context, title, desc+"\n"+link, "");
+            shareIntent(context, title, desc+" "+link, "");
         }
     }
 

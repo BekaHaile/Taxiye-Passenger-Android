@@ -348,13 +348,13 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 												.replace("{{{restaurant_name}}", activity.getVendorOpened().getName())
 												.replace("{{{restaurant_address}}", activity.getVendorOpened().getAddress())
 												.replace("{{{review_desc}}}", "\n"+review1.getReviewDesc())
-												.replace("{{{link}}}", "\n"+link);
+												.replace("{{{link}}}", " "+link);
 								} else if(review1.getIsEditable() == 0 && !TextUtils.isEmpty(callback.getShareTextOther())) {
 									content = callback.getShareTextOther()
 											.replace("{{{restaurant_name}}", activity.getVendorOpened().getName())
 											.replace("{{{restaurant_address}}", activity.getVendorOpened().getAddress())
 											.replace("{{{review_desc}}}", "\n"+review1.getReviewDesc())
-											.replace("{{{link}}}", "\n"+link);
+											.replace("{{{link}}}", " "+link);
 								}
 
 								if(TextUtils.isEmpty(content)){

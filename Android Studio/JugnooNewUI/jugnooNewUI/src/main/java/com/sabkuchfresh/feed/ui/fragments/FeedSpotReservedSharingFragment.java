@@ -142,7 +142,7 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 							}
 							ReferralActions.shareIntent(activity,
 									Data.getFeedData().getEarlyAccessShareTitle(),
-									Data.getFeedData().getEarlyAccessShareDesc()+"\n"+link, appType);
+									Data.getFeedData().getEarlyAccessShareDesc()+" "+link, appType);
 						}
 
 						@Override
