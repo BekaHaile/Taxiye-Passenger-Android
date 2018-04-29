@@ -7550,9 +7550,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     }
                                                 }
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
-                                                // TODO: 25/04/18 request_ride bids
-//                                                Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
-//                                                updateBidsView();
+                                                if(jObj.has(Constants.KEY_BIDS)) {
+													Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
+													updateBidsView();
+												}
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag
                                                     || ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag
                                                     || ApiResponseFlags.RIDE_ARRIVED.getOrdinal() == flag) {
