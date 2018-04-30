@@ -42,6 +42,7 @@ import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.typekit.Typekit;
 import product.clicklabs.jugnoo.wallet.WalletCore;
@@ -65,6 +66,7 @@ public class MyApplication extends Application {
     public String ACTIVITY_NAME_REFER_A_DRIVER = "REFER A DRIVER";
     public String ACTIVITY_NAME_SUPPORT = "SUPPORT";
     public String ACTIVITY_NAME_ABOUT = "ABOUT";
+    public String ACTIVITY_CHANGE_LANGUAGE = "CHANGE LANGUAGE";
     public String ACTIVITY_NAME_JUGNOO_STAR = "JUGNOO STAR";
     public String ACTIVITY_NAME_NOTIFICATION_SETTING = "SET PREFERENCES";
 
@@ -139,7 +141,8 @@ public class MyApplication extends Application {
 
     @Override
     protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
+//        super.attachBaseContext(base);
+        super.attachBaseContext(LocaleHelper.onAttach(base, "ar"));
         MultiDex.install(this);
     }
 
@@ -432,6 +435,5 @@ public class MyApplication extends Application {
 	public Locale getCurrentLocale(){
 		return getResources().getConfiguration().locale;
 	}
-
 
 }

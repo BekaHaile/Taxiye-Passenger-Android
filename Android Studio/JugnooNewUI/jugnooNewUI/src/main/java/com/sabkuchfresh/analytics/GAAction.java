@@ -258,4 +258,5 @@ public interface GAAction {
 
 
 	String FATAFAT_CATEGORY = "Fatafat Category";
+	String CHANGE_LANGUAGE = "Change Language";
 }

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
@@ -101,7 +102,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 try {
                     int vehicleType = orderHistory.getVehicleType();
                     int rideType = orderHistory.getRideType();
-                   holder.imageViewProductType.setImageResource(getVehicleTypeDrawable(vehicleType, rideType, orderHistory.getIconSet()));
+                    holder.imageViewProductType.setImageResource(getVehicleTypeDrawable(vehicleType, rideType, orderHistory.getIconSet()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -117,7 +118,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     } catch (Exception e) {
                         holder.textViewStatusValue.setTextColor(ContextCompat.getColor(activity, R.color.text_color_blue));
                     }
-                    holder.textViewDetailsValue.setText(orderHistory.getDate() + ", " + decimalFormat.format(orderHistory.getDistance()) + " "+activity.getString(R.string.km)+", " + decimalFormatNoDec.format(orderHistory.getRideTime()) + " "+activity.getString(R.string.min));
+                    holder.textViewDetailsValue.setText(orderHistory.getDate() + ", " + decimalFormat.format(orderHistory.getDistance()) + " " + activity.getString(R.string.km) + ", " + decimalFormatNoDec.format(orderHistory.getRideTime()) + " " + activity.getString(R.string.min));
                     holder.relativeLayoutTo.setVisibility(View.VISIBLE);
 //                    holder.ivOrderStatusIcon.setImageResource(R.drawable.ic_tick_copy);
                 } else {
@@ -165,8 +166,6 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(orderHistory.getDiscountedAmount())));
 
 
-
-
                 if (orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_groceries_new_vector);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_grocery_new);
@@ -196,13 +195,12 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.ivOrderStatusIcon.setImageResource(R.drawable.ic_order_history_pending);
 
                 }*/
-            }
-            else if(orderHistory.getProductType() == ProductType.PROS.getOrdinal()){
+            } else if (orderHistory.getProductType() == ProductType.PROS.getOrdinal()) {
                 holder.textViewStatus.setText(R.string.status_colon);
                 holder.textViewStatusValue.setText(ProsCatalogueAdapter.getProsOrderState(activity, orderHistory.getJobStatus()).second);
-                try{
+                try {
                     holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
-                } catch (Exception e){
+                } catch (Exception e) {
                     holder.textViewStatusValue.setTextColor(ContextCompat.getColor(activity, orderHistory.getJobStatusColorRes()));
                 }
                 holder.textViewId.setText(R.string.id_colon);
@@ -212,21 +210,20 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewDetails.setText(R.string.details_colon);
                 android.util.Pair<String, String> pair = orderHistory.getProductNameAndJobAmount();
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormatTZ(orderHistory.getJobTime())
-                        +", "+pair.first);
+                        + ", " + pair.first);
 
-                holder.textViewAmount.setText(!TextUtils.isEmpty(pair.second)?Utils.formatCurrencyValue(orderHistory.getCurrency(), pair.second):"-");
+                holder.textViewAmount.setText(!TextUtils.isEmpty(pair.second) ? Utils.formatCurrencyValue(orderHistory.getCurrency(), pair.second) : "-");
                 holder.imageViewProductType.setImageResource(R.drawable.ic_pros_grey);
                 holder.imageViewProductType.setImageResource(R.drawable.ic_pros);
                 holder.imageViewProductType.setBackgroundResource(R.drawable.circle_pink_pros_fab);
 
                 holder.relativeLayoutTo.setVisibility(View.GONE);
-            }
-            else if(orderHistory.getProductType() == ProductType.FEED.getOrdinal()){
+            } else if (orderHistory.getProductType() == ProductType.FEED.getOrdinal()) {
                 holder.textViewStatus.setText(R.string.status_colon);
                 holder.textViewStatusValue.setText(orderHistory.getOrderStatus());
-                try{
+                try {
                     holder.textViewStatusValue.setTextColor(Color.parseColor(orderHistory.getOrderStatusColor()));
-                } catch (Exception e){
+                } catch (Exception e) {
                     holder.textViewStatusValue.setTextColor(ContextCompat.getColor(activity, R.color.green_status));
                 }
                 holder.textViewId.setText(R.string.id_colon);
@@ -238,15 +235,14 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewDetails.setText(R.string.created_at_colon);
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(orderHistory.getCreatedAt())));
 
-                if(orderHistory.getAmount()!=0){
+                if (orderHistory.getAmount() != 0) {
                     holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format,
                             Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
-                }
-                else {
+                } else {
                     holder.textViewAmount.setText("");
                 }
-                holder.imageViewProductType.setImageResource(Data.userData.isRidesAndFatafatEnabled()?R.drawable.ic_delivery_customer:R.drawable.ic_anywhere_fab);
-                holder.imageViewProductType.setBackgroundResource(Data.userData.isRidesAndFatafatEnabled()?R.drawable.circle_green_delivery_customer_fab:R.drawable.circle_feed_grey_fab);
+                holder.imageViewProductType.setImageResource(Data.userData.isRidesAndFatafatEnabled() ? R.drawable.ic_delivery_customer : R.drawable.ic_anywhere_fab);
+                holder.imageViewProductType.setBackgroundResource(Data.userData.isRidesAndFatafatEnabled() ? R.drawable.circle_green_delivery_customer_fab : R.drawable.circle_feed_grey_fab);
 
                 holder.relativeLayoutTo.setVisibility(View.VISIBLE);
             }
@@ -370,34 +366,41 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private int getVehicleTypeDrawable(int vehicleType, int rideType, String iconSet) {
-        if (vehicleType == VehicleTypeValue.AUTOS.getOrdinal()) {
-            if (rideType == RideTypeValue.POOL.getOrdinal()) {
-                return R.drawable.ic_pool_white;
+        try {
+            VehicleIconSet vehicleIconSet = HomeUtil.getVehicleIconSet(iconSet);
+            return vehicleIconSet.getIconInvoice();
+        } catch (Exception e) {
+            if (vehicleType == VehicleTypeValue.AUTOS.getOrdinal()) {
+                if (rideType == RideTypeValue.POOL.getOrdinal()) {
+                    return R.drawable.ic_pool_white;
+                } else {
+                    return R.drawable.ic_rides;
+                }
+            } else if (vehicleType == VehicleTypeValue.BIKES.getOrdinal()) {
+                if (rideType == RideTypeValue.POOL.getOrdinal()) {
+                    return R.drawable.ic_pool_white;
+                } else {
+                    return R.drawable.ic_bike_white;
+                }
+            } else if (vehicleType == VehicleTypeValue.TAXI.getOrdinal()) {
+                if (rideType == RideTypeValue.POOL.getOrdinal()) {
+                    return R.drawable.ic_pool_white;
+                } else {
+                    return R.drawable.ic_car_white;
+                }
+            } else if (vehicleType == VehicleTypeValue.HELICOPTER.getOrdinal()) {
+                return R.drawable.ic_copter_white;
+            } else if (vehicleType == VehicleTypeValue.ERICKSHAW.getOrdinal()) {
+                return R.drawable.ic_erickshaw_white;
+            } else if (vehicleType == VehicleTypeValue.TRANSPORT.getOrdinal()
+                    || iconSet.equalsIgnoreCase(VehicleIconSet.TRANSPORT.getName())) {
+                return R.drawable.ic_transport_white;
             } else {
                 return R.drawable.ic_rides;
             }
-        } else if (vehicleType == VehicleTypeValue.BIKES.getOrdinal()) {
-            if (rideType == RideTypeValue.POOL.getOrdinal()) {
-                return R.drawable.ic_pool_white;
-            } else {
-                return R.drawable.ic_bike_white;
-            }
-        } else if (vehicleType == VehicleTypeValue.TAXI.getOrdinal()) {
-            if (rideType == RideTypeValue.POOL.getOrdinal()) {
-                return R.drawable.ic_pool_white;
-            } else {
-                return R.drawable.ic_car_white;
-            }
-        } else if (vehicleType == VehicleTypeValue.HELICOPTER.getOrdinal()) {
-            return R.drawable.ic_copter_white;
-        } else if (vehicleType == VehicleTypeValue.ERICKSHAW.getOrdinal()) {
-            return R.drawable.ic_erickshaw_white;
-        } else if (vehicleType == VehicleTypeValue.TRANSPORT.getOrdinal()
-                || iconSet.equalsIgnoreCase(VehicleIconSet.TRANSPORT.getName())) {
-            return R.drawable.ic_transport_white;
-        } else {
-            return R.drawable.ic_rides;
         }
+
+
     }
 
 }

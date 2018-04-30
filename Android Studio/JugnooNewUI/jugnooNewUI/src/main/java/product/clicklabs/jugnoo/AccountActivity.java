@@ -105,7 +105,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     ImageView imageViewEditProfile, ivEditPhone, imageViewEditProfileSave;
 
     RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact;
-    TextView textViewEmergencyContact;
+    TextView textViewEmergencyContact,textViewChangeLanguage;
     LinearLayout linearLayoutPasswordChange;
     RelativeLayout relativeLayoutOldPassword, relativeLayoutNewPassword, relativeLayoutRetypePassword;
     EditText editTextOldPassword, editTextNewPassword, editTextRetypePassword;
@@ -120,7 +120,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
     private LinearLayout linearLayoutPasswordSave;
 
-    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer;
+    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer,relativeLayoutChangeLanguage;
     NonScrollListView listViewSavedLocations;
     RelativeLayout relativeLayoutAddNewAddress;
     View viewStarIcon;
@@ -176,6 +176,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         ((TextView) findViewById(R.id.textViewChangePassword)).setTypeface(Fonts.mavenMedium(this));
         relativeLayoutEmergencyContact = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact);
         textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.mavenMedium(this));
+        textViewChangeLanguage = (TextView) findViewById(R.id.textViewChangeLanguage); textViewChangeLanguage.setTypeface(Fonts.mavenMedium(this));
         linearLayoutPasswordChange = (LinearLayout) findViewById(R.id.linearLayoutPasswordChange);
         imageViewChangePassword = (ImageView) findViewById(R.id.imageViewChangePassword);
         relativeLayoutOldPassword = (RelativeLayout) findViewById(R.id.relativeLayoutOldPassword);
@@ -272,6 +273,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         ((TextView) findViewById(R.id.textViewAddNewAddress)).setTypeface(Fonts.mavenMedium(this));
 
         relativeLayoutAddressBook = (RelativeLayout) findViewById(R.id.relativeLayoutAddressBook);
+        relativeLayoutChangeLanguage = (RelativeLayout) findViewById(R.id.relativeLayoutChangeLanguage);
         textViewAddressBook =  ((TextView)findViewById(R.id.textViewAddressBook));
         textViewAddressBook.setTypeface(Fonts.mavenMedium(this));
 
@@ -707,6 +709,14 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, true);
                     GAUtils.event(SIDE_MENU, USER + PROFILE, ADDRESS_BOOK);
                 }
+            }
+        });
+        relativeLayoutChangeLanguage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AccountActivity.this, ChangeLanguageActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                GAUtils.event(SIDE_MENU, USER + PROFILE, GAAction.CHANGE_LANGUAGE);
             }
         });
 
