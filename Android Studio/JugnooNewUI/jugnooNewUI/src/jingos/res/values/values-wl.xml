@@ -65,4 +65,5 @@
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">true</bool>
     <bool name="show_about">true</bool>
+    <bool name="show_change_languge">false</bool>
 </resources>

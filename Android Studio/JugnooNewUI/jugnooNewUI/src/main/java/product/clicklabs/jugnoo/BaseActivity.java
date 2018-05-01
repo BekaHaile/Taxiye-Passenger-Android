@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 /**
@@ -22,7 +23,8 @@ public class BaseActivity extends Activity {
 
 	@Override
 	protected void attachBaseContext(Context newBase) {
-		super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+		super.attachBaseContext(LocaleHelper.onAttach(TypekitContextWrapper.wrap(newBase), "en"));
+//		super.attachBaseContext();
 	}
 
 	@Override

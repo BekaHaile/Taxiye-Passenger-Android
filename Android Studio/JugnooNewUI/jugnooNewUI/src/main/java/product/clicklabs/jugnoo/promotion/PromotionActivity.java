@@ -96,10 +96,10 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         HomeActivity.checkForAccessTokenChange(this);
     }
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
-    }
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+//    }
 
     private boolean codeEntered;
 

@@ -141,8 +141,8 @@ public class MyApplication extends Application {
 
     @Override
     protected void attachBaseContext(Context base) {
-//        super.attachBaseContext(base);
-        super.attachBaseContext(LocaleHelper.onAttach(base, "ar"));
+        super.attachBaseContext(base);
+//        super.attachBaseContext(LocaleHelper.onAttach(base, "ar"));
         MultiDex.install(this);
     }
 

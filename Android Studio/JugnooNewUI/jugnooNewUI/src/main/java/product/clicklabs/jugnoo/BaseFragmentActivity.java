@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
@@ -84,10 +85,10 @@ public class BaseFragmentActivity extends FragmentActivity {
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
 	}
 
-	@Override
-	protected void attachBaseContext(Context newBase) {
-		super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
-	}
+//	@Override
+//	protected void attachBaseContext(Context newBase) {
+//		super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+//	}
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -98,4 +99,9 @@ public class BaseFragmentActivity extends FragmentActivity {
 			}
 		}
 	};
+	@Override
+	protected void attachBaseContext(Context newBase) {
+		super.attachBaseContext(LocaleHelper.onAttach(TypekitContextWrapper.wrap(newBase), "en"));
+//		super.attachBaseContext();
+	}
 }

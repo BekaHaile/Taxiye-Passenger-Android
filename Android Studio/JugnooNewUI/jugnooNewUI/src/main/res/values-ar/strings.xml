@@ -47,7 +47,7 @@
     <string name="from">From: </string>
     <string name="to">To: </string>
 
-    <string name="history">History</string>
+    <string name="history">التاريخ</string>
 
     <string name="driver_mode">Driver Mode</string>
     <string name="invite_friends">Invite Friends</string>
@@ -1356,7 +1356,7 @@
     <string name="order_time_colon">Order Time:</string>
     <string name="delivery_time_colon">Delivery Time:</string>
     <string name="label_rb_schedule_time">Schedule Time</string>
-    <string name="chat_support">Chat Support</string>
+    <string name="chat_support">دعم الدردشة</string>
     <string name="from_wo">From</string>
     <string name="to_wo">To</string>
     <string name="pay_online">Pay Online</string>
@@ -1862,6 +1862,6 @@
     <string name="search">Search</string>
     <string name="country_picker_header">Select country</string>
     <string name="no_country_found">No country found</string>
-    <string name="change_language">Change Language</string>
+    <string name="change_language">غير اللغة</string>
 
 </resources>

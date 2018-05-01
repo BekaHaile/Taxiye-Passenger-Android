@@ -24,6 +24,7 @@ import com.sabkuchfresh.utils.AppConstant;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 
@@ -41,11 +42,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * Edited by Parminder Singh on 1/30/17 at 3:49 PM
      **/
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
-    }
+//
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+////        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+//    }
 
 
     @Override
@@ -124,7 +125,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
-
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.onAttach(TypekitContextWrapper.wrap(newBase), "en"));
+//		super.attachBaseContext();
+    }
     public void setupParent(View view) {
         //Set up touch listener for non-text box views to hide keyboard.
         if (!(view instanceof EditText)) {

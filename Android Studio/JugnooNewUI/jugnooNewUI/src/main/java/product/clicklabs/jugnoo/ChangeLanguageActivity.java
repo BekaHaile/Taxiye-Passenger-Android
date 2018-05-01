@@ -107,18 +107,8 @@ public class ChangeLanguageActivity extends BaseActivity {
     private void updateViews(String languageCode) {
         LocaleHelper.setLocale(this, languageCode);
         //  Resources resources = context.getResources();
-        //Toast.makeText(getApplicationContext(),resources.getString(R.string.are_you_sure_you_want_to_logout)+getString(R.string.are_you_sure_you_want_to_logout),Toast.LENGTH_SHORT).show();
-        recreate();
-        //finishAffinity();
-        //startActivity(new Intent(ChangeLanguageActivity.this, SplashNewActivity.class));
-//
-//        mTitleTextView.setText(resources.getString(R.string.main_activity_title));
-//        mDescTextView.setText(resources.getString(R.string.main_activity_desc));
-//        mAboutTextView.setText(resources.getString(R.string.main_activity_about));
-//        mToTRButton.setText(resources.getString(R.string.main_activity_to_tr_button));
-//        mToENButton.setText(resources.getString(R.string.main_activity_to_en_button));
-//
-//        setTitle(resources.getString(R.string.main_activity_toolbar_title));
+        finishAffinity();
+        startActivity(new Intent(ChangeLanguageActivity.this, SplashNewActivity.class));
     }
 
     public void performBackPressed() {

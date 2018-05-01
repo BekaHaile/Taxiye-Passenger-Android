@@ -62,10 +62,10 @@ public class LocaleHelper {
     @TargetApi(Build.VERSION_CODES.N)
     private static Context updateResources(Context context, String language) {
         Locale locale = new Locale(language);
-        Locale.setDefault(locale);
-
         Configuration configuration = context.getResources().getConfiguration();
+        Locale.setDefault(locale);
         configuration.setLocale(locale);
+        configuration.setLayoutDirection(locale);
 
         return context.createConfigurationContext(configuration);
     }
@@ -79,6 +79,9 @@ public class LocaleHelper {
 
         Configuration configuration = resources.getConfiguration();
         configuration.locale = locale;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            configuration.setLayoutDirection(locale);
+        }
 
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
 

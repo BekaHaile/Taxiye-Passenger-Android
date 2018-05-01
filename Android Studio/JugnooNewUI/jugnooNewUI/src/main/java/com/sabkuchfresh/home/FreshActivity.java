@@ -5024,10 +5024,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
 
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
-    }
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+//    }
 
 
     private LocationUpdate locationUpdate = new LocationUpdate() {

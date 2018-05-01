@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 /**
@@ -40,10 +41,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if(!HomeActivity.checkIfUserDataNull(this)){
+		if(checkOfAT() && !HomeActivity.checkIfUserDataNull(this)){
 			HomeActivity.checkForAccessTokenChange(this);
-		} else {
-			return;
 		}
 	}
 
@@ -51,10 +50,8 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 	protected void onResume() {
 		super.onResume();
 		Data.activityResumed = true;
-		if(!HomeActivity.checkIfUserDataNull(this)){
+		if(checkOfAT() && !HomeActivity.checkIfUserDataNull(this)){
 			HomeActivity.checkForAccessTokenChange(this);
-		} else {
-			return;
 		}
 	}
 
@@ -66,6 +63,11 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 
 	@Override
 	protected void attachBaseContext(Context newBase) {
-		super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+		super.attachBaseContext(LocaleHelper.onAttach(TypekitContextWrapper.wrap(newBase), "en"));
+//		super.attachBaseContext();
+	}
+
+	public boolean checkOfAT(){
+    	return true;
 	}
 }

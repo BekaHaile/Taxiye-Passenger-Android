@@ -127,7 +127,12 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class SplashNewActivity extends AppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
+public class SplashNewActivity extends BaseAppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
+
+	@Override
+	public boolean checkOfAT(){
+		return false;
+	}
 
 	//adding drop location
 
@@ -241,10 +246,10 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 //		FlurryAgent.onEndSession(this);
 	}
 
-	@Override
-	protected void attachBaseContext(Context newBase) {
-		super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
-	}
+//	@Override
+//	protected void attachBaseContext(Context newBase) {
+//		super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
+//	}
 
 	@Override
 	public void onStart() {
