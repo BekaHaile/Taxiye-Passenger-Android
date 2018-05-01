@@ -242,7 +242,7 @@ import retrofit.mime.TypedByteArray;
 public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
-        GACategory, GAAction, BidsPlacedAdapter.Callback{
+        GACategory, GAAction, BidsPlacedAdapter.Callback {
 
 
     private final String TAG = "Home Screen";
@@ -293,8 +293,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     RelativeLayout relativeLayoutLocationErrorSearchBar;
 
 
-
-
     //Assigining layout
     RelativeLayout assigningLayout;
     TextView textViewFindingDriver;
@@ -322,21 +320,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm;
     Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat, relativeLayoutTotalFare;
-	TextView textViewIRPaymentOptionValue;
-	ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm;
-
+    TextView textViewIRPaymentOptionValue;
+    ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm;
 
 
     //Search Layout
     RelativeLayout relativeLayoutSearchContainer, relativeLayoutSearch, relativeLayoutPoolSharing;
 
 
-
     //Center Location Layout
     RelativeLayout centreLocationRl, relativeLayoutPinEtaRotate;
     ImageView centreLocationPin, imageViewCenterPinMargin;
     TextView textViewCentrePinETA;
-
 
 
     //End Ride layout
@@ -354,7 +349,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
     TextView textViewRSScroll, textViewChangeLocality;
     private TextView textViewSendInvites, textViewSendInvites2, textViewThumbsDown, textViewThumbsUp, textViewCancellation,
-            textViewPaymentModeValueConfirm, textViewOffersConfirm, textVieGetFareEstimateConfirm, textViewPoolInfo1,textViewCouponApplied,
+            textViewPaymentModeValueConfirm, textViewOffersConfirm, textVieGetFareEstimateConfirm, textViewPoolInfo1, textViewCouponApplied,
             textViewRideEndWithImage;
     private RelativeLayout changeLocalityLayout, relativeLayoutPoolInfoBar, relativeLayoutRideEndWithImage;
     private LinearLayout linearlayoutChangeLocalityInner;
@@ -367,14 +362,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private TextView tvPayOnline, tvPayOnlineIn;
 
 
-
     // data variables declaration
 
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
     DecimalFormat decimalFormat1DigitAD = new DecimalFormat("#.#");
 
     LatLng lastSearchLatLng;
-
 
 
     static long previousWaitTime = 0, previousRideTime = 0;
@@ -438,7 +431,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private final String GOOGLE_ADWORD_CONVERSION_ID = "947755540";
-
 
 
     public CheckForGPSAccuracyTimer checkForGPSAccuracyTimer;
@@ -506,7 +498,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private TransactionUtils transactionUtils;
     private RelativeLayout relativeLayoutContainer;
     private FrameLayout coordinatorLayout;
-    private FuguNotificationConfig fuguNotificationConfig  = new FuguNotificationConfig();;
+    private FuguNotificationConfig fuguNotificationConfig = new FuguNotificationConfig();
+    ;
     Gson gson = new Gson();
     private boolean addressPopulatedFromDifferentOffering;
 
@@ -519,7 +512,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        GAUtils.trackScreenView(RIDES+HOME);
+        GAUtils.trackScreenView(RIDES + HOME);
         Data.currentActivity = HomeActivity.class.getName();
 
        /* if((Data.userData.getShowHomeScreen() == 1)
@@ -541,7 +534,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         try {
             setContentView(R.layout.activity_home);
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Crashlytics.logException(e);
             DialogPopup.alertPopupWithListener(this, "", getResources().getString(R.string.insert_sd_card),
@@ -607,13 +600,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         slidingBottomPanel = new SlidingBottomPanelV4(HomeActivity.this, drawerLayout);
 
 
-
         //Top RL
         topBar = new TopBar(this, drawerLayout);
 
         //FAB View
         //fabView = new FABView(this);
-
 
 
         //Map Layout
@@ -630,9 +621,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         //Initial layout
         initialLayout = (RelativeLayout) findViewById(R.id.initialLayout);
-        changeLocalityLayout = (RelativeLayout)findViewById(R.id.changeLocalityLayout);
+        changeLocalityLayout = (RelativeLayout) findViewById(R.id.changeLocalityLayout);
         linearlayoutChangeLocalityInner = (LinearLayout) findViewById(R.id.linearlayoutChangeLocalityInner);
-        textViewChangeLocality = (TextView)findViewById(R.id.textViewChangeLocality);textViewChangeLocality.setTypeface(Fonts.mavenLight(this));
+        textViewChangeLocality = (TextView) findViewById(R.id.textViewChangeLocality);
+        textViewChangeLocality.setTypeface(Fonts.mavenLight(this));
         buttonChangeLocalityMyLocation = (Button) findViewById(R.id.buttonChangeLocalityMyLocation);
 
         initialMyLocationBtn = (Button) findViewById(R.id.initialMyLocationBtn);
@@ -659,20 +651,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         relativeLayoutSearchContainer = (RelativeLayout) findViewById(R.id.relativeLayoutSearchContainer);
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
         relativeLayoutDestSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutDestSearchBar);
-        textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch); textViewInitialSearch.setTypeface(Fonts.mavenRegular(this));
-        textViewDestSearch = (TextView) findViewById(R.id.textViewDestSearch); textViewDestSearch.setTypeface(Fonts.mavenRegular(this));
+        textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch);
+        textViewInitialSearch.setTypeface(Fonts.mavenRegular(this));
+        textViewDestSearch = (TextView) findViewById(R.id.textViewDestSearch);
+        textViewDestSearch.setTypeface(Fonts.mavenRegular(this));
         progressBarInitialSearch = (ProgressWheel) findViewById(R.id.progressBarInitialSearch);
         progressBarInitialSearch.setVisibility(View.GONE);
         imageViewDropCross = (ImageView) findViewById(R.id.imageViewDropCross);
         imageViewDropCross.setVisibility(View.GONE);
-        relativeLayoutGreat = (RelativeLayout)findViewById(R.id.relativeLayoutGreat);
-        imageViewThumbsUpGif = (ImageView)findViewById(R.id.imageViewThumbsUpGif);
-        imageViewConfirmDropLocationEdit = (ImageView)findViewById(R.id.imageViewConfirmDropLocationEdit);
-        relativeLayoutRideEndWithImage = (RelativeLayout)findViewById(R.id.relativeLayoutRideEndWithImage);
-        textViewRideEndWithImage = (TextView)findViewById(R.id.textViewRideEndWithImage); textViewRideEndWithImage.setTypeface(Fonts.mavenMedium(this));
-        buttonEndRideSkip = (Button) findViewById(R.id.buttonEndRideSkip);buttonEndRideSkip.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
-        buttonEndRideInviteFriends = (Button)findViewById(R.id.buttonEndRideInviteFriends); buttonEndRideInviteFriends.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
-        imageViewRideEndWithImage = (ImageView)findViewById(R.id.imageViewRideEndWithImage);
+        relativeLayoutGreat = (RelativeLayout) findViewById(R.id.relativeLayoutGreat);
+        imageViewThumbsUpGif = (ImageView) findViewById(R.id.imageViewThumbsUpGif);
+        imageViewConfirmDropLocationEdit = (ImageView) findViewById(R.id.imageViewConfirmDropLocationEdit);
+        relativeLayoutRideEndWithImage = (RelativeLayout) findViewById(R.id.relativeLayoutRideEndWithImage);
+        textViewRideEndWithImage = (TextView) findViewById(R.id.textViewRideEndWithImage);
+        textViewRideEndWithImage.setTypeface(Fonts.mavenMedium(this));
+        buttonEndRideSkip = (Button) findViewById(R.id.buttonEndRideSkip);
+        buttonEndRideSkip.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        buttonEndRideInviteFriends = (Button) findViewById(R.id.buttonEndRideInviteFriends);
+        buttonEndRideInviteFriends.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        imageViewRideEndWithImage = (ImageView) findViewById(R.id.imageViewRideEndWithImage);
 
         relativeLayoutGoogleAttr = (RelativeLayout) findViewById(R.id.relativeLayoutGoogleAttr);
         imageViewGoogleAttrCross = (ImageView) findViewById(R.id.imageViewGoogleAttrCross);
@@ -680,11 +677,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewGoogleAttrText.setTypeface(Fonts.mavenMedium(this));
         relativeLayoutGoogleAttr.setVisibility(View.GONE);
         relativeLayoutPoolSharing = (RelativeLayout) findViewById(R.id.relativeLayoutPoolSharing);
-        textViewFellowRider = (TextView) findViewById(R.id.textViewFellowRider); textViewFellowRider.setTypeface(Fonts.mavenMedium(this));
-        relativeLayoutConfirmBottom  = (RelativeLayout) findViewById(R.id.relativeLayoutConfirmBottom);
-        relativeLayoutConfirmRequest  = (RelativeLayout) findViewById(R.id.relativeLayoutConfirmRequest);
+        textViewFellowRider = (TextView) findViewById(R.id.textViewFellowRider);
+        textViewFellowRider.setTypeface(Fonts.mavenMedium(this));
+        relativeLayoutConfirmBottom = (RelativeLayout) findViewById(R.id.relativeLayoutConfirmBottom);
+        relativeLayoutConfirmRequest = (RelativeLayout) findViewById(R.id.relativeLayoutConfirmRequest);
         relativeLayoutConfirmRequest.setVisibility(View.GONE);
-        relativeLayoutTotalFare = (RelativeLayout)findViewById(R.id.relativeLayoutTotalFare);
+        relativeLayoutTotalFare = (RelativeLayout) findViewById(R.id.relativeLayoutTotalFare);
         buttonConfirmRequest = (Button) findViewById(R.id.buttonConfirmRequest);
         buttonConfirmRequest.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         linearLayoutPaymentModeConfirm = (LinearLayout) findViewById(R.id.linearLayoutPaymentModeConfirm);
@@ -704,18 +702,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewPoolInfo1 = (TextView) findViewById(R.id.textViewPoolInfo1);
         textViewCouponApplied = (TextView) findViewById(R.id.tv_coupon_applied);
         textViewPoolInfo1.setTypeface(Fonts.mavenMedium(this));
-        textViewCouponApplied.setTypeface(Fonts.mavenMedium(this),Typeface.BOLD);
+        textViewCouponApplied.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 
 
         //Location error layout
         relativeLayoutLocationError = (RelativeLayout) findViewById(R.id.relativeLayoutLocationError);
         relativeLayoutLocationErrorSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutLocationErrorSearchBar);
-        ((TextView)findViewById(R.id.textViewLocationErrorSearch)).setTypeface(Fonts.mavenMedium(this));
+        ((TextView) findViewById(R.id.textViewLocationErrorSearch)).setTypeface(Fonts.mavenMedium(this));
         relativeLayoutLocationError.setVisibility(View.GONE);
-        ((TextView)findViewById(R.id.textViewThanks)).setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
-
-
-
+        ((TextView) findViewById(R.id.textViewThanks)).setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
 
 
         //Assigning layout
@@ -737,15 +732,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
         relativeLayoutAssigningDropLocationClick = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationClick);
         relativeLayoutDestinationHelp = (RelativeLayout) findViewById(R.id.relativeLayoutDestinationHelp);
-        textViewDestHelp = (TextView) findViewById(R.id.textViewDestHelp);textViewDestHelp.setTypeface(Fonts.mavenRegular(this));
-        textViewAssigningDropLocationClick = (TextView)findViewById(R.id.textViewAssigningDropLocationClick);
+        textViewDestHelp = (TextView) findViewById(R.id.textViewDestHelp);
+        textViewDestHelp.setTypeface(Fonts.mavenRegular(this));
+        textViewAssigningDropLocationClick = (TextView) findViewById(R.id.textViewAssigningDropLocationClick);
         textViewAssigningDropLocationClick.setTypeface(Fonts.mavenMedium(this));
         textViewAssigningDropLocationClick.setText("");
-        progressBarAssigningDropLocation = (ProgressWheel)findViewById(R.id.progressBarAssigningDropLocation);
-        imageViewAssigningDropLocationEdit = (ImageView)findViewById(R.id.imageViewAssigningDropLocationEdit);
+        progressBarAssigningDropLocation = (ProgressWheel) findViewById(R.id.progressBarAssigningDropLocation);
+        imageViewAssigningDropLocationEdit = (ImageView) findViewById(R.id.imageViewAssigningDropLocationEdit);
         imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
         progressBarAssigningDropLocation.setVisibility(View.GONE);
-
 
 
         //Request Final Layout
@@ -758,7 +753,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewInRideFareFactor = (TextView) findViewById(R.id.textViewInRideFareFactor);
         textViewInRideFareFactor.setTypeface(Fonts.mavenMedium(this));
         relativeLayoutFinalDropLocationClick = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationClick);
-        textViewFinalDropLocationClick = (TextView)findViewById(R.id.textViewFinalDropLocationClick);
+        textViewFinalDropLocationClick = (TextView) findViewById(R.id.textViewFinalDropLocationClick);
         textViewFinalDropLocationClick.setTypeface(Fonts.mavenMedium(this));
         textViewFinalDropLocationClick.setText("");
         imageViewFinalDropLocationEdit = (ImageView) findViewById(R.id.imageViewFinalDropLocationEdit);
@@ -777,10 +772,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewDriverRating = (TextView) findViewById(R.id.textViewDriverRating);
         textViewDriverRating.setTypeface(Fonts.mavenMedium(this));
         relativeLayoutDriverRating = (RelativeLayout) findViewById(R.id.relativeLayoutDriverRating);
-        textViewCancellation = (TextView) findViewById(R.id.textViewCancellation); textViewCancellation.setTypeface(Fonts.mavenRegular(this));
-        textViewTotalFare = (TextView)findViewById(R.id.textViewTotalFare); textViewTotalFare.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
-        textViewTotalFareValue = (TextView)findViewById(R.id.textViewTotalFareValue); textViewTotalFareValue.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
-        textViewIncludes = (TextView)findViewById(R.id.textViewIncludes); textViewIncludes.setTypeface(Fonts.mavenMedium(this));
+        textViewCancellation = (TextView) findViewById(R.id.textViewCancellation);
+        textViewCancellation.setTypeface(Fonts.mavenRegular(this));
+        textViewTotalFare = (TextView) findViewById(R.id.textViewTotalFare);
+        textViewTotalFare.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        textViewTotalFareValue = (TextView) findViewById(R.id.textViewTotalFareValue);
+        textViewTotalFareValue.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        textViewIncludes = (TextView) findViewById(R.id.textViewIncludes);
+        textViewIncludes.setTypeface(Fonts.mavenMedium(this));
 
         buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide);
         buttonCancelRide.setTypeface(Fonts.mavenRegular(this));
@@ -793,18 +792,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
 
-		textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue); textViewIRPaymentOptionValue.setTypeface(Fonts.mavenMedium(this));
+        textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue);
+        textViewIRPaymentOptionValue.setTypeface(Fonts.mavenMedium(this));
         imageViewIRPaymentOption = (ImageView) findViewById(R.id.imageViewIRPaymentOption);
 
         linearLayoutSendInvites = (LinearLayout) findViewById(R.id.linearLayoutSendInvites);
-        textViewSendInvites = (TextView) findViewById(R.id.textViewSendInvites); textViewSendInvites.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
-        textViewSendInvites2 = (TextView) findViewById(R.id.textViewSendInvites2); textViewSendInvites2.setTypeface(Fonts.mavenRegular(this));
+        textViewSendInvites = (TextView) findViewById(R.id.textViewSendInvites);
+        textViewSendInvites.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+        textViewSendInvites2 = (TextView) findViewById(R.id.textViewSendInvites2);
+        textViewSendInvites2.setTypeface(Fonts.mavenRegular(this));
 
 
         //Search Layout
         relativeLayoutSearch = (RelativeLayout) findViewById(R.id.relativeLayoutSearch);
-
-
 
 
         //Center location layout
@@ -822,49 +822,61 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         scrollViewRideSummary = (ScrollView) findViewById(R.id.scrollViewRideSummary);
         linearLayoutRideSummaryContainer = (LinearLayout) findViewById(R.id.linearLayoutRideSummaryContainer);
         linearLayoutRideSummary = (LinearLayout) findViewById(R.id.linearLayoutRideSummary);
-        textViewRSTotalFareValue = (TextView) findViewById(R.id.textViewRSTotalFareValue); textViewRSTotalFareValue.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
-        ((TextView)findViewById(R.id.textViewRSTotalFare)).setTypeface(Fonts.mavenMedium(this));
-        textViewRSCashPaidValue = (TextView) findViewById(R.id.textViewRSCashPaidValue); textViewRSCashPaidValue.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
-        ((TextView)findViewById(R.id.textViewRSCashPaid)).setTypeface(Fonts.mavenMedium(this));
+        textViewRSTotalFareValue = (TextView) findViewById(R.id.textViewRSTotalFareValue);
+        textViewRSTotalFareValue.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewRSTotalFare)).setTypeface(Fonts.mavenMedium(this));
+        textViewRSCashPaidValue = (TextView) findViewById(R.id.textViewRSCashPaidValue);
+        textViewRSCashPaidValue.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewRSCashPaid)).setTypeface(Fonts.mavenMedium(this));
         linearLayoutRSViewInvoice = (LinearLayout) findViewById(R.id.linearLayoutRSViewInvoice);
-        ((TextView)findViewById(R.id.textViewRSInvoice)).setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
-        ((TextView)findViewById(R.id.textViewRSRateYourRide)).setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewRSInvoice)).setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        ((TextView) findViewById(R.id.textViewRSRateYourRide)).setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         ivEndRideType = (ImageView) findViewById(R.id.ivEndRideType);
         imageViewThumbsDown = (ImageView) findViewById(R.id.imageViewThumbsDown);
         imageViewThumbsUp = (ImageView) findViewById(R.id.imageViewThumbsUp);
-        textViewThumbsDown = (TextView) findViewById(R.id.textViewThumbsDown); textViewThumbsDown.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
-        textViewThumbsUp = (TextView) findViewById(R.id.textViewThumbsUp); textViewThumbsUp.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        textViewThumbsDown = (TextView) findViewById(R.id.textViewThumbsDown);
+        textViewThumbsDown.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        textViewThumbsUp = (TextView) findViewById(R.id.textViewThumbsUp);
+        textViewThumbsUp.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         llPayOnline = (LinearLayout) findViewById(R.id.llPayOnline);
-        tvPayOnline = (TextView) findViewById(R.id.tvPayOnline); tvPayOnline.setTypeface(tvPayOnline.getTypeface(), Typeface.BOLD);
+        tvPayOnline = (TextView) findViewById(R.id.tvPayOnline);
+        tvPayOnline.setTypeface(tvPayOnline.getTypeface(), Typeface.BOLD);
         tvPayOnlineIn = (TextView) findViewById(R.id.tvPayOnlineIn);
 
         rlChatDriver = (RelativeLayout) findViewById(R.id.rlChatDriver);
-        bChatDriver = (Button) findViewById(R.id.bChatDriver); bChatDriver.setOnClickListener(this);
-        tvChatCount = (TextView) findViewById(R.id.tvChatCount); tvChatCount.setTypeface(Fonts.mavenMedium(this));
+        bChatDriver = (Button) findViewById(R.id.bChatDriver);
+        bChatDriver.setOnClickListener(this);
+        tvChatCount = (TextView) findViewById(R.id.tvChatCount);
+        tvChatCount.setTypeface(Fonts.mavenMedium(this));
 
 
-
-        ratingBarRSFeedback = (RatingBar) findViewById(R.id.ratingBarRSFeedback); ratingBarRSFeedback.setRating(0);
-        textViewRSWhatImprove = (TextView) findViewById(R.id.textViewRSWhatImprove); textViewRSWhatImprove.setTypeface(Fonts.mavenLight(this));
-        textViewRSOtherError = (TextView) findViewById(R.id.textViewRSOtherError); textViewRSOtherError.setTypeface(Fonts.mavenLight(this));
+        ratingBarRSFeedback = (RatingBar) findViewById(R.id.ratingBarRSFeedback);
+        ratingBarRSFeedback.setRating(0);
+        textViewRSWhatImprove = (TextView) findViewById(R.id.textViewRSWhatImprove);
+        textViewRSWhatImprove.setTypeface(Fonts.mavenLight(this));
+        textViewRSOtherError = (TextView) findViewById(R.id.textViewRSOtherError);
+        textViewRSOtherError.setTypeface(Fonts.mavenLight(this));
         gridViewRSFeedbackReasons = (NonScrollGridView) findViewById(R.id.gridViewRSFeedbackReasons);
 
         // Special Pickup views
         rlSpecialPickup = (RelativeLayout) findViewById(R.id.rlSpecialPickup);
         specialPickupLocationBtn = (Button) findViewById(R.id.specialPickupLocationBtn);
         spin = (MySpinner) findViewById(R.id.simpleSpinner);
-        tvSpecialPicupTitle = (TextView) findViewById(R.id.tvSpecialPicupTitle); tvSpecialPicupTitle.setTypeface(Fonts.mavenMedium(this));
-        tvSpecialPicupDesc = (TextView) findViewById(R.id.tvSpecialPicupDesc); tvSpecialPicupDesc.setTypeface(Fonts.mavenRegular(this));
+        tvSpecialPicupTitle = (TextView) findViewById(R.id.tvSpecialPicupTitle);
+        tvSpecialPicupTitle.setTypeface(Fonts.mavenMedium(this));
+        tvSpecialPicupDesc = (TextView) findViewById(R.id.tvSpecialPicupDesc);
+        tvSpecialPicupDesc.setTypeface(Fonts.mavenRegular(this));
         rlSelectedPickup = (RelativeLayout) findViewById(R.id.rlSelectedPickup);
         tvSelectedPickup = (TextView) findViewById(R.id.tvSelectedPickup);
         ivSpecialPickupArrow = (ImageView) findViewById(R.id.ivSpecialPickupArrow);
-        bSpecialPicupConfirmRequest = (Button) findViewById(R.id.bSpecialPicupConfirmRequest); bSpecialPicupConfirmRequest.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
+        bSpecialPicupConfirmRequest = (Button) findViewById(R.id.bSpecialPicupConfirmRequest);
+        bSpecialPicupConfirmRequest.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         specialPickupItemsAdapter = new SpecialPickupItemsAdapter(HomeActivity.this, specialPickups);
         try {
             int currentapiVersion = android.os.Build.VERSION.SDK_INT;
-            if (currentapiVersion > Build.VERSION_CODES.JELLY_BEAN){
-                spin.setDropDownWidth((int)(ASSL.Xscale()*550));
-                spin.setDropDownVerticalOffset((int)(ASSL.Xscale()*1));
+            if (currentapiVersion > Build.VERSION_CODES.JELLY_BEAN) {
+                spin.setDropDownWidth((int) (ASSL.Xscale() * 550));
+                spin.setDropDownVerticalOffset((int) (ASSL.Xscale() * 1));
             }
 
         } catch (Exception e) {
@@ -892,7 +904,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 getApiFindADriver().setRefreshLatLng(specialPicupLatLng);
                 specialPickupSelected = true;
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), getMapAnimateDuration(), null);
-                selectedSpecialPickup  = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText()+", ";
+                selectedSpecialPickup = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText() + ", ";
                 textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress());
                 GAUtils.event(RIDES, HOME, SPECIAL_PICKUP_CHOOSED);
             }
@@ -917,29 +929,32 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         try {
             feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.autoData.getFeedbackReasons(),
-					new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
-						@Override
-						public void onLastItemSelected(boolean selected, String name) {
-							if(!selected){
-								if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
-									textViewRSOtherError.setText("");
-								}
-							}
-						}
-					});
+                    new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
+                        @Override
+                        public void onLastItemSelected(boolean selected, String name) {
+                            if (!selected) {
+                                if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
+                                    textViewRSOtherError.setText("");
+                                }
+                            }
+                        }
+                    });
             gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        editTextRSFeedback = (EditText) findViewById(R.id.editTextRSFeedback); editTextRSFeedback.setTypeface(Fonts.mavenLight(this));
-        buttonRSSubmitFeedback = (Button) findViewById(R.id.buttonRSSubmitFeedback); buttonRSSubmitFeedback.setTypeface(Fonts.mavenRegular(this));
-        buttonRSSkipFeedback = (Button) findViewById(R.id.buttonRSSkipFeedback); buttonRSSkipFeedback.setTypeface(Fonts.mavenRegular(this));
+        editTextRSFeedback = (EditText) findViewById(R.id.editTextRSFeedback);
+        editTextRSFeedback.setTypeface(Fonts.mavenLight(this));
+        buttonRSSubmitFeedback = (Button) findViewById(R.id.buttonRSSubmitFeedback);
+        buttonRSSubmitFeedback.setTypeface(Fonts.mavenRegular(this));
+        buttonRSSkipFeedback = (Button) findViewById(R.id.buttonRSSkipFeedback);
+        buttonRSSkipFeedback.setTypeface(Fonts.mavenRegular(this));
         textViewRSScroll = (TextView) findViewById(R.id.textViewRSScroll);
 
         textViewRSWhatImprove.setVisibility(View.GONE);
         gridViewRSFeedbackReasons.setVisibility(View.GONE);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
-        layoutParams.height = (int)(ASSL.Yscale() * 200);
+        layoutParams.height = (int) (ASSL.Yscale() * 200);
         editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
 
@@ -954,31 +969,33 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
         try {
-            if(Data.autoData != null){
-				textViewSendInvites.setText(Data.autoData.getInRideSendInviteTextBoldV2());
-				textViewSendInvites2.setText(Data.autoData.getInRideSendInviteTextNormalV2());
-				if(Data.autoData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")){
-					textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
-				} else{
-					textVieGetFareEstimateConfirm.setVisibility(View.GONE);
-				}
-			}
+            if (Data.autoData != null) {
+                textViewSendInvites.setText(Data.autoData.getInRideSendInviteTextBoldV2());
+                textViewSendInvites2.setText(Data.autoData.getInRideSendInviteTextNormalV2());
+                if (Data.autoData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")) {
+                    textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
+                } else {
+                    textVieGetFareEstimateConfirm.setVisibility(View.GONE);
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-        imageViewPokemonOnOffInitial = (ImageView) findViewById(R.id.imageViewPokemonOnOffInitial); imageViewPokemonOnOffInitial.setVisibility(View.GONE);
-        imageViewPokemonOnOffConfirm = (ImageView) findViewById(R.id.imageViewPokemonOnOffConfirm); imageViewPokemonOnOffConfirm.setVisibility(View.GONE);
-        imageViewPokemonOnOffEngaged = (ImageView) findViewById(R.id.imageViewPokemonOnOffEngaged); imageViewPokemonOnOffEngaged.setVisibility(View.GONE);
+        imageViewPokemonOnOffInitial = (ImageView) findViewById(R.id.imageViewPokemonOnOffInitial);
+        imageViewPokemonOnOffInitial.setVisibility(View.GONE);
+        imageViewPokemonOnOffConfirm = (ImageView) findViewById(R.id.imageViewPokemonOnOffConfirm);
+        imageViewPokemonOnOffConfirm.setVisibility(View.GONE);
+        imageViewPokemonOnOffEngaged = (ImageView) findViewById(R.id.imageViewPokemonOnOffEngaged);
+        imageViewPokemonOnOffEngaged.setVisibility(View.GONE);
 
-        fabViewIntial = (View)findViewById(R.id.fabViewIntial);
-        fabViewFinal = (View)findViewById(R.id.fabViewFinal);
+        fabViewIntial = (View) findViewById(R.id.fabViewIntial);
+        fabViewFinal = (View) findViewById(R.id.fabViewFinal);
 //        fabViewTest = new FABViewTest(this, fabViewIntial);
         //relativeLayoutFABTest = (RelativeLayout)findViewById(R.id.relativeLayoutFABTest);
-        relativeLayoutSlidingBottomParent = (RelativeLayout)findViewById(R.id.relativeLayoutSlidingBottomParent);
-        viewSlidingExtra = (View)findViewById(R.id.viewSlidingExtra);
-
+        relativeLayoutSlidingBottomParent = (RelativeLayout) findViewById(R.id.relativeLayoutSlidingBottomParent);
+        viewSlidingExtra = (View) findViewById(R.id.viewSlidingExtra);
 
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
@@ -1007,31 +1024,29 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex() == AppLinkIndex.OPEN_JEANIE.getOrdinal()
-                            && fabViewTest != null){
+                    if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex() == AppLinkIndex.OPEN_JEANIE.getOrdinal()
+                            && fabViewTest != null) {
                         fabViewTest.menuLabelsRightTest.open(true);
-                    }
-                    else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex() == -1
-							|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
-							.getDeepindex() == AppLinkIndex.OPEN_COUPONS_DIALOG.getOrdinal()){
-						if(Data.autoData.getRegions().size() == 1){
-							slidingBottomPanel.slideOnClick(findViewById(R.id.linearLayoutOffers));
-						} else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
-							slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
-									Data.userData.getCoupons(ProductType.AUTO, HomeActivity.this));
-						}
-                        GAUtils.event(RIDES, HOME, OFFERS+BAR+CLICKED);
-					} else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()){
-						Data.deepLinkIndex = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex();
+                    } else if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex() == -1
+                            || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
+                            .getDeepindex() == AppLinkIndex.OPEN_COUPONS_DIALOG.getOrdinal()) {
+                        if (Data.autoData.getRegions().size() == 1) {
+                            slidingBottomPanel.slideOnClick(findViewById(R.id.linearLayoutOffers));
+                        } else if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
+                            slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
+                                    Data.userData.getCoupons(ProductType.AUTO, HomeActivity.this));
+                        }
+                        GAUtils.event(RIDES, HOME, OFFERS + BAR + CLICKED);
+                    } else if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
+                        Data.deepLinkIndex = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex();
                         deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
-                        GAUtils.event(RIDES, HOME, OFFERS+BAR+CLICKED);
-					}
+                        GAUtils.event(RIDES, HOME, OFFERS + BAR + CLICKED);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
-
 
 
         textVieGetFareEstimateConfirm.setOnClickListener(new OnClickListener() {
@@ -1060,11 +1075,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if(slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() <= 0){
-						slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(promoCouponSelectedForRide);
-					}
+                    if (slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() <= 0) {
+                        slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(promoCouponSelectedForRide);
+                    }
                     slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
-							Data.userData.getCoupons(ProductType.AUTO, HomeActivity.this));
+                            Data.userData.getCoupons(ProductType.AUTO, HomeActivity.this));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1086,7 +1101,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         });
 
 
-
         // Customer initial layout events
         rideNowClicked = false;
         imageViewRideNow.setOnClickListener(new OnClickListener() {
@@ -1095,24 +1109,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 //fabView.menuLabelsRight.close(true);
                 //imageViewFabFake.setVisibility(View.GONE);
                 try {
-                    if(map != null) {
-						if (!rideNowClicked) {
-							Data.autoData.setPickupLatLng(map.getCameraPosition().target);
-							if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-								findDriversETACall(true, false, false);
-							} else {
-								imageViewRideNowPoolCheck();
-							}
+                    if (map != null) {
+                        if (!rideNowClicked) {
+                            Data.autoData.setPickupLatLng(map.getCameraPosition().target);
+                            if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+                                findDriversETACall(true, false, false);
+                            } else {
+                                imageViewRideNowPoolCheck();
+                            }
                             getFabViewTest().hideJeanieHelpInSession();
-							rideNowClicked = true;
-							new Handler().postDelayed(new Runnable() {
-								@Override
-								public void run() {
-									rideNowClicked = false;
-								}
-							}, 300);
-						}
-					}
+                            rideNowClicked = true;
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    rideNowClicked = false;
+                                }
+                            }, 300);
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1123,10 +1137,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if(!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()){
+                    if (!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
                         Data.autoData.setPickupLatLng(map.getCameraPosition().target);
                     }
-                    if(getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())){
+                    if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
                         findDriversETACall(true, true, false);
                     } else {
                         requestRideClick();
@@ -1160,7 +1174,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         });
 
 
-
         imageViewInAppCampaign.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1184,28 +1197,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         });
 
 
-
         relativeLayoutInitialSearchBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     ViewGroup viewGroup = ((ViewGroup) relativeLayoutInitialSearchBar.getParent());
                     int index = viewGroup.indexOfChild(relativeLayoutDestSearchBar);
-                    if(index == 1 && Data.autoData.getDropLatLng() == null) {
-						translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
-						translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
-						if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
-							textViewDestSearch.setText(getResources().getString(R.string.destination_required));
-						} else {
-							textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
-						}
-						textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
-					}else{
-						placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
-						setServiceAvailablityUI("");
-						passengerScreenMode = PassengerScreenMode.P_SEARCH;
-						switchPassengerScreen(passengerScreenMode);
-					}
+                    if (index == 1 && Data.autoData.getDropLatLng() == null) {
+                        translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
+                        translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
+                        if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
+                            textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+                        } else {
+                            textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
+                        }
+                        textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
+                    } else {
+                        placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
+                        setServiceAvailablityUI("");
+                        passengerScreenMode = PassengerScreenMode.P_SEARCH;
+                        switchPassengerScreen(passengerScreenMode);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1219,15 +1231,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 try {
                     ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
                     int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
-                    if(index == 1 && Data.autoData.getDropLatLng() == null) {
-						translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
-						translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
-					}else{
-						placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
-						setServiceAvailablityUI("");
-						passengerScreenMode = PassengerScreenMode.P_SEARCH;
-						switchPassengerScreen(passengerScreenMode);
-					}
+                    if (index == 1 && Data.autoData.getDropLatLng() == null) {
+                        translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
+                        translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
+                    } else {
+                        placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
+                        setServiceAvailablityUI("");
+                        passengerScreenMode = PassengerScreenMode.P_SEARCH;
+                        switchPassengerScreen(passengerScreenMode);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1243,11 +1255,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Data.autoData.setDropAddressId(0);
                     dropLocationSet = false;
                     dropLocationSearched = false;
-                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
-						textViewDestSearch.setText(R.string.destination_required);
-					} else {
-						textViewDestSearch.setText(R.string.enter_destination);
-					}
+                    if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
+                        textViewDestSearch.setText(R.string.destination_required);
+                    } else {
+                        textViewDestSearch.setText(R.string.enter_destination);
+                    }
                     imageViewDropCross.setVisibility(View.GONE);
                     ((ViewGroup) relativeLayoutInitialSearchBar.getParent()).bringChildToFront(relativeLayoutInitialSearchBar);
                     translateViewBottomTop(relativeLayoutDestSearchBar, false);
@@ -1277,7 +1289,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 relativeLayoutInitialSearchBar.performClick();
             }
         });
-
 
 
         //Location error layout
@@ -1316,15 +1327,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onClick(View v) {
                 try {
                     if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
-						if (checkForGPSAccuracyTimer != null) {
-							if (checkForGPSAccuracyTimer.isRunning) {
-								checkForGPSAccuracyTimer.stopTimer();
-								customerUIBackToInitialAfterCancel();
-							}
-						}
-					} else {
-						cancelCustomerRequestAsync(HomeActivity.this);
-					}
+                        if (checkForGPSAccuracyTimer != null) {
+                            if (checkForGPSAccuracyTimer.isRunning) {
+                                checkForGPSAccuracyTimer.stopTimer();
+                                customerUIBackToInitialAfterCancel();
+                            }
+                        }
+                    } else {
+                        cancelCustomerRequestAsync(HomeActivity.this);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1355,7 +1366,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 try {
                     Data.deepLinkIndex = Data.autoData.getRideStartInviteTextDeepIndexV2();
                     deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
-                    GAUtils.event(RIDES, RIDE+IN_PROGRESS, Constants.REFERRAL+CLICKED);
+                    GAUtils.event(RIDES, RIDE + IN_PROGRESS, Constants.REFERRAL + CLICKED);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1424,9 +1435,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() != 1) {
-						initDropLocationSearchUI(true);
-					}
+                    if (Data.autoData.getAssignedDriverInfo().getIsPooledRide() != 1) {
+                        initDropLocationSearchUI(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1438,8 +1449,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onClick(View v) {
             }
         });
-
-
 
 
         // End ride review layout events
@@ -1481,7 +1490,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         editTextRSFeedback.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     scrollViewRideSummary.smoothScrollTo(0, buttonRSSubmitFeedback.getBottom());
                 }
             }
@@ -1492,17 +1501,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 try {
                     if (Data.autoData.getFeedbackReasons().size() > 0) {
-						if (rating > 0 && rating <= 3) {
-							textViewRSWhatImprove.setVisibility(View.VISIBLE);
-							gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
+                        if (rating > 0 && rating <= 3) {
+                            textViewRSWhatImprove.setVisibility(View.VISIBLE);
+                            gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
 
-							LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
-							layoutParams.height = (int) (ASSL.Yscale() * 150);
-							editTextRSFeedback.setLayoutParams(layoutParams);
-						} else {
-							setZeroRatingView();
-						}
-					}
+                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+                            layoutParams.height = (int) (ASSL.Yscale() * 150);
+                            editTextRSFeedback.setLayoutParams(layoutParams);
+                        } else {
+                            setZeroRatingView();
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1589,10 +1598,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if(Data.autoData.getEndRideData() != null) {
-						linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.INVOICE);
-						GAUtils.event(RIDES, FEEDBACK, VIEW_INVOICE+CLICKED);
-					}
+                    if (Data.autoData.getEndRideData() != null) {
+                        linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.INVOICE);
+                        GAUtils.event(RIDES, FEEDBACK, VIEW_INVOICE + CLICKED);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1611,28 +1620,28 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     //setZeroRatingView();
                     if (MyApplication.getInstance().isOnline()) {
-						thumbsUpGifStartTime = System.currentTimeMillis();
-						rating = 5;
-						submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
-								rating, "", "");
-						if(Data.userData != null){
-							if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()){
-								endRideWithImages(R.drawable.ride_end_image_1);
-							} else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()){
-								endRideWithImages(R.drawable.ride_end_image_2);
-							} else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()){
-								endRideWithImages(R.drawable.ride_end_image_3);
-							} else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()){
-								endRideWithImages(R.drawable.ride_end_image_4);
-							} else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
-								endRideWithGif();
-							}
+                        thumbsUpGifStartTime = System.currentTimeMillis();
+                        rating = 5;
+                        submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
+                                rating, "", "");
+                        if (Data.userData != null) {
+                            if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()) {
+                                endRideWithImages(R.drawable.ride_end_image_1);
+                            } else if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()) {
+                                endRideWithImages(R.drawable.ride_end_image_2);
+                            } else if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()) {
+                                endRideWithImages(R.drawable.ride_end_image_3);
+                            } else if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()) {
+                                endRideWithImages(R.drawable.ride_end_image_4);
+                            } else if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
+                                endRideWithGif();
+                            }
                             disableEmergencyModeIfNeeded(Data.autoData.getcEngagementId());
                             updateTopBar();
                             topBar.imageViewHelp.setVisibility(View.GONE);
-						}
-                        GAUtils.event(RIDES, RIDE+FINISHED, THUMB_UP+CLICKED);
-					}
+                        }
+                        GAUtils.event(RIDES, RIDE + FINISHED, THUMB_UP + CLICKED);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1646,7 +1655,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     rating = 1;
                     //linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
-							rating, "", "");
+                            rating, "", "");
                     if (Data.isFuguChatEnabled()) {
                         fuguCustomerHelpRides(false);
                     } else {
@@ -1678,18 +1687,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if(Data.autoData.getEndRideData() != null) {
-                    	if(getResources().getBoolean(R.bool.force_mpesa_payment)){
-							if(Data.autoData.getEndRideData().toPay > 0
-									&& Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.MPESA.getOrdinal()
-									&& Data.autoData.getEndRideData().getShowPaymentOptions() == 1){
-								initiateRideEndPaymentAPI(Data.autoData.getEndRideData().engagementId, PaymentOption.MPESA.getOrdinal());
-							}
-						} else {
-							linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.ONLINE_PAYMENT);
-						}
-						GAUtils.event(RIDES, RIDE+END, ONLINE_PAYMENT);
-					}
+                    if (Data.autoData.getEndRideData() != null) {
+                        if (getResources().getBoolean(R.bool.force_mpesa_payment)) {
+                            if (Data.autoData.getEndRideData().toPay > 0
+                                    && Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.MPESA.getOrdinal()
+                                    && Data.autoData.getEndRideData().getShowPaymentOptions() == 1) {
+                                initiateRideEndPaymentAPI(Data.autoData.getEndRideData().engagementId, PaymentOption.MPESA.getOrdinal());
+                            }
+                        } else {
+                            linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.ONLINE_PAYMENT);
+                        }
+                        GAUtils.event(RIDES, RIDE + END, ONLINE_PAYMENT);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1700,7 +1709,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if(Prefs.with(HomeActivity.this).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1) {
+                    if (Prefs.with(HomeActivity.this).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1) {
                         if (Prefs.with(HomeActivity.this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
                             Prefs.with(HomeActivity.this).save(Constants.SP_POKESTOP_ENABLED_BY_USER, 0);
                         } else {
@@ -1721,7 +1730,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             LocalBroadcastManager.getInstance(this).registerReceiver(pushBroadcastReceiver,
                     new IntentFilter(Data.LOCAL_BROADCAST));
-        } catch(Exception e) {
+        } catch (Exception e) {
 
         }
 
@@ -1753,7 +1762,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void run() {
                 try {
-                    if(Data.userData.getSignupTutorial() != null) {
+                    if (Data.userData.getSignupTutorial() != null) {
                         if (Data.userData.getSignupTutorial().getDs1() == 1) {
                             startActivity(new Intent(HomeActivity.this, NewUserFlow.class));
                             overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -1769,12 +1778,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void run() {
                 try {
-                    if(Data.userData.getSignupTutorial() != null) {
-						if (Data.userData.getSignupTutorial().getTs1() == 1
-								|| Data.userData.getSignupTutorial().getTs2() == 1) {
-							getTransactionUtils().openSignUpTutorialFragment(HomeActivity.this, relativeLayoutContainer, 2);
-						}
-					}
+                    if (Data.userData.getSignupTutorial() != null) {
+                        if (Data.userData.getSignupTutorial().getTs1() == 1
+                                || Data.userData.getSignupTutorial().getTs2() == 1) {
+                            getTransactionUtils().openSignUpTutorialFragment(HomeActivity.this, relativeLayoutContainer, 2);
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1793,10 +1802,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }, 500);
 
         try {
-            if(Data.getFuguChatBundle()!=null) {
-				fuguNotificationConfig.handleFuguPushNotification(HomeActivity.this, Data.getFuguChatBundle());
-				Data.setFuguChatBundle(null);
-			}
+            if (Data.getFuguChatBundle() != null) {
+                fuguNotificationConfig.handleFuguPushNotification(HomeActivity.this, Data.getFuguChatBundle());
+                Data.setFuguChatBundle(null);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1834,11 +1843,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             try {
 
 
-                if(getIntent().hasExtra(Constants.KEY_LATITUDE) && getIntent().hasExtra(Constants.KEY_LONGITUDE)){
+                if (getIntent().hasExtra(Constants.KEY_LATITUDE) && getIntent().hasExtra(Constants.KEY_LONGITUDE)) {
                     double latitude = getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude);
                     double longitude = getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude);
                     LatLng latLngInIntent = new LatLng(latitude, longitude);
-                    if(MapUtils.distance(new LatLng(Data.latitude, Data.longitude), latLngInIntent) > 200){
+                    if (MapUtils.distance(new LatLng(Data.latitude, Data.longitude), latLngInIntent) > 200) {
                         zoomedToMyLocation = true;
                         Data.latitude = latitude;
                         Data.longitude = longitude;
@@ -1849,16 +1858,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
 
                 if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
-						|| (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
-					map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.getIndiaCentre(), 5));
-					forceFarAwayCity();
-					Data.autoData.setLastRefreshLatLng(Data.getIndiaCentre());
-				} else {
-					map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), MAX_ZOOM));
-                    if(Data.autoData.getLastRefreshLatLng() == null) {
+                        || (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.getIndiaCentre(), 5));
+                    forceFarAwayCity();
+                    Data.autoData.setLastRefreshLatLng(Data.getIndiaCentre());
+                } else {
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), MAX_ZOOM));
+                    if (Data.autoData.getLastRefreshLatLng() == null) {
                         Data.autoData.setLastRefreshLatLng(new LatLng(Data.latitude, Data.longitude));
                     }
-				}
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1934,14 +1943,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
 
                         return true;
-                    }
-                    else if(!TextUtils.isEmpty(arg0.getTitle()) || "recent".equalsIgnoreCase(arg0.getTitle())){
+                    } else if (!TextUtils.isEmpty(arg0.getTitle()) || "recent".equalsIgnoreCase(arg0.getTitle())) {
 //                        CustomInfoWindow customIW = new CustomInfoWindow(HomeActivity.this, arg0.getTitle(), arg0.getSnippet());
 //                        map.setInfoWindowAdapter(customIW);
 
                         return true;
-                    }
-                    else {
+                    } else {
                         return true;
                     }
                 }
@@ -1963,11 +1970,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     try {
                         myLocationButtonClicked = false;
                         customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
-                        if(PassengerScreenMode.P_INITIAL == passengerScreenMode && zoomedForSearch
-                                && !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()){
-                            if(lastSearchLatLng != null){
+                        if (PassengerScreenMode.P_INITIAL == passengerScreenMode && zoomedForSearch
+                                && !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
+                            if (lastSearchLatLng != null) {
                                 double distance = MapUtils.distance(lastSearchLatLng, map.getCameraPosition().target);
-                                if(distance > MAP_PAN_DISTANCE_CHECK){
+                                if (distance > MAP_PAN_DISTANCE_CHECK) {
                                     textViewInitialSearch.setText("");
                                     zoomedForSearch = false;
                                     lastSearchLatLng = null;
@@ -1993,32 +2000,32 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 @Override
                 public void onMapSettled() {
                     // Map settled
-                    FreshActivity.saveAddressRefreshBoolean(HomeActivity.this,false);
+                    FreshActivity.saveAddressRefreshBoolean(HomeActivity.this, false);
                     boolean refresh = false;
                     try {
                         checkForMyLocationButtonVisibility();
                         refresh = false;
-                        if(Data.autoData.getLastRefreshLatLng() == null
-                                || (MapUtils.distance(Data.autoData.getLastRefreshLatLng(), map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH)){
-							Data.autoData.setLastRefreshLatLng(map.getCameraPosition().target);
-							refresh = true;
-						}
-                        if(!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation() && !specialPickupSelected) {
-							if ((refresh && mapTouched) || addressPopulatedFromDifferentOffering) {
+                        if (Data.autoData.getLastRefreshLatLng() == null
+                                || (MapUtils.distance(Data.autoData.getLastRefreshLatLng(), map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH)) {
+                            Data.autoData.setLastRefreshLatLng(map.getCameraPosition().target);
+                            refresh = true;
+                        }
+                        if (!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation() && !specialPickupSelected) {
+                            if ((refresh && mapTouched) || addressPopulatedFromDifferentOffering) {
                                 addressPopulatedFromDifferentOffering = false;
-								callMapTouchedRefreshDrivers();
-							}
-							if (!zoomedForSearch && map != null && !(isSpecialPickupScreenOpened() && !refresh)) {
-								getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
-							}
-						}
+                                callMapTouchedRefreshDrivers();
+                            }
+                            if (!zoomedForSearch && map != null && !(isSpecialPickupScreenOpened() && !refresh)) {
+                                getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
+                            }
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     specialPickupSelected = false;
 
                     try {
-                        if(PassengerScreenMode.P_INITIAL != passengerScreenMode || !refresh) {
+                        if (PassengerScreenMode.P_INITIAL != passengerScreenMode || !refresh) {
                             pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
                         }
                     } catch (Exception e) {
@@ -2029,8 +2036,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 @Override
                 public void onCameraPositionChanged(CameraPosition cameraPosition) {
 
-                    Log.v("camera position is", "--> "+cameraPosition.zoom);
-                    if(previousZoomLevel != cameraPosition.zoom) {
+                    Log.v("camera position is", "--> " + cameraPosition.zoom);
+                    if (previousZoomLevel != cameraPosition.zoom) {
                         if ((savedAddressState != HomeUtil.SavedAddressState.MARKER_WITH_TEXT) && cameraPosition.zoom > 15f) {
                             homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, true);
                             savedAddressState = HomeUtil.SavedAddressState.MARKER_WITH_TEXT;
@@ -2080,7 +2087,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             switchUserScreen();
 
             startUIAfterGettingUserStatus();
-            if(Data.autoData.getDropLatLng() == null){
+            if (Data.autoData.getDropLatLng() == null) {
                 getHandler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -2089,11 +2096,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }, 500);
             }
 
-            if(Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")){
+            if (Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")) {
                 textViewCancellation.setVisibility(View.GONE);
             }
 
-            if(Data.userData.getGetGogu() == 1) {
+            if (Data.userData.getGetGogu() == 1) {
                 new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();
             }
 
@@ -2104,23 +2111,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
-        try{
-            if(!"".equalsIgnoreCase(Data.deepLinkClassName)) {
+        try {
+            if (!"".equalsIgnoreCase(Data.deepLinkClassName)) {
                 Class cls = Class.forName(getPackageName() + "." + Data.deepLinkClassName);
                 startActivity(new Intent(this, cls));
                 overridePendingTransition(R.anim.hold, R.anim.hold);
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        try{
+        try {
             Branch.getInstance(this).setIdentity(Data.userData.userIdentifier);
 //            FlurryAgent.setUserId(Data.userData.getUserId());
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
 
 
 //		Prefs.with(HomeActivity.this).save(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
@@ -2136,9 +2142,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
-        try{
-            if(getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE).getBoolean(Constants.KEY_INTERNAL_APP_SWITCH, false)
-                    && Prefs.with(this).getInt(KEY_STATE_RESTORE_NEEDED, 0) == 1){
+        try {
+            if (getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE).getBoolean(Constants.KEY_INTERNAL_APP_SWITCH, false)
+                    && Prefs.with(this).getInt(KEY_STATE_RESTORE_NEEDED, 0) == 1) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -2151,7 +2157,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }, 500);
 
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 0);
@@ -2190,7 +2196,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //    }
 
 
-    private void endRideWithGif(){
+    private void endRideWithGif() {
         relativeLayoutGreat.setVisibility(View.VISIBLE);
         GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageViewThumbsUpGif);
         Glide.with(HomeActivity.this)
@@ -2206,13 +2212,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }, 3000);
     }
 
-    private void endRideWithImages(int drawable){
+    private void endRideWithImages(int drawable) {
         relativeLayoutRideEndWithImage.setVisibility(View.VISIBLE);
         imageViewRideEndWithImage.setImageResource(drawable);
     }
 
 
-    private void showServiceUnavailableDialog(){
+    private void showServiceUnavailableDialog() {
         new ServiceUnavailableDialog(HomeActivity.this, new ServiceUnavailableDialog.Callback() {
             @Override
             public void onDialogDismiss() {
@@ -2226,7 +2232,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }).showServiceUnavailableDialog();
     }
 
-    public void flurryEventGAForTransaction(){
+    public void flurryEventGAForTransaction() {
 
         List<Product> productList = new ArrayList<>();
 
@@ -2260,29 +2266,29 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         GAUtils.transactionCompleteEvent(productList, productAction);
     }
 
-    private void setEnteredDestination(){
-        if(!Prefs.with(HomeActivity.this).getString(SPLabels.ENTERED_DESTINATION, "").equalsIgnoreCase("")){
+    private void setEnteredDestination() {
+        if (!Prefs.with(HomeActivity.this).getString(SPLabels.ENTERED_DESTINATION, "").equalsIgnoreCase("")) {
             SearchResult temp = new Gson().fromJson(Prefs.with(HomeActivity.this).getString(SPLabels.ENTERED_DESTINATION, ""), SearchResult.class);
             long diff = System.currentTimeMillis() - temp.getTime();
-            int minutes = (int) ((diff / (1000*60)) % 60);
-            Log.v("diff is ","--> "+minutes);
-            if(minutes < DESTINATION_PERSISTENCE_TIME){
+            int minutes = (int) ((diff / (1000 * 60)) % 60);
+            Log.v("diff is ", "--> " + minutes);
+            if (minutes < DESTINATION_PERSISTENCE_TIME) {
                 setDropAddressAndExpandFields(temp);
-            } else{
+            } else {
                 Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
             }
 
         }
     }
 
-    private void setDropAddressAndExpandFields(SearchResult searchResult){
+    private void setDropAddressAndExpandFields(SearchResult searchResult) {
         Data.autoData.setDropLatLng(searchResult.getLatLng());
         Data.autoData.setDropAddress(searchResult.getAddress());
-		Data.autoData.setDropAddressId(searchResult.getId());
-        if(Data.autoData.getDropLatLng() != null){
-            if(textViewDestSearch.getText().toString().isEmpty()
+        Data.autoData.setDropAddressId(searchResult.getId());
+        if (Data.autoData.getDropLatLng() != null) {
+            if (textViewDestSearch.getText().toString().isEmpty()
                     || textViewDestSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.enter_destination))
-                    || textViewDestSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.destination_required))){
+                    || textViewDestSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.destination_required))) {
                 translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
                 translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
             }
@@ -2299,7 +2305,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void translateViewBottom(final ViewGroup viewGroup, final View mView, final boolean viewExchange,
                                      final boolean callNextAnim) {
-        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int)(ASSL.Yscale()*SEARCH_FLIP_ANIMATION_MARGIN));
+        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int) (ASSL.Yscale() * SEARCH_FLIP_ANIMATION_MARGIN));
         animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
         animation.setFillAfter(false);
         mView.clearAnimation();
@@ -2311,14 +2317,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if(viewExchange) {
+                if (viewExchange) {
                     viewGroup.bringChildToFront(viewGroup.getChildAt(0));
                 }
                 mView.clearAnimation();
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mView.getLayoutParams();
-                params.topMargin = ((int)(ASSL.Yscale()*98f));
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
+                params.topMargin = ((int) (ASSL.Yscale() * 98f));
                 mView.setLayoutParams(params);
-                if(callNextAnim) {
+                if (callNextAnim) {
                     translateViewBottomTop(mView, viewExchange);
                 }
             }
@@ -2332,8 +2338,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     }
 
-    private void translateViewBottomTop(final View mView, final boolean viewExchange){
-        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int)(ASSL.Yscale() * (-SEARCH_FLIP_ANIMATION_MARGIN)));
+    private void translateViewBottomTop(final View mView, final boolean viewExchange) {
+        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int) (ASSL.Yscale() * (-SEARCH_FLIP_ANIMATION_MARGIN)));
         animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
         animation.setFillAfter(false);
         mView.clearAnimation();
@@ -2367,7 +2373,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void translateViewTop(final ViewGroup viewGroup, final View mView, final boolean viewExchange,
                                   final boolean callNextAnim) {
-        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int)(ASSL.Yscale() * (-SEARCH_FLIP_ANIMATION_MARGIN)));
+        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int) (ASSL.Yscale() * (-SEARCH_FLIP_ANIMATION_MARGIN)));
         animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
         animation.setFillAfter(false);
         mView.clearAnimation();
@@ -2399,8 +2405,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         mView.startAnimation(animation);
     }
 
-    private void translateViewTopBottom(final View mView, final boolean viewExchange){
-        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int)(ASSL.Yscale() * SEARCH_FLIP_ANIMATION_MARGIN));
+    private void translateViewTopBottom(final View mView, final boolean viewExchange) {
+        TranslateAnimation animation = new TranslateAnimation(0f, 0f, 0f, (int) (ASSL.Yscale() * SEARCH_FLIP_ANIMATION_MARGIN));
         animation.setDuration(SEARCH_FLIP_ANIMATION_TIME);
         animation.setFillAfter(false);
         mView.clearAnimation();
@@ -2431,11 +2437,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         mView.startAnimation(animation);
     }
 
-    private void resetPickupDropFeilds(){
-        try{
+    private void resetPickupDropFeilds() {
+        try {
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
-			Data.autoData.setDropAddressId(0);
+            Data.autoData.setDropAddressId(0);
             dropLocationSet = false;
             dropLocationSearched = false;
 
@@ -2455,12 +2461,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             relativeLayoutInitialSearchBar.setLayoutParams(params1);
 
             ((ViewGroup) relativeLayoutInitialSearchBar.getParent()).bringChildToFront(relativeLayoutInitialSearchBar);
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void onClickSearchCancel(){
+    public void onClickSearchCancel() {
         textViewInitialSearch.setText("");
         Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
         HomeActivity.this.passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -2469,18 +2475,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private float googleMapPadding = 0;
-    public void setGoogleMapPadding(float bottomPadding){
+
+    public void setGoogleMapPadding(float bottomPadding) {
         try {
             float mapTopPadding = 0.0f;
-            if(map != null){
-                if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            if (map != null) {
+                if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                     mapTopPadding = 200.0f;
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) centreLocationRl.getLayoutParams();
                     params.setMargins(0, (int) (ASSL.Yscale() * mapTopPadding), 0, 0);
                     params.setMarginStart(0);
                     params.setMarginEnd(0);
                     centreLocationRl.setLayoutParams(params);
-                }else {
+                } else {
                     mapTopPadding = 100.0f;
                 }
                 map.setPadding(0, (int) (ASSL.Yscale() * mapTopPadding), 0, (int) (ASSL.Yscale() * bottomPadding));
@@ -2492,9 +2499,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void setCentrePinAccToGoogleMapPadding(){
+    private void setCentrePinAccToGoogleMapPadding() {
         try {
-            if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewCenterPinMargin.getLayoutParams();
                 params.height = (int) (ASSL.Yscale() * googleMapPadding);
                 imageViewCenterPinMargin.setLayoutParams(params);
@@ -2503,10 +2510,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
-
-
-
-
 
 
     public void callMapTouchedRefreshDrivers() {
@@ -2542,10 +2545,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-
     public void initiateRequestRide(boolean newRequest) {
         if (newRequest) {
-            if(!isPoolRideAtConfirmation()) {
+            if (!isPoolRideAtConfirmation()) {
                 double fareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor();
                 int priorityTipCategory = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getPriorityTipCategory();
                 new PriorityTipDialog(HomeActivity.this, fareFactor, priorityTipCategory,
@@ -2563,7 +2565,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 switchPassengerScreen(passengerScreenMode);
                             }
                         }).showDialog();
-            } else{
+            } else {
                 finalRequestRideTimerStart();
             }
 
@@ -2581,7 +2583,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setcEngagementId("");
             dropLocationSearchText = "";
 
-            if(myLocation == null){
+            if (myLocation == null) {
                 myLocation = new Location(LocationManager.GPS_PROVIDER);
                 myLocation.setLatitude(Data.latitude);
                 myLocation.setLongitude(Data.longitude);
@@ -2604,46 +2606,47 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private ArrayList<SearchResult> fetchLastLocations(String fromList){
+    private ArrayList<SearchResult> fetchLastLocations(String fromList) {
         ArrayList<SearchResult> lastLocationSavedList = null;
 
         try {
             String json = Prefs.with(HomeActivity.this).getString(fromList, "");
-            Type type = new TypeToken<ArrayList<SearchResult>>() {}.getType();
+            Type type = new TypeToken<ArrayList<SearchResult>>() {
+            }.getType();
             lastLocationSavedList = new Gson().fromJson(json, type);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(lastLocationSavedList == null){
+        if (lastLocationSavedList == null) {
             lastLocationSavedList = new ArrayList<>();
         }
         return lastLocationSavedList;
     }
 
-    private void snapPickupLocToNearbyAddress(SearchResult searchResult){
+    private void snapPickupLocToNearbyAddress(SearchResult searchResult) {
         try {
             Data.autoData.setPickupLatLng(searchResult.getLatLng());
             Data.autoData.setPickupAddress(searchResult.getAddress());
             map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()));
             if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-				findDriversETACall(true, false, true);
-			} else {
-				requestRideDriverCheck();
-			}
+                findDriversETACall(true, false, true);
+            } else {
+                requestRideDriverCheck();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void requestRideClick(){
-        try{
+    private void requestRideClick() {
+        try {
             try {
-                if(map != null) {
+                if (map != null) {
                     if (MyApplication.getInstance().isOnline()) {
 
                         boolean proceed = slidingBottomPanel.getRequestRideOptionsFragment().displayAlertAndCheckForSelectedWalletCoupon();
-                        if(proceed) {
+                        if (proceed) {
 
                             boolean callRequestRide = MyApplication.getInstance().getWalletCore()
                                     .requestWalletBalanceCheck(HomeActivity.this, Data.autoData.getPickupPaymentOption());
@@ -2652,25 +2655,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if (callRequestRide) {
                                 promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
 
-                                if(!specialPickupScreenOpened && Data.autoData.getUseRecentLocAtRequest() == 1) {
+                                if (!specialPickupScreenOpened && Data.autoData.getUseRecentLocAtRequest() == 1) {
                                     SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
                                             CHOOSE_SAVED_PICKUP_ADDRESS, true);
                                     if (searchResult != null) {
-                                        if(MapUtils.distance(Data.autoData.getPickupLatLng(), searchResult.getLatLng())
-                                                <= Data.autoData.getUseRecentLocAutoSnapMinDistance()){
+                                        if (MapUtils.distance(Data.autoData.getPickupLatLng(), searchResult.getLatLng())
+                                                <= Data.autoData.getUseRecentLocAutoSnapMinDistance()) {
                                             snapPickupLocToNearbyAddress(searchResult);
                                         } else {
                                             new SavedAddressPickupDialog(HomeActivity.this, searchResult, new SavedAddressPickupDialog.Callback() {
                                                 @Override
                                                 public void onDialogDismiss() {
                                                     requestRideDriverCheck();
-                                                    GAUtils.event(RIDES, PICKUP_LOCATION_DIFFERENT_FROM_CURRENT_LOCATION+POPUP, GAAction.CANCEL+CLICKED);
+                                                    GAUtils.event(RIDES, PICKUP_LOCATION_DIFFERENT_FROM_CURRENT_LOCATION + POPUP, GAAction.CANCEL + CLICKED);
                                                 }
 
                                                 @Override
                                                 public void yesClicked(SearchResult searchResult) {
                                                     snapPickupLocToNearbyAddress(searchResult);
-                                                    GAUtils.event(RIDES, PICKUP_LOCATION_DIFFERENT_FROM_CURRENT_LOCATION+POPUP, GAAction.OK+CLICKED);
+                                                    GAUtils.event(RIDES, PICKUP_LOCATION_DIFFERENT_FROM_CURRENT_LOCATION + POPUP, GAAction.OK + CLICKED);
                                                 }
                                             }).show();
                                         }
@@ -2711,7 +2714,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
-            if(!textViewInitialSearch.getText().toString().equalsIgnoreCase("")) {
+            if (!textViewInitialSearch.getText().toString().equalsIgnoreCase("")) {
                 lastPickUp.clear();
                 lastPickUp.addAll(fetchLastLocations(SPLabels.LAST_PICK_UP));
                 if (lastPickUp.size() == 0) {
@@ -2743,23 +2746,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 Prefs.with(HomeActivity.this).save(SPLabels.LAST_PICK_UP, tempPickup);
             }
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private boolean addressMatchedWithSavedAddresses(String address){
-        if(address.equalsIgnoreCase(getResources().getString(R.string.home)) || address.equalsIgnoreCase(getResources().getString(R.string.work))){
+    private boolean addressMatchedWithSavedAddresses(String address) {
+        if (address.equalsIgnoreCase(getResources().getString(R.string.home)) || address.equalsIgnoreCase(getResources().getString(R.string.work))) {
             return true;
         }
-        for(SearchResult searchResult : Data.userData.getSearchResults()){
-            if(address.equalsIgnoreCase(searchResult.getName()) || address.equalsIgnoreCase(searchResult.getAddress())){
+        for (SearchResult searchResult : Data.userData.getSearchResults()) {
+            if (address.equalsIgnoreCase(searchResult.getName()) || address.equalsIgnoreCase(searchResult.getAddress())) {
                 return true;
             }
         }
         return false;
     }
-
 
 
     public void switchRequestRideUI() {
@@ -2784,19 +2786,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     };
 
-    private void navigateToCurrLoc(boolean fromButton){
-        if(isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()){
+    private void navigateToCurrLoc(boolean fromButton) {
+        if (isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()) {
             poolPathZoomAtConfirm();
             return;
         }
-        if(passengerScreenMode != PassengerScreenMode.P_INITIAL
+        if (passengerScreenMode != PassengerScreenMode.P_INITIAL
                 && Data.autoData != null
                 && Data.autoData.getAssignedDriverInfo() != null
-                && Data.autoData.getAssignedDriverInfo().latLng != null){
+                && Data.autoData.getAssignedDriverInfo().latLng != null) {
             zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
-        }else {
+        } else {
             myLocationButtonClicked = true;
-            if(fromButton) {
+            if (fromButton) {
                 textViewInitialSearch.setText("");
                 zoomedForSearch = false;
                 lastSearchLatLng = null;
@@ -2816,7 +2818,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         }
     }
-
 
 
     Handler reconnectionHandler = null;
@@ -2851,12 +2852,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void checkForFareAvailablity(){
-        try{
-            if(Data.autoData.getFareStructure() != null && !Data.autoData.getFareStructure().getIsFromServer()){
+    private void checkForFareAvailablity() {
+        try {
+            if (Data.autoData.getFareStructure() != null && !Data.autoData.getFareStructure().getIsFromServer()) {
                 forceFarAwayCity();
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -2879,12 +2880,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     currentLocationMarker.remove();
                 }
 
-                try {pickupLocationMarker.remove();} catch (Exception e) {}
-                if(mode != PassengerScreenMode.P_DRIVER_ARRIVED && mode != PassengerScreenMode.P_REQUEST_FINAL) {
-                    try {driverLocationMarker.remove(); driverLocationMarker = null;} catch (Exception e) {}
+                try {
+                    pickupLocationMarker.remove();
+                } catch (Exception e) {
                 }
-                if(mode != PassengerScreenMode.P_IN_RIDE){
-                    try{driverMarkerInRide.remove(); driverMarkerInRide = null;}catch (Exception e){}
+                if (mode != PassengerScreenMode.P_DRIVER_ARRIVED && mode != PassengerScreenMode.P_REQUEST_FINAL) {
+                    try {
+                        driverLocationMarker.remove();
+                        driverLocationMarker = null;
+                    } catch (Exception e) {
+                    }
+                }
+                if (mode != PassengerScreenMode.P_IN_RIDE) {
+                    try {
+                        driverMarkerInRide.remove();
+                        driverMarkerInRide = null;
+                    } catch (Exception e) {
+                    }
                     lastSavedLatLng = null;
                 }
 
@@ -2893,12 +2905,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                        genieLayout.setVisibility(View.GONE);
                         mapLayout.setVisibility(View.VISIBLE);
                         endRideReviewRl.setVisibility(View.VISIBLE);
-                        if(Data.autoData.getEndRideData().getIsPooled() == 1){
+                        if (Data.autoData.getEndRideData().getIsPooled() == 1) {
                             ivEndRideType.setImageResource(R.drawable.ic_history_pool);
-                        } else{
-                            try{
+                        } else {
+                            try {
                                 ivEndRideType.setImageResource(Data.autoData.getAssignedDriverInfo().getVehicleIconSet().getIconInvoice());
-                            } catch (Exception e){
+                            } catch (Exception e) {
                                 ivEndRideType.setImageResource(R.drawable.ic_auto_grey);
                             }
                         }
@@ -2910,7 +2922,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         relativeLayoutGreat.setVisibility(View.GONE);
 
                         editTextRSFeedback.setText("");
-                        for(int i=0; i<Data.autoData.getFeedbackReasons().size(); i++){
+                        for (int i = 0; i < Data.autoData.getFeedbackReasons().size(); i++) {
                             Data.autoData.getFeedbackReasons().get(i).checked = false;
                         }
                         feedbackReasonsAdapter.notifyDataSetChanged();
@@ -2929,7 +2941,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         //fabViewTest.setRelativeLayoutFABVisibility(mode);
 
                         int onlinePaymentVisibility = updateRideEndPayment();
-                        if(onlinePaymentVisibility == View.VISIBLE && Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()){
+                        if (onlinePaymentVisibility == View.VISIBLE && Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()) {
                             llPayOnline.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -2937,10 +2949,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
                             });
                         }
-                        if(getResources().getBoolean(R.bool.force_mpesa_payment)) {
-							tvPayOnlineIn.setText(getString(R.string.pay_via_format,
-									MyApplication.getInstance().getWalletCore().getMPesaName(this)));
-						}
+                        if (getResources().getBoolean(R.bool.force_mpesa_payment)) {
+                            tvPayOnlineIn.setText(getString(R.string.pay_via_format,
+                                    MyApplication.getInstance().getWalletCore().getMPesaName(this)));
+                        }
 
                     } else {
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -2966,7 +2978,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         getHandler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if(fabViewTest != null) {
+                                if (fabViewTest != null) {
                                     fabViewTest.showTutorial();
                                 }
                             }
@@ -2974,10 +2986,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         GCMIntentService.clearNotifications(HomeActivity.this);
                         Prefs.with(HomeActivity.this).save(Constants.KEY_CHAT_COUNT, 0);
 
-                        if(!dropLocationSet) {
+                        if (!dropLocationSet) {
                             Data.autoData.setDropLatLng(null);
                             Data.autoData.setDropAddress("");
-							Data.autoData.setDropAddressId(0);
+                            Data.autoData.setDropAddressId(0);
                         }
                         Data.autoData.setAssignedDriverInfo(null);
 
@@ -3004,7 +3016,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         Log.e("Data.latitude", "=" + Data.latitude);
                         Log.e("myLocation", "=" + myLocation);
 
-                        if(Data.autoData.getPickupLatLng() == null) {
+                        if (Data.autoData.getPickupLatLng() == null) {
                             if (Data.latitude != 0 && Data.longitude != 0) {
                                 Data.autoData.setPickupLatLng(new LatLng(Data.latitude, Data.longitude));
                             } else if (myLocation != null) {
@@ -3016,26 +3028,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         topBar.imageViewHelp.setVisibility(View.GONE);
                         topBar.relativeLayoutNotification.setVisibility(View.GONE);
 
-                        if(!specialPickupScreenOpened && !firstTimeZoom && !confirmedScreenOpened){
-                            if(Data.autoData.getPickupLatLng() != null){
+                        if (!specialPickupScreenOpened && !firstTimeZoom && !confirmedScreenOpened) {
+                            if (Data.autoData.getPickupLatLng() != null) {
                                 zoomToCurrentLocationWithOneDriver(Data.autoData.getPickupLatLng());
-                            }
-                            else if(myLocation != null){
+                            } else if (myLocation != null) {
                                 zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
                             }
                             try {
-                                if(!zoomedForSearch && Data.autoData.getPickupLatLng() != null && myLocation != null
-										&& MapUtils.distance(Data.autoData.getPickupLatLng(),
-										new LatLng(myLocation.getLatitude(), myLocation.getLongitude())) <= MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
-									myLocationButtonClicked = true;
-								}
+                                if (!zoomedForSearch && Data.autoData.getPickupLatLng() != null && myLocation != null
+                                        && MapUtils.distance(Data.autoData.getPickupLatLng(),
+                                        new LatLng(myLocation.getLatitude(), myLocation.getLongitude())) <= MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
+                                    myLocationButtonClicked = true;
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                         firstTimeZoom = true;
 
-                        if(Data.locationSettingsNoPressed){
+                        if (Data.locationSettingsNoPressed) {
                             relativeLayoutLocationError.setVisibility(View.VISIBLE);
                             initialMyLocationBtn.setVisibility(View.GONE);
                             imageViewRideNow.setVisibility(View.GONE);
@@ -3043,8 +3054,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             centreLocationRl.setVisibility(View.GONE);
                             changeLocalityLayout.setVisibility(View.GONE);
                             Data.locationSettingsNoPressed = false;
-                        }
-                        else{
+                        } else {
                             relativeLayoutLocationError.setVisibility(View.GONE);
                             checkForMyLocationButtonVisibility();
                             imageViewRideNow.setVisibility(View.VISIBLE);
@@ -3059,24 +3069,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         relativeLayoutInitialSearchBar.setEnabled(true);
                         imageViewConfirmDropLocationEdit.setVisibility(View.GONE);
 
-                        if(specialPickupScreenOpened){
+                        if (specialPickupScreenOpened) {
                             rlSpecialPickup.setVisibility(View.VISIBLE);
                             topBar.imageViewMenu.setVisibility(View.GONE);
                             topBar.imageViewBack.setVisibility(View.VISIBLE);
                             specialPickupItemsAdapter.setResults(Data.autoData.getNearbyPickupRegionses().getHoverInfo());
                             setGoogleMapPadding(mapPaddingSpecialPickup);
                             showSpecialPickupMarker(specialPickups);
-                        } else{
+                        } else {
                             rlSpecialPickup.setVisibility(View.GONE);
                             setGoogleMapPadding(0f);
                             showPoolInforBar(false);
                         }
 
 
-                        if(confirmedScreenOpened){
+                        if (confirmedScreenOpened) {
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                             relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
-                            if(isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()) {
+                            if (isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()) {
                                 centreLocationRl.setVisibility(View.GONE);
                                 imageViewConfirmDropLocationEdit.setVisibility(View.VISIBLE);
                                 fareEstimateForPool();
@@ -3091,10 +3101,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             updateConfirmedStateFare();
                             //fabView.setRelativeLayoutFABVisibility(mode);
                             setGoogleMapPadding(mapPaddingConfirm);
-                        } else{
+                        } else {
                             if (!zoomedForSearch && !specialPickupScreenOpened && map != null) {
                                 getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
-                                if(!searchedALocation){
+                                if (!searchedALocation) {
                                     dropAddressName = "";
                                 }
                             }
@@ -3147,7 +3157,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.GONE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        if(Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")){
+                        if (Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")) {
                             textViewCancellation.setVisibility(View.GONE);
                         }
 
@@ -3179,14 +3189,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             markerOptions.position(Data.autoData.getPickupLatLng());
                             markerOptions.zIndex(HOME_MARKER_ZINDEX);
 
-                            if((confirmedScreenOpened &&
+                            if ((confirmedScreenOpened &&
                                     (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()))
-                                    || Data.autoData.getDropLatLng() != null){
+                                    || Data.autoData.getDropLatLng() != null) {
                                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                                         .getTextAssignBitmap(HomeActivity.this, assl,
                                                 slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
                                                 getResources().getDimensionPixelSize(R.dimen.text_size_22))));
-                            }else{
+                            } else {
                                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                                         .getTextBitmap(HomeActivity.this, assl,
                                                 slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
@@ -3198,7 +3208,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             new Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+                                    if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
                                         //poolPathZoomAtConfirm();
                                     } else {
                                         if (map != null && Data.autoData.getPickupLatLng() != null) {
@@ -3220,10 +3230,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         topBar.imageViewHelp.setVisibility(View.GONE);
 
                         try {
-                            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+                            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
                                 imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
                                 relativeLayoutAssigningDropLocationClick.setEnabled(false);
-                            } else{
+                            } else {
                                 imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
                                 relativeLayoutAssigningDropLocationClick.setEnabled(true);
                             }
@@ -3246,7 +3256,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                             Log.e("Data.autoData.getAssignedDriverInfo().latLng", "=" + Data.autoData.getAssignedDriverInfo().latLng);
 
-                            if(driverLocationMarker == null) {
+                            if (driverLocationMarker == null) {
                                 clearMap();
 
                                 driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
@@ -3278,10 +3288,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         setAssignedDriverData(mode);
 
 
-                        if(dropLocationSearched){
+                        if (dropLocationSearched) {
                             initDropLocationSearchUI(true);
-                        }
-                        else{
+                        } else {
                             stopDropLocationSearchUI(true);
                         }
                         setDropLocationEngagedUI();
@@ -3297,10 +3306,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         topBar.relativeLayoutNotification.setVisibility(View.GONE);
 
                         try {
-                            if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1){
+                            if (Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1) {
                                 relativeLayoutPoolSharing.setVisibility(View.VISIBLE);
                                 imageViewFinalDropLocationEdit.setVisibility(View.GONE);
-                            } else{
+                            } else {
                                 relativeLayoutPoolSharing.setVisibility(View.GONE);
                             }
                             setPoolRideStatus(Data.autoData.getAssignedDriverInfo().getPoolRideStatusString(), Data.autoData.getAssignedDriverInfo().getFellowRiders());
@@ -3322,7 +3331,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if (map != null) {
 
                             Log.e("Data.autoData.getAssignedDriverInfo().latLng", "=" + Data.autoData.getAssignedDriverInfo().latLng);
-                            if(driverLocationMarker == null) {
+                            if (driverLocationMarker == null) {
                                 clearMap();
 
                                 driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
@@ -3354,10 +3363,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.VISIBLE);
                         centreLocationRl.setVisibility(View.GONE);
 
-                        if(dropLocationSearched){
+                        if (dropLocationSearched) {
                             initDropLocationSearchUI(true);
-                        }
-                        else{
+                        } else {
                             stopDropLocationSearchUI(true);
                         }
                         setDropLocationEngagedUI();
@@ -3376,10 +3384,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         topBar.relativeLayoutNotification.setVisibility(View.GONE);
 
                         try {
-                            if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1){
+                            if (Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1) {
                                 relativeLayoutPoolSharing.setVisibility(View.VISIBLE);
                                 imageViewFinalDropLocationEdit.setVisibility(View.GONE);
-                            } else{
+                            } else {
                                 relativeLayoutPoolSharing.setVisibility(View.GONE);
                             }
                             setPoolRideStatus(Data.autoData.getAssignedDriverInfo().getPoolRideStatusString(), Data.autoData.getAssignedDriverInfo().getFellowRiders());
@@ -3399,7 +3407,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         fabViewFinal.setVisibility(View.VISIBLE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
                         if (map != null) {
-                            if(driverMarkerInRide == null) {
+                            if (driverMarkerInRide == null) {
                                 clearMap();
 
                                 if (Data.autoData.getDropLatLng() != null) {
@@ -3420,11 +3428,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         centreLocationRl.setVisibility(View.GONE);
 
 
-
-                        if(dropLocationSearched){
+                        if (dropLocationSearched) {
                             initDropLocationSearchUI(true);
-                        }
-                        else{
+                        } else {
                             stopDropLocationSearchUI(true);
                         }
                         setDropLocationEngagedUI();
@@ -3442,10 +3448,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         topBar.relativeLayoutNotification.setVisibility(View.GONE);
 
                         try {
-                            if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1){
+                            if (Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1) {
                                 relativeLayoutPoolSharing.setVisibility(View.VISIBLE);
                                 imageViewFinalDropLocationEdit.setVisibility(View.GONE);
-                            } else{
+                            } else {
                                 relativeLayoutPoolSharing.setVisibility(View.GONE);
                             }
                             setPoolRideStatus(Data.autoData.getAssignedDriverInfo().getPoolRideStatusString(), Data.autoData.getAssignedDriverInfo().getFellowRiders());
@@ -3467,8 +3473,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         showChatButton();
 
-                        if(Data.autoData != null && Data.autoData.getReferralPopupContent() != null){
-                            if(Data.autoData.getReferralPopupContent().getShown() == 0) {
+                        if (Data.autoData != null && Data.autoData.getReferralPopupContent() != null) {
+                            if (Data.autoData.getReferralPopupContent().getShown() == 0) {
                                 new OrderCompleteReferralDialog(this, new OrderCompleteReferralDialog.Callback() {
                                     @Override
                                     public void onDialogDismiss() {
@@ -3522,7 +3528,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 openPaytmRechargeDialog();
 
                 showReferAllDialog();
-                if(mode == PassengerScreenMode.P_INITIAL) {
+                if (mode == PassengerScreenMode.P_INITIAL) {
 //                    showPoolIntroDialog();
                 }
                 callT20AndReferAllDialog(mode);
@@ -3543,7 +3549,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                    fabViewTest.closeMenu();
 //                    getViewSlidingExtra().setVisibility(View.GONE);
 //                    getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
-                } catch (Exception e) {e.printStackTrace();}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -3555,7 +3563,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             textViewRSCashPaidValue.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), Data.autoData.getEndRideData().toPay));
             int onlinePaymentVisibility = (Data.autoData.getEndRideData().toPay > 0 &&
                     (Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.CASH.getOrdinal()
-                    || Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal())
+                            || Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()
+                            || Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.MPESA.getOrdinal())
                     && Data.autoData.getEndRideData().getShowPaymentOptions() == 1) ? View.VISIBLE : View.GONE;
             llPayOnline.setVisibility(onlinePaymentVisibility);
             tvPayOnline.setVisibility(onlinePaymentVisibility);
@@ -3568,17 +3577,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void showChatButton() {
         try {
-            if(passengerScreenMode != PassengerScreenMode.P_IN_RIDE && Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1){
+            if (passengerScreenMode != PassengerScreenMode.P_IN_RIDE && Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1) {
                 rlChatDriver.setVisibility(View.VISIBLE);
                 buttonCallDriver.setVisibility(View.GONE);
-                if(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 0) > 0){
+                if (Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 0) > 0) {
                     tvChatCount.setVisibility(View.VISIBLE);
                     tvChatCount.setText(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 0));
-                } else{
+                } else {
                     tvChatCount.setVisibility(View.GONE);
                     Prefs.with(HomeActivity.this).save(KEY_CHAT_COUNT, 0);
                 }
-            } else{
+            } else {
                 rlChatDriver.setVisibility(View.GONE);
                 buttonCallDriver.setVisibility(View.VISIBLE);
             }
@@ -3589,24 +3598,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-
-    private void setFabViewAtRide(PassengerScreenMode mode){
+    private void setFabViewAtRide(PassengerScreenMode mode) {
         //fabViewTest.setFABMenuDrawable();
         float containerHeight = 160f;
         //fabViewTest.setRelativeLayoutFABVisibility(mode);
-        if(relativeLayoutPoolSharing.getVisibility() == View.VISIBLE){
+        if (relativeLayoutPoolSharing.getVisibility() == View.VISIBLE) {
             containerHeight = containerHeight + 50f;
         }
-        if(relativeLayoutInRideInfo.getVisibility() == View.VISIBLE){
+        if (relativeLayoutInRideInfo.getVisibility() == View.VISIBLE) {
             containerHeight = containerHeight + 40f;
         }
         fabViewTest.setMenuLabelsRightTestPadding(containerHeight);
     }
 
 
-
-
-    private void callT20AndReferAllDialog(PassengerScreenMode mode){
+    private void callT20AndReferAllDialog(PassengerScreenMode mode) {
         t20Ops.openDialog(this, Data.autoData.getcEngagementId(), mode, new T20Dialog.T20DialogCallback() {
             @Override
             public void onDismiss() {
@@ -3618,50 +3624,50 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         });
     }
 
-    private void showPromoFailedAtSignupDialog(){
-        try{
-            if(Data.userData.getPromoSuccess() == 0
-                    && PassengerScreenMode.P_INITIAL == passengerScreenMode){
+    private void showPromoFailedAtSignupDialog() {
+        try {
+            if (Data.userData.getPromoSuccess() == 0
+                    && PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                 DialogPopup.alertPopupWithListener(HomeActivity.this, "",
                         Data.userData.getPromoMessage(),
                         new OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                MenuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag(),0,0,HomeActivity.this,getCurrentPlaceLatLng());
+                                MenuAdapter.onClickAction(MenuInfoTags.OFFERS.getTag(), 0, 0, HomeActivity.this, getCurrentPlaceLatLng());
                             }
                         });
                 Data.userData.setPromoSuccess(1);
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-
-    public SlidingBottomPanelV4 getSlidingBottomPanel(){
+    public SlidingBottomPanelV4 getSlidingBottomPanel() {
         return slidingBottomPanel;
     }
 
 
-    private void startStopLocationUpdateService(PassengerScreenMode mode){
+    private void startStopLocationUpdateService(PassengerScreenMode mode) {
         Prefs.with(this).save(Constants.SP_CURRENT_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
-        if((PassengerScreenMode.P_REQUEST_FINAL == mode
+        if ((PassengerScreenMode.P_REQUEST_FINAL == mode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == mode
                 || PassengerScreenMode.P_IN_RIDE == mode)
                 && Prefs.with(this).getLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, LOCATION_UPDATE_INTERVAL) > 0) {
-            if(!Utils.isServiceRunning(this, LocationUpdateService.class.getName())) {
+            if (!Utils.isServiceRunning(this, LocationUpdateService.class.getName())) {
                 Intent intent = new Intent(this, LocationUpdateService.class);
                 intent.putExtra(KEY_ONE_SHOT, false);
                 startService(intent);
             }
-        } else{
+        } else {
             Intent intent = new Intent(this, LocationUpdateService.class);
             stopService(intent);
         }
     }
 
     private BroadcastReceiver receiver;
+
     private void registerDialogDismissReceiver() {
         receiver = new BroadcastReceiver() {
             @Override
@@ -3681,10 +3687,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         registerReceiver(receiver, intentFilter);
     }
 
-    private void dismissReferAllDialog(PassengerScreenMode mode){
+    private void dismissReferAllDialog(PassengerScreenMode mode) {
         try {
-            if(PassengerScreenMode.P_IN_RIDE != mode
-                    && PassengerScreenMode.P_INITIAL != mode){
+            if (PassengerScreenMode.P_IN_RIDE != mode
+                    && PassengerScreenMode.P_INITIAL != mode) {
                 dismissReferAllDialog();
                 dialogUploadContacts = null;
             }
@@ -3693,8 +3699,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void dismissReferAllDialog(){
-        if(dialogUploadContacts != null && dialogUploadContacts.isShowing()) {
+    private void dismissReferAllDialog() {
+        if (dialogUploadContacts != null && dialogUploadContacts.isShowing()) {
             dialogUploadContacts.dismiss();
         }
     }
@@ -3753,7 +3759,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         return viewPoolInfoBarAnim;
     }
 
-    private void setZeroRatingView(){
+    private void setZeroRatingView() {
         textViewRSWhatImprove.setVisibility(View.GONE);
         gridViewRSFeedbackReasons.setVisibility(View.GONE);
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
@@ -3762,22 +3768,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewRSOtherError.setText("");
     }
 
-    private PlaceSearchListFragment getPlaceSearchListFragment(PassengerScreenMode mode){
+    private PlaceSearchListFragment getPlaceSearchListFragment(PassengerScreenMode mode) {
         Fragment frag = getSupportFragmentManager()
                 .findFragmentByTag(PlaceSearchListFragment.class.getSimpleName() + mode);
         return (PlaceSearchListFragment) frag;
     }
 
-    private void relativeLayoutSearchSetVisiblity(int visiblity){
-        if(View.VISIBLE == visiblity){
+    private void relativeLayoutSearchSetVisiblity(int visiblity) {
+        if (View.VISIBLE == visiblity) {
             relativeLayoutSearch.setVisibility(View.VISIBLE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_SEARCH);
-            if(frag == null || frag.isRemoving()) {
+            if (frag == null || frag.isRemoving()) {
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
-                if(placeSearchMode.getOrdinal() == PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal()){
+                if (placeSearchMode.getOrdinal() == PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal()) {
                     bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.enter_destination));
-                } else{
+                } else {
                     bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.enter_pickup));
                 }
                 bundle.putInt(KEY_SEARCH_MODE, placeSearchMode.getOrdinal());
@@ -3786,10 +3792,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 PlaceSearchListFragment.class.getSimpleName() + PassengerScreenMode.P_SEARCH)
                         .commitAllowingStateLoss();
             }
-        } else{
+        } else {
             relativeLayoutSearch.setVisibility(View.GONE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_SEARCH);
-            if(frag != null) {
+            if (frag != null) {
                 getSupportFragmentManager().beginTransaction()
                         .remove(frag)
                         .commit();
@@ -3799,17 +3805,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-
-    private void relativeLayoutAssigningDropLocationParentSetVisibility(int visiblity){
-        if(View.VISIBLE == visiblity){
+    private void relativeLayoutAssigningDropLocationParentSetVisibility(int visiblity) {
+        if (View.VISIBLE == visiblity) {
             fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
             relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_ASSIGNING);
-            if(frag == null || frag.isRemoving()) {
+            if (frag == null || frag.isRemoving()) {
                 Bundle bundle = new Bundle();
-                if(textViewAssigningDropLocationClick.getText().length() > 0){
+                if (textViewAssigningDropLocationClick.getText().length() > 0) {
                     bundle.putString(KEY_SEARCH_FIELD_TEXT, textViewAssigningDropLocationClick.getText().toString());
-                } else{
+                } else {
                     bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
                 }
                 bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
@@ -3819,11 +3824,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 PlaceSearchListFragment.class.getSimpleName() + PassengerScreenMode.P_ASSIGNING)
                         .commitAllowingStateLoss();
             }
-        } else{
+        } else {
             //fabViewTest.setRelativeLayoutFABVisibility(passengerScreenMode);
             relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_ASSIGNING);
-            if(frag != null) {
+            if (frag != null) {
                 getSupportFragmentManager().beginTransaction()
                         .remove(frag)
                         .commit();
@@ -3833,16 +3838,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void relativeLayoutFinalDropLocationParentSetVisibility(int visiblity, String text){
-        if(View.VISIBLE == visiblity){
+    private void relativeLayoutFinalDropLocationParentSetVisibility(int visiblity, String text) {
+        if (View.VISIBLE == visiblity) {
             fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
             relativeLayoutFinalDropLocationParent.setVisibility(View.VISIBLE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL);
-            if(frag == null || frag.isRemoving()) {
+            if (frag == null || frag.isRemoving()) {
                 Bundle bundle = new Bundle();
-                if(textViewFinalDropLocationClick.getText().length() > 0){
+                if (textViewFinalDropLocationClick.getText().length() > 0) {
                     bundle.putString(KEY_SEARCH_FIELD_TEXT, textViewFinalDropLocationClick.getText().toString());
-                } else{
+                } else {
                     bundle.putString(KEY_SEARCH_FIELD_TEXT, text);
                 }
                 bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
@@ -3853,11 +3858,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         .commitAllowingStateLoss();
             }
             customerInRideMyLocationBtn.setVisibility(View.GONE);
-        } else{
+        } else {
             //fabViewTest.setRelativeLayoutFABVisibility(passengerScreenMode);
             relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL);
-            if(frag != null) {
+            if (frag != null) {
                 getSupportFragmentManager().beginTransaction()
                         .remove(frag)
                         .commit();
@@ -3870,17 +3875,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private Fragment fragToAdd;
-    private void linearLayoutRideSummaryContainerSetVisiblity(int visiblity, RideEndFragmentMode rideEndFragmentMode){
+
+    private void linearLayoutRideSummaryContainerSetVisiblity(int visiblity, RideEndFragmentMode rideEndFragmentMode) {
         if (View.VISIBLE == visiblity) {
             linearLayoutRideSummaryContainer.setVisibility(View.VISIBLE);
             Fragment fragToCheck = null;
             String tag = "", title = "";
-            if(RideEndFragmentMode.INVOICE == rideEndFragmentMode) {
+            if (RideEndFragmentMode.INVOICE == rideEndFragmentMode) {
                 fragToCheck = getRideSummaryFragment();
                 fragToAdd = RideSummaryFragment.newInstance(-1, null, false, EngagementStatus.ENDED.getOrdinal());
                 tag = RideSummaryFragment.class.getName();
                 title = getResources().getString(R.string.receipt);
-            } else if(RideEndFragmentMode.ONLINE_PAYMENT == rideEndFragmentMode) {
+            } else if (RideEndFragmentMode.ONLINE_PAYMENT == rideEndFragmentMode) {
                 fragToCheck = getStarSubscriptionCheckoutFragment();
                 fragToAdd = StarSubscriptionCheckoutFragment.newInstance(Integer.parseInt(Data.autoData.getEndRideData().engagementId),
                         Data.autoData.getEndRideData().finalFare,
@@ -3911,19 +3917,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private RideSummaryFragment getRideSummaryFragment(){
+    private RideSummaryFragment getRideSummaryFragment() {
         Fragment frag = getSupportFragmentManager()
                 .findFragmentByTag(RideSummaryFragment.class.getName());
         return (RideSummaryFragment) frag;
     }
 
-    private StarSubscriptionCheckoutFragment getStarSubscriptionCheckoutFragment(){
+    private StarSubscriptionCheckoutFragment getStarSubscriptionCheckoutFragment() {
         Fragment frag = getSupportFragmentManager()
                 .findFragmentByTag(StarSubscriptionCheckoutFragment.class.getName());
         return (StarSubscriptionCheckoutFragment) frag;
     }
 
-    private void updateInRideAddMoneyToWalletButtonText(){
+    private void updateInRideAddMoneyToWalletButtonText() {
         try {
             MyApplication.getInstance().getWalletCore().addMoneyToWalletTextDuringRide(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode());
         } catch (Exception e) {
@@ -3931,15 +3937,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private void setDropLocationAssigningUI(){
+    private void setDropLocationAssigningUI() {
         try {
-            if(Data.autoData.getDropLatLng() == null){
+            if (Data.autoData.getDropLatLng() == null) {
                 if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
                     relativeLayoutAssigningDropLocationClick.setVisibility(View.GONE);
                     relativeLayoutDestinationHelp.setVisibility(View.GONE);
-                }
-                else{
-                    if(relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
+                } else {
+                    if (relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE) {
 
                         relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
                         try {
@@ -3953,7 +3958,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 @Override
                                 public void onAnimationEnd(Animation animation) {
                                     relativeLayoutAssigningDropLocationClick.clearAnimation();
-                                    if(Data.userData != null && (!Data.autoData.getDestinationHelpText().equalsIgnoreCase(""))){
+                                    if (Data.userData != null && (!Data.autoData.getDestinationHelpText().equalsIgnoreCase(""))) {
                                         textViewDestHelp.setText(Data.autoData.getDestinationHelpText());
                                         relativeLayoutDestinationHelp.setVisibility(View.VISIBLE);
                                     }
@@ -3975,10 +3980,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
                     progressBarAssigningDropLocation.setVisibility(View.GONE);
                 }
-            }
-            else{
+            } else {
                 relativeLayoutDestinationHelp.setVisibility(View.GONE);
-                if(relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE){
+                if (relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE) {
                     relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
                     try {
                         Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
@@ -3997,23 +4001,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-
-    private void setDropLocationEngagedUI(){
-        if(Data.autoData.getDropLatLng() == null){
+    private void setDropLocationEngagedUI() {
+        if (Data.autoData.getDropLatLng() == null) {
             textViewFinalDropLocationClick.setText("");
             dropAddressName = "";
             imageViewFinalDropLocationEdit.setVisibility(View.GONE);
             progressBarFinalDropLocation.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             setDropLocationMarker();
             imageViewFinalDropLocationEdit.setVisibility(View.VISIBLE);
             getAddressAsync(Data.autoData.getDropLatLng(), textViewFinalDropLocationClick, progressBarFinalDropLocation);
         }
     }
 
-    private void setDropLocationMarker(){
-        if(Data.autoData.getDropLatLng() != null
+    private void setDropLocationMarker() {
+        if (Data.autoData.getDropLatLng() != null
                 && (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
                 || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
@@ -4025,8 +4027,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void setPickupToDropPath(){
-        if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+    private void setPickupToDropPath() {
+        if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
             if (pathToDropLocationPolylineOptions != null) {
                 if (pathToDropLocationPolyline != null) {
                     pathToDropLocationPolyline.remove();
@@ -4049,22 +4051,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private void checkForGoogleLogoVisibilityInRide(){
-        try{
+    private void checkForGoogleLogoVisibilityInRide() {
+        try {
             float padding = getResources().getDimension(R.dimen.map_padding_request_final);
-            if(relativeLayoutInRideInfo.getVisibility() == View.VISIBLE){
+            if (relativeLayoutInRideInfo.getVisibility() == View.VISIBLE) {
                 padding = padding + getResources().getDimension(R.dimen.map_padding_request_final_extra);
             }
-            if(relativeLayoutPoolSharing.getVisibility() == View.VISIBLE){
+            if (relativeLayoutPoolSharing.getVisibility() == View.VISIBLE) {
                 padding = padding + 90;
             }
             setGoogleMapPadding(padding);
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
 
 
     public void setAssignedDriverData(PassengerScreenMode mode) {
@@ -4102,10 +4102,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             try {
                 double rating = Double.parseDouble(Data.autoData.getAssignedDriverInfo().rating);
-                if(rating > 0) {
+                if (rating > 0) {
                     relativeLayoutDriverRating.setVisibility(View.VISIBLE);
                     textViewDriverRating.setText(decimalFormat1DigitAD.format(rating));
-                } else{
+                } else {
                     relativeLayoutDriverRating.setVisibility(View.GONE);
                 }
             } catch (Exception e) {
@@ -4114,12 +4114,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             Data.autoData.getAssignedDriverInfo().image = Data.autoData.getAssignedDriverInfo().image.replace("http://graph.facebook", "https://graph.facebook");
             try {
-                if(!"".equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().image)) {
+                if (!"".equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().image)) {
                     float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                     Picasso.with(HomeActivity.this).load(Data.autoData.getAssignedDriverInfo().image)
                             .placeholder(R.drawable.ic_driver_placeholder)
                             .transform(new CircleTransform())
-                            .resize((int)(130f * minRatio), (int)(130f * minRatio)).centerCrop()
+                            .resize((int) (130f * minRatio), (int) (130f * minRatio)).centerCrop()
                             .into(imageViewInRideDriver);
                 }
             } catch (Exception e) {
@@ -4131,28 +4131,28 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     }
 
-    private void setPaymentOptionInRide(){
-        try{
+    private void setPaymentOptionInRide() {
+        try {
             imageViewIRPaymentOption.setImageResource(MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionIconSmall(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
             textViewIRPaymentOptionValue.setTextColor(MyApplication.getInstance().getWalletCore()
                     .getWalletBalanceColor(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
-            if(PaymentOption.CASH.getOrdinal() == Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()){
+            if (PaymentOption.CASH.getOrdinal() == Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()) {
                 textViewIRPaymentOptionValue.setText(getString(R.string.cash));
             } else {
                 textViewIRPaymentOptionValue.setText(MyApplication.getInstance().getWalletCore()
                         .getPaymentOptionBalanceText(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
             }
-        } catch(Exception e){}
+        } catch (Exception e) {
+        }
     }
-
 
 
     public void updateDriverETAText(PassengerScreenMode passengerScreenMode) {
         if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) {
             if (!"".equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().getEta())) {
                 try {
-                    if(Data.autoData.getDropLatLng() != null){
+                    if (Data.autoData.getDropLatLng() != null) {
                         pickupLocationMarker.setIcon(BitmapDescriptorFactory
                                 .fromBitmap(CustomMapMarkerCreator
                                         .getTextAssignBitmap(HomeActivity.this, assl, Data.autoData.getAssignedDriverInfo().getEta(),
@@ -4174,14 +4174,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-
-    private void initDropLocationSearchUI(boolean engaged){
+    private void initDropLocationSearchUI(boolean engaged) {
         try {
             dropLocationSearched = true;
             if (!engaged) {
                 relativeLayoutAssigningDropLocationParentSetVisibility(View.VISIBLE);
-            }
-            else{
+            } else {
                 relativeLayoutFinalDropLocationParentSetVisibility(View.VISIBLE, dropLocationSearchText);
             }
         } catch (Exception e) {
@@ -4189,7 +4187,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void stopDropLocationSearchUI(boolean engaged){
+    private void stopDropLocationSearchUI(boolean engaged) {
         try {
             dropLocationSearched = false;
             if (!engaged) {
@@ -4208,31 +4206,31 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         String clientId = Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
         if (Data.userData == null) {
             boolean dataFoundNull = false;
-            if(clientId.equalsIgnoreCase(Config.getAutosClientId()) && Data.autoData == null){
+            if (clientId.equalsIgnoreCase(Config.getAutosClientId()) && Data.autoData == null) {
                 dataFoundNull = true;
-            } else if(clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.getFreshData() == null){
+            } else if (clientId.equalsIgnoreCase(Config.getFreshClientId()) && Data.getFreshData() == null) {
                 dataFoundNull = true;
-            } else if(clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.getMealsData() == null){
+            } else if (clientId.equalsIgnoreCase(Config.getMealsClientId()) && Data.getMealsData() == null) {
                 dataFoundNull = true;
-            } else if(clientId.equalsIgnoreCase(Config.getGroceryClientId()) && Data.getGroceryData() == null){
+            } else if (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && Data.getGroceryData() == null) {
                 dataFoundNull = true;
-            } else if(clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.getMenusData() == null){
+            } else if (clientId.equalsIgnoreCase(Config.getMenusClientId()) && Data.getMenusData() == null) {
                 dataFoundNull = true;
-            } else if(clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && Data.getDeliveryCustomerData() == null){
+            } else if (clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && Data.getDeliveryCustomerData() == null) {
                 dataFoundNull = true;
-            } else if(clientId.equalsIgnoreCase(Config.getPayClientId()) && Data.getPayData() == null){
+            } else if (clientId.equalsIgnoreCase(Config.getPayClientId()) && Data.getPayData() == null) {
                 dataFoundNull = true;
-            } else if(clientId.equalsIgnoreCase(Config.getFeedClientId()) && Data.getFeedData() == null){
+            } else if (clientId.equalsIgnoreCase(Config.getFeedClientId()) && Data.getFeedData() == null) {
                 dataFoundNull = true;
-            } else if(clientId.equalsIgnoreCase(Config.getProsClientId()) && Data.getProsData() == null){
+            } else if (clientId.equalsIgnoreCase(Config.getProsClientId()) && Data.getProsData() == null) {
                 dataFoundNull = true;
             }
-            if(dataFoundNull) {
+            if (dataFoundNull) {
                 activity.startActivity(new Intent(activity, SplashNewActivity.class));
                 activity.finish();
                 activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 return true;
-            } else{
+            } else {
                 return false;
             }
         } else {
@@ -4240,9 +4238,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void showReferAllDialog(){
+    private void showReferAllDialog() {
         try {
-            if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+            if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
                 //******** If return 0 then show popup, contact not saved in database.
                 if (Data.autoData.getReferAllStatus() == 0
                         && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
@@ -4321,7 +4319,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
                             });
                 }
-            } else if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
+            } else if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                 if (Data.autoData.getReferAllStatusLogin() == 0
                         && dialogUploadContacts == null) {
                     drawerLayout.closeDrawer(GravityCompat.START);
@@ -4334,7 +4332,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             new OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if(MyApplication.getInstance().isOnline()) {
+                                    if (MyApplication.getInstance().isOnline()) {
 
                                         Data.autoData.setReferAllStatus(1);
                                         Data.autoData.setReferAllStatusLogin(1);
@@ -4346,7 +4344,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                         startService(syncContactsIntent);
                                         registerDialogDismissReceiver();
                                         dismissReferAllDialog();
-                                    } else{
+                                    } else {
                                         DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
                                                 new Utils.AlertCallBackWithButtonsInterface() {
                                                     @Override
@@ -4369,12 +4367,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             }, new OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    if(MyApplication.getInstance().isOnline()) {
+                                    if (MyApplication.getInstance().isOnline()) {
                                         Data.autoData.setReferAllStatus(0);
                                         Data.autoData.setReferAllStatusLogin(-1);
                                         uploadContactsApi(true);
                                         dismissReferAllDialog();
-                                    } else{
+                                    } else {
                                         DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
                                                 new Utils.AlertCallBackWithButtonsInterface() {
                                                     @Override
@@ -4401,7 +4399,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     showPromoFailedAtSignupDialog();
                                 }
                             });
-                } else{
+                } else {
                     showPromoFailedAtSignupDialog();
                 }
             }
@@ -4414,24 +4412,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if(intent.hasExtra(Constants.KEY_EVENT)
-                && intent.getStringExtra(Constants.KEY_EVENT).equalsIgnoreCase(Constants.KEY_RIDE_ACCEPTED)){
-            GAUtils.event(RIDES, HOME, RIDE_ACCEPTED_PUSH+CLICKED);
+        if (intent.hasExtra(Constants.KEY_EVENT)
+                && intent.getStringExtra(Constants.KEY_EVENT).equalsIgnoreCase(Constants.KEY_RIDE_ACCEPTED)) {
+            GAUtils.event(RIDES, HOME, RIDE_ACCEPTED_PUSH + CLICKED);
         }
         try {
 
-            if(intent.getExtras()!=null && intent.getExtras().containsKey(Constants.FUGU_CUSTOM_ACTION_PAYLOAD)){
-                Log.i(TAG, "onNewIntent: Fugu Broadcast received" );
+            if (intent.getExtras() != null && intent.getExtras().containsKey(Constants.FUGU_CUSTOM_ACTION_PAYLOAD)) {
+                Log.i(TAG, "onNewIntent: Fugu Broadcast received");
                 String payload = intent.getStringExtra(Constants.FUGU_CUSTOM_ACTION_PAYLOAD);
                 FuguCustomActionModel customActionModel = gson.fromJson(payload, FuguCustomActionModel.class);
-                if(customActionModel.getDeepIndex()!=null && customActionModel.getDeepIndex()!=-1){
+                if (customActionModel.getDeepIndex() != null && customActionModel.getDeepIndex() != -1) {
                     Data.deepLinkIndex = customActionModel.getDeepIndex();
-                    if(customActionModel.getDeepIndex()==AppLinkIndex.RIDE_HISTORY.getOrdinal()){
+                    if (customActionModel.getDeepIndex() == AppLinkIndex.RIDE_HISTORY.getOrdinal()) {
                         Data.deepLinkOrderId = customActionModel.getOrderId();
                         Data.deepLinkProductType = ProductType.FEED.getOrdinal();
                     }
                     MenuAdapter.closeDrawerIfOpen(this);
-                    DeepLinkAction.openDeepLink(this,getCurrentPlaceLatLng());
+                    DeepLinkAction.openDeepLink(this, getCurrentPlaceLatLng());
                 }
 
 
@@ -4442,6 +4440,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     boolean ignoreTimeCheckFetchWalletBalance = true;
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -4468,7 +4467,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                         LatLng currLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
                                         Data.setLatLngOfJeanieLastShown(currLatLng);
                                         Data.autoData.setLastRefreshLatLng(currLatLng);
-                                    } catch (Exception e) {}
+                                    } catch (Exception e) {
+                                    }
                                 }
                             }
                         }
@@ -4528,11 +4528,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
                 // to check if selected destination saved address is deleted or not
-                if(passengerScreenMode == PassengerScreenMode.P_INITIAL && Data.autoData.getDropLatLng() != null){
+                if (passengerScreenMode == PassengerScreenMode.P_INITIAL && Data.autoData.getDropLatLng() != null) {
                     SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(),
                             Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
-                    if(searchResult == null && Data.autoData.getDropAddressId() > 0){
-						imageViewDropCross.performClick();
+                    if (searchResult == null && Data.autoData.getDropAddressId() > 0) {
+                        imageViewDropCross.performClick();
                     }
 
                 }
@@ -4564,7 +4564,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 e.printStackTrace();
             }
 
-            if(AccountActivity.updateMenuBar){
+            if (AccountActivity.updateMenuBar) {
                 menuBar.setProfileData();
                 AccountActivity.updateMenuBar = false;
             }
@@ -4575,8 +4575,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void performDeeplink() {
-        if(Data.userData != null && Data.userData.isRidesAndFatafatEnabled()
-                && !Prefs.with(this).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "").equalsIgnoreCase("")){ //or deeplink to other client id
+        if (Data.userData != null && Data.userData.isRidesAndFatafatEnabled()
+                && !Prefs.with(this).getString(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "").equalsIgnoreCase("")) { //or deeplink to other client id
             Data.deepLinkIndex = AppLinkIndex.DELIVERY_CUSTOMER_PAGE.getOrdinal();
         }
         deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
@@ -4594,34 +4594,36 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void saveDriverBearing() {
         try {
-            if((passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
-					|| passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED)
-					&& driverLocationMarker != null){
-				Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, driverLocationMarker.getRotation());
-			} else if(passengerScreenMode == PassengerScreenMode.P_IN_RIDE
-					&& driverMarkerInRide != null){
-				Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, driverMarkerInRide.getRotation());
-			}
+            if ((passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
+                    || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED)
+                    && driverLocationMarker != null) {
+                Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, driverLocationMarker.getRotation());
+            } else if (passengerScreenMode == PassengerScreenMode.P_IN_RIDE
+                    && driverMarkerInRide != null) {
+                Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, driverMarkerInRide.getRotation());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-    private void startNotifsUpdater(){
+    private void startNotifsUpdater() {
         try {
             updateNotifsHandler.post(updateNotifsRunnable);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private void stopNotifsUpdater(){
+
+    private void stopNotifsUpdater() {
         try {
             updateNotifsHandler.removeCallbacks(updateNotifsRunnable);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private Handler updateNotifsHandler = new Handler();
     private Runnable updateNotifsRunnable = new Runnable() {
         @Override
@@ -4643,23 +4645,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    public void openChatScreen(){
+    public void openChatScreen() {
         Prefs.with(HomeActivity.this).save(KEY_CHAT_COUNT, 0);
         tvChatCount.setVisibility(View.GONE);
         startActivity(new Intent(HomeActivity.this, ChatActivity.class));
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
-        GAUtils.event(RIDES, DRIVER_ENROUTE, CHAT+GAAction.BUTTON+CLICKED);
+        GAUtils.event(RIDES, DRIVER_ENROUTE, CHAT + GAAction.BUTTON + CLICKED);
     }
 
 
-
-
-    private class UpdateNotificationsAsync extends AsyncTask<String, String, String>{
+    private class UpdateNotificationsAsync extends AsyncTask<String, String, String> {
 
         private Handler updateNotifsHandler;
         private Runnable updateNotifsRunnable;
 
-        public UpdateNotificationsAsync(Handler updateNotifsHandler, Runnable updateNotifsRunnable){
+        public UpdateNotificationsAsync(Handler updateNotifsHandler, Runnable updateNotifsRunnable) {
             this.updateNotifsHandler = updateNotifsHandler;
             this.updateNotifsRunnable = updateNotifsRunnable;
         }
@@ -4668,11 +4668,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         protected String doInBackground(String... params) {
             try {
                 ArrayList<NotificationData> notificationDatas = MyApplication.getInstance().getDatabase2().getAllNotification();
-                if(notificationDatas.size() == 0) {
+                if (notificationDatas.size() == 0) {
                     Prefs.with(HomeActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, 0);
-                }
-                else if(notificationDatas.size() > 0
-                        && Prefs.with(HomeActivity.this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) > notificationDatas.size()){
+                } else if (notificationDatas.size() > 0
+                        && Prefs.with(HomeActivity.this).getInt(SPLabels.NOTIFICATION_UNREAD_COUNT, 0) > notificationDatas.size()) {
                     Prefs.with(HomeActivity.this).save(SPLabels.NOTIFICATION_UNREAD_COUNT, notificationDatas.size());
                 }
             } catch (Exception e) {
@@ -4694,11 +4693,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-
-    private void performDeepLinkForLatLngRequest(){
-        try{
-            if(PassengerScreenMode.P_INITIAL == passengerScreenMode){
-                if(Data.deepLinkPickup == 1) {
+    private void performDeepLinkForLatLngRequest() {
+        try {
+            if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                if (Data.deepLinkPickup == 1) {
                     zoomingForDeepLink = true;
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -4711,7 +4709,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }, 500);
                 }
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Data.deepLinkPickup = -1;
@@ -4740,25 +4738,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            if(resultCode==RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 if (requestCode == Constants.REQUEST_CODE_ADD_HOME) {
                     String strResult = data.getStringExtra("PLACE");
                     SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
-                    if(searchResult != null){
+                    if (searchResult != null) {
                         placeAdded = true;
-                    }else {
+                    } else {
                     }
 
                 } else if (requestCode == Constants.REQUEST_CODE_ADD_WORK) {
                     String strResult = data.getStringExtra("PLACE");
                     SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
-                    if(searchResult != null) {
+                    if (searchResult != null) {
                         placeAdded = true;
-                    }else{
+                    } else {
                     }
-                } else if(requestCode == FARE_ESTIMATE){
+                } else if (requestCode == FARE_ESTIMATE) {
                     try {
-                        if(data.hasExtra(KEY_SEARCH_RESULT)) {
+                        if (data.hasExtra(KEY_SEARCH_RESULT)) {
                             SearchResult searchResult = new Gson().fromJson(data.getStringExtra(KEY_SEARCH_RESULT), SearchResult.class);
                             searchResult.setTime(System.currentTimeMillis());
                             setDropAddressAndExpandFields(searchResult);
@@ -4766,7 +4764,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                         slidingBottomPanel.getImageViewExtraForSliding().performClick();
                         // check if we need to avoid the action click
-                        if(data.getExtras()!=null && !data.getExtras().containsKey(Constants.KEY_AVOID_RIDE_ACTION)) {
+                        if (data.getExtras() != null && !data.getExtras().containsKey(Constants.KEY_AVOID_RIDE_ACTION)) {
                             imageViewRideNow.performClick();
                         }
                         activityResumed = false;
@@ -4834,9 +4832,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
         try {
-            if(PassengerScreenMode.P_RIDE_END == passengerScreenMode
-					&& relativeLayoutRideEndWithImage.getVisibility() == View.VISIBLE){
-			}
+            if (PassengerScreenMode.P_RIDE_END == passengerScreenMode
+                    && relativeLayoutRideEndWithImage.getVisibility() == View.VISIBLE) {
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -4847,7 +4845,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    public void backFromSearchToInitial(){
+    public void backFromSearchToInitial() {
         try {
             Utils.hideSoftKeyboard(this, textViewInitialSearch);
             new Handler().postDelayed(new Runnable() {
@@ -4866,60 +4864,54 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void onBackPressed() {
         try {
-            if(drawerLayout.isDrawerOpen(Gravity.START)){
-				drawerLayout.closeDrawer(Gravity.START);
-				return;
-			}
-            if(fabViewTest.menuLabelsRightTest.isOpened()){
-				fabViewTest.menuLabelsRightTest.close(true, false);
-				return;
-			}
+            if (drawerLayout.isDrawerOpen(Gravity.START)) {
+                drawerLayout.closeDrawer(Gravity.START);
+                return;
+            }
+            if (fabViewTest.menuLabelsRightTest.isOpened()) {
+                fabViewTest.menuLabelsRightTest.close(true, false);
+                return;
+            }
         } catch (Exception e) {
         }
         performBackpressed();
     }
 
 
-    public void performBackpressed(){
+    public void performBackpressed() {
         try {
             if (PassengerScreenMode.P_SEARCH == passengerScreenMode) {
                 backFromSearchToInitial();
-            }
-            else if(dropLocationSearched && PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
+            } else if (dropLocationSearched && PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
                 stopDropLocationSearchUI(false);
-            }
-            else if(dropLocationSearched &&
+            } else if (dropLocationSearched &&
                     (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode ||
                             PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode ||
-                            PassengerScreenMode.P_IN_RIDE == passengerScreenMode)){
+                            PassengerScreenMode.P_IN_RIDE == passengerScreenMode)) {
                 stopDropLocationSearchUI(true);
-            }
-            else if(PassengerScreenMode.P_RIDE_END == passengerScreenMode
-                    && linearLayoutRideSummaryContainer.getVisibility() == View.VISIBLE){
+            } else if (PassengerScreenMode.P_RIDE_END == passengerScreenMode
+                    && linearLayoutRideSummaryContainer.getVisibility() == View.VISIBLE) {
                 linearLayoutRideSummaryContainerSetVisiblity(View.GONE, RideEndFragmentMode.INVOICE);
-            }
-            else if(PassengerScreenMode.P_RIDE_END == passengerScreenMode
-                    && relativeLayoutRideEndWithImage.getVisibility() == View.VISIBLE){
+            } else if (PassengerScreenMode.P_RIDE_END == passengerScreenMode
+                    && relativeLayoutRideEndWithImage.getVisibility() == View.VISIBLE) {
                 buttonEndRideSkip.performClick();
-            }
-            else{
-                if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
+            } else {
+                if (slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                } else if(confirmedScreenOpened){
+                } else if (confirmedScreenOpened) {
                     confirmedScreenOpened = false;
-                    if(Data.autoData.getDropLatLng() != null){
+                    if (Data.autoData.getDropLatLng() != null) {
                         imageViewDropCross.setVisibility(View.VISIBLE);
                     }
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                     navigateToCurrLoc(false);
-                } else if(specialPickupScreenOpened){
+                } else if (specialPickupScreenOpened) {
                     specialPickupScreenOpened = false;
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                     initialMyLocationBtn.performClick();
-                }
-                else{
+                } else {
                     MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
                     finishWithToast();
                 }
@@ -4932,24 +4924,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private int backPressedCount = 0;
-    private void finishWithToast(){
+
+    private void finishWithToast() {
         backPressedCount++;
         getHandler().removeCallbacks(runnableBackPressReset);
         getHandler().postDelayed(runnableBackPressReset, 2000);
-        if(backPressedCount == 2){
+        if (backPressedCount == 2) {
             ActivityCompat.finishAffinity(HomeActivity.this);
             Utils.cancelToast();
         } else {
             Utils.showToast(this, getString(R.string.press_back_again_to_quit));
         }
     }
+
     private Runnable runnableBackPressReset = new Runnable() {
         @Override
         public void run() {
             backPressedCount = 0;
         }
     };
-
 
 
     @Override
@@ -4979,7 +4972,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private void intentToShareActivity(boolean fromDeepLink){
+    private void intentToShareActivity(boolean fromDeepLink) {
         Intent intent = new Intent(HomeActivity.this, ShareActivity.class);
         intent.putExtra(KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, fromDeepLink);
         startActivity(intent);
@@ -4987,16 +4980,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         relativeLayoutRideEndWithImage.setVisibility(View.GONE);
 
         try {
-            if(fromDeepLink){
-            } else{
+            if (fromDeepLink) {
+            } else {
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private ApiFindADriver getApiFindADriver(){
-        if(apiFindADriver == null) {
+    private ApiFindADriver getApiFindADriver() {
+        if (apiFindADriver == null) {
             apiFindADriver = new ApiFindADriver(this, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected(),
                     new ApiFindADriver.Callback() {
                         @Override
@@ -5023,7 +5016,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         public void onCompleteFindADriver() {
                             findADriverFinishing(true, false);
                             try {
-                                if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                                if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                                     pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
                                 }
                             } catch (Exception e) {
@@ -5046,9 +5039,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         @Override
                         public void continueRequestRide(boolean confirmedScreenOpened, boolean savedAddressUsed) {
-                            if(savedAddressUsed){
+                            if (savedAddressUsed) {
                                 requestRideDriverCheck();
-                            } else if(confirmedScreenOpened){
+                            } else if (confirmedScreenOpened) {
                                 requestRideClick();
                             } else {
                                 imageViewRideNowPoolCheck();
@@ -5058,11 +5051,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         @Override
                         public void stopRequestRide(boolean confirmedScreenOpened) {
                             Utils.showToast(HomeActivity.this, getResources().getString(R.string.fares_updated));
-                            if(!confirmedScreenOpened) {
+                            if (!confirmedScreenOpened) {
                                 Animation anim = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.rotate_shake);
                                 imageViewRideNow.startAnimation(anim);
                             }
-                            if(confirmedScreenOpened
+                            if (confirmedScreenOpened
                                     && (isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation())) {
                                 fareEstimateForPool();
                             }
@@ -5079,26 +5072,26 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         @Override
                         public void updateWalletConfig() {
-                            if(Data.userData != null) {
+                            if (Data.userData != null) {
                                 slidingBottomPanel.updatePaymentOptions();
                             }
                         }
 
                         @Override
                         public void updateSideMenu(ArrayList<MenuInfo> menuInfos) {
-                            if(Data.userData != null && menuInfos != null && menuInfos.size() > 0) {
+                            if (Data.userData != null && menuInfos != null && menuInfos.size() > 0) {
                                 /*
                                  * hack for preserving jugnoo star MenuInfo if it was there in Login api
                                  * For Parminder
                                  */
                                 MenuInfo menuInfoStar = null;
                                 int index = Data.userData.getMenuInfoList().indexOf(new MenuInfo(MenuInfoTags.JUGNOO_STAR.getTag()));
-                                if(index > -1){
+                                if (index > -1) {
                                     menuInfoStar = Data.userData.getMenuInfoList().get(index);
                                 }
                                 Data.userData.setMenuInfoList(menuInfos);
-                                if(Data.userData.getMenuInfoList().indexOf(new MenuInfo(MenuInfoTags.JUGNOO_STAR.getTag())) < 0
-                                        && menuInfoStar != null && Data.userData.getMenuInfoList().size() >= index){
+                                if (Data.userData.getMenuInfoList().indexOf(new MenuInfo(MenuInfoTags.JUGNOO_STAR.getTag())) < 0
+                                        && menuInfoStar != null && Data.userData.getMenuInfoList().size() >= index) {
                                     Data.userData.getMenuInfoList().add(index, menuInfoStar);
                                 }
 
@@ -5111,17 +5104,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private ApiFindADriver apiFindADriver = null;
-    private void findDriversETACall(boolean beforeRequestRide, boolean confirmedScreenOpened, boolean savedAddressUsed){
+
+    private void findDriversETACall(boolean beforeRequestRide, boolean confirmedScreenOpened, boolean savedAddressUsed) {
         getApiFindADriver().hit(Data.userData.accessToken, Data.autoData.getPickupLatLng(), showAllDrivers, showDriverInfo,
                 slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected(), beforeRequestRide,
                 confirmedScreenOpened, savedAddressUsed);
     }
 
-    private void findADriverFinishing(boolean showPoolIntro, boolean useServerDefaultCoupon){
+    private void findADriverFinishing(boolean showPoolIntro, boolean useServerDefaultCoupon) {
         //fabViewTest.setFABButtons();
-        if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+        if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
             try {
-                if(slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0 || promoSelectionLastOperation) {
+                if (slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0 || promoSelectionLastOperation) {
                     defaultCouponSelection();
                 }
                 slidingBottomPanel.update();
@@ -5129,7 +5123,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 e.printStackTrace();
             }
             try {
-                if(zoomAfterFindADriver){
+                if (zoomAfterFindADriver) {
                     zoomAfterFindADriver = false;
                     zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
                 }
@@ -5146,7 +5140,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     setJeanieVisibility();
                     setServiceAvailablityUI(Data.autoData.getFarAwayCity());
                     showPoolInforBar(false);
-                    if(showPoolIntro) {
+                    if (showPoolIntro) {
 //                        showPoolIntroDialog();
                     }
                     updateSpecialPickupScreen();
@@ -5158,37 +5152,35 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void defaultCouponSelection(){
+    private void defaultCouponSelection() {
 
         PromoCoupon lasSelectedCustomCoupon = getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
-        boolean lastSelectedCouponExits = false ;
-        if(lasSelectedCustomCoupon!=null){
-            for(PromoCoupon promoCoupon : Data.autoData.getPromoCoupons()){
-                if(promoCoupon.getId() == lasSelectedCustomCoupon.getId()){
+        boolean lastSelectedCouponExits = false;
+        if (lasSelectedCustomCoupon != null) {
+            for (PromoCoupon promoCoupon : Data.autoData.getPromoCoupons()) {
+                if (promoCoupon.getId() == lasSelectedCustomCoupon.getId()) {
                     lastSelectedCouponExits = true;
                 }
 
             }
         }
 
-        if(!lastSelectedCouponExits) {
+        if (!lastSelectedCouponExits) {
             getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(Data.userData
-                    .getDefaultCoupon(getVehicleTypeSelected(), getOperatorIdSelected(),HomeActivity.this));
+                    .getDefaultCoupon(getVehicleTypeSelected(), getOperatorIdSelected(), HomeActivity.this));
         }
-
-
 
 
     }
 
-    private boolean updateSpecialPickupScreen(){
+    private boolean updateSpecialPickupScreen() {
         specialPickups.clear();
-        if(Data.autoData.getNearbyPickupRegionses() != null
+        if (Data.autoData.getNearbyPickupRegionses() != null
                 && Data.autoData.getNearbyPickupRegionses().getHoverInfo() != null
-                && Data.autoData.getNearbyPickupRegionses().getHoverInfo().size() > 0){
+                && Data.autoData.getNearbyPickupRegionses().getHoverInfo().size() > 0) {
             specialPickups.addAll(Data.autoData.getNearbyPickupRegionses().getHoverInfo());
             return true;
-        } else{
+        } else {
             specialPickupScreenOpened = false;
             selectedSpecialPickup = "";
             rlSpecialPickup.setVisibility(View.GONE);
@@ -5197,16 +5189,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private int getIndex(Spinner spinner, String myString){
+    private int getIndex(Spinner spinner, String myString) {
         int index = 0;
-        for (int i=0;i<spinner.getCount();i++){
-            if (specialPickups.get(i).getText().equals(myString)){
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (specialPickups.get(i).getText().equals(myString)) {
                 index = i;
                 LatLng specialPicupLatLng = new LatLng(Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getLatitude()),
                         Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getLongitude()));
                 Data.autoData.setPickupLatLng(specialPicupLatLng);
                 specialPickupSelected = true;
-                selectedSpecialPickup  = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getText()+", ";
+                selectedSpecialPickup = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getText() + ", ";
                 textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress());
                 break;
             }
@@ -5215,9 +5207,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private void setJeanieVisibility(){
+    private void setJeanieVisibility() {
         try {
-            if(Data.userData.getIntegratedJugnooEnabled() == 1) {
+            if (Data.userData.getIntegratedJugnooEnabled() == 1) {
                 if ((Data.userData.getFreshEnabled() == 0) && (Data.userData.getMealsEnabled() == 0) &&
                         (Data.userData.getDeliveryEnabled() == 0) && (Data.userData.getGroceryEnabled() == 0)
                         && (Data.userData.getMenusEnabled() == 0) && (Data.userData.getPayEnabled() == 0)
@@ -5244,8 +5236,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private void setupFreshUI(){
-        try{
+    private void setupFreshUI() {
+        try {
 //            if(1 == Data.freshAvailable){
                 /*Dialog locD = new FreshIntroDialog(this, freshIntroCallback).show();
                 if(locD != null){
@@ -5253,14 +5245,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }*/
 //            }
             menuBar.setupFreshUI();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void setupInAppCampaignUI(){
-        try{
-            if(Data.autoData.getCampaigns() != null && Data.autoData.getCampaigns().getMapLeftButton() != null){
+    private void setupInAppCampaignUI() {
+        try {
+            if (Data.autoData.getCampaigns() != null && Data.autoData.getCampaigns().getMapLeftButton() != null) {
                 imageViewInAppCampaign.clearAnimation();
                 imageViewInAppCampaign.setVisibility(View.VISIBLE);
                 new Handler().postDelayed(new Runnable() {
@@ -5274,19 +5266,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                     }
                 }, 1000);
-            } else{
+            } else {
                 imageViewInAppCampaign.clearAnimation();
                 imageViewInAppCampaign.setVisibility(View.GONE);
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-
     //Our service is not available in this area
-    private void setServiceAvailablityUI(String farAwayCity){
+    private void setServiceAvailablityUI(String farAwayCity) {
         if (PassengerScreenMode.P_INITIAL == passengerScreenMode
                 && relativeLayoutLocationError.getVisibility() == View.GONE) {
             if (!"".equalsIgnoreCase(farAwayCity)) {
@@ -5309,24 +5300,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-
-    public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng, boolean inRide){
+    public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng, boolean inRide) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("pickup location");
         markerOptions.snippet("");
         markerOptions.position(latLng);
         markerOptions.zIndex(HOME_MARKER_ZINDEX);
-        if(inRide){
+        if (inRide) {
             markerOptions.icon(BitmapDescriptorFactory
                     .fromBitmap(CustomMapMarkerCreator
                             .createPinMarkerBitmapStart(HomeActivity.this, assl)));
-        } else{
-            if(Data.autoData.getDropLatLng() != null){
+        } else {
+            if (Data.autoData.getDropLatLng() != null) {
                 markerOptions.icon(BitmapDescriptorFactory
                         .fromBitmap(CustomMapMarkerCreator
                                 .getTextAssignBitmap(HomeActivity.this, assl, Data.autoData.getAssignedDriverInfo().getEta(),
                                         getResources().getDimensionPixelSize(R.dimen.text_size_24))));
-            } else{
+            } else {
                 markerOptions.icon(BitmapDescriptorFactory
                         .fromBitmap(CustomMapMarkerCreator
                                 .getTextBitmap(HomeActivity.this, assl, Data.autoData.getAssignedDriverInfo().getEta(),
@@ -5336,7 +5326,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         return markerOptions;
     }
 
-    public MarkerOptions getAssignedDriverCarMarkerOptions(DriverInfo driverInfo){
+    public MarkerOptions getAssignedDriverCarMarkerOptions(DriverInfo driverInfo) {
         MarkerOptions markerOptions1 = new MarkerOptions();
         markerOptions1.title("driver position");
         markerOptions1.snippet("");
@@ -5348,6 +5338,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private final float HOME_MARKER_ZINDEX = 2.0f;
+
     public Marker addDriverMarkerForCustomer(DriverInfo driverInfo, int resourceId) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("driver shown to customer");
@@ -5380,8 +5371,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private ArrayList<Marker> markersDriversFindADriver = new ArrayList<>();
-    private void clearMarkersDriversFindADriver(){
-        for(Marker marker : markersDriversFindADriver){
+
+    private void clearMarkersDriversFindADriver() {
+        for (Marker marker : markersDriversFindADriver) {
             marker.remove();
         }
         markersDriversFindADriver.clear();
@@ -5389,7 +5381,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void showDriverMarkersAndPanMap(final LatLng userLatLng, Region region) {
         try {
-            if("".equalsIgnoreCase(Data.autoData.getFarAwayCity())) {
+            if ("".equalsIgnoreCase(Data.autoData.getFarAwayCity())) {
                 if (userMode == UserMode.PASSENGER &&
                         ((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)
                                 || PassengerScreenMode.P_ASSIGNING == passengerScreenMode)) {
@@ -5398,7 +5390,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         clearMarkersDriversFindADriver();
                         int regionDriversCount = 0;
                         for (int i = 0; i < Data.autoData.getDriverInfos().size(); i++) {
-                            if(Data.autoData.getDriverInfos().get(i).getOperatorId() == region.getOperatorId()
+                            if (Data.autoData.getDriverInfos().get(i).getOperatorId() == region.getOperatorId()
                                     && region.getVehicleType().equals(Data.autoData.getDriverInfos().get(i).getVehicleType())
                                     && Data.autoData.getDriverInfos().get(i).getRegionIds().contains(region.getRegionId())
                                     ) {
@@ -5438,9 +5430,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void zoomtoPickupAndDriverLatLngBounds(final LatLng driverLatLng, List<LatLng> latLngsToInclude, int duration){
-        try{
-            if((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+    private void zoomtoPickupAndDriverLatLngBounds(final LatLng driverLatLng, List<LatLng> latLngsToInclude, int duration) {
+        try {
+            if ((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                     || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
                     && Data.autoData.getPickupLatLng() != null && driverLatLng != null) {
@@ -5451,21 +5443,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     boundsBuilder
                             //.include(Data.autoData.getPickupLatLng())
                             .include(driverLatLng);
-                    if(Data.autoData.getDropLatLng() != null && PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+                    if (Data.autoData.getDropLatLng() != null && PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
                         boundsBuilder.include(Data.autoData.getDropLatLng());
                     }
-                    if(latLngsToInclude != null){
-                        for(LatLng latLng : latLngsToInclude) {
+                    if (latLngsToInclude != null) {
+                        for (LatLng latLng : latLngsToInclude) {
                             boundsBuilder.include(latLng);
                         }
                     }
-                    if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
-                            || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode){
+                    if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                            || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
                         boundsBuilder.include(Data.autoData.getPickupLatLng());
                     }
                     final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(boundsBuilder, FIX_ZOOM_DIAGONAL);
                     final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-                    if(duration == 0){
+                    if (duration == 0) {
                         duration = getMapAnimateDuration();
                     }
                     final int finalDuration = duration;
@@ -5487,7 +5479,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }, 200);
                 }
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -5499,16 +5491,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             LatLng firstLatLng = null;
             Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
             DriverInfo firstDriverInfo = null;
-            for(DriverInfo driverInfo : Data.autoData.getDriverInfos()){
-                if(driverInfo.getOperatorId() == region.getOperatorId()
+            for (DriverInfo driverInfo : Data.autoData.getDriverInfos()) {
+                if (driverInfo.getOperatorId() == region.getOperatorId()
                         && driverInfo.getVehicleType() == region.getVehicleType()
                         && driverInfo.getRegionIds().contains(region.getRegionId())
-                        ){
+                        ) {
                     firstDriverInfo = driverInfo;
                     break;
                 }
             }
-            if((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_ASSIGNING == passengerScreenMode)
+            if ((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_ASSIGNING == passengerScreenMode)
                     && firstDriverInfo != null) {
                 firstLatLng = firstDriverInfo.latLng;
             }
@@ -5550,7 +5542,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         @Override
                         public void run() {
                             try {
-                                if(finalFixedZoom){
+                                if (finalFixedZoom) {
                                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(userLatLng.latitude, userLatLng.longitude), MAX_ZOOM), getMapAnimateDuration(), null);
                                 } else {
                                     map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), getMapAnimateDuration(), null);
@@ -5564,7 +5556,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     e.printStackTrace();
                 }
             } else {
-                if(runnableSetPickup != null){
+                if (runnableSetPickup != null) {
                     runnableZoom = runnableSetPickup;
                 }
             }
@@ -5576,14 +5568,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private Runnable getPickupAddressZoomRunnable(){
+    private Runnable getPickupAddressZoomRunnable() {
         String resultStr = Prefs.with(this).getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT);
-        if(!setPickupAddressZoomedOnce && !resultStr.equalsIgnoreCase(Constants.EMPTY_JSON_OBJECT)){
+        if (!setPickupAddressZoomedOnce && !resultStr.equalsIgnoreCase(Constants.EMPTY_JSON_OBJECT)) {
             return new Runnable() {
                 @Override
                 public void run() {
-                    if(passengerScreenMode == PassengerScreenMode.P_INITIAL
-                            && !isNormalRideWithDropAtConfirmation() && !isPoolRideAtConfirmation() && !isSpecialPickupScreenOpened()){
+                    if (passengerScreenMode == PassengerScreenMode.P_INITIAL
+                            && !isNormalRideWithDropAtConfirmation() && !isPoolRideAtConfirmation() && !isSpecialPickupScreenOpened()) {
 //                        setSearchResultToPickupCase();
                     }
                 }
@@ -5593,27 +5585,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private void getAddressAsync(final LatLng currentLatLng, final TextView textView, final ProgressWheel progressBar){
+    private void getAddressAsync(final LatLng currentLatLng, final TextView textView, final ProgressWheel progressBar) {
 
         try {
             boolean addressNeeded = true;
-            if(passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+            if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
                 Data.autoData.setPickupAddress("");
             } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
                     || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                     || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                if(Data.autoData.getDropLatLng() != null && !TextUtils.isEmpty(Data.autoData.getDropAddress())){
-                    if(dropAddressName.length() == 0) {
+                if (Data.autoData.getDropLatLng() != null && !TextUtils.isEmpty(Data.autoData.getDropAddress())) {
+                    if (dropAddressName.length() == 0) {
                         textView.setText(Data.autoData.getDropAddress());
-                    } else{
+                    } else {
                         textView.setText(dropAddressName);
                     }
                     addressNeeded = false;
                 }
             }
 
-            if(addressNeeded) {
+            if (addressNeeded) {
                 if (progressBar != null) {
                     progressBar.setVisibility(View.VISIBLE);
                 }
@@ -5639,7 +5631,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                         Data.autoData.setPickupAddress(address);
                                         SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
                                                 Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
-                                        if(searchResult != null) {
+                                        if (searchResult != null) {
                                             textView.setText(searchResult.getName());
                                             Data.autoData.setPickupAddress(searchResult.getAddress());
                                         }
@@ -5731,12 +5723,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e(TAG, "cancelTheRequest error="+error.toString());
+                    Log.e(TAG, "cancelTheRequest error=" + error.toString());
                     DialogPopup.dismissLoadingDialog();
                     callAndHandleStateRestoreAPI(true);
                 }
             });
-            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null) {
+            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null) {
                 GAUtils.event(RIDES, HOME,
                         slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUEST + CANCELLED);
             }
@@ -5867,8 +5859,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-
-
     public void getRideSummaryAPI(final Activity activity, final String engagementId) {
         if (!checkIfUserDataNull(activity)) {
             if (MyApplication.getInstance().isOnline()) {
@@ -5923,7 +5913,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.e(TAG, "getRideSummary error="+error);
+                        Log.e(TAG, "getRideSummary error=" + error);
                         DialogPopup.dismissLoadingDialog();
                         endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
                     }
@@ -5953,10 +5943,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             params.put("access_token", Data.userData.accessToken);
             params.put("session_id", Data.autoData.getcSessionId());
-            params.put(KEY_OP_DROP_LATITUDE, ""+dropLatLng.latitude);
+            params.put(KEY_OP_DROP_LATITUDE, "" + dropLatLng.latitude);
             params.put(KEY_OP_DROP_LONGITUDE, "" + dropLatLng.longitude);
             params.put(KEY_DROP_LOCATION_ADDRESS, address);
-            if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+            if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
                 params.put("engagement_id", Data.autoData.getcEngagementId());
             }
 
@@ -5991,7 +5981,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     stopDropLocationSearchUI(true);
                                     setDropLocationEngagedUI();
                                     LatLng pickupLatLng = Data.autoData.getPickupLatLng();
-                                    if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+                                    if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
                                         pickupLatLng = Data.autoData.getAssignedDriverInfo().latLng;
                                     }
                                     getDropLocationPathAndDisplay(pickupLatLng, zoomAfterDropSet, null);
@@ -6011,7 +6001,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e(TAG, "addDropLocation error="+error.toString());
+                    Log.e(TAG, "addDropLocation error=" + error.toString());
 //                        DialogPopup.dismissLoadingDialog();
                     progressWheel.setVisibility(View.GONE);
                     DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
@@ -6050,11 +6040,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             nameValuePairs.put("access_token", Data.userData.accessToken);
                             nameValuePairs.put("driver_id", Data.autoData.getAssignedDriverInfo().userId);
                             nameValuePairs.put("pickup_latitude", "" + Data.autoData.getPickupLatLng().latitude);
-                            nameValuePairs.put("pickup_longitude", ""+Data.autoData.getPickupLatLng().longitude);
+                            nameValuePairs.put("pickup_longitude", "" + Data.autoData.getPickupLatLng().longitude);
 
                             new HomeUtil().putDefaultParams(nameValuePairs);
                             Response response = RestClient.getApiService().getDriverCurrentLocation(nameValuePairs);
-                            String result = new String(((TypedByteArray)response.getBody()).getBytes());
+                            String result = new String(((TypedByteArray) response.getBody()).getBytes());
 
                             try {
                                 JSONObject jObj = new JSONObject(result);
@@ -6075,7 +6065,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                             eta = jObj.getString("eta");
                                         }
                                         if (Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null) {
-                                            if(MapUtils.distance(Data.autoData.getAssignedDriverInfo().latLng , driverCurrentLatLng) > 5) {
+                                            if (MapUtils.distance(Data.autoData.getAssignedDriverInfo().latLng, driverCurrentLatLng) > 5) {
                                                 Data.autoData.getAssignedDriverInfo().latLng = driverCurrentLatLng;
                                                 Data.autoData.getAssignedDriverInfo().setEta(eta);
                                                 MyApplication.getInstance().getDatabase2().insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), driverCurrentLatLng);
@@ -6098,8 +6088,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                                                                     @Override
                                                                                     public void onTranslate(LatLng latLng, double duration) {
-                                                                                        if(latLng != null) {
-                                                                                            zoomtoPickupAndDriverLatLngBounds(latLng, null, (int) (0.7d*duration));
+                                                                                        if (latLng != null) {
+                                                                                            zoomtoPickupAndDriverLatLngBounds(latLng, null, (int) (0.7d * duration));
                                                                                         }
                                                                                     }
 
@@ -6235,7 +6225,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         new HomeUtil().putDefaultParams(nameValuePairs);
                         Response response = RestClient.getApiService().getOngoingRidePath(nameValuePairs);
-                        String result = new String(((TypedByteArray)response.getBody()).getBytes());
+                        String result = new String(((TypedByteArray) response.getBody()).getBytes());
 
                         Log.e(TAG, "getOngoingRidePath result=" + result);
 
@@ -6268,54 +6258,58 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                 firstPos = 0;
                                             }
                                             // sorting logic
-                                            if(firstPos > -1) {
+                                            if (firstPos > -1) {
                                                 List<RidePath> ridePathsSorted = new ArrayList<RidePath>();
                                                 ridePathsList.add(0, ridePathsList.remove(firstPos));
 
-												ridePathsSorted.add(ridePathsList.get(0));
+                                                ridePathsSorted.add(ridePathsList.get(0));
 
-												while(ridePathsSorted.size() < ridePathsList.size()){
-													RidePath ridePath = ridePathsSorted.get(ridePathsSorted.size()-1);
-													RidePath ridePathNearest = null;
-													double distFromCurr = Double.MAX_VALUE;
-													for (RidePath ridePathI : ridePathsList) {
-														if(ridePath.ridePathId != ridePathI.ridePathId && !ridePathsSorted.contains(ridePathI)){
-															double dist = MapUtils.distance(ridePath.getDestinationLatLng(), ridePathI.getSourceLatLng());
-															if(dist < distFromCurr){
-																distFromCurr = dist;
-																ridePathNearest = ridePathI;
-															}
-														}
-													}
-													if(ridePathNearest != null){
-														ridePathsSorted.add(ridePathNearest);
-													}
-												}
+                                                while (ridePathsSorted.size() < ridePathsList.size()) {
+                                                    RidePath ridePath = ridePathsSorted.get(ridePathsSorted.size() - 1);
+                                                    RidePath ridePathNearest = null;
+                                                    double distFromCurr = Double.MAX_VALUE;
+                                                    for (RidePath ridePathI : ridePathsList) {
+                                                        if (ridePath.ridePathId != ridePathI.ridePathId && !ridePathsSorted.contains(ridePathI)) {
+                                                            double dist = MapUtils.distance(ridePath.getDestinationLatLng(), ridePathI.getSourceLatLng());
+                                                            if (dist < distFromCurr) {
+                                                                distFromCurr = dist;
+                                                                ridePathNearest = ridePathI;
+                                                            }
+                                                        }
+                                                    }
+                                                    if (ridePathNearest != null) {
+                                                        ridePathsSorted.add(ridePathNearest);
+                                                    }
+                                                }
 
-												if(ridePathsList.size() == ridePathsSorted.size()){
-													ridePathsList.clear();
-													ridePathsList.addAll(ridePathsSorted);
+                                                if (ridePathsList.size() == ridePathsSorted.size()) {
+                                                    ridePathsList.clear();
+                                                    ridePathsList.addAll(ridePathsSorted);
 
                                                     boolean sourceAdded = false;
-													for (RidePath ridePathI : ridePathsList) {
-                                                        if(!sourceAdded){
+                                                    for (RidePath ridePathI : ridePathsList) {
+                                                        if (!sourceAdded) {
                                                             latLngsList.add(ridePathI.getSourceLatLng());
                                                             sourceAdded = true;
                                                         }
-														lastLatLng = ridePathI.getDestinationLatLng();
-														latLngsList.add(lastLatLng);
-													}
-												}
+                                                        lastLatLng = ridePathI.getDestinationLatLng();
+                                                        latLngsList.add(lastLatLng);
+                                                    }
+                                                }
                                             }
 
 
-                                            if(lastLatLng != null) {
+                                            if (lastLatLng != null) {
                                                 Data.autoData.getAssignedDriverInfo().latLng = lastLatLng;
                                                 getDropLocationPathAndDisplay(lastLatLng, true, latLngsList);
                                             }
                                             polylineOptionsInRideDriverPath = null;
                                             plotPolylineInRideDriverPath();
-                                            try { MyApplication.getInstance().getDatabase2().createRideInfoRecords(ridePathsList); } catch (Exception e) { e.printStackTrace(); }
+                                            try {
+                                                MyApplication.getInstance().getDatabase2().createRideInfoRecords(ridePathsList);
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
 
                                         }
                                     } catch (Exception e) {
@@ -6336,15 +6330,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             };
 
             displayOldPath();
-            if(driverMarkerInRide == null){
-                if(lastSavedLatLng != null){
+            if (driverMarkerInRide == null) {
+                if (lastSavedLatLng != null) {
                     Data.autoData.getAssignedDriverInfo().latLng = lastSavedLatLng;
                 }
                 MarkerOptions markerOptions = getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo());
                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createMarkerBitmapForResource(this, assl, R.drawable.ic_marker_transparent)));
                 driverMarkerInRide = map.addMarker(markerOptions);
                 getDropLocationPathAndDisplay(Data.autoData.getAssignedDriverInfo().latLng, true, null);
-                if(driverMarkerInRide.getRotation() == 0f) {
+                if (driverMarkerInRide.getRotation() == 0f) {
                     if (Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0) {
                         driverMarkerInRide.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
                     } else {
@@ -6363,11 +6357,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private LatLng lastSavedLatLng;
-    private ArrayList<PolylineOptions> getPolylineOptionsInRideDriverPath(){
-        if(polylineOptionsInRideDriverPath == null){
+
+    private ArrayList<PolylineOptions> getPolylineOptionsInRideDriverPath() {
+        if (polylineOptionsInRideDriverPath == null) {
             polylineOptionsInRideDriverPath = new ArrayList<>();
         }
-        if(polylineOptionsInRideDriverPath.size() == 0) {
+        if (polylineOptionsInRideDriverPath.size() == 0) {
             try {
                 ArrayList<RidePath> ridePathsList = MyApplication.getInstance().getDatabase2().getRidePathInfo();
                 for (RidePath ridePath : ridePathsList) {
@@ -6387,16 +6382,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         return polylineOptionsInRideDriverPath;
     }
 
-    private void plotPolylineInRideDriverPath(){
+    private void plotPolylineInRideDriverPath() {
         if (map != null) {
             initAndClearInRidePath();
-            for(PolylineOptions polylineOptions : getPolylineOptionsInRideDriverPath()){
+            for (PolylineOptions polylineOptions : getPolylineOptionsInRideDriverPath()) {
                 polylinesInRideDriverPath.add(map.addPolyline(polylineOptions));
             }
         }
     }
 
-    private void initAndClearInRidePath(){
+    private void initAndClearInRidePath() {
         if (map != null) {
             if (polylinesInRideDriverPath == null) {
                 polylinesInRideDriverPath = new ArrayList<>();
@@ -6438,7 +6433,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    public boolean toShowPathToDrop(){
+    public boolean toShowPathToDrop() {
         return (PassengerScreenMode.P_IN_RIDE == passengerScreenMode);
     }
 
@@ -6451,13 +6446,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         List<LatLng> listPath = null;
                         if (MyApplication.getInstance().isOnline() && Data.autoData.getDropLatLng() != null && pickupLatLng != null && toShowPathToDrop()) {
                             LatLng source = pickupLatLng;
-                            if(latLngsListForDriverAnimation == null){
+                            if (latLngsListForDriverAnimation == null) {
                                 RidePath ridePath = MyApplication.getInstance().getDatabase2().getLastRidePath();
                                 source = ridePath != null ? ridePath.getDestinationLatLng() : pickupLatLng;
                             }
                             Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
                                     Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false);
-                            String result = new String(((TypedByteArray)response.getBody()).getBytes());
+                            String result = new String(((TypedByteArray) response.getBody()).getBytes());
                             if (result != null) {
                                 listPath = MapUtils.getLatLngListFromPath(result);
                                 final List<LatLng> finalListPath = listPath;
@@ -6472,8 +6467,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 7f).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true).zIndex(0);
 
                                                     // for joining last point of driver tracked path to path left (red to blue)
-                                                    if(latLngsListForDriverAnimation != null && latLngsListForDriverAnimation.size() > 1){
-                                                        pathToDropLocationPolylineOptions.add(latLngsListForDriverAnimation.get(latLngsListForDriverAnimation.size()-1));
+                                                    if (latLngsListForDriverAnimation != null && latLngsListForDriverAnimation.size() > 1) {
+                                                        pathToDropLocationPolylineOptions.add(latLngsListForDriverAnimation.get(latLngsListForDriverAnimation.size() - 1));
                                                     }
                                                     for (int z = 0; z < finalListPath.size(); z++) {
                                                         pathToDropLocationPolylineOptions.add(finalListPath.get(z));
@@ -6499,32 +6494,32 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             @Override
                             public void run() {
                                 try {
-                                    if(driverMarkerInRide != null && latLngsListForDriverAnimation != null && latLngsListForDriverAnimation.size() > 1) {
-										int untrackedPathColor = Data.autoData.getDropLatLng() != null ? getResources().getColor(R.color.google_path_polyline_color) : Color.TRANSPARENT;
-										MarkerAnimation.animateMarkerOnList(driverMarkerInRide, latLngsListForDriverAnimation,
-												new LatLngInterpolator.LinearFixed(), true, map,
-												RIDE_ELAPSED_PATH_COLOR,
-												untrackedPathColor, ASSL.Xscale() * 7f, null, getString(R.string.google_maps_api_server_key), false);
-									} else {
+                                    if (driverMarkerInRide != null && latLngsListForDriverAnimation != null && latLngsListForDriverAnimation.size() > 1) {
+                                        int untrackedPathColor = Data.autoData.getDropLatLng() != null ? getResources().getColor(R.color.google_path_polyline_color) : Color.TRANSPARENT;
+                                        MarkerAnimation.animateMarkerOnList(driverMarkerInRide, latLngsListForDriverAnimation,
+                                                new LatLngInterpolator.LinearFixed(), true, map,
+                                                RIDE_ELAPSED_PATH_COLOR,
+                                                untrackedPathColor, ASSL.Xscale() * 7f, null, getString(R.string.google_maps_api_server_key), false);
+                                    } else {
                                         MarkerAnimation.clearPolylines();
                                     }
 
-                                    if(zoom) {
+                                    if (zoom) {
                                         List<LatLng> latLngsToInclude = null;
-                                        if(latLngsListForDriverAnimation != null){
-                                            if(latLngsToInclude == null){
+                                        if (latLngsListForDriverAnimation != null) {
+                                            if (latLngsToInclude == null) {
                                                 latLngsToInclude = new ArrayList<LatLng>();
                                             }
                                             latLngsToInclude.addAll(latLngsListForDriverAnimation);
                                         }
-                                        if(finalListPath1 != null){
-                                            if(latLngsToInclude == null){
+                                        if (finalListPath1 != null) {
+                                            if (latLngsToInclude == null) {
                                                 latLngsToInclude = new ArrayList<LatLng>();
                                             }
                                             latLngsToInclude.addAll(finalListPath1);
                                         }
-										zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngsToInclude, 0);
-									}
+                                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngsToInclude, 0);
+                                    }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -6540,7 +6535,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    public MarkerOptions getCustomerLocationMarkerOptions(LatLng customerLatLng){
+    public MarkerOptions getCustomerLocationMarkerOptions(LatLng customerLatLng) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("End Location");
         markerOptions.snippet("");
@@ -6586,7 +6581,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             btnOk.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(requestRideDriverCheck()){
+                    if (requestRideDriverCheck()) {
                         dialog.dismiss();
                     }
                 }
@@ -6621,14 +6616,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             //30.7500, 76.7800
             //22.971723, 78.754263
-            if((Utils.compareDouble(Data.autoData.getPickupLatLng().latitude, 30.7500) == 0 && Utils.compareDouble(Data.autoData.getPickupLatLng().longitude, 76.7800) == 0)
+            if ((Utils.compareDouble(Data.autoData.getPickupLatLng().latitude, 30.7500) == 0 && Utils.compareDouble(Data.autoData.getPickupLatLng().longitude, 76.7800) == 0)
                     ||
-                    (Utils.compareDouble(Data.autoData.getPickupLatLng().latitude, 22.971723) == 0 && Utils.compareDouble(Data.autoData.getPickupLatLng().longitude, 78.754263) == 0)){
+                    (Utils.compareDouble(Data.autoData.getPickupLatLng().latitude, 22.971723) == 0 && Utils.compareDouble(Data.autoData.getPickupLatLng().longitude, 78.754263) == 0)) {
                 myLocation = null;
                 Utils.showToast(activity, "Waiting for location...");
                 return;
-            }
-            else{
+            } else {
                 if (myLocation == null) {
                     //We could not detect your location. Are you sure you want to request an auto to pick you at this location
                     myLocation = new Location(LocationManager.GPS_PROVIDER);
@@ -6670,8 +6664,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private boolean requestRideDriverCheck(){
-        if(MyApplication.getInstance().isOnline()) {
+    private boolean requestRideDriverCheck() {
+        if (MyApplication.getInstance().isOnline()) {
             if (getFilteredDrivers() == 0) {
                 noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
                 specialPickupScreenOpened = false;
@@ -6682,7 +6676,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 initiateRequestRide(true);
                 return true;
             }
-        } else{
+        } else {
             DialogPopup.dialogNoInternet(HomeActivity.this, getString(R.string.connection_lost_title),
                     getString(R.string.connection_lost_desc), new Utils.AlertCallBackWithButtonsInterface() {
                         @Override
@@ -6704,24 +6698,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         return false;
     }
 
-    private int getFilteredDrivers(){
+    private int getFilteredDrivers() {
         int driversCount = 0;
-        for(DriverInfo driverInfo : Data.autoData.getDriverInfos()){
-            if(driverInfo.getOperatorId() == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId()
+        for (DriverInfo driverInfo : Data.autoData.getDriverInfos()) {
+            if (driverInfo.getOperatorId() == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId()
                     && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
                     && driverInfo.getRegionIds() != null
                     && driverInfo.getRegionIds().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
-                    ){
+                    ) {
                 driversCount++;
             }
         }
         return driversCount;
     }
 
-    private void noDriverNearbyToast(String message){
+    private void noDriverNearbyToast(String message) {
         Toast toast = Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT);
         TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
-        if( v != null) v.setGravity(Gravity.CENTER);
+        if (v != null) v.setGravity(Gravity.CENTER);
         toast.show();
     }
 
@@ -6730,7 +6724,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
      */
     public void rateAppPopup(final RateAppDialogContent rateAppDialogContent) {
         try {
-            if(rateAppDialogContent != null) {
+            if (rateAppDialogContent != null) {
                 getRateAppDialog().show(rateAppDialogContent);
             }
         } catch (Exception e) {
@@ -6739,8 +6733,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private RateAppDialog rateAppDialog;
-    private RateAppDialog getRateAppDialog(){
-        if(rateAppDialog == null){
+
+    private RateAppDialog getRateAppDialog() {
+        if (rateAppDialog == null) {
             rateAppDialog = new RateAppDialog(this);
         }
         return rateAppDialog;
@@ -6782,14 +6777,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         public void run() {
                             try {
                                 Log.i("in in herestartRideForCustomer  run class", "=");
-                                if(Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null) {
+                                if (Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null) {
                                     Data.autoData.setReferralPopupContent(referralPopupContent);
-									initializeStartRideVariables();
-									passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-									switchPassengerScreen(passengerScreenMode);
-								} else{
-									callAndHandleStateRestoreAPI(true);
-								}
+                                    initializeStartRideVariables();
+                                    passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+                                    switchPassengerScreen(passengerScreenMode);
+                                } else {
+                                    callAndHandleStateRestoreAPI(true);
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -6803,12 +6798,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             try {
                                 Log.i("in in herestartRideForCustomer  run class", "=");
                                 if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-									firstTimeZoom = false;
-									passengerScreenMode = PassengerScreenMode.P_INITIAL;
-									switchPassengerScreen(passengerScreenMode);
-									DialogPopup.alertPopup(HomeActivity.this, "", message);
+                                    firstTimeZoom = false;
+                                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                    switchPassengerScreen(passengerScreenMode);
+                                    DialogPopup.alertPopup(HomeActivity.this, "", message);
                                     dismissSOSDialog();
-								}
+                                }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -6830,7 +6825,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void run() {
                 try {
-                    if(!isSpecialPickupScreenOpened()) {
+                    if (!isSpecialPickupScreenOpened()) {
                         callMapTouchedRefreshDrivers();
                     }
                 } catch (Exception e) {
@@ -6859,12 +6854,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     @Override
-    public void onUpdatePoolRideStatus(JSONObject jsonObject){
+    public void onUpdatePoolRideStatus(JSONObject jsonObject) {
         try {
             final String poolRideStatusString = jsonObject.optString("message", getResources().getString(R.string.sharing_your_ride_with));
             ArrayList<String> fellowRiders = new ArrayList<>();
             JSONArray userNames = jsonObject.optJSONArray("user_names");
-            if(userNames != null) {
+            if (userNames != null) {
                 for (int i = 0; i < userNames.length(); i++) {
                     fellowRiders.add(userNames.getJSONObject(i).optString("user_name"));
                 }
@@ -6878,13 +6873,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     StringBuilder sb;
-    private void setPoolRideStatus(String message, ArrayList<String> userNames){
-        if(message.equalsIgnoreCase("")){
+
+    private void setPoolRideStatus(String message, ArrayList<String> userNames) {
+        if (message.equalsIgnoreCase("")) {
             message = getResources().getString(R.string.sharing_your_ride_with);
         }
-        sb  = new StringBuilder();
+        sb = new StringBuilder();
         sb.append(message);
-        if(userNames != null) {
+        if (userNames != null) {
             for (int i = 0; i < userNames.size(); i++) {
                 sb.append(userNames.get(i));
                 break;
@@ -6968,13 +6964,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             double fareFixed = 0;
             String cancelRideThrashHoldTime = "";
             int cancellationCharges = 0;
-            try{
+            try {
                 fareFixed = jObj.optJSONObject("fare_details").optDouble("fare_fixed", 0);
                 cancelRideThrashHoldTime = jObj.optString("cancel_ride_threshold_time", "");
                 cancellationCharges = jObj.optInt("cancellation_charge", 0);
                 bearing = jObj.optDouble(KEY_BEARING, 0);
 
-            } catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             int preferredPaymentMode = jObj.optInt("preferred_payment_mode", PaymentOption.CASH.getOrdinal());
@@ -7000,14 +6996,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             MyApplication.getInstance().getDatabase2().insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), new LatLng(latitude, longitude));
 
-            if(ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag){
+            if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag) {
                 passengerScreenMode = PassengerScreenMode.P_REQUEST_FINAL;
-            }
-            else if(ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag){
+            } else if (ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag) {
                 initializeStartRideVariables();
                 passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-            }
-            else if(ApiResponseFlags.RIDE_ARRIVED.getOrdinal() == flag){
+            } else if (ApiResponseFlags.RIDE_ARRIVED.getOrdinal() == flag) {
                 passengerScreenMode = PassengerScreenMode.P_DRIVER_ARRIVED;
             }
             runOnUiThread(new Runnable() {
@@ -7021,7 +7015,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
-
 
 
     public void clearRideSPData() {
@@ -7191,8 +7184,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void checkForMyLocationButtonVisibility(){
-        if(relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE) {
+    private void checkForMyLocationButtonVisibility() {
+        if (relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE) {
             try {
                 if ("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) || changeLocalityLayout.getVisibility() == View.GONE) {
                     if (MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
@@ -7225,15 +7218,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         initializeHighSpeedAccuracyFusedLocationFetcher();
     }
 
-    private void initializeHighSpeedAccuracyFusedLocationFetcher(){
+    private void initializeHighSpeedAccuracyFusedLocationFetcher() {
         destroyHighSpeedAccuracyFusedLocationFetcher();
-        if(checkForInitialMyLocationButtonClick()) {
+        if (checkForInitialMyLocationButtonClick()) {
             if (highSpeedAccuracyLF == null) {
                 highSpeedAccuracyLF = new LocationFetcher(MyApplication.getInstance());
             }
             highSpeedAccuracyLF.connect(highSpeedLU, 5000);
         }
     }
+
     private LocationUpdate highSpeedLU = new LocationUpdate() {
         @Override
         public void onLocationChanged(Location location) {
@@ -7241,7 +7235,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (checkForInitialMyLocationButtonClick()) {
                     LatLng lastMapCentre = map.getCameraPosition().target;
                     LatLng currentLoc = new LatLng(location.getLatitude(), location.getLongitude());
-                    if(MapUtils.distance(lastMapCentre, currentLoc) > MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
+                    if (MapUtils.distance(lastMapCentre, currentLoc) > MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
                         map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), getMapAnimateDuration(), null);
                     }
                 } else {
@@ -7254,7 +7248,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     };
 
 
-    private boolean checkForInitialMyLocationButtonClick(){
+    private boolean checkForInitialMyLocationButtonClick() {
         return PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened && !specialPickupScreenOpened
                 && myLocationButtonClicked;
     }
@@ -7273,6 +7267,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
+
     public void destroyHighSpeedAccuracyFusedLocationFetcher() {
         try {
             if (highSpeedAccuracyLF != null) {
@@ -7295,7 +7290,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 checkForMyLocationButtonVisibility();
 
-                if(PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink){
+                if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink) {
                     Data.autoData.setFarAwayCity("");
                     mapTouched = true;
                     zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
@@ -7312,7 +7307,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } catch (Exception e) {
 //				e.printStackTrace();
                 }
-                if(!cached && PassengerScreenMode.P_INITIAL == passengerScreenMode
+                if (!cached && PassengerScreenMode.P_INITIAL == passengerScreenMode
                         && relativeLayoutLocationError.getVisibility() == View.VISIBLE) {
                     locationGotNow();
                 }
@@ -7325,15 +7320,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     };
 
 
-    private void locationGotNow(){
+    private void locationGotNow() {
         textViewInitialSearch.setText("");
         relativeLayoutLocationError.setVisibility(View.GONE);
         checkForMyLocationButtonVisibility();
         imageViewRideNow.setVisibility(View.VISIBLE);
         centreLocationRl.setVisibility(View.VISIBLE);
     }
-
-
 
 
     //Customer's timer
@@ -7402,7 +7395,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     nameValuePairs.put("current_latitude", "" + Data.autoData.getPickupLatLng().latitude);
                                     nameValuePairs.put("current_longitude", "" + Data.autoData.getPickupLatLng().longitude);
                                 }
-                                if(Data.autoData.getDropLatLng() != null){
+                                if (Data.autoData.getDropLatLng() != null) {
                                     nameValuePairs.put(KEY_OP_DROP_LATITUDE, String.valueOf(Data.autoData.getDropLatLng().latitude));
                                     nameValuePairs.put(KEY_OP_DROP_LONGITUDE, String.valueOf(Data.autoData.getDropLatLng().longitude));
                                     nameValuePairs.put(KEY_DROP_LOCATION_ADDRESS, Data.autoData.getDropAddress());
@@ -7438,8 +7431,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
                                 String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
-                                if(links != null){
-                                    if(!"[]".equalsIgnoreCase(links)) {
+                                if (links != null) {
+                                    if (!"[]".equalsIgnoreCase(links)) {
                                         nameValuePairs.put(KEY_BRANCH_REFERRING_LINKS, links);
                                     }
                                 }
@@ -7454,8 +7447,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
                                         .getRequestRideOptionsFragment().getRegionSelected().getRegionId()));
 
-                                if(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
-                                    nameValuePairs.put("pool_fare_id", ""+jugnooPoolFareId);
+                                if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
+                                    nameValuePairs.put("pool_fare_id", "" + jugnooPoolFareId);
                                 }
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
@@ -7504,10 +7497,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                         public void run() {
                                                             try {
                                                                 if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-																	DialogPopup.alertPopup(HomeActivity.this, "", errorMessage);
-																	HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-																	switchPassengerScreen(passengerScreenMode);
-																}
+                                                                    DialogPopup.alertPopup(HomeActivity.this, "", errorMessage);
+                                                                    HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                                                    switchPassengerScreen(passengerScreenMode);
+                                                                }
                                                             } catch (Exception e) {
                                                                 e.printStackTrace();
                                                             }
@@ -7540,20 +7533,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                             GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
                                                     confirmedScreenOpened = false;
                                                     specialPickupScreenOpened = false;
-                                                    if(Data.autoData.getPickupPaymentOption() != PaymentOption.CASH.getOrdinal()) {
+                                                    if (Data.autoData.getPickupPaymentOption() != PaymentOption.CASH.getOrdinal()) {
                                                         Prefs.with(HomeActivity.this).save(SP_LAST_USED_WALLET, Data.autoData.getPickupPaymentOption());
                                                     }
 
-                                                    if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null){
+                                                    if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null) {
                                                         GAUtils.event(RIDES, HOME, slidingBottomPanel
-                                                                .getRequestRideOptionsFragment().getRegionSelected().getRegionName()+" "+REQUESTED);
+                                                                .getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUESTED);
                                                     }
                                                 }
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
-                                                if(jObj.has(Constants.KEY_BIDS)) {
-													Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
-													updateBidsView();
-												}
+                                                if (jObj.has(Constants.KEY_BIDS)) {
+                                                    Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
+                                                    updateBidsView();
+                                                }
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag
                                                     || ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag
                                                     || ApiResponseFlags.RIDE_ARRIVED.getOrdinal() == flag) {
@@ -7570,17 +7563,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     public void run() {
                                                         try {
                                                             if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-																noDriverAvailablePopup(HomeActivity.this, false, log);
-																firstTimeZoom = false;
-																HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-																switchPassengerScreen(passengerScreenMode);
-															}
+                                                                noDriverAvailablePopup(HomeActivity.this, false, log);
+                                                                firstTimeZoom = false;
+                                                                HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                                                switchPassengerScreen(passengerScreenMode);
+                                                            }
                                                         } catch (Exception e) {
                                                             e.printStackTrace();
                                                         }
                                                     }
                                                 });
-                                            } else if(ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag){
+                                            } else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
                                                 final String message = jObj.optString(KEY_MESSAGE, "");
                                                 final double userDebt = jObj.optDouble(KEY_USER_DEBT, 0);
                                                 Log.e("USER_IN_DEBT message", "=" + message);
@@ -7590,17 +7583,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     public void run() {
                                                         try {
                                                             if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-																HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-																switchPassengerScreen(passengerScreenMode);
-																new UserDebtDialog(HomeActivity.this, Data.userData,
-																		new UserDebtDialog.Callback() {
-																			@Override
-																			public void successFullyDeducted(double userDebt) {
-																				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
-																				setUserData();
-																			}
-																		}).showUserDebtDialog(userDebt, message);
-															}
+                                                                HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                                                switchPassengerScreen(passengerScreenMode);
+                                                                new UserDebtDialog(HomeActivity.this, Data.userData,
+                                                                        new UserDebtDialog.Callback() {
+                                                                            @Override
+                                                                            public void successFullyDeducted(double userDebt) {
+                                                                                MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
+                                                                                setUserData();
+                                                                            }
+                                                                        }).showUserDebtDialog(userDebt, message);
+                                                            }
                                                         } catch (Exception e) {
                                                             e.printStackTrace();
                                                         }
@@ -7668,16 +7661,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void run() {
                 try {
                     if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
-						relativeLayoutAssigningDropLocationParentSetVisibility(View.GONE);
-						initialCancelRideBtn.setVisibility(View.GONE);
-						findDriverJugnooAnimation.setVisibility(View.VISIBLE);
-						jugnooAnimation.start();
-					} else {
-						setDropLocationAssigningUI();
-						initialCancelRideBtn.setVisibility(View.VISIBLE);
-						jugnooAnimation.stop();
-						findDriverJugnooAnimation.setVisibility(View.GONE);
-					}
+                        relativeLayoutAssigningDropLocationParentSetVisibility(View.GONE);
+                        initialCancelRideBtn.setVisibility(View.GONE);
+                        findDriverJugnooAnimation.setVisibility(View.VISIBLE);
+                        jugnooAnimation.start();
+                    } else {
+                        setDropLocationAssigningUI();
+                        initialCancelRideBtn.setVisibility(View.VISIBLE);
+                        jugnooAnimation.stop();
+                        findDriverJugnooAnimation.setVisibility(View.GONE);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -7688,7 +7681,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void fbLogEvent(HashMap<String, String> params) {
         try {
             Bundle bundle = new Bundle();
-            for(String key : params.keySet()){
+            for (String key : params.keySet()) {
                 bundle.putString(key, params.get(key));
             }
 
@@ -7735,7 +7728,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    public void afterRideFeedbackSubmitted(final int givenRating){
+    public void afterRideFeedbackSubmitted(final int givenRating) {
         try {
             try {
                 disableEmergencyModeIfNeeded(Data.autoData.getcEngagementId());
@@ -7762,7 +7755,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setPickupAddress("");
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
-			Data.autoData.setDropAddressId(0);
+            Data.autoData.setDropAddressId(0);
             Data.setRecentAddressesFetched(false);
             dropLocationSet = false;
             zoomedForSearch = false;
@@ -7810,7 +7803,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
 
 
-
             try {
                 AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
                         "947755540", "BS6QCL3P0GgQlLT2wwM", "0.00", false);
@@ -7822,8 +7814,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
-
-
 
 
     @Override
@@ -7871,12 +7861,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void run() {
                 try {
-                    if(Data.autoData.getAssignedDriverInfo() != null) {
-						passengerScreenMode = PassengerScreenMode.P_DRIVER_ARRIVED;
-						switchPassengerScreen(passengerScreenMode);
-					} else{
-						callAndHandleStateRestoreAPI(true);
-					}
+                    if (Data.autoData.getAssignedDriverInfo() != null) {
+                        passengerScreenMode = PassengerScreenMode.P_DRIVER_ARRIVED;
+                        switchPassengerScreen(passengerScreenMode);
+                    } else {
+                        callAndHandleStateRestoreAPI(true);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -7919,6 +7909,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public static String CALL = "CALL", SMS = "SMS", CALL_100 = "CALL_100";
 
     private Dialog sosDialog;
+
     public void sosDialog(final Activity activity) {
         if (Data.userData.getEmergencyContactsList() != null) {
             sosDialog = new EmergencyDialog(activity, Data.autoData.getcEngagementId(), new EmergencyDialog.CallBack() {
@@ -7931,7 +7922,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     intent.putExtra(Constants.KEY_DRIVER_ID, Data.autoData.getAssignedDriverInfo().userId);
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    GAUtils.event(RIDES, GAAction.HELP+POPUP, ENABLE_EMERGENCY_MODE+CLICKED);
+                    GAUtils.event(RIDES, GAAction.HELP + POPUP, ENABLE_EMERGENCY_MODE + CLICKED);
                 }
 
                 @Override
@@ -7947,7 +7938,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     intent.putExtra(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
                     startActivity(intent);
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                    GAUtils.event(RIDES, GAAction.HELP+POPUP, SEND_RIDE_STATUS+CLICKED);
+                    GAUtils.event(RIDES, GAAction.HELP + POPUP, SEND_RIDE_STATUS + CLICKED);
                 }
 
                 @Override
@@ -7960,7 +7951,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         startActivity(intent);
                         overridePendingTransition(R.anim.right_in, R.anim.right_out);
                     }
-                    GAUtils.event(RIDES, GAAction.HELP+POPUP, IN_APP_SUPPORT+CLICKED);
+                    GAUtils.event(RIDES, GAAction.HELP + POPUP, IN_APP_SUPPORT + CLICKED);
                 }
 
                 @Override
@@ -7976,41 +7967,43 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private final String FUGU_TAG_SOS = "SOS";
+
     public void fuguCustomerHelpRides(boolean fromSos) {
         try {
-			if(!TextUtils.isEmpty(Data.autoData.getFuguChannelId())){
+            if (!TextUtils.isEmpty(Data.autoData.getFuguChannelId())) {
                 Data.autoData.getFuguTags().remove(FUGU_TAG_SOS);
-                if(fromSos){
+                if (fromSos) {
                     Data.autoData.getFuguTags().add(FUGU_TAG_SOS);
                 }
-				FuguConfig.getInstance().openChatByTransactionId(Data.autoData.getFuguChannelId(),String.valueOf(Data.getFuguUserData().getUserId()),
-						Data.autoData.getFuguChannelName(), Data.autoData.getFuguTags());
-			}else {
-				FuguConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
-		}
+                FuguConfig.getInstance().openChatByTransactionId(Data.autoData.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
+                        Data.autoData.getFuguChannelName(), Data.autoData.getFuguTags());
+            } else {
+                FuguConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Utils.showToast(HomeActivity.this, getString(R.string.something_went_wrong));
+        }
     }
 
-    private void dismissSOSDialog(){
-        if(sosDialog != null && sosDialog.isShowing()){
+    private void dismissSOSDialog() {
+        if (sosDialog != null && sosDialog.isShowing()) {
             sosDialog.dismiss();
         }
     }
 
     public static int localModeEnabled = -1;
-    private void updateTopBar(){
-        try{
-            if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+
+    private void updateTopBar() {
+        try {
+            if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                     || PassengerScreenMode.P_IN_RIDE == passengerScreenMode
                     || PassengerScreenMode.P_ASSIGNING == passengerScreenMode
                     || (PassengerScreenMode.P_RIDE_END == passengerScreenMode
-                    && relativeLayoutRideEndWithImage.getVisibility() == View.GONE && relativeLayoutGreat.getVisibility() == View.GONE)){
+                    && relativeLayoutRideEndWithImage.getVisibility() == View.GONE && relativeLayoutGreat.getVisibility() == View.GONE)) {
                 int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
-                if(modeEnabled == 1){
+                if (modeEnabled == 1) {
                     topBar.textViewTitle.setText(getResources().getString(R.string.emergency_mode_enabled));
 
 //                    topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)getResources().getDimensionPixelSize(R.dimen.text_size_30)*minRatio);
@@ -8019,25 +8012,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     topBar.imageViewMenu.setImageResource(R.drawable.menu_icon_selector_emergency);
                     localModeEnabled = modeEnabled;
                     return;
-                } else{
-                    if(localModeEnabled == 1){
+                } else {
+                    if (localModeEnabled == 1) {
                         EmergencyDisableDialog emergencyDisableDialog = new EmergencyDisableDialog(HomeActivity.this);
                         emergencyDisableDialog.show();
                     }
-                    if(getStarSubscriptionCheckoutFragment() != null){
+                    if (getStarSubscriptionCheckoutFragment() != null) {
                         topBar.textViewTitle.setText(getResources().getString(R.string.pay_online));
                     } else {
                         topBar.textViewTitle.setText(getResources().getString(R.string.rides));
                     }
                 }
                 localModeEnabled = modeEnabled;
-            } else{
+            } else {
                 Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
-                if(confirmedScreenOpened){
+                if (confirmedScreenOpened) {
                     topBar.textViewTitle.setText(getResources().getString(R.string.confirmation));
-                } else if(specialPickupScreenOpened){
+                } else if (specialPickupScreenOpened) {
                     topBar.textViewTitle.setText(getResources().getString(R.string.choose_pickup));
-                } else if(getStarSubscriptionCheckoutFragment() != null){
+                } else if (getStarSubscriptionCheckoutFragment() != null) {
                     topBar.textViewTitle.setText(getResources().getString(R.string.pay_online));
                 } else {
                     topBar.textViewTitle.setText(getResources().getString(R.string.rides));
@@ -8050,20 +8043,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             topBar.imageViewMenu.setImageResource(R.drawable.ic_menu_selector);
             topBar.textViewTitle.setTextColor(getResources().getColor(R.color.text_color));
 
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-    private void disableEmergencyModeIfNeeded(final String engagementId){
+    private void disableEmergencyModeIfNeeded(final String engagementId) {
         int modeEnabled = Prefs.with(this).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
-        if(modeEnabled == 1){
+        if (modeEnabled == 1) {
             disableEmergencyMode(engagementId);
         }
     }
 
-    public void disableEmergencyMode(final String engagementId){
+    public void disableEmergencyMode(final String engagementId) {
         new ApiEmergencyDisable(this, new ApiEmergencyDisable.Callback() {
             @Override
             public void onSuccess() {
@@ -8088,6 +8081,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private boolean switchUICalledFromStateRestore;
+
     public void callAndHandleStateRestoreAPI(final boolean showDialogs) {
         new Thread(new Runnable() {
             @Override
@@ -8135,8 +8129,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     if (showDialogs) {
                                         DialogPopup.dismissLoadingDialog();
                                     }
-                                    if(!placeAdded) {
-                                        if(PassengerScreenMode.P_IN_RIDE != passengerScreenModeOld
+                                    if (!placeAdded) {
+                                        if (PassengerScreenMode.P_IN_RIDE != passengerScreenModeOld
                                                 && PassengerScreenMode.P_IN_RIDE == passengerScreenMode
                                                 && Data.autoData.getDropLatLng() != null) {
                                             // havan karo yahan pe
@@ -8330,44 +8324,45 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private DeepLinkAction deepLinkAction = new DeepLinkAction();
-    private void openPushDialog(){
+
+    private void openPushDialog() {
         dismissPushDialog(false);
         PushDialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
             @Override
             public void onButtonClicked(int deepIndex, String url, int restaurantId) {
-                if("".equalsIgnoreCase(url)) {
+                if ("".equalsIgnoreCase(url)) {
                     Data.deepLinkIndex = deepIndex;
-                    Prefs.with(HomeActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, ""+restaurantId);
+                    Prefs.with(HomeActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "" + restaurantId);
                     deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
-                } else{
+                } else {
                     Utils.openUrl(HomeActivity.this, url);
                 }
             }
         }).show();
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         }
-        if(dialog != null){
+        if (dialog != null) {
             pushDialog = dialog;
         }
     }
 
-    private void dismissPushDialog(boolean clearDialogContent){
-        if(pushDialog != null){
+    private void dismissPushDialog(boolean clearDialogContent) {
+        if (pushDialog != null) {
             pushDialog.dismiss(clearDialogContent);
             pushDialog = null;
         }
     }
 
 
-    private void fareEstimateForPool(){
-        if(Data.autoData.getDropLatLng() != null){
+    private void fareEstimateForPool() {
+        if (Data.autoData.getDropLatLng() != null) {
             int isPooled = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() ? 1 : 0;
             boolean callFareEstimate = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
                     ||
                     (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)
                     ? true : false;
-            PromoCoupon promoCouponSelected =null;
+            PromoCoupon promoCouponSelected = null;
             try {
                 promoCouponSelected = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
             } catch (Exception e) {
@@ -8388,7 +8383,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     map.addPolyline(poolPolylineOption);
 
-                    try{pickupLocationMarker.remove();}catch(Exception e){}
+                    try {
+                        pickupLocationMarker.remove();
+                    } catch (Exception e) {
+                    }
                     MarkerOptions poolMarkerOptionStart = new MarkerOptions();
                     poolMarkerOptionStart.title("Start");
                     poolMarkerOptionStart.position(Data.autoData.getPickupLatLng());
@@ -8411,22 +8409,38 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     map.addMarker(poolMarkerOptionEnd);
 
                     poolPathZoomAtConfirm();
-                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
+                    try {
+                        fabViewTest.closeMenu();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
                 public void onRetry() {
-                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
+                    try {
+                        fabViewTest.closeMenu();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
                 public void onNoRetry() {
-                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
+                    try {
+                        fabViewTest.closeMenu();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
                 public void onFareEstimateSuccess(String currency, String minFare, String maxFare, double convenienceCharge) {
-                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
+                    try {
+                        fabViewTest.closeMenu();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     textViewTotalFare.setText(getString(R.string.total_fare_colon));
                     textViewTotalFareValue.setText(Utils.formatCurrencyValue(currency, minFare) + " - " +
                             Utils.formatCurrencyValue(currency, maxFare));
@@ -8452,7 +8466,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     textViewIncludes.setVisibility(View.VISIBLE);
                     textViewIncludes.setText(text);
-                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
+                    try {
+                        fabViewTest.closeMenu();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -8463,7 +8481,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     textViewIncludes.setVisibility(View.GONE);
                     textViewIncludes.setText("");
-                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
+                    try {
+                        fabViewTest.closeMenu();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
@@ -8474,29 +8496,37 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     textViewIncludes.setVisibility(View.GONE);
                     textViewIncludes.setText("");
-                    try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
+                    try {
+                        fabViewTest.closeMenu();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, callFareEstimate,
-                    getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(),promoCouponSelected);
-        } else{
-                textViewDestSearch.setText(getResources().getString(R.string.destination_required));
-                textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
+                    getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), promoCouponSelected);
+        } else {
+            textViewDestSearch.setText(getResources().getString(R.string.destination_required));
+            textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
 
-                ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
-                int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
-                if (index == 1 && Data.autoData.getDropLatLng() == null) {
-                    translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
-                    translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
-                }
-                if (Data.autoData.getDropLatLng() == null) {
-                    Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
-                    textViewDestSearch.startAnimation(shake);
-                }
-            try {fabViewTest.closeMenu();} catch (Exception e) {e.printStackTrace();}
+            ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
+            int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
+            if (index == 1 && Data.autoData.getDropLatLng() == null) {
+                translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
+                translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
+            }
+            if (Data.autoData.getDropLatLng() == null) {
+                Animation shake = AnimationUtils.loadAnimation(this, R.anim.shake);
+                textViewDestSearch.startAnimation(shake);
+            }
+            try {
+                fabViewTest.closeMenu();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void poolPathZoomAtConfirm(){
+    private void poolPathZoomAtConfirm() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -8515,13 +8545,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-
-
-
     private ApiFetchWalletBalance apiFetchWalletBalance = null;
+
     private void fetchWalletBalance(final Activity activity, boolean ignoreTimeCheck) {
         try {
-            if(apiFetchWalletBalance == null){
+            if (apiFetchWalletBalance == null) {
                 apiFetchWalletBalance = new ApiFetchWalletBalance(this, new ApiFetchWalletBalance.Callback() {
                     @Override
                     public void onSuccess() {
@@ -8553,7 +8581,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             long lastFetchWalletBalanceCall = Prefs.with(activity).getLong(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
             long lastCallDiff = System.currentTimeMillis() - lastFetchWalletBalanceCall;
-            if(ignoreTimeCheck || lastCallDiff >= FETCH_WALLET_BALANCE_REFRESH_TIME) {
+            if (ignoreTimeCheck || lastCallDiff >= FETCH_WALLET_BALANCE_REFRESH_TIME) {
                 apiFetchWalletBalance.getBalance(false);
             }
         } catch (Exception e) {
@@ -8562,17 +8590,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private void uploadContactsApi(final boolean fromLogin){
+    private void uploadContactsApi(final boolean fromLogin) {
         HashMap<String, String> params = new HashMap<>();
         if (MyApplication.getInstance().isOnline()) {
 
             DialogPopup.showLoadingDialog(this, "Loading...");
             params.put(KEY_ACCESS_TOKEN, Data.userData.accessToken);
-            if(fromLogin){
+            if (fromLogin) {
                 params.put(KEY_ENGAGEMENT_ID, "");
                 params.put(KEY_USER_RESPONSE, "-2");
                 params.put(KEY_IS_LOGIN_POPUP, "1");
-            } else{
+            } else {
                 params.put(KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
                 params.put(KEY_USER_RESPONSE, "-1");
             }
@@ -8616,7 +8644,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-
     public void skipFeedbackForCustomerAsync(final Activity activity, final String engagementId) {
         try {
             final HashMap<String, String> params = new HashMap<>();
@@ -8632,14 +8659,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 @Override
                 public void failure(RetrofitError error) {
-                    Log.e(TAG, "skipRatingByCustomer error="+error.toString());
+                    Log.e(TAG, "skipRatingByCustomer error=" + error.toString());
                 }
             });
 
             MyApplication.getInstance().getDatabase2().insertPendingAPICall(activity,
                     PendingCall.SKIP_RATING_BY_CUSTOMER.getPath(), params);
 
-            try { Data.autoData.getDriverInfos().clear(); } catch (Exception e) { e.printStackTrace(); }
+            try {
+                Data.autoData.getDriverInfos().clear();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             HomeActivity.feedbackSkipped = true;
             afterRideFeedbackSubmitted(0);
@@ -8647,7 +8678,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
-
 
 
     public void submitFeedbackToDriverAsync(final Activity activity, final String engagementId, final String ratingReceiverId,
@@ -8683,14 +8713,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 
-                                    if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()){
+                                    if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
                                         new Handler().postDelayed(new Runnable() {
                                             @Override
                                             public void run() {
                                                 submitFeedbackToInitial(givenRating);
                                             }
                                         }, 3000);
-                                    } else if(Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()
+                                    } else if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal()
                                             || givenRating == 1) {
                                         submitFeedbackToInitial(givenRating);
                                     }
@@ -8716,7 +8746,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     @Override
                     public void failure(RetrofitError error) {
-                        Log.e(TAG, "rateTheDriver error="+error.toString());
+                        Log.e(TAG, "rateTheDriver error=" + error.toString());
                         relativeLayoutGreat.setVisibility(View.GONE);
                         DialogPopup.dismissLoadingDialog();
                         DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
@@ -8752,7 +8782,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //        }
     }
 
-    private void submitFeedbackToInitial(int givenRating){
+    private void submitFeedbackToInitial(int givenRating) {
         relativeLayoutGreat.setVisibility(View.GONE);
         try {
             Data.autoData.getDriverInfos().clear();
@@ -8764,13 +8794,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onTextChange(String text) {
-        if((PassengerScreenMode.P_ASSIGNING == passengerScreenMode
+        if ((PassengerScreenMode.P_ASSIGNING == passengerScreenMode
                 || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode
                 || (PassengerScreenMode.P_INITIAL == passengerScreenMode
                 && placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP))
-                && !"".equalsIgnoreCase(text)){
+                && !"".equalsIgnoreCase(text)) {
             dropLocationSearchText = text;
         }
     }
@@ -8788,11 +8818,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void onPlaceClick(SearchResult autoCompleteSearchResult) {
 
-        if(PassengerScreenMode.P_INITIAL == passengerScreenMode
-                || PassengerScreenMode.P_SEARCH == passengerScreenMode){
+        if (PassengerScreenMode.P_INITIAL == passengerScreenMode
+                || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
             myLocationButtonClicked = false;
             zoomAfterFindADriver = false;
-            if(!isPoolRideAtConfirmation()) {
+            if (!isPoolRideAtConfirmation()) {
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     textViewInitialSearch.setText(autoCompleteSearchResult.getNameForText());
                     zoomedForSearch = true;
@@ -8803,14 +8833,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 searchedALocation = true;
             }
-        }
-        else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
+        } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
             textViewAssigningDropLocationClick.setText(autoCompleteSearchResult.getNameForText());
             dropAddressName = autoCompleteSearchResult.getNameForText();
-        }
-        else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+        } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
             textViewFinalDropLocationClick.setText(autoCompleteSearchResult.getNameForText());
             dropAddressName = autoCompleteSearchResult.getNameForText();
         }
@@ -8819,9 +8847,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void onPlaceSearchPre() {
 
-        if(PassengerScreenMode.P_INITIAL == passengerScreenMode
-                || PassengerScreenMode.P_SEARCH == passengerScreenMode){
-            if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+        if (PassengerScreenMode.P_INITIAL == passengerScreenMode
+                || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
+            if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                 progressBarInitialSearch.setVisibility(View.VISIBLE);
                 progressBarInitialSearch.spin();
             }
@@ -8830,12 +8858,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Log.e("onPlaceSearchPre", "=");
     }
 
-    private void setSearchResultToPickupCase(SearchResult searchResult){
+    private void setSearchResultToPickupCase(SearchResult searchResult) {
         try {
             Gson gson = new Gson();
 //            SearchResult searchResult = gson.fromJson(Prefs.with(this)
 //                    .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
-            if(searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())){
+            if (searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())) {
                 textViewInitialSearch.setText(searchResult.getNameForText());
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), getMapAnimateDuration(), new GoogleMap.CancelableCallback() {
                     @Override
@@ -8872,69 +8900,67 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void onPlaceSearchPost(SearchResult searchResult) {
 
         try {
-            if(PassengerScreenMode.P_INITIAL == passengerScreenMode
-					|| PassengerScreenMode.P_SEARCH == passengerScreenMode) {
-				if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+            if (PassengerScreenMode.P_INITIAL == passengerScreenMode
+                    || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
+                if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     progressBarInitialSearch.stopSpinning();
                     progressBarInitialSearch.setVisibility(View.GONE);
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
-					if (map != null && searchResult != null) {
-						try {
-	//                        Prefs.with(this).save(SP_FRESH_LAST_ADDRESS_OBJ, new Gson().toJson(searchResult, SearchResult.class));
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						setSearchResultToPickupCase(searchResult);
-                        GAUtils.event(RIDES, HOME, PICKUP+LOCATION+ENTERED);
-					}
-				} else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
+                    if (map != null && searchResult != null) {
+                        try {
+                            //                        Prefs.with(this).save(SP_FRESH_LAST_ADDRESS_OBJ, new Gson().toJson(searchResult, SearchResult.class));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        setSearchResultToPickupCase(searchResult);
+                        GAUtils.event(RIDES, HOME, PICKUP + LOCATION + ENTERED);
+                    }
+                } else if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
 
-					if(Data.autoData.getDropLatLng() == null){
-						translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
-						translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
-					}
-					Data.autoData.setDropLatLng(searchResult.getLatLng());
-					Data.autoData.setDropAddress(searchResult.getAddress());
-					Data.autoData.setDropAddressId(searchResult.getId());
-					dropLocationSet = true;
-					relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
-					imageViewDropCross.setVisibility(View.VISIBLE);
+                    if (Data.autoData.getDropLatLng() == null) {
+                        translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
+                        translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
+                    }
+                    Data.autoData.setDropLatLng(searchResult.getLatLng());
+                    Data.autoData.setDropAddress(searchResult.getAddress());
+                    Data.autoData.setDropAddressId(searchResult.getId());
+                    dropLocationSet = true;
+                    relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+                    imageViewDropCross.setVisibility(View.VISIBLE);
 
-					// Save Last 3 Destination...
-					saveLastDestinations(searchResult);
+                    // Save Last 3 Destination...
+                    saveLastDestinations(searchResult);
 
-					passengerScreenMode = PassengerScreenMode.P_INITIAL;
-					textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
-					switchPassengerScreen(passengerScreenMode);
+                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
+                    switchPassengerScreen(passengerScreenMode);
 
-					if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
-							shakeAnim > 0 && !updateSpecialPickupScreen())
+                    if ((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
+                            shakeAnim > 0 && !updateSpecialPickupScreen())
                             ||
-                            (!specialPickupScreenOpened && !confirmedScreenOpened && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)){
+                            (!specialPickupScreenOpened && !confirmedScreenOpened && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)) {
                         textViewTotalFareValue.setText("");
                         imageViewRideNow.performClick();
-					}
-                    GAUtils.event(RIDES, HOME, DESTINATION+LOCATION+ENTERED);
-				}
-			}
-			else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
-				saveLastDestinations(searchResult);
-				sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
-						getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch(), false, searchResult.getAddress());
-			}
-			else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
-					|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-					|| PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
-				saveLastDestinations(searchResult);
-				zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null, 0);
-
-				sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
-						getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true, searchResult.getAddress());
-                if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
-                    GAUtils.event(RIDES, RIDE+IN_PROGRESS, DESTINATION+UPDATED);
+                    }
+                    GAUtils.event(RIDES, HOME, DESTINATION + LOCATION + ENTERED);
                 }
-			}
+            } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
+                saveLastDestinations(searchResult);
+                sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
+                        getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch(), false, searchResult.getAddress());
+            } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                    || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                    || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+                saveLastDestinations(searchResult);
+                zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null, 0);
+
+                sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
+                        getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true, searchResult.getAddress());
+                if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+                    GAUtils.event(RIDES, RIDE + IN_PROGRESS, DESTINATION + UPDATED);
+                }
+            }
 
             Log.e("onPlaceSearchPost", "=" + searchResult);
         } catch (Exception e) {
@@ -8945,22 +8971,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void onPlaceSearchError() {
 
-        if(PassengerScreenMode.P_INITIAL == passengerScreenMode
-                || PassengerScreenMode.P_SEARCH == passengerScreenMode){
-            if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
+        if (PassengerScreenMode.P_INITIAL == passengerScreenMode
+                || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
+            if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
                 textViewDestSearch.setText("");
                 dropAddressName = "";
-            } else{
+            } else {
                 textViewInitialSearch.setText("");
             }
-        }
-        else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
+        } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
             textViewAssigningDropLocationClick.setText("");
             dropAddressName = "";
-        }
-        else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+        } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
             textViewFinalDropLocationClick.setText("");
             dropAddressName = "";
         }
@@ -8978,7 +9002,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     }
 
-    private void saveLastDestinations(SearchResult searchResult){
+    private void saveLastDestinations(SearchResult searchResult) {
         try {
             lastDestination.clear();
             lastDestination.addAll(fetchLastLocations(SPLabels.LAST_DESTINATION));
@@ -9021,9 +9045,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private PaytmRechargeDialog paytmRechargeDialog;
-    private void openPaytmRechargeDialog(){
+
+    private void openPaytmRechargeDialog() {
         try {
-            if(Data.userData.getPaytmRechargeInfo() != null) {
+            if (Data.userData.getPaytmRechargeInfo() != null) {
                 if (paytmRechargeDialog != null
                         && paytmRechargeDialog.getDialog() != null
                         && paytmRechargeDialog.getDialog().isShowing()) {
@@ -9031,7 +9056,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             Data.userData.getPaytmRechargeInfo().getTransferSenderName(),
                             Data.userData.getPaytmRechargeInfo().getTransferPhone(),
                             Data.userData.getPaytmRechargeInfo().getTransferAmount());
-                } else{
+                } else {
                     paytmRechargeDialog = new PaytmRechargeDialog(HomeActivity.this,
                             Data.userData.getPaytmRechargeInfo().getTransferId(),
                             Data.userData.getPaytmRechargeInfo().getTransferSenderName(),
@@ -9065,8 +9090,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private Animation bounceScale;
-    private Animation getBounceScale(){
-        if(bounceScale == null){
+
+    private Animation getBounceScale() {
+        if (bounceScale == null) {
             bounceScale = AnimationUtils.loadAnimation(this, R.anim.bounce_scale);
         }
         return bounceScale;
@@ -9079,7 +9105,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         int oldRideType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType();
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
         int newVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
-        if(Data.autoData.getRegions().size() == 1) {
+        if (Data.autoData.getRegions().size() == 1) {
             imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
         } else {
@@ -9087,17 +9113,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(oldVehicleType)
                     || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId().equals(oldRegionId)
                     ) {
-                if(oldRideType == RideTypeValue.POOL.getOrdinal()
+                if (oldRideType == RideTypeValue.POOL.getOrdinal()
                         && textViewDestSearch.getText().toString()
                         .equalsIgnoreCase(getResources().getString(R.string.enter_destination))) {
                     textViewDestSearch.setText("");
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
                 }
                 setRegionUI(false);
-            } else{
-                if(getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
+            } else {
+                if (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                } else{
+                } else {
                     getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
             }
@@ -9108,14 +9134,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         PromoCoupon selectedCoupon = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
 
-        if(!(userClicked && oldVehicleType==newVehicleType)){//do not change promo if user clicked on same vehicle Type
-            if(selectedCoupon==null || selectedCoupon.getId()==-1 || !selectedCoupon.isVehicleTypeExists(getVehicleTypeSelected(), getOperatorIdSelected())){
+        if (!(userClicked && oldVehicleType == newVehicleType)) {//do not change promo if user clicked on same vehicle Type
+            if (selectedCoupon == null || selectedCoupon.getId() == -1 || !selectedCoupon.isVehicleTypeExists(getVehicleTypeSelected(), getOperatorIdSelected())) {
                 PromoCoupon defaultCoupon = Data.userData.getDefaultCoupon(getVehicleTypeSelected(), getOperatorIdSelected(), HomeActivity.this);
 
-                if(defaultCoupon!=null){
+                if (defaultCoupon != null) {
                     slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(defaultCoupon);
 
-                }else{
+                } else {
                     slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(-1);
                 }
             }
@@ -9125,24 +9151,26 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         slidingBottomPanel.getRequestRideOptionsFragment().updateOffersCount();
     }
 
-    public int getVehicleTypeSelected(){
-        return  slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
+    public int getVehicleTypeSelected() {
+        return slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
     }
-    public int getOperatorIdSelected(){
-        return  slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId();
+
+    public int getOperatorIdSelected() {
+        return slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId();
     }
 
     private SelectorBitmapLoader selectorBitmapLoader;
     private int regionIdForSelectorLoader;
-    private SelectorBitmapLoader getSelectorBitmapLoader(int regionIdForSelectorLoader){
-        if(selectorBitmapLoader == null){
+
+    private SelectorBitmapLoader getSelectorBitmapLoader(int regionIdForSelectorLoader) {
+        if (selectorBitmapLoader == null) {
             selectorBitmapLoader = new SelectorBitmapLoader(this);
         }
         this.regionIdForSelectorLoader = regionIdForSelectorLoader;
         return selectorBitmapLoader;
     }
 
-    private void updateImageViewRideNowIcon(){
+    private void updateImageViewRideNowIcon() {
         try {
             imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRequestSelector(this));
             getSelectorBitmapLoader(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
@@ -9150,13 +9178,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getImages().getRideNowNormal(),
                             slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getImages().getRideNowHighlighted(),
                             new SelectorBitmapLoader.Callback() {
-                        @Override
-                        public void onSuccess(Drawable drawable) {
-                            if (regionIdForSelectorLoader == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
-                                imageViewRideNow.setImageDrawable(drawable);
-                            }
-                        }
-                    }, false);
+                                @Override
+                                public void onSuccess(Drawable drawable) {
+                                    if (regionIdForSelectorLoader == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
+                                        imageViewRideNow.setImageDrawable(drawable);
+                                    }
+                                }
+                            }, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -9178,7 +9206,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
                     translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
                 }
-                if(Data.autoData.getDropLatLng() == null) {
+                if (Data.autoData.getDropLatLng() == null) {
                     textViewDestSearch.setText(getResources().getString(R.string.destination_required));
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
                 }
@@ -9199,7 +9227,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     translateViewTop(viewGroup, relativeLayoutInitialSearchBar, true, true);
                     translateViewBottom(viewGroup, relativeLayoutDestSearchBar, false, true);
                 }
-                if(Data.autoData.getDropLatLng() == null) {
+                if (Data.autoData.getDropLatLng() == null) {
                     textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
                 }
@@ -9229,15 +9257,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    public void setFabMarginInitial(boolean isSliding, boolean isSlidingPanelCollapsing){
+    public void setFabMarginInitial(boolean isSliding, boolean isSlidingPanelCollapsing) {
         try {
-            if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                 fabViewFinal.setVisibility(View.GONE);
                 fabViewIntial.setVisibility(View.VISIBLE);
                 final ValueAnimator animator;
                 int handlerTime = 0;
                 if (viewPoolInfoBarAnim.getVisibility() == View.VISIBLE) {
-                    if(changeLocalityLayout.getVisibility() == View.VISIBLE) {
+                    if (changeLocalityLayout.getVisibility() == View.VISIBLE) {
                         animator = ValueAnimator.ofInt(fabViewTest.menuLabelsRightTest.getPaddingBottom(), (int) (62f * scale + 0.5f));
                         handlerTime = 0;
                     } else {
@@ -9255,12 +9283,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                        if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                             fabViewTest.setMenuLabelsRightTestPadding((Integer) valueAnimator.getAnimatedValue());
                         }
                     }
                 });
-                if(isSlidingPanelCollapsing){
+                if (isSlidingPanelCollapsing) {
                     handlerTime = 300;
                 }
                 animator.setDuration(300);
@@ -9271,57 +9299,56 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                 }, handlerTime);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
         }
-
 
 
         setJeanieVisibility();
     }
 
-    public void setDestinationBarPlaceholderText(int rideTypeValue){
-        if(rideTypeValue == RideTypeValue.POOL.getOrdinal()){
-            if(Data.autoData.getDropLatLng() == null) {
+    public void setDestinationBarPlaceholderText(int rideTypeValue) {
+        if (rideTypeValue == RideTypeValue.POOL.getOrdinal()) {
+            if (Data.autoData.getDropLatLng() == null) {
                 textViewDestSearch.setText(getResources().getString(R.string.destination_required));
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
             }
         } else {
-            if(Data.autoData.getDropLatLng() == null) {
+            if (Data.autoData.getDropLatLng() == null) {
                 textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
             }
         }
     }
 
-    public void showPoolInforBar(boolean isSlidingPanelCollapsing){
+    public void showPoolInforBar(boolean isSlidingPanelCollapsing) {
         try {
             float mapBottomPadding = 0f;
             String textToShow = "";
 
 
-            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts() != null
-                    && !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")){
+            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts() != null
+                    && !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) {
                 textToShow = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1();
-            } else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts() != null
-                    && !TextUtils.isEmpty(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2())){
+            } else if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts() != null
+                    && !TextUtils.isEmpty(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2())) {
                 textToShow = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText2();
             }
             boolean isCustomCouponText = false;
-            PromoCoupon promoCoupon = getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon() ;
+            PromoCoupon promoCoupon = getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
 
-            if(promoCoupon!=null && promoCoupon.getId()>0){
+            if (promoCoupon != null && promoCoupon.getId() > 0) {
                 textToShow = promoCoupon.getTitle();
                 isCustomCouponText = true;
                 textViewCouponApplied.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 textViewCouponApplied.setVisibility(View.GONE);
 
             }
             textToShow = textToShow.trim();
-            if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
+            if ((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) &&
                     (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
                     (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts() != null
-                            && !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) && !isCustomCouponText){
+                            && !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase("")) && !isCustomCouponText) {
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
                 setFabMarginInitial(false, isSlidingPanelCollapsing);
                 textViewPoolInfo1.setText(textToShow);
@@ -9329,8 +9356,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewPoolInfo1.setTextColor(getResources().getColor(R.color.text_color));
                 mapBottomPadding = relativeLayoutPoolInfoBar.getMeasuredHeight();
                 //setGoogleMapPadding(70);
-            } else if((getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
-                    (!TextUtils.isEmpty(textToShow))){
+            } else if ((getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
+                    (!TextUtils.isEmpty(textToShow))) {
 
 
                 viewPoolInfoBarAnim.setVisibility(View.GONE);
@@ -9348,11 +9375,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 mapBottomPadding = relativeLayoutPoolInfoBar.getMeasuredHeight();
                 //setGoogleMapPadding(70);
-            } else{
+            } else {
                 viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
                 setFabMarginInitial(false, isSlidingPanelCollapsing);
             }
-            if(PassengerScreenMode.P_INITIAL == passengerScreenMode
+            if (PassengerScreenMode.P_INITIAL == passengerScreenMode
                     && !specialPickupScreenOpened && !confirmedScreenOpened) {
                 setGoogleMapPadding(mapBottomPadding);
             }
@@ -9361,7 +9388,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    public void forceFarAwayCity(){
+    public void forceFarAwayCity() {
         try {
             Data.autoData.setFarAwayCity(getResources().getString(R.string.service_not_available));
             setServiceAvailablityUI(Data.autoData.getFarAwayCity());
@@ -9370,11 +9397,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    public LatLng getCurrentPlaceLatLng(){
-        if(Data.getLatLngOfJeanieLastShown() != null){
+    public LatLng getCurrentPlaceLatLng() {
+        if (Data.getLatLngOfJeanieLastShown() != null) {
             return Data.getLatLngOfJeanieLastShown();
-        }
-        else if(map != null){
+        } else if (map != null) {
             return map.getCameraPosition().target;
         } else {
             return new LatLng(Data.latitude, Data.longitude);
@@ -9382,17 +9408,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-
     private ApiCampaignAvailRequest apiCampaignAvailRequest;
-    private ApiCampaignAvailRequest getApiCampaignAvailRequest(){
-        if(apiCampaignAvailRequest == null){
+
+    private ApiCampaignAvailRequest getApiCampaignAvailRequest() {
+        if (apiCampaignAvailRequest == null) {
             apiCampaignAvailRequest = new ApiCampaignAvailRequest(this, new ApiCampaignAvailRequest.Callback() {
                 @Override
                 public void onPre() {
                     try {
                         linearLayoutRequestMain.setVisibility(View.GONE);
                         relativeLayoutInAppCampaignRequest.setVisibility(View.VISIBLE);
-                        if(Data.autoData.getCampaigns().getMapLeftButton() != null){
+                        if (Data.autoData.getCampaigns().getMapLeftButton() != null) {
                             textViewInAppCampaignRequest.setText(Data.autoData.getCampaigns().getMapLeftButton().getText());
                         }
                     } catch (Exception e) {
@@ -9403,7 +9429,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 @Override
                 public void onSuccess(int flag, String message, String image, int width, int height) {
                     try {
-                        if(campaignApiCancelled || "".equalsIgnoreCase(image)){
+                        if (campaignApiCancelled || "".equalsIgnoreCase(image)) {
                             backFromCampaignAvailLoading();
                         } else {
                             float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
@@ -9440,17 +9466,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private Target targetAvailCampaign;
     private String messageAvailCampaign;
     private int flagAvailCampaign;
-    private Target getTargetAvailCampaign(int flagAvailCampaign, String messageAvailCampaign){
+
+    private Target getTargetAvailCampaign(int flagAvailCampaign, String messageAvailCampaign) {
         this.messageAvailCampaign = messageAvailCampaign;
         this.flagAvailCampaign = flagAvailCampaign;
-        if(targetAvailCampaign == null){
+        if (targetAvailCampaign == null) {
             targetAvailCampaign = new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
                     try {
                         backFromCampaignAvailLoading();
-                        if(!campaignApiCancelled){
-                            if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == HomeActivity.this.flagAvailCampaign) {
+                        if (!campaignApiCancelled) {
+                            if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == HomeActivity.this.flagAvailCampaign) {
                                 setCampaignAvailed();
                             }
                             new InAppCampaignDialog(HomeActivity.this, new InAppCampaignDialog.Callback() {
@@ -9479,13 +9506,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         return targetAvailCampaign;
     }
 
-    private void callCampaignAvailRequest(){
+    private void callCampaignAvailRequest() {
         try {
-            if(Data.autoData.getCampaigns() != null && Data.autoData.getCampaigns().getMapLeftButton() != null) {
+            if (Data.autoData.getCampaigns() != null && Data.autoData.getCampaigns().getMapLeftButton() != null) {
                 campaignApiCancelled = false;
                 getApiCampaignAvailRequest().availCampaign(map.getCameraPosition().target,
                         Data.autoData.getCampaigns().getMapLeftButton().getCampaignId());
-            } else{
+            } else {
                 Utils.showToast(this, getString(R.string.no_campaign_currently));
             }
         } catch (Exception e) {
@@ -9493,13 +9520,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void setCampaignAvailed(){
-        try{
-            if(Data.autoData.getCampaigns().getMapLeftButton().getShowCampaignAfterAvail() == 0){
+    private void setCampaignAvailed() {
+        try {
+            if (Data.autoData.getCampaigns().getMapLeftButton().getShowCampaignAfterAvail() == 0) {
                 Data.autoData.setCampaigns(null);
                 setupInAppCampaignUI();
             }
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -9507,8 +9534,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private boolean campaignApiCancelled = false;
     private ApiCampaignRequestCancel apiCampaignRequestCancel;
-    private ApiCampaignRequestCancel getApiCampaignRequestCancel(){
-        if(apiCampaignRequestCancel == null){
+
+    private ApiCampaignRequestCancel getApiCampaignRequestCancel() {
+        if (apiCampaignRequestCancel == null) {
             apiCampaignRequestCancel = new ApiCampaignRequestCancel(this, new ApiCampaignRequestCancel.Callback() {
                 @Override
                 public void onSuccess() {
@@ -9535,11 +9563,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         return apiCampaignRequestCancel;
     }
 
-    private void callApiCampaignRequestCancel(){
+    private void callApiCampaignRequestCancel() {
         try {
-            if(Data.autoData.getCampaigns() != null && Data.autoData.getCampaigns().getMapLeftButton() != null) {
+            if (Data.autoData.getCampaigns() != null && Data.autoData.getCampaigns().getMapLeftButton() != null) {
                 getApiCampaignRequestCancel().cancelCampaignRequest(Data.autoData.getCampaigns().getMapLeftButton().getCampaignId());
-            } else{
+            } else {
                 Utils.showToast(this, getString(R.string.no_campaign_currently));
                 backFromCampaignAvailLoading();
             }
@@ -9548,14 +9576,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void backFromCampaignAvailLoading(){
+    private void backFromCampaignAvailLoading() {
         linearLayoutRequestMain.setVisibility(View.VISIBLE);
         relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
     }
 
 
-
-    public void updateConfirmedStatePaymentUI(){
+    public void updateConfirmedStatePaymentUI() {
         try {
             imageViewPaymentModeConfirm.setImageResource(MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()));
@@ -9566,12 +9593,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    public void updateConfirmedStateCoupon(){
+    public void updateConfirmedStateCoupon() {
         try {
             promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
-            if(promoCouponSelectedForRide.getId() > 0){
+            if (promoCouponSelectedForRide.getId() > 0) {
                 imageViewOfferConfirm.setVisibility(View.VISIBLE);
-            } else{
+            } else {
                 imageViewOfferConfirm.setVisibility(View.GONE);
             }
             showPoolInforBar(false);
@@ -9581,21 +9608,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    public void updateConfirmedStateFare(){
+    public void updateConfirmedStateFare() {
         try {
             float padding = 150f;
-            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
+            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
                     ||
-                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1){
+                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1) {
                 relativeLayoutTotalFare.setVisibility(View.VISIBLE);
                 textVieGetFareEstimateConfirm.setVisibility(View.GONE);
                 padding = padding + 80f;
-            } else{
+            } else {
                 relativeLayoutTotalFare.setVisibility(View.GONE);
-                if(Data.autoData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")){
+                if (Data.autoData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")) {
                     textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
                     padding = padding + 80f;
-                } else{
+                } else {
                     textVieGetFareEstimateConfirm.setVisibility(View.GONE);
                 }
             }
@@ -9606,75 +9633,71 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-
-
     public void setShakeAnim(int shakeAnim) {
         this.shakeAnim = shakeAnim;
     }
 
-    public void imageViewRideNowPoolCheck(){
-            rlSpecialPickup.setVisibility(View.GONE);
-            if (getSlidingBottomPanel().getRequestRideOptionsFragment()
-                    .getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
-                if (Data.autoData.getDropLatLng() != null) {
-                    //requestRideClick();
-                    shakeAnim = 0;
-                    if(updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()){
-                        // show special pickup screen
-                        specialPickupScreenOpened = true;
-                        passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                        switchPassengerScreen(passengerScreenMode);
-                        //map.moveCamera(CameraUpdateFactory.zoomOut());
-                        showSpecialPickupMarker(specialPickups);
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
-                        spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
-                    } else {
-                        specialPickupScreenOpened = false;
-                        removeSpecialPickupMarkers();
-                        rlSpecialPickup.setVisibility(View.GONE);
-                        updateTopBar();
-                        openConfirmRequestView();
-                    }
+    public void imageViewRideNowPoolCheck() {
+        rlSpecialPickup.setVisibility(View.GONE);
+        if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                .getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
+            if (Data.autoData.getDropLatLng() != null) {
+                //requestRideClick();
+                shakeAnim = 0;
+                if (updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()) {
+                    // show special pickup screen
+                    specialPickupScreenOpened = true;
+                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(passengerScreenMode);
+                    //map.moveCamera(CameraUpdateFactory.zoomOut());
+                    showSpecialPickupMarker(specialPickups);
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
+                    spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
                 } else {
-//                    rlSpecialPickup.setVisibility(View.VISIBLE);
-                    destinationRequiredShake();
+                    specialPickupScreenOpened = false;
+                    removeSpecialPickupMarkers();
+                    rlSpecialPickup.setVisibility(View.GONE);
+                    updateTopBar();
+                    openConfirmRequestView();
                 }
             } else {
-                if (Data.autoData.getDropLatLng() == null && getSlidingBottomPanel().getRequestRideOptionsFragment()
-                        .getRegionSelected().getDestinationMandatory() == 1) {
 //                    rlSpecialPickup.setVisibility(View.VISIBLE);
-                    destinationRequiredShake();
+                destinationRequiredShake();
+            }
+        } else {
+            if (Data.autoData.getDropLatLng() == null && getSlidingBottomPanel().getRequestRideOptionsFragment()
+                    .getRegionSelected().getDestinationMandatory() == 1) {
+//                    rlSpecialPickup.setVisibility(View.VISIBLE);
+                destinationRequiredShake();
+            } else {
+                if (updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()) {
+                    // show special pickup screen
+
+                    specialPickupScreenOpened = true;
+                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    switchPassengerScreen(passengerScreenMode);
+                    showSpecialPickupMarker(specialPickups);
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
+                    spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
+
+                } else if (Data.autoData.getDropLatLng() != null
+                        && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1) {
+                    specialPickupScreenOpened = false;
+                    removeSpecialPickupMarkers();
+                    rlSpecialPickup.setVisibility(View.GONE);
+                    updateTopBar();
+                    openConfirmRequestView();
                 } else {
-                    if(updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()){
-                        // show special pickup screen
-
-                        specialPickupScreenOpened = true;
-                        passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                        switchPassengerScreen(passengerScreenMode);
-                        showSpecialPickupMarker(specialPickups);
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
-                        spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
-
-                    }
-                    else if(Data.autoData.getDropLatLng() != null
-                            && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1) {
-                        specialPickupScreenOpened = false;
-                        removeSpecialPickupMarkers();
-                        rlSpecialPickup.setVisibility(View.GONE);
-                        updateTopBar();
-                        openConfirmRequestView();
-                    }
-                    else {
-                        removeSpecialPickupMarkers();
-                        requestRideClick();
-                        slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                    }
+                    removeSpecialPickupMarkers();
+                    requestRideClick();
+                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
             }
+        }
     }
 
-    private void destinationRequiredShake(){
-        if(slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED){
+    private void destinationRequiredShake() {
+        if (slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         }
         textViewDestSearch.setText(getResources().getString(R.string.destination_required));
@@ -9682,15 +9705,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         ViewGroup viewGroup = ((ViewGroup) relativeLayoutDestSearchBar.getParent());
         int index = viewGroup.indexOfChild(relativeLayoutInitialSearchBar);
-        if(index == 1 && Data.autoData.getDropLatLng() == null) {
+        if (index == 1 && Data.autoData.getDropLatLng() == null) {
             translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
             translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
         }
-        if(Data.autoData.getDropLatLng() == null){
+        if (Data.autoData.getDropLatLng() == null) {
             Animation shake = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.shake);
             textViewDestSearch.startAnimation(shake);
             shakeAnim++;
-            if(shakeAnim > 3){
+            if (shakeAnim > 3) {
                         /*new PoolDestinationDialog(HomeActivity.this, new PoolDestinationDialog.Callback() {
                             @Override
                             public void onEnterDestination() {
@@ -9704,69 +9727,69 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    public void openConfirmRequestView(){
+    public void openConfirmRequestView() {
         confirmedScreenOpened = true;
         textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
         passengerScreenMode = PassengerScreenMode.P_INITIAL;
         switchPassengerScreen(passengerScreenMode);
     }
 
-    private boolean isPoolRideAtConfirmation(){
+    private boolean isPoolRideAtConfirmation() {
         return PassengerScreenMode.P_INITIAL == passengerScreenMode
                 && confirmedScreenOpened
                 && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal();
     }
 
-    private boolean isNormalRideWithDropAtConfirmation(){
+    private boolean isNormalRideWithDropAtConfirmation() {
         return PassengerScreenMode.P_INITIAL == passengerScreenMode
                 && confirmedScreenOpened
                 && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.POOL.getOrdinal()
                 && Data.autoData.getDropLatLng() != null;
     }
 
-    private boolean isSpecialPickupScreenOpened(){
+    private boolean isSpecialPickupScreenOpened() {
         return PassengerScreenMode.P_INITIAL == passengerScreenMode
                 && specialPickupScreenOpened;
     }
 
 
-
-    private void clearMap(){
+    private void clearMap() {
         try {
             map.clear();
             pokestopHelper.mapCleared();
             pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
             homeUtil.displaySavedAddressesAsFlags(this, assl, map, true);
             homeUtil.displayPointOfInterestMarkers(this, assl, map);
-            if(driverMarkerInRide != null){driverMarkerInRide.remove();}
+            if (driverMarkerInRide != null) {
+                driverMarkerInRide.remove();
+            }
             driverMarkerInRide = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void showPokestopOnOffButton(PassengerScreenMode mode){
+    private void showPokestopOnOffButton(PassengerScreenMode mode) {
         try {
-            if(Utils.isAppInstalled(this, POKEMON_GO_APP_PACKAGE)
+            if (Utils.isAppInstalled(this, POKEMON_GO_APP_PACKAGE)
                     && changeLocalityLayout.getVisibility() == View.GONE
-                    && Prefs.with(this).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1){
+                    && Prefs.with(this).getInt(Constants.KEY_SHOW_POKEMON_DATA, 0) == 1) {
                 //imageViewPokemonOnOffInitial.setVisibility(View.VISIBLE);
                 //imageViewPokemonOnOffConfirm.setVisibility(View.VISIBLE);
                 //imageViewPokemonOnOffEngaged.setVisibility(View.VISIBLE);
 
                 ImageView imageView = null;
-                if(mode == PassengerScreenMode.P_REQUEST_FINAL || mode == PassengerScreenMode.P_DRIVER_ARRIVED
-                        || mode == PassengerScreenMode.P_IN_RIDE){
+                if (mode == PassengerScreenMode.P_REQUEST_FINAL || mode == PassengerScreenMode.P_DRIVER_ARRIVED
+                        || mode == PassengerScreenMode.P_IN_RIDE) {
                     imageView = imageViewPokemonOnOffEngaged;
-                }
-                else if(mode == PassengerScreenMode.P_INITIAL){
-                    if(confirmedScreenOpened){
+                } else if (mode == PassengerScreenMode.P_INITIAL) {
+                    if (confirmedScreenOpened) {
                         imageView = imageViewPokemonOnOffConfirm;
                     } else {
                         imageView = imageViewPokemonOnOffInitial;
                     }
                 }
-                if(imageView != null) {
+                if (imageView != null) {
                     if (Prefs.with(this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, 0) == 1) {
                         imageView.setAlpha(1.0f);
                     } else {
@@ -9774,7 +9797,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                     pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
                 }
-            } else{
+            } else {
                 imageViewPokemonOnOffInitial.setVisibility(View.GONE);
                 imageViewPokemonOnOffConfirm.setVisibility(View.GONE);
                 imageViewPokemonOnOffEngaged.setVisibility(View.GONE);
@@ -9785,7 +9808,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     public void openNotification() {
-        menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag(),0,0,HomeActivity.this,getCurrentPlaceLatLng());
+        menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag(), 0, 0, HomeActivity.this, getCurrentPlaceLatLng());
     }
 
     private BroadcastReceiver pushBroadcastReceiver = new BroadcastReceiver() {
@@ -9797,7 +9820,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 public void run() {
                     try {
                         int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
-                        if(flag == -1) {
+                        if (flag == -1) {
                             String message = intent.getStringExtra("message");
                             int type = intent.getIntExtra("open_type", 0);
                             if (type == 0) {
@@ -9811,7 +9834,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getFreshClientId(), null,
                                             getCurrentPlaceLatLng(), bundle);
                                 }
-                            } else if(type == 2){
+                            } else if (type == 2) {
                                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                                     drawerLayout.closeDrawer(GravityCompat.START);
                                 }
@@ -9821,7 +9844,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getGroceryClientId(), null,
                                             getCurrentPlaceLatLng(), bundle);
                                 }
-                            } else if(type == 3){
+                            } else if (type == 3) {
                                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                                     drawerLayout.closeDrawer(GravityCompat.START);
                                 }
@@ -9831,7 +9854,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     MyApplication.getInstance().getAppSwitcher().switchApp(HomeActivity.this, Config.getMenusClientId(), null,
                                             getCurrentPlaceLatLng(), bundle);
                                 }
-                            } else if(type == 4){
+                            } else if (type == 4) {
                                 if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                                     drawerLayout.closeDrawer(GravityCompat.START);
                                 }
@@ -9843,22 +9866,28 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
                             }
                         } else {
-                            if(PushFlags.INITIATE_PAYTM_RECHARGE.getOrdinal() == flag) {
+                            if (PushFlags.INITIATE_PAYTM_RECHARGE.getOrdinal() == flag) {
                                 String message = intent.getStringExtra(KEY_MESSAGE);
                                 Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));
                                 openPaytmRechargeDialog();
-                            } else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
+                            } else if (PushFlags.CHAT_MESSAGE.getOrdinal() == flag) {
                                 tvChatCount.setVisibility(View.VISIBLE);
                                 tvChatCount.setText(String.valueOf(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 1)));
                             } else if (Constants.OPEN_DEEP_INDEX == flag) {
                                 deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
-                            } else if(PushFlags.BID_RECEIVED.getOrdinal() == flag) {
-                                if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
+                            } else if (PushFlags.BID_RECEIVED.getOrdinal() == flag) {
+                                if (passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                                     String message = intent.getStringExtra(Constants.KEY_MESSAGE);
                                     JSONObject jObj = new JSONObject(message);
                                     Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
                                     updateBidsView();
                                 }
+                            } else if (PushFlags.MPESA_PAYMENT_SUCCESS.getOrdinal() == flag) {
+                                textViewRSCashPaidValue.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), Data.autoData.getEndRideData().toPay));
+                                DialogPopup.alertPopup(HomeActivity.this, "", intent.getStringExtra("message"));
+                            } else if (PushFlags.MPESA_PAYMENT_FAILURE.getOrdinal() == flag) {
+                                DialogPopup.alertPopup(HomeActivity.this, "", intent.getStringExtra("message"));
+                                updateRideEndPayment();
                             }
                         }
                     } catch (Exception e) {
@@ -9875,22 +9904,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private TrackingLogHelper trackingLogHelper;
-    private TrackingLogHelper getTrackingLogHelper(){
-        if(trackingLogHelper == null){
+
+    private TrackingLogHelper getTrackingLogHelper() {
+        if (trackingLogHelper == null) {
             trackingLogHelper = new TrackingLogHelper(this);
         }
         return trackingLogHelper;
     }
 
-    public FABViewTest getFabViewTest(){
+    public FABViewTest getFabViewTest() {
         return fabViewTest;
     }
 
     private void showSpecialPickupMarker(ArrayList<NearbyPickupRegions.HoverInfo> specialPickups) {
         try {
-            if(map != null) {
+            if (map != null) {
                 float zIndex = 0.0f;
-                for(NearbyPickupRegions.HoverInfo specialPickup : specialPickups){
+                for (NearbyPickupRegions.HoverInfo specialPickup : specialPickups) {
                     LatLng specialPicupLatLng = new LatLng(Double.parseDouble(specialPickup.getLatitude()),
                             Double.parseDouble(specialPickup.getLongitude()));
                     MarkerOptions markerOptions = new MarkerOptions();
@@ -9899,8 +9929,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     markerOptions.position(specialPicupLatLng);
                     markerOptions.anchor(0.5f, 0.5f);
                     markerOptions.zIndex(zIndex);
-                        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                .createMarkerBitmapForResource(HomeActivity.this, assl, R.drawable.ic_special_location_pin, 37f, 37f)));
+                    markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                            .createMarkerBitmapForResource(HomeActivity.this, assl, R.drawable.ic_special_location_pin, 37f, 37f)));
                     markersSpecialPickup.add(map.addMarker(markerOptions));
                     markerOptionsSpecialPickup.add(markerOptions);
                 }
@@ -9923,8 +9953,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private ApiFetchUserAddress apiFetchUserAddress;
-    private ApiFetchUserAddress getApiFetchUserAddress(){
-        if(apiFetchUserAddress == null){
+
+    private ApiFetchUserAddress getApiFetchUserAddress() {
+        if (apiFetchUserAddress == null) {
             apiFetchUserAddress = new ApiFetchUserAddress(this, new ApiFetchUserAddress.Callback() {
                 @Override
                 public void onSuccess() {
@@ -9976,24 +10007,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     }
 
-    public GoogleApiClient getmGoogleApiClient(){
+    public GoogleApiClient getmGoogleApiClient() {
         return mGoogleApiClient;
     }
 
     private HomeUtil.SavedAddressState savedAddressState = HomeUtil.SavedAddressState.BLANK;
 
     private Handler handler;
-    public Handler getHandler(){
-        if(handler == null){
+
+    public Handler getHandler() {
+        if (handler == null) {
             handler = new Handler();
         }
         return handler;
     }
 
-    private int getMapAnimateDuration(){
-        if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+    private int getMapAnimateDuration() {
+        if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
             return 1000;
         }
         return MAP_ANIMATE_DURATION;
@@ -10025,10 +10057,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     @Override
                     public void onSuccess(final PaymentResponse response, String message, int flag) {
                         try {
-                            if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                            if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
-                                    PaymentResponse.PaymentData paymentData = response.getData().getPaymentData();
-                                    rideEndPaymentSuccess(paymentData.getRemaining(), message);
+                                    rideEndPaymentSuccess(message);
                                 }
                             } else {
                                 DialogPopup.alertPopup(HomeActivity.this, "", message);
@@ -10057,16 +10088,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 });
     }
 
-    private void rideEndPaymentSuccess(double remaining, String message) {
+    private void rideEndPaymentSuccess(String message) {
         if (Data.autoData != null && Data.autoData.getEndRideData() != null) {
             Data.autoData.getEndRideData().setShowPaymentOptions(0);
-            Data.autoData.getEndRideData().toPay = remaining;
         }
         DialogPopup.alertPopupWithListener(this, "", message, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    updateRideEndPayment();
-                    setUserData();
+                updateRideEndPayment();
+                setUserData();
             }
         });
     }
@@ -10087,7 +10117,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     @Override
                     public void onSuccess(final FeedCommonResponse response, String message, int flag) {
                         try {
-                            if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                            if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
 
                             } else {
                                 DialogPopup.alertPopup(HomeActivity.this, "", message);
