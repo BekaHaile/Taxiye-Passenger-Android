@@ -9885,6 +9885,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             } else if (PushFlags.MPESA_PAYMENT_SUCCESS.getOrdinal() == flag) {
                                 textViewRSCashPaidValue.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), Data.autoData.getEndRideData().toPay));
                                 DialogPopup.alertPopup(HomeActivity.this, "", intent.getStringExtra("message"));
+                                rideEndPaymentSuccess(intent.getStringExtra("message"));
                             } else if (PushFlags.MPESA_PAYMENT_FAILURE.getOrdinal() == flag) {
                                 DialogPopup.alertPopup(HomeActivity.this, "", intent.getStringExtra("message"));
                                 updateRideEndPayment();
@@ -10057,13 +10058,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     @Override
                     public void onSuccess(final PaymentResponse response, String message, int flag) {
                         try {
-                            if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                                if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
-                                    rideEndPaymentSuccess(message);
-                                }
-                            } else {
+//                            if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+//                                if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
+//                                    rideEndPaymentSuccess(message);
+//                                }
+//                            } else {
                                 DialogPopup.alertPopup(HomeActivity.this, "", message);
-                            }
+                            //}
 
                         } catch (Exception e) {
                             e.printStackTrace();

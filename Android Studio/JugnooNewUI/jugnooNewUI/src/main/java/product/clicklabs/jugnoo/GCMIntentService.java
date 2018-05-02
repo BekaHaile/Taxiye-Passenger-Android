@@ -852,6 +852,12 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						intent.putExtra(Constants.KEY_MESSAGE, message);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					}
+					else if(PushFlags.MPESA_PAYMENT_FAILURE.getOrdinal()==flag){
+						Intent intent = new Intent(Data.LOCAL_BROADCAST);
+						intent.putExtra(Constants.KEY_FLAG, flag);
+						intent.putExtra(Constants.KEY_MESSAGE, message);
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+					}
 
 					incrementPushCounter(jObj, flag);
 
