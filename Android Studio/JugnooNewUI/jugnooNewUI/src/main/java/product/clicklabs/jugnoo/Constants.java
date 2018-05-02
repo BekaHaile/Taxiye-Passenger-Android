@@ -69,6 +69,7 @@ public interface Constants {
 
     String KEY_FLAG = "flag";
     String KEY_MESSAGE = "message";
+    String TO_PAY = "to_pay";
     String KEY_TITLE = "title";
     String KEY_ERROR = "error";
 

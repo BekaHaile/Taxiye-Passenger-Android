@@ -9883,12 +9883,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     updateBidsView();
                                 }
                             } else if (PushFlags.MPESA_PAYMENT_SUCCESS.getOrdinal() == flag) {
-                                textViewRSCashPaidValue.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), Data.autoData.getEndRideData().toPay));
-                                DialogPopup.alertPopup(HomeActivity.this, "", intent.getStringExtra("message"));
-                                rideEndPaymentSuccess(intent.getStringExtra("message"));
+                                //  textViewRSCashPaidValue.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), Data.autoData.getEndRideData().toPay));
+                                //DialogPopup.alertPopup(HomeActivity.this, "", intent.getStringExtra("message"));
+                                rideEndPaymentSuccess(intent.getStringExtra("message"), Double.parseDouble(intent.getStringExtra(Constants.TO_PAY)));
                             } else if (PushFlags.MPESA_PAYMENT_FAILURE.getOrdinal() == flag) {
-                                DialogPopup.alertPopup(HomeActivity.this, "", intent.getStringExtra("message"));
-                                updateRideEndPayment();
+                                //DialogPopup.alertPopup(HomeActivity.this, "", intent.getStringExtra("message"));
+                                //updateRideEndPayment();
+                                rideEndPaymentSuccess(intent.getStringExtra("message"), null);
                             }
                         }
                     } catch (Exception e) {
@@ -10063,7 +10064,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                                    rideEndPaymentSuccess(message);
 //                                }
 //                            } else {
-                                DialogPopup.alertPopup(HomeActivity.this, "", message);
+                            DialogPopup.alertPopup(HomeActivity.this, "", message);
                             //}
 
                         } catch (Exception e) {
@@ -10089,9 +10090,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 });
     }
 
-    private void rideEndPaymentSuccess(String message) {
+    private void rideEndPaymentSuccess(String message, Double remaining) {
         if (Data.autoData != null && Data.autoData.getEndRideData() != null) {
             Data.autoData.getEndRideData().setShowPaymentOptions(0);
+            if (remaining != null) {
+                Data.autoData.getEndRideData().toPay = remaining;
+            }
         }
         DialogPopup.alertPopupWithListener(this, "", message, new View.OnClickListener() {
             @Override
