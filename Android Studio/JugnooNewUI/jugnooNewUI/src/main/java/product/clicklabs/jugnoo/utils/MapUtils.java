@@ -18,8 +18,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
@@ -39,10 +42,18 @@ public class MapUtils {
 			Location location2 = new Location("locationA");
 			location2.setLatitude(end.latitude);
 			location2.setLongitude(end.longitude);
+//
+//			double distance = location1.distanceTo(location2);
+//			NumberFormat nf = NumberFormat.getNumberInstance(Locale.ENGLISH);
+//			DecimalFormat formatter = (DecimalFormat)nf;
+//			formatter.applyPattern("#.#");
+//			double distanceFormated = Double.parseDouble(formatter.format(distance));
+
 
 			double distance = location1.distanceTo(location2);
-			DecimalFormat decimalFormat = new DecimalFormat("#.#");
+			DecimalFormat decimalFormat = new DecimalFormat("#.#",new DecimalFormatSymbols(Locale.ENGLISH));
 			double distanceFormated = Double.parseDouble(decimalFormat.format(distance));
+
 			return distanceFormated;
 		} catch (Exception e) {
 			e.printStackTrace();

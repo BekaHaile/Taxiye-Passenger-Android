@@ -2,6 +2,8 @@ package product.clicklabs.jugnoo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -20,8 +22,8 @@ public class ChangeLanguageActivity extends BaseActivity {
 
     RelativeLayout relative;
 
-    TextView textViewTitle;
-    ImageView imageViewBack;
+    TextView textViewTitle, tvCountDownTimer;
+    ImageView imageViewBack, ivEnglish, ivArabic, ivFrench, ivGerman;
 
     RelativeLayout relativeLayoutEnglish, relativeLayoutFrench, relativeLayoutArabic, relativeLayoutGerman;
     TextView textViewEnglish, textViewFrench, textViewArabic, textViewGerman;
@@ -42,8 +44,13 @@ public class ChangeLanguageActivity extends BaseActivity {
         new ASSL(this, (ViewGroup) relative, 1134, 720, false);
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+        tvCountDownTimer = (TextView) findViewById(R.id.tvCountDownTimer);
         textViewTitle.setTypeface(Fonts.avenirNext(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+        ivEnglish = (ImageView) findViewById(R.id.ivEnglish);
+        ivArabic = (ImageView) findViewById(R.id.ivArabic);
+        ivFrench = (ImageView) findViewById(R.id.ivFrench);
+        ivGerman = (ImageView) findViewById(R.id.ivGerman);
 
         relativeLayoutEnglish = (RelativeLayout) findViewById(R.id.relativeLayoutEnglish);
         relativeLayoutFrench = (RelativeLayout) findViewById(R.id.relativeLayoutFrench);
@@ -59,7 +66,7 @@ public class ChangeLanguageActivity extends BaseActivity {
         textViewGerman = (TextView) findViewById(R.id.textViewGerman);
         textViewGerman.setTypeface(Fonts.mavenLight(this));
 
-        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_ABOUT);
+        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_CHANGE_LANGUAGE);
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
         relativeLayoutEnglish.setOnClickListener(new OnClickListener() {
@@ -102,13 +109,56 @@ public class ChangeLanguageActivity extends BaseActivity {
                 performBackPressed();
             }
         });
+        showSelectedLanguage();
+    }
+
+    public void showSelectedLanguage() {
+        if (LocaleHelper.getLanguage(this).equalsIgnoreCase("en")) {
+            ivEnglish.setVisibility(View.VISIBLE);
+            ivArabic.setVisibility(View.GONE);
+            ivFrench.setVisibility(View.GONE);
+            ivGerman.setVisibility(View.GONE);
+        } else if (LocaleHelper.getLanguage(this).equalsIgnoreCase("fr")) {
+            ivEnglish.setVisibility(View.GONE);
+            ivArabic.setVisibility(View.GONE);
+            ivFrench.setVisibility(View.VISIBLE);
+            ivGerman.setVisibility(View.GONE);
+        } else if (LocaleHelper.getLanguage(this).equalsIgnoreCase("ar")) {
+            ivEnglish.setVisibility(View.GONE);
+            ivArabic.setVisibility(View.VISIBLE);
+            ivFrench.setVisibility(View.GONE);
+            ivGerman.setVisibility(View.GONE);
+        } else if (LocaleHelper.getLanguage(this).equalsIgnoreCase("de")) {
+            ivEnglish.setVisibility(View.GONE);
+            ivArabic.setVisibility(View.GONE);
+            ivFrench.setVisibility(View.GONE);
+            ivGerman.setVisibility(View.VISIBLE);
+        }
     }
 
     private void updateViews(String languageCode) {
         LocaleHelper.setLocale(this, languageCode);
         //  Resources resources = context.getResources();
-        finishAffinity();
-        startActivity(new Intent(ChangeLanguageActivity.this, SplashNewActivity.class));
+        new CountDownTimer(5000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                tvCountDownTimer.setVisibility(View.VISIBLE);
+                tvCountDownTimer.setText("app will restart in " + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+                tvCountDownTimer.setText("done!");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        finishAffinity();
+                        startActivity(new Intent(ChangeLanguageActivity.this, SplashNewActivity.class));
+                    }
+                }, 1000);
+            }
+
+        }.start();
+
     }
 
     public void performBackPressed() {

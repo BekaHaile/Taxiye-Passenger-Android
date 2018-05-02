@@ -60,15 +60,20 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/english"
-                    android:layout_marginStart="@dimen/px_110"
+                    android:layout_marginStart="@dimen/px_50"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 
-               <!-- <ImageView
+                <ImageView
+                    android:id="@+id/ivEnglish"
                     android:layout_alignParentRight="true"
                     style="@style/forward_image"
+                    android:src="@drawable/ic_fresh_sort_tick_svg"
+                    android:rotation="0"
+                    android:visibility="gone"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginRight="10px"
-                    />-->
+                    />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -96,15 +101,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/px_110"
+                    android:layout_marginStart="@dimen/px_50"
                     android:text="@string/arabic"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 
-                <!--<ImageView
+                <ImageView
+                    android:id="@+id/ivArabic"
                     android:layout_alignParentRight="true"
                     style="@style/forward_image"
-                    android:layout_marginRight="10px" />-->
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_fresh_sort_tick_svg"
+                    android:rotation="0"
+                    android:visibility="gone"
+                    android:layout_marginRight="10px" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -132,15 +142,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/px_110"
+                    android:layout_marginStart="@dimen/px_50"
                     android:text="@string/french"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 
-                <!--<ImageView
+                <ImageView
+                    android:id="@+id/ivFrench"
                     android:layout_alignParentRight="true"
                     style="@style/forward_image"
-                    android:layout_marginRight="10px" />-->
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_fresh_sort_tick_svg"
+                    android:rotation="0"
+                    android:visibility="gone"
+                    android:layout_marginRight="10px" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -168,15 +183,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/px_110"
+                    android:layout_marginStart="@dimen/px_50"
                     android:text="@string/german"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 
-               <!-- <ImageView
+                <ImageView
+                    android:id="@+id/ivGerman"
                     android:layout_alignParentRight="true"
                     style="@style/forward_image"
-                    android:layout_marginRight="10px" />-->
+                    android:src="@drawable/ic_fresh_sort_tick_svg"
+                    android:rotation="0"
+                    android:visibility="gone"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="10px" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -184,7 +204,14 @@
                     android:layout_alignParentBottom="true"
                     android:src="@color/stroke_color_light" />
             </RelativeLayout>
-
+            <TextView
+                android:id="@+id/tvCountDownTimer"
+                android:text="@string/change_language"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/px_100"
+                style="@style/title" />
             
         </LinearLayout>
     </LinearLayout>
