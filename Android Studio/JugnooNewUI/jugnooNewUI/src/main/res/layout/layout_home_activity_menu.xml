@@ -13,11 +13,6 @@
         android:layout_width="match_parent"
         android:background="@drawable/bg_rectangle_gradient_normal"
         android:layout_height="wrap_content">
-
-
-
-
-
         <RelativeLayout
             android:id="@+id/iv_jugnoo_image"
             android:layout_width="wrap_content"

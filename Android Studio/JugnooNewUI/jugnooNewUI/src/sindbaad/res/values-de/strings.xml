@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY appname "Jugnoo White">
+    <!ENTITY appname "Sindbaad">
     <!ENTITY currency "\u20B9">
+    <!ENTITY appnamecaps "SINDBAD">
     ]>
 <resources>
 
@@ -1855,8 +1856,22 @@
     <string name="distance_km_away_format">%skm away</string>
     <string name="distance_m_away_format">%sm away</string>
     <string name="bids_received">Bids received</string>
+    <string name="change_language">Sprache ändern</string>
+    <string name="change_language_caps">SPRACHE ÄNDERN</string>
+    <string name="game_caps">SPIEL</string>
+    <string name="free_rides_caps">FREIFAHRTEN</string>
+    <string name="wallet_caps">BRIEFTASCHE</string>
+    <string name="inbox_caps">Posteingang</string>
+    <string name="promotions_caps">Sonderangebote</string>
+    <string name="history_caps">GESCHICHTE</string>
+    <string name="refer_a_driver_caps">REFERENZEN EINES TREIBERS</string>
+    <string name="support_caps">UNTERSTÜTZUNG</string>
+    <string name="jugnoo_star_caps">&appnamecaps; STAR</string>
+    <string name="set_preferences_caps">SET-VOREINSTELLUNGEN</string>
+    <string name="restarting_your_app">Neustarten der App ...</string>
     <string name="we_could_not_detect_your_location">We could not detect your location. Are you sure you want to request an auto to pick you at this location?</string>
     <string name="location_accuracy_is_low">Location accuracy is low. Are you sure you want to request an auto to pick you at this location?</string>
     <string name="the_pickup_location_you_have_set_is_different">The pickup location you have set is different from your current location. Are you sure this is your pickup location?</string>
+
 
 </resources>

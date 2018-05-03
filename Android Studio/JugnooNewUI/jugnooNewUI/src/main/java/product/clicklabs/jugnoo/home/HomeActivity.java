@@ -6575,8 +6575,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Button btnCancel = (Button) dialog.findViewById(R.id.btnCancel);
             btnCancel.setTypeface(Fonts.mavenMedium(activity));
 
-            btnOk.setText("OK");
-            btnCancel.setText("Cancel");
+            btnOk.setText(getString(R.string.ok));
+            btnCancel.setText(getString(R.string.cancel));
 
             btnOk.setOnClickListener(new OnClickListener() {
                 @Override
@@ -6620,7 +6620,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     ||
                     (Utils.compareDouble(Data.autoData.getPickupLatLng().latitude, 22.971723) == 0 && Utils.compareDouble(Data.autoData.getPickupLatLng().longitude, 78.754263) == 0)) {
                 myLocation = null;
-                Utils.showToast(activity, "Waiting for location...");
+                Utils.showToast(activity, getResources().getString(R.string.waiting_for_location));
                 return;
             } else {
                 if (myLocation == null) {
@@ -6630,7 +6630,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     myLocation.setLongitude(Data.autoData.getPickupLatLng().longitude);
                     myLocation.setAccuracy(100);
                     myLocation.setTime(System.currentTimeMillis());
-                    textMessage.setText("We could not detect your location. Are you sure you want to request an auto to pick you at this location?");
+                    textMessage.setText(getString(R.string.we_could_not_detect_your_location));
                     dialog.show();
 
                 } else {
@@ -6644,12 +6644,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                     if (cached) {
                         //Location accuracy is low. Are you sure you want to request an auto to pick you at this location
-                        textMessage.setText("Location accuracy is low. Are you sure you want to request an auto to pick you at this location?");
+                        textMessage.setText(getString(R.string.location_accuracy_is_low));
                         dialog.show();
                     } else {
                         double distance = MapUtils.distance(Data.autoData.getPickupLatLng(), new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
                         if (distance > MAP_PAN_DISTANCE_CHECK) {
-                            textMessage.setText("The pickup location you have set is different from your current location. Are you sure this is your pickup location?");
+                            textMessage.setText(getString(R.string.the_pickup_location_you_have_set_is_different));
                             dialog.show();
                         } else {
                             requestRideDriverCheck();

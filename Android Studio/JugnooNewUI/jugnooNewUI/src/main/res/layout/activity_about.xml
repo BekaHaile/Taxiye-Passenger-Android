@@ -66,8 +66,8 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentRight="true"
                     style="@style/forward_image"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginRight="10px"
                     />
 
@@ -103,7 +103,7 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     style="@style/forward_image"
                     android:layout_marginRight="10px" />
 
@@ -139,7 +139,7 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     style="@style/forward_image"
                     android:layout_marginRight="10px" />
 
@@ -175,7 +175,7 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     style="@style/forward_image"
                     android:layout_marginRight="10px" />
 
@@ -211,7 +211,7 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     style="@style/forward_image"
                     android:layout_marginRight="10px" />
 
