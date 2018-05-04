@@ -55,6 +55,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:text=""
+                android:layoutDirection="ltr"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_42"
                 app:typekitFont="@string/maven"

@@ -29,11 +29,11 @@
     <string name="password">Password</string>
     <string name="forgot_password"><u>Forgot Password?</u></string>
     <string name="sign_up">Sign Up</string>
-    <string name="or">or</string>
+    <string name="or">oder</string>
 
     <string name="no_internet_connection">Keine Internetverbindung</string>
     <string name="call_to_book">CALL TO BOOK</string>
-    <string name="refresh">REFRESH</string>
+    <string name="refresh">"AKTUALISIERUNG "</string>
 
     <string name="ok">OK</string>
 
@@ -53,7 +53,7 @@
     <string name="from">Von: </string>
     <string name="to">Zu: </string>
 
-    <string name="history">History</string>
+    <string name="history">Geschichte</string>
 
     <string name="driver_mode">Treibermodus</string>
     <string name="invite_friends">Freunde einladen</string>
@@ -147,7 +147,7 @@
     <string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
     <string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
     <string name="review_must_be_in">Review must be in 300 letters.</string>
-    <string name="order_expereince">How was your Experience?</string>
+    <string name="order_expereince">"Wie war deine Erfahrung? "</string>
 
     <!-- Add Places -->
 
@@ -483,7 +483,7 @@
     <string name="paytm_no_cash">You do not have money in your\nPaytm Account</string>
     <string name="paytm_error_case_select_cash">We are not able to connect to Paytm</string>
 
-    <string name="who_are_we">Who are we?</string>
+    <string name="who_are_we">"Wer sind wir? "</string>
     <string name="about_caps">ÜBER</string>
 
     <string name="request_accepted_message">Ihre Anfrage wurde akzeptiert</string>
@@ -537,11 +537,11 @@
     <string name="show_more">Zeig mehr</string>
 
 
-    <string name="no_net_title">CONNECTION LOST</string>
-    <string name="no_net_text">Oops! Your Internet is not working.\nPlease try again.</string>
-    <string name="conn_lost_title">CONNECTION LOST</string>
+    <string name="no_net_title">"VERBINDUNG UNTERBROCHEN "</string>
+    <string name="no_net_text">" Hoppla! Dein Internet funktioniert nicht. Bitte versuche es erneut."</string>
+    <string name="conn_lost_title">"VERBINDUNG UNTERBROCHEN "</string>
     <string name="conn_lost_text">Hoppla! Wir können momentan keine Verbindung zum Server herstellen. \nBitte versuchen Sie es erneut.</string>
-    <string name="server_error_title">CONNECTION LOST</string>
+    <string name="server_error_title">"VERBINDUNG UNTERBROCHEN "</string>
     <string name="server_error_text">Hoppla! Wir können momentan keine Verbindung zum Server herstellen. \nBitte versuchen Sie es erneut.</string>
 
 
@@ -867,8 +867,8 @@
     <string name="sort_by">Sort by</string>
     <string name="tags">Tags</string>
     <string name="minimum_order">Minimum order amount</string>
-    <string name="filters">Filters</string>
-    <string name="reset">Reset</string>
+    <string name="filters">"Filter "</string>
+    <string name="reset">"Zurücksetzen "</string>
     <string name="bullet">\u2022</string>
     <string name="bullet_spaces"> \u2022 &#032;</string>
     <string name="select_cuisines">Select Cuisines</string>
@@ -993,7 +993,7 @@
     <string name="no_continue_with_current_pickup">Nein, fahre mit der Stromaufnahme fort</string>
 
     <string name="remove_payment_address_string">Are you sure you want to remove this payment address?</string>
-    <string name="please_enter_valid_phone">Please enter valid phone number</string>
+    <string name="please_enter_valid_phone">"Bitte geben Sie eine gültige Telefonnummer ein "</string>
     <string name="requested_in_caps">REQUESTED</string>
 
 
@@ -1169,12 +1169,12 @@
     <string name="create_a_handle">Create a Handle</string>
     <string name="no_notifications_yet">No Notificaitons Yet!</string>
     <string name="bullet_three">\u2022\u2022\u2022</string>
-    <string name="press_back_again_to_quit">Press back again to quit</string>
+    <string name="press_back_again_to_quit">"Drücken Sie erneut, um zu beenden "</string>
     <string name="join">Join</string>
     <string name="select_city">Select City</string>
     <string name="delete_post_alert_message">Do you want to delete this post? If you delete once it will no longer be available.</string>
-    <string name="enter_your_name">Enter your Name</string>
-    <string name="enter_email_id">Enter Email ID</string>
+    <string name="enter_your_name">"Gib deinen Namen ein "</string>
+    <string name="enter_email_id">"E-Mail-ID eingeben "</string>
     <string name="fatafat">Grocery</string>
     <string name="fatafat_offering_name">Chat</string>
     <string name="unable_to_fetch_address">Die aktuelle Adresse kann momentan nicht abgerufen werden</string>
@@ -1186,7 +1186,7 @@
     <string name="tracking_not_available_message">Live tracking will be enabled after order dispatch.</string>
     <string name="some_error_occured_try_again">Ein Fehler ist aufgetreten.\nVersuchen Sie es erneut</string>
     <string name="you_are_first_in_queue">You are first in queue</string>
-    <string name="enter_location">Enter location</string>
+    <string name="enter_location">"Ort eingeben "</string>
     <string name="checkout_bracket_item"><b>CHECKOUT</b> (%s ITEM)</string>
     <string name="checkout_bracket_items"><b>CHECKOUT</b> (%s ITEMS)</string>
     <string name="do_you_have_a_referral_code">Hast du einen Promocode?</string>
@@ -1231,7 +1231,7 @@
     <string name="dig_in_enjoy_food">Dig in! Enjoy your food.</string>
     <string name="dig_in_enjoy_food_experience_feedback">We care about your experience. Once you are done eating, we’ll follow up for feedback</string>
     <string name="report_issue">Report Issue</string>
-    <string name="chat_with_us">Chat with us</string>
+    <string name="chat_with_us">"chatte mit uns "</string>
     <string name="call_restaurant">Call Restaurant</string>
     <string name="reviews">Reviews</string>
     <string name="txt_and">and</string>
@@ -1250,7 +1250,7 @@
     <string name="waiting_for_response">Waiting for response...</string>
     <string name="label_request_expires_in">Your request will expire in</string>
     <string name="hint_add_upi">Please add UPI Address</string>
-    <string name="please_wait">Please Wait...</string>
+    <string name="please_wait">"Warten Sie mal... "</string>
     <string name="place_bulk_order">Place a Bulk Order</string>
     <string name="bulk_order">Bulk Order</string>
     <string name="pros">Pros</string>
@@ -1283,7 +1283,7 @@
     <string name="order_status_colon">Order Status:</string>
     <string name="order_id_colon">Order Id:</string>
     <string name="visiting_charges_may_apply">*Service rate will be determined after inspection. Minimum  visiting charges may apply.</string>
-    <string name="select_offerings">Select Offerings</string>
+    <string name="select_offerings">"Wählen Sie Angebote "</string>
     <string name="thanks_for_riding_with_us">Danke, dass du mit uns gefahren bist</string>
     <string name="label_searched_items">SEARCHED ITEMS</string>
     <string name="label_relevant_categories">RELEVANT CATEGORIES</string>
@@ -1307,7 +1307,7 @@
     <string name="can_be_used_format">Can be used %s times</string>
     <string name="applied_on_all_offerings">Applicable on all offerings</string>
     <string name="no_coupons_available">No Coupons Available</string>
-    <string name="how_was_your_experience">How was your Experience?</string>
+    <string name="how_was_your_experience">"Wie war deine Erfahrung? "</string>
     <string name="to_use_this_coupon">To use this coupon, select it at the time of checkout.</string>
     <string name="are_you_sure_want_to_disable_emergency">Are you sure you want to disable Emergency mode?</string>
     <string name="call">Call</string>
@@ -1342,12 +1342,12 @@
     <string name="order_time_colon">Order Time:</string>
     <string name="delivery_time_colon">Delivery Time:</string>
     <string name="label_rb_schedule_time">Schedule Time</string>
-    <string name="chat_support">Chat Support</string>
+    <string name="chat_support">"Chat-Unterstützung "</string>
     <string name="from_wo">From</string>
     <string name="to_wo">To</string>
     <string name="pay_online">Pay Online</string>
     <string name="want_to_pay_online">Want to pay online instead?</string>
-    <string name="to_be_paid">To be paid</string>
+    <string name="to_be_paid">"Bezahlt werden "</string>
     <string name="choose_payment_method">Choose payment method</string>
     <string name="swipe_right_to_pay"><![CDATA[Swipe right to pay >>]]></string>
     <string name="card">Card</string>
@@ -1442,12 +1442,12 @@
     <string name="min">min</string>
     <string name="ratings_format">%s Ratings</string>
     <string name="please_enter_one_alphabet">Please enter at least one alphabet</string>
-    <string name="please_enter_email">Please enter email id</string>
+    <string name="please_enter_email">"Bitte geben Sie die E-Mail-ID ein "</string>
     <string name="please_enter_phone_number">Please enter phone number</string>
     <string name="please_enter_password">Please enter password</string>
     <string name="password_must_be_atleast_six">Password must be of atleast six characters</string>
-    <string name="please_enter_valid_email_id">Please enter valid email id</string>
-    <string name="login_cancelled">Login Cancelled</string>
+    <string name="please_enter_valid_email_id">"Bitte geben Sie eine gültige E-Mail-ID ein "</string>
+    <string name="login_cancelled">"Anmeldung abgebrochen "</string>
     <string name="unknown_response_type">Unknown response type</string>
     <string name="confirm_debug_password">Confirm Debug Password</string>
     <string name="please_enter_password_to_continue">Please enter password to continue.</string>
@@ -1504,7 +1504,7 @@
     <string name="replies">Replies</string>
     <string name="reply">Reply</string>
     <string name="send_us_email">Send Us an Email</string>
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy">"Datenschutz-Bestimmungen "</string>
     <string name="rate_card">Preisliste</string>
     <string name="terms_of_schedule">Terms of Schedule</string>
     <string name="wallet_promotions">Wallet Promotions</string>
@@ -1571,7 +1571,7 @@
     <string name="anywhere">Anywhere</string>
     <string name="i_need_colon">I need:</string>
     <string name="when_colon">When:</string>
-    <string name="required_field">Required field</string>
+    <string name="required_field">"Pflichtfeld "</string>
     <string name="discount_valid_till_format">Discount valid till %s</string>
     <string name="discount_valid_for_next_format">Discount valid for next %s</string>
     <string name="discount_valid_for_less_than_1_min">Discount valid for less than 1 min</string>
@@ -1633,7 +1633,7 @@
     <string name="_3">3</string>
     <string name="_1_25x">1.25X</string>
     <string name="test_nabc">test abc</string>
-    <string name="add_caps">ADD</string>
+    <string name="add_caps">"HINZUFÜGEN "</string>
     <string name="cashback">cashback</string>
     <string name="animation">Animation</string>
     <string name="title">Title</string>
@@ -1672,7 +1672,7 @@
     <string name="luggage_charge">Luggage Charge</string>
     <string name="convenience_charge">Komfortgebühr</string>
     <string name="final_fare">Final Fare</string>
-    <string name="to_be_paid_camel_case">To Be Paid</string>
+    <string name="to_be_paid_camel_case">"Bezahlt werden "</string>
     <string name="rs_20">&currency; 20</string>
     <string name="_20_kms">20 kms</string>
     <string name="wait">Wait</string>
@@ -1686,7 +1686,7 @@
     <string name="status1">Status1</string>
     <string name="status2">Status2</string>
     <string name="status3">Status3</string>
-    <string name="home_caps">HOME</string>
+    <string name="home_caps">"ZUHAUSE "</string>
     <string name="support">SUPPORT</string>
     <string name="hyphen">-</string>
     <string name="min_caps">MIN</string>
@@ -1751,19 +1751,19 @@
     <string name="no_transactions_currently_camel_case">No Transactions Currently</string>
     <string name="_1234">1234</string>
     <string name="_15_aug_2016_05_30pm_8_5_km">15 Aug 2016, 05:30PM, 8.5 Km</string>
-    <string name="rate_us_on_play_store">Rate us on Play Store</string>
-    <string name="like_us_on_facebook">Like us on Facebook</string>
-    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="rate_us_on_play_store">"Bewerten Sie uns im Play Store "</string>
+    <string name="like_us_on_facebook">"Like uns auf Facebook "</string>
+    <string name="terms_and_conditions">"Geschäftsbedingungen "</string>
     <string name="a_z">A - Z</string>
     <string name="_9999999999">9999999999</string>
     <string name="choose_image">Choose Image</string>
     <string name="_432">432</string>
     <string name="paytm_wallet_caps">PAYTM WALLET</string>
-    <string name="edit_caps">EDIT</string>
+    <string name="edit_caps">"BEARBEITEN "</string>
     <string name="current_balance">Current Balance</string>
     <string name="_5000">5000</string>
     <string name="enter_amount">Enter Amount</string>
-    <string name="set_location_on_map">Set Location on Map</string>
+    <string name="set_location_on_map">"Legen Sie den Standort auf der Karte fest "</string>
     <string name="_1_free">1 Free</string>
     <string name="_2x">2X</string>
     <string name="garry_gurcharan">Garry Gurcharan</string>
@@ -1774,7 +1774,7 @@
     <string name="value">Value</string>
     <string name="your_star_status_has_expired">Your star status has expired.</string>
     <string name="cashback_nabc">cashback abc</string>
-    <string name="get_a_ride">GET A RIDE</string>
+    <string name="get_a_ride">"EINE MITFAHRGELEGENHEIT BEKOMMEN "</string>
     <string name="ac_nservice_nand_repair">AC  Service  and Repair</string>
     <string name="_999">******999</string>
     <string name="do_you_really_want_to_delete_this_post_if_you_delete_once_it_will_no_longer_be_available">Do you really want to delete this post? If you delete once it will no longer be available.</string>
@@ -1795,11 +1795,11 @@
     <string name="wallet">WALLET</string>
     <string name="promotional_banner">Promotional banner</string>
     <string name="type_your_message_here">Type your message here</string>
-    <string name="help_caps">HELP</string>
+    <string name="help_caps">HILFE</string>
     <string name="pb65ac0123">PB65AC0123</string>
     <string name="status">Status</string>
     <string name="edit_place">Edit Place</string>
-    <string name="view_invoice_caps">VIEW INVOICE</string>
+    <string name="view_invoice_caps">"RECHNUNG ANSEHEN "</string>
     <string name="rate_your_experience">Rate your Experience</string>
     <string name="review_title">Review Title</string>
     <string name="description_goes_here">Description goes here...</string>
@@ -1809,7 +1809,7 @@
     <string name="cancel_ride_caps">ABBRUCH FAHREN</string>
     <string name="others">Others</string>
     <string name="please_specify_the_reason">Please specify the reason</string>
-    <string name="required">* Required</string>
+    <string name="required">"* Erforderlich "</string>
     <string name="cancellation_of_a_ride_more_than_5_minutes_nafter_the_driver_is_allocated_will_lead_to_ncancellation_charges_of_rs_20">Cancellation of a ride more than 5 minutes after the driver is allocated will lead to cancellation charges of &currency; 20</string>
     <string name="fare_estimate">FARE ESTIMATE</string>
     <string name="convenience_charges_rs_10">Convenience charges &currency;10</string>
@@ -1825,7 +1825,7 @@
     <string name="delivery_time_camel_case">Delivery Time</string>
     <string name="as_soon_as_possible">As soon as possible</string>
     <string name="scheduled_time">Scheduled Time</string>
-    <string name="try_again">Try Again</string>
+    <string name="try_again">"Versuch es noch einmal "</string>
     <string name="back_caps">BACK</string>
     <string name="tell_us_about_your_requirements">Tell us about your requirements…</string>
     <string name="view_rate_card">View Rate Card</string>
@@ -1843,14 +1843,14 @@
 
     <string name="error_listener_not_set">Listener is not set you will not receive any callback for country picked!</string>
     <string name="error_no_countries_found">No Countries Found! Did you call build()</string>
-    <string name="search">Search</string>
-    <string name="country_picker_header">Select country</string>
+    <string name="search">"Suche "</string>
+    <string name="country_picker_header">"Land auswählen "</string>
     <string name="no_country_found">No country found</string>
     <string name="pay_via_format">Pay via %s</string>
     <string name="jugnoo_cash_added">&appname; Cash added</string>
-    <string name="finding_a_driver">Finding a &appname; driver...</string>
-    <string name="confirm_ride_request">Confirm Ride Request</string>
-    <string name="please_select_country_code">Please select country code</string>
+    <string name="finding_a_driver">&appname;Einen Sindbaad Treiber finden ...</string>
+    <string name="confirm_ride_request">"Fahranforderung bestätigen "</string>
+    <string name="please_select_country_code">"Bitte Ländercode auswählen "</string>
     <string name="code">Code</string>
     <string name="hash_format">#%s</string>
     <string name="distance_km_away_format">%skm away</string>
@@ -1869,9 +1869,9 @@
     <string name="jugnoo_star_caps">&appnamecaps; STAR</string>
     <string name="set_preferences_caps">SET-VOREINSTELLUNGEN</string>
     <string name="restarting_your_app">Neustarten der App ...</string>
-    <string name="we_could_not_detect_your_location">We could not detect your location. Are you sure you want to request an auto to pick you at this location?</string>
-    <string name="location_accuracy_is_low">Location accuracy is low. Are you sure you want to request an auto to pick you at this location?</string>
-    <string name="the_pickup_location_you_have_set_is_different">The pickup location you have set is different from your current location. Are you sure this is your pickup location?</string>
+    <string name="we_could_not_detect_your_location">"Wir konnten Ihren Standort nicht erkennen. Sind Sie sicher, dass Sie ein Auto anfordern möchten, um Sie an diesem Ort abzuholen? "</string>
+    <string name="location_accuracy_is_low">"Die Ortsgenauigkeit ist niedrig. Sind Sie sicher, dass Sie ein Auto anfordern möchten, um Sie an diesem Ort abzuholen? "</string>
+    <string name="the_pickup_location_you_have_set_is_different">"Der von Ihnen eingestellte Abholort unterscheidet sich von Ihrem aktuellen Standort. Sind Sie sicher, dass dies Ihr Abholort ist? "</string>
 
 
 </resources>

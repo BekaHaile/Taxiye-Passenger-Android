@@ -79,6 +79,7 @@
                 android:layout_marginTop="5px"
                 android:singleLine="true"
                 android:maxLines="1"
+                android:layoutDirection="ltr"
                 android:ellipsize="end"
                 android:text="@string/view_account"
                 android:textColor="@color/white"

@@ -1,5 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY appname "Sindbaad"><!ENTITY currency "\u20B9"><!ENTITY nextline "\u2028
-"><!ENTITY appnamecaps "SINDBAD">]>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources
+    [<!ENTITY appname "Sindbad">
+        <!ENTITY currency "\u20B9">
+        <!ENTITY nextline "\u2028">
+        <!ENTITY appnamecaps "SINDBAD">]>
 <resources>
 
     <string name="app_name">Sindbaad</string>

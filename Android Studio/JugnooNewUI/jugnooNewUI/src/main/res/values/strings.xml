@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
     <!ENTITY appname "Jugnoo White">
+    <!ENTITY appnamecaps "JUGNOO WHITE">
     <!ENTITY currency "\u20B9">
     ]>
 <resources>
@@ -11,7 +12,6 @@
 
     <string name="no_more_than">Can\'t order more than %d units</string>
     <string name="no_more_than_star">Can\'t add more than %d unit</string>
-
 
 
 
@@ -541,7 +541,7 @@
     <string name="conn_lost_title">CONNECTION LOST</string>
     <string name="conn_lost_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
     <string name="server_error_title">CONNECTION LOST</string>
-    <string name="server_error_text">Oops! We are not able to connect to server right now.\nPlease try again.</string>
+    <string name="server_error_text">Oops! We are not able to connect to server right now. Please try again.</string>
 
 
     <string name="priority_tip_format">Priority Tip %sx</string>
@@ -1845,23 +1845,31 @@
     <string name="search">Search</string>
     <string name="country_picker_header">Select country</string>
     <string name="no_country_found">No country found</string>
-    <string name="pay_via_format">Pay via %s</string>
     <string name="jugnoo_cash_added">&appname; Cash added</string>
     <string name="finding_a_driver">Finding a &appname; driver...</string>
     <string name="confirm_ride_request">Confirm Ride Request</string>
     <string name="please_select_country_code">Please select country code</string>
     <string name="code">Code</string>
-    <string name="hash_format">#%s</string>
-    <string name="distance_km_away_format">%skm away</string>
-    <string name="distance_m_away_format">%sm away</string>
-    <string name="bids_received">Bids received</string>
     <string name="change_language">Change Language</string>
+    <string name="change_language_caps">CHANGE LANGUAGE</string>
+    <string name="game_caps">GAME</string>
+    <string name="free_rides_caps">FREE RIDES</string>
+    <string name="wallet_caps">WALLET</string>
+    <string name="inbox_caps">INBOX</string>
+    <string name="promotions_caps">PROMOTIONS</string>
+    <string name="history_caps">HISTORY</string>
+    <string name="refer_a_driver_caps">REFER A DRIVER</string>
+    <string name="support_caps">SUPPORT</string>
+    <string name="jugnoo_star_caps">&appnamecaps; STAR</string>
+    <string name="set_preferences_caps">SET PREFERENCES</string>
+    <string name="restarting_your_app">Restarting you app...</string>
+    <string name="we_could_not_detect_your_location">We could not detect your location. Are you sure you want to request an auto to pick you at this location?</string>
+    <string name="location_accuracy_is_low">Location accuracy is low. Are you sure you want to request an auto to pick you at this location?</string>
+    <string name="the_pickup_location_you_have_set_is_different">The pickup location you have set is different from your current location. Are you sure this is your pickup location?</string>
     <string name="english">English</string>
     <string name="arabic">عربى</string>
     <string name="french">français</string>
     <string name="german">Deutsche</string>
-    <string name="we_could_not_detect_your_location">We could not detect your location. Are you sure you want to request an auto to pick you at this location?</string>
-    <string name="location_accuracy_is_low">Location accuracy is low. Are you sure you want to request an auto to pick you at this location?</string>
-    <string name="the_pickup_location_you_have_set_is_different">The pickup location you have set is different from your current location. Are you sure this is your pickup location?</string>
+
 
 </resources>
