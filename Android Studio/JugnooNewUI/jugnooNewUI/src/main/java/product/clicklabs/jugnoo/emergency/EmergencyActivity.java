@@ -50,7 +50,7 @@ public class EmergencyActivity extends BaseFragmentActivity {
             String engagementId = getIntent().getStringExtra(Constants.KEY_ENGAGEMENT_ID);
             String driverId = getIntent().getStringExtra(Constants.KEY_DRIVER_ID);
             getSupportFragmentManager().beginTransaction()
-                    .add(relativeLayoutContainer.getId(), new EmergencyModeEnabledFragment(driverId, engagementId),
+                    .add(relativeLayoutContainer.getId(), EmergencyModeEnabledFragment.newInstance(driverId, engagementId),
                             EmergencyModeEnabledFragment.class.getName())
                     .addToBackStack(EmergencyModeEnabledFragment.class.getName())
                     .commitAllowingStateLoss();

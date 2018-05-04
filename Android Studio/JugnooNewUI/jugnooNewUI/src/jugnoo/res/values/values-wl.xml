@@ -35,7 +35,7 @@
 
     <string name="operator_token">d7f228ce89b10cb02ec9fccdb47355d5</string>
     <string name="support_number">+919023121121</string>
-    <string name="police_number">+100</string>
+    <string name="police_number">100</string>
     <string name="facebook_page_id">252184564966458</string>
     <string name="facebook_page_name">jugnoose</string>
 
@@ -64,5 +64,5 @@
     <string name="pictures_path">Jugnoo/Jugnoo Pictures</string>
     <bool name="force_inhouse_login">false</bool>
     <bool name="force_mpesa_payment">false</bool>
-    <bool name="show_about">true</bool>
+    <integer name="show_about">@integer/view_visible</integer>
 </resources>

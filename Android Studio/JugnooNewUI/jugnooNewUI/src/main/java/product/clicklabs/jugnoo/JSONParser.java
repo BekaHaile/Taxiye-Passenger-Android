@@ -742,6 +742,7 @@ public class JSONParser implements Constants {
 
             HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
             Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+            Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jLastRideData.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1028,6 +1029,8 @@ public class JSONParser implements Constants {
                             chatEnabled = jObject.optInt("chat_enabled", 0);
                             operatorId = jObject.optInt(KEY_OPERATOR_ID, 0);
                             currency = jObject.optString(KEY_CURRENCY);
+
+                            Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jObject.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
                             try {
                                 if(jObject.has(KEY_OP_DROP_LATITUDE) && jObject.has(KEY_OP_DROP_LONGITUDE)) {

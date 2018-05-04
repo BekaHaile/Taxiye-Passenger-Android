@@ -1334,11 +1334,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             super.onBackPressed();
             textViewTitle.setText(R.string.title_my_profile);
             rlMain.setVisibility(View.VISIBLE);
-            if(getResources().getBoolean(R.bool.show_about)) {
+            if(getResources().getInteger(R.integer.show_about) == 0) {
                 tvAbout.setVisibility(View.VISIBLE);
-            }
-            else {
-
             }
         }
     }

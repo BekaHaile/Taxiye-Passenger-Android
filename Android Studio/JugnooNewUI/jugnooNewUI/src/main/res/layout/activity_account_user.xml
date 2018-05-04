@@ -38,6 +38,7 @@
             android:theme="@style/GreyHighlight"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:typekitFont="@string/maven"
+            android:visibility="@integer/show_about"
             />
 
 
