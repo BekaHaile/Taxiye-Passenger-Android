@@ -33,7 +33,7 @@
 
 
 
-    <string name="operator_token">08a0fec5f1b7543e90667e1f2e039c21</string>
+    <string name="operator_token">2a5ea26afb2c1fdbd0e7ab0941b9b9ab</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">911</string>
     <string name="facebook_page_id">252184564966458</string>
@@ -51,19 +51,19 @@
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <integer name="show_splash_logo_text">@integer/view_visible</integer>
 
-    <string name="file_provider_name">com.sindbaad.fileprovider</string>
+    <string name="file_provider_name">com.progressive.fileprovider</string>
     <string name="web_landing_page">https://jugnoo.in</string>
     <string name="smart_url">http://smarturl.it/jugnoo</string>
-    <string name="db_name">sindbaad_database</string>
+    <string name="db_name">progressive_database</string>
     <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
     <string name="app_domain">jugnoo.in</string>
     <string name="app_host_name">www.jugnoo.in</string>
     <string name="branch_domain">share.jugnoo.in</string>
-    <string name="app_scheme">sindbaad</string>
+    <string name="app_scheme">progressive</string>
 
-    <string name="pictures_path">Sindbaad/Sindbaad Pictures</string>
+    <string name="pictures_path">Progressive/Progressive Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
     <bool name="show_about">false</bool>
-    <bool name="show_change_languge">true</bool>
+    <bool name="show_change_languge">false</bool>
 </resources>
