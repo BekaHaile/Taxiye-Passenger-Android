@@ -3,10 +3,10 @@ package product.clicklabs.jugnoo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,14 +20,15 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 public class ChangeLanguageActivity extends BaseActivity {
 
-    RelativeLayout relative;
+    FrameLayout relative;
+    RelativeLayout rlTransparent;
 
     TextView textViewTitle, tvCountDownTimer;
     ImageView imageViewBack, ivEnglish, ivArabic, ivFrench, ivGerman;
 
     RelativeLayout relativeLayoutEnglish, relativeLayoutFrench, relativeLayoutArabic, relativeLayoutGerman;
     TextView textViewEnglish, textViewFrench, textViewArabic, textViewGerman;
-    private final String TAG = "About";
+    private final String TAG = "Change Language";
     Bundle bundle;
     TextView textViewCounter;
     ImageView imageViewYellowLoadingBar;
@@ -43,11 +44,19 @@ public class ChangeLanguageActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_language);
-        relative = (RelativeLayout) findViewById(R.id.relative);
+        relative = (FrameLayout) findViewById(R.id.relative);
+        rlTransparent = (RelativeLayout) findViewById(R.id.rlTransparent);
+        rlTransparent.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         new ASSL(this, (ViewGroup) relative, 1134, 720, false);
 
         rlRestartTimer = (RelativeLayout) findViewById(R.id.rlRestartTimer);
-        textViewCounter = (TextView) findViewById(R.id.textViewCounter); textViewCounter.setTypeface(Fonts.mavenRegular(this));
+        textViewCounter = (TextView) findViewById(R.id.textViewCounter);
+        textViewCounter.setTypeface(Fonts.mavenRegular(this));
         imageViewYellowLoadingBar = (ImageView) findViewById(R.id.imageViewYellowLoadingBar);
 
 
@@ -81,7 +90,9 @@ public class ChangeLanguageActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
-                updateViews("en");
+                if (!LocaleHelper.getLanguage(ChangeLanguageActivity.this).equalsIgnoreCase("en")) {
+                    updateViews("en");
+                }
             }
         });
 
@@ -89,7 +100,9 @@ public class ChangeLanguageActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
-                updateViews("fr");
+                if (!LocaleHelper.getLanguage(ChangeLanguageActivity.this).equalsIgnoreCase("fr")) {
+                    updateViews("fr");
+                }
             }
         });
 
@@ -97,7 +110,9 @@ public class ChangeLanguageActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
-                updateViews("ar");
+                if (!LocaleHelper.getLanguage(ChangeLanguageActivity.this).equalsIgnoreCase("ar")) {
+                    updateViews("ar");
+                }
             }
         });
 
@@ -105,7 +120,9 @@ public class ChangeLanguageActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
-                updateViews("de");
+                if (!LocaleHelper.getLanguage(ChangeLanguageActivity.this).equalsIgnoreCase("de")) {
+                    updateViews("de");
+                }
             }
         });
 
@@ -166,7 +183,8 @@ public class ChangeLanguageActivity extends BaseActivity {
 //            }
 //
 //        }.start();
-startRestartTimer();
+        rlTransparent.setVisibility(View.VISIBLE);
+        startRestartTimer();
     }
 
     public void performBackPressed() {
@@ -176,7 +194,9 @@ startRestartTimer();
 
     @Override
     public void onBackPressed() {
-        performBackPressed();
+        if (rlTransparent.getVisibility() == View.GONE) {
+            performBackPressed();
+        }
     }
 
 
@@ -187,14 +207,14 @@ startRestartTimer();
         super.onDestroy();
     }
 
-    private void startRestartTimer(){
-        try{
-            long timerDuration =3000;
-                setRlRestartTimerVisibility(View.VISIBLE);
-                CustomCountDownTimer customCountDownTimer = new CustomCountDownTimer(timerDuration, 5);
-                customCountDownTimer.start();
-                Utils.hideKeyboard(this);
-        } catch(Exception e){
+    private void startRestartTimer() {
+        try {
+            long timerDuration = 3000;
+            setRlRestartTimerVisibility(View.VISIBLE);
+            CustomCountDownTimer customCountDownTimer = new CustomCountDownTimer(timerDuration, 5);
+            customCountDownTimer.start();
+            Utils.hideKeyboard(this);
+        } catch (Exception e) {
             setRlRestartTimerVisibility(View.GONE);
         }
     }
@@ -202,6 +222,7 @@ startRestartTimer();
     class CustomCountDownTimer extends CountDownTimer {
 
         private final long mMillisInFuture;
+
         public CustomCountDownTimer(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
             mMillisInFuture = millisInFuture;
@@ -209,7 +230,7 @@ startRestartTimer();
 
         @Override
         public void onTick(long millisUntilFinished) {
-            double percent = (((double)millisUntilFinished) * 100.0) / mMillisInFuture;
+            double percent = (((double) millisUntilFinished) * 100.0) / mMillisInFuture;
 
             double widthToSet = percent * ((double) (ASSL.Xscale() * 530)) / 100.0;
 
@@ -218,8 +239,8 @@ startRestartTimer();
             imageViewYellowLoadingBar.setLayoutParams(params);
 
 
-            long seconds = (long) Math.ceil(((double)millisUntilFinished) / 1000.0d);
-            String text = seconds < 10 ? "0:0"+seconds : "0:"+seconds;
+            long seconds = (long) Math.ceil(((double) millisUntilFinished) / 1000.0d);
+            String text = seconds < 10 ? "0:0" + seconds : "0:" + seconds;
             textViewCounter.setText(text);
         }
 
@@ -229,8 +250,9 @@ startRestartTimer();
             startActivity(new Intent(ChangeLanguageActivity.this, SplashNewActivity.class));
         }
     }
-    private void setRlRestartTimerVisibility(int visibility){
-        if(visibility == View.GONE){
+
+    private void setRlRestartTimerVisibility(int visibility) {
+        if (visibility == View.GONE) {
             rlRestartTimer.setVisibility(View.GONE);
         } else {
             rlRestartTimer.setVisibility(View.VISIBLE);
