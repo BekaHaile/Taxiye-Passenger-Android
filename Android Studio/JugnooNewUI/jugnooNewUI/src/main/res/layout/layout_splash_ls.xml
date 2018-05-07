@@ -92,6 +92,7 @@
             android:textAllCaps="true"
             android:textStyle="bold"
             android:visibility="@integer/show_splash_logo_text"
+            android:textColor="@color/splash_logo_color"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
             android:tag="@string/dont_touch_me"

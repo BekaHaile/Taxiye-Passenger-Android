@@ -32,6 +32,7 @@
         android:textStyle="bold"
         android:layout_below="@+id/ivLogoP"
         android:visibility="@integer/show_splash_logo_text"
+        android:textColor="@color/splash_logo_color"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:tag="@string/dont_touch_me"
