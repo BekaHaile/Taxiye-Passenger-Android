@@ -54,7 +54,6 @@ public class LocaleHelper {
     private static void persist(Context context, String language) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
-
         editor.putString(SELECTED_LANGUAGE, language);
         editor.apply();
     }
@@ -62,8 +61,9 @@ public class LocaleHelper {
     @TargetApi(Build.VERSION_CODES.N)
     private static Context updateResources(Context context, String language) {
         Locale locale = new Locale(language);
-        Configuration configuration = context.getResources().getConfiguration();
         Locale.setDefault(locale);
+
+        Configuration configuration = context.getResources().getConfiguration();
         configuration.setLocale(locale);
         configuration.setLayoutDirection(locale);
 
@@ -82,7 +82,6 @@ public class LocaleHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             configuration.setLayoutDirection(locale);
         }
-
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
 
         return context;

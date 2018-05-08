@@ -112,6 +112,7 @@ import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.OwnerInfo;
@@ -1368,7 +1369,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				textViewPhoneNumberRequired.setVisibility((s.length() == 0)?View.VISIBLE:View.GONE);
 			}
 		});
-
+		new HomeUtil().forceRTL(this);
 	}
 
 	private void startFbAccountKit(PhoneNumber phoneNumber){

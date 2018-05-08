@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -163,26 +164,6 @@ public class ChangeLanguageActivity extends BaseActivity {
 
     private void updateViews(String languageCode) {
         LocaleHelper.setLocale(this, languageCode);
-        //  Resources resources = context.getResources();
-//        new CountDownTimer(5000, 1000) {
-//
-//            public void onTick(long millisUntilFinished) {
-//                tvCountDownTimer.setVisibility(View.VISIBLE);
-//                tvCountDownTimer.setText("app will restart in " + millisUntilFinished / 1000);
-//            }
-//
-//            public void onFinish() {
-//                tvCountDownTimer.setText("done!");
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        finishAffinity();
-//                        startActivity(new Intent(ChangeLanguageActivity.this, SplashNewActivity.class));
-//                    }
-//                }, 1000);
-//            }
-//
-//        }.start();
         rlTransparent.setVisibility(View.VISIBLE);
         startRestartTimer();
     }
@@ -246,8 +227,14 @@ public class ChangeLanguageActivity extends BaseActivity {
 
         @Override
         public void onFinish() {
-            finishAffinity();
-            startActivity(new Intent(ChangeLanguageActivity.this, SplashNewActivity.class));
+            //finishAffinity();
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+                    startActivity(new Intent(ChangeLanguageActivity.this, SplashNewActivity.class));
+//                }
+//            },1000);
+
         }
     }
 

@@ -3,7 +3,10 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
@@ -19,6 +22,12 @@ public class BaseActivity extends Activity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	protected void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		new HomeUtil().forceRTL(this);
 	}
 
 	@Override

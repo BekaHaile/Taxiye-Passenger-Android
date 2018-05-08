@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
@@ -44,6 +45,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
 		if(checkOfAT() && !HomeActivity.checkIfUserDataNull(this)){
 			HomeActivity.checkForAccessTokenChange(this);
 		}
+		new HomeUtil().forceRTL(this);
 	}
 
 	@Override

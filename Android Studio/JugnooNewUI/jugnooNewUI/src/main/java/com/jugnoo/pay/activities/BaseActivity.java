@@ -24,6 +24,7 @@ import com.sabkuchfresh.utils.AppConstant;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
@@ -55,6 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         appCompatActivity = this;
         broadCastReceiverSetup();
+        new HomeUtil().forceRTL(this);
     }
 
 

@@ -241,7 +241,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             public void onClick(View v) {
             }
         });
-
+        new HomeUtil().forceRTL(this);
     }
 
     public void performBackPressed(){

@@ -52,6 +52,7 @@ import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 
@@ -113,6 +114,7 @@ public class PickerActivity extends AppCompatActivity {
         setupAlbums(savedInstanceState);
         initFab();
         updateFab();
+        new HomeUtil().forceRTL(this);
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {

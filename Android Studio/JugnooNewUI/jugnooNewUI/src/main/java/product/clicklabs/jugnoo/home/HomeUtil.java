@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.home;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -46,6 +47,7 @@ import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -460,6 +462,15 @@ public class HomeUtil {
 			return Config.getProsClientId();
 		}
 		return "";
+	}
+	public void forceRTL(Activity activity){
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			if (LocaleHelper.getLanguage(activity).equalsIgnoreCase("ar")) {
+				activity.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+			} else {
+				activity.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+			}
+		}
 	}
 
 }

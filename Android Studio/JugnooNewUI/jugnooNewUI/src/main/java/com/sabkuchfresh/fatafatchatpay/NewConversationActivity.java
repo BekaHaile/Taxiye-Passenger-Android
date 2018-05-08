@@ -46,6 +46,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.PaperDBKeys;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.ContactsUploadService;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.CreateChatResponse;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -112,6 +113,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
                 syncContacts();
             }
         }
+        new HomeUtil().forceRTL(this);
     }
 
     @Override

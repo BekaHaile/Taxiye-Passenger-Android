@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
 
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
@@ -50,6 +51,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 		} else {
 			return;
 		}
+		new HomeUtil().forceRTL(this);
 	}
 
 	@Override
