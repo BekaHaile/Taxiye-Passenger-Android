@@ -1466,7 +1466,7 @@
     <string name="txt_suggestions">Suggestions</string>
     <string name="txt_recent_searches">Recent Searches</string>
     <string name="txt_related_to">Related to \"%s\"</string>
-    <string name="jugnoo_taxi">&appname; Taxi</string>
+    <string name="jugnoo_taxi">&appname;</string>
     <string name="faqs">FAQs</string>
     <string name="we_could_not_find_this_post">We could not find this post right now</string>
     <string name="closing_in_format">Closing in %1$s %2$s</string>
