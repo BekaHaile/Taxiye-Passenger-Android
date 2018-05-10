@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.stripe.StripeAddCardFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -57,6 +58,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 
     View rootView;
     private PaymentActivity paymentActivity;
+	private RelativeLayout relativeLayoutStripe;
 
 	public static WalletFragment newInstance(){
 		WalletFragment fragment = new WalletFragment();
@@ -121,6 +123,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
         textViewFreeChargeBalanceValue = (TextView) rootView.findViewById(R.id.textViewFreeChargeBalanceValue); textViewFreeChargeBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 		relativeLayoutPayTransactions = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPayTransactions);
+		relativeLayoutStripe = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutStripe);
 		((TextView) rootView.findViewById(R.id.textViewPayTransactions)).setTypeface(Fonts.mavenRegular(paymentActivity));
         relativeLayoutWalletTransactions = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWalletTransactions);
 		((TextView) rootView.findViewById(R.id.textViewWalletTransactions)).setTypeface(Fonts.mavenRegular(paymentActivity));
@@ -222,6 +225,19 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 						.add(R.id.fragLayout, WalletTransactionsFragment.newInstance(1), WalletTransactionsFragment.class.getName())
 						.addToBackStack(WalletTransactionsFragment.class.getName())
+						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+						.commit();
+			}
+		});
+
+		relativeLayoutStripe.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				paymentActivity.getSupportFragmentManager().beginTransaction()
+						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+						.add(R.id.fragLayout, new StripeAddCardFragment(), StripeAddCardFragment.class.getName())
+						.addToBackStack(StripeAddCardFragment.class.getName())
 						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 						.commit();

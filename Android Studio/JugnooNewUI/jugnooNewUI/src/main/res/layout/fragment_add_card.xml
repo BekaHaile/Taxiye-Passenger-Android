@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:stripe="http://schemas.android.com/apk/res-auto"
+    android:tag="@string/dont_touch_me"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:text="@string/stripe"
+            android:textSize="18sp"
+            style="@style/title"/>
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            style="@style/back_image"/>
+    </RelativeLayout>
+
+
+
+    <com.stripe.android.view.CardInputWidget
+        android:id="@+id/card_input_widget"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/CardWidgetStyle"
+        stripe:cardTint="@color/theme_color" />
+
+
+    <Button
+        android:id="@+id/btn_add_card"
+        android:layout_marginTop="20dp"
+       android:background="@drawable/button_theme"
+        android:textColor="@color/white"
+        android:text="Add Card"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>

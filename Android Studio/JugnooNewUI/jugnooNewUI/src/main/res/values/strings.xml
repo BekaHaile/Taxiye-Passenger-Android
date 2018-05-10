@@ -1856,5 +1856,6 @@
     <string name="distance_m_away_format">%sm away</string>
     <string name="bids_received">Bids received</string>
     <string name="select_a_bid">Select a bid</string>
+    <string name="stripe">Stripe</string>
 
 </resources>

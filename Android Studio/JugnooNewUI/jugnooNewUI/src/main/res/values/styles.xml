@@ -936,4 +936,14 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="CardWidgetStyle" parent="@android:style/Theme.DeviceDefault">
+        <item name="android:background">@color/theme_color_alpha</item>
+        <item name="editTextStyle">@style/EditTextOverride</item>
+        <item name="android:editTextStyle">@style/EditTextOverride</item>
+    </style>
+
+    <style name="EditTextOverride" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColorHint">@color/text_color_hint</item>
+    </style>
 </resources>
