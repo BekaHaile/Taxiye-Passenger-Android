@@ -1340,7 +1340,7 @@
     <string name="no_coupons_available">No Coupons Available</string>
     <string name="how_was_your_experience">كيف كانت تجربتك؟</string>
     <string name="to_use_this_coupon">To use this coupon, select it at the time of checkout.</string>
-    <string name="are_you_sure_want_to_disable_emergency">Are you sure you want to disable Emergency mode?</string>
+    <string name="are_you_sure_want_to_disable_emergency">"هل أنت متأكد من أنك تريد تعطيل وضع الطوارئ؟ "</string>
     <string name="call">Call</string>
     <string name="order_online">"Order Online "</string>
     <string name="see_all">See All</string>
@@ -1900,7 +1900,7 @@
     <string name="support_caps">الدعم</string>
     <string name="jugnoo_star_caps">&appnamecaps; نجمة</string>
     <string name="set_preferences_caps">تحديد التفضيلات</string>
-    <string name="restarting_your_app">جارٍ إعادة تشغيل التطبيق ...</string>
+    <string name="restarting_your_app">جارٍ إعادة تشغيل تطبيقك ...</string>
     <string name="we_could_not_detect_your_location">لم نتمكن من اكتشاف موقعك. هل أنت متأكد من أنك تريد طلب الحصول على سيارة تلقائيًا في هذا الموقع؟</string>
     <string name="location_accuracy_is_low">دقة الموقع منخفضة. هل أنت متأكد من أنك تريد طلب الحصول على سيارة تلقائيًا في هذا الموقع؟</string>
     <string name="the_pickup_location_you_have_set_is_different">يختلف موقع الاستلام الذي قمت بتعيينه عن موقعك الحالي. هل أنت متأكد من أن هذا هو موقع التقاطك؟</string>

@@ -1318,7 +1318,7 @@
     <string name="no_coupons_available">No Coupons Available</string>
     <string name="how_was_your_experience">"Comment s'est passée votre expérience? "</string>
     <string name="to_use_this_coupon">To use this coupon, select it at the time of checkout.</string>
-    <string name="are_you_sure_want_to_disable_emergency">Are you sure you want to disable Emergency mode?</string>
+    <string name="are_you_sure_want_to_disable_emergency">"Êtes-vous sûr de vouloir désactiver le mode Urgence? "</string>
     <string name="call">Call</string>
     <string name="order_online">"Order Online "</string>
     <string name="see_all">See All</string>

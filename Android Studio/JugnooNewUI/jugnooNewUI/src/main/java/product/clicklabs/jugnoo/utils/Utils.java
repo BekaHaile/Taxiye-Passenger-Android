@@ -75,6 +75,7 @@ import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 

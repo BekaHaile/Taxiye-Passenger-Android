@@ -15,6 +15,9 @@
             android:id="@+id/textViewTitle"
             android:text="@string/call_your_contacts"
             android:textSize="@dimen/text_size_32"
+            android:layout_toStartOf="@+id/textViewSend"
+            android:layout_toEndOf="@+id/imageViewBack"
+            android:gravity="center"
             style="@style/title"
             />
 

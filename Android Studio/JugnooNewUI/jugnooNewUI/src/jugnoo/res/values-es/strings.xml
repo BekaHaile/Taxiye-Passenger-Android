@@ -1868,7 +1868,7 @@
     <string name="support_caps">SUPPORT</string>
     <string name="jugnoo_star_caps">&appnamecaps; STAR</string>
     <string name="set_preferences_caps">SET PREFERENCES</string>
-    <string name="restarting_your_app">Restarting you app...</string>
+    <string name="restarting_your_app">Reiniciando tu aplicación ...</string>
     <string name="we_could_not_detect_your_location">"No pudimos detectar su ubicación. ¿Seguro que quieres solicitar un auto para que te recoja en esta ubicación? "</string>
     <string name="location_accuracy_is_low">"La precisión de ubicación es baja. ¿Seguro que quieres solicitar un auto para que te recoja en esta ubicación? "</string>
     <string name="the_pickup_location_you_have_set_is_different">"La ubicación de recolección que ha establecido es diferente de su ubicación actual. ¿Estás seguro de que este es tu lugar de recogida? "</string>

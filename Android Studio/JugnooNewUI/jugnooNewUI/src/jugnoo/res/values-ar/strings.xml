@@ -1474,8 +1474,7 @@
     <string name="min">الدقائق</string>
     <string name="ratings_format">%s Ratings</string>
     <string name="please_enter_one_alphabet">Please enter at least one alphabet</string>
-    <string name="please_enter_email">الرجاء إدخال معرف البريد الإلكتروني
-</string>
+    <string name="please_enter_email">الرجاء إدخال معرف البريد الإلكتروني</string>
     <string name="please_enter_phone_number">Please enter phone number</string>
     <string name="please_enter_password">Please enter password</string>
     <string name="password_must_be_atleast_six">Password must be of atleast six characters</string>
@@ -1900,7 +1899,7 @@
     <string name="support_caps">الدعم</string>
     <string name="jugnoo_star_caps">&appnamecaps; نجمة</string>
     <string name="set_preferences_caps">تحديد التفضيلات</string>
-    <string name="restarting_your_app">جارٍ إعادة تشغيل التطبيق ...</string>
+    <string name="restarting_your_app">جارٍ إعادة تشغيل تطبيقك ...</string>
     <string name="we_could_not_detect_your_location">لم نتمكن من اكتشاف موقعك. هل أنت متأكد من أنك تريد طلب الحصول على سيارة تلقائيًا في هذا الموقع؟</string>
     <string name="location_accuracy_is_low">دقة الموقع منخفضة. هل أنت متأكد من أنك تريد طلب الحصول على سيارة تلقائيًا في هذا الموقع؟</string>
     <string name="the_pickup_location_you_have_set_is_different">يختلف موقع الاستلام الذي قمت بتعيينه عن موقعك الحالي. هل أنت متأكد من أن هذا هو موقع التقاطك؟</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY appname "Sindbaad">
+    <!ENTITY appname "Sindbad">
     <!ENTITY currency "\u20B9">
     <!ENTITY appnamecaps "SINDBAD">
     ]>
@@ -1150,7 +1150,7 @@
     <string name="one_item_in_cart">1 Item in cart</string>
     <string name="clear_cart">Clear Cart</string>
     <string name="i_want_to_cancel_my_order_because">I want to cancel my Order because</string>
-    <string name="please_select_one_reason">Please select one reason</string>
+    <string name="please_select_one_reason">Bitte wählen Sie einen Grund aus</string>
     <string name="error_feed_review_restaurant_not_selected">Select a restaurant to review</string>
     <string name="add_a_reply">Add a reply...</string>
     <string name="label_city">City</string>
@@ -1309,7 +1309,7 @@
     <string name="no_coupons_available">No Coupons Available</string>
     <string name="how_was_your_experience">"Wie war deine Erfahrung? "</string>
     <string name="to_use_this_coupon">To use this coupon, select it at the time of checkout.</string>
-    <string name="are_you_sure_want_to_disable_emergency">Are you sure you want to disable Emergency mode?</string>
+    <string name="are_you_sure_want_to_disable_emergency">"Möchten Sie den Notfallmodus wirklich deaktivieren? "</string>
     <string name="call">Call</string>
     <string name="order_online">"Order Online "</string>
     <string name="see_all">See All</string>
@@ -1717,7 +1717,7 @@
     <string name="gift_your_friends_nrs_50">Gift your friends  &currency; 50</string>
     <string name="_10_00_am_12_00_pm">10:00 AM - 12:00 PM</string>
     <string name="no_current_notifications">No Current Notifications</string>
-    <string name="driver_is_late">Driver is late</string>
+    <string name="driver_is_late">Der Fahrer ist spät dran</string>
     <string name="_3_2">3.2</string>
     <string name="order">Order:</string>
     <string name="_13af67">13AF67</string>
@@ -1807,11 +1807,11 @@
     <string name="send_to">send to</string>
     <string name="cash_added">Cash Added</string>
     <string name="cancel_ride_caps">ABBRUCH FAHREN</string>
-    <string name="others">Others</string>
-    <string name="please_specify_the_reason">Please specify the reason</string>
+    <string name="others">Andere</string>
+    <string name="please_specify_the_reason">Bitte geben Sie den Grund an</string>
     <string name="required">"* Erforderlich "</string>
     <string name="cancellation_of_a_ride_more_than_5_minutes_nafter_the_driver_is_allocated_will_lead_to_ncancellation_charges_of_rs_20">Cancellation of a ride more than 5 minutes after the driver is allocated will lead to cancellation charges of &currency; 20</string>
-    <string name="fare_estimate">FARE ESTIMATE</string>
+    <string name="fare_estimate">FARE SCHÄTZEN</string>
     <string name="convenience_charges_rs_10">Convenience charges &currency;10</string>
     <string name="type_city_name">Type City Name</string>
     <string name="use_current_location">Use Current Location</string>
@@ -1848,7 +1848,7 @@
     <string name="no_country_found">No country found</string>
     <string name="pay_via_format">Pay via %s</string>
     <string name="jugnoo_cash_added">&appname; Cash added</string>
-    <string name="finding_a_driver">&appname;Einen Sindbaad Treiber finden ...</string>
+    <string name="finding_a_driver">&appname;Einen Sindbad Treiber finden ...</string>
     <string name="confirm_ride_request">"Fahranforderung bestätigen "</string>
     <string name="please_select_country_code">"Bitte Ländercode auswählen "</string>
     <string name="code">Code</string>

@@ -72,7 +72,7 @@
     <string name="cancel_order">CANCEL ORDER</string>
 
 
-    <string name="ride_time">Ride Time</string>
+    <string name="ride_time">الوقت ركوب</string>
 
     <string name="submit">Submit</string>
 
@@ -104,7 +104,7 @@
 
     <string name="amount_range">Recharge amount should be between Rs. 1 - Rs. 5000</string>
     <string name="free_ride_desc">Send friends free rides and \n you\'ll get one too, up to \u20B9100!</string>
-    <string name="fare_note">Note: This is just an estimate. Actual cost, time and distance may vary</string>
+    <string name="fare_note">ملاحظة: هذا مجرد تقدير. قد تختلف التكلفة الفعلية والوقت والمسافة</string>
 
 
     <!-- Upload contacts dialog Strings -->
@@ -620,7 +620,7 @@
     <string name="autos">Autos</string>
     <string name="rides">ركوب سيارة أجرة</string>
     <string name="waiting_for_location">&#8230;في انتظار الموقع</string>
-    <string name="get_ride">Get Ride</string>
+    <string name="get_ride">اركب</string>
     <string name="fresh">Fresh</string>
     <string name="grocery">Grocery</string>
     <string name="delete_fresh_cart_message">Are you sure you want to delete all items in your cart?</string>
@@ -1181,7 +1181,7 @@
     <string name="one_item_in_cart">1 Item in cart</string>
     <string name="clear_cart">Clear Cart</string>
     <string name="i_want_to_cancel_my_order_because">I want to cancel my Order because</string>
-    <string name="please_select_one_reason">Please select one reason</string>
+    <string name="please_select_one_reason">يرجى اختيار سبب واحد</string>
     <string name="error_feed_review_restaurant_not_selected">Select a restaurant to review</string>
     <string name="add_a_reply">Add a reply...</string>
     <string name="label_city">City</string>
@@ -1340,7 +1340,7 @@
     <string name="no_coupons_available">No Coupons Available</string>
     <string name="how_was_your_experience">كيف كانت تجربتك؟</string>
     <string name="to_use_this_coupon">To use this coupon, select it at the time of checkout.</string>
-    <string name="are_you_sure_want_to_disable_emergency">Are you sure you want to disable Emergency mode?</string>
+    <string name="are_you_sure_want_to_disable_emergency">"هل أنت متأكد من أنك تريد تعطيل وضع الطوارئ؟ "</string>
     <string name="call">Call</string>
     <string name="order_online">"Order Online "</string>
     <string name="see_all">See All</string>
@@ -1751,7 +1751,7 @@
     <string name="gift_your_friends_nrs_50">Gift your friends  Rs. 50</string>
     <string name="_10_00_am_12_00_pm">10:00 AM - 12:00 PM</string>
     <string name="no_current_notifications">No Current Notifications</string>
-    <string name="driver_is_late">Driver is late</string>
+    <string name="driver_is_late">سائق في وقت متأخر</string>
     <string name="_3_2">3.2</string>
     <string name="order">Order:</string>
     <string name="_13af67">13AF67</string>
@@ -1842,11 +1842,11 @@
     <string name="send_to">send to</string>
     <string name="cash_added">Cash Added</string>
     <string name="cancel_ride_caps">CANCEL RIDE</string>
-    <string name="others">Others</string>
-    <string name="please_specify_the_reason">Please specify the reason</string>
+    <string name="others">الآخرين</string>
+    <string name="please_specify_the_reason">يرجى تحديد السبب</string>
     <string name="required">* مطلوب</string>
     <string name="cancellation_of_a_ride_more_than_5_minutes_nafter_the_driver_is_allocated_will_lead_to_ncancellation_charges_of_rs_20">Cancellation of a ride more than 5 minutes after the driver is allocated will lead to cancellation charges of Rs. 20</string>
-    <string name="fare_estimate">FARE ESTIMATE</string>
+    <string name="fare_estimate">تقدير السعر</string>
     <string name="convenience_charges_rs_10">Convenience charges Rs.10</string>
     <string name="type_city_name">Type City Name</string>
     <string name="use_current_location">Use Current Location</string>
@@ -1900,7 +1900,7 @@
     <string name="support_caps">الدعم</string>
     <string name="jugnoo_star_caps">&appnamecaps; نجمة</string>
     <string name="set_preferences_caps">تحديد التفضيلات</string>
-    <string name="restarting_your_app">جارٍ إعادة تشغيل التطبيق ...</string>
+    <string name="restarting_your_app">جارٍ إعادة تشغيل تطبيقك ...</string>
     <string name="we_could_not_detect_your_location">لم نتمكن من اكتشاف موقعك. هل أنت متأكد من أنك تريد طلب الحصول على سيارة تلقائيًا في هذا الموقع؟</string>
     <string name="location_accuracy_is_low">دقة الموقع منخفضة. هل أنت متأكد من أنك تريد طلب الحصول على سيارة تلقائيًا في هذا الموقع؟</string>
     <string name="the_pickup_location_you_have_set_is_different">يختلف موقع الاستلام الذي قمت بتعيينه عن موقعك الحالي. هل أنت متأكد من أن هذا هو موقع التقاطك؟</string>
