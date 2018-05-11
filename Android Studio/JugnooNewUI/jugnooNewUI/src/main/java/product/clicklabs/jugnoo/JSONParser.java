@@ -964,6 +964,7 @@ public class JSONParser implements Constants {
             int operatorId = 0;
             String currency = null;
             ArrayList<BidInfo> bidInfos = new ArrayList<>();
+            int bidAcceptSeconds = 0;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1002,6 +1003,7 @@ public class JSONParser implements Constants {
                         Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""));
                         parseDropLatLng(jObject1);
                         bidInfos = JSONParser.parseBids(Constants.KEY_BIDS, jObject1);
+                        bidAcceptSeconds = jObject1.optInt(Constants.KEY_BID_ACCEPT_SECONDS, 60);
 
                         engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
                     } else if (ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag) {
@@ -1127,6 +1129,7 @@ public class JSONParser implements Constants {
                 HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
                 Data.autoData.setcSessionId(sessionId);
                 Data.autoData.setBidInfos(bidInfos);
+                Data.autoData.setBidAcceptSeconds(bidAcceptSeconds);
                 Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
                 clearSPData(context);
             } else {
