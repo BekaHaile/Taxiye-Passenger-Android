@@ -874,4 +874,5 @@ public interface Constants {
     String KEY_DRIVER_RATING = "driver_rating";
     String KEY_EMERGENCY_NO = "emergency_no";
     String KEY_BID_ACCEPT_SECONDS = "bid_accept_seconds";
+    String REJECT_API = "reject_api";
 }

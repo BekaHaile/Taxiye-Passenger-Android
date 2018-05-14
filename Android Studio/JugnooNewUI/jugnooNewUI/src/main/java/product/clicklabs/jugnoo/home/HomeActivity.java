@@ -8129,7 +8129,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         });
                         int currentUserStatus = 2;
                         final PassengerScreenMode passengerScreenModeOld = passengerScreenMode;
-                        String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
+                        final String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
                                 currentUserStatus, getApiFindADriver(), getCurrentPlaceLatLng());
                         if (resp.contains(Constants.SERVER_TIMEOUT)) {
                             String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
@@ -8161,6 +8161,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                 && PassengerScreenMode.P_IN_RIDE == passengerScreenMode
                                                 && Data.autoData.getDropLatLng() != null) {
                                             // havan karo yahan pe
+                                        }
+                                        if(resp.equalsIgnoreCase(Constants.REJECT_API)){
+                                            return;
                                         }
                                         switchUICalledFromStateRestore = true;
                                         startUIAfterGettingUserStatus();

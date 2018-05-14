@@ -911,12 +911,20 @@ public class JSONParser implements Constants {
                 nameValuePairs.put(Constants.KEY_AUTOS_BENEFIT_ID, String.valueOf(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getBenefitIdAutos()));
             }
             new HomeUtil().putDefaultParams(nameValuePairs);
+            long apiTime = System.currentTimeMillis();
             Response response = RestClient.getApiService().getCurrentUserStatus(nameValuePairs);
+            apiTime = System.currentTimeMillis() - apiTime;
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
             if (response == null || responseStr == null) {
                 return Constants.SERVER_TIMEOUT;
             } else {
                 JSONObject jObject1 = new JSONObject(responseStr);
+                if(apiTime > 2000
+                        && Data.autoData != null && !"".equalsIgnoreCase(Data.autoData.getcSessionId())
+                        && jObject1.optInt(Constants.KEY_FLAG, ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal()) == ApiResponseFlags.NO_ACTIVE_SESSION.getOrdinal()){
+                    Log.w(TAG, "special case of state restore api lagging");
+                    return Constants.REJECT_API;
+                }
                 String resp = parseCurrentUserStatus(context, currentUserStatus, jObject1);
 
                 if(PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
