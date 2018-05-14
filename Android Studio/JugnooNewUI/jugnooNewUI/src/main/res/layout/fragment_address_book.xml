@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/relativeLayoutRoot"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/sliding_bottom_bg_color"
-                android:splitMotionEvents="false">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayoutRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sliding_bottom_bg_color"
+    android:splitMotionEvents="false">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -30,20 +30,17 @@
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_less_light"
                 android:textSize="@dimen/text_size_24"
-                android:visibility="visible"
-                />
+                android:visibility="visible" />
 
-            <android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cardViewAddresses"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8px"
-                android:layout_marginStart="20px"
                 android:layout_marginEnd="20px"
+                android:layout_marginStart="20px"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px"
-                >
+                card_view:cardCornerRadius="4px">
 
                 <product.clicklabs.jugnoo.utils.NonScrollListView
                     android:id="@+id/listViewSavedLocations"
@@ -52,7 +49,7 @@
                     android:background="@color/white"
                     android:divider="@color/transparent"
                     android:dividerHeight="0dp"
-                    android:splitMotionEvents="false"/>
+                    android:splitMotionEvents="false" />
 
             </android.support.v7.widget.CardView>
 
@@ -69,21 +66,18 @@
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_less_light"
                 android:textSize="@dimen/text_size_24"
-                android:visibility="visible"
-                />
+                android:visibility="visible" />
 
 
-            <android.support.v7.widget.CardView
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/cardViewRecentAddresses"
-                xmlns:card_view="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8px"
-                android:layout_marginStart="20px"
                 android:layout_marginEnd="20px"
+                android:layout_marginStart="20px"
                 card_view:cardBackgroundColor="@color/white"
-                card_view:cardCornerRadius="4px"
-                >
+                card_view:cardCornerRadius="4px">
 
                 <product.clicklabs.jugnoo.utils.NonScrollListView
                     android:id="@+id/listViewRecentAddresses"
@@ -95,8 +89,7 @@
                     android:fadeScrollbars="true"
                     android:scrollbars="vertical"
                     android:splitMotionEvents="false"
-                    android:visibility="visible"
-                    />
+                    android:visibility="visible" />
             </android.support.v7.widget.CardView>
 
 
@@ -110,20 +103,19 @@
                 android:background="@drawable/capsule_green_color_selector"
                 android:tag="@string/dont_touch_me"
                 android:text="@string/plus_add_new_address"
+                android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="@dimen/sp_16"
-                app:typekitFont="maven"
-                android:textAllCaps="true"
-                />
+                app:typekitFont="maven" />
 
         </LinearLayout>
 
     </ScrollView>
 
     <View
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="6px"
-        android:background="@drawable/shadow_down"/>
+        android:background="@drawable/shadow_down"
+        android:visibility="gone" />
 
 </RelativeLayout>

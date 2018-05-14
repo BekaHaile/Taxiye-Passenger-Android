@@ -68,7 +68,7 @@
 
     <string name="cancel_request">إلغاء الطلب</string>
 
-    <string name="cancel_ride">Cancel Ride</string>
+    <string name="cancel_ride">إلغاء الرحلة</string>
     <string name="cancel_order">CANCEL ORDER</string>
 
 
@@ -250,13 +250,10 @@
 
 
     <string name="no_results_found">لا نتيجة</string>
-    <string name="i_want_to_cancel_my_ride_because">I WANT TO CANCEL MY RIDE BECAUSE</string>
-    <string name="connection_lost_title">اتصال المفقودة
-</string>
-    <string name="connection_lost_desc">وجه الفتاة! لا يعمل الإنترنت الخاص بك. \ n الرجاء المحاولة مرة أخرى.
-</string>
-    <string name="connection_lost_try_again">حاول ثانية
-</string>
+    <string name="i_want_to_cancel_my_ride_because">أنا أريد أن إلغاء رحلتي لأن</string>
+    <string name="connection_lost_title">اتصال المفقودة</string>
+    <string name="connection_lost_desc">وجه الفتاة! لا يعمل الإنترنت الخاص بك. \ n الرجاء المحاولة مرة أخرى.</string>
+    <string name="connection_lost_try_again">حاول ثانية</string>
     <string name="delivery_charges_with_value">Delivery Charges \u20B9%s</string>
     <string name="minimum_order_with_value">Minimum order \u20B9%s for free delivery</string>
 
@@ -532,11 +529,12 @@
     <string name="support_ride_issues_title">Select an Issue</string>
     <string name="sample_address">1097, Madhya Marg, 28B, Sector 28, Chandigarh, 160101, India</string>
     <string name="support_feedback_lengthy_error_format">Only %s characters allowed</string>
-    <string name="need_help">Need Help?</string>
+    <string name="need_help">تحتاج مساعدة؟</string>
     <string name="help">مساعدة</string>
 
     <!-- Ride transactions-->
-    <string name="show_more">Show more</string>
+    <string name="show_more">أظهر المزيد
+</string>
 
 
     <string name="no_net_title">اتصال المفقودة</string>
@@ -570,7 +568,7 @@
     <string name="contacts">جهات الاتصال</string>
     <string name="edit">تصحيح</string>
     <string name="delete">حذف</string>
-    <string name="send">Send</string>
+    <string name="send">إرسال</string>
     <string name="send_invites">Send invites</string>
     <string name="send_invites_2">to friends who haven\'t tried &appname;</string>
     <string name="delete_emergency_contact_message">هل أنت متأكد من أنك تريد حذف جهة الاتصال هذه من قائمة الطوارئ الخاصة بك؟</string>
@@ -1180,7 +1178,7 @@
     <string name="number_items_in_cart">%s Items in cart</string>
     <string name="one_item_in_cart">1 Item in cart</string>
     <string name="clear_cart">Clear Cart</string>
-    <string name="i_want_to_cancel_my_order_because">I want to cancel my Order because</string>
+    <string name="i_want_to_cancel_my_order_because">أريد إلغاء طلبي بسبب ذلك</string>
     <string name="please_select_one_reason">يرجى اختيار سبب واحد</string>
     <string name="error_feed_review_restaurant_not_selected">Select a restaurant to review</string>
     <string name="add_a_reply">Add a reply...</string>
@@ -1593,10 +1591,10 @@
     <string name="your_ride_has_started">Your ride has started</string>
     <string name="your_ride_has_ended">Your ride has ended</string>
     <string name="your_account_has_been_verified">Your account has been verified</string>
-    <string name="enter_home_location">Enter Home location</string>
-    <string name="enter_work_location">Enter Work location</string>
+    <string name="enter_home_location">ادخل موقع المنزل</string>
+    <string name="enter_work_location">أدخل مكان العمل</string>
     <string name="edit_format">Edit %s</string>
-    <string name="enter_location_format">Enter %s location</string>
+    <string name="enter_location_format">%s أدخل موقع</string>
     <string name="facebook_not_installed">Facebook app not enabled</string>
     <string name="country_name">India</string>
     <string name="search_in_format">Search in %s</string>
@@ -1705,7 +1703,7 @@
     <string name="driver_name">Driver Name</string>
     <string name="luggage_charge">Luggage Charge</string>
     <string name="convenience_charge">Convenience Charge</string>
-    <string name="final_fare">Final Fare</string>
+    <string name="final_fare">الأجرة النهائية</string>
     <string name="to_be_paid_camel_case">لكي تدفع</string>
     <string name="rs_20">Rs. 20</string>
     <string name="_20_kms">20 kms</string>
@@ -1841,7 +1839,7 @@
     <string name="submit_caps">SUBMIT</string>
     <string name="send_to">send to</string>
     <string name="cash_added">Cash Added</string>
-    <string name="cancel_ride_caps">CANCEL RIDE</string>
+    <string name="cancel_ride_caps">إلغاء ركوب</string>
     <string name="others">الآخرين</string>
     <string name="please_specify_the_reason">يرجى تحديد السبب</string>
     <string name="required">* مطلوب</string>

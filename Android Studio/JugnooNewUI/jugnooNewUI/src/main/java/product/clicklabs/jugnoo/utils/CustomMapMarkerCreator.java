@@ -251,7 +251,7 @@ public class CustomMapMarkerCreator {
 		shape.setBounds(0, 0, bmpText.getWidth(), bmpText.getHeight());
 		shape.draw(canvasText);
 
-		canvasText.drawText(context.getString(R.string.eta)+": ", (45f * assl.Xscale()), (34f * assl.Yscale()), paint);
+		canvasText.drawText("ETA: ", (45f * assl.Xscale()), (34f * assl.Yscale()), paint);
 		canvasText.drawText(text+" "+context.getString(R.string.min).toUpperCase(), (105f * assl.Xscale()), (int)(34f*assl.Yscale()), paint1);
 
 

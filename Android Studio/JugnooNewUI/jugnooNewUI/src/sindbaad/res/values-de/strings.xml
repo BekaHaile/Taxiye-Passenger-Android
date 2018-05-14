@@ -1671,7 +1671,7 @@
     <string name="driver_name">Fahrername</string>
     <string name="luggage_charge">Luggage Charge</string>
     <string name="convenience_charge">Komfortgebühr</string>
-    <string name="final_fare">Final Fare</string>
+    <string name="final_fare">Letzter Preis</string>
     <string name="to_be_paid_camel_case">"Bezahlt werden "</string>
     <string name="rs_20">&currency; 20</string>
     <string name="_20_kms">20 kms</string>

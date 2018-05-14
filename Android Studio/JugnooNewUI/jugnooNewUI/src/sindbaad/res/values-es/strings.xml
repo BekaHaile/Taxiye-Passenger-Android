@@ -251,7 +251,7 @@
 
 
     <string name="no_results_found">No se han encontrado resultados</string>
-    <string name="i_want_to_cancel_my_ride_because">Quiero cancelar mi viaje PORQUE</string>
+    <string name="i_want_to_cancel_my_ride_because">QUIERO CANCELAR MI PASEO PORQUE</string>
     <string name="connection_lost_title">CONEXIÓN PERDIDA</string>
     <string name="connection_lost_desc">¡Huy! Su Internet no está funcionando. \n Por favor inténtelo de nuevo.</string>
     <string name="connection_lost_try_again">INTÉNTALO DE NUEVO</string>
@@ -1149,7 +1149,7 @@
     <string name="number_items_in_cart">%s Items in cart</string>
     <string name="one_item_in_cart">1 Item in cart</string>
     <string name="clear_cart">Clear Cart</string>
-    <string name="i_want_to_cancel_my_order_because">I want to cancel my Order because</string>
+    <string name="i_want_to_cancel_my_order_because">Quiero cancelar mi orden porque</string>
     <string name="please_select_one_reason">Por favor seleccione una razón</string>
     <string name="error_feed_review_restaurant_not_selected">Select a restaurant to review</string>
     <string name="add_a_reply">Add a reply...</string>
@@ -1671,7 +1671,7 @@
     <string name="driver_name">Nombre del conductor</string>
     <string name="luggage_charge">Luggage Charge</string>
     <string name="convenience_charge">Carga de conveniencia</string>
-    <string name="final_fare">Final Fare</string>
+    <string name="final_fare">Tarifa final</string>
     <string name="to_be_paid_camel_case">"A pagar "</string>
     <string name="rs_20">&currency; 20</string>
     <string name="_20_kms">20 kms</string>
