@@ -42,7 +42,7 @@
         android:id="@+id/rlPhone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/px_480"
+        android:layout_below="@+id/tvJugnooTaxiP"
         android:layout_marginEnd="@dimen/px_80"
         android:layout_marginStart="@dimen/px_80">
 

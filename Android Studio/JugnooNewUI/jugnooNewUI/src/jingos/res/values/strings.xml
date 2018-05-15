@@ -1869,5 +1869,6 @@
     <string name="arabic">عربى</string>
     <string name="french">français</string>
     <string name="german">Deutsche</string>
+    <string name="pay_via_format">Pay via %s</string>
 
 </resources>

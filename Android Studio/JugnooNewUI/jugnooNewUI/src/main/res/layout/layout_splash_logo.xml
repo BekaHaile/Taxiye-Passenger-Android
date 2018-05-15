@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:src="@drawable/splash_top_bg"
+        android:visibility="@integer/show_splash_logo_text"
         android:tag="mwar" />
 
     <!-- Jugnoo Logo layout-->

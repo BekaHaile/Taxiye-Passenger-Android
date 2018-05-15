@@ -49,7 +49,7 @@
     <dimen name="splash_logo_height">135dp</dimen>
     <dimen name="splash_logo_top_margin">100dp</dimen>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
-    <integer name="show_splash_logo_text">@integer/view_visible</integer>
+    <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <color name="splash_logo_color">@color/theme_color</color>
 
     <string name="file_provider_name">com.hezz.fileprovider</string>

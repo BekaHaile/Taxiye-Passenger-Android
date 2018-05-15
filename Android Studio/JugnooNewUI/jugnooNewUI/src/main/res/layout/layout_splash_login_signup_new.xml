@@ -142,6 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/px_32"
                 android:gravity="center"
+                android:visibility="@integer/show_social_login"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -174,6 +175,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/px_32"
                 android:gravity="center_horizontal"
+                android:visibility="@integer/show_social_login"
                 android:orientation="horizontal">
 
                 <RelativeLayout
