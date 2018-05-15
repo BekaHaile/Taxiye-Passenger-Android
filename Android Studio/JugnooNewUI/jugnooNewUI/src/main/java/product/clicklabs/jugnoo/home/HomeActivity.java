@@ -117,6 +117,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
@@ -2582,7 +2583,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             Data.autoData.setcSessionId("");
             Data.autoData.setBidInfos(null);
-            Data.autoData.setBidAcceptSeconds(-1);
+            Data.autoData.setBidStartTime(DateOperations.getCurrentTimeInUTC());
             totalBidTime = -1;
             Data.autoData.setcEngagementId("");
             dropLocationSearchText = "";
@@ -7563,7 +7564,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
                                                 if(jObj.has(Constants.KEY_BIDS)) {
 													Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
-													Data.autoData.setBidAcceptSeconds(jObj.optInt(Constants.KEY_BID_ACCEPT_SECONDS, 60));
+													Data.autoData.setBidStartTime(jObj.optString(Constants.KEY_BID_START_TIME, DateOperations.getCurrentTimeInUTC()));
 													runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
@@ -9881,7 +9882,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     String message = intent.getStringExtra(Constants.KEY_MESSAGE);
                                     JSONObject jObj = new JSONObject(message);
                                     Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
-                                    Data.autoData.setBidAcceptSeconds(jObj.optInt(Constants.KEY_BID_ACCEPT_SECONDS, 60));
+                                    Data.autoData.setBidStartTime(jObj.optString(Constants.KEY_BID_START_TIME, DateOperations.getCurrentTimeInUTC()));
                                     updateBidsView();
                                 }
                             }
@@ -9898,7 +9899,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         bidsPlacedAdapter.setList(Data.autoData.getBidInfos());
         textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.select_a_bid);
         // TODO: 11/05/18 check logic
-        if(bidsPlacedAdapter.getItemCount() == 0){
+		String serverTime = DateOperations.addCalendarFieldValueToDateTime(Data.autoData.getBidStartTime(),
+				Prefs.with(this).getInt(KEY_BID_ACCEPT_INTERVAL, 60), Calendar.SECOND);
+		long diff = DateOperations.getTimeDifference(serverTime, DateOperations.getCurrentTimeInUTC())/1000;
+        if(bidsPlacedAdapter.getItemCount() == 0 || diff <= 0){
             handler.removeCallbacks(runnableBidTimer);
             pwBidTimer.setVisibility(View.GONE);
             tvBidTimer.setVisibility(View.GONE);
@@ -9906,7 +9910,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             pwBidTimer.setVisibility(View.VISIBLE);
             tvBidTimer.setVisibility(View.VISIBLE);
             if(totalBidTime < 0){
-                totalBidTime = Data.autoData.getBidAcceptSeconds();
+                totalBidTime = (int) diff;
                 pwBidTimer.resetCount();
                 bidTime = totalBidTime;
                 handler.removeCallbacks(runnableBidTimer);
@@ -9923,8 +9927,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         @Override
         public void run() {
             bidTime--;
-            tvBidTimer.setText(String.valueOf(totalBidTime - bidTime));
-            pwBidTimer.setInstantProgress(((float)(totalBidTime - bidTime)) / (float)totalBidTime);
+            tvBidTimer.setText(String.valueOf(bidTime));
+            pwBidTimer.setInstantProgress(((float)(bidTime)) / (float)totalBidTime);
             if(bidTime > 0) {
                 handler.postDelayed(this, 1000);
             } else {
