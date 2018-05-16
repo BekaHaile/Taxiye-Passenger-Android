@@ -875,6 +875,6 @@ public interface Constants {
     String KEY_EMERGENCY_NO = "emergency_no";
     String REJECT_API = "reject_api";
 
-    String KEY_BID_ACCEPT_INTERVAL = "bid_accept_interval";
-    String KEY_BID_START_TIME = "bid_start_time";
+    String KEY_REVERSE_BID_TIME_INTERVAL = "reverse_bid_time_interval";
+    String KEY_CREATED_AT = "created_at";
 }

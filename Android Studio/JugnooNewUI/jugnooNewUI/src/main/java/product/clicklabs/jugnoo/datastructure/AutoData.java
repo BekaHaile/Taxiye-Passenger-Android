@@ -54,7 +54,6 @@ public class AutoData {
     private Double useRecentLocAutoSnapMaxDistance;
     private PlaceOrderResponse.ReferralPopupContent referralPopupContent;
     private ArrayList<BidInfo> bidInfos;
-    private String bidStartTime;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -531,13 +530,5 @@ public class AutoData {
 
     public void setBidInfos(ArrayList<BidInfo> bidInfos) {
         this.bidInfos = bidInfos;
-    }
-
-    public String getBidStartTime() {
-        return bidStartTime;
-    }
-
-    public void setBidStartTime(String bidStartTime) {
-        this.bidStartTime = bidStartTime;
     }
 }

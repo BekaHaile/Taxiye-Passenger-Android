@@ -338,7 +338,6 @@ public class JSONParser implements Constants {
             String referAllTitleLogin = autoData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
             int isRazorpayEnabled = autoData.optInt(KEY_IS_RAZORPAY_ENABLED, 0);
 
-            Prefs.with(context).save(KEY_BID_ACCEPT_INTERVAL, autoData.optInt(KEY_BID_ACCEPT_INTERVAL, 60));
 
             NearbyPickupRegions nearbyPickupRegionses = autosData.getNearbyPickupRegions();
 
@@ -974,7 +973,6 @@ public class JSONParser implements Constants {
             int operatorId = 0;
             String currency = null;
             ArrayList<BidInfo> bidInfos = new ArrayList<>();
-            String bidStartTime = DateOperations.getCurrentTimeInUTC();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1012,8 +1010,7 @@ public class JSONParser implements Constants {
                         Data.autoData.setPickupLatLng(new LatLng(assigningLatitude, assigningLongitude));
                         Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""));
                         parseDropLatLng(jObject1);
-                        bidInfos = JSONParser.parseBids(Constants.KEY_BIDS, jObject1);
-                        bidStartTime = jObject1.optString(Constants.KEY_BID_START_TIME, DateOperations.getCurrentTimeInUTC());
+                        bidInfos = JSONParser.parseBids(context, Constants.KEY_BIDS, jObject1);
 
                         engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
                     } else if (ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag) {
@@ -1139,7 +1136,6 @@ public class JSONParser implements Constants {
                 HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
                 Data.autoData.setcSessionId(sessionId);
                 Data.autoData.setBidInfos(bidInfos);
-                Data.autoData.setBidStartTime(bidStartTime);
                 Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
                 clearSPData(context);
             } else {
@@ -1743,7 +1739,8 @@ public class JSONParser implements Constants {
         }
     }
 
-    public static ArrayList<BidInfo> parseBids(String arrayKeyName, JSONObject jsonObject){
+    public static ArrayList<BidInfo> parseBids(Context context, String arrayKeyName, JSONObject jsonObject){
+        Prefs.with(context).save(KEY_REVERSE_BID_TIME_INTERVAL, jsonObject.optLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L));
         ArrayList<BidInfo> bidInfos = new ArrayList<>();
         try{
             if(jsonObject.has(arrayKeyName)){
@@ -1754,7 +1751,8 @@ public class JSONParser implements Constants {
                             object.optDouble(Constants.KEY_BID_VALUE),
                             object.optString(Constants.KEY_CURRENCY),
                             object.optDouble(Constants.KEY_ACCEPT_DISTANCE),
-                            object.optDouble(Constants.KEY_DRIVER_RATING)));
+                            object.optDouble(Constants.KEY_DRIVER_RATING),
+                            object.optString(Constants.KEY_CREATED_AT, DateOperations.getCurrentTimeInUTC())));
                 }
             }
         } catch (Exception ignored){

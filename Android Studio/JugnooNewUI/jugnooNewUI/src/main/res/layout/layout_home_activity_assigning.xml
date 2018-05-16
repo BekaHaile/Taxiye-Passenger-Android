@@ -19,7 +19,9 @@
             android:layout_height="wrap_content"
             android:minHeight="112dp"
             android:background="@color/white"
-            android:splitMotionEvents="false">
+            android:splitMotionEvents="false"
+            android:clickable="true"
+            android:focusable="true">
 
             <ProgressBar
                 android:id="@+id/pbAssigning"
@@ -28,7 +30,7 @@
                 android:layout_height="14dp"
                 android:indeterminate="true"
                 android:indeterminateBehavior="cycle"
-                android:indeterminateTint="@color/theme_color"
+                android:progressDrawable="@drawable/progressbar"
                 android:tag="@string/dont_touch_me"
                 android:layout_marginTop="-6dp"
                 />

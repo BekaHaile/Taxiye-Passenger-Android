@@ -21,7 +21,7 @@ public class BidInfo {
 	@Expose
 	private double rating;
 
-	public BidInfo(int engagementId, double bidValue, String currency, double distance, double rating) {
+	public BidInfo(int engagementId, double bidValue, String currency, double distance, double rating, String createdAt) {
 		this.engagementId = engagementId;
 		this.bidValue = bidValue;
 		this.currency = currency;
@@ -68,4 +68,5 @@ public class BidInfo {
 	public void setRating(double rating) {
 		this.rating = rating;
 	}
+
 }

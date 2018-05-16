@@ -117,7 +117,6 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
@@ -2583,8 +2582,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             Data.autoData.setcSessionId("");
             Data.autoData.setBidInfos(null);
-            Data.autoData.setBidStartTime(DateOperations.getCurrentTimeInUTC());
             totalBidTime = -1;
+            Prefs.with(HomeActivity.this).remove(KEY_REVERSE_BID_TIME_INTERVAL);
             Data.autoData.setcEngagementId("");
             dropLocationSearchText = "";
 
@@ -7562,20 +7561,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     }
                                                 }
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
-                                                if(jObj.has(Constants.KEY_BIDS)) {
-													Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
-													Data.autoData.setBidStartTime(jObj.optString(Constants.KEY_BID_START_TIME, DateOperations.getCurrentTimeInUTC()));
-													runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            try {
-                                                                updateBidsView();
-                                                            } catch (Exception e) {
-                                                                e.printStackTrace();
-                                                            }
+                                                Data.autoData.setBidInfos(JSONParser.parseBids(HomeActivity.this, Constants.KEY_BIDS, jObj));
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        try {
+                                                            updateBidsView();
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
                                                         }
-                                                    });
-												}
+                                                    }
+                                                });
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag
                                                     || ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag
                                                     || ApiResponseFlags.RIDE_ARRIVED.getOrdinal() == flag) {
@@ -9881,8 +9877,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                                     String message = intent.getStringExtra(Constants.KEY_MESSAGE);
                                     JSONObject jObj = new JSONObject(message);
-                                    Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
-                                    Data.autoData.setBidStartTime(jObj.optString(Constants.KEY_BID_START_TIME, DateOperations.getCurrentTimeInUTC()));
+                                    Data.autoData.setBidInfos(JSONParser.parseBids(HomeActivity.this, Constants.KEY_BIDS, jObj));
                                     updateBidsView();
                                 }
                             }
@@ -9899,10 +9894,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         bidsPlacedAdapter.setList(Data.autoData.getBidInfos());
         textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.select_a_bid);
         // TODO: 11/05/18 check logic
-		String serverTime = DateOperations.addCalendarFieldValueToDateTime(Data.autoData.getBidStartTime(),
-				Prefs.with(this).getInt(KEY_BID_ACCEPT_INTERVAL, 60), Calendar.SECOND);
-		long diff = DateOperations.getTimeDifference(serverTime, DateOperations.getCurrentTimeInUTC())/1000;
-        if(bidsPlacedAdapter.getItemCount() == 0 || diff <= 0){
+		long diff = Prefs.with(this).getLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L);
+        if(diff <= 0){
             handler.removeCallbacks(runnableBidTimer);
             pwBidTimer.setVisibility(View.GONE);
             tvBidTimer.setVisibility(View.GONE);
@@ -9911,10 +9904,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             tvBidTimer.setVisibility(View.VISIBLE);
             if(totalBidTime < 0){
                 totalBidTime = (int) diff;
-                pwBidTimer.resetCount();
                 bidTime = totalBidTime;
                 handler.removeCallbacks(runnableBidTimer);
                 handler.post(runnableBidTimer);
+            } else {
+                bidTime = (int) diff;
             }
         }
 
