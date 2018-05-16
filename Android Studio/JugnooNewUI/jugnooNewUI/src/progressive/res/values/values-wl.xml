@@ -20,8 +20,8 @@
             ic_launcher
             notification_icon
     -->
-    <string name="google_maps_api_key">AIzaSyANuWpB4yMijvfrerndITj0YS4Xrm8kt7U</string>
-    <string name="google_maps_api_server_key">AIzaSyDfK1c6RA0U1U_Lmh_gPFykhBLX0fyRC6A</string>
+    <string name="google_maps_api_key">AIzaSyDL96no_9dXS-ERNJs3qxOAu3lQW4RrUbY</string>
+    <string name="google_maps_api_server_key">AIzaSyCURolQ4eIj04nAmW9XFCgfs9AyYnWrHKA</string>
     <string name="google_server_client_id">abc</string>
     <string name="fb_app_id">123</string>
     <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>

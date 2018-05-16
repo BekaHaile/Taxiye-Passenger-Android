@@ -1,38 +1,27 @@
 {
   "project_info": {
-    "project_number": "151739932694",
-    "firebase_url": "https://progressive-taxi.firebaseio.com",
-    "project_id": "progressive-taxi",
-    "storage_bucket": "progressive-taxi.appspot.com"
+    "project_number": "259458780933",
+    "firebase_url": "https://progressive-taxi-a0c03.firebaseio.com",
+    "project_id": "progressive-taxi-a0c03",
+    "storage_bucket": "progressive-taxi-a0c03.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:151739932694:android:df1c7dbf2cc8d303",
+        "mobilesdk_app_id": "1:259458780933:android:df1c7dbf2cc8d303",
         "android_client_info": {
           "package_name": "product.clicklabs.progressive.driver"
         }
       },
       "oauth_client": [
         {
-          "client_id": "151739932694-s3lio9el2elm0q30632eg1urr2pn56p5.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "product.clicklabs.progressive.driver",
-            "certificate_hash": "680748e983552b428e27f9c3a48da9ff990cf909"
-          }
-        },
-        {
-          "client_id": "151739932694-g6s92tl121me167pck70oliiispajiro.apps.googleusercontent.com",
+          "client_id": "259458780933-vqsoschtjnql4snlst0bejmalvqk7nf0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBGaF5lCD8Hzb628gyU_MNKu5nE445iW8I"
-        },
-        {
-          "current_key": "AIzaSyANuWpB4yMijvfrerndITj0YS4Xrm8kt7U"
+          "current_key": "AIzaSyDL96no_9dXS-ERNJs3qxOAu3lQW4RrUbY"
         }
       ],
       "services": {
@@ -40,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "151739932694-g6s92tl121me167pck70oliiispajiro.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
@@ -55,31 +39,20 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:151739932694:android:825ae3c0e7d46d55",
+        "mobilesdk_app_id": "1:259458780933:android:825ae3c0e7d46d55",
         "android_client_info": {
           "package_name": "production.progressive.customer"
         }
       },
       "oauth_client": [
         {
-          "client_id": "151739932694-56uj8gps8sfjd3cdppniia275fojcfqk.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "production.progressive.customer",
-            "certificate_hash": "680748e983552b428e27f9c3a48da9ff990cf909"
-          }
-        },
-        {
-          "client_id": "151739932694-g6s92tl121me167pck70oliiispajiro.apps.googleusercontent.com",
+          "client_id": "259458780933-vqsoschtjnql4snlst0bejmalvqk7nf0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBGaF5lCD8Hzb628gyU_MNKu5nE445iW8I"
-        },
-        {
-          "current_key": "AIzaSyANuWpB4yMijvfrerndITj0YS4Xrm8kt7U"
+          "current_key": "AIzaSyDL96no_9dXS-ERNJs3qxOAu3lQW4RrUbY"
         }
       ],
       "services": {
@@ -87,13 +60,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "151739932694-g6s92tl121me167pck70oliiispajiro.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2
