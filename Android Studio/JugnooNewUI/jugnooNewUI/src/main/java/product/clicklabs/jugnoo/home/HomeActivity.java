@@ -9892,7 +9892,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void updateBidsView() {
         bidsPlacedAdapter.setList(Data.autoData.getBidInfos());
-        textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.select_a_bid);
+        textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.tap_a_bid);
         // TODO: 11/05/18 check logic
 		long diff = Prefs.with(this).getLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L);
         if(diff <= 0){
@@ -9923,7 +9923,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             bidTime--;
             tvBidTimer.setText(String.valueOf(bidTime));
             pwBidTimer.setInstantProgress(((float)(bidTime)) / (float)totalBidTime);
+            rvBidsIncoming.clearAnimation();
             if(bidTime > 0) {
+                if(bidsPlacedAdapter.getItemCount() > 0 && bidTime <= 20){
+                    if(bidTime % 4 == 0){
+                        Animation shake = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.scale_bounce_slow);
+                        rvBidsIncoming.startAnimation(shake);
+                    }
+                }
                 handler.postDelayed(this, 1000);
             } else {
                 handler.removeCallbacks(this);
