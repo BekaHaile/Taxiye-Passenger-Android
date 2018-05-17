@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ff8162</color>
-    <color name="colorPrimaryDark">#f8b542</color>
+
     <color name="colorAccent">#595968</color>
 
 
@@ -121,7 +120,7 @@
     <color name="grey_lb_list">#f6f6f6</color>
 
     <!-- NEW LOOK COLORS -->
-    <color name="theme_color">#FD7945</color>
+
     <color name="theme_color_start">#FC644F</color>
     <color name="theme_color_end">#FF9339</color>
     <color name="theme_color_pressed">#99F17B47</color>
@@ -279,10 +278,6 @@
     <color name="text_color_87">#878787</color>
 
     <!--New Gradient Colors-->
-    <color name="gradient_normal_start">#e85d7b</color>
-    <color name="gradient_normal_end">#efa645</color>
-    <color name="gradient_pressed_start">#c1556c</color>
-    <color name="gradient_pressed_end">#c58f3f</color>
     <color name="border_color_new">#CCd0d0d0</color>
 
     <color name="bg_address_confirm_border">#f6c96f</color>

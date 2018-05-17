@@ -6,11 +6,17 @@
                 android:layout_height="match_parent"
                 android:visibility="visible"
                 android:background="@color/white">
-
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/splash_back_hezz"
+        android:visibility="@integer/show_splash_hezz_bg"
+        android:tag="mwar" />
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:src="@drawable/bg_top_2"
+        android:visibility="@integer/show_splash_top_bg"
         android:tag="mwar" />
 
     <ImageView
@@ -152,7 +158,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:layout_alignParentBottom="true"
-        android:src="@drawable/splash_bottom_building_bg2"
+        android:background="@drawable/splash_bottom_building_bg1"
         android:tag="mwar" />
 
 </RelativeLayout>

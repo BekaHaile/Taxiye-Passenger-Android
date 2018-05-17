@@ -10,26 +10,23 @@
     android:visibility="visible">
 
 
-    <ImageView
-        android:id="@+id/ivBottom1"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/px_160"
-        android:layout_alignParentBottom="true"
-        android:src="@drawable/splash_bottom_building_bg1"
-        android:tag="mwar"
-        android:visibility="visible" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true">
-
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/splash_back_hezz"
+            android:visibility="@integer/show_splash_hezz_bg"
+            android:tag="mwar" />
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="@dimen/px_160"
             android:src="@drawable/splash_top_bg"
+            android:visibility="@integer/show_splash_top_bg"
             android:tag="mwar" />
 
 
@@ -97,7 +94,7 @@
                 android:text="@string/login_signup_with"
                 android:textSize="@dimen/text_size_32"
                 android:textColor="@color/text_color"
-                android:layout_marginTop="@dimen/px_100"
+                android:layout_marginTop="@dimen/px_50"
                 android:layout_gravity="center_horizontal"
                 app:typekitFont="maven"/>
 
@@ -272,4 +269,12 @@
         </LinearLayout>
 
     </RelativeLayout>
+    <ImageView
+        android:id="@+id/ivBottom1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_160"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/splash_bottom_building_bg1"
+        android:tag="mwar"
+        android:visibility="visible" />
 </RelativeLayout>
