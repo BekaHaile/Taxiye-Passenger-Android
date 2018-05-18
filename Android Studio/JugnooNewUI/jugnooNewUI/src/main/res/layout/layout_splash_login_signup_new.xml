@@ -250,6 +250,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/px_70"
+                android:visibility="@integer/show_terms"
                 android:text="@string/nl_splash_terms"
                 android:textColor="@color/document_layout_bordor_color"
                 android:textSize="@dimen/text_size_24" />

@@ -50,6 +50,7 @@
     <dimen name="splash_logo_top_margin">125dp</dimen>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <integer name="show_splash_logo_text">@integer/view_gone</integer>
+    <integer name="show_terms">@integer/view_visible</integer>
 
     <string name="file_provider_name">com.jugnoo.fileprovider</string>
     <string name="web_landing_page">https://jugnoo.in</string>
