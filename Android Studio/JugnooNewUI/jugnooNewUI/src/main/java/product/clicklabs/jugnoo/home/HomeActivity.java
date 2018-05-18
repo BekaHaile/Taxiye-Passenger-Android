@@ -9893,7 +9893,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void updateBidsView() {
         bidsPlacedAdapter.setList(Data.autoData.getBidInfos());
         textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.tap_a_bid);
-        // TODO: 11/05/18 check logic
 		long diff = Prefs.with(this).getLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L);
         if(diff <= 0){
             handler.removeCallbacks(runnableBidTimer);
