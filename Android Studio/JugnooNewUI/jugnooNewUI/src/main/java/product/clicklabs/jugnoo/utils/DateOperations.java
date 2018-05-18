@@ -312,68 +312,7 @@ public class DateOperations {
 		return "";
 	}
 	
-	
-	/**
-	 * Converts date string from 2014-01-12 00:00 to 12th Jan, 2014
-	 * @param dateTime 
-	 * @return
-	 */
-	public static String getDate(String dateTime){
-		try{
-			dateTime = dateTime.replace("T", " ");
-		String date = dateTime.split(" ")[0];
-		
-		String year = date.split("-")[0];
-		String month = date.split("-")[1];
-		String day = ""+Integer.parseInt(date.split("-")[2]);
-		
-		if("01".equalsIgnoreCase(month)){
-			month = "Jan";
-		}
-		else if("02".equalsIgnoreCase(month)){
-			month = "Feb";
-		}
-		else if("03".equalsIgnoreCase(month)){
-			month = "Mar";
-		}
-		else if("04".equalsIgnoreCase(month)){
-			month = "Apr";
-		}
-		else if("05".equalsIgnoreCase(month)){
-			month = "May";
-		}
-		else if("06".equalsIgnoreCase(month)){
-			month = "Jun";
-		}
-		else if("07".equalsIgnoreCase(month)){
-			month = "Jul";
-		}
-		else if("08".equalsIgnoreCase(month)){
-			month = "Aug";
-		}
-		else if("09".equalsIgnoreCase(month)){
-			month = "Sept";
-		}
-		else if("10".equalsIgnoreCase(month)){
-			month = "Oct";
-		}
-		else if("11".equalsIgnoreCase(month)){
-			month = "Nov";
-		}
-		else if("12".equalsIgnoreCase(month)){
-			month = "Dec";
-		}
-		
-		String finalDate = ""+ day + " " + month + ", " + year; 
-		
-		return finalDate;
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			return dateTime;
-		}
-	}
-	
+
 	
 	public static String getCurrentTime() {
 	    long foo = System.currentTimeMillis();

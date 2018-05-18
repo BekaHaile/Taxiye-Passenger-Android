@@ -19,7 +19,9 @@
             android:layout_height="wrap_content"
             android:minHeight="112dp"
             android:background="@color/white"
-            android:splitMotionEvents="false">
+            android:splitMotionEvents="false"
+            android:clickable="true"
+            android:focusable="true">
 
             <ProgressBar
                 android:id="@+id/pbAssigning"
@@ -28,7 +30,7 @@
                 android:layout_height="14dp"
                 android:indeterminate="true"
                 android:indeterminateBehavior="cycle"
-                android:indeterminateTint="@color/theme_color"
+                android:progressDrawable="@drawable/progressbar"
                 android:tag="@string/dont_touch_me"
                 android:layout_marginTop="-6dp"
                 />
@@ -40,17 +42,60 @@
                 android:orientation="vertical"
                 android:layout_below="@+id/pbAssigning">
 
-                <TextView
-                    android:id="@+id/textViewFindingDriver"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20px"
-                    android:layout_marginEnd="20px"
+                    android:orientation="horizontal"
                     android:gravity="center"
-                    android:singleLine="true"
-                    android:text="@string/finding_a_jugnoo_driver"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_34" />
+                    >
+
+                    <TextView
+                        android:id="@+id/textViewFindingDriver"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20px"
+                        android:layout_marginEnd="20px"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:text="@string/finding_a_jugnoo_driver"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_34" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <product.clicklabs.jugnoo.utils.ProgressWheel
+                            android:id="@+id/pwBidTimer"
+                            xmlns:wheel="http://schemas.android.com/apk/res-auto"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:tag="@string/dont_touch_me"
+                            android:visibility="gone"
+                            wheel:matProg_barColor="@color/theme_color"
+                            wheel:matProg_barWidth="3dp"
+                            wheel:matProg_fillRadius="true"
+                            wheel:matProg_linearProgress="true"
+                            wheel:matProg_rimColor="@color/feed_grey_tab"
+                            wheel:matProg_rimWidth="3dp"
+                            android:alpha="0.9"
+                            />
+
+                        <TextView
+                            android:id="@+id/tvBidTimer"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:tag="@string/dont_touch_me"
+                            android:gravity="center"
+                            android:text="99"
+                            android:visibility="gone"
+                            android:textColor="@color/text_color_dark"
+                            android:textSize="18sp" />
+
+                    </RelativeLayout>
+
+
+
+                </LinearLayout>
 
 
                 <android.support.v7.widget.RecyclerView
