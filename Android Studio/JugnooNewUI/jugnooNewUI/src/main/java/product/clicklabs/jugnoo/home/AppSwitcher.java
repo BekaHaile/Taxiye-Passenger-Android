@@ -576,6 +576,7 @@ public class AppSwitcher {
 			}
 
 			Prefs.with(activity).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
+			Prefs.with(activity).save(Constants.SP_CLIENT_ID_VIA_DEEP_LINK, "");
 
 			intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 			intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);

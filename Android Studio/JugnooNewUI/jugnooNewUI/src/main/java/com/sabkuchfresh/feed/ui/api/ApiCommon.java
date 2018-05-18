@@ -115,8 +115,8 @@ public class ApiCommon<T extends FeedCommonResponse> {
             apiCommonCallback.onFinish();
             if (!apiCommonCallback.onNotConnected()) {
                 retryDialog(DialogErrorType.NO_NET);
-                return;
             }
+            return;
 
         }
 

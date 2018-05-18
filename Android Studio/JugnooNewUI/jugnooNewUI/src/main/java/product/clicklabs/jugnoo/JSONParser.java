@@ -338,6 +338,7 @@ public class JSONParser implements Constants {
             String referAllTitleLogin = autoData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
             int isRazorpayEnabled = autoData.optInt(KEY_IS_RAZORPAY_ENABLED, 0);
 
+
             NearbyPickupRegions nearbyPickupRegionses = autosData.getNearbyPickupRegions();
 
             Data.autoData = new AutoData(destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1
@@ -911,12 +912,20 @@ public class JSONParser implements Constants {
                 nameValuePairs.put(Constants.KEY_AUTOS_BENEFIT_ID, String.valueOf(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getBenefitIdAutos()));
             }
             new HomeUtil().putDefaultParams(nameValuePairs);
+            long apiTime = System.currentTimeMillis();
             Response response = RestClient.getApiService().getCurrentUserStatus(nameValuePairs);
+            apiTime = System.currentTimeMillis() - apiTime;
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
             if (response == null || responseStr == null) {
                 return Constants.SERVER_TIMEOUT;
             } else {
                 JSONObject jObject1 = new JSONObject(responseStr);
+                if(apiTime > 2000
+                        && Data.autoData != null && !"".equalsIgnoreCase(Data.autoData.getcSessionId())
+                        && jObject1.optInt(Constants.KEY_FLAG, ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal()) == ApiResponseFlags.NO_ACTIVE_SESSION.getOrdinal()){
+                    Log.w(TAG, "special case of state restore api lagging");
+                    return Constants.REJECT_API;
+                }
                 String resp = parseCurrentUserStatus(context, currentUserStatus, jObject1);
 
                 if(PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
@@ -1001,7 +1010,7 @@ public class JSONParser implements Constants {
                         Data.autoData.setPickupLatLng(new LatLng(assigningLatitude, assigningLongitude));
                         Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""));
                         parseDropLatLng(jObject1);
-                        bidInfos = JSONParser.parseBids(Constants.KEY_BIDS, jObject1);
+                        bidInfos = JSONParser.parseBids(context, Constants.KEY_BIDS, jObject1);
 
                         engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
                     } else if (ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag) {
@@ -1730,7 +1739,8 @@ public class JSONParser implements Constants {
         }
     }
 
-    public static ArrayList<BidInfo> parseBids(String arrayKeyName, JSONObject jsonObject){
+    public static ArrayList<BidInfo> parseBids(Context context, String arrayKeyName, JSONObject jsonObject){
+        Prefs.with(context).save(KEY_REVERSE_BID_TIME_INTERVAL, jsonObject.optLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L));
         ArrayList<BidInfo> bidInfos = new ArrayList<>();
         try{
             if(jsonObject.has(arrayKeyName)){
@@ -1741,7 +1751,8 @@ public class JSONParser implements Constants {
                             object.optDouble(Constants.KEY_BID_VALUE),
                             object.optString(Constants.KEY_CURRENCY),
                             object.optDouble(Constants.KEY_ACCEPT_DISTANCE),
-                            object.optDouble(Constants.KEY_DRIVER_RATING)));
+                            object.optDouble(Constants.KEY_DRIVER_RATING),
+                            object.optString(Constants.KEY_CREATED_AT, DateOperations.getCurrentTimeInUTC())));
                 }
             }
         } catch (Exception ignored){

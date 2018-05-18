@@ -873,4 +873,8 @@ public interface Constants {
     String KEY_ACCEPT_DISTANCE = "accept_distance";
     String KEY_DRIVER_RATING = "driver_rating";
     String KEY_EMERGENCY_NO = "emergency_no";
+    String REJECT_API = "reject_api";
+
+    String KEY_REVERSE_BID_TIME_INTERVAL = "reverse_bid_time_interval";
+    String KEY_CREATED_AT = "created_at";
 }
