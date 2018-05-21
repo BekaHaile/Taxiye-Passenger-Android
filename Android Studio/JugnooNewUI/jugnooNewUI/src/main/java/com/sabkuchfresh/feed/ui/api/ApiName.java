@@ -35,5 +35,7 @@ public enum ApiName {
     FEED_PAY_FOR_ORDER,
     OFFERING_VISBILITY_API,
     FETCH_CONTACTS,
-    SELECT_BID
+    SELECT_BID,
+    FETCH_CHAT,
+    POST_CHAT
 }

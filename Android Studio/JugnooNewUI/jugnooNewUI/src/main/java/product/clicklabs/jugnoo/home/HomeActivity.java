@@ -495,7 +495,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private FloatingActionButton fabFresh;
     private FloatingActionButton fabAutos;
     private View fabExtra;*/
-    private Button bChatDriver;
+    private TextView bChatDriver;
     private RelativeLayout rlChatDriver;
     private TextView tvChatCount;
     private ArrayList<Marker> markersSpecialPickup = new ArrayList<>();
@@ -843,7 +843,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         tvPayOnlineIn = (TextView) findViewById(R.id.tvPayOnlineIn);
 
         rlChatDriver = (RelativeLayout) findViewById(R.id.rlChatDriver);
-        bChatDriver = (Button) findViewById(R.id.bChatDriver); bChatDriver.setOnClickListener(this);
+        bChatDriver = (TextView) findViewById(R.id.bChatDriver); bChatDriver.setOnClickListener(this);
         tvChatCount = (TextView) findViewById(R.id.tvChatCount); tvChatCount.setTypeface(Fonts.mavenMedium(this));
 
 
