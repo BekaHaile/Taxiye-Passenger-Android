@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:textSize="12sp"
         android:textColor="@color/text_color"
-        tools:text="20 KM away"
+        tools:text="20 km away"
         app:typekitFont="@string/maven_r"
         android:layout_marginTop="2dp"
         />

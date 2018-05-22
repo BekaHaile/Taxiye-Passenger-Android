@@ -161,7 +161,7 @@ public class ApiFindADriver {
 					String brandingStatus = driver.getBrandingStatus();
 					Data.autoData.getDriverInfos().add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
 							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(), brandingStatus,
-							driver.getOperatorId()));
+							driver.getOperatorId(), driver.getPaymentMethod()));
 				}
 			}
 

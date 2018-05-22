@@ -1265,7 +1265,7 @@ public class JSONParser implements Constants {
                     String brandingStatus = driver.getBrandingStatus();
                     Data.autoData.getDriverInfos().add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage,
                             phoneNo, rating, carNumber, 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(),
-                            brandingStatus, driver.getOperatorId()));
+                            brandingStatus, driver.getOperatorId(), driver.getPaymentMethod()));
                 }
             }
         } catch (Exception e) {

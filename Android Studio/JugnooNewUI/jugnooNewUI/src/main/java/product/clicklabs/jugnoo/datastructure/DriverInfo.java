@@ -36,6 +36,7 @@ public class DriverInfo {
 	private ArrayList<String> fellowRiders = new ArrayList<>();
 	private int operatorId;
 	private String currency;
+	private int paymentMethod;
 
 	public DriverInfo(String userId){
 		this.userId = userId;
@@ -44,7 +45,8 @@ public class DriverInfo {
 	//for drivers to show in free state
 	public DriverInfo(String userId, double latitude, double longitude, 
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
-			int freeRide, double bearing, int vehicleType, ArrayList<Integer> regionIds, String brandingStatus, int operatorId){
+			int freeRide, double bearing, int vehicleType, ArrayList<Integer> regionIds, String brandingStatus, int operatorId,
+					  int paymentMethod){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -59,6 +61,7 @@ public class DriverInfo {
 		this.regionIds = regionIds;
 		this.brandingStatus = brandingStatus;
 		this.operatorId = operatorId;
+		this.paymentMethod = paymentMethod;
 	}
 
 	//for engagement
@@ -265,5 +268,27 @@ public class DriverInfo {
 
 	public void setCurrency(String currency) {
 		this.currency = currency;
+	}
+
+	public int getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(int paymentMethod) {
+		this.paymentMethod = paymentMethod;
+	}
+
+	public enum PaymentMethod{
+		CASH(1),
+		BOTH(2); // default
+
+		private int ordinal;
+		PaymentMethod(int ordinal){
+			this.ordinal = ordinal;
+		}
+
+		public int getOrdinal() {
+			return ordinal;
+		}
 	}
 }

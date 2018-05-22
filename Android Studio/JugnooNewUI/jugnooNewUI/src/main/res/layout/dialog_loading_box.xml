@@ -6,11 +6,16 @@
     android:layout_gravity="center"
     android:background="@android:color/transparent">
 
-    <ImageView
+    <product.clicklabs.jugnoo.utils.ProgressWheel
         android:id="@+id/ivAnimation"
-        android:layout_width="@dimen/px_150"
-        android:layout_height="@dimen/px_150"
-        android:tag="mwar"
-        android:contentDescription="@string/animation" />
+        xmlns:wheel="http://schemas.android.com/apk/res-auto"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:tag="@string/dont_touch_me"
+        wheel:matProg_barColor="@color/theme_color"
+        wheel:matProg_barWidth="5dp"
+        wheel:matProg_fillRadius="true"
+        wheel:matProg_progressIndeterminate="true"
+        />
 
 </RelativeLayout>

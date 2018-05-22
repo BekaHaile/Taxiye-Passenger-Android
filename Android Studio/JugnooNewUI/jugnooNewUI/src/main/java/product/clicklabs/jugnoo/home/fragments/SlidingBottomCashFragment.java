@@ -134,6 +134,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.FREECHARGE);
                     break;
             }
+            activity.showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
             try {
                 GAUtils.event(RIDES, HOME + WALLET + SELECTED, MyApplication.getInstance().getWalletCore()
                         .getPaymentOptionName(Data.autoData.getPickupPaymentOption()));
