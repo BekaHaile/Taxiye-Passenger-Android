@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,30 +20,24 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 
-import org.json.JSONObject;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.adapters.ChatAdapter;
 import product.clicklabs.jugnoo.adapters.ChatSuggestionAdapter;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FetchChatResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 
 /**
@@ -53,21 +46,13 @@ import retrofit.mime.TypedByteArray;
 
 public class ChatActivity extends BaseFragmentActivity implements View.OnClickListener, GAAction, GACategory{
 
-    private RelativeLayout relative;
-    private TextView textViewTitle;
-    private ImageView imageViewBack;
 	private EditText input;
-	private int position = 0;
-	private ImageView send, ivCallDriver;
 
 	RecyclerView recyclerViewChat, recyclerViewChatOptions;
 	ChatAdapter chatAdapter;
 	ArrayList<FetchChatResponse.ChatHistory> chatResponse = new ArrayList<>();
-	private FetchChatResponse fetchChatResponse;
-	private SimpleDateFormat sdf;
 	private final String LOGIN_TYPE = "0";
 	private Handler handler = new Handler();
-	private Handler myHandler=new Handler();
 	ChatSuggestionAdapter chatSuggestionAdapter;
 	ArrayList<FetchChatResponse.Suggestion> chatSuggestions = new ArrayList<>();
 
@@ -78,18 +63,18 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
         setContentView(R.layout.activity_chat);
 
 		try {
-			relative = (RelativeLayout) findViewById(R.id.relative);
+			RelativeLayout relative = (RelativeLayout) findViewById(R.id.relative);
 			new ASSL(this, relative, 1134, 720, false);
 
-			sdf = new SimpleDateFormat("hh:mm a");
-			textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+			TextView textViewTitle = (TextView) findViewById(R.id.textViewTitle);
 			textViewTitle.setTypeface(Fonts.avenirNext(this));
 			textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 			input = (EditText) findViewById(R.id.input);
-			send = (ImageView) findViewById(R.id.action_send);
-			imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+			ImageView send = (ImageView) findViewById(R.id.action_send);
+			ImageView imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 			imageViewBack.setOnClickListener(this);
-			ivCallDriver = (ImageView) findViewById(R.id.ivCallDriver); ivCallDriver.setOnClickListener(this);
+			ImageView ivCallDriver = (ImageView) findViewById(R.id.ivCallDriver);
+			ivCallDriver.setOnClickListener(this);
 
 			recyclerViewChat = (RecyclerView) findViewById(R.id.recyclerViewChat);
 			recyclerViewChat.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
@@ -125,15 +110,9 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			input.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
-						if(MyApplication.getInstance().isOnline()){
-							if(input.getText().toString().trim().length() > 0) {
-								sendChat(input.getText().toString().trim());
-							}
-						} else{
-							DialogPopup.alertPopup(ChatActivity.this, "", getString(R.string.connection_lost_desc));
-						}
+						sendChatClick();
 
-                        return true;
+						return true;
                     }
                     return false;
                 }
@@ -142,7 +121,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			input.setOnClickListener(this);
 			send.setOnClickListener(this);
 
-			fetchChat(ChatActivity.this);
+			fetchChat();
 
 			if(Data.autoData.getAssignedDriverInfo() != null) {
                 textViewTitle.setText(Data.autoData.getAssignedDriverInfo().name);
@@ -155,18 +134,9 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 
 		registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_FINISH_ACTIVITY));
 
-		//myHandler.postAtTime(loadDiscussion, 5000);
     }
 
 	Runnable loadDiscussion=new Runnable() {
-		@Override
-		public void run() {
-			loadDiscussions();
-			//myHandler.postAtTime(loadDiscussion, 5000);
-		}
-	};
-
-	Runnable runnable = new Runnable() {
 		@Override
 		public void run() {
 			loadDiscussions();
@@ -179,14 +149,6 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 		Data.context = ChatActivity.this;
 	}
 
-	public void updateListData(String message, boolean errorOccurred) {
-		if (errorOccurred) {
-			chatAdapter.notifyDataSetChanged();
-		} else {
-			chatAdapter.notifyDataSetChanged();
-		}
-	}
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
@@ -194,13 +156,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
                 performBackPressed();
             	break;
 			case R.id.action_send:
-				if(MyApplication.getInstance().isOnline()) {
-					if (input.getText().toString().trim().length() > 0) {
-						sendChat(input.getText().toString().trim());
-					}
-				} else{
-					DialogPopup.alertPopup(ChatActivity.this, "", getString(R.string.connection_lost_desc));
-				}
+				sendChatClick();
 				break;
 			case R.id.ivCallDriver:
 				Utils.callDriverDuringRide(ChatActivity.this);
@@ -209,11 +165,20 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
         }
     }
 
+	private void sendChatClick() {
+		if(MyApplication.getInstance().isOnline()) {
+			if (input.getText().toString().trim().length() > 0) {
+				sendChat(input.getText().toString().trim());
+			}
+		} else{
+			DialogPopup.alertPopup(ChatActivity.this, "", getString(R.string.connection_lost_desc));
+		}
+	}
+
 
 	@Override
 	public void onBackPressed() {
 		performBackPressed();
-		//super.onBackPressed();
 	}
 
 	@Override
@@ -221,37 +186,26 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
 		Data.context = null;
-		try {
-			if(handler != null){
-                handler.removeCallbacks(loadDiscussion);
-            }
-			if(myHandler != null){
-                myHandler.removeCallbacks(loadDiscussion);
-            }
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (handler != null && loadDiscussion != null) {
+			handler.removeCallbacks(loadDiscussion);
 		}
 	}
 
 	// sends the message to server and display it
 	private void sendChat(String inputText) {
-		//hideKeyboard(input);
-		//String inputText = input.getText().toString().trim();
-		Calendar time = Calendar.getInstance();
-		if (!(inputText.isEmpty()) && fetchChatResponse != null) {
-			// add message to list
-			FetchChatResponse.ChatHistory chatHistory = fetchChatResponse.new ChatHistory();
+		if (!(inputText.isEmpty())) {
+			FetchChatResponse.ChatHistory chatHistory = new FetchChatResponse.ChatHistory();
 			chatHistory.setChatHistoryId(0);
-			chatHistory.setCreatedAt(sdf.format(time.getTime()));
+			chatHistory.setCreatedAt(DateOperations.getCurrentTimeInUTC());
 			chatHistory.setIsSender(1);
 			chatHistory.setMessage(inputText);
 			chatResponse.add(chatHistory);
-			position = chatAdapter.getItemCount() - 1;
+			int position = chatAdapter.getItemCount() - 1;
 			chatAdapter.notifyItemInserted(position);
 
 			// scroll to the last message
 			recyclerViewChat.scrollToPosition(position);
-			postChat(ChatActivity.this, inputText);
+			postChat(inputText);
 			input.setText("");
 		}
 	}
@@ -284,121 +238,84 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			return;
 		}
 
-		fetchChat(ChatActivity.this);
+		fetchChat();
 	}
 
-    private void fetchChat(final Activity activity) {
+	private ApiCommon<FetchChatResponse> apiCommon;
+	private ApiCommon<FetchChatResponse> getApiCommon(){
+		if(apiCommon == null){
+			apiCommon = new ApiCommon<>(this);
+		}
+		return apiCommon;
+	}
+
+    private void fetchChat() {
         try {
-            if (MyApplication.getInstance().isOnline()) {
-                //DialogPopup.showLoadingDialog(ChatActivity.this, getResources().getString(R.string.loading));
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put("login_type", LOGIN_TYPE);
-                params.put("engagement_id", Data.autoData.getcEngagementId());
+			HashMap<String, String> params = new HashMap<>();
+			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+			params.put("login_type", LOGIN_TYPE);
+			params.put("engagement_id", Data.autoData.getcEngagementId());
 
-				new HomeUtil().putDefaultParams(params);
-                RestClient.getChatApiService().fetchChat(params, new Callback<FetchChatResponse>() {
-					@Override
-					public void success(FetchChatResponse fetchChat, Response response) {
-						try {
-							Prefs.with(ChatActivity.this).save(Constants.KEY_CHAT_COUNT, 0);
-							String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-							//Log.e("Shared rides jsonString", "=" + jsonString);
-							JSONObject jObj;
-							jObj = new JSONObject(jsonString);
-							int flag = jObj.getInt("flag");
-							String message = jObj.getString("message");
-							fetchChatResponse = fetchChat;
-							if (!jObj.isNull("error")) {
-								String errorMessage = jObj.getString("error");
-							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == fetchChat.getFlag()) {
-								chatResponse.clear();
-								chatResponse.addAll(fetchChat.getChatHistory());
-								Collections.reverse(chatResponse);
-								chatAdapter.notifyDataSetChanged();
-								recyclerViewChat.scrollToPosition(chatAdapter.getItemCount() - 1);
-								chatSuggestions.clear();
-								chatSuggestions.addAll(fetchChat.getSuggestions());
-								chatSuggestionAdapter.notifyDataSetChanged();
-								if(chatSuggestions.size() > 0){
-									recyclerViewChatOptions.setVisibility(View.VISIBLE);
-								} else{
-									recyclerViewChatOptions.setVisibility(View.GONE);
-								}
-								if(handler != null && loadDiscussion != null) {
-									handler.postDelayed(loadDiscussion, 5000);
-								}
-							}
-						} catch (Exception exception) {
-							exception.printStackTrace();
-						}
-						//DialogPopup.dismissLoadingDialog();
+			new HomeUtil().putDefaultParams(params);
+
+			getApiCommon().showLoader(false).execute(params, ApiName.FETCH_CHAT, new APICommonCallback<FetchChatResponse>() {
+				@Override
+				public void onSuccess(FetchChatResponse fetchChatResponse, String message, int flag) {
+					Prefs.with(ChatActivity.this).save(Constants.KEY_CHAT_COUNT, 0);
+					chatResponse.clear();
+					chatResponse.addAll(fetchChatResponse.getChatHistory());
+					Collections.reverse(chatResponse);
+					chatAdapter.notifyDataSetChanged();
+					recyclerViewChat.scrollToPosition(chatAdapter.getItemCount() - 1);
+					chatSuggestions.clear();
+					chatSuggestions.addAll(fetchChatResponse.getSuggestions());
+					chatSuggestionAdapter.notifyDataSetChanged();
+					if(chatSuggestions.size() > 0){
+						recyclerViewChatOptions.setVisibility(View.VISIBLE);
+					} else{
+						recyclerViewChatOptions.setVisibility(View.GONE);
 					}
-
-					@Override
-					public void failure(RetrofitError error) {
-						//DialogPopup.dismissLoadingDialog();
-						DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
+					if(handler != null && loadDiscussion != null) {
+						handler.removeCallbacks(loadDiscussion);
+						handler.postDelayed(loadDiscussion, 5000);
 					}
-				});
+				}
 
-            } else {
-                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
-            }
+				@Override
+				public boolean onError(FetchChatResponse fetchChatResponse, String message, int flag) {
+					return false;
+				}
+			});
         } catch (Exception e) {
             e.printStackTrace();
-            //DialogPopup.dismissLoadingDialog();
         }
     }
 
-    private void postChat(final Activity activity, final String message) {
+    private void postChat(final String message) {
         try {
-            if (MyApplication.getInstance().isOnline()) {
-                //DialogPopup.showLoadingDialog(ChatActivity.this, getResources().getString(R.string.loading));
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                params.put("login_type", LOGIN_TYPE);
-                params.put("engagement_id", Data.autoData.getcEngagementId());
-                params.put("message", message);
+			HashMap<String, String> params = new HashMap<>();
+			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+			params.put("login_type", LOGIN_TYPE);
+			params.put("engagement_id", Data.autoData.getcEngagementId());
+			params.put("message", message);
 
-				new HomeUtil().putDefaultParams(params);
-                RestClient.getChatApiService().postChat(params, new Callback<FetchChatResponse>() {
-					@Override
-					public void success(FetchChatResponse fetchChatResponse, Response response) {
-						try {
-							DialogPopup.dismissLoadingDialog();
-							String jsonString = new String(((TypedByteArray) response.getBody()).getBytes());
-							//Log.e("Shared rides jsonString", "=" + jsonString);
-							JSONObject jObj;
-							jObj = new JSONObject(jsonString);
-							int flag = jObj.getInt("flag");
-							String message = jObj.getString("message");
-							if (!jObj.isNull("error")) {
-								String errorMessage = jObj.getString("error");
-							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-								if(handler != null && loadDiscussion != null) {
-									handler.removeCallbacks(loadDiscussion);
-								}
-									fetchChat(ChatActivity.this);
-							}
-						} catch (Exception exception) {
-							exception.printStackTrace();
-						}
-
+			new HomeUtil().putDefaultParams(params);
+			getApiCommon().showLoader(false).execute(params, ApiName.POST_CHAT, new APICommonCallback<FetchChatResponse>() {
+				@Override
+				public void onSuccess(FetchChatResponse fetchChatResponse, String message, int flag) {
+					if(handler != null && loadDiscussion != null) {
+						handler.removeCallbacks(loadDiscussion);
 					}
+					fetchChat();
+				}
 
-					@Override
-					public void failure(RetrofitError error) {
-						//DialogPopup.dismissLoadingDialog();
-					}
-				});
-
-            } else {
-                DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
-            }
+				@Override
+				public boolean onError(FetchChatResponse fetchChatResponse, String message, int flag) {
+					return false;
+				}
+			});
         } catch (Exception e) {
             e.printStackTrace();
-            //DialogPopup.dismissLoadingDialog();
         }
     }
 

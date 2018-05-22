@@ -466,29 +466,26 @@
             
             <RelativeLayout
                 android:id="@+id/rlChatDriver"
-                android:layout_width="132px"
-                android:layout_height="133px"
-                android:visibility="visible">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:tag="@string/dont_touch_me">
 
-                <Button
+                <TextView
                     android:id="@+id/bChatDriver"
-                    android:layout_width="127px"
-                    android:layout_height="128px"
-                    android:layout_marginTop="0px"
+                    android:layout_width="49dp"
+                    android:layout_height="49dp"
                     android:contentDescription="@string/chat_with_driver"
-                    android:background="@drawable/chat_driver_selector"
-                    android:tag="mwar" />
+                    android:background="@drawable/chat_driver_selector"/>
 
                 <TextView
                     android:id="@+id/tvChatCount"
-                    android:layout_width="35px"
-                    android:layout_height="35px"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="10px"
-                    android:layout_marginTop="10px"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
                     android:text="@string/_1"
+                    android:layout_alignEnd="@+id/bChatDriver"
                     android:textColor="@color/theme_color"
-                    android:textSize="@dimen/text_size_24"
+                    android:textSize="12sp"
                     android:gravity="center"
                     android:visibility="gone"
                     android:background="@drawable/circle_white_stroke_theme"/>

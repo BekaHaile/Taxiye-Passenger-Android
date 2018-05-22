@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.retrofit.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +12,8 @@ import java.util.List;
  */
 
 
-public class FetchChatResponse {
+public class FetchChatResponse extends FeedCommonResponse {
 
-	@SerializedName("flag")
-	@Expose
-	private Integer flag;
-	@SerializedName("message")
-	@Expose
-	private String message;
 	@SerializedName("chat_history")
 	@Expose
 	private List<ChatHistory> chatHistory = new ArrayList<ChatHistory>();
@@ -28,42 +23,6 @@ public class FetchChatResponse {
 	@SerializedName("status")
 	@Expose
 	private Integer status;
-
-	/**
-	 *
-	 * @return
-	 * The flag
-	 */
-	public Integer getFlag() {
-		return flag;
-	}
-
-	/**
-	 *
-	 * @param flag
-	 * The flag
-	 */
-	public void setFlag(Integer flag) {
-		this.flag = flag;
-	}
-
-	/**
-	 *
-	 * @return
-	 * The message
-	 */
-	public String getMessage() {
-		return message;
-	}
-
-	/**
-	 *
-	 * @param message
-	 * The message
-	 */
-	public void setMessage(String message) {
-		this.message = message;
-	}
 
 	/**
 	 *
@@ -119,7 +78,7 @@ public class FetchChatResponse {
 		this.status = status;
 	}
 
-	public class ChatHistory {
+	public static class ChatHistory {
 
 		@SerializedName("chat_history_id")
 		@Expose
