@@ -16,7 +16,6 @@
             android:id="@+id/textViewTitle"
             android:text="@string/add_card_title"
             android:textSize="18sp"
-            app:typekitFont="@string/maven_r"
             style="@style/title"/>
 
         <ImageView
@@ -34,12 +33,14 @@
          android:layout_below="@id/topBar"
          android:layout_width="match_parent"
          android:layout_height="wrap_content">
+         
 
 
 
 
              <com.stripe.android.view.CardNumberEditText
                  android:id="@+id/edt_card_number"
+                 android:drawablePadding="10dp"
                  android:textColor="@color/text_color"
                  android:textColorHint="@color/text_color_hint"
                  app:typekitFont="@string/maven_r"
@@ -121,12 +122,13 @@
 
              <Button
                  android:id="@+id/btn_add_card"
-                 android:layout_marginTop="30dp"
+                 android:layout_marginTop="50dp"
                  android:layout_gravity="center"
                  android:background="@drawable/capsule_theme_color_selector"
                  android:textColor="@color/white"
                  android:text="@string/save"
                  android:textAllCaps="true"
+                 app:typekitFont="@string/maven_r"
                  android:paddingStart="15dp"
                  android:paddingEnd="15dp"
                  android:layout_marginLeft="30dp"

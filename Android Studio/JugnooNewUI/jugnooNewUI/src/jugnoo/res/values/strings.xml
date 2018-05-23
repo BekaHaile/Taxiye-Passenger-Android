@@ -1852,4 +1852,7 @@
     <string name="hint_date">MM/YY</string>
     <string name="hint_cvv">CVV</string>
     <string name="add_card_title">ADD CARD</string>
+    <string name="edit_card_title">EDIT CARD</string>
+    <string name="stripe_add_card_error">Invalid inputs</string>
+
 </resources>
