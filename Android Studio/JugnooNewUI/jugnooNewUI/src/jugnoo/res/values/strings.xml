@@ -1848,5 +1848,8 @@
     <string name="confirm_ride_request">Confirm Ride Request</string>
     <string name="please_select_country_code">Please select country code</string>
     <string name="code">Code</string>
-
+    <string name="hint_card_number">CARD NUMBER</string>
+    <string name="hint_date">MM/YY</string>
+    <string name="hint_cvv">CVV</string>
+    <string name="add_card_title">ADD CARD</string>
 </resources>
