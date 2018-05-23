@@ -153,11 +153,14 @@
                 />
 
 
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/px_40"
+                android:layout_marginBottom="@dimen/px_40"
+                android:layout_marginTop="@dimen/px_40"
                 android:splitMotionEvents="false"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
                 >
 
                 <Button
@@ -171,12 +174,13 @@
                     android:id="@+id/bSendGift"
                     style="@style/ButtonTheme"
                     android:layout_width="@dimen/px_346"
-                    android:layout_alignParentEnd="true"
                     android:text="@string/send_free_gift"
                     android:textAllCaps="true"
-                    android:textSize="@dimen/text_size_30"/>
+                    android:textSize="@dimen/text_size_30"
+                    android:layout_marginStart="54px"
+                    />
 
-            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
 
