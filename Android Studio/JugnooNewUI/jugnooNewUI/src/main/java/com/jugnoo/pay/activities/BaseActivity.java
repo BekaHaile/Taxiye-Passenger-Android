@@ -129,7 +129,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(LocaleHelper.onAttach(TypekitContextWrapper.wrap(newBase), "en"));
+        super.attachBaseContext(LocaleHelper.onAttach(TypekitContextWrapper.wrap(newBase), newBase.getString(R.string.default_lang)));
 //		super.attachBaseContext();
     }
     public void setupParent(View view) {

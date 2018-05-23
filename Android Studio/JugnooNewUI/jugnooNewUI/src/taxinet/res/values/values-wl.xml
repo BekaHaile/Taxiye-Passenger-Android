@@ -36,13 +36,12 @@
     <string name="operator_token">1ac6f54692c22e08ab9ddd9c383ff0a3</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">911</string>
-    <string name="facebook_page_id">1497119970363540</string>
-    <string name="facebook_page_name">Hezzmaroc</string>
+    <string name="facebook_page_id">252184564966458</string>
+    <string name="facebook_page_name">jugnoose</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
     <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
-    <integer name="show_social_login">@integer/view_invisible</integer>
     <bool name="force_open_autos">true</bool>
 
 
@@ -51,8 +50,8 @@
     <dimen name="splash_logo_top_margin">100dp</dimen>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <integer name="show_splash_logo_text">@integer/view_gone</integer>
-    <integer name="show_splash_top_bg">@integer/view_invisible</integer>
-    <integer name="show_splash_hezz_bg">@integer/view_visible</integer>
+    <integer name="show_splash_top_bg">@integer/view_visible</integer>
+    <integer name="show_splash_hezz_bg">@integer/view_invisible</integer>
     <color name="splash_logo_color">@color/theme_color</color>
 
     <string name="file_provider_name">com.hezz.fileprovider</string>
@@ -69,11 +68,5 @@
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
     <bool name="show_about">false</bool>
-    <bool name="show_change_languge">true</bool>
-    <string name="default_lang">fr</string>
-    <string-array name="languages_to_show">
-        <item>en</item>
-        <item>ar</item>
-        <item>fr</item>
-    </string-array>
+    <bool name="show_change_languge">false</bool>
 </resources>

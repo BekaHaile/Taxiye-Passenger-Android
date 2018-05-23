@@ -199,7 +199,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	private LinearLayout llSignupMain, llSignupOnboarding;
 	private ScrollView svSignupOnboarding;
 
-	private RelativeLayout rlClaimGift, rlPromo;
+	private RelativeLayout rlClaimGift, rlPromo,rlSignupOnboarding;
 	private ImageView ivUser;
 	private TextView tvGiftFrom, tvGiftDetail, tvReferralTitle, tvSkip;
 	private Button btnClaimGift, bPromoSubmit, btnPhoneLogin;
@@ -618,6 +618,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			llSignupOnboarding = (LinearLayout) findViewById(R.id.llSignupOnboarding);
 			tvSkip = (TextView) findViewById(R.id.tvSkip);
 			rlPhoneLogin = (RelativeLayout) findViewById(R.id.rlPhoneLogin);
+			rlSignupOnboarding = (RelativeLayout) findViewById(R.id.rlSignupOnboarding);
 			btnPhoneLogin = (Button) findViewById(R.id.btnPhoneLogin);
 
 			((TextView)findViewById(R.id.tvJugnooTaxiS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
@@ -1597,7 +1598,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		rlLoginSignupNew.setVisibility(View.GONE);
 		llSignupOnboarding.setVisibility(View.GONE);
 		rlPhoneLogin.setVisibility(View.GONE);
-		svSignupOnboarding.setVisibility(View.GONE);
+		rlSignupOnboarding.setVisibility(View.GONE);
 
 		int duration = 500;
 		switch (state) {
@@ -1720,7 +1721,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			case SPLASH_ONBOARDING:
 				llContainer.setVisibility(View.VISIBLE);
 				rlPhoneLogin.clearAnimation();
-				svSignupOnboarding.setVisibility(View.VISIBLE);
+				rlSignupOnboarding.setVisibility(View.VISIBLE);
 				llSignupOnboarding.setVisibility(View.VISIBLE);
 
 				Animation anim1 = AnimationUtils.loadAnimation(this, R.anim.right_in);

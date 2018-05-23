@@ -1,227 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/svSignupOnboarding"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlSignupOnboarding"
     android:layout_width="match_parent"
-    android:fillViewport="true"
     android:layout_height="match_parent"
-    android:visibility="visible">
-
-    <LinearLayout
-        android:id="@+id/llSignupOnboarding"
+    android:background="@color/white">
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/white">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px_160"
-            android:src="@drawable/bg_top_2"
-            android:tag="mwar" />
-
+        android:background="@drawable/splash_back_hezz"
+        android:visibility="@integer/show_splash_hezz_bg"
+        android:tag="mwar" />
+    <ScrollView
+        android:id="@+id/svSignupOnboarding"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
+            android:id="@+id/llSignupOnboarding"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/px_20"
-            android:gravity="center_horizontal"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvReferralTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/do_you_have_a_referral_code"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/px_36"
-                app:typekitFont="@string/maven_r" />
-
-            <EditText
-                android:id="@+id/etReferralCode"
-                android:layout_width="match_parent"
-                android:layout_height="80px"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginStart="@dimen/px_90"
-                android:layout_marginEnd="@dimen/px_90"
-                android:layout_marginTop="36px"
-                android:background="#0000"
-                android:capitalize="characters"
-                android:digits="@string/digits_characters_caps_numbers"
-                android:gravity="center"
-                android:hint="@string/enter_promocode_optional"
-                android:inputType="textCapCharacters"
-                android:maxWidth="200dp"
-                android:paddingStart="20px"
-                android:paddingEnd="20px"
-                android:singleLine="true"
-                android:textAlignment="viewStart"
-                android:textAllCaps="true"
-                android:textColor="@color/black_text"
-                android:textColorHint="@color/black_text_alpha"
-                android:textCursorDrawable="@drawable/cursor_black"
-                android:textSize="@dimen/text_size_32"
-                app:typekitFont="@string/maven_r" />
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginStart="@dimen/px_90"
-                android:layout_marginEnd="@dimen/px_90"
-                android:src="@color/grey_light" />
+                android:layout_height="@dimen/px_160"
+                android:src="@drawable/bg_top_2"
+                android:tag="mwar"
+                android:visibility="@integer/show_splash_top_bg" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/px_86"
-                android:text="@string/please_enter_your_personal_info"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/px_32"
-                app:typekitFont="@string/maven_r" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/px_90"
-                android:layout_marginEnd="@dimen/px_90"
                 android:layout_marginTop="@dimen/px_20"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:layout_width="18px"
-                    android:layout_height="27px"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_user_email"
-                    android:tag="mhar" />
-
-                <EditText
-                    android:id="@+id/etOnboardingName"
-                    android:layout_width="match_parent"
-                    android:layout_height="88px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="28px"
-                    android:layout_toStartOf="@+id/textViewSNameRequired"
-                    android:background="#0000"
-                    android:digits="@string/digits_characters_numbers"
-                    android:gravity="center_vertical"
-                    android:hint="@string/your_full_name"
-                    android:inputType="textNoSuggestions|textCapWords"
-                    android:maxLength="50"
-                    android:paddingStart="20px"
-                    android:paddingEnd="20px"
-                    android:singleLine="true"
-                    android:textColor="@color/text_color"
-                    android:textColorHint="@color/text_color_hint"
-                    android:textCursorDrawable="@drawable/cursor_black"
-                    android:textSize="@dimen/text_size_34"
-                    app:typekitFont="@string/maven_r" />
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textViewSNameRequired"
+                    android:id="@+id/tvReferralTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/nl_splash_optional"
-                    android:textColor="@color/text_color_hint"
-                    android:textSize="@dimen/text_size_22" />
+                    android:layout_gravity="center"
+                    android:text="@string/do_you_have_a_referral_code"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/px_36"
+                    app:typekitFont="@string/maven_r" />
 
-            </RelativeLayout>
+                <EditText
+                    android:id="@+id/etReferralCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="80px"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginEnd="@dimen/px_90"
+                    android:layout_marginStart="@dimen/px_90"
+                    android:layout_marginTop="36px"
+                    android:background="#0000"
+                    android:capitalize="characters"
+                    android:digits="@string/digits_characters_caps_numbers"
+                    android:gravity="center"
+                    android:hint="@string/enter_promocode_optional"
+                    android:inputType="textCapCharacters"
+                    android:maxWidth="200dp"
+                    android:paddingEnd="20px"
+                    android:paddingStart="20px"
+                    android:singleLine="true"
+                    android:textAlignment="viewStart"
+                    android:textAllCaps="true"
+                    android:textColor="@color/black_text"
+                    android:textColorHint="@color/black_text_alpha"
+                    android:textCursorDrawable="@drawable/cursor_black"
+                    android:textSize="@dimen/text_size_32"
+                    app:typekitFont="@string/maven_r" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginEnd="@dimen/px_90"
+                    android:layout_marginStart="@dimen/px_90"
+                    android:src="@color/grey_light" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/px_86"
+                    android:text="@string/please_enter_your_personal_info"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/px_32"
+                    app:typekitFont="@string/maven_r" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/px_90"
+                    android:layout_marginStart="@dimen/px_90"
+                    android:layout_marginTop="@dimen/px_20"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="18px"
+                        android:layout_height="27px"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_user_email"
+                        android:tag="mhar" />
+
+                    <EditText
+                        android:id="@+id/etOnboardingName"
+                        android:layout_width="match_parent"
+                        android:layout_height="88px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="28px"
+                        android:layout_toStartOf="@+id/textViewSNameRequired"
+                        android:background="#0000"
+                        android:digits="@string/digits_characters_numbers"
+                        android:gravity="center_vertical"
+                        android:hint="@string/your_full_name"
+                        android:inputType="textNoSuggestions|textCapWords"
+                        android:maxLength="50"
+                        android:paddingEnd="20px"
+                        android:paddingStart="20px"
+                        android:singleLine="true"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textCursorDrawable="@drawable/cursor_black"
+                        android:textSize="@dimen/text_size_34"
+                        app:typekitFont="@string/maven_r" />
+
+                    <TextView
+                        android:id="@+id/textViewSNameRequired"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/nl_splash_optional"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="@dimen/text_size_22" />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginEnd="@dimen/px_90"
+                    android:layout_marginStart="@dimen/px_90"
+                    android:src="@color/grey_light" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/px_90"
+                    android:layout_marginStart="@dimen/px_90"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="27px"
+                        android:layout_height="23px"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_email"
+                        android:tag="mhar" />
+
+                    <EditText
+                        android:id="@+id/etOnboardingEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="88px"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="28px"
+                        android:layout_toStartOf="@+id/textViewSEmailRequired"
+                        android:background="#0000"
+                        android:gravity="center_vertical"
+                        android:hint="@string/email_address"
+                        android:inputType="textEmailAddress"
+                        android:paddingEnd="20px"
+                        android:paddingStart="20px"
+                        android:singleLine="true"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textCursorDrawable="@drawable/cursor_black"
+                        android:textSize="@dimen/text_size_34"
+                        app:typekitFont="@string/maven_r" />
+
+                    <TextView
+                        android:id="@+id/textViewSEmailRequired"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/nl_splash_optional"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="@dimen/text_size_22" />
+
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/bPromoSubmit"
+                    android:layout_width="@dimen/splash_button_width"
+                    android:layout_height="@dimen/splash_button_height"
+                    android:layout_marginTop="@dimen/px_50"
+                    android:background="@drawable/capsule_theme_color_selector"
+                    android:text="@string/next"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_white_grey_selector"
+                    android:textSize="@dimen/text_size_34"
+                    app:typekitFont="maven" />
+
+                <TextView
+                    android:id="@+id/tvSkip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px_32"
+                    android:text="@string/skip_this_step"
+                    android:textColor="@color/grey_969696"
+                    android:textSize="@dimen/px_30"
+                    app:typekitFont="@string/maven_r" />
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="1"
+                android:minHeight="@dimen/px_40" />
 
             <ImageView
+                android:id="@+id/ivBottom"
                 android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginStart="@dimen/px_90"
-                android:layout_marginEnd="@dimen/px_90"
-                android:src="@color/grey_light" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/px_90"
-                android:layout_marginEnd="@dimen/px_90"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:layout_width="27px"
-                    android:layout_height="23px"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_email"
-                    android:tag="mhar" />
-
-                <EditText
-                    android:id="@+id/etOnboardingEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="88px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="28px"
-                    android:layout_toStartOf="@+id/textViewSEmailRequired"
-                    android:background="#0000"
-                    android:gravity="center_vertical"
-                    android:hint="@string/email_address"
-                    android:inputType="textEmailAddress"
-                    android:paddingStart="20px"
-                    android:paddingEnd="20px"
-                    android:singleLine="true"
-                    android:textColor="@color/text_color"
-                    android:textColorHint="@color/text_color_hint"
-                    android:textCursorDrawable="@drawable/cursor_black"
-                    android:textSize="@dimen/text_size_34"
-                    app:typekitFont="@string/maven_r" />
-
-                <TextView
-                    android:id="@+id/textViewSEmailRequired"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/nl_splash_optional"
-                    android:textColor="@color/text_color_hint"
-                    android:textSize="@dimen/text_size_22" />
-
-            </RelativeLayout>
-
-            <Button
-                android:id="@+id/bPromoSubmit"
-                android:layout_width="@dimen/splash_button_width"
-                android:layout_height="@dimen/splash_button_height"
-                android:layout_marginTop="@dimen/px_50"
-                android:background="@drawable/capsule_theme_color_selector"
-                android:text="@string/next"
-                android:textAllCaps="true"
-                android:textColor="@color/text_color_white_grey_selector"
-                android:textSize="@dimen/text_size_34"
-                app:typekitFont="maven" />
-
-            <TextView
-                android:id="@+id/tvSkip"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/px_32"
-                android:text="@string/skip_this_step"
-                android:textColor="@color/grey_969696"
-                android:textSize="@dimen/px_30"
-                app:typekitFont="@string/maven_r" />
+                android:layout_height="@dimen/px_160"
+                android:layout_gravity="bottom"
+                android:background="@drawable/splash_bottom_building_bg1"
+                android:tag="mwar" />
 
         </LinearLayout>
-
-
-
-        <View
-            android:minHeight="@dimen/px_40"
-            android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="1"/>
-        <ImageView
-            android:id="@+id/ivBottom"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/px_160"
-           android:layout_gravity="bottom"
-            android:src="@drawable/splash_bottom_building_bg2"
-            android:tag="mwar" />
-
-    </LinearLayout>
-
-</ScrollView>
+    </ScrollView>
+</RelativeLayout>

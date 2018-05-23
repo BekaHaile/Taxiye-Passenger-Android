@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -135,6 +134,7 @@ public class ChangeLanguageActivity extends BaseActivity {
                 performBackPressed();
             }
         });
+        languagesToShow();
         showSelectedLanguage();
     }
 
@@ -159,6 +159,23 @@ public class ChangeLanguageActivity extends BaseActivity {
             ivArabic.setVisibility(View.GONE);
             ivFrench.setVisibility(View.GONE);
             ivGerman.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void languagesToShow() {
+        String[] languages = getResources().getStringArray(R.array.languages_to_show);
+        for (int i = 0; i < languages.length; i++) {
+            if (languages[i].equalsIgnoreCase("en")) {
+                relativeLayoutEnglish.setVisibility(View.VISIBLE);
+            } else if (languages[i].equalsIgnoreCase("fr")) {
+                relativeLayoutFrench.setVisibility(View.VISIBLE);
+            } else if (languages[i].equalsIgnoreCase("de")) {
+                relativeLayoutGerman.setVisibility(View.VISIBLE);
+            } else if (languages[i].equalsIgnoreCase("ar")) {
+                relativeLayoutArabic.setVisibility(View.VISIBLE);
+            } else if (languages[i].equalsIgnoreCase("es")) {
+                relativeLayoutArabic.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -231,7 +248,7 @@ public class ChangeLanguageActivity extends BaseActivity {
 //            new Handler().postDelayed(new Runnable() {
 //                @Override
 //                public void run() {
-                    startActivity(new Intent(ChangeLanguageActivity.this, SplashNewActivity.class));
+            startActivity(new Intent(ChangeLanguageActivity.this, SplashNewActivity.class));
 //                }
 //            },1000);
 
