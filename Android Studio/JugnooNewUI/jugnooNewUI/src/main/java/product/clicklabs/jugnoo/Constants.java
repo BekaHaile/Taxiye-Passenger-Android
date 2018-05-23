@@ -878,4 +878,5 @@ public interface Constants {
 
     String KEY_REVERSE_BID_TIME_INTERVAL = "reverse_bid_time_interval";
     String KEY_CREATED_AT = "created_at";
+    String KEY_DISTANCE_UNIT = "distance_unit";
 }

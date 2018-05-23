@@ -521,12 +521,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 textViewEndRideFareFactorValue.setText(String.format(getResources().getString(R.string.priority_tip_format), decimalFormat.format(endRideData.fareFactor)));
                 textViewEndRideBaseFareValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.baseFare));
                 double totalDistanceInKm = endRideData.distance;
-                String kmsStr = "";
-                if (totalDistanceInKm > 1) {
-                    kmsStr = getString(R.string.kms);
-                } else {
-                    kmsStr = getString(R.string.km);
-                }
+                String kmsStr = Utils.getDistanceUnit(endRideData.getDistanceUnit());
                 textViewEndRideDistanceValue.setText("" + decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
                 if (endRideData.rideTime > -1) {
                     linearLayoutEndRideTime.setVisibility(View.VISIBLE);

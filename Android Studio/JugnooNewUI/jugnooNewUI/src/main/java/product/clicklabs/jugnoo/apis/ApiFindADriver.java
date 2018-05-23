@@ -381,7 +381,8 @@ public class ApiFindADriver {
 								fareStructure.getFarePerWaitingMin(),
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
 								fareStructure.getDisplayBaseFare(),
-								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(), findADriverResponse.getCurrency());
+								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(),
+								findADriverResponse.getCurrency(), findADriverResponse.getDistanceUnit());
 						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
 							try {
 								if (Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()

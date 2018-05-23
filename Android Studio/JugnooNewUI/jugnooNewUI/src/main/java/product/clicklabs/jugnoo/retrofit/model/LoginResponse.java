@@ -840,6 +840,9 @@ public class LoginResponse {
 		@SerializedName("currency")
 		@Expose
 		private String currency;
+		@SerializedName("distance_unit")
+		@Expose
+		private String distanceUnit;
 
 		public List<Driver> getDrivers() {
 			return drivers;
@@ -1010,6 +1013,14 @@ public class LoginResponse {
 
 		public void setCurrency(String currency) {
 			this.currency = currency;
+		}
+
+		public String getDistanceUnit() {
+			return distanceUnit;
+		}
+
+		public void setDistanceUnit(String distanceUnit) {
+			this.distanceUnit = distanceUnit;
 		}
 	}
 

@@ -1106,6 +1106,13 @@ public class Utils implements GAAction, GACategory{
 			return value;
 		}
 	}
+	public static String getDistanceUnit(String distanceUnit){
+		if(TextUtils.isEmpty(distanceUnit)){
+			return MyApplication.getInstance().getString(R.string.km);
+		} else {
+			return distanceUnit;
+		}
+	}
 }
 
 

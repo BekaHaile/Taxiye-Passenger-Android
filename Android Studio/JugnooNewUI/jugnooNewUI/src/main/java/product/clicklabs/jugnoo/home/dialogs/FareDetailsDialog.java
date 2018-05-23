@@ -54,7 +54,7 @@ public class FareDetailsDialog {
 			((TextView) dialog.findViewById(R.id.textViewFareDetails)).setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
 			TextView textViewMinimumFare = (TextView) dialog.findViewById(R.id.textViewMinimumFare);
 			textViewMinimumFare.setTypeface(Fonts.mavenMedium(activity));
-			((TextView) dialog.findViewById(R.id.textViewKM)).setTypeface(Fonts.mavenMedium(activity));
+			TextView textViewKM = (TextView) dialog.findViewById(R.id.textViewKM);textViewKM.setTypeface(Fonts.mavenMedium(activity));
 			((TextView) dialog.findViewById(R.id.textViewMin)).setTypeface(Fonts.mavenMedium(activity));
 			TextView textViewKMValue = (TextView) dialog.findViewById(R.id.textViewKMValue);
 			textViewKMValue.setTypeface(Fonts.mavenMedium(activity));
@@ -102,6 +102,7 @@ public class FareDetailsDialog {
 					Data.autoData.getFareStructure().getDisplayBaseFare(activity))));
 			textViewKMValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerKm));
 			textViewMinValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerMin));
+			textViewKM.setText(activity.getString(R.string.per_format, Utils.getDistanceUnit(Data.autoData.getFareStructure().getDistanceUnit())));
 
 			Region region = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected();
 			double fareFactor = region.getCustomerFareFactor();
