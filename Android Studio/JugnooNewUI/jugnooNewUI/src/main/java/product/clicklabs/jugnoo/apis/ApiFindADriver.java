@@ -169,6 +169,8 @@ public class ApiFindADriver {
 			if(findADriverResponse.getFareFactor() != null) {
 				Data.autoData.setFareFactor(findADriverResponse.getFareFactor());
 			}
+			Data.autoData.setDistanceUnit(findADriverResponse.getDistanceUnit());
+
 			Data.autoData.setDriverFareFactor(1);
 			if(findADriverResponse.getDriverFareFactor() != null) {
 				Data.autoData.setDriverFareFactor(findADriverResponse.getDriverFareFactor());

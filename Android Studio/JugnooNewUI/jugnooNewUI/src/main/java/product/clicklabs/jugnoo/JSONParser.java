@@ -555,6 +555,8 @@ public class JSONParser implements Constants {
             if(autos.getFareFactor() != null) {
                 Data.autoData.setFareFactor(autos.getFareFactor());
             }
+            Data.autoData.setDistanceUnit(autos.getDistanceUnit());
+
             Data.autoData.setDriverFareFactor(1);
             if(autos.getDriverFareFactor() != null) {
                 Data.autoData.setDriverFareFactor(autos.getDriverFareFactor());

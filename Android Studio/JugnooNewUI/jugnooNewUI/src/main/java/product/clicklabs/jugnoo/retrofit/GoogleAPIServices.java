@@ -29,7 +29,9 @@ public interface GoogleAPIServices {
 					   @Query("destination") String destLatLng,
 					   @Query("sensor") Boolean sensor,
 					   @Query("mode") String mode,
-					   @Query("alternatives") Boolean alternatives, Callback<SettleUserDebt> callback);
+					   @Query("alternatives") Boolean alternatives,
+					   @Query("units") String units,
+					   Callback<SettleUserDebt> callback);
 
 	// language=EN&sensor=false&alternatives=false
 	@GET("/distancematrix/json")

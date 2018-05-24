@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.sabkuchfresh.adapters.ItemListener;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.BidInfo;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -59,11 +61,13 @@ public class BidsPlacedAdapter extends RecyclerView.Adapter<BidsPlacedAdapter.My
         holder.tvBidNumber.setText(context.getString(R.string.hash_format, String.valueOf(position+1)));
         holder.tvBidValue.setText(Utils.formatCurrencyValue(bidInfo.getCurrency(), bidInfo.getBidValue()));
         holder.tvBidDistance.setText(bidInfo.getAcceptDistanceText());
-	/*	if(bidInfo.getDistance() >= 1000){
-			holder.tvBidDistance.setText(context.getString(R.string.distance_km_away_format, Utils.getDecimalFormat2Decimal().format(bidInfo.getDistance()/1000d)));
+	/*	  if(Data.autoData != null && !TextUtils.isEmpty(Data.autoData.getDistanceUnit())){
+			holder.tvBidDistance.setText(context.getString(R.string.away_format, Utils.getDecimalFormat2Decimal().format(bidInfo.getDistance())
+					+ Data.autoData.getDistanceUnit()));
 		} else {
-			holder.tvBidDistance.setText(context.getString(R.string.distance_m_away_format, Utils.getMoneyDecimalFormatWithoutFloat().format(bidInfo.getDistance())));
+			holder.tvBidDistance.setText(context.getString(R.string.distance_km_away_format, Utils.getDecimalFormat2Decimal().format(bidInfo.getDistance()/1000D)));
 		}*/
+
 		holder.tvBidRating.setText(Utils.getDecimalFormat1Decimal().format(bidInfo.getRating()));
     }
 
