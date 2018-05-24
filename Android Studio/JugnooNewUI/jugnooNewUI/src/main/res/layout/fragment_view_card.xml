@@ -56,11 +56,15 @@
         android:id="@+id/tv_card"
         android:layout_marginTop="20dp"
         android:textAllCaps="true"
-        android:textSize="17sp"
-        android:gravity="center"
+        android:textSize="20sp"
+        android:maxLines="1"
+        android:gravity="left"
         android:text="eqeqweqwe"
-        android:padding="5dp"
-        android:layout_marginLeft="20dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingBottom="15dp"
+        android:drawablePadding="5dp"
+        android:layout_margin="20dp"
         android:background="@drawable/bottom_border_grey"
         android:layout_marginRight="20dp"
         android:layout_below="@id/topBar"
@@ -78,7 +82,12 @@
 
 
 
-
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/topBar"
+        android:background="@drawable/shadow_down"
+        />
 
 
 

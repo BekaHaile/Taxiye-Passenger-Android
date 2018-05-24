@@ -41,6 +41,7 @@ import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Utils;
 
 import static com.stripe.android.model.Card.BRAND_RESOURCE_MAP;
 
@@ -111,54 +112,88 @@ public class StripeAddCardFragment extends Fragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick(R.id.btn_add_card)
-    public void onViewClicked() {
-        String cardNumber = edtCardNumber.getCardNumber();
-        int[] cardDate = edtDate.getValidDateFields();
-        if (cardNumber == null || cardDate == null || cardDate.length != 2) {
-            return;
-        }
+    @OnClick({R.id.imageViewBack, R.id.btn_add_card})
+    public void onViewClicked(View view) {
+        switch (view.getId()){
+            case R.id.btn_add_card:
+                String cardNumber = edtCardNumber.getCardNumber();
+                int[] cardDate = edtDate.getValidDateFields();
 
+                if(cardNumber==null){
+                    Toast.makeText(getActivity(),getString(R.string.stripe_add_card_error,getString(R.string.card_number)),Toast.LENGTH_SHORT).show();
+                    return;
 
-
-        Card card = new Card(
-                edtCardNumber.getCardNumber(),
-                cardDate[0],
-                cardDate[1],
-                edtCvv.getText().toString()
-        );
-
-
-
-        if (!card.validateCard()) {
-            Toast.makeText(getActivity(),getString(R.string.stripe_add_card_error),Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        stripe.createToken(
-                card,
-                new TokenCallback() {
-                    public void onSuccess(Token token) {
-                        // Send token to  server
-
-                        Log.i(TAG, token.getId());
-                        Log.i(TAG, token.toString());
-
-                        addCardApi( token);
-
-
-                    }
-
-                    public void onError(Exception error) {
-                        // Show localized error message
-                        Log.e(TAG, error.getMessage());
-                        Toast.makeText(getContext(),
-                                error.getLocalizedMessage(),
-                                Toast.LENGTH_LONG
-                        ).show();
-                    }
                 }
-        );
+
+
+                if (cardDate == null || cardDate.length != 2) {
+                    Toast.makeText(getActivity(),getString(R.string.stripe_add_card_error,getString(R.string.expiry_date)),Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
+                Card card = new Card(
+                        edtCardNumber.getCardNumber(),
+                        cardDate[0],
+                        cardDate[1],
+                        edtCvv.getText().toString()
+                );
+
+                if(!card.validateNumber()){
+                    Toast.makeText(getActivity(),getString(R.string.stripe_add_card_error,getString(R.string.card_number)),Toast.LENGTH_SHORT).show();
+                    return;
+
+                }
+
+                if(!card.validateExpiryDate()){
+                    Toast.makeText(getActivity(),getString(R.string.stripe_add_card_error,getString(R.string.expiry_date)),Toast.LENGTH_SHORT).show();
+                    return;
+
+                }
+
+
+                if (!card.validateCVC()) {
+                    Toast.makeText(getActivity(),getString(R.string.stripe_add_card_error,getString(R.string.cvc)),Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Utils.hideSoftKeyboard(getActivity(),edtCardNumber);
+                DialogPopup.showLoadingDialog(getActivity(),getString(R.string.loading));
+                stripe.createToken(
+                        card,
+                        new TokenCallback() {
+                            public void onSuccess(Token token) {
+                                // Send token to  server
+
+
+                                DialogPopup.dismissLoadingDialog();
+                                addCardApi( token);
+
+
+                            }
+
+                            public void onError(Exception error) {
+                                // Show localized error message
+                                Log.e(TAG, error.getMessage());
+                                DialogPopup.dismissLoadingDialog();
+                                Toast.makeText(getContext(),
+                                        error.getLocalizedMessage(),
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            }
+                        }
+                );
+                break;
+            case R.id.imageViewBack:
+                getActivity().onBackPressed();
+                break;
+            default:
+                break;
+
+
+
+        }
+
 
 
     }

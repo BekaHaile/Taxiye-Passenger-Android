@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Fonts;
 
 import static com.stripe.android.model.Card.BRAND_RESOURCE_MAP;
 
@@ -73,6 +75,7 @@ public class StripeViewCardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_view_card, container, false);
         ButterKnife.bind(this, rootView);
+        textViewTitle.setTypeface(Fonts.avenirNext(getActivity()));
         if (stripeCardData != null) {
             StringBuilder formString = new StringBuilder();
 
@@ -80,12 +83,12 @@ public class StripeViewCardFragment extends Fragment {
                 if (i != 0 && i % 4 == 0) {
                     formString.append(" ");
                 }
-                formString.append(R.string.bullet);
+                formString.append(getString(R.string.bullet));
 
             }
             formString.append(" ");
             formString.append(stripeCardData.getLast4());
-            tvCard.setText(formString);
+            tvCard.setText(formString.toString());
             tvCard.setVisibility(View.VISIBLE);
             ivMore.setVisibility(View.VISIBLE);
             updateIcon(stripeCardData.getBrand());
@@ -126,17 +129,19 @@ public class StripeViewCardFragment extends Fragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.imageViewBack:
+                getActivity().onBackPressed();
                 break;
             case R.id.ivMore:
                 if(popupMenu==null){
 
 
-                    PopupMenu popup = new PopupMenu(getActivity(), view);
+                    ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.PopupMenu);
+                    popupMenu = new PopupMenu(ctw, view);
                     //Inflating the Popup using xml file
-                    popup.getMenuInflater().inflate(R.menu.popup_menu_stripe_card, popup.getMenu());
+                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu_stripe_card, popupMenu.getMenu());
 
                     //registering popup with OnMenuItemClickListener
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         public boolean onMenuItemClick(MenuItem item) {
                             if(item.getItemId()==R.id.item_delete){
                                 showDeletePopup(stripeCardData);
@@ -154,7 +159,7 @@ public class StripeViewCardFragment extends Fragment {
     }
 
     private void showDeletePopup(final StripeCardData stripeCardData) {
-        DialogPopup.alertPopupTwoButtonsWithListeners(getActivity(), "", new View.OnClickListener() {
+        DialogPopup.alertPopupTwoButtonsWithListeners(getActivity(), getString(R.string.stripe_delete_card,stripeCardData.getLast4()), new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 deleteCardApi(stripeCardData);

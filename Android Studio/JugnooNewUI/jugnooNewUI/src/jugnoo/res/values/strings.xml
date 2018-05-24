@@ -1853,5 +1853,9 @@
     <string name="hint_cvv">CVV</string>
     <string name="add_card_title">ADD CARD</string>
     <string name="edit_card_title">EDIT CARD</string>
-    <string name="stripe_add_card_error">Invalid inputs</string>
+    <string name="stripe_delete_card">Are you sure you want to delete your card ending with %s?</string>
+    <string name="stripe_add_card_error">%s is not valid.</string>
+    <string name="card_number">Card Number</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="cvc">CVC</string>
 </resources>

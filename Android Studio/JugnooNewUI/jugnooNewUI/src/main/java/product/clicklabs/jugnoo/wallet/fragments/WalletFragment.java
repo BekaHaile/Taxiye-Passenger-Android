@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.wallet.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,7 +62,13 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
     View rootView;
     private PaymentActivity paymentActivity;
 	private RelativeLayout relativeLayoutStripe;
-
+	private Handler handler = new Handler();
+	private Runnable enableStripeRunnable = new Runnable() {
+		@Override
+		public void run() {
+			relativeLayoutStripe.setEnabled(true);
+		}
+	};
 	public static WalletFragment newInstance(){
 		WalletFragment fragment = new WalletFragment();
 		Bundle bundle = new Bundle();
@@ -237,7 +244,11 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		relativeLayoutStripe.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if(true){					// TODO: 24/05/18 check for credit card already exists
+				relativeLayoutStripe.setEnabled(false);
+				handler.postDelayed(enableStripeRunnable,300);
+
+				boolean open = false;
+				if(open){					// TODO: 24/05/18 check for credit card already exists
 
 					paymentActivity.getSupportFragmentManager().beginTransaction()
 							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
@@ -389,9 +400,12 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 							linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
 						} else if(paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
-                        }
+                        }else if(paymentModeConfigData.getPaymentOption()==PaymentOption.STRIPE_CARDS.getOrdinal()){
+							linearLayoutWalletContainer.addView(relativeLayoutStripe);
+						}
 					}
 				}
+				linearLayoutWalletContainer.addView(relativeLayoutStripe);// TODO: 24/05/18 Remove
 			}
 		} catch (Exception e){
 			e.printStackTrace();

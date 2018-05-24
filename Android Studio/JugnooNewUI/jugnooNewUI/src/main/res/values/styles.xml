@@ -22,6 +22,39 @@
     </style>
 
 
+    <style name="PopupMenuTheme" parent="AppTheme">
+        <item name="colorAccent">@color/red</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+
+
+    </style>
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="colorAccent">@color/red</item>
+        <item name="android:popupBackground">@drawable/button_white_grey_border_round_selector</item>
+        <item name="android:textAppearance">@style/PopupMenuTextAppearance</item>
+        <item name="android:textAppearanceLargePopupMenu">@style/PopupMenuTextAppearance</item>
+        <item name="android:textAppearanceSmallPopupMenu">@style/PopupMenuTextAppearance</item>
+    </style>
+
+    <style name="PopupMenuTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">
+            13sp
+        </item>
+
+        <item name="colorControlNormal">
+            @color/red
+        </item>
+
+        <item name="colorAccent">
+            @color/blue_facebook
+        </item>
+
+        <item name="colorControlActivated">
+            @color/green
+        </item>
+    </style>
+
+
     <!-- Application theme. -->
     <style name="BaseAppCompatTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
 

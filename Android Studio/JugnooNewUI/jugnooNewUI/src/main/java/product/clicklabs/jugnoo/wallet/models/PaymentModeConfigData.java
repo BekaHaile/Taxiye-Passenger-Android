@@ -48,6 +48,8 @@ public class PaymentModeConfigData {
 			paymentOption = PaymentOption.ICICI_UPI.getOrdinal();
 		} else if(Constants.KEY_MPESA.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.MPESA.getOrdinal();
+		} else if(Constants.KEY_STRIPE_CARDS.equalsIgnoreCase(name)){
+			paymentOption = PaymentOption.STRIPE_CARDS.getOrdinal();
 		}
 		this.priority = 0;
 		this.upiCashbackValue = upiCashbackValue;
