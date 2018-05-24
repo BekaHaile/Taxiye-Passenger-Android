@@ -6722,6 +6722,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
                     && driverInfo.getRegionIds() != null
                     && driverInfo.getRegionIds().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
+					&& (driverInfo.getPaymentMethod() == DriverInfo.PaymentMethod.BOTH.getOrdinal() || driverInfo.getPaymentMethod() == 0
+					|| Data.autoData.getPickupPaymentOption() == PaymentOption.CASH.getOrdinal())
                     ){
                 driversCount++;
             }

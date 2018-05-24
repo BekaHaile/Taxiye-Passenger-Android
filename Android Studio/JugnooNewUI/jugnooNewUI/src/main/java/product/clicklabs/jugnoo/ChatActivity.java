@@ -49,6 +49,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 	private EditText input;
 
 	RecyclerView recyclerViewChat, recyclerViewChatOptions;
+	LinearLayoutManager linearLayoutManager;
 	ChatAdapter chatAdapter;
 	ArrayList<FetchChatResponse.ChatHistory> chatResponse = new ArrayList<>();
 	private final String LOGIN_TYPE = "0";
@@ -77,7 +78,8 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			ivCallDriver.setOnClickListener(this);
 
 			recyclerViewChat = (RecyclerView) findViewById(R.id.recyclerViewChat);
-			recyclerViewChat.setLayoutManager(new LinearLayoutManager(ChatActivity.this));
+			linearLayoutManager = new LinearLayoutManager(ChatActivity.this);
+			recyclerViewChat.setLayoutManager(linearLayoutManager);
 			recyclerViewChat.setHasFixedSize(false);
 			recyclerViewChat.setItemAnimator(new DefaultItemAnimator());
 			chatResponse = new ArrayList<>();
@@ -203,8 +205,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			int position = chatAdapter.getItemCount() - 1;
 			chatAdapter.notifyItemInserted(position);
 
-			// scroll to the last message
-			recyclerViewChat.scrollToPosition(position);
+			linearLayoutManager.scrollToPositionWithOffset(chatAdapter.getItemCount() - 1, 10);
 			postChat(inputText);
 			input.setText("");
 		}
@@ -266,7 +267,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 					chatResponse.addAll(fetchChatResponse.getChatHistory());
 					Collections.reverse(chatResponse);
 					chatAdapter.notifyDataSetChanged();
-					recyclerViewChat.scrollToPosition(chatAdapter.getItemCount() - 1);
+					linearLayoutManager.scrollToPositionWithOffset(chatAdapter.getItemCount() - 1, 10);
 					chatSuggestions.clear();
 					chatSuggestions.addAll(fetchChatResponse.getSuggestions());
 					chatSuggestionAdapter.notifyDataSetChanged();
