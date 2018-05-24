@@ -21,8 +21,8 @@
             notification_icon
     -->
 
-    <string name="google_maps_api_key">AIzaSyCReMAp5TW8sUMQRqecpPwT-o45UC4J3Lk</string>
-    <string name="google_maps_api_server_key">AIzaSyB7i02FGFHWR5ttygDB4qwmxJ4ESuc-asM</string>
+    <string name="google_maps_api_key">AIzaSyB8aOETL0HSK0AoQlqrBS6Do87IWVpwBPc</string>
+    <string name="google_maps_api_server_key">AIzaSyCZLBiNvptiJT6i0L3jpYo5X9YrLkNxKys</string>
     <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
     <string name="fb_app_id">782131025144439</string>
     <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
@@ -33,7 +33,7 @@
 
 
 
-    <string name="operator_token">1ac6f54692c22e08ab9ddd9c383ff0a3</string>
+    <string name="operator_token">5bb40d7c0caa35d207433fe74302e7c2</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">911</string>
     <string name="facebook_page_id">252184564966458</string>
@@ -54,17 +54,17 @@
     <integer name="show_splash_hezz_bg">@integer/view_invisible</integer>
     <color name="splash_logo_color">@color/theme_color</color>
 
-    <string name="file_provider_name">com.hezz.fileprovider</string>
-    <string name="web_landing_page">https://jugnoo.in</string>
-    <string name="smart_url">http://smarturl.it/jugnoo</string>
-    <string name="db_name">hezz_database</string>
-    <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
-    <string name="app_domain">jugnoo.in</string>
-    <string name="app_host_name">www.jugnoo.in</string>
-    <string name="branch_domain">share.jugnoo.in</string>
-    <string name="app_scheme">hezz</string>
+    <string name="file_provider_name">com.teaxinet.fileprovider</string>
+    <string name="web_landing_page">https://taxinet.in</string>
+    <string name="smart_url">http://smarturl.it/taxinet</string>
+    <string name="db_name">taxinet_database</string>
+    <string name="terms_of_use_url">https://www.taxinet.in/#/terms</string>
+    <string name="app_domain">taxinet.in</string>
+    <string name="app_host_name">www.taxinet.in</string>
+    <string name="branch_domain">share.taxinet.in</string>
+    <string name="app_scheme">taxinet</string>
 
-    <string name="pictures_path">Hezz/Hezz Pictures</string>
+    <string name="pictures_path">Taxinet/Taxinet Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
     <bool name="show_about">false</bool>
