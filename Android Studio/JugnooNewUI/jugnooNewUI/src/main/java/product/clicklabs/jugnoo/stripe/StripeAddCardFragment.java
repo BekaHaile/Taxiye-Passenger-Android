@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.stripe.android.CardUtils;
@@ -37,6 +38,7 @@ import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 
@@ -137,7 +139,7 @@ public class StripeAddCardFragment extends Fragment {
                 card,
                 new TokenCallback() {
                     public void onSuccess(Token token) {
-                        // Send token to your server
+                        // Send token to  server
 
                         Log.i(TAG, token.getId());
                         Log.i(TAG, token.toString());
@@ -162,7 +164,7 @@ public class StripeAddCardFragment extends Fragment {
     }
 
     private void addCardApi(Token token) {
-        Map<String,String> params = new HashMap<>();
+        HashMap<String,String> params = new HashMap<>();
         params.put("stripe_token",token.getId());
         params.put("last_4",token.getCard().getLast4());
         params.put("brand",token.getCard().getBrand());
@@ -172,7 +174,32 @@ public class StripeAddCardFragment extends Fragment {
 
 
 
-//        new ApiCommon<StripeCardResponse>(getActivity()).showLoader(true).execute(params, ApiName.CITY_INFO_API,);
+        new ApiCommon<StripeCardResponse>(getActivity()).showLoader(true).execute(params, ApiName.ADD_CARD_API, new APICommonCallback<StripeCardResponse>() {
+            @Override
+            public void onSuccess(StripeCardResponse stripeCardResponse, String message, int flag) {
+                if(getView()==null || getActivity()==null){
+                    return;
+                }
+
+
+                DialogPopup.alertPopupWithListener(getActivity(),"",message, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getActivity().onBackPressed();
+
+                    }
+                });
+
+
+
+
+            }
+
+            @Override
+            public boolean onError(StripeCardResponse stripeCardResponse, String message, int flag) {
+                return false;
+            }
+        });
     }
 
 

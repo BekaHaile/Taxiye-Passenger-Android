@@ -1858,5 +1858,6 @@
     <string name="select_a_bid">Select a bid</string>
     <string name="stripe">Stripe</string>
     <string name="view_card_title">CREDIT CARD</string>
+    <string name="add_credit_card">Add Credit Card</string>
 
 </resources>

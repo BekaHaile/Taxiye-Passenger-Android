@@ -131,7 +131,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                     if(showLoader) {
                         DialogPopup.dismissLoadingDialog();
                     }
-                    if(isCancelled())
+                    if(isCancelled() || activity.isFinishing())
                         return;
 
                     try {
@@ -162,7 +162,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                     if(showLoader) {
                         DialogPopup.dismissLoadingDialog();
                     }
-                    if(isCancelled())
+                    if(isCancelled() || activity.isFinishing())
                         return;
                     error.printStackTrace();
                     apiCommonCallback.onFinish();
@@ -256,6 +256,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 break;
             case SELECT_BID:
                 RestClient.getApiService().selectTheBid(params, callback);
+                break;
+            case ADD_CARD_API:
+                RestClient.getApiService().addCardToCustomer(params, callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");

@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.sabkuchfresh.feed.models.FeedCommonResponse;
 
 /**
  * Created by Parminder Saini on 23/05/18.
@@ -16,8 +15,11 @@ public class StripeCardData  implements Parcelable {
 
 
     @Expose
-    @SerializedName("card_number")
-    private String cardNumber;
+    @SerializedName("card_id")
+    private String cardId;
+    @Expose
+    @SerializedName("last_4")
+    private String last4;
     @Expose
     @SerializedName("expiry_month")
     private String expiryMonth;
@@ -31,27 +33,19 @@ public class StripeCardData  implements Parcelable {
     @SerializedName("brand")
     private String brand;
 
+    public StripeCardData(String cardId, String last4, String brand) {
+        this.cardId = cardId;
+        this.last4 = last4;
+        this.brand = brand;
+    }
 
     protected StripeCardData(Parcel in) {
-        cardNumber = in.readString();
+        cardId = in.readString();
+        last4 = in.readString();
         expiryMonth = in.readString();
         expiryYear = in.readString();
         _cvv = in.readString();
         brand = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(cardNumber);
-        dest.writeString(expiryMonth);
-        dest.writeString(expiryYear);
-        dest.writeString(_cvv);
-        dest.writeString(brand);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<StripeCardData> CREATOR = new Creator<StripeCardData>() {
@@ -66,8 +60,27 @@ public class StripeCardData  implements Parcelable {
         }
     };
 
-    public String getCardNumber() {
-        return cardNumber;
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(cardId);
+        parcel.writeString(last4);
+        parcel.writeString(expiryMonth);
+        parcel.writeString(expiryYear);
+        parcel.writeString(_cvv);
+        parcel.writeString(brand);
+    }
+
+    public String getCardId() {
+        return cardId;
+    }
+
+    public String getLast4() {
+        return last4;
     }
 
     public String getExpiryMonth() {
@@ -86,3 +99,4 @@ public class StripeCardData  implements Parcelable {
         return brand;
     }
 }
+

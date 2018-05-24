@@ -25,6 +25,8 @@ import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.stripe.StripeAddCardFragment;
+import product.clicklabs.jugnoo.stripe.StripeViewCardFragment;
+import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -51,7 +53,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 	TextView textViewMobiKwik, textViewMobiKwikBalanceValue;
 
     RelativeLayout relativeLayoutFreeCharge;
-    TextView textViewFreeCharge, textViewFreeChargeBalanceValue;
+    TextView textViewFreeCharge, textViewFreeChargeBalanceValue,textViewStripeCard;
 
     RelativeLayout relativeLayoutWalletTransactions, relativeLayoutPayTransactions;
 
@@ -96,8 +98,8 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 
 		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
 		new ASSL(paymentActivity, relative, 1134, 720, false);
-		
-		
+
+		textViewStripeCard= (TextView) rootView.findViewById(R.id.textViewCards);
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
 		
@@ -125,6 +127,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		relativeLayoutPayTransactions = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPayTransactions);
 		relativeLayoutStripe = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutStripe);
 		((TextView) rootView.findViewById(R.id.textViewPayTransactions)).setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewStripeCard.setTypeface(Fonts.mavenRegular(paymentActivity));
         relativeLayoutWalletTransactions = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWalletTransactions);
 		((TextView) rootView.findViewById(R.id.textViewWalletTransactions)).setTypeface(Fonts.mavenRegular(paymentActivity));
 		relativeLayoutPayTransactions.setVisibility(View.GONE);
@@ -234,13 +237,25 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		relativeLayoutStripe.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				paymentActivity.getSupportFragmentManager().beginTransaction()
-						.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-						.add(R.id.fragLayout, new StripeAddCardFragment(), StripeAddCardFragment.class.getName())
-						.addToBackStack(StripeAddCardFragment.class.getName())
-						.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
-								.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-						.commit();
+				if(true){					// TODO: 24/05/18 check for credit card already exists
+
+					paymentActivity.getSupportFragmentManager().beginTransaction()
+							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+							.add(R.id.fragLayout, new StripeAddCardFragment(), StripeAddCardFragment.class.getName())
+							.addToBackStack(StripeAddCardFragment.class.getName())
+							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+							.commit();
+				}else{
+					paymentActivity.getSupportFragmentManager().beginTransaction()
+							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+							.add(R.id.fragLayout,  StripeViewCardFragment.newInstance(new StripeCardData("random_id","4242","JCB")), StripeViewCardFragment.class.getName())
+							.addToBackStack(StripeViewCardFragment.class.getName())
+							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+							.commit();
+				}
+
 			}
 		});
 

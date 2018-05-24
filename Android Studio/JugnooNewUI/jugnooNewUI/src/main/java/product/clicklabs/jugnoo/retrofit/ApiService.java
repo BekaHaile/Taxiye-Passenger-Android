@@ -598,4 +598,9 @@ public interface ApiService {
     void selectTheBid(@FieldMap Map<String, String> params,
                                 Callback<FeedCommonResponse> callback);
 
+    @FormUrlEncoded
+    @POST("/add_card_to_customer_account")
+    void addCardToCustomer(@FieldMap Map<String, String> params,
+                           Callback<FeedCommonResponse> callback);
+
 }
