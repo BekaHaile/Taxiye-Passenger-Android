@@ -103,6 +103,9 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
                 } else if(transactionInfo.getFreecharge() == 1){
                     holder.textViewTransactionMode.setVisibility(View.VISIBLE);
                     holder.textViewTransactionMode.setText(context.getResources().getString(R.string.freecharge_colon));
+                } else if(transactionInfo.getMpesa() == 1){
+                    holder.textViewTransactionMode.setVisibility(View.VISIBLE);
+                    holder.textViewTransactionMode.setText(context.getResources().getString(R.string.mpesa));
                 }
             }
             else if(transactionInfo.getPay() == 1){

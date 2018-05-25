@@ -716,6 +716,7 @@
     <string name="paytm_colon">Paytm:</string>
     <string name="mobikwik_colon">MobiKwik:</string>
     <string name="freecharge_colon">FreeCharge:</string>
+    <string name="mpesa_colon">mPesa:</string>
     <string name="request_otp_message_paytm">Request an OTP to link Paytm Wallet to</string>
     <string name="request_otp_message_mobikwik">Request an OTP to link MobiKwik Wallet to</string>
     <string name="request_otp_message_freecharge">Request an OTP to link FreeCharge Wallet to</string>
