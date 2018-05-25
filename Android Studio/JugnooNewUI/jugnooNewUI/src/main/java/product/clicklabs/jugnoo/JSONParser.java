@@ -1750,7 +1750,7 @@ public class JSONParser implements Constants {
                     bidInfos.add(new BidInfo(object.optInt(Constants.KEY_ENGAGEMENT_ID),
                             object.optDouble(Constants.KEY_BID_VALUE),
                             object.optString(Constants.KEY_CURRENCY),
-                            object.optDouble(Constants.KEY_ACCEPT_DISTANCE),
+                            object.optDouble(Constants.KEY_ACCEPT_DISTANCE),object.optString(Constants.KEY_ACCEPT_DISTANCE_TEXT),
                             object.optDouble(Constants.KEY_DRIVER_RATING),
                             object.optString(Constants.KEY_CREATED_AT, DateOperations.getCurrentTimeInUTC())));
                 }
