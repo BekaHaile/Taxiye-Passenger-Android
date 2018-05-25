@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.stripe;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -48,6 +49,21 @@ public class StripeViewCardFragment extends Fragment {
     private StripeCardData stripeCardData;
     private static final String ARGS_CARD_DATA = "edit_mode";
     private PopupMenu popupMenu;
+
+    private StripeCardsStateListener stripeCardsStateListener;
+
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof StripeCardsStateListener){
+            stripeCardsStateListener = (StripeCardsStateListener) context;
+        }
+
+
+    }
+
 
     public static  <T extends StripeCardData>  StripeViewCardFragment newInstance(T stripeData) {
         StripeViewCardFragment stripeViewCardFragment = new StripeViewCardFragment();
@@ -167,7 +183,7 @@ public class StripeViewCardFragment extends Fragment {
         });
     }
 
-    private void deleteCardApi(StripeCardData stripeCardData) {
+    private void deleteCardApi(final StripeCardData stripeCardData) {
         HashMap<String,String> params = new HashMap<>();
         params.put("card_id",stripeCardData.getCardId());
         params.put("is_delete","1");
@@ -178,6 +194,10 @@ public class StripeViewCardFragment extends Fragment {
         new ApiCommon<StripeCardResponse>(getActivity()).showLoader(true).execute(params, ApiName.ADD_CARD_API, new APICommonCallback<StripeCardResponse>() {
             @Override
             public void onSuccess(StripeCardResponse stripeCardResponse, String message, int flag) {
+                if(stripeCardsStateListener!=null){
+                    stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData());
+                }
+
                 if(getView()==null || getActivity()==null){
                     return;
                 }

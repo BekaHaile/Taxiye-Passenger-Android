@@ -1,7 +1,18 @@
 package product.clicklabs.jugnoo.wallet.models;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 
 /**
  * Created by shankar on 7/8/16.
@@ -15,9 +26,14 @@ public class PaymentModeConfigData {
 	private String offerText, displayName, upiHandle;
 	private String jugnooVpaHandle;
 	private String upiCashbackValue;
+	private ArrayList<StripeCardData> cardsData;
+	private static JsonParser jsonParser = new JsonParser();
+	private static Gson gson = new Gson();
+
+
 
 	public PaymentModeConfigData(String name, int enabled, String offerText, String displayName, String upiHandle,
-								 String jugnooVpaHanlde, String upiCashbackValue){
+								 String jugnooVpaHanlde, String upiCashbackValue, JSONArray cardsData){
 		this.name = name;
 		this.enabled = enabled;
 		this.offerText = offerText;
@@ -50,6 +66,26 @@ public class PaymentModeConfigData {
 			paymentOption = PaymentOption.MPESA.getOrdinal();
 		} else if(Constants.KEY_STRIPE_CARDS.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.STRIPE_CARDS.getOrdinal();
+			if(cardsData!=null){
+				 this.cardsData = new ArrayList<>();
+
+
+					for (int i=0;i<cardsData.length();i++){
+
+						try {
+							JsonElement mJson = jsonParser.parse(cardsData.getJSONObject(i).toString());
+							StripeCardData stripeCardData = gson.fromJson(mJson, StripeCardData.class);
+							this.cardsData.add(stripeCardData);
+						} catch (JSONException e) {
+							e.printStackTrace();
+
+						}
+
+					}
+
+
+			}
+
 		}
 		this.priority = 0;
 		this.upiCashbackValue = upiCashbackValue;
@@ -130,5 +166,13 @@ public class PaymentModeConfigData {
 
 	public void setUpiCashbackValue(String upiCashbackValue) {
 		this.upiCashbackValue = upiCashbackValue;
+	}
+
+	public ArrayList<StripeCardData> getCardsData() {
+		return cardsData;
+	}
+
+	public void setCardsData(ArrayList<StripeCardData> cardsData) {
+		this.cardsData = cardsData;
 	}
 }

@@ -15,16 +15,16 @@ public class StripeCardData  implements Parcelable {
 
 
     @Expose
-    @SerializedName("card_id")
+    @SerializedName("id")
     private String cardId;
     @Expose
     @SerializedName("last_4")
     private String last4;
     @Expose
-    @SerializedName("expiry_month")
+    @SerializedName("exp_month")
     private String expiryMonth;
     @Expose
-    @SerializedName("expiry_year")
+    @SerializedName("exp_year")
     private String expiryYear;
     @Expose
     @SerializedName("_cvv")

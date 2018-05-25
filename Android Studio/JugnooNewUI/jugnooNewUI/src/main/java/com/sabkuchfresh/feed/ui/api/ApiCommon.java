@@ -141,7 +141,8 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
 						} else {
                             apiCommonCallback.onFinish();
-							if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag())) {
+							if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage()==null?feedCommonResponse.getError():feedCommonResponse.getMessage(),
+                                    feedCommonResponse.getFlag())) {
 								DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage());
 							}
 						}

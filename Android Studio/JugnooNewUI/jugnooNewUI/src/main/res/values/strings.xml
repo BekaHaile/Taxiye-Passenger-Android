@@ -1859,5 +1859,6 @@
     <string name="stripe">Stripe</string>
     <string name="view_card_title">CREDIT CARD</string>
     <string name="add_credit_card">Add Credit Card</string>
+    <string name="view_card_wallet">View Card</string>
 
 </resources>

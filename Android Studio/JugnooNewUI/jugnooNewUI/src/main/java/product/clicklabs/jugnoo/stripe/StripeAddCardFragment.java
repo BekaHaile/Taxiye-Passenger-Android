@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.stripe;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,13 +30,11 @@ import com.stripe.android.view.ExpiryDateEditText;
 import com.stripe.android.view.StripeEditText;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.BuildConfig;
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -64,8 +63,19 @@ public class StripeAddCardFragment extends Fragment {
     @Bind(R.id.textViewTitle)
     TextView textViewTitle;
 
+    private StripeCardsStateListener stripeCardsStateListener;
 
 
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof StripeCardsStateListener){
+            stripeCardsStateListener = (StripeCardsStateListener) context;
+        }
+
+
+    }
 
     @Nullable
     @Override
@@ -205,6 +215,7 @@ public class StripeAddCardFragment extends Fragment {
         params.put("brand",token.getCard().getBrand());
         params.put("exp_month",String.valueOf(token.getCard().getExpMonth()));
         params.put("exp_year",String.valueOf(token.getCard().getExpYear()));
+        params.put("is_delete","0");
 
 
 
@@ -212,6 +223,12 @@ public class StripeAddCardFragment extends Fragment {
         new ApiCommon<StripeCardResponse>(getActivity()).showLoader(true).execute(params, ApiName.ADD_CARD_API, new APICommonCallback<StripeCardResponse>() {
             @Override
             public void onSuccess(StripeCardResponse stripeCardResponse, String message, int flag) {
+
+                if(stripeCardsStateListener!=null){
+                    stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData());
+                }
+
+
                 if(getView()==null || getActivity()==null){
                     return;
                 }

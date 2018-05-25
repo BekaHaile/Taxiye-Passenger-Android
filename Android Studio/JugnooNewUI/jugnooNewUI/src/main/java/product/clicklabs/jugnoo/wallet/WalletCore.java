@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.dialogs.WalletSelectionErrorDialog;
 import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
+import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
@@ -576,7 +577,7 @@ public class WalletCore {
 				PaymentModeConfigData paymentModeConfigData = new PaymentModeConfigData(ji.getString(Constants.KEY_NAME),
 						ji.getInt(Constants.KEY_ENABLED), ji.optString(KEY_OFFER_TEXT, null), ji.optString(KEY_DISPLAY_NAME, null),
 						ji.optString(KEY_UPI_HANDLE, null),ji.optString(KEY_JUGNOO_VPA_HANDLE,null),
-						ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""));
+						ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""),ji.optJSONArray(Constants.KEY_CARDS_DATA));
 				paymentModeConfigDatas.add(paymentModeConfigData);
 			}
 		} catch (Exception e){
@@ -595,7 +596,7 @@ public class WalletCore {
 				PaymentModeConfigData paymentModeConfigData = new PaymentModeConfigData(ji.getString(Constants.KEY_NAME),
 						ji.getInt(Constants.KEY_ENABLED), ji.optString(KEY_OFFER_TEXT, null), ji.optString(KEY_DISPLAY_NAME, null),
 						ji.optString(KEY_UPI_HANDLE, null),ji.optString(KEY_JUGNOO_VPA_HANDLE,null),
-						ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""));
+						ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""),ji.optJSONArray(Constants.KEY_CARDS_DATA));
 				if(paymentModeConfigDatas.indexOf(paymentModeConfigData) > -1) {
 					paymentModeConfigDatas.set(paymentModeConfigDatas.indexOf(paymentModeConfigData), paymentModeConfigData);
 				}
@@ -1115,5 +1116,65 @@ public class WalletCore {
 
 	public void faEventAddWallet(int paymentOption, String suffix){
 	}
+
+	/**
+	 *
+	 *
+	 * @param stripeCardData Card Data object to add
+	 * @return Adds a card to stripe Config data and returns the stripe config data
+	 */
+	public PaymentModeConfigData updateStripeCards(ArrayList<StripeCardData> stripeCardData) {
+		if(paymentModeConfigDatas==null)return null;
+		PaymentModeConfigData stripeConfigData = null;
+		for(PaymentModeConfigData paymentModeConfigData:paymentModeConfigDatas){
+			if(paymentModeConfigData.getPaymentOption()==PaymentOption.STRIPE_CARDS.getOrdinal()){
+
+				stripeConfigData = paymentModeConfigData;
+			}
+		}
+		if(stripeConfigData==null)return null;
+
+		 stripeConfigData.setCardsData(stripeCardData);
+
+		return stripeConfigData;
+
+
+	}
+/*
+	public PaymentModeConfigData deleteStripeCard(String cardId) {
+		if(paymentModeConfigDatas==null)return null;
+		PaymentModeConfigData stripeConfigData = null;
+		for(PaymentModeConfigData paymentModeConfigData:paymentModeConfigDatas){
+			if(paymentModeConfigData.getPaymentOption()==PaymentOption.STRIPE_CARDS.getOrdinal()){
+
+				stripeConfigData = paymentModeConfigData;
+			}
+		}
+		if(stripeConfigData==null)return null;
+
+		ArrayList<StripeCardData> stripeCardsList = stripeConfigData.getCardsData();
+		if(stripeCardsList==null)return stripeConfigData;
+
+
+		for (StripeCardData card: stripeCardsList){
+
+			if(card.getCardId().equals(cardId)){
+				stripeCardsList.remove(card);
+				break;
+			}
+
+
+		}
+
+
+
+		return stripeConfigData;
+
+
+	}
+
+*/
+
+
 
 }

@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.stripe.StripeAddCardFragment;
+import product.clicklabs.jugnoo.stripe.StripeCardsStateListener;
 import product.clicklabs.jugnoo.stripe.StripeViewCardFragment;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -57,6 +58,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
     TextView textViewFreeCharge, textViewFreeChargeBalanceValue,textViewStripeCard;
 
     RelativeLayout relativeLayoutWalletTransactions, relativeLayoutPayTransactions;
+
 
 
     View rootView;
@@ -246,9 +248,9 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 			public void onClick(View view) {
 				relativeLayoutStripe.setEnabled(false);
 				handler.postDelayed(enableStripeRunnable,300);
-
-				boolean open = false;
-				if(open){					// TODO: 24/05/18 check for credit card already exists
+				if(stripeConfigData==null)return;
+				boolean openViewCardScreen = stripeConfigData.getCardsData()!=null && stripeConfigData.getCardsData().size()>0;
+				if(!openViewCardScreen){
 
 					paymentActivity.getSupportFragmentManager().beginTransaction()
 							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
@@ -260,7 +262,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 				}else{
 					paymentActivity.getSupportFragmentManager().beginTransaction()
 							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-							.add(R.id.fragLayout,  StripeViewCardFragment.newInstance(new StripeCardData("random_id","4242","JCB")), StripeViewCardFragment.class.getName())
+							.add(R.id.fragLayout,  StripeViewCardFragment.newInstance(stripeConfigData.getCardsData().get(0)), StripeViewCardFragment.class.getName())
 							.addToBackStack(StripeViewCardFragment.class.getName())
 							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
@@ -402,22 +404,38 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
                             linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
                         }else if(paymentModeConfigData.getPaymentOption()==PaymentOption.STRIPE_CARDS.getOrdinal()){
 							linearLayoutWalletContainer.addView(relativeLayoutStripe);
+							setStripePaymentUI(paymentModeConfigData);
+
 						}
 					}
 				}
-				linearLayoutWalletContainer.addView(relativeLayoutStripe);// TODO: 24/05/18 Remove
 			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}
 
+	private PaymentModeConfigData stripeConfigData;
+	public void setStripePaymentUI(PaymentModeConfigData paymentModeConfigData) {
 
-    @Override
+		this.stripeConfigData = paymentModeConfigData;
+		if (relativeLayoutStripe != null && paymentModeConfigData!=null) {
+			if (paymentModeConfigData.getCardsData() != null && paymentModeConfigData.getCardsData().size() > 0) {
+				textViewStripeCard.setText(getString(R.string.view_card_wallet));
+			} else {
+				textViewStripeCard.setText(getString(R.string.add_credit_card));
+			}
+		}
+	}
+
+
+	@Override
 	public void onDestroy() {
 		super.onDestroy();
         ASSL.closeActivity(relative);
         System.gc();
 	}
+
+
 
 }
