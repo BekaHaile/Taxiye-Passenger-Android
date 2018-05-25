@@ -58,22 +58,15 @@ public class EmergencyModeEnabledFragment extends Fragment {
 
 	private String driverId, engagementId;
 
-	public EmergencyModeEnabledFragment(String driverId, String engagementId){
-		this.driverId = driverId;
-		this.engagementId = engagementId;
-	}
+	public EmergencyModeEnabledFragment(){}
 
-	@Override
-	public void onStart() {
-		super.onStart();
-//		FlurryAgent.init(activity, Config.getFlurryKey());
-//		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-//		FlurryAgent.onEvent(EmergencyModeEnabledFragment.class.getSimpleName() + " started");
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
+	public static EmergencyModeEnabledFragment newInstance(String driverId, String engagementId){
+		EmergencyModeEnabledFragment fragment = new EmergencyModeEnabledFragment();
+		Bundle bundle = new Bundle();
+		bundle.putString(Constants.KEY_DRIVER_ID, driverId);
+		bundle.putString(Constants.KEY_ENGAGEMENT_ID, engagementId);
+		fragment.setArguments(bundle);
+		return fragment;
 	}
 
 	@Override
@@ -104,6 +97,8 @@ public class EmergencyModeEnabledFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_emergency_mode_enabled, container, false);
 
+		driverId = getArguments().getString(Constants.KEY_DRIVER_ID);
+		engagementId = getArguments().getString(Constants.KEY_ENGAGEMENT_ID);
 
         activity = getActivity();
 
@@ -145,7 +140,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 						break;
 
 					case R.id.buttonCallPolice:
-						Utils.openCallIntent(activity, getString(R.string.police_number));
+						Utils.openCallIntent(activity, Prefs.with(activity).getString(Constants.KEY_EMERGENCY_NO, getString(R.string.police_number)));
 						break;
 
 					case R.id.buttonCallEmergencyContact:

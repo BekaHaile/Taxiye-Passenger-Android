@@ -201,7 +201,7 @@
                         android:layout_marginBottom="10px"
                         android:layout_marginTop="10px"
                         android:gravity="center_horizontal"
-                        android:text="23 Km"
+                        android:text="23 km"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_30"
 

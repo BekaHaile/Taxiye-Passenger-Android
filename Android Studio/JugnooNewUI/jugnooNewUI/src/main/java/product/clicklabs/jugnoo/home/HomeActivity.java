@@ -295,7 +295,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     //Assigining layout
     RelativeLayout assigningLayout;
-    TextView textViewFindingDriver;
+    TextView textViewFindingDriver, tvBidTimer;
+    private ProgressWheel pwBidTimer;
     Button initialCancelRideBtn;
     public RelativeLayout relativeLayoutAssigningDropLocationParent;
     private RelativeLayout relativeLayoutAssigningDropLocationClick, relativeLayoutDestinationHelp, relativeLayoutConfirmBottom, relativeLayoutConfirmRequest;
@@ -486,7 +487,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private FloatingActionButton fabFresh;
     private FloatingActionButton fabAutos;
     private View fabExtra;*/
-    private Button bChatDriver;
+    private TextView bChatDriver;
     private RelativeLayout rlChatDriver;
     private TextView tvChatCount;
     private ArrayList<Marker> markersSpecialPickup = new ArrayList<>();
@@ -717,6 +718,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         assigningLayout = (RelativeLayout) findViewById(R.id.assigningLayout);
         textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver);
         textViewFindingDriver.setTypeface(Fonts.mavenLight(this));
+        pwBidTimer = (ProgressWheel) findViewById(R.id.pwBidTimer);
+        tvBidTimer = (TextView) findViewById(R.id.tvBidTimer);
+        tvBidTimer.setTypeface(Fonts.mavenMedium(this));
         initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn);
         initialCancelRideBtn.setTypeface(Fonts.mavenRegular(this));
         findDriverJugnooAnimation = (ImageView) findViewById(R.id.findDriverJugnooAnimation);
@@ -844,10 +848,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         tvPayOnlineIn = (TextView) findViewById(R.id.tvPayOnlineIn);
 
         rlChatDriver = (RelativeLayout) findViewById(R.id.rlChatDriver);
-        bChatDriver = (Button) findViewById(R.id.bChatDriver);
-        bChatDriver.setOnClickListener(this);
-        tvChatCount = (TextView) findViewById(R.id.tvChatCount);
-        tvChatCount.setTypeface(Fonts.mavenMedium(this));
+        bChatDriver = (TextView) findViewById(R.id.bChatDriver); bChatDriver.setOnClickListener(this);
+        tvChatCount = (TextView) findViewById(R.id.tvChatCount); tvChatCount.setTypeface(Fonts.mavenMedium(this));
 
 
         ratingBarRSFeedback = (RatingBar) findViewById(R.id.ratingBarRSFeedback);
@@ -2580,6 +2582,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             Data.autoData.setcSessionId("");
             Data.autoData.setBidInfos(null);
+            totalBidTime = -1;
+            Prefs.with(HomeActivity.this).remove(KEY_REVERSE_BID_TIME_INTERVAL);
             Data.autoData.setcEngagementId("");
             dropLocationSearchText = "";
 
@@ -2813,7 +2817,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     e.printStackTrace();
                 }
             } else {
-                Utils.showToast(HomeActivity.this, "Waiting for your location...");
+                Utils.showToast(HomeActivity.this, getString(R.string.waiting_for_location));
                 reconnectLocationFetchers();
             }
         }
@@ -3162,6 +3166,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
 
                         textViewFindingDriver.setText(R.string.finding_a_driver);
+                        pwBidTimer.setVisibility(View.GONE);
+                        tvBidTimer.setVisibility(View.GONE);
                         updateBidsView();
                         initialCancelRideBtn.setVisibility(View.GONE);
                         try {
@@ -4097,7 +4103,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (PassengerScreenMode.P_REQUEST_FINAL == mode || PassengerScreenMode.P_DRIVER_ARRIVED == mode) {
                 updateDriverETAText(mode);
             } else {
-                textViewInRideState.setText("Ride in progress");
+                textViewInRideState.setText(R.string.ride_in_progress);
             }
 
             try {
@@ -4166,10 +4172,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                textViewInRideState.setText("Driver Enroute");
+                textViewInRideState.setText(R.string.driver_enroute);
             }
         } else if (PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-            textViewInRideState.setText("Arrived at Pickup");
+            textViewInRideState.setText(R.string.arrived_at_pickup);
         }
     }
 
@@ -4500,7 +4506,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                DialogPopup.dialogBanner(HomeActivity.this, "Thank you for your valuable feedback");
+                                DialogPopup.dialogBanner(HomeActivity.this, getString(R.string.thank_you_for_valuable_feedback));
                             }
                         }, 300);
                     }
@@ -5390,12 +5396,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         clearMarkersDriversFindADriver();
                         int regionDriversCount = 0;
                         for (int i = 0; i < Data.autoData.getDriverInfos().size(); i++) {
-                            if (Data.autoData.getDriverInfos().get(i).getOperatorId() == region.getOperatorId()
-                                    && region.getVehicleType().equals(Data.autoData.getDriverInfos().get(i).getVehicleType())
-                                    && Data.autoData.getDriverInfos().get(i).getRegionIds().contains(region.getRegionId())
+                            DriverInfo driver = Data.autoData.getDriverInfos().get(i);
+                            if(driver.getOperatorId() == region.getOperatorId()
+                                    && region.getVehicleType().equals(driver.getVehicleType())
+                                    && driver.getRegionIds().contains(region.getRegionId())
+                                    && (driver.getPaymentMethod() == DriverInfo.PaymentMethod.BOTH.getOrdinal() || driver.getPaymentMethod() == 0
+                                    || Data.autoData.getPickupPaymentOption() == PaymentOption.CASH.getOrdinal())
                                     ) {
-                                Data.autoData.getDriverInfos().get(i).setVehicleIconSet(region.getVehicleIconSet().getName());
-                                markersDriversFindADriver.add(addDriverMarkerForCustomer(Data.autoData.getDriverInfos().get(i),
+                                driver.setVehicleIconSet(region.getVehicleIconSet().getName());
+                                markersDriversFindADriver.add(addDriverMarkerForCustomer(driver,
                                         region.getVehicleIconSet().getIconMarker()));
                                 regionDriversCount++;
                             }
@@ -5678,7 +5687,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void cancelCustomerRequestAsync(final Activity activity) {
         if (MyApplication.getInstance().isOnline()) {
 
-            DialogPopup.showLoadingDialog(activity, "Loading...");
+            DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 
             HashMap<String, String> params = new HashMap<>();
 
@@ -5811,10 +5820,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
             if (zeroDriversNearby) {
-                textMessage.setText("Sorry there are no drivers available nearby within 3 km. We will look into it");
+                textMessage.setText(R.string.sorry_no_drivers_available_nearby);
             } else {
                 if ("".equalsIgnoreCase(message)) {
-                    textMessage.setText("Sorry, All our drivers are currently busy. We are unable to offer you services right now. Please try again sometime later.");
+                    textMessage.setText(R.string.sorry_all_drivers_busy);
                 } else {
                     textMessage.setText(message);
                 }
@@ -5925,7 +5934,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     public void endRideRetryDialog(final Activity activity, final String engagementId, String errorMessage) {
-        DialogPopup.alertPopupWithListener(activity, "", errorMessage + "\nTap OK to retry", new OnClickListener() {
+        DialogPopup.alertPopupWithListener(activity, "", errorMessage, new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -6705,7 +6714,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
                     && driverInfo.getRegionIds() != null
                     && driverInfo.getRegionIds().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
-                    ) {
+					&& (driverInfo.getPaymentMethod() == DriverInfo.PaymentMethod.BOTH.getOrdinal() || driverInfo.getPaymentMethod() == 0
+					|| Data.autoData.getPickupPaymentOption() == PaymentOption.CASH.getOrdinal())
+                    ){
                 driversCount++;
             }
         }
@@ -6982,6 +6993,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             int operatorId = jObj.optInt(KEY_OPERATOR_ID, 0);
             String iconSet = jObj.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
             String currency = jObj.optString(KEY_CURRENCY);
+            Prefs.with(this).save(Constants.KEY_EMERGENCY_NO, jObj.optString(KEY_EMERGENCY_NO, getString(R.string.police_number)));
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
@@ -7176,7 +7188,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     protected void onStop() {
         try {
-            mGoogleApiClient.disconnect();
+            if(mGoogleApiClient != null) {
+                mGoogleApiClient.disconnect();
+            }
             super.onStop();
 //            FlurryAgent.onEndSession(this);
         } catch (Exception e) {
@@ -7543,10 +7557,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     }
                                                 }
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
-                                                if (jObj.has(Constants.KEY_BIDS)) {
-                                                    Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
-                                                    updateBidsView();
-                                                }
+                                                Data.autoData.setBidInfos(JSONParser.parseBids(HomeActivity.this, Constants.KEY_BIDS, jObj));
+                                                runOnUiThread(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        try {
+                                                            updateBidsView();
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                });
                                             } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag
                                                     || ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag
                                                     || ApiResponseFlags.RIDE_ARRIVED.getOrdinal() == flag) {
@@ -7785,7 +7806,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
 
             try {
-                AppEventsLogger.newLogger(this).logPurchase(BigDecimal.valueOf(Data.autoData.getEndRideData().toPay), Currency.getInstance("INR"));
+                AppEventsLogger.newLogger(this).logPurchase(BigDecimal.valueOf(Data.autoData.getEndRideData().toPay), Currency.getInstance(Data.autoData.getEndRideData().getCurrency()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -7831,7 +7852,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this,
                             getString(R.string.jugnoo_cash_added),
                             message,
-                            "Check Balance", "Call Support",
+                            getString(R.string.check_balance), getString(R.string.call_support),
                             new OnClickListener() {
 
                                 @Override
@@ -8093,7 +8114,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             public void run() {
                                 try {
                                     if (showDialogs) {
-                                        DialogPopup.showLoadingDialog(HomeActivity.this, "Loading...");
+                                        DialogPopup.showLoadingDialog(HomeActivity.this, getString(R.string.loading));
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -8102,7 +8123,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         });
                         int currentUserStatus = 2;
                         final PassengerScreenMode passengerScreenModeOld = passengerScreenMode;
-                        String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
+                        final String resp = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
                                 currentUserStatus, getApiFindADriver(), getCurrentPlaceLatLng());
                         if (resp.contains(Constants.SERVER_TIMEOUT)) {
                             String resp1 = new JSONParser().getUserStatus(HomeActivity.this, Data.userData.accessToken,
@@ -8134,6 +8155,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                 && PassengerScreenMode.P_IN_RIDE == passengerScreenMode
                                                 && Data.autoData.getDropLatLng() != null) {
                                             // havan karo yahan pe
+                                        }
+                                        if(resp.equalsIgnoreCase(Constants.REJECT_API)){
+                                            return;
                                         }
                                         switchUICalledFromStateRestore = true;
                                         startUIAfterGettingUserStatus();
@@ -8189,7 +8213,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
         public void displayLessAccurateToast(Context context) {
-            Utils.showToast(context, "Please wait for sometime. We need to get your more accurate location.");
+            Utils.showToast(context, getString(R.string.please_wait_more_accurate_location));
         }
 
         public void initRequestRideUi() {
@@ -8446,8 +8470,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             Utils.formatCurrencyValue(currency, maxFare));
                     if (convenienceCharge > 0) {
                         textViewIncludes.setVisibility(View.VISIBLE);
-                        textViewIncludes.setText("Convenience Charges "
-                                + Utils.formatCurrencyValue(currency, convenienceCharge));
+                        textViewIncludes.setText(getString(R.string.convenience_charge_format, Utils.formatCurrencyValue(currency, convenienceCharge)));
                     } else {
                         textViewIncludes.setVisibility(View.GONE);
                         textViewIncludes.setText("");
@@ -8594,7 +8617,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         HashMap<String, String> params = new HashMap<>();
         if (MyApplication.getInstance().isOnline()) {
 
-            DialogPopup.showLoadingDialog(this, "Loading...");
+            DialogPopup.showLoadingDialog(this, getString(R.string.loading));
             params.put(KEY_ACCESS_TOKEN, Data.userData.accessToken);
             if (fromLogin) {
                 params.put(KEY_ENGAGEMENT_ID, "");
@@ -9369,7 +9392,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 if (!isCustomCouponText) {
                     final StyleSpan bss = new StyleSpan(Typeface.BOLD);
-                    final SpannableStringBuilder sb = new SpannableStringBuilder(" - View all offers.");
+                    final SpannableStringBuilder sb = new SpannableStringBuilder(" "+getString(R.string.view_all_offers));
                     sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     textViewPoolInfo1.append(sb);
                 }
@@ -9879,7 +9902,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 if (passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                                     String message = intent.getStringExtra(Constants.KEY_MESSAGE);
                                     JSONObject jObj = new JSONObject(message);
-                                    Data.autoData.setBidInfos(JSONParser.parseBids(Constants.KEY_BIDS, jObj));
+                                    Data.autoData.setBidInfos(JSONParser.parseBids(HomeActivity.this, Constants.KEY_BIDS, jObj));
                                     updateBidsView();
                                 }
                             } else if (PushFlags.MPESA_PAYMENT_SUCCESS.getOrdinal() == flag) {
@@ -9902,8 +9925,50 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void updateBidsView() {
         bidsPlacedAdapter.setList(Data.autoData.getBidInfos());
-        textViewFindingDriver.setVisibility(bidsPlacedAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE);
+        textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.tap_a_bid);
+		long diff = Prefs.with(this).getLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L);
+        if(diff <= 0){
+            handler.removeCallbacks(runnableBidTimer);
+            pwBidTimer.setVisibility(View.GONE);
+            tvBidTimer.setVisibility(View.GONE);
+        } else {
+            pwBidTimer.setVisibility(View.VISIBLE);
+            tvBidTimer.setVisibility(View.VISIBLE);
+            if(totalBidTime < 0){
+                totalBidTime = (int) diff;
+                bidTime = totalBidTime;
+                handler.removeCallbacks(runnableBidTimer);
+                handler.post(runnableBidTimer);
+            } else {
+                bidTime = (int) diff;
+            }
+        }
+
     }
+
+
+    private int bidTime = -1;
+    private int totalBidTime = -1;
+    private Runnable runnableBidTimer = new Runnable() {
+        @Override
+        public void run() {
+            bidTime--;
+            tvBidTimer.setText(String.valueOf(bidTime));
+            pwBidTimer.setInstantProgress(((float)(bidTime)) / (float)totalBidTime);
+            rvBidsIncoming.clearAnimation();
+            if(bidTime > 0) {
+                if(bidsPlacedAdapter.getItemCount() > 0 && bidTime <= 20){
+                    if(bidTime % 4 == 0){
+                        Animation shake = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.scale_bounce_slow);
+                        rvBidsIncoming.startAnimation(shake);
+                    }
+                }
+                handler.postDelayed(this, 1000);
+            } else {
+                handler.removeCallbacks(this);
+            }
+        }
+    };
 
     private TrackingLogHelper trackingLogHelper;
 

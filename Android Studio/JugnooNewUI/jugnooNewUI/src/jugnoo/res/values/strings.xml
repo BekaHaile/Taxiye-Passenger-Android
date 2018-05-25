@@ -609,7 +609,7 @@
     <string name="notifications">Notifications</string>
     <string name="push_notification_pref">Push Notifications Preferences</string>
     <string name="notification_pref_desc">We respect your personal space. Help us customize your experience by personalizing notifications you receive.</string>
-    <string name="fare_threshold_distance_message_format">First %s Kms included in base fare</string>
+    <string name="fare_threshold_distance_message_format">First %s included in base fare</string>
 
     <string name="auto">Auto</string>
     <string name="autos">Autos</string>

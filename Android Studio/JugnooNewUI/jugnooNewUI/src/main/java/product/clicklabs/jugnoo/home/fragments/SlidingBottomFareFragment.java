@@ -35,7 +35,7 @@ public class SlidingBottomFareFragment extends Fragment implements GAAction, GAC
     private HomeActivity activity;
     private LinearLayout linearLayoutRoot;
     private RelativeLayout relativeLayoutPriorityTip;
-    private TextView textViewPriorityTipValue, textViewKMValue, textViewMinValue, textViewFareEstimage, textViewThreshold;
+    private TextView textViewPriorityTipValue, textViewKM, textViewKMValue, textViewMinValue, textViewFareEstimage, textViewThreshold;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class SlidingBottomFareFragment extends Fragment implements GAAction, GAC
 
         relativeLayoutPriorityTip = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutPriorityTip);
         textViewPriorityTipValue = (TextView)rootView.findViewById(R.id.textViewPriorityTipValue);textViewPriorityTipValue.setTypeface(Fonts.mavenRegular(activity));
-        ((TextView)rootView.findViewById(R.id.textViewKM)).setTypeface(Fonts.mavenRegular(activity));
+        textViewKM = (TextView)rootView.findViewById(R.id.textViewKM); textViewKM.setTypeface(Fonts.mavenRegular(activity));
         ((TextView)rootView.findViewById(R.id.textViewMin)).setTypeface(Fonts.mavenRegular(activity));
         textViewKMValue = (TextView)rootView.findViewById(R.id.textViewKMValue);textViewKMValue.setTypeface(Fonts.mavenRegular(activity));
         textViewMinValue = (TextView)rootView.findViewById(R.id.textViewMinValue);textViewMinValue.setTypeface(Fonts.mavenRegular(activity));
@@ -90,6 +90,7 @@ public class SlidingBottomFareFragment extends Fragment implements GAAction, GAC
         try {
             textViewKMValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerKm));
             textViewMinValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerMin));
+            textViewKM.setText(activity.getString(R.string.per_format, Utils.getDistanceUnit(Data.autoData.getFareStructure().getDistanceUnit())));
 
 
             textViewThreshold.setVisibility(View.GONE);

@@ -58,7 +58,7 @@ android:splitMotionEvents="false" >
             android:layout_height="2px"
             android:background="@color/grey_light" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="90px"
             android:layout_gravity="center_horizontal"
@@ -66,35 +66,34 @@ android:splitMotionEvents="false" >
             android:splitMotionEvents="false" >
 
             <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_white_grey_blr_selector"
+                android:singleLine="true"
+                android:text="@string/cancel"
+                android:textColor="@color/text_color"
+                android:textSize="34px" />
+
+
+            <ImageView
+                android:layout_width="2px"
+                android:layout_height="match_parent"
+                android:background="@color/grey_light" />
+
+            <Button
                 android:id="@+id/btnOk"
-                android:layout_width="307px"
-                android:layout_height="90px"
-                android:layout_alignParentEnd="true"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:background="@drawable/button_white_grey_brr_selector"
                 android:singleLine="true"
                 android:text="@string/ok"
                 android:textColor="@color/text_color"
                 android:textSize="34px" />
 
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="2px"
-                android:layout_height="match_parent"
-                android:layout_centerHorizontal="true"
-                android:background="@color/grey_light" />
-
-            <Button
-                android:id="@+id/btnCancel"
-                android:layout_width="307px"
-                android:layout_height="90px"
-                android:layout_alignParentTop="true"
-                android:layout_toStartOf="@+id/imageView1"
-                android:background="@drawable/button_white_grey_blr_selector"
-                android:singleLine="true"
-                android:text="@string/cancel"
-                android:textColor="@color/text_color"
-                android:textSize="34px" />
-        </RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 </RelativeLayout>

@@ -271,6 +271,9 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 				RestClient.getApiService().getRecentRides(params, new Callback<HistoryResponse>() {
 					@Override
 					public void success(HistoryResponse historyResponse, Response response) {
+						if(getView() == null){
+							return;
+						}
 						String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
 						Log.i("Server response", "response = " + responseStr);
 						try {
@@ -302,6 +305,9 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 
 					@Override
 					public void failure(RetrofitError error) {
+						if(getView() == null){
+							return;
+						}
 						Log.e(TAG, "getRecentRidesAPI error="+error.toString());
 						updateListData(getString(R.string.some_error_occured_tap_to_retry), true);
 						swipeRefreshLayout.setRefreshing(false);

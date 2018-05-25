@@ -115,8 +115,8 @@ public class ApiCommon<T extends FeedCommonResponse> {
             apiCommonCallback.onFinish();
             if (!apiCommonCallback.onNotConnected()) {
                 retryDialog(DialogErrorType.NO_NET);
-                return;
             }
+            return;
 
         }
 
@@ -256,6 +256,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 break;
             case SELECT_BID:
                 RestClient.getApiService().selectTheBid(params, callback);
+                break;
+            case FETCH_CHAT:
+                RestClient.getChatApiService().fetchChat(params, callback);
+                break;
+            case POST_CHAT:
+                RestClient.getChatApiService().postChat(params, callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");

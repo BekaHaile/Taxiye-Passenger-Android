@@ -2,6 +2,8 @@ package product.clicklabs.jugnoo.apis;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -53,7 +55,7 @@ public class ApiFareEstimate {
                 if (sourceLatLng != null && destLatLng != null) {
                     DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
                     RestClient.getGoogleApiService().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
-                            destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false, new retrofit.Callback<SettleUserDebt>() {
+                            destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false, getDistanceUnit(), new retrofit.Callback<SettleUserDebt>() {
                                 @Override
                                 public void success(SettleUserDebt settleUserDebt, Response response) {
                                     try {
@@ -109,6 +111,15 @@ public class ApiFareEstimate {
             e.printStackTrace();
             callback.onDirectionsFailure();
         }
+    }
+
+    @NonNull
+    private String getDistanceUnit() {
+        String units = "metric";
+        if(Data.autoData != null && !TextUtils.isEmpty(Data.autoData.getDistanceUnit())){
+			units = "imperial";
+		}
+        return units;
     }
 
     public interface Callback{

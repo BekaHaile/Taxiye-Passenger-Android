@@ -161,7 +161,7 @@ public class ApiFindADriver {
 					String brandingStatus = driver.getBrandingStatus();
 					Data.autoData.getDriverInfos().add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
 							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(), brandingStatus,
-							driver.getOperatorId()));
+							driver.getOperatorId(), driver.getPaymentMethod()));
 				}
 			}
 
@@ -169,6 +169,8 @@ public class ApiFindADriver {
 			if(findADriverResponse.getFareFactor() != null) {
 				Data.autoData.setFareFactor(findADriverResponse.getFareFactor());
 			}
+			Data.autoData.setDistanceUnit(findADriverResponse.getDistanceUnit());
+
 			Data.autoData.setDriverFareFactor(1);
 			if(findADriverResponse.getDriverFareFactor() != null) {
 				Data.autoData.setDriverFareFactor(findADriverResponse.getDriverFareFactor());
@@ -381,7 +383,8 @@ public class ApiFindADriver {
 								fareStructure.getFarePerWaitingMin(),
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
 								fareStructure.getDisplayBaseFare(),
-								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(), findADriverResponse.getCurrency());
+								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(),
+								findADriverResponse.getCurrency(), findADriverResponse.getDistanceUnit());
 						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
 							try {
 								if (Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()

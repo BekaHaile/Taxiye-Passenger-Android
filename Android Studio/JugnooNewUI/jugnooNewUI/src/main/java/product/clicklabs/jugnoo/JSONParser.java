@@ -338,6 +338,7 @@ public class JSONParser implements Constants {
             String referAllTitleLogin = autoData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
             int isRazorpayEnabled = autoData.optInt(KEY_IS_RAZORPAY_ENABLED, 0);
 
+
             NearbyPickupRegions nearbyPickupRegionses = autosData.getNearbyPickupRegions();
 
             Data.autoData = new AutoData(destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1
@@ -554,6 +555,8 @@ public class JSONParser implements Constants {
             if(autos.getFareFactor() != null) {
                 Data.autoData.setFareFactor(autos.getFareFactor());
             }
+            Data.autoData.setDistanceUnit(autos.getDistanceUnit());
+
             Data.autoData.setDriverFareFactor(1);
             if(autos.getDriverFareFactor() != null) {
                 Data.autoData.setDriverFareFactor(autos.getDriverFareFactor());
@@ -613,7 +616,8 @@ public class JSONParser implements Constants {
 								fareStructure.getFarePerWaitingMin(),
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
 								fareStructure.getDisplayBaseFare(),
-								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(), autos.getCurrency());
+								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(), autos.getCurrency(),
+                                autos.getDistanceUnit());
 						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
 							try {
 								if (Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
@@ -650,7 +654,7 @@ public class JSONParser implements Constants {
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){
-        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null, null, 0, null);
+        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null, null, 0, null, null);
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getFareStructure(){
@@ -742,6 +746,7 @@ public class JSONParser implements Constants {
 
             HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
             Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+            Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jLastRideData.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -853,6 +858,7 @@ public class JSONParser implements Constants {
         int totalRide = jLastRideData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 0);
         int status = jLastRideData.optInt(Constants.KEY_STATUS, EngagementStatus.ENDED.getOrdinal());
         String currency = jLastRideData.optString(Constants.KEY_CURRENCY);
+        String distanceUnit = jLastRideData.optString(Constants.KEY_DISTANCE_UNIT);
 
         String supportNumber = jLastRideData.optString(KEY_SUPPORT_NUMBER, "");
 
@@ -877,7 +883,7 @@ public class JSONParser implements Constants {
                 sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge,paidUsingMpesa,paidUsingRazorpay, totalRide, status, supportNumber
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
-                showPaymentOptions, paymentOption, operatorId, currency);
+                showPaymentOptions, paymentOption, operatorId, currency, distanceUnit);
 	}
 
 
@@ -910,12 +916,20 @@ public class JSONParser implements Constants {
                 nameValuePairs.put(Constants.KEY_AUTOS_BENEFIT_ID, String.valueOf(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getBenefitIdAutos()));
             }
             new HomeUtil().putDefaultParams(nameValuePairs);
+            long apiTime = System.currentTimeMillis();
             Response response = RestClient.getApiService().getCurrentUserStatus(nameValuePairs);
+            apiTime = System.currentTimeMillis() - apiTime;
             String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
             if (response == null || responseStr == null) {
                 return Constants.SERVER_TIMEOUT;
             } else {
                 JSONObject jObject1 = new JSONObject(responseStr);
+                if(apiTime > 2000
+                        && Data.autoData != null && !"".equalsIgnoreCase(Data.autoData.getcSessionId())
+                        && jObject1.optInt(Constants.KEY_FLAG, ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal()) == ApiResponseFlags.NO_ACTIVE_SESSION.getOrdinal()){
+                    Log.w(TAG, "special case of state restore api lagging");
+                    return Constants.REJECT_API;
+                }
                 String resp = parseCurrentUserStatus(context, currentUserStatus, jObject1);
 
                 if(PassengerScreenMode.P_INITIAL == HomeActivity.passengerScreenMode
@@ -1000,7 +1014,7 @@ public class JSONParser implements Constants {
                         Data.autoData.setPickupLatLng(new LatLng(assigningLatitude, assigningLongitude));
                         Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""));
                         parseDropLatLng(jObject1);
-                        bidInfos = JSONParser.parseBids(Constants.KEY_BIDS, jObject1);
+                        bidInfos = JSONParser.parseBids(context, Constants.KEY_BIDS, jObject1);
 
                         engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
                     } else if (ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag) {
@@ -1028,6 +1042,8 @@ public class JSONParser implements Constants {
                             chatEnabled = jObject.optInt("chat_enabled", 0);
                             operatorId = jObject.optInt(KEY_OPERATOR_ID, 0);
                             currency = jObject.optString(KEY_CURRENCY);
+
+                            Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jObject.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
                             try {
                                 if(jObject.has(KEY_OP_DROP_LATITUDE) && jObject.has(KEY_OP_DROP_LONGITUDE)) {
@@ -1253,7 +1269,7 @@ public class JSONParser implements Constants {
                     String brandingStatus = driver.getBrandingStatus();
                     Data.autoData.getDriverInfos().add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage,
                             phoneNo, rating, carNumber, 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(),
-                            brandingStatus, driver.getOperatorId()));
+                            brandingStatus, driver.getOperatorId(), driver.getPaymentMethod()));
                 }
             }
         } catch (Exception e) {
@@ -1727,7 +1743,8 @@ public class JSONParser implements Constants {
         }
     }
 
-    public static ArrayList<BidInfo> parseBids(String arrayKeyName, JSONObject jsonObject){
+    public static ArrayList<BidInfo> parseBids(Context context, String arrayKeyName, JSONObject jsonObject){
+        Prefs.with(context).save(KEY_REVERSE_BID_TIME_INTERVAL, jsonObject.optLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L));
         ArrayList<BidInfo> bidInfos = new ArrayList<>();
         try{
             if(jsonObject.has(arrayKeyName)){
@@ -1737,8 +1754,9 @@ public class JSONParser implements Constants {
                     bidInfos.add(new BidInfo(object.optInt(Constants.KEY_ENGAGEMENT_ID),
                             object.optDouble(Constants.KEY_BID_VALUE),
                             object.optString(Constants.KEY_CURRENCY),
-                            object.optDouble(Constants.KEY_ACCEPT_DISTANCE),
-                            object.optDouble(Constants.KEY_DRIVER_RATING)));
+                            object.optDouble(Constants.KEY_ACCEPT_DISTANCE),object.optString(Constants.KEY_ACCEPT_DISTANCE_TEXT),
+                            object.optDouble(Constants.KEY_DRIVER_RATING),
+                            object.optString(Constants.KEY_CREATED_AT, DateOperations.getCurrentTimeInUTC())));
                 }
             }
         } catch (Exception ignored){

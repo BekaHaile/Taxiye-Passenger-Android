@@ -272,6 +272,7 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 										int paytm = jTransactionI.optInt(Constants.KEY_PAYTM, 0);
 										int mobikwik = jTransactionI.optInt(Constants.KEY_MOBIKWIK, 0);
 										int freecharge = jTransactionI.optInt(Constants.KEY_FREECHARGE, 0);
+										int mpesa = jTransactionI.optInt(Constants.KEY_MPESA, 0);
 										int pay = jTransactionI.optInt(Constants.KEY_JUGNOO_PAY, WalletTransactionsFragment.this.pay);
 
 										if(pay == 1){
@@ -279,7 +280,7 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 													jTransactionI.optInt("txn_type", 0),
 													DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(jTransactionI.optString("date"))),
 													"", "", jTransactionI.optDouble("amount"),
-													paytm, mobikwik, freecharge, pay, jTransactionI.optInt("status", 0),
+													paytm, mobikwik, freecharge,mpesa, pay, jTransactionI.optInt("status", 0),
 													jTransactionI.optString("name", ""),
 													jTransactionI.optString(Constants.KEY_CURRENCY)));
 										} else {
@@ -289,7 +290,7 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 													jTransactionI.getString("txn_date"),
 													jTransactionI.getString("txn_text"),
 													jTransactionI.getDouble("amount"),
-													paytm, mobikwik, freecharge, pay, 0, "",
+													paytm, mobikwik, freecharge,mpesa, pay, 0, "",
 													jTransactionI.optString(Constants.KEY_CURRENCY)));
 										}
 									}

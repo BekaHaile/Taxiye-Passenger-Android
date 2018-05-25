@@ -130,6 +130,9 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
     @SerializedName("currency")
     @Expose
     private String currency;
+    @SerializedName("distance_unit")
+    @Expose
+    private String distanceUnit;
     @SerializedName("menu")
     @Expose
     private List<MenuInfo> menuInfoList;
@@ -502,5 +505,13 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
 
     public void setMenuInfoList(List<MenuInfo> menuInfoList) {
         this.menuInfoList = menuInfoList;
+    }
+
+    public String getDistanceUnit() {
+        return distanceUnit;
+    }
+
+    public void setDistanceUnit(String distanceUnit) {
+        this.distanceUnit = distanceUnit;
     }
 }

@@ -414,19 +414,16 @@ public class Database2 {                                                        
         }
     }
 
-    public int deletePendingAPICall(int apiId){
+    public void deletePendingAPICall(int apiId){
         try{
-            return database.delete(TABLE_PENDING_API_CALLS, API_ID + "=" + apiId, null);
+            database.delete(TABLE_PENDING_API_CALLS, API_ID + "=" + apiId, null);
         } catch(Exception e){
             e.printStackTrace();
         }
-        return 0;
     }
 
-    public void checkStartPendingApisService(Context context){
-        if(!Utils.isServiceRunning(context, PushPendingCallsService.class.getName())){
-            context.startService(new Intent(context, PushPendingCallsService.class));
-        }
+    private void checkStartPendingApisService(Context context){
+        context.startService(new Intent(context, PushPendingCallsService.class));
     }
 
 

@@ -1,112 +1,86 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-import android.os.IBinder;
-import android.os.SystemClock;
+import android.support.annotation.Nullable;
 
+import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.datastructure.PendingAPICall;
+import product.clicklabs.jugnoo.datastructure.PendingCall;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
-public class PushPendingCallsService extends Service {
-	
+public class PushPendingCallsService extends IntentService {
+	private final String TAG = PushPendingCallsService.class.getSimpleName();
+
 	public PushPendingCallsService() {
-		Log.e("PushPendinsCallsService", " instance created");
+		this("RazorpayCallbackService");
+	}
+
+	public PushPendingCallsService(String name){
+		super(name);
 	}
 
 	@Override
-	public IBinder onBind(Intent intent) {
-		throw new UnsupportedOperationException("Not yet implemented");
+	protected void onHandleIntent(@Nullable Intent intent) {
+		onReceive(this);
 	}
-	
-	
-	@Override
-    public void onCreate() {
-        
-    }
+	public void onReceive(final Context context) {
+		try {
+			ArrayList<PendingAPICall> pendingAPICalls = MyApplication.getInstance().getDatabase2().getAllPendingAPICalls();
+			for(PendingAPICall pendingAPICall : pendingAPICalls){
+				Log.e(TAG, "pendingAPICall=" + pendingAPICall);
+				startAPI(pendingAPICall);
+			}
 
-	
-    @Override
-    public void onStart(Intent intent, int startId) {
-        try{
-        	Log.i("PushPendinsCallsService started", "=======");
-            Prefs.with(this).save(SPLabels.PENDING_CALLS_RETRY_COUNT, 0);
-            startUploadPathAlarm();
-        } catch(Exception e){
-        	e.printStackTrace();
-        }
-    }
-    
-    
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-    	super.onStartCommand(intent, flags, startId);
-    	return Service.START_STICKY;
-    }
-    
-    
-    @Override
-    public void onTaskRemoved(Intent rootIntent) {
-    	try {
-	    	Log.e("onTaskRemoved","="+rootIntent);
-	    	Intent restartService = new Intent(getApplicationContext(), this.getClass());
-	    	restartService.setPackage(getPackageName());
-	    	PendingIntent restartServicePI = PendingIntent.getService(getApplicationContext(), 1, restartService, PendingIntent.FLAG_ONE_SHOT);
-	    	AlarmManager alarmService = (AlarmManager)getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-	    	alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1000, restartServicePI);
-		} catch (Exception e) {
+			int pendingApisCount = MyApplication.getInstance().getDatabase2().getAllPendingAPICallsCount();
+			if(pendingApisCount > 0){
+				// continue next time
+				int lastCount = Prefs.with(context).getInt(SPLabels.PENDING_CALLS_RETRY_COUNT, 0);
+				if(lastCount < 5){
+					Prefs.with(context).save(SPLabels.PENDING_CALLS_RETRY_COUNT, lastCount+1);
+				}
+			}
+			else{
+				if(HomeActivity.appInterruptHandler != null){
+					HomeActivity.appInterruptHandler.refreshOnPendingCallsDone();
+				}
+			}
+		} catch(Exception e){
 			e.printStackTrace();
 		}
-    }
-    
- 
-    @Override
-    public void onDestroy() {
-    	Log.e("PushPendinsCallsService onDestroy", "=");
-        cancelUploadPathAlarm(this);
-    }
+	}
 
 
-
-
-    public static final int PUSH_PENDING_CALLS_PI_REQUEST_CODE = 112;
-    public static final String PUSH_PENDING_CALLS = BuildConfig.APPLICATION_ID+".PUSH_PENDING_CALLS";
-    public static final long ALARM_REPEAT_INTERVAL = 60000;
-
-
-    public void startUploadPathAlarm() {
-        // check task is scheduled or not
-        boolean alarmUp = (PendingIntent.getBroadcast(this, PUSH_PENDING_CALLS_PI_REQUEST_CODE,
-            new Intent(this, PushPendingCallsReceiver.class).setAction(PUSH_PENDING_CALLS),
-            PendingIntent.FLAG_NO_CREATE) != null);
-
-        if (alarmUp) {
-            cancelUploadPathAlarm(this);
-        }
-
-        Intent intent = new Intent(this, PushPendingCallsReceiver.class);
-        intent.setAction(PUSH_PENDING_CALLS);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, PUSH_PENDING_CALLS_PI_REQUEST_CODE,
-            intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), ALARM_REPEAT_INTERVAL, pendingIntent);
-    }
-
-    public static void cancelUploadPathAlarm(Context context) {
-        Intent intent = new Intent(context, PushPendingCallsReceiver.class);
-        intent.setAction(PUSH_PENDING_CALLS);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, PUSH_PENDING_CALLS_PI_REQUEST_CODE,
-            intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Activity.ALARM_SERVICE);
-        alarmManager.cancel(pendingIntent);
-        pendingIntent.cancel();
-    }
-
+	public void startAPI(PendingAPICall pendingAPICall) {
+		if (MyApplication.getInstance().isOnline()) {
+			try {
+				if (MyApplication.getInstance().isOnline()) {
+					Response response = null;
+					if(PendingCall.EMERGENCY_ALERT.getPath().equalsIgnoreCase(pendingAPICall.url)){
+						response = RestClient.getApiService().emergencyAlertSync(pendingAPICall.nameValuePairs);
+					}
+					else if(PendingCall.SKIP_RATING_BY_CUSTOMER.getPath().equalsIgnoreCase(pendingAPICall.url)){
+						response = RestClient.getApiService().skipRatingByCustomerSync(pendingAPICall.nameValuePairs);
+					}
+					Log.e(TAG, "response="+response);
+					if(response != null){
+						MyApplication.getInstance().getDatabase2().deletePendingAPICall(pendingAPICall.id);
+						Log.e(TAG, "response to string=" + new String(((TypedByteArray)response.getBody()).getBytes()));
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				Log.e(TAG, "e="+e);
+			}
+		}
+	}
 }
