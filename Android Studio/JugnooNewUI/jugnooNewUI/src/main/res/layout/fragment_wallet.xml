@@ -264,7 +264,7 @@
                         style="@style/payment_option_icon_small"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="15px"
-                        android:src="@drawable/ic_recent_transactions"
+                        android:src="@drawable/ic_card_default"
                         />
 
 

@@ -543,7 +543,12 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         }
         return paymentOptionDialog;
     }
+    public void dismissPaymentDialog(){
+        if(paymentOptionDialog!=null){
+            paymentOptionDialog.dismiss();
+        }
 
+    }
 
 
 

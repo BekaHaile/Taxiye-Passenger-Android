@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.stripe;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.view.ContextThemeWrapper;
@@ -24,11 +25,15 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.wallet.WalletCore;
 
 import static com.stripe.android.model.Card.BRAND_RESOURCE_MAP;
 
@@ -93,18 +98,8 @@ public class StripeViewCardFragment extends Fragment {
         ButterKnife.bind(this, rootView);
         textViewTitle.setTypeface(Fonts.avenirNext(getActivity()));
         if (stripeCardData != null) {
-            StringBuilder formString = new StringBuilder();
 
-            for (int i = 0; i < 12; i++) {
-                if (i != 0 && i % 4 == 0) {
-                    formString.append(" ");
-                }
-                formString.append(getString(R.string.bullet));
-
-            }
-            formString.append(" ");
-            formString.append(stripeCardData.getLast4());
-            tvCard.setText(formString.toString());
+            tvCard.setText(WalletCore.getStripeCardDisplayString(getActivity(),stripeCardData.getLast4()));
             tvCard.setVisibility(View.VISIBLE);
             ivMore.setVisibility(View.VISIBLE);
             updateIcon(stripeCardData.getBrand());
@@ -112,6 +107,7 @@ public class StripeViewCardFragment extends Fragment {
 
         return rootView;
     }
+
 
 
     @Override
@@ -203,6 +199,9 @@ public class StripeViewCardFragment extends Fragment {
                 }
 
 
+                if(Data.autoData!=null && (Data.autoData.getPickupPaymentOption()== PaymentOption.STRIPE_CARDS.getOrdinal())){
+                    MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
+                }
                 DialogPopup.alertPopupWithListener(getActivity(),"",message, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

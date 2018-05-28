@@ -16,6 +16,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.stripe.StripeAddCardFragment;
 import product.clicklabs.jugnoo.stripe.StripeCardsStateListener;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -79,10 +80,18 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
 		}
 		else if(PaymentActivityPath.ADD_WALLET.getOrdinal() == paymentActivityPathInt){
 			int walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.fragLayout, AddWalletFragment.newInstance(walletType), AddWalletFragment.class.getName())
-					.addToBackStack(AddWalletFragment.class.getName())
-					.commitAllowingStateLoss();
+			if(walletType==PaymentOption.STRIPE_CARDS.getOrdinal()){
+				getSupportFragmentManager().beginTransaction()
+						.add(R.id.fragLayout,new StripeAddCardFragment(), StripeAddCardFragment.class.getName())
+						.addToBackStack(StripeAddCardFragment.class.getName())
+						.commitAllowingStateLoss();
+			}else{
+				getSupportFragmentManager().beginTransaction()
+						.add(R.id.fragLayout, AddWalletFragment.newInstance(walletType), AddWalletFragment.class.getName())
+						.addToBackStack(AddWalletFragment.class.getName())
+						.commitAllowingStateLoss();
+			}
+
 		}
 
 		setWalletAddMoneyState(WalletAddMoneyState.INIT);
