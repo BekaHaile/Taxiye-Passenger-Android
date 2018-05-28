@@ -32,7 +32,6 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
-import product.clicklabs.jugnoo.retrofit.RestClient;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
@@ -229,8 +228,8 @@ public class MarkerAnimation {
             try {
                 stopCurrentAsync = false;
                 if(list == null || list.size() == 0) {
-                    Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
-                            destination.latitude + "," + destination.longitude, false, "driving", false);
+                    Response response = GoogleRestApis.getDirections(source.latitude + "," + source.longitude,
+                            destination.latitude + "," + destination.longitude, false, "driving", false, "metric");
                     return new String(((TypedByteArray) response.getBody()).getBytes());
                 } else {
                     LatLng first = list.get(0);

@@ -48,9 +48,9 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -685,13 +685,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			params.put("language", Locale.getDefault().getCountry());
 			params.put("sensor", "false");
 
-			RestClient.getGoogleApiService().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
+			GoogleRestApis.geocode(latLng.latitude + "," + latLng.longitude, Locale.getDefault().getCountry(), new Callback<GoogleGeocodeResponse>() {
 				@Override
 				public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
 					try {
-						if(geocodeResponse.results != null && geocodeResponse.results.size() > 0){
-							 lastLatFetched = latLng.latitude;
-							 lastLngFetched = latLng.longitude;
+						if (geocodeResponse.results != null && geocodeResponse.results.size() > 0) {
+							lastLatFetched = latLng.latitude;
+							lastLngFetched = latLng.longitude;
 
 							String current_street = geocodeResponse.results.get(0).getStreetNumber();
 							String current_route = geocodeResponse.results.get(0).getRoute();
@@ -699,11 +699,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 							String current_city = geocodeResponse.results.get(0).getCity();
 							String current_pincode = geocodeResponse.results.get(0).getCountry();
 
-							setFetchedAddressToTextView(current_street + (current_street.length()>0?", ":"")
-									+ current_route + (current_route.length()>0?", ":"")
+							setFetchedAddressToTextView(current_street + (current_street.length() > 0 ? ", " : "")
+									+ current_route + (current_route.length() > 0 ? ", " : "")
 									+ geocodeResponse.results.get(0).getAddAddress()
 									+ ", " + current_city);
-							mapSettledCanForward= true;
+							mapSettledCanForward = true;
 						} else {
 							Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
 							setFetchedAddressToTextView("");
