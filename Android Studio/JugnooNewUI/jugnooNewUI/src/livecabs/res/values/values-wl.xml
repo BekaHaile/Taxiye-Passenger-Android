@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <integer name="view_visible">0</integer>
+    <integer name="view_invisible">1</integer>
+    <integer name="view_gone">2</integer>
+
+
+    <!--Other things to change
+        1. google-services.json
+        2. Doc entity in strings.xml
+        3. application_id in build.gradle
+    -->
+
+
+    <!--
+        Icons to change:
+            ic_taxi_logo => ic_splash_logo
+            ic_launcher
+            notification_icon
+    -->
+
+    <string name="google_maps_api_key">AIzaSyDWJIBt2XjtRvhHC9mpSyD6otrmpMMSr9s</string>
+    <string name="google_maps_api_server_key">AIzaSyC3NVQc-v2UY4qcHmj93ZZR5EsvTOvCo8Q</string>
+    <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
+    <string name="fb_app_id">782131025144439</string>
+    <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
+    <string name="ak_login_protocol_scheme">ak782131025144439</string>
+    <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
+
+
+
+
+
+    <string name="operator_token">e3b869ce5b9e6a95f5cde539c4cb6d68</string>
+    <string name="support_number">+2549023121121</string>
+    <string name="police_number">911</string>
+    <string name="facebook_page_id">livecabs</string>
+    <string name="facebook_page_name">livecabs</string>
+
+
+    <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
+    <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
+    <bool name="force_open_autos">true</bool>
+
+
+    <dimen name="splash_logo_width">250dp</dimen>
+    <dimen name="splash_logo_height">250dp</dimen>
+    <dimen name="splash_logo_top_margin">100dp</dimen>
+    <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
+    <integer name="show_splash_logo_text">@integer/view_visible</integer>
+
+    <string name="file_provider_name">com.livecabs.fileprovider</string>
+    <string name="web_landing_page">https://jugnoo.in</string>
+    <string name="smart_url">http://smarturl.it/livecabs</string>
+    <string name="db_name">livecabs_database</string>
+    <string name="terms_of_use_url">https://www.livecabs.in/#/terms</string>
+    <string name="app_domain">livecabs.in</string>
+    <string name="app_host_name">www.livecabs.in</string>
+    <string name="branch_domain">share.livecabs.in</string>
+    <string name="app_scheme">livecabs</string>
+
+    <string name="pictures_path">livecabs/livecabs Pictures</string>
+    <bool name="force_inhouse_login">true</bool>
+    <bool name="force_mpesa_payment">false</bool>
+    <bool name="show_about">false</bool>
+    <bool name="show_change_languge">true</bool>
+</resources>

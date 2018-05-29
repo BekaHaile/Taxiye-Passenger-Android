@@ -21,8 +21,8 @@
             notification_icon
     -->
 
-    <string name="google_maps_api_key">AIzaSyCReMAp5TW8sUMQRqecpPwT-o45UC4J3Lk</string>
-    <string name="google_maps_api_server_key">AIzaSyB7i02FGFHWR5ttygDB4qwmxJ4ESuc-asM</string>
+    <string name="google_maps_api_key">AIzaSyDWJIBt2XjtRvhHC9mpSyD6otrmpMMSr9s</string>
+    <string name="google_maps_api_server_key">AIzaSyC3NVQc-v2UY4qcHmj93ZZR5EsvTOvCo8Q</string>
     <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
     <string name="fb_app_id">782131025144439</string>
     <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
@@ -33,49 +33,42 @@
 
 
 
-    <string name="operator_token">1ac6f54692c22e08ab9ddd9c383ff0a3</string>
+    <string name="operator_token">e3b869ce5b9e6a95f5cde539c4cb6d68</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">911</string>
-    <string name="facebook_page_id">1497119970363540</string>
-    <string name="facebook_page_name">Hezzmaroc</string>
+    <string name="facebook_page_id">val</string>
+    <string name="facebook_page_name">val</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
     <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
-    <integer name="show_social_login">@integer/view_invisible</integer>
-    <integer name="show_help">@integer/view_invisible</integer>
     <bool name="force_open_autos">true</bool>
 
 
-    <dimen name="splash_logo_width">135dp</dimen>
-    <dimen name="splash_logo_height">135dp</dimen>
+    <dimen name="splash_logo_width">150dp</dimen>
+    <dimen name="splash_logo_height">150dp</dimen>
     <dimen name="splash_logo_top_margin">100dp</dimen>
-    <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
-    <drawable name="splash_background_drawable">@drawable/show_splash_hezz_bg</drawable>
-    <integer name="show_splash_logo_text">@integer/view_gone</integer>
     <integer name="show_splash_top_bg">@integer/view_invisible</integer>
+    <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bg">@integer/view_visible</integer>
-    <color name="splash_logo_color">@color/theme_color</color>
+    <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
+    <drawable name="splash_background_drawable">@color/theme_color</drawable>
+    <integer name="show_social_login">@integer/view_invisible</integer>
+    <integer name="show_splash_logo_text">@integer/view_invisible</integer>
 
-    <string name="file_provider_name">com.hezz.fileprovider</string>
+    <string name="file_provider_name">com.val.fileprovider</string>
     <string name="web_landing_page">https://jugnoo.in</string>
     <string name="smart_url">http://smarturl.it/jugnoo</string>
-    <string name="db_name">hezz_database</string>
+    <string name="db_name">val_database</string>
     <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
     <string name="app_domain">jugnoo.in</string>
     <string name="app_host_name">www.jugnoo.in</string>
     <string name="branch_domain">share.jugnoo.in</string>
-    <string name="app_scheme">hezz</string>
+    <string name="app_scheme">val</string>
 
-    <string name="pictures_path">Hezz/Hezz Pictures</string>
+    <string name="pictures_path">Val/Val Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
     <bool name="show_about">false</bool>
     <bool name="show_change_languge">true</bool>
-    <string name="default_lang">fr</string>
-    <string-array name="languages_to_show">
-        <item>en</item>
-        <item>ar</item>
-        <item>fr</item>
-    </string-array>
 </resources>

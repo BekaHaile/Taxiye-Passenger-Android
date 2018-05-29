@@ -7,8 +7,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/splash_back_hezz"
-        android:visibility="@integer/show_splash_hezz_bg"
+        android:background="@drawable/splash_background_drawable"
+        android:visibility="@integer/show_splash_bg"
         android:tag="mwar" />
     <RelativeLayout
         android:layout_width="match_parent"
@@ -79,6 +79,7 @@
         android:layout_height="@dimen/px_160"
         android:background="@drawable/splash_bottom_building_bg1"
         android:layout_alignParentBottom="true"
+        android:visibility="@integer/show_splash_bottom_bg"
         android:tag="mwar" />
     </RelativeLayout>
 </RelativeLayout>

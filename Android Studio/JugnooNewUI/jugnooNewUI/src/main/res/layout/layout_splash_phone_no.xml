@@ -9,8 +9,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/splash_back_hezz"
-        android:visibility="@integer/show_splash_hezz_bg"
+        android:background="@drawable/splash_background_drawable"
+        android:visibility="@integer/show_splash_bg"
         android:tag="mwar" />
     <ImageView
         android:layout_width="match_parent"
@@ -82,6 +82,7 @@
                 android:hint="@string/code"
                 android:textColor="@color/text_color"
                 android:textSize="17sp"
+                android:textColorHint="@color/text_color_hint"
                 android:drawableEnd="@drawable/ic_arrow_down_vector"
                 android:drawablePadding="3dp"
                 app:typekitFont="@string/maven"/>
@@ -158,6 +159,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:layout_alignParentBottom="true"
+        android:visibility="@integer/show_splash_top_bg"
         android:background="@drawable/splash_bottom_building_bg1"
         android:tag="mwar" />
 
