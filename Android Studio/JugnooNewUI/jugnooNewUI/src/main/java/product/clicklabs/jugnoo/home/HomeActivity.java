@@ -8954,7 +8954,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 					|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
 					|| PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
 				saveLastDestinations(searchResult);
-				zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null, 0);
+				if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+                    zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null, 0);
+                }
 
 				sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
 						getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true, searchResult.getAddress());
