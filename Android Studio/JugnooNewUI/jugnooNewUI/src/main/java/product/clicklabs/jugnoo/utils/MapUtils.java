@@ -23,7 +23,6 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
-import product.clicklabs.jugnoo.retrofit.RestClient;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
@@ -315,8 +314,8 @@ public class MapUtils {
 
 	public static void drawPathFromGoogle(Activity activity, final GoogleMap map, final LatLng sourceLatLng, final LatLng destinationLatLng){
 		if (MyApplication.getInstance().isOnline()) {
-			Response response = RestClient.getGoogleApiService().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
-					destinationLatLng.latitude + "," + destinationLatLng.longitude, false, "driving", false);
+			Response response = GoogleRestApis.getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
+					destinationLatLng.latitude + "," + destinationLatLng.longitude, false, "driving", false, "metric");
 			String result = new String(((TypedByteArray)response.getBody()).getBytes());
 			Log.i("result", "=" + result);
 			if (result != null) {

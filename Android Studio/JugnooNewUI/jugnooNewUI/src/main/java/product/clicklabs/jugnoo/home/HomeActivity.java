@@ -95,6 +95,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.FuguCustomActionModel;
+import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
@@ -217,6 +218,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.FrameAnimDrawable;
+import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.Log;
@@ -5633,10 +5635,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Data.autoData.setPickupAddress("");
                 }
                 textView.setHint(R.string.getting_address);
-                RestClient.getGoogleApiService().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                        "en", false, new Callback<SettleUserDebt>() {
+				GoogleRestApis.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
+                        "en", new Callback<GoogleGeocodeResponse>() {
                             @Override
-                            public void success(SettleUserDebt settleUserDebt, Response response) {
+                            public void success(GoogleGeocodeResponse settleUserDebt, Response response) {
                                 try {
                                     String resp = new String(((TypedByteArray) response.getBody()).getBytes());
                                     GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
@@ -6466,8 +6468,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 RidePath ridePath = MyApplication.getInstance().getDatabase2().getLastRidePath();
                                 source = ridePath != null ? ridePath.getDestinationLatLng() : pickupLatLng;
                             }
-                            Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
-                                    Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false);
+                            Response response = GoogleRestApis.getDirections(source.latitude + "," + source.longitude,
+                                    Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false, "metric");
                             String result = new String(((TypedByteArray)response.getBody()).getBytes());
                             if (result != null) {
                                 listPath = MapUtils.getLatLngListFromPath(result);
