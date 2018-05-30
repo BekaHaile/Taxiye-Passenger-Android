@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="otp_background">@color/colorPrimary</color>
+    <color name="otp_text_color">@color/white</color>
+</resources>

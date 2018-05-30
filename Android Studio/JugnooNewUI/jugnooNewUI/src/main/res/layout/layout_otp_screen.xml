@@ -4,7 +4,7 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white">
+                android:background="@color/otp_background">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -45,7 +45,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/px_25"
                 android:text="@string/enter_otp_recieved_on"
-                android:textColor="@color/text_color"
+                android:textColor="@color/otp_text_color"
                 android:textSize="@dimen/text_size_32"
                 />
 
@@ -57,7 +57,7 @@
                 android:gravity="center"
                 android:text=""
                 android:layoutDirection="ltr"
-                android:textColor="@color/text_color"
+                android:textColor="@color/otp_text_color"
                 android:textSize="@dimen/text_size_42"
                 app:typekitFont="@string/maven"
                 android:layout_marginTop="@dimen/px_8"

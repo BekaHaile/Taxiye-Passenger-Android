@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/login_signup_with"
                 android:textSize="@dimen/text_size_32"
-                android:textColor="@color/text_color"
+                android:textColor="@color/otp_text_color"
                 android:layout_marginTop="@dimen/px_50"
                 android:layout_gravity="center_horizontal"
                 app:typekitFont="maven"/>

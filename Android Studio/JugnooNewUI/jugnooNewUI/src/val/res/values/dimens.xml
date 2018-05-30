@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="otp_country_code_text_size">@dimen/text_size_34</dimen>
+
+</resources>
