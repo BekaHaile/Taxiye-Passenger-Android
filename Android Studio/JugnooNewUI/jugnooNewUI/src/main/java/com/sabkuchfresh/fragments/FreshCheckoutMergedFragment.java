@@ -131,6 +131,7 @@ import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
+import product.clicklabs.jugnoo.wallet.WalletCore;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import product.clicklabs.jugnoo.widgets.MySpinner;
@@ -167,11 +168,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private ImageView imageViewAddressType, imageViewDeliveryAddressForward;
     private TextView textViewAddressName, textViewAddressValue, tvNoAddressAlert;
 
-    private RelativeLayout relativeLayoutPaytm, relativeLayoutMobikwik, relativeLayoutFreeCharge, relativeLayoutJugnooPay, relativeLayoutCash;
+    private RelativeLayout relativeLayoutPaytm,relativeLayoutStripeCard, relativeLayoutMobikwik, relativeLayoutFreeCharge, relativeLayoutJugnooPay, relativeLayoutCash;
     private LinearLayout linearLayoutWalletContainer;
-    private ImageView imageViewPaytmRadio, imageViewAddPaytm, imageViewRadioMobikwik, imageViewAddMobikwik,
+    private ImageView imageViewPaytmRadio, imageViewAddPaytm, imageViewRadioMobikwik, imageViewAddMobikwik,imageViewStripeRadio,imageViewAddStripeCard,
             imageViewRadioFreeCharge, imageViewAddFreeCharge, imageViewRadioJugnooPay, imageViewAddJugnooPay, imageViewCashRadio;
-    private TextView textViewPaytmValue, textViewMobikwikValue, textViewFreeChargeValue;
+    private TextView textViewPaytmValue, tvStripeCardNumber, textViewMobikwikValue, textViewFreeChargeValue;
     private RelativeLayout rlOtherModesToPay, rlUPI;
     private ImageView ivOtherModesToPay, ivUPI;
     private TextView tvOtherModesToPay, tvUPI;
@@ -456,6 +457,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
         linearLayoutWalletContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutWalletContainer);
         relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
+        relativeLayoutStripeCard = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutStripeCard);
         relativeLayoutIcici = (RelativeLayout) rootView.findViewById(R.id.rlIciciUpi);
         relativeLayoutMobikwik = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMobikwik);
         relativeLayoutFreeCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFreeCharge);
@@ -464,6 +466,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         edtIciciVpa = (EditText) rootView.findViewById(R.id.edtIciciVpa);
         tvLabelIciciUpi = (TextView) rootView.findViewById(R.id.tv_label_below_edt_icici);
         imageViewPaytmRadio = (ImageView) rootView.findViewById(R.id.imageViewPaytmRadio);
+        imageViewStripeRadio = (ImageView) rootView.findViewById(R.id.imageViewStripeRadio);
+        imageViewAddStripeCard = (ImageView) rootView.findViewById(R.id.imageViewAddStripeCard);
         imageViewAddPaytm = (ImageView) rootView.findViewById(R.id.imageViewAddPaytm);
         imageViewRadioMobikwik = (ImageView) rootView.findViewById(R.id.imageViewRadioMobikwik);
         imageViewIcici = (ImageView) rootView.findViewById(R.id.ivRadioIciciUpi);
@@ -474,7 +478,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         imageViewAddJugnooPay = (ImageView) rootView.findViewById(R.id.imageViewAddJugnooPay);
         imageViewCashRadio = (ImageView) rootView.findViewById(R.id.imageViewCashRadio);
         textViewPaytmValue = (TextView) rootView.findViewById(R.id.textViewPaytmValue);
+        tvStripeCardNumber = (TextView) rootView.findViewById(R.id.tvStripeCardNumber);
         textViewPaytmValue.setTypeface(Fonts.mavenMedium(activity));
+        tvStripeCardNumber.setTypeface(Fonts.mavenMedium(activity));
         textViewMobikwikValue = (TextView) rootView.findViewById(R.id.textViewMobikwikValue);
         textViewMobikwikValue.setTypeface(Fonts.mavenMedium(activity));
         textViewFreeChargeValue = (TextView) rootView.findViewById(R.id.textViewFreeChargeValue);
@@ -555,6 +561,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         rlDeliveryFrom.setMinimumHeight((int) (ASSL.Yscale() * 116f));
         relativeLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
+        relativeLayoutStripeCard.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutJugnooPay.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -997,6 +1004,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     case R.id.rlIciciUpi:
                         callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.ICICI_UPI);
                         break;
+                    case R.id.relativeLayoutStripeCard:
+                        MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.STRIPE_CARDS,
+                                callbackPaymentOptionSelector);
+//                        callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.STRIPE_CARDS);
+                        break;
                 }
                 GAUtils.event(activity.getGaCategory(), CHECKOUT + WALLET + MODIFIED, String.valueOf(activity.getPaymentOption()));
             } catch (Exception e) {
@@ -1172,6 +1184,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 textViewPaytmValue.setVisibility(View.GONE);
                 imageViewAddPaytm.setVisibility(View.VISIBLE);
             }
+
             if (Data.userData.getMobikwikEnabled() == 1) {
                 textViewMobikwikValue.setVisibility(View.VISIBLE);
                 imageViewAddMobikwik.setVisibility(View.GONE);
@@ -1192,7 +1205,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 imageViewAddJugnooPay.setVisibility(View.VISIBLE);
             }
 
+
             imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_normal);
+            imageViewStripeRadio.setImageResource(R.drawable.ic_radio_button_normal);
             imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_normal);
             imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_normal);
             imageViewRadioJugnooPay.setImageResource(R.drawable.ic_radio_button_normal);
@@ -1203,7 +1218,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
             if (activity.getPaymentOption() == PaymentOption.PAYTM) {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_selected);
-            } else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
+            } else if(activity.getPaymentOption()==PaymentOption.STRIPE_CARDS){
+                imageViewStripeRadio.setImageResource(R.drawable.ic_radio_button_selected);
+
+            }else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
                 imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_selected);
             } else if (activity.getPaymentOption() == PaymentOption.FREECHARGE) {
                 imageViewRadioFreeCharge.setImageResource(R.drawable.ic_radio_button_selected);
@@ -2059,6 +2077,18 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             jugnooVpaHandle =  paymentModeConfigData.getJugnooVpaHandle();
                             tvLabelIciciUpi.setText(activity.getString(R.string.label_below_icici_payment_edt, jugnooVpaHandle));
                             tvUPICashback.setText(!TextUtils.isEmpty(paymentModeConfigData.getUpiCashbackValue())?paymentModeConfigData.getUpiCashbackValue():"");
+                        }else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
+                            linearLayoutWalletContainer.addView(relativeLayoutStripeCard);
+                            PaymentModeConfigData stripeConfigData = MyApplication.getInstance().getWalletCore().getStripeConfigData();
+                            if(stripeConfigData!=null && stripeConfigData.getCardsData()!=null && stripeConfigData.getCardsData().size()>0 ){
+                                tvStripeCardNumber.setText(WalletCore.getStripeCardDisplayString(activity,stripeConfigData.getCardsData().get(0).getLast4()));
+                                imageViewAddStripeCard.setVisibility(View.GONE);
+                            }else{
+                                tvStripeCardNumber.setText(getString(R.string.add_card_payments));
+                                imageViewAddStripeCard.setVisibility(View.VISIBLE);
+                            }
+
+
                         }
 
                     }
@@ -2105,6 +2135,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private void setPaymentOptionVisibility(int applicablePaymentMode) {
         relativeLayoutCash.setVisibility(View.VISIBLE);
         relativeLayoutPaytm.setVisibility(View.VISIBLE);
+        relativeLayoutStripeCard.setVisibility(View.VISIBLE);
         relativeLayoutMobikwik.setVisibility(View.VISIBLE);
         relativeLayoutFreeCharge.setVisibility(View.VISIBLE);
         relativeLayoutJugnooPay.setVisibility(View.VISIBLE);
@@ -2119,6 +2150,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             rlOtherModesToPay.setVisibility(View.GONE);
             rlUPI.setVisibility(View.GONE);
             relativeLayoutIcici.setVisibility(View.GONE);
+            relativeLayoutStripeCard.setVisibility(View.GONE);
         } else if (applicablePaymentMode == ApplicablePaymentMode.ONLINE.getOrdinal()) {
             relativeLayoutCash.setVisibility(View.GONE);
         }
