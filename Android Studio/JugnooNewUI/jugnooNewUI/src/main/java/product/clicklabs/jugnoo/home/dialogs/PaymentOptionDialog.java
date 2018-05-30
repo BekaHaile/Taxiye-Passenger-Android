@@ -39,7 +39,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
     private RelativeLayout relativeLayoutFreeCharge;
     private RelativeLayout relativeLayoutMpesa;
     private LinearLayout linearLayoutCash, llOtherModesToPay ;
-    private ImageView radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard;
+    private ImageView radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard,ivStripeCardIcon;
     private TextView textViewPaytm,textViewStripeCard, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue, textViewFreeCharge, textViewFreeChargeValue, tvOtherModesToPay, textViewMpesa,textViewMpesaValue;
 
     public PaymentOptionDialog(HomeActivity activity, Callback callback) {
@@ -79,6 +79,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
             radioBtnCash = (ImageView) dialog.findViewById(R.id.radio_cash);
             imageViewRadioMpesa = (ImageView) dialog.findViewById(R.id.imageViewRadioMpesa);
             imageViewRadioStripeCard = (ImageView) dialog.findViewById(R.id.imageViewRadioStripeCard);
+            ivStripeCardIcon = (ImageView) dialog.findViewById(R.id.ivStripeCardIcon);
             ivOtherModesToPay = (ImageView) dialog.findViewById(R.id.ivOtherModesToPay);
 
 
@@ -313,8 +314,9 @@ public class PaymentOptionDialog implements View.OnClickListener {
                         }else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutStripeCard);
                             if(paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0){
-                                textViewStripeCard.setText(WalletCore.getStripeCardDisplayString(activity,paymentModeConfigData.getCardsData().get(0).getLast4()));
+                               WalletCore.getStripeCardDisplayString(activity,paymentModeConfigData.getCardsData().get(0),textViewStripeCard,ivStripeCardIcon);
                             }else{
+                                ivStripeCardIcon.setImageResource(R.drawable.ic_card_default);
                                 textViewStripeCard.setText(activity.getString(R.string.add_card_payments));
                             }
                         }

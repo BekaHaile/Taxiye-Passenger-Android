@@ -123,6 +123,7 @@
                         android:tag="mwar"/>
 
                     <ImageView
+                        android:id="@+id/ivStripeCardIcon"
                         style="@style/payment_option_icon_small"
                         android:src="@drawable/ic_card_default"
                         android:layout_marginStart="10px"

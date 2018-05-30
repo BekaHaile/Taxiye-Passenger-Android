@@ -171,7 +171,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private RelativeLayout relativeLayoutPaytm,relativeLayoutStripeCard, relativeLayoutMobikwik, relativeLayoutFreeCharge, relativeLayoutJugnooPay, relativeLayoutCash;
     private LinearLayout linearLayoutWalletContainer;
     private ImageView imageViewPaytmRadio, imageViewAddPaytm, imageViewRadioMobikwik, imageViewAddMobikwik,imageViewStripeRadio,imageViewAddStripeCard,
-            imageViewRadioFreeCharge, imageViewAddFreeCharge, imageViewRadioJugnooPay, imageViewAddJugnooPay, imageViewCashRadio;
+            imageViewRadioFreeCharge, imageViewAddFreeCharge, imageViewRadioJugnooPay, imageViewAddJugnooPay, imageViewCashRadio,ivStripeCardIcon;
     private TextView textViewPaytmValue, tvStripeCardNumber, textViewMobikwikValue, textViewFreeChargeValue;
     private RelativeLayout rlOtherModesToPay, rlUPI;
     private ImageView ivOtherModesToPay, ivUPI;
@@ -479,6 +479,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         imageViewCashRadio = (ImageView) rootView.findViewById(R.id.imageViewCashRadio);
         textViewPaytmValue = (TextView) rootView.findViewById(R.id.textViewPaytmValue);
         tvStripeCardNumber = (TextView) rootView.findViewById(R.id.tvStripeCardNumber);
+        ivStripeCardIcon = (ImageView) rootView.findViewById(R.id.ivStripeCardIcon);
         textViewPaytmValue.setTypeface(Fonts.mavenMedium(activity));
         tvStripeCardNumber.setTypeface(Fonts.mavenMedium(activity));
         textViewMobikwikValue = (TextView) rootView.findViewById(R.id.textViewMobikwikValue);
@@ -2081,10 +2082,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             linearLayoutWalletContainer.addView(relativeLayoutStripeCard);
                             PaymentModeConfigData stripeConfigData = MyApplication.getInstance().getWalletCore().getStripeConfigData();
                             if(stripeConfigData!=null && stripeConfigData.getCardsData()!=null && stripeConfigData.getCardsData().size()>0 ){
-                                tvStripeCardNumber.setText(WalletCore.getStripeCardDisplayString(activity,stripeConfigData.getCardsData().get(0).getLast4()));
+                                WalletCore.getStripeCardDisplayString(activity,stripeConfigData.getCardsData().get(0),tvStripeCardNumber,ivStripeCardIcon);
                                 imageViewAddStripeCard.setVisibility(View.GONE);
                             }else{
                                 tvStripeCardNumber.setText(getString(R.string.add_card_payments));
+                                ivStripeCardIcon.setImageResource(R.drawable.ic_card_default);
                                 imageViewAddStripeCard.setVisibility(View.VISIBLE);
                             }
 

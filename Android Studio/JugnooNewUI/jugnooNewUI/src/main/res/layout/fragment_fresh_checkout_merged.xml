@@ -436,8 +436,9 @@
                                     android:layout_marginStart="30px" />
 
                                 <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:id="@+id/ivStripeCardIcon"
+                                    android:layout_width="52px"
+                                    android:layout_height="36px"
                                     android:layout_marginStart="24px"
                                     android:src="@drawable/ic_card_default"
                                     android:tag="mwar" />

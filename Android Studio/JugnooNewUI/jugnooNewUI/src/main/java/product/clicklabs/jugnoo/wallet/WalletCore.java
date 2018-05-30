@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
@@ -36,6 +38,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
+import static com.stripe.android.model.Card.BRAND_RESOURCE_MAP;
 import static product.clicklabs.jugnoo.Constants.KEY_DISPLAY_NAME;
 import static product.clicklabs.jugnoo.Constants.KEY_JUGNOO_VPA_HANDLE;
 import static product.clicklabs.jugnoo.Constants.KEY_OFFER_TEXT;
@@ -1227,7 +1230,7 @@ public class WalletCore {
 
 
 	@NonNull
-	public static String getStripeCardDisplayString(Context context,String last_4) {
+	public static String getStripeCardDisplayString(Context context, String last_4) {
 		StringBuilder formString = new StringBuilder();
 
 		for (int i = 0; i < 12; i++) {
@@ -1241,40 +1244,30 @@ public class WalletCore {
 		formString.append(last_4);
 		return formString.toString();
 	}
-/*
-	public PaymentModeConfigData deleteStripeCard(String cardId) {
-		if(paymentModeConfigDatas==null)return null;
-		PaymentModeConfigData stripeConfigData = null;
-		for(PaymentModeConfigData paymentModeConfigData:paymentModeConfigDatas){
-			if(paymentModeConfigData.getPaymentOption()==PaymentOption.STRIPE_CARDS.getOrdinal()){
-
-				stripeConfigData = paymentModeConfigData;
-			}
-		}
-		if(stripeConfigData==null)return null;
-
-		ArrayList<StripeCardData> stripeCardsList = stripeConfigData.getCardsData();
-		if(stripeCardsList==null)return stripeConfigData;
+	private static int getBrandImage(String brand){
 
 
-		for (StripeCardData card: stripeCardsList){
+		int brandImage = R.drawable.ic_card_default;
 
-			if(card.getCardId().equals(cardId)){
-				stripeCardsList.remove(card);
-				break;
-			}
-
-
+		if(!TextUtils.isEmpty(brand) &&  BRAND_RESOURCE_MAP.get(brand)!=com.stripe.android.R.drawable.ic_unknown){
+			brandImage =  BRAND_RESOURCE_MAP.get(brand);
 		}
 
-
-
-		return stripeConfigData;
-
+		return brandImage;
 
 	}
 
-*/
+
+
+	@NonNull
+	public static void getStripeCardDisplayString(Context context, StripeCardData stripeCardData, TextView textView, ImageView imageView) {
+
+		String strpeCardString = getStripeCardDisplayString(context,stripeCardData.getLast4());
+		textView.setText(strpeCardString);
+		imageView.setImageResource(getBrandImage(stripeCardData.getBrand()));
+
+	}
+
 
 
 

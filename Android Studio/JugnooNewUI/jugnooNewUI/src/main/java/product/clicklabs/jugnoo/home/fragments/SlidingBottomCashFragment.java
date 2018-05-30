@@ -35,7 +35,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
     private View rootView;
     private ScrollView linearLayoutRoot;
     private LinearLayout linearLayoutWalletContainer, linearLayoutCash, llOtherModesToPay;
-    private ImageView imageViewRadioPaytm,imageViewRadioStripeCard, imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioCash, imageViewRadioFreeCharge, ivOtherModesToPay;
+    private ImageView imageViewRadioPaytm,imageViewRadioStripeCard, imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioCash, imageViewRadioFreeCharge,ivStripeCardIcon,ivOtherModesToPay;
     private TextView textViewPaytm,textViewStripeCard, textViewPaytmValue, textViewMpesa, textViewMpesaValue, textViewMobikwik, textViewMobikwikValue, textViewFreeCharge, textViewFreeChargeValue, tvOtherModesToPay;
     private RelativeLayout relativeLayoutPaytm,relativeLayoutStripeCard, relativeLayoutMpesa, relativeLayoutMobikwik, relativeLayoutFreeCharge;
     private HomeActivity activity;
@@ -68,6 +68,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         textViewPaytm = (TextView) rootView.findViewById(R.id.textViewPaytm);
         textViewPaytm.setTypeface(Fonts.mavenMedium(getActivity()));
         textViewStripeCard = (TextView) rootView.findViewById(R.id.textViewStripeCard);
+        ivStripeCardIcon = (ImageView) rootView.findViewById(R.id.ivStripeCardIcon);
         textViewStripeCard.setTypeface(Fonts.mavenMedium(getActivity()));
         textViewMpesaValue = (TextView) rootView.findViewById(R.id.textViewMpesaValue);
         textViewMpesaValue.setTypeface(Fonts.mavenMedium(getActivity()));
@@ -277,9 +278,10 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                         }else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutStripeCard);
                             if(paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0){
-                                textViewStripeCard.setText(WalletCore.getStripeCardDisplayString(getActivity(),paymentModeConfigData.getCardsData().get(0).getLast4()));
+                                WalletCore.getStripeCardDisplayString(getActivity(),paymentModeConfigData.getCardsData().get(0),textViewStripeCard,ivStripeCardIcon);
                             }else{
                                 textViewStripeCard.setText(getString(R.string.add_card_payments));
+                                ivStripeCardIcon.setImageResource(R.drawable.ic_card_default);
                             }
                         }
                     }
