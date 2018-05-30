@@ -333,6 +333,8 @@ public class HistoryResponse {
         private int isPaid;
         @SerializedName("currency")
         private String currency;
+        @SerializedName("distance_unit")
+        private String distanceUnit;
 
         public int getIsPaid() {
             return isPaid;
@@ -1141,6 +1143,14 @@ public class HistoryResponse {
 
         public void setIconSet(String iconSet) {
             this.iconSet = iconSet;
+        }
+
+        public String getDistanceUnit() {
+            return distanceUnit;
+        }
+
+        public void setDistanceUnit(String distanceUnit) {
+            this.distanceUnit = distanceUnit;
         }
     }
 

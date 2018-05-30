@@ -63,6 +63,7 @@ import product.clicklabs.jugnoo.retrofit.model.GoogleDirectionWayPointsResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
@@ -606,7 +607,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 								if (TextUtils.isEmpty(eta)) {
 									String origin = latLngDriver.latitude + "," + latLngDriver.longitude;
 									String destination = deliveryLatLng.latitude + "," + deliveryLatLng.longitude;
-									Response responseDM = RestClient.getGoogleApiService().getDistanceMatrix(origin,
+									Response responseDM = GoogleRestApis.getDistanceMatrix(origin,
 											destination, "EN", false, false
 									);
 									JSONObject jObjDM = new JSONObject(new String(((TypedByteArray)responseDM.getBody()).getBytes()));

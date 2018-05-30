@@ -2,6 +2,8 @@ package product.clicklabs.jugnoo.apis;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -26,6 +28,7 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import retrofit.RetrofitError;
@@ -52,8 +55,8 @@ public class ApiFareEstimate {
             if (MyApplication.getInstance().isOnline()) {
                 if (sourceLatLng != null && destLatLng != null) {
                     DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
-                    RestClient.getGoogleApiService().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
-                            destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false, new retrofit.Callback<SettleUserDebt>() {
+                    GoogleRestApis.getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
+                            destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false, getDistanceUnit(), new retrofit.Callback<SettleUserDebt>() {
                                 @Override
                                 public void success(SettleUserDebt settleUserDebt, Response response) {
                                     try {
@@ -109,6 +112,17 @@ public class ApiFareEstimate {
             e.printStackTrace();
             callback.onDirectionsFailure();
         }
+    }
+
+    @NonNull
+    private String getDistanceUnit() {
+        String units = "metric";
+        if(Data.autoData != null
+                && !TextUtils.isEmpty(Data.autoData.getDistanceUnit())
+                && Data.autoData.getDistanceUnit().contains("mile")){
+			units = "imperial";
+		}
+        return units;
     }
 
     public interface Callback{

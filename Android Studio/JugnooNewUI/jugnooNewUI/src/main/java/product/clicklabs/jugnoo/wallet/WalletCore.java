@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -679,6 +680,13 @@ public class WalletCore {
 				}
 			}
 			if (paymentModeConfigDataDefault != null) {
+				String clientId = Config.getLastOpenedClientId(context);
+				// TODO: 21/05/18 hard check of payment options enabled for Autos
+				if(clientId.equalsIgnoreCase(Config.getAutosClientId())
+						&& (paymentModeConfigDataDefault.getPaymentOption() == PaymentOption.JUGNOO_PAY.getOrdinal()
+						|| paymentModeConfigDataDefault.getPaymentOption() == PaymentOption.ICICI_UPI.getOrdinal())){
+					paymentModeConfigDataDefault.setPaymentOption(PaymentOption.CASH.getOrdinal());
+				}
 				paymentOption = getPaymentOptionFromInt(paymentModeConfigDataDefault.getPaymentOption());
 			}
 		} catch (Exception e) {
@@ -693,8 +701,8 @@ public class WalletCore {
 	 */
 	public int validatePaymentOptionForRidesOffering(int paymentOptionInt) {
 		if (paymentOptionInt == PaymentOption.PAYTM.getOrdinal()
-				&& paymentOptionInt == PaymentOption.MOBIKWIK.getOrdinal()
-				&& paymentOptionInt == PaymentOption.FREECHARGE.getOrdinal()) {
+				|| paymentOptionInt == PaymentOption.MOBIKWIK.getOrdinal()
+				|| paymentOptionInt == PaymentOption.FREECHARGE.getOrdinal()) {
 			try {
 				PaymentModeConfigData paymentModeConfigDataDefault = null;
 				for (PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas()) {

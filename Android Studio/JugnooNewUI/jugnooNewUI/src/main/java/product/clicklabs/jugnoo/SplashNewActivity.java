@@ -342,7 +342,7 @@ public class SplashNewActivity extends AppCompatActivity implements  Constants, 
 				}
 			}
 		} catch (Exception e) {
-			readSMSClickLink();
+//			readSMSClickLink();
 		}
 	}
 

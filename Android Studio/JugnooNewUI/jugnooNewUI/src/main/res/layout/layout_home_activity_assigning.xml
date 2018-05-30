@@ -106,7 +106,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="5dp"
                     android:visibility="gone"
-                    ></android.support.v7.widget.RecyclerView>
+                    />
                 
                 <ImageView
                     android:id="@+id/findDriverJugnooAnimation"
@@ -118,11 +118,19 @@
 
                 <Button
                     android:id="@+id/initialCancelRideBtn"
-                    style="@style/ButtonTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_theme"
+                    android:minWidth="200dp"
+                    android:textColor="@color/white"
+                    android:textAllCaps="true"
+                    android:textSize="28px"
+                    android:paddingLeft="10px"
+                    android:paddingRight="10px"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
-                    android:layout_marginTop="20px"
-                    android:layout_marginBottom="20px"
+                    android:layout_marginTop="15px"
+                    android:layout_marginBottom="10px"
                     android:text="@string/cancel_request"/>
 
             </LinearLayout>

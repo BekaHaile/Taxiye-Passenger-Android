@@ -17,16 +17,20 @@ public class BidInfo {
 	@SerializedName("accept_distance")
 	@Expose
 	private double distance;
+	@SerializedName("accept_distance_text")
+	@Expose
+	private String acceptDistanceText;
 	@SerializedName("driver_rating")
 	@Expose
 	private double rating;
 
-	public BidInfo(int engagementId, double bidValue, String currency, double distance, double rating, String createdAt) {
+	public BidInfo(int engagementId, double bidValue, String currency, double distance,String acceptDistanceText, double rating, String createdAt) {
 		this.engagementId = engagementId;
 		this.bidValue = bidValue;
 		this.currency = currency;
 		this.distance = distance;
 		this.rating = rating;
+		this.acceptDistanceText = acceptDistanceText;
 	}
 
 	public int getEngagementId() {
@@ -69,4 +73,8 @@ public class BidInfo {
 		this.rating = rating;
 	}
 
+
+	public String getAcceptDistanceText() {
+		return acceptDistanceText;
+	}
 }

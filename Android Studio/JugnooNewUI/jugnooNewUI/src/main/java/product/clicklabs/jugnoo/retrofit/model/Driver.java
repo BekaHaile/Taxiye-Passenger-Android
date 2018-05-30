@@ -49,6 +49,9 @@ public class Driver {
 	@SerializedName("operator_id")
 	@Expose
 	private int operatorId;
+	@SerializedName("payment_method")
+	@Expose
+	private int paymentMethod;
 	/**
 	 * @return The userId
 	 */
@@ -198,5 +201,13 @@ public class Driver {
 
 	public void setOperatorId(int operatorId) {
 		this.operatorId = operatorId;
+	}
+
+	public int getPaymentMethod() {
+		return paymentMethod;
+	}
+
+	public void setPaymentMethod(int paymentMethod) {
+		this.paymentMethod = paymentMethod;
 	}
 }

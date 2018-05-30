@@ -176,6 +176,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
                     callback.onPaymentModeUpdated();
                     break;
             }
+            activity.showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
         } catch (Exception e) {
             e.printStackTrace();
         }

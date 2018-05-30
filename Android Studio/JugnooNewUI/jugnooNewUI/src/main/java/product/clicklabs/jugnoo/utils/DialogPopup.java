@@ -25,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 
@@ -794,21 +793,23 @@ public class DialogPopup {
             progressDialog.setContentView(R.layout.dialog_loading_box);
             RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
             new ASSL((Activity) context, frameLayout, 1134, 720, false);
-			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
+            final View loader = progressDialog.findViewById(R.id.ivAnimation);
+            if(loader instanceof ImageView){
+				loader.setBackgroundResource(R.drawable.loader_new_frame_anim);
+				loader.post(new Runnable() {
+					@Override
+					public void run() {
+						AnimationDrawable frameAnimation =
+								(AnimationDrawable) loader.getBackground();
+						frameAnimation.start();
+					}
+				});
+			}
 			/*GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(animImageView);
 			Glide.with(context)
 					.load(R.drawable.jugnoo_logo)
 					.placeholder(R.drawable.jugnoo_logo)
 					.into(imageViewTarget);*/
-			animImageView.setBackgroundResource(R.drawable.loader_new_frame_anim);
-			animImageView.post(new Runnable() {
-				@Override
-				public void run() {
-					AnimationDrawable frameAnimation =
-							(AnimationDrawable) animImageView.getBackground();
-					frameAnimation.start();
-				}
-			});
         } catch(Exception e){
             e.printStackTrace();
         }
@@ -859,16 +860,18 @@ public class DialogPopup {
 			progressDialog.setContentView(R.layout.dialog_loading_box);
 			RelativeLayout frameLayout = (RelativeLayout) progressDialog.findViewById(R.id.dlgProgress);
 			new ASSL((Activity) context, frameLayout, 1134, 720, false);
-			final ImageView animImageView = (ImageView) progressDialog.findViewById(R.id.ivAnimation);
-			animImageView.setBackgroundResource(R.drawable.loader_new_frame_anim);
-			animImageView.post(new Runnable() {
-				@Override
-				public void run() {
-					AnimationDrawable frameAnimation =
-							(AnimationDrawable) animImageView.getBackground();
-					frameAnimation.start();
-				}
-			});
+			final View loader = progressDialog.findViewById(R.id.ivAnimation);
+			if(loader instanceof ImageView){
+				loader.setBackgroundResource(R.drawable.loader_new_frame_anim);
+				loader.post(new Runnable() {
+					@Override
+					public void run() {
+						AnimationDrawable frameAnimation =
+								(AnimationDrawable) loader.getBackground();
+						frameAnimation.start();
+					}
+				});
+			}
 
 			return progressDialog;
 		} catch(Exception e){

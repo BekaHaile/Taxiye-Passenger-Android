@@ -24,10 +24,11 @@ public class FareStructure {
     private String displayFareText;
     private int operatorId;
     private String currency;
+    private String distanceUnit;
 
 
     public FareStructure(double fixedFare, double thresholdDistance, double farePerKm, double farePerMin, double freeMinutes, double farePerWaitingMin, double fareThresholdWaitingTime,
-						 double convenienceCharge, boolean fromServer, String displayBaseFare, String displayFareText, int operatorId, String currency){
+						 double convenienceCharge, boolean fromServer, String displayBaseFare, String displayFareText, int operatorId, String currency, String distanceUnit){
         this.fixedFare = fixedFare;
         this.thresholdDistance = thresholdDistance;
         this.farePerKm = farePerKm;
@@ -42,6 +43,7 @@ public class FareStructure {
         this.displayFareText = displayFareText;
         this.operatorId = operatorId;
         this.currency = currency;
+        this.distanceUnit = distanceUnit;
     }
 
 
@@ -86,11 +88,11 @@ public class FareStructure {
                 if("".equalsIgnoreCase(convenienceThresholdText)){
                     convenienceThresholdText = String.format(context.getResources()
                                     .getString(R.string.fare_threshold_distance_message_format),
-                            decimalFormat.format(thresholdDistance));
+                            decimalFormat.format(thresholdDistance)+" "+Utils.getDistanceUnit(getDistanceUnit()));
                 } else{
                     convenienceThresholdText = convenienceThresholdText + "\n" + String.format(context.getResources()
                                     .getString(R.string.fare_threshold_distance_message_format),
-                            decimalFormat.format(thresholdDistance));
+                            decimalFormat.format(thresholdDistance)+" "+Utils.getDistanceUnit(getDistanceUnit()));
                 }
             }
 
@@ -122,5 +124,13 @@ public class FareStructure {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public String getDistanceUnit() {
+        return distanceUnit;
+    }
+
+    public void setDistanceUnit(String distanceUnit) {
+        this.distanceUnit = distanceUnit;
     }
 }

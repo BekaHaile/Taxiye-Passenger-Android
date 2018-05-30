@@ -555,6 +555,8 @@ public class JSONParser implements Constants {
             if(autos.getFareFactor() != null) {
                 Data.autoData.setFareFactor(autos.getFareFactor());
             }
+            Data.autoData.setDistanceUnit(autos.getDistanceUnit());
+
             Data.autoData.setDriverFareFactor(1);
             if(autos.getDriverFareFactor() != null) {
                 Data.autoData.setDriverFareFactor(autos.getDriverFareFactor());
@@ -614,7 +616,8 @@ public class JSONParser implements Constants {
 								fareStructure.getFarePerWaitingMin(),
 								fareStructure.getFareThresholdWaitingTime(), convenienceCharges, true,
 								fareStructure.getDisplayBaseFare(),
-								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(), autos.getCurrency());
+								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(), autos.getCurrency(),
+                                autos.getDistanceUnit());
 						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
 							try {
 								if (Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
@@ -651,7 +654,7 @@ public class JSONParser implements Constants {
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getDefaultFareStructure(){
-        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null, null, 0, null);
+        return new product.clicklabs.jugnoo.datastructure.FareStructure(10, 0, 3, 1, 0, 0, 0, 0, false, null, null, 0, null, null);
     }
 
     public static product.clicklabs.jugnoo.datastructure.FareStructure getFareStructure(){
@@ -855,6 +858,7 @@ public class JSONParser implements Constants {
         int totalRide = jLastRideData.optInt(Constants.KEY_TOTAL_RIDES_AS_USER, 0);
         int status = jLastRideData.optInt(Constants.KEY_STATUS, EngagementStatus.ENDED.getOrdinal());
         String currency = jLastRideData.optString(Constants.KEY_CURRENCY);
+        String distanceUnit = jLastRideData.optString(Constants.KEY_DISTANCE_UNIT);
 
         String supportNumber = jLastRideData.optString(KEY_SUPPORT_NUMBER, "");
 
@@ -879,7 +883,7 @@ public class JSONParser implements Constants {
                 sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge,paidUsingMpesa,paidUsingRazorpay, totalRide, status, supportNumber
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
-                showPaymentOptions, paymentOption, operatorId, currency);
+                showPaymentOptions, paymentOption, operatorId, currency, distanceUnit);
 	}
 
 
@@ -1265,7 +1269,7 @@ public class JSONParser implements Constants {
                     String brandingStatus = driver.getBrandingStatus();
                     Data.autoData.getDriverInfos().add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage,
                             phoneNo, rating, carNumber, 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(),
-                            brandingStatus, driver.getOperatorId()));
+                            brandingStatus, driver.getOperatorId(), driver.getPaymentMethod()));
                 }
             }
         } catch (Exception e) {
@@ -1750,7 +1754,7 @@ public class JSONParser implements Constants {
                     bidInfos.add(new BidInfo(object.optInt(Constants.KEY_ENGAGEMENT_ID),
                             object.optDouble(Constants.KEY_BID_VALUE),
                             object.optString(Constants.KEY_CURRENCY),
-                            object.optDouble(Constants.KEY_ACCEPT_DISTANCE),
+                            object.optDouble(Constants.KEY_ACCEPT_DISTANCE),object.optString(Constants.KEY_ACCEPT_DISTANCE_TEXT),
                             object.optDouble(Constants.KEY_DRIVER_RATING),
                             object.optString(Constants.KEY_CREATED_AT, DateOperations.getCurrentTimeInUTC())));
                 }
