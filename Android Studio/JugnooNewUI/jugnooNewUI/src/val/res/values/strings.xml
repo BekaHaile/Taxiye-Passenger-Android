@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY appname "Val">
-    <!ENTITY appnamecaps "VAL">
+    <!ENTITY appname "Val Rides">
+    <!ENTITY appnamecaps "VAL RIDES">
     <!ENTITY currency "\u20B9">
     ]>
 <resources>

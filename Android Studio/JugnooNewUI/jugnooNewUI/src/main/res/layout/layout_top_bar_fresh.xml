@@ -195,7 +195,7 @@
                         android:singleLine="true"
                         android:ellipsize="marquee"
                         android:drawablePadding="2dp"
-                        android:drawableEnd="@drawable/ic_arrow_down_vector"
+                        android:drawableEnd="@drawable/ic_arrow_down_vector_otp"
                         android:text=""
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />

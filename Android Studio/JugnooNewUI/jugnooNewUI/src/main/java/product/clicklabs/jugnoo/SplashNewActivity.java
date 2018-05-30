@@ -2352,7 +2352,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 						if(countryPicker.getAllCountries().size() > 1){
 							rlCountryCode.setEnabled(true);
-							tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_vector, 0);
+							tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_vector_otp, 0);
 						} else {
 							rlCountryCode.setEnabled(false);
 							tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
