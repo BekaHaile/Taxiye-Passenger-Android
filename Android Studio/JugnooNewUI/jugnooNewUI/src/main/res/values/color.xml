@@ -323,6 +323,7 @@
 
     <color name="otp_background">@color/white</color>
     <color name="otp_text_color">@color/text_color</color>
+    <color name="background_no_net">@null</color>
 
 
 
