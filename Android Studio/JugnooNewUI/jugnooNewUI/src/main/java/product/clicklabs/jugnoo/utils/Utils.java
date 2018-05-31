@@ -1114,6 +1114,15 @@ public class Utils implements GAAction, GACategory{
 			return distanceUnit;
 		}
 	}
+
+	public static void openMailIntent(Activity activity, String[] to, String subject, String body) {
+		Intent email = new Intent(Intent.ACTION_SEND);
+		email.putExtra(Intent.EXTRA_EMAIL, to);
+		email.putExtra(Intent.EXTRA_SUBJECT, subject);
+		email.putExtra(Intent.EXTRA_TEXT, body); //
+		email.setType("message/rfc822");
+		activity.startActivity(Intent.createChooser(email, activity.getString(R.string.choose_email_client)));
+	}
 }
 
 

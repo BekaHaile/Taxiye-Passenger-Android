@@ -67,6 +67,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.BillSummaryModel;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.SupportMailActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -1332,6 +1333,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
     private void needHelpClick() {
         if (activity instanceof RideTransactionsActivity) {
+            if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
+                activity.startActivity(new Intent(activity, SupportMailActivity.class));
+                return;
+            }
             if (Data.isFuguChatEnabled()) {
                 try {
 

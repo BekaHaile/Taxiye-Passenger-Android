@@ -95,6 +95,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.FuguCustomActionModel;
+import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
@@ -204,6 +205,7 @@ import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.SupportMailActivity;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.T20Ops;
@@ -217,6 +219,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.FrameAnimDrawable;
+import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.Log;
@@ -242,7 +245,7 @@ import retrofit.mime.TypedByteArray;
 public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
-        GACategory, GAAction, BidsPlacedAdapter.Callback {
+        GACategory, GAAction, BidsPlacedAdapter.Callback{
 
 
     private final String TAG = "Home Screen";
@@ -293,6 +296,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     RelativeLayout relativeLayoutLocationErrorSearchBar;
 
 
+
+
     //Assigining layout
     RelativeLayout assigningLayout;
     TextView textViewFindingDriver, tvBidTimer;
@@ -321,18 +326,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm;
     Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat, relativeLayoutTotalFare;
-    TextView textViewIRPaymentOptionValue;
-    ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm;
+	TextView textViewIRPaymentOptionValue;
+	ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm;
+
 
 
     //Search Layout
     RelativeLayout relativeLayoutSearchContainer, relativeLayoutSearch, relativeLayoutPoolSharing;
 
 
+
     //Center Location Layout
     RelativeLayout centreLocationRl, relativeLayoutPinEtaRotate;
     ImageView centreLocationPin, imageViewCenterPinMargin;
     TextView textViewCentrePinETA;
+
 
 
     //End Ride layout
@@ -1657,7 +1665,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     rating = 1;
                     //linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
-                            rating, "", "");
+							rating, "", "");
+                    if(getResources().getBoolean(R.bool.support_email_page_enabled)){
+                        startActivity(new Intent(HomeActivity.this, SupportMailActivity.class));
+                        return;
+                    }
                     if (Data.isFuguChatEnabled()) {
                         fuguCustomerHelpRides(false);
                     } else {
@@ -5623,10 +5635,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Data.autoData.setPickupAddress("");
                 }
                 textView.setHint(R.string.getting_address);
-                RestClient.getGoogleApiService().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                        "en", false, new Callback<SettleUserDebt>() {
+				GoogleRestApis.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
+                        "en", new Callback<GoogleGeocodeResponse>() {
                             @Override
-                            public void success(SettleUserDebt settleUserDebt, Response response) {
+                            public void success(GoogleGeocodeResponse settleUserDebt, Response response) {
                                 try {
                                     String resp = new String(((TypedByteArray) response.getBody()).getBytes());
                                     GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
@@ -6459,9 +6471,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 RidePath ridePath = MyApplication.getInstance().getDatabase2().getLastRidePath();
                                 source = ridePath != null ? ridePath.getDestinationLatLng() : pickupLatLng;
                             }
-                            Response response = RestClient.getGoogleApiService().getDirections(source.latitude + "," + source.longitude,
-                                    Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false);
-                            String result = new String(((TypedByteArray) response.getBody()).getBytes());
+                            Response response = GoogleRestApis.getDirections(source.latitude + "," + source.longitude,
+                                    Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false, "metric");
+                            String result = new String(((TypedByteArray)response.getBody()).getBytes());
                             if (result != null) {
                                 listPath = MapUtils.getLatLngListFromPath(result);
                                 final List<LatLng> finalListPath = listPath;
@@ -7964,6 +7976,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 @Override
                 public void onInAppCustomerSupportClick(View view) {
+                    if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
+                        activity.startActivity(new Intent(activity, SupportMailActivity.class));
+                        return;
+                    }
                     if (Data.isFuguChatEnabled()) {
                         fuguCustomerHelpRides(true);
                     } else {
@@ -8965,18 +8981,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             (!specialPickupScreenOpened && !confirmedScreenOpened && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)) {
                         textViewTotalFareValue.setText("");
                         imageViewRideNow.performClick();
-                    }
-                    GAUtils.event(RIDES, HOME, DESTINATION + LOCATION + ENTERED);
+					}
+                    GAUtils.event(RIDES, HOME, DESTINATION+LOCATION+ENTERED);
+				}
+			}
+			else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
+				saveLastDestinations(searchResult);
+				sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
+						getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch(), false, searchResult.getAddress());
+			}
+			else if(PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+					|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+					|| PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
+				saveLastDestinations(searchResult);
+				if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+                    zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null, 0);
                 }
-            } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
-                saveLastDestinations(searchResult);
-                sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
-                        getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch(), false, searchResult.getAddress());
-            } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
-                    || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-                    || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                saveLastDestinations(searchResult);
-                zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null, 0);
 
                 sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
                         getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true, searchResult.getAddress());

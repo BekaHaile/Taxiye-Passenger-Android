@@ -28,6 +28,7 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import retrofit.RetrofitError;
@@ -54,7 +55,7 @@ public class ApiFareEstimate {
             if (MyApplication.getInstance().isOnline()) {
                 if (sourceLatLng != null && destLatLng != null) {
                     DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
-                    RestClient.getGoogleApiService().getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
+                    GoogleRestApis.getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
                             destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false, getDistanceUnit(), new retrofit.Callback<SettleUserDebt>() {
                                 @Override
                                 public void success(SettleUserDebt settleUserDebt, Response response) {
@@ -116,7 +117,9 @@ public class ApiFareEstimate {
     @NonNull
     private String getDistanceUnit() {
         String units = "metric";
-        if(Data.autoData != null && !TextUtils.isEmpty(Data.autoData.getDistanceUnit())){
+        if(Data.autoData != null
+                && !TextUtils.isEmpty(Data.autoData.getDistanceUnit())
+                && Data.autoData.getDistanceUnit().contains("mile")){
 			units = "imperial";
 		}
         return units;

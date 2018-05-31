@@ -121,6 +121,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_theme"
+                    android:minWidth="200dp"
                     android:textColor="@color/white"
                     android:textAllCaps="true"
                     android:textSize="28px"
