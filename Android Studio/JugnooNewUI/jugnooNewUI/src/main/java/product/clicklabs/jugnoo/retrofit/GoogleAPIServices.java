@@ -31,7 +31,7 @@ public interface GoogleAPIServices {
 						   @Query("units") String units,
 						   @Query("key") String key);
 	@GET("/maps/api/directions/json")
-	Response getDirections(@Query(value = "origin", encodeValue = false) String originLatLng,
+	void getDirections(@Query(value = "origin", encodeValue = false) String originLatLng,
 						   @Query(value = "destination", encodeValue = false) String destLatLng,
 						   @Query("sensor") Boolean sensor,
 						   @Query("mode") String mode,
@@ -41,7 +41,7 @@ public interface GoogleAPIServices {
 						   @Query(value = "signature", encodeValue = false) String signature,
 						   Callback<SettleUserDebt> callback);
 	@GET("/maps/api/directions/json")
-	Response getDirections(@Query(value = "origin", encodeValue = false) String originLatLng,
+	void getDirections(@Query(value = "origin", encodeValue = false) String originLatLng,
 						   @Query(value = "destination", encodeValue = false) String destLatLng,
 						   @Query("sensor") Boolean sensor,
 						   @Query("mode") String mode,
