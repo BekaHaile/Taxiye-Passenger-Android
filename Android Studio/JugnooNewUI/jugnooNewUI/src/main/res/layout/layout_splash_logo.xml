@@ -39,7 +39,7 @@
                 android:layout_width="@dimen/splash_logo_width"
                 android:layout_height="@dimen/splash_logo_height"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/splash_logo_icon_drawable"
+                android:src="@drawable/splash_logo_icon_drawable"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:tag="@string/dont_touch_me"
