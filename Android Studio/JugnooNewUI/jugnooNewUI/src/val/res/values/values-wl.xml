@@ -53,7 +53,7 @@
     <integer name="show_splash_bg">@integer/view_visible</integer>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <drawable name="splash_background_drawable">@color/theme_color</drawable>
-    <integer name="show_social_login">@integer/view_visible</integer>
+    <integer name="show_social_login">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text_login">@integer/view_visible</integer>
 
@@ -80,6 +80,9 @@
     <color name="underline_edittext_account">@color/gradient_normal_end</color>
     <color name="otp_auto_detect_bar">@color/gradient_normal_end</color>
     <color name="fb_account_kit_button_background">@color/gradient_normal_end</color>
+    <dimen name="centre_pin_margin">-10px</dimen>
+    <dimen name="eta_pin_margin">12px</dimen>
+
 
     <!--Profile Screen-->
     <integer name="top_bar_about">@integer/view_gone</integer>
