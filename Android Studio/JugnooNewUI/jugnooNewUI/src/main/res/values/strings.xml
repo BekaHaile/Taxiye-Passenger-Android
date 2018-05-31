@@ -1891,4 +1891,5 @@
     <string name="arabic">عربى</string>
     <string name="french">français</string>
     <string name="german">Deutsche</string>
+    <string name="text_under_logo">@string/jugnoo_taxi</string>
 </resources>

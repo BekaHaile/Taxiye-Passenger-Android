@@ -58,14 +58,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
-                    android:text="@string/jugnoo_taxi"
-                    android:textAllCaps="true"
+                    android:text="@string/text_under_logo"
+                    android:textAllCaps="@bool/text_under_logo_all_caps"
                     android:textStyle="bold"
+                    android:gravity="center"
                     android:layout_below="@+id/imageViewJugnooLogo"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="5dp"
                     android:tag="@string/dont_touch_me"
-                    android:visibility="@integer/show_splash_logo_text"
+                    android:visibility="@integer/show_splash_logo_text_login"
                     android:textColor="@color/splash_logo_color"
                     />
 

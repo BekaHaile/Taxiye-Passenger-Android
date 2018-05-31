@@ -601,7 +601,7 @@ public class Data {
         FuguConfig.getInstance().setColorConfig(fuguColorConfig);
 
         FuguFontConfig fuguFontConfig = new FuguFontConfig.Builder()
-                .setNormaTextFontPath("fonts/maven_pro_regular.otf")
+                .setNormaTextFontPath("fonts/maven_pro_regular.ttf")
                 .setHeaderTitleFontPath("fonts/avenir_next_demi.otf")
                 .build();
 

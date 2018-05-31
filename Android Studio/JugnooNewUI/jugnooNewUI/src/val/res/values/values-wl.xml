@@ -44,7 +44,7 @@
     <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
     <bool name="force_open_autos">true</bool>
 
-
+    <integer name="show_terms">@integer/view_invisible</integer>
     <dimen name="splash_logo_width">150dp</dimen>
     <dimen name="splash_logo_height">150dp</dimen>
     <dimen name="splash_logo_top_margin">100dp</dimen>
@@ -53,8 +53,9 @@
     <integer name="show_splash_bg">@integer/view_visible</integer>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <drawable name="splash_background_drawable">@color/theme_color</drawable>
-    <integer name="show_social_login">@integer/view_invisible</integer>
+    <integer name="show_social_login">@integer/view_visible</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
+    <integer name="show_splash_logo_text_login">@integer/view_visible</integer>
 
     <string name="file_provider_name">com.val.fileprovider</string>
     <string name="web_landing_page">https://jugnoo.in</string>
@@ -70,5 +71,16 @@
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
     <bool name="show_about">false</bool>
-    <bool name="show_change_languge">true</bool>
+    <bool name="show_change_languge">false</bool>
+    <bool name="text_under_logo_all_caps">false</bool>
+
+    <color name="splash_logo_color">@color/white</color>
+    <color name="color_start_top_navigation_drawer">@color/colorPrimary</color>
+    <color name="color_end_top_navigation_drawer">@color/colorPrimary</color>
+    <color name="underline_edittext_account">@color/gradient_normal_end</color>
+    <color name="otp_auto_detect_bar">@color/gradient_normal_end</color>
+    <color name="fb_account_kit_button_background">@color/gradient_normal_end</color>
+
+    <!--Profile Screen-->
+    <integer name="top_bar_about">@integer/view_gone</integer>
 </resources>

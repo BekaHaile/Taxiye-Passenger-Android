@@ -7,4 +7,6 @@
     <color name="background_no_net">@color/colorPrimary</color>
     <color name="no_internet_text_color">@color/white</color>
 
+    <color name="text_color">@color/colorPrimary</color>
+
 </resources>

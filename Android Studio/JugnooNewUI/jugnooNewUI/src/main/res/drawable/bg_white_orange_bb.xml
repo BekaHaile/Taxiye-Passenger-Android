@@ -4,7 +4,7 @@
 
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/theme_color_alpha"/>
+            <solid android:color="@color/underline_edittext_account"/>
         </shape>
     </item>
 

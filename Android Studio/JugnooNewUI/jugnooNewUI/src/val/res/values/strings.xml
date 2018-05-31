@@ -192,7 +192,7 @@
 
 
     <!-- NL Splash screen-->
-    <string name="nl_splash_terms">By Signing up you agree to our <u>Terms of Use</u></string>
+    <string name="nl_splash_terms">By continuing you agree to our <u>Terms of Use</u></string>
     <string name="paytm_wallet">Paytm Wallet</string>
     <string name="mpesa_wallet">mPesa Wallet</string>
     <string name="nl_add_paytm_wallet">Add Paytm Wallet</string>
@@ -1870,5 +1870,5 @@
     <string name="arabic">عربى</string>
     <string name="french">français</string>
     <string name="german">Deutsche</string>
-
+    <string name="text_under_logo">Powered &amp; Backed by\nMERCEDES-BENZ</string>
 </resources>

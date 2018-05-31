@@ -20,7 +20,7 @@ public class Fonts {
 
     public static Typeface mavenRegular(Context appContext) {											// accessing fonts functions
         if (mavenRegular == null) {
-            mavenRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.otf");
+            mavenRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.ttf");
         }
         return mavenRegular;
     }
@@ -52,7 +52,7 @@ public class Fonts {
 
     public static Typeface latoRegular(Context appContext) {											// accessing fonts functions
         if (latoRegular == null) {
-            latoRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.otf");
+            latoRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.ttf");
         }
         return latoRegular;
     }

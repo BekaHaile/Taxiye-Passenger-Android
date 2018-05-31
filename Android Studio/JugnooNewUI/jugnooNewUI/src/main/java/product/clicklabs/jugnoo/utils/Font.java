@@ -20,7 +20,7 @@ public class Font {
 
 	public Typeface mavenRegular(Context appContext) {											// accessing fonts functions
 		if (mavenRegular == null) {
-			mavenRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.otf");
+			mavenRegular = Typeface.createFromAsset(appContext.getAssets(), "fonts/maven_pro_regular.ttf");
 		}
 		return mavenRegular;
 	}
