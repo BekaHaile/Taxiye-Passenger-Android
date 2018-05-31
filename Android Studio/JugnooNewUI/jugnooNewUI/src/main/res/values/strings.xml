@@ -1871,5 +1871,8 @@
     <string name="view_all_offers">- View all offers.</string>
     <string name="per_format">Per %s</string>
     <string name="away_format">%s away</string>
+    <string name="send_us_a_mail">Send us a mail</string>
+    <string name="issue_description">Issue description</string>
+    <string name="support_mail_subject">&appname; Support</string>
 
 </resources>

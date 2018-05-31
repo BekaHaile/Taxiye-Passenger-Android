@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -43,6 +44,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.SupportMailActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -284,6 +286,10 @@ public class RideSummaryFragment extends Fragment implements Constants {
 				@Override
 				public void onClick(View v) {
 					if (activity instanceof RideTransactionsActivity) {
+                        if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
+                            activity.startActivity(new Intent(activity, SupportMailActivity.class));
+                            return;
+                        }
                         if (Data.isFuguChatEnabled()) {
                             try {
                                 if(!TextUtils.isEmpty(endRideData.getFuguChannelId())){

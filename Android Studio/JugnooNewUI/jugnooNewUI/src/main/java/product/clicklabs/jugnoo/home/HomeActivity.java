@@ -205,6 +205,7 @@ import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
+import product.clicklabs.jugnoo.support.SupportMailActivity;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.T20Ops;
@@ -1653,6 +1654,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     //linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
 							rating, "", "");
+                    if(getResources().getBoolean(R.bool.support_email_page_enabled)){
+                        startActivity(new Intent(HomeActivity.this, SupportMailActivity.class));
+                        return;
+                    }
                     if (Data.isFuguChatEnabled()) {
                         fuguCustomerHelpRides(false);
                     } else {
@@ -7977,6 +7982,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 @Override
                 public void onInAppCustomerSupportClick(View view) {
+                    if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
+                        activity.startActivity(new Intent(activity, SupportMailActivity.class));
+                        return;
+                    }
                     if (Data.isFuguChatEnabled()) {
                         fuguCustomerHelpRides(true);
                     } else {
