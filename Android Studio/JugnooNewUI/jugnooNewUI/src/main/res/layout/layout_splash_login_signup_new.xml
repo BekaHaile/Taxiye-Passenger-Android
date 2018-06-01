@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
                     android:text="@string/text_under_logo"
-                    android:textAllCaps="@bool/text_under_logo_all_caps"
+                    android:textAllCaps="true"
                     android:textStyle="bold"
                     android:gravity="center"
                     android:layout_below="@+id/imageViewJugnooLogo"

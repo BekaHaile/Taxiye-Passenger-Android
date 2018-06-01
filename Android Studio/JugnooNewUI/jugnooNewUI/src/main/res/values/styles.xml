@@ -547,7 +547,7 @@
             @android:color/black
         </item>
         <item name="com_accountkit_button_background_color">
-            @color/fb_account_kit_button_background
+            @color/theme_color
         </item>
         <item name="com_accountkit_button_text_color">
             @android:color/white

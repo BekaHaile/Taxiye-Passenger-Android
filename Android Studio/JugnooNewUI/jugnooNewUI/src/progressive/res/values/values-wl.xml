@@ -65,6 +65,6 @@
     <string name="pictures_path">Progressive/Progressive Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
-    <bool name="show_about">false</bool>
+    <bool name="show_about">@integer/view_invisible</bool>
     <bool name="show_change_languge">false</bool>
 </resources>

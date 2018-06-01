@@ -71,18 +71,10 @@
     <string name="pictures_path">Val/Val Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
-    <bool name="show_about">false</bool>
+    <bool name="show_about">@integer/view_invisible</bool>
     <bool name="show_change_languge">false</bool>
-    <bool name="text_under_logo_all_caps">false</bool>
 
-    <color name="splash_logo_color">@color/white</color>
-    <color name="color_start_top_navigation_drawer">@color/colorPrimary</color>
-    <color name="color_end_top_navigation_drawer">@color/colorPrimary</color>
-    <color name="underline_edittext_account">@color/gradient_normal_end</color>
-    <color name="otp_auto_detect_bar">@color/gradient_normal_end</color>
-    <color name="fb_account_kit_button_background">@color/gradient_normal_end</color>
-    <dimen name="centre_pin_margin">-10px</dimen>
-    <dimen name="eta_pin_margin">12px</dimen>
+
 
 
     <!--Profile Screen-->

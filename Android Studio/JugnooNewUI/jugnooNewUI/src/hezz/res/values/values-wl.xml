@@ -71,7 +71,7 @@
     <string name="pictures_path">Hezz/Hezz Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
-    <bool name="show_about">false</bool>
+    <bool name="show_about">@integer/view_invisible</bool>
     <bool name="show_change_languge">true</bool>
     <string name="default_lang">fr</string>
     <string-array name="languages_to_show">
