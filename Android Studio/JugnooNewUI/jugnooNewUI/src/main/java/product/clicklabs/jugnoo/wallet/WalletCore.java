@@ -701,8 +701,8 @@ public class WalletCore {
 	 */
 	public int validatePaymentOptionForRidesOffering(int paymentOptionInt) {
 		if (paymentOptionInt == PaymentOption.PAYTM.getOrdinal()
-				&& paymentOptionInt == PaymentOption.MOBIKWIK.getOrdinal()
-				&& paymentOptionInt == PaymentOption.FREECHARGE.getOrdinal()) {
+				|| paymentOptionInt == PaymentOption.MOBIKWIK.getOrdinal()
+				|| paymentOptionInt == PaymentOption.FREECHARGE.getOrdinal()) {
 			try {
 				PaymentModeConfigData paymentModeConfigDataDefault = null;
 				for (PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas()) {

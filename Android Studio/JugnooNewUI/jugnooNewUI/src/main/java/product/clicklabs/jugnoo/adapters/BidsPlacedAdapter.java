@@ -61,13 +61,6 @@ public class BidsPlacedAdapter extends RecyclerView.Adapter<BidsPlacedAdapter.My
         holder.tvBidNumber.setText(context.getString(R.string.hash_format, String.valueOf(position+1)));
         holder.tvBidValue.setText(Utils.formatCurrencyValue(bidInfo.getCurrency(), bidInfo.getBidValue()));
         holder.tvBidDistance.setText(bidInfo.getAcceptDistanceText());
-	/*	  if(Data.autoData != null && !TextUtils.isEmpty(Data.autoData.getDistanceUnit())){
-			holder.tvBidDistance.setText(context.getString(R.string.away_format, Utils.getDecimalFormat2Decimal().format(bidInfo.getDistance())
-					+ Data.autoData.getDistanceUnit()));
-		} else {
-			holder.tvBidDistance.setText(context.getString(R.string.distance_km_away_format, Utils.getDecimalFormat2Decimal().format(bidInfo.getDistance()/1000D)));
-		}*/
-
 		holder.tvBidRating.setText(Utils.getDecimalFormat1Decimal().format(bidInfo.getRating()));
     }
 

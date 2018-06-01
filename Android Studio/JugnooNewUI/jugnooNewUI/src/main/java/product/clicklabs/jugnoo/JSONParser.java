@@ -299,6 +299,10 @@ public class JSONParser implements Constants {
 //                Prefs.with(context).save(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, "");
 //            }
 
+            Prefs.with(context).save(Constants.KEY_SUPPORT_EMAIL,
+                    userData.optString(Constants.KEY_SUPPORT_EMAIL, context.getString(R.string.default_support_email)));
+            Prefs.with(context).save(Constants.KEY_SUPPORT_EMAIL_SUBJECT,
+                    userData.optString(Constants.KEY_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject)));
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -348,7 +348,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				}
 			}
 		} catch (Exception e) {
-			readSMSClickLink();
+//			readSMSClickLink();
 		}
 	}
 

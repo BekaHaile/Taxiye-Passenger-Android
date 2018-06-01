@@ -141,11 +141,10 @@ public class RestClient {
             };
 
             RestAdapter.Builder builder = new RestAdapter.Builder()
-                    .setEndpoint("http://maps.googleapis.com/maps/api")
+                    .setEndpoint("https://maps.googleapis.com")
                     .setClient(new Ok3Client(getOkHttpClient(true)))
                     .setLog(fooLog)
                     .setLogLevel(RestAdapter.LogLevel.FULL);
-            setLogger(builder);
             RestAdapter restAdapter = builder.build();
             GOOGLE_API_SERVICES = restAdapter.create(GoogleAPIServices.class);
         }

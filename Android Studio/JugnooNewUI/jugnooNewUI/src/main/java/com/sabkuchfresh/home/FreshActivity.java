@@ -86,6 +86,7 @@ import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.datastructure.FuguCustomActionModel;
+import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.dialogs.FreshSortDialog;
 import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
@@ -206,8 +207,6 @@ import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
-import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
@@ -216,6 +215,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
@@ -3928,10 +3928,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void getAddressAndFetchOfferingData(final LatLng currentLatLng, final int appType) {
         try {
             DialogPopup.showLoadingDialog(this, "Loading...");
-            RestClient.getGoogleApiService().geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                    "en", false, new Callback<SettleUserDebt>() {
+            GoogleRestApis.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
+                    "en", new Callback<GoogleGeocodeResponse>() {
                         @Override
-                        public void success(SettleUserDebt settleUserDebt, Response response) {
+                        public void success(GoogleGeocodeResponse settleUserDebt, Response response) {
                             try {
                                 DialogPopup.dismissLoadingDialog();
                                 String resp = new String(((TypedByteArray) response.getBody()).getBytes());

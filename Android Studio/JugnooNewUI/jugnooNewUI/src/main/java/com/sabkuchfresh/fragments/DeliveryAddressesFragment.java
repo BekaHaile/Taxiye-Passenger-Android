@@ -69,10 +69,10 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
@@ -764,7 +764,7 @@ public class DeliveryAddressesFragment extends Fragment implements GAAction,
 //            params.put("key", activity.getString(R.string.google_maps_api_server_key));
 
 
-            RestClient.getGoogleApiService().getMyAddress(params, new Callback<GoogleGeocodeResponse>() {
+            GoogleRestApis.geocode(latLng.latitude + "," + latLng.longitude, Locale.getDefault().getCountry(), new Callback<GoogleGeocodeResponse>() {
                 @Override
                 public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
                     try {

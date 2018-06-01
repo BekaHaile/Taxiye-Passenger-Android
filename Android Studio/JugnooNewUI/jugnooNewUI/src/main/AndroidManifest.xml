@@ -189,6 +189,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme"/>
         <activity
+            android:name=".support.SupportMailActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme"/>
+        <activity
             android:name=".WebActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
