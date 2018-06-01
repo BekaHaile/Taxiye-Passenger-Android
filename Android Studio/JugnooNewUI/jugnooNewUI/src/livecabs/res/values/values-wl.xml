@@ -56,6 +56,7 @@
     <drawable name="login_background_drawable">@color/white</drawable>
     <integer name="show_social_login">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
+    <integer name="show_splash_logo_text_login">@integer/view_visible</integer>
 
     <string name="file_provider_name">com.livecabs.fileprovider</string>
     <string name="web_landing_page">https://livecabs.in</string>
