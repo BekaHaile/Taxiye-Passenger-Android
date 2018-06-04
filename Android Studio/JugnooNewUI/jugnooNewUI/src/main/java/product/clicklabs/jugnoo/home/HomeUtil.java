@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.fugu.FuguConfig;
 import com.google.android.gms.maps.GoogleMap;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 
@@ -252,7 +254,7 @@ public class HomeUtil {
 		if (!TextUtils.isEmpty(searchResult.getAddress())) {
 			markerOptions.anchor(0.1f, 1f);
 			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-					.getSavedAddressBitmap(activity, assl, addressName, activity.getResources().getDimensionPixelSize(R.dimen.text_size_28),
+					.getSavedAddressBitmap(activity, addressName, activity.getResources().getDimensionPixelSize(R.dimen.text_size_28),
 							drawable, R.color.text_color)));
 		} else {
 			if(searchResult.getFreq() != null){
@@ -260,7 +262,7 @@ public class HomeUtil {
 			}
 			markerOptions.anchor(0.1f, 1f);
 			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-					.getSavedAddressBitmap(activity, assl, addressName, activity.getResources().getDimensionPixelSize(R.dimen.text_size_24),
+					.getSavedAddressBitmap(activity, addressName, activity.getResources().getDimensionPixelSize(R.dimen.text_size_24),
 							R.drawable.ic_point_of_interest_marker, R.color.brown_marker_text)));
 		}
 		return markerOptions;
@@ -470,6 +472,15 @@ public class HomeUtil {
 			} else {
 				activity.getWindow().getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
 			}
+		}
+	}
+
+	public static void setVehicleIcon(Context context, ImageView imageView, String imageUrl, int resId, Callback callback){
+		if(!TextUtils.isEmpty(imageUrl)) {
+			Picasso.with(context).load(imageUrl)
+					.placeholder(resId).error(resId).into(imageView, callback);
+		} else {
+			imageView.setImageResource(resId);
 		}
 	}
 

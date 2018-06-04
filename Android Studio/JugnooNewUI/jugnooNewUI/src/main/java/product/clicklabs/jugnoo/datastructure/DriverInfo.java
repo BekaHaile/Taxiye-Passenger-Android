@@ -2,17 +2,29 @@ package product.clicklabs.jugnoo.datastructure;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoTools;
+import com.squareup.picasso.RequestCreator;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.t20.models.Schedule;
-import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.BitmapUtils;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -36,6 +48,7 @@ public class DriverInfo {
 	private ArrayList<String> fellowRiders = new ArrayList<>();
 	private int operatorId;
 	private String currency;
+	private String markerUrl;
 	private int paymentMethod;
 
 	public DriverInfo(String userId){
@@ -69,7 +82,8 @@ public class DriverInfo {
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
 			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
-					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId, String currency){
+					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId,
+					  String currency, String markerUrl){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -99,6 +113,7 @@ public class DriverInfo {
 		this.chatEnabled = chatEnabled;
 		this.operatorId = operatorId;
 		this.currency = currency;
+		this.markerUrl = markerUrl;
 	}
 
 	//for last ride data
@@ -244,13 +259,13 @@ public class DriverInfo {
 		this.chatEnabled = chatEnabled;
 	}
 
-	public Bitmap getMarkerBitmap(Activity activity, ASSL assl){
+	private Bitmap getMarkerBitmap(Activity activity){
 		if(vehicleIconSet == VehicleIconSet.ERICKSHAW){
-			return CustomMapMarkerCreator.createMarkerBitmapForResource(activity, assl,
+			return CustomMapMarkerCreator.createMarkerBitmapForResource(activity,
 					vehicleIconSet.getIconMarker(), 34f, 52f);
 		} else {
 			return CustomMapMarkerCreator
-					.createMarkerBitmapForResource(activity, assl, vehicleIconSet.getIconMarker());
+					.createMarkerBitmapForResource(activity, vehicleIconSet.getIconMarker());
 		}
 	}
 
@@ -278,6 +293,14 @@ public class DriverInfo {
 		this.paymentMethod = paymentMethod;
 	}
 
+	public String getMarkerUrl() {
+		return markerUrl;
+	}
+
+	public void setMarkerUrl(String markerUrl) {
+		this.markerUrl = markerUrl;
+	}
+
 	public enum PaymentMethod{
 		CASH(1),
 		BOTH(2); // default
@@ -291,4 +314,42 @@ public class DriverInfo {
 			return ordinal;
 		}
 	}
+
+	// dont remove this, it is for disabling GC for Picasso targets
+	private Target target;
+
+	public Marker addMarkerToMap(String markerUrl, final Activity context, final GoogleMap map, final MarkerOptions markerOptions){
+		if(!TextUtils.isEmpty(markerUrl)){
+			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmap(context)));
+			final Marker marker = map.addMarker(markerOptions);
+			RequestCreator requestCreator = MyApplication.getPicasso(context).load(markerUrl)
+					.resize(Utils.dpToPx(context, 27), Utils.dpToPx(context, 34));
+			target = new Target() {
+				@Override
+				public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+					try {
+						if(marker != null && marker.isVisible()) {
+							marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapUtils.getScaledDownBitmap(bitmap,
+									context.getResources().getDimensionPixelSize(R.dimen.dp_38), true)));
+						}
+					} catch (Exception ignored) {
+					}
+				}
+
+				@Override
+				public void onBitmapFailed(Drawable drawable) {
+				}
+
+				@Override
+				public void onPrepareLoad(Drawable drawable) {
+				}
+			};
+			PicassoTools.into(requestCreator, target);
+			return marker;
+		} else {
+			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmap(context)));
+			return map.addMarker(markerOptions);
+		}
+	}
+
 }

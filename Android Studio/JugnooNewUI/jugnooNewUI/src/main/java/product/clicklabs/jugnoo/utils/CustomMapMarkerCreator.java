@@ -24,8 +24,8 @@ import product.clicklabs.jugnoo.R;
 @SuppressWarnings("static-access")
 public class CustomMapMarkerCreator {
 
-	public static Bitmap createMarkerBitmapForResource(Activity activity, ASSL assl, int resourceId){
-		float scale = Math.min(assl.Xscale(), assl.Yscale());
+	public static Bitmap createMarkerBitmapForResource(Activity activity, int resourceId){
+		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
 		int width = (int)(49.0f * scale);
 		int height = (int)(62.0f * scale);
 		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -36,8 +36,8 @@ public class CustomMapMarkerCreator {
 		return mDotMarkerBitmap;
 	}
 
-    public static Bitmap createMarkerBitmapForResource(Activity activity, ASSL assl, int resourceId, float originalWidth, float originalHeight){
-        float scale = Math.min(assl.Xscale(), assl.Yscale());
+    public static Bitmap createMarkerBitmapForResource(Activity activity, int resourceId, float originalWidth, float originalHeight){
+        float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
         int width = (int)(originalWidth * scale);
         int height = (int)(originalHeight * scale);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -49,8 +49,8 @@ public class CustomMapMarkerCreator {
     }
 
 
-    public static Bitmap createPinMarkerBitmapEnd(Activity activity, ASSL assl){
-        float scale = Math.min(assl.Xscale(), assl.Yscale());
+    public static Bitmap createPinMarkerBitmapEnd(Activity activity){
+        float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
         int width = (int)(46.0f * scale * 0.85f);
         int height = (int)(94.0f * scale * 0.85f);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -61,8 +61,8 @@ public class CustomMapMarkerCreator {
         return mDotMarkerBitmap;
     }
 
-    public static Bitmap createPinMarkerBitmapStart(Activity activity, ASSL assl){
-        float scale = Math.min(assl.Xscale(), assl.Yscale());
+    public static Bitmap createPinMarkerBitmapStart(Activity activity){
+        float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
         int width = (int)(46.0f * scale * 0.85f);
         int height = (int)(94.0f * scale * 0.85f);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -74,8 +74,8 @@ public class CustomMapMarkerCreator {
     }
 
 
-    public static Bitmap createSmallPinMarkerBitmap(Activity activity, ASSL assl, int drawableId){
-        float scale = Math.min(assl.Xscale(), assl.Yscale());
+    public static Bitmap createSmallPinMarkerBitmap(Activity activity, int drawableId){
+        float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
         int width = (int)(46.0f * scale * 0.65f);
         int height = (int)(94.0f * scale * 0.65f);
         Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -87,9 +87,9 @@ public class CustomMapMarkerCreator {
     }
 
 
-	public static Bitmap getTextBitmap(final Context context, ASSL assl, String text, final int fontSize) {
+	public static Bitmap getTextBitmap(final Context context, String text, final int fontSize) {
 // ic_centre_pin_big
-		float scale = Math.min(assl.Xscale(), assl.Yscale());
+		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
 		final TextView textView = new TextView(context);
 
 		String textToWrite = text==null?"--":text;
@@ -120,11 +120,11 @@ public class CustomMapMarkerCreator {
 			try{
 				minsText = Math.round(Double.parseDouble(text)) > 1 ? context.getString(R.string.mins).toUpperCase() : context.getString(R.string.min).toUpperCase();
 			} catch (Exception e){}
-			canvasText.drawText(minsText, canvasText.getWidth() / 2, (int)(37f*assl.Yscale()) + boundsText.height(), paint);
-			canvasText.drawText(textToWrite, canvasText.getWidth() / 2, (31f*assl.Yscale()), paint);
+			canvasText.drawText(minsText, canvasText.getWidth() / 2, (int)(37f*ASSL.Yscale()) + boundsText.height(), paint);
+			canvasText.drawText(textToWrite, canvasText.getWidth() / 2, (31f*ASSL.Yscale()), paint);
 
 		}else{
-			canvasText.drawText(textToWrite, canvasText.getWidth() / 2, (31f*assl.Yscale()), paint);
+			canvasText.drawText(textToWrite, canvasText.getWidth() / 2, (31f*ASSL.Yscale()), paint);
 
 		}
 
@@ -133,9 +133,9 @@ public class CustomMapMarkerCreator {
 
 		return bmpText;
 	}
-	public static Bitmap getTextBitmap(final Context context, ASSL assl, String value,String suffix, final int fontSize) {
+	public static Bitmap getTextBitmap(final Context context, String value, String suffix, final int fontSize) {
 // ic_centre_pin_big
-		float scale = Math.min(assl.Xscale(), assl.Yscale());
+		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
 		final TextView textView = new TextView(context);
 
 		String textToWrite = value==null?"--":value;
@@ -162,11 +162,11 @@ public class CustomMapMarkerCreator {
 		shape.setBounds(0, 0, bmpText.getWidth(), bmpText.getHeight());
 		shape.draw(canvasText);
 		if(value!=null){
-			canvasText.drawText(suffix, canvasText.getWidth() / 2, (int)(37f*assl.Yscale()) + boundsText.height(), paint);
-			canvasText.drawText(textToWrite, canvasText.getWidth() / 2, (31f*assl.Yscale()), paint);
+			canvasText.drawText(suffix, canvasText.getWidth() / 2, (int)(37f*ASSL.Yscale()) + boundsText.height(), paint);
+			canvasText.drawText(textToWrite, canvasText.getWidth() / 2, (31f*ASSL.Yscale()), paint);
 
 		}else{
-			canvasText.drawText(textToWrite, canvasText.getWidth() / 2, (31f*assl.Yscale()), paint);
+			canvasText.drawText(textToWrite, canvasText.getWidth() / 2, (31f*ASSL.Yscale()), paint);
 
 		}
 
@@ -177,10 +177,10 @@ public class CustomMapMarkerCreator {
 	}
 
 
-	public static Bitmap getSavedAddressBitmap(final Context context, ASSL assl, String text, final int fontSize, int icon,
+	public static Bitmap getSavedAddressBitmap(final Context context, String text, final int fontSize, int icon,
 											   int colorResId) {
 // ic_centre_pin_big
-		float scale = Math.min(assl.Xscale(), assl.Yscale());
+		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
 		final TextView textView = new TextView(context);
 		textView.setText(text);
 		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int)(scale * (float)fontSize));
@@ -206,16 +206,15 @@ public class CustomMapMarkerCreator {
 		shape.setBounds(0, 0, (int)(42.0f * scale), bmpText.getHeight());
 		shape.draw(canvasText);
 
-		canvasText.drawText(text, (assl.Xscale() * 42f), (31f*assl.Yscale()), paint);
-		//canvasText.drawText("MIN", canvasText.getWidth() / 2, (int)(37f*assl.Yscale()) + boundsText.height(), paint);
+		canvasText.drawText(text, (ASSL.Xscale() * 42f), (31f*ASSL.Yscale()), paint);
 
 
 		return bmpText;
 	}
 
-	public static Bitmap getTextAssignBitmap(final Context context, ASSL assl, String text, final int fontSize) {
+	public static Bitmap getTextAssignBitmap(final Context context, String text, final int fontSize) {
 // ic_centre_pin_big
-		float scale = Math.min(assl.Xscale(), assl.Yscale());
+		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
 		final TextView textView = new TextView(context);
 		textView.setText(text);
 		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) (scale * (float) fontSize));
@@ -251,8 +250,8 @@ public class CustomMapMarkerCreator {
 		shape.setBounds(0, 0, bmpText.getWidth(), bmpText.getHeight());
 		shape.draw(canvasText);
 
-		canvasText.drawText("ETA: ", (45f * assl.Xscale()), (34f * assl.Yscale()), paint);
-		canvasText.drawText(text+" "+context.getString(R.string.min).toUpperCase(), (105f * assl.Xscale()), (int)(34f*assl.Yscale()), paint1);
+		canvasText.drawText(context.getString(R.string.eta)+": ", (45f * ASSL.Xscale()), (34f * ASSL.Yscale()), paint);
+		canvasText.drawText(text+" "+context.getString(R.string.min).toUpperCase(), (105f * ASSL.Xscale()), (int)(34f*ASSL.Yscale()), paint1);
 
 
 		return bmpText;

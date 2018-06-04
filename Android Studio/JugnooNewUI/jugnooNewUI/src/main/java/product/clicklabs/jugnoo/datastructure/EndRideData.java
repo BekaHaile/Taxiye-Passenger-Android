@@ -31,6 +31,7 @@ public class EndRideData {
 	private int operatorId;
 	private String currency;
 	private String distanceUnit;
+	private String iconUrl;
 
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
 					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
@@ -41,7 +42,7 @@ public class EndRideData {
 					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, double paidUsingFreeCharge,double paidUsingMpesa, double paidUsingRazorpay,
 					   int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
 					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags, int showPaymentOptions,
-					   int paymentOption, int operatorId, String currency, String distanceUnit){
+					   int paymentOption, int operatorId, String currency, String distanceUnit, String iconUrl){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -87,7 +88,7 @@ public class EndRideData {
 		this.phoneNumber = phoneNumber;
 		this.tripTotal = tripTotal;
 		this.vehicleType = vehicleType;
-		this.vehicleIconSet = new HomeUtil().getVehicleIconSet(iconSet);
+		this.vehicleIconSet = HomeUtil.getVehicleIconSet(iconSet);
 		this.isPooled = isPooled;
 		this.engagementDate = engagementDate;
 		this.totalRide = totalRide;
@@ -110,6 +111,7 @@ public class EndRideData {
 		this.operatorId = operatorId;
 		this.currency = currency;
 		this.distanceUnit = distanceUnit;
+		this.iconUrl = iconUrl;
 	}
 
 
@@ -256,5 +258,13 @@ public class EndRideData {
 
 	public void setDistanceUnit(String distanceUnit) {
 		this.distanceUnit = distanceUnit;
+	}
+
+	public String getIconUrl() {
+		return iconUrl;
+	}
+
+	public void setIconUrl(String iconUrl) {
+		this.iconUrl = iconUrl;
 	}
 }

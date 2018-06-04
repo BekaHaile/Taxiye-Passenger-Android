@@ -32,8 +32,7 @@ public class BaseActivity extends Activity {
 
 	@Override
 	protected void attachBaseContext(Context newBase) {
-		super.attachBaseContext(LocaleHelper.onAttach(TypekitContextWrapper.wrap(newBase), newBase.getString(R.string.default_lang)));
-//		super.attachBaseContext();
+		super.attachBaseContext(TypekitContextWrapper.wrap(LocaleHelper.onAttach(newBase, newBase.getString(R.string.default_lang))));
 	}
 
 	@Override

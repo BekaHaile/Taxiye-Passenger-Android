@@ -143,10 +143,10 @@ public class PokestopHelper {
                     markerOptions.zIndex(zIndex);
                     if(pokestopInfo.getType() == PokestopTypeValue.GYM.getOrdinal()){
                         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                .createMarkerBitmapForResource((Activity) context, assl, R.drawable.ic_poke_gym, 42f, 43f)));
+                                .createMarkerBitmapForResource((Activity) context, R.drawable.ic_poke_gym, 42f, 43f)));
                     } else{
                         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                .createMarkerBitmapForResource((Activity) context, assl, R.drawable.ic_poke_stop, 39f*0.9f, 40f*0.9f)));
+                                .createMarkerBitmapForResource((Activity) context, R.drawable.ic_poke_stop, 39f*0.9f, 40f*0.9f)));
                     }
                     markersPokemap.add(map.addMarker(markerOptions));
                     markerOptionsPokemap.add(markerOptions);

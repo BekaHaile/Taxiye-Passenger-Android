@@ -188,6 +188,9 @@ public class Region {
 		@SerializedName("ride_now_highlighted")
 		@Expose
 		private String rideNowHighlighted;
+		@SerializedName("marker_icon")
+		@Expose
+		private String markerIcon;
 
 		/**
 		 * @return The tabNormal
@@ -243,6 +246,14 @@ public class Region {
 		 */
 		public void setRideNowHighlighted(String rideNowHighlighted) {
 			this.rideNowHighlighted = rideNowHighlighted;
+		}
+
+		public String getMarkerIcon() {
+			return markerIcon;
+		}
+
+		public void setMarkerIcon(String markerIcon) {
+			this.markerIcon = markerIcon;
 		}
 	}
 
@@ -340,6 +351,9 @@ public class Region {
 	}
 
 	public Images getImages() {
+		if(images == null){
+			images = new Images();
+		}
 		return images;
 	}
 

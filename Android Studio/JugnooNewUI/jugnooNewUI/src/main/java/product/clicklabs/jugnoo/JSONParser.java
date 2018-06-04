@@ -854,6 +854,7 @@ public class JSONParser implements Constants {
         int vehicleType = jLastRideData.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
         int operatorId = jLastRideData.optInt(KEY_OPERATOR_ID, 0);
         String iconSet = jLastRideData.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+        String iconUrl = jLastRideData.optString(Constants.KEY_INVOICE_ICON);
         String engagementDate = jLastRideData.optString("engagement_date", "");
 
         double paidUsingMobikwik = jLastRideData.optDouble(KEY_PAID_USING_MOBIKWIK, 0);
@@ -889,7 +890,7 @@ public class JSONParser implements Constants {
                 sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge,paidUsingMpesa,paidUsingRazorpay, totalRide, status, supportNumber
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
-                showPaymentOptions, paymentOption, operatorId, currency, distanceUnit);
+                showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl);
 	}
 
 
@@ -932,6 +933,7 @@ public class JSONParser implements Constants {
                 JSONObject jObject1 = new JSONObject(responseStr);
                 if(apiTime > 2000
                         && Data.autoData != null && !"".equalsIgnoreCase(Data.autoData.getcSessionId())
+                        && HomeActivity.passengerScreenMode != null && HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING
                         && jObject1.optInt(Constants.KEY_FLAG, ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal()) == ApiResponseFlags.NO_ACTIVE_SESSION.getOrdinal()){
                     Log.w(TAG, "special case of state restore api lagging");
                     return Constants.REJECT_API;
@@ -983,6 +985,7 @@ public class JSONParser implements Constants {
             int operatorId = 0;
             String currency = null;
             ArrayList<BidInfo> bidInfos = new ArrayList<>();
+            String vehicleIconUrl = null;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1048,6 +1051,7 @@ public class JSONParser implements Constants {
                             chatEnabled = jObject.optInt("chat_enabled", 0);
                             operatorId = jObject.optInt(KEY_OPERATOR_ID, 0);
                             currency = jObject.optString(KEY_CURRENCY);
+                            vehicleIconUrl = jObject.optString(Constants.KEY_MARKER_ICON);
 
                             Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jObject.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
@@ -1173,7 +1177,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);
