@@ -1666,13 +1666,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     //linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
 							rating, "", "");
-                    if(getResources().getBoolean(R.bool.support_email_page_enabled)){
-                        startActivity(new Intent(HomeActivity.this, SupportMailActivity.class));
-                        return;
-                    }
                     if (Data.isFuguChatEnabled()) {
                         fuguCustomerHelpRides(false);
                     } else {
+                        if(getResources().getBoolean(R.bool.support_email_page_enabled)){
+                            startActivity(new Intent(HomeActivity.this, SupportMailActivity.class));
+                            return;
+                        }
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
                         intent.putExtra(INTENT_KEY_FROM_BAD, 1);
                         intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
@@ -7976,13 +7976,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 @Override
                 public void onInAppCustomerSupportClick(View view) {
-                    if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
-                        activity.startActivity(new Intent(activity, SupportMailActivity.class));
-                        return;
-                    }
                     if (Data.isFuguChatEnabled()) {
                         fuguCustomerHelpRides(true);
                     } else {
+                        if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
+                            activity.startActivity(new Intent(activity, SupportMailActivity.class));
+                            return;
+                        }
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
                         intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
                         startActivity(intent);

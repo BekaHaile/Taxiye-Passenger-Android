@@ -373,6 +373,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         if (datum1 != null && !TextUtils.isEmpty(datum1.getFuguChannelId())) {
                             FuguConfig.getInstance().openChatByTransactionId(datum1.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
                                     datum1.getFuguChannelName(), datum1.getFuguTags());
+                        } else if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
+                            activity.startActivity(new Intent(activity, SupportMailActivity.class));
                         }
                     }else if(activity instanceof FreshActivity){
                         activity.onBackPressed();
@@ -1333,10 +1335,6 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
     private void needHelpClick() {
         if (activity instanceof RideTransactionsActivity) {
-            if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
-                activity.startActivity(new Intent(activity, SupportMailActivity.class));
-                return;
-            }
             if (Data.isFuguChatEnabled()) {
                 try {
 
@@ -1354,6 +1352,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 }
 
             } else {
+                if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
+                    activity.startActivity(new Intent(activity, SupportMailActivity.class));
+                    return;
+                }
                 new TransactionUtils().openRideIssuesFragment(activity,
                         ((RideTransactionsActivity) activity).getContainer(),
                         -1, -1, null, null, 0, false, 0, datum1, -1, -1, "");
