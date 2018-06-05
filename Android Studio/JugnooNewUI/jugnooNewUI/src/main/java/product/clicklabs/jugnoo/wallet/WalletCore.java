@@ -685,9 +685,10 @@ public class WalletCore {
 				if(clientId.equalsIgnoreCase(Config.getAutosClientId())
 						&& (paymentModeConfigDataDefault.getPaymentOption() == PaymentOption.JUGNOO_PAY.getOrdinal()
 						|| paymentModeConfigDataDefault.getPaymentOption() == PaymentOption.ICICI_UPI.getOrdinal())){
-					paymentModeConfigDataDefault.setPaymentOption(PaymentOption.CASH.getOrdinal());
+					paymentOption = PaymentOption.CASH;
+				} else {
+					paymentOption = getPaymentOptionFromInt(paymentModeConfigDataDefault.getPaymentOption());
 				}
-				paymentOption = getPaymentOptionFromInt(paymentModeConfigDataDefault.getPaymentOption());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
