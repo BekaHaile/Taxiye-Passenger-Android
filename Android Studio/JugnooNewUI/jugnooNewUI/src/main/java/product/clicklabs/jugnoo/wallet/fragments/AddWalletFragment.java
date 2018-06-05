@@ -127,6 +127,7 @@ public class AddWalletFragment extends Fragment {
 
 		imageViewWalletIcon = (ImageView) rootView.findViewById(R.id.imageViewWalletIcon);
 		textViewAddWalletHelp = (TextView) rootView.findViewById(R.id.textViewAddWalletHelp); textViewAddWalletHelp.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewAddWalletHelp.setText(getString(R.string.add_paytm_money_help_text, getString(R.string.app_name)));
 		textViewOTPMessage = (TextView) rootView.findViewById(R.id.textViewOTPMessage); textViewOTPMessage.setTypeface(Fonts.mavenRegular(paymentActivity));
 		textViewOTPNumber = (TextView) rootView.findViewById(R.id.textViewOTPNumber); textViewOTPNumber.setTypeface(Fonts.mavenMedium(paymentActivity));
 

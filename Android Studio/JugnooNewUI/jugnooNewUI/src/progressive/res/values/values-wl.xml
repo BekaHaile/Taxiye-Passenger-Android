@@ -20,6 +20,8 @@
             ic_launcher
             notification_icon
     -->
+    <string name="app_name">Progressive Taxi</string>
+
     <string name="google_maps_api_key">AIzaSyDL96no_9dXS-ERNJs3qxOAu3lQW4RrUbY</string>
     <string name="google_maps_api_server_key">AIzaSyCURolQ4eIj04nAmW9XFCgfs9AyYnWrHKA</string>
     <string name="google_server_client_id">abc</string>
@@ -65,6 +67,6 @@
     <string name="pictures_path">Progressive/Progressive Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
-    <bool name="show_about">@integer/view_invisible</bool>
+    <integer name="show_about">@integer/view_invisible</integer>
     <bool name="show_change_languge">false</bool>
 </resources>

@@ -73,6 +73,7 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
     private Animation rotateAnim;
     private ImageView ivContactSync;
     private RelativeLayout rlSync;
+    private TextView tvJugnooConnection;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -168,9 +169,12 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
         llContactSyncing.setVisibility(View.GONE);
         tvNoJugnooConnections = (TextView) findViewById(R.id.tvNoJugnooConnections);
         tvNoJugnooConnections.setVisibility(View.GONE);
+        tvNoJugnooConnections.setText(getString(R.string.txt_no_jugnoo_connections, getString(R.string.app_name)));
         rotateAnim = AnimationUtils.loadAnimation(this, R.anim.rotate);
         ivContactSync = (ImageView) llContactSyncing.findViewById(R.id.ivContactSync);
         rlSync = (RelativeLayout) findViewById(R.id.rlSync);
+        tvJugnooConnection = (TextView) findViewById(R.id.tvJugnooConnection);
+        tvJugnooConnection.setText(getString(R.string.txt_jugnoo_connections, getString(R.string.app_name)));
 
         etSearchConnections.addTextChangedListener(this);
         imgBtnSync.setOnClickListener(this);

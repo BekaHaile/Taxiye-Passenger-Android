@@ -7862,7 +7862,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         setUserData();
                     }
                     DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this,
-                            getString(R.string.jugnoo_cash_added),
+                            getString(R.string.jugnoo_cash_added, getString(R.string.app_name)),
                             message,
                             getString(R.string.check_balance), getString(R.string.call_support),
                             new OnClickListener() {

@@ -77,14 +77,14 @@ public class FreshOrderCompleteDialog extends OrderCompletDialog {
 
 			if(appType == AppConstant.ApplicationType.MEALS) {
 				if(placeOrderResponse == null || TextUtils.isEmpty(placeOrderResponse.getOrderPlacedMessage())) {
-					textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_meals));
+					textView.setText(activity.getString(R.string.thank_you_for_placing_order_meals, activity.getString(R.string.app_name)));
 
 				} else {
 					textView.setText(Utils.trimHTML(Utils.fromHtml(placeOrderResponse.getOrderPlacedMessage())));
 				}
 			}
 			else if(appType == AppConstant.ApplicationType.GROCERY) {
-				textView.setText(activity.getResources().getString(R.string.thank_you_for_placing_order_grocery));
+				textView.setText(activity.getString(R.string.thank_you_for_placing_order_grocery, activity.getString(R.string.app_name)));
 			}
 			else if(appType == AppConstant.ApplicationType.MENUS || appType == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
 				if(placeOrderResponse == null || TextUtils.isEmpty(placeOrderResponse.getOrderPlacedMessage())) {

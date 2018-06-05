@@ -116,6 +116,7 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		textViewEmergencyModeEnabledTitle.setTypeface(Fonts.mavenRegular(activity));
 		textViewEmergencyModeEnabledMessage = (TextView) rootView.findViewById(R.id.textViewEmergencyModeEnabledMessage);
 		textViewEmergencyModeEnabledMessage.setTypeface(Fonts.mavenRegular(activity));
+		textViewEmergencyModeEnabledMessage.setText(getString(R.string.emergency_mode_enabled_message, getString(R.string.app_name)));
 		((TextView)rootView.findViewById(R.id.textViewOr)).setTypeface(Fonts.mavenLight(activity));
 
 		buttonCallPolice = (Button) rootView.findViewById(R.id.buttonCallPolice);

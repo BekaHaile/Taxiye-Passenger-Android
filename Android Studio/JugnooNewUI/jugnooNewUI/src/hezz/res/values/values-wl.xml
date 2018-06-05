@@ -20,6 +20,7 @@
             ic_launcher
             notification_icon
     -->
+    <string name="app_name">Hezz Taxi</string>
 
     <string name="google_maps_api_key">AIzaSyCReMAp5TW8sUMQRqecpPwT-o45UC4J3Lk</string>
     <string name="google_maps_api_server_key">AIzaSyB7i02FGFHWR5ttygDB4qwmxJ4ESuc-asM</string>
@@ -71,7 +72,7 @@
     <string name="pictures_path">Hezz/Hezz Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
-    <bool name="show_about">@integer/view_invisible</bool>
+    <integer name="show_about">@integer/view_invisible</integer>
     <bool name="show_change_languge">true</bool>
     <string name="default_lang">fr</string>
     <string-array name="languages_to_show">

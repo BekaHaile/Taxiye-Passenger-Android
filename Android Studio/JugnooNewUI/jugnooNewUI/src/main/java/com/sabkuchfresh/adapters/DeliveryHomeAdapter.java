@@ -2276,7 +2276,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             view.findViewById(R.id.divider_bottom).setVisibility(View.VISIBLE);
             view.findViewById(R.id.seperator_below_add_store).setVisibility(View.VISIBLE);
             TextView textView = (TextView) view.findViewById(R.id.tv_add_store);
-            textView.setText(R.string.label_add_store_text);
+            textView.setText(activity.getString(R.string.label_add_store_text, activity.getString(R.string.app_name)));
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

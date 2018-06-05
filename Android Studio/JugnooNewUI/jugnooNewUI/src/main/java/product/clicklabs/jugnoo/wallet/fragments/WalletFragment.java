@@ -104,6 +104,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		linearLayoutWalletContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutWalletContainer);
 		relativeLayoutJugnooCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWallet);
 		((TextView)rootView.findViewById(R.id.textViewJugnooCashBalance)).setTypeface(Fonts.mavenRegular(paymentActivity));
+		((TextView)rootView.findViewById(R.id.textViewJugnooCashBalance)).setText(getString(R.string.jugnoo_cash, getString(R.string.app_name)));
 		((TextView)rootView.findViewById(R.id.textViewJugnooCashTNC)).setTypeface(Fonts.mavenLight(paymentActivity));
 		textViewJugnooCashBalanceValue = (TextView) rootView.findViewById(R.id.textViewJugnooCashBalanceValue);
 		textViewJugnooCashBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));

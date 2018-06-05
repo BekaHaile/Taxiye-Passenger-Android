@@ -23,7 +23,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -112,7 +111,6 @@ import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
-import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.OwnerInfo;
@@ -121,7 +119,6 @@ import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.UserEmailFetcher;
 import product.clicklabs.jugnoo.utils.Utils;
-import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -625,6 +622,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			((TextView)findViewById(R.id.tvJugnooTaxiLS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 			((TextView)findViewById(R.id.tvJugnooTaxiP)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 			((TextView)findViewById(R.id.tvJugnooTaxiNoNet)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
+
+			((TextView)findViewById(R.id.tvWelcome)).setText(getString(R.string.welcome_to_jugnoo, getString(R.string.app_name)));
+
 			rlCountryCode = (LinearLayout) findViewById(R.id.rlCountryCode);
 			tvCountryCode = (TextView) findViewById(R.id.tvCountryCode);
 

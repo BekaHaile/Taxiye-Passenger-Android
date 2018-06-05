@@ -74,6 +74,7 @@ public class WalletTopupFragment extends Fragment {
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(activity));
 		textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
+		textViewTitle.setText(getString(R.string.jugnoo_cash, getString(R.string.app_name)));
 		textViewTNC = (TextView) rootView.findViewById(R.id.textViewTNC); textViewTNC.setTypeface(Fonts.mavenMedium(activity));
 
 		((TextView) rootView.findViewById(R.id.textViewAddCashHelp)).setTypeface(Fonts.mavenRegular(activity));
@@ -82,6 +83,7 @@ public class WalletTopupFragment extends Fragment {
 		textViewCurrentBalanceValue = (TextView) rootView.findViewById(R.id.textViewCurrentBalanceValue); textViewCurrentBalanceValue.setTypeface(Fonts.mavenRegular(activity));
 
 		textViewRechargeInfo = (TextView) rootView.findViewById(R.id.textViewRechargeInfo); textViewRechargeInfo.setTypeface(Fonts.mavenMedium(activity));
+		textViewRechargeInfo.setText(getString(R.string.recharge_jc_topup_info, getString(R.string.app_name)));
 		editTextTopupCardCode = (EditText) rootView.findViewById(R.id.editTextTopupCardCode); editTextTopupCardCode.setTypeface(Fonts.mavenRegular(activity));
 
 		buttonRecharge = (Button) rootView.findViewById(R.id.buttonRecharge); buttonRecharge.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);

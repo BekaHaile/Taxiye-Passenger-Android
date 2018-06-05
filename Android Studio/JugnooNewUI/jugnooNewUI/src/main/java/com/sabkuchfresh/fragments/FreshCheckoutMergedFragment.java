@@ -388,6 +388,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         linearLayoutCartExpansion = (LinearLayout) rootView.findViewById(R.id.linearLayoutCartExpansion);
         tvBecomeStar = (TextView) rootView.findViewById(R.id.tvBecomeStar);
         tvBecomeStar.setTypeface(Fonts.mavenMedium(activity));
+        tvBecomeStar.setText(getString(R.string.become_a_jugnoo_star, getString(R.string.app_name)));
         tvStarOffer = (TextView) rootView.findViewById(R.id.tvStarOffer);
         tvStarOffer.setTypeface(Fonts.mavenMedium(activity));
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
@@ -1031,7 +1032,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             if (activity.getUserCheckoutResponse().getStarSubscriptionText() != null && !activity.getUserCheckoutResponse().getStarSubscriptionText().equalsIgnoreCase("")) {
                 tvStarOffer.setText(activity.getUserCheckoutResponse().getStarSubscriptionText());
             } else {
-                tvStarOffer.setText(activity.getResources().getString(R.string.become_a_jugnoo_star));
+                tvStarOffer.setText(activity.getString(R.string.become_a_jugnoo_star, activity.getString(R.string.app_name)));
             }
 
             if (activity.getUserCheckoutResponse().getStarSubscriptionTitle() != null && !activity.getUserCheckoutResponse().getStarSubscriptionTitle().equalsIgnoreCase("")) {
@@ -2429,7 +2430,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         if (activity.getUserCheckoutResponse() != null
                                                 && activity.getUserCheckoutResponse().getSubscriptionInfo() != null
                                                 && activity.getUserCheckoutResponse().getSubscriptionInfo().getSubscriptionId() == null) {
-                                            Utils.showToast(activity, activity.getResources().getString(R.string.star_could_not_be_added));
+                                            Utils.showToast(activity, activity.getString(R.string.star_could_not_be_added, getString(R.string.app_name)));
                                         }
                                         setSubscriptionView();
                                         if (isMenusOrDeliveryOpen()) {

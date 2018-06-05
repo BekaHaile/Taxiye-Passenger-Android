@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources
-    [<!ENTITY appname "Jugnoo White">
-        <!ENTITY currency "\u20B9">
-        <!ENTITY nextline "\u2028">
-        <!ENTITY appnamecaps "JUGNOO WHITE">]>
+<!DOCTYPE resources [
+    <!ENTITY currency "\u20B9">
+    ]>
 <resources>
 
-    <string name="app_name">&appname;</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
@@ -21,7 +18,7 @@
 
     <!-- \n\nPeople with autos can offer rides to users who find taxis a bit too expensive. -->
 
-    <string name="about_1_text">&appname; helps you provide a friendly and affordable ride within the Chandigarh tricity area.\nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.</string>
+    <string name="about_1_text">%s helps you provide a friendly and affordable ride within the Chandigarh tricity area.\nThe rates are affordable, and definitely a good deal when you get them for a friendly ride.</string>
 
 
     <string name="password">Password</string>
@@ -89,8 +86,8 @@
     <string name="cancelled_too_many_rides">Oops! You have cancelled\ntoo many rides.</string>
     <string name="resume_after_24_hours">Your ride booking will resume\nafter 24 hours.</string>
     <string name="ride_summary_bad_text">Apologies for the inconvenience caused. We regret any difficulty you faced with us. Please let us know about the issue.</string>
-    <string name="no_current_offer_popup_text">Get free rides by referring &appname; to friends.Every successful referral gets you a free ride.</string>
-    <string name="end_ride_with_image_text">Gift your friend a &appname; transaction worth 50 &amp; Get one for yourself as well. </string>
+    <string name="no_current_offer_popup_text">Get free rides by referring %s to friends.Every successful referral gets you a free ride.</string>
+    <string name="end_ride_with_image_text">Gift your friend a %s transaction worth 50 &amp; Get one for yourself as well. </string>
 
 
     <!-- wallet screen-->
@@ -117,7 +114,7 @@
 
 
     <!-- Jugnoo Jeanie Strings-->
-    <string name="jugnoo_jeanie">&appname; Jeanie</string>
+    <string name="jugnoo_jeanie">%s Jeanie</string>
 
     <!-- Account Settings Strings -->
     <string name="add_home">أضف الرئيسية</string>
@@ -475,7 +472,7 @@
 
     <string name="paytm">Paytm</string>
     <string name="cash">السيولة النقدية</string>
-    <string name="jugnoo_cash">&appname; Cash</string>
+    <string name="jugnoo_cash">%s Cash</string>
     <string name="add_cash">ADD CASH</string>
 
     <string name="paytm_coupon_selected_but_paytm_not_added">Please add Paytm Wallet to avail the selected coupon</string>
@@ -515,9 +512,9 @@
     <string name="tnc_apply">T&amp;C Apply</string>
     <string name="tnc">T&amp;C</string>
     <string name="tnc_applied">*T&amp;C Applied</string>
-    <string name="jugnoo_cash_tnc">1. &appname; Cash if present would be the first source of deduction for your ride fare.\n
-		2. &appname; Cash added till January 21, 2016 would expire on March 31, 2016.\n
-		3. &appname;
+    <string name="jugnoo_cash_tnc">1. %s Cash if present would be the first source of deduction for your ride fare.\n
+		2. %s Cash added till January 21, 2016 would expire on March 31, 2016.\n
+		3. %s
         Cash added after January 21, 2016 will expire after one month of crediting.</string>
 
     <!-- Support Screen-->
@@ -549,7 +546,7 @@
 
     <string name="priority_tip_format">Priority Tip %sx</string>
 
-    <string name="call_jugnoo">Call &appname;</string>
+    <string name="call_jugnoo">Call %s</string>
     <string name="star_please_fill_required_information">* Please fill required information</string>
 
 
@@ -559,7 +556,7 @@
     <string name="in_app_customer_support">In App Customer Support</string>
     <string name="emergency_mode_enabled">وضع الطوارئ ممكن</string>
     <string name="emergency_mode_enabled_title">لقد قمت بتمكين الطوارئ.</string>
-    <string name="emergency_mode_enabled_message"> الدعم&appname; لقد أرسلنا موقعك إلى جهات الاتصال الخاصة بك في حالات الطوارئ و.</string>
+    <string name="emergency_mode_enabled_message"> الدعم%s لقد أرسلنا موقعك إلى جهات الاتصال الخاصة بك في حالات الطوارئ و.</string>
     <string name="call_police">الشرطة الدعوة</string>
     <string name="call_emergency_contact">الاتصال في حالات الطوارئ الاتصال</string>
     <string name="call_your_contacts">اتصل بجهات الاتصال الخاصة بك</string>
@@ -572,7 +569,7 @@
     <string name="delete">حذف</string>
     <string name="send">Send</string>
     <string name="send_invites">Send invites</string>
-    <string name="send_invites_2">to friends who haven\'t tried &appname;</string>
+    <string name="send_invites_2">to friends who haven\'t tried %s</string>
     <string name="delete_emergency_contact_message">هل أنت متأكد من أنك تريد حذف جهة الاتصال هذه من قائمة الطوارئ الخاصة بك؟</string>
     <string name="type_a_name_or_mobile_number">اكتب اسمًا أو رقم هاتف محمول</string>
     <string name="or_call_directly">أو اتصل مباشرة</string>
@@ -581,9 +578,9 @@
     <string name="send_ride_status_more_contacts_message_format">You have selected more than %1$s contacts, we will send ride status to only %2$s contacts at once.</string>
     <string name="configure_your_emergency_contacts">جهة اتصال للطوارئ
 تكوين الخاص بك</string>
-    <string name="inform_your_friends">أبلغ أصدقائك وعائلتك n\ عن موقعك الحالي في كل مرة n\ أنت مع &appname;</string>
+    <string name="inform_your_friends">أبلغ أصدقائك وعائلتك n\ عن موقعك الحالي في كل مرة n\ أنت مع %s</string>
     <string name="everything_is_alright_caps">كل شيء على ما يرام</string>
-    <string name="you_have_disabled_jugnoo_emergency">وضع الطوارئ&appname;لقد قمت بتعطيل</string>
+    <string name="you_have_disabled_jugnoo_emergency">وضع الطوارئ%sلقد قمت بتعطيل</string>
     <string name="please_select_some_contacts_first">يرجى اختيار بعض جهات الاتصال أولاً
 </string>
 
@@ -593,7 +590,7 @@
     <string name="str_new">New</string>
     <string name="play_predict_win">Play, Predict &amp; Win</string>
     <string name="team_vs_team_format">%1$s Vs %2$s</string>
-    <string name="t20_terms">Guess the winner of today T20 match after your ride starts and win exciting Offers from &appname;</string>
+    <string name="t20_terms">Guess the winner of today T20 match after your ride starts and win exciting Offers from %s</string>
     <string name="who_do_you_think_will_win_today">Who do you think will win today?</string>
     <string name="team_not_selected_error">Please select a team</string>
 
@@ -645,11 +642,11 @@
     <string name="delivery_date">Delivery Date</string>
     <string name="delivery_slot">Delivery Slot</string>
     <string name="place_order_confirmation">Are you sure you want to place your order?</string>
-    <string name="thank_you_for_placing_order">Thank you for placing your order\nwith &appname;
+    <string name="thank_you_for_placing_order">Thank you for placing your order\nwith %s
         Grocery!</string>
-    <string name="thank_you_for_placing_order_meals">Thank you for placing your order\nwith &appname;
+    <string name="thank_you_for_placing_order_meals">Thank you for placing your order\nwith %s
         Meals!</string>
-    <string name="thank_you_for_placing_order_grocery">Thank you for placing your order\nwith &appname;
+    <string name="thank_you_for_placing_order_grocery">Thank you for placing your order\nwith %s
         Grocery!</string>
     <string name="thank_you_for_placing_order_menus_format">Order placed with %s.\nWe will send you the confirmation once your order is accepted.</string>
     <string name="your_order_id">Your Order ID:</string>
@@ -661,14 +658,14 @@
 
 
     <string name="refer_a_driver">Refer a Driver</string>
-    <string name="came_across_auto_driver">Riding with a driver\nnot aware of &appname;
+    <string name="came_across_auto_driver">Riding with a driver\nnot aware of %s
         yet?</string>
     <string name="kindly_recommend_us_to_them">Kindly recommend us to them.</string>
-    <string name="if_they_are_interested">Please help us improve &appname;\nand increase driver income.\nWin! Win!</string>
+    <string name="if_they_are_interested">Please help us improve %s\nand increase driver income.\nWin! Win!</string>
     <string name="name_of_driver">Name of Driver</string>
     <string name="contact_number">Contact Number</string>
     <string name="refer">Refer</string>
-    <string name="want_free_rides">Get Free &appname; Cash</string>
+    <string name="want_free_rides">Get Free %s Cash</string>
 
     <string name="inbox">Inbox</string>
     <string name="play">Play</string>
@@ -684,7 +681,7 @@
     <string name="pay_for_your_rides_using">Pay for your rides using</string>
     <string name="enter_destination">أدخل الوجهة</string>
     <string name="destination_required">الوجهة المطلوبة</string>
-    <string name="add_paytm_money_help_text">Pay for &appname; with a Mobile Wallet</string>
+    <string name="add_paytm_money_help_text">Pay for %s with a Mobile Wallet</string>
     <string name="base_fare">الاجرة الاساسية</string>
     <string name="want_to_refer_a_driver">Want to refer a Driver?</string>
     <string name="promotions">Promotions</string>
@@ -750,7 +747,7 @@
 
 
     <string name="jugnoo_pokemon">POKEMON RADAR</string>
-    <string name="jugnoo_fab">&appname; JEANIE</string>
+    <string name="jugnoo_fab">%s JEANIE</string>
 
 
     <!--For fresh Application-->
@@ -802,7 +799,7 @@
     <string name="freecharge_no_cash">You do not have money in your\nFreeCharge Account</string>
 
     <string name="yes">Yes</string>
-    <string name="rate_app_dialog_title">Do you find &appname; useful?</string>
+    <string name="rate_app_dialog_title">Do you find %s useful?</string>
     <string name="rate_app_dialog_message">We would appreciate if you could rate us on the Play Store</string>
     <string name="rate_now">Rate Now</string>
     <string name="not_now">Not Now</string>
@@ -818,7 +815,7 @@
     <string name="could_not_find_address">لا يمكن العثور على العنوان</string>
     <string name="address_book">دليل العناوين</string>
     <string name="enter_topup_card_code">Enter Topup Card code</string>
-    <string name="recharge_jc_topup_info">Recharge &appname; Cash with Topup Card</string>
+    <string name="recharge_jc_topup_info">Recharge %s Cash with Topup Card</string>
     <string name="topup_code_empty">Topup code empty</string>
     <string name="address_delete_confirm_message">هل أنت متأكد من أنك تريد حذف هذا العنوان؟</string>
     <string name="saved_places">Saved Places</string>
@@ -860,7 +857,7 @@
     <string name="select_an_offer">Select an Offer</string>
 
 
-    <string name="jugnoo_offerings">&appname; Offerings</string>
+    <string name="jugnoo_offerings">%s Offerings</string>
     <string name="side_menu">Side menu</string>
     <string name="chat_with_driver">chat with driver</string>
     <string name="bad_feedback">bad feedback</string>
@@ -998,7 +995,7 @@
     <string name="change_mpin">Change MPIN</string>
     <string name="reset_pay_account">Reset Pay Account</string>
     <string name="account_management">Account Management</string>
-    <string name="jugnoo_pay">&appname; Pay</string>
+    <string name="jugnoo_pay">%s Pay</string>
     <string name="reset_account_alert_message">After resetting the account, your Payment address will be erased and you will be logged out of the app. Are you sure you want to proceed ?</string>
     <string name="delivery_before_colon">Delivery before:</string>
     <string name="oh_no_what_went_wrong">Oh no, what went wrong?</string>
@@ -1011,7 +1008,7 @@
     <string name="no_loading_money">No loading of money in wallets</string>
     <string name="bank_grade_security">Bank grade security</string>
     <string name="make_payment_with_mpin">Make payments with your MPIN on \nsecure NPCI platform</string>
-    <string name="phone_number_registered_with_jugnoo">The phone number registered \nwith &appname;
+    <string name="phone_number_registered_with_jugnoo">The phone number registered \nwith %s
         should be linked to \nyour bank account.</string>
     <string name="registered_number_should_be">The registered number should be \nthe default/preferred sim for SMS \nand calls for regular updates</string>
     <string name="GotIt">Got It</string>
@@ -1036,8 +1033,8 @@
     <string name="delivers_in">Delivers in</string>
     <string name="minimum_order_rupee_format">Min Order \u20B9%s</string>
     <string name="minimum_order_rupee_short_format"> \u2022 Min  \u20B9%s</string>
-    <string name="jugnoo_star">&appname; star</string>
-    <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for &appname;
+    <string name="jugnoo_star">%s star</string>
+    <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for %s
         STARS.</string>
     <string name="no">No</string>
     <string name="did_you_know">Did you know?</string>
@@ -1050,7 +1047,7 @@
     <string name="star_savings">Star Savings</string>
     <string name="you_will_receive_cashback_on_order">You’ll receive \u20B9%s cashback on this order</string>
     <string name="star_savings_no_priority_tip">Star Savings: No Priority Tip on this ride</string>
-    <string name="become_a_jugnoo_star">Become a &appname; star</string>
+    <string name="become_a_jugnoo_star">Become a %s star</string>
     <string name="add_to_avail_unlimited_free_deliveries">Add to avail unlimited free deliveries</string>
     <string name="total">Total</string>
     <string name="sub_total">Sub Total</string>
@@ -1094,7 +1091,7 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="zoom_view">zoom_view_transition</string>
-    <string name="star_could_not_be_added">&appname;
+    <string name="star_could_not_be_added">%s
         star couldn\'t be added. Please try next time.</string>
     <string name="claim_gift">Claim gift</string>
     <string name="auto_renewal">Auto Renewal</string>
@@ -1126,7 +1123,7 @@
     <string name="view_more">View more</string>
     <string name="view_less">View less</string>
     <string name="or_login_with">Or login with</string>
-    <string name="welcome_to_jugnoo">Welcome to &appname;</string>
+    <string name="welcome_to_jugnoo">Welcome to %s</string>
     <string name="or_signup_with">Or signup with</string>
     <string name="enter_otp_recieved_on">أدخل كلمة مرور لمرة واحدة تم استلامها</string>
     <string name="autodetecting_otp_sent_to">تم إرسال كلمة المرور المكتوبة تلقائيًا إلى</string>
@@ -1444,19 +1441,19 @@
     <string name="tap_to_upload_photo_store">Add photos of store front or menu</string>
     <string name="phone_number_add_store">PHONE NO.</string>
     <string name="upload_a_photo">Upload photos</string>
-    <string name="label_add_store_text"><b>Suggest a missing store to &appname;</b></string>
-    <string name="label_add_store_text_oh_snap"><b>Suggest a store to &appname;</b></string>
+    <string name="label_add_store_text"><b>Suggest a missing store to %s</b></string>
+    <string name="label_add_store_text_oh_snap"><b>Suggest a store to %s</b></string>
     <string name="hint_spinner_add_store">- Select Category -</string>
     <string name="store_address">Store\'s Address</string>
     <string name="enter_store_phone_number">Enter store\'s phone number</string>
     <string name="title_suggest_store">SUGGEST A STORE</string>
 
     <!-- Jugnoo Connections -->
-    <string name="txt_jugnoo_connections">Your &appname; Connections</string>
+    <string name="txt_jugnoo_connections">Your %s Connections</string>
     <string name="txt_new_message">New Message</string>
     <string name="min_order_strip_merchant_info">Min. Order Amount %s</string>
     <string name="txt_contacts_syncing">Your contacts are syncing&#8230;</string>
-    <string name="txt_no_jugnoo_connections">No &appname; connections!</string>
+    <string name="txt_no_jugnoo_connections">No %s connections!</string>
 
     <string-array name="search_tab_names">
         <item>Items</item>
@@ -1466,7 +1463,7 @@
     <string name="txt_suggestions">Suggestions</string>
     <string name="txt_recent_searches">Recent Searches</string>
     <string name="txt_related_to">Related to \"%s\"</string>
-    <string name="jugnoo_taxi">&appname;</string>
+    <string name="jugnoo_taxi">%s</string>
     <string name="faqs">FAQs</string>
     <string name="we_could_not_find_this_post">We could not find this post right now</string>
     <string name="closing_in_format">Closing in %1$s %2$s</string>
@@ -1549,7 +1546,7 @@
     <string name="whatsapp_not_installed">WhatsApp not Installed</string>
     <string name="choose_email_client">Choose an Email client:</string>
     <string name="share_with">Share with...</string>
-    <string name="you_havent_tried_app_yet">You haven\'t tried &appname; yet.</string>
+    <string name="you_havent_tried_app_yet">You haven\'t tried %s yet.</string>
     <string name="some_error_occured_tap_to_retry">حدث خطأ ما ، انقر لإعادة المحاولة</string>
     <string name="no_connection_tap_to_retry">No internet connection, tap to retry</string>
     <string name="discounts">Discounts</string>
@@ -1636,7 +1633,7 @@
     <string name="service_deleted">Service Deleted</string>
     <string name="service_ignored">Service Ignored</string>
     <string name="service_seen_by_agent">Service seen by agent</string>
-    <string name="pay_unsuccessful_message">Your payment via &appname; Pay was unsuccessful. In case, any money was debited from your bank account, it will be auto-credited in some time.</string>
+    <string name="pay_unsuccessful_message">Your payment via %s Pay was unsuccessful. In case, any money was debited from your bank account, it will be auto-credited in some time.</string>
     <string name="cannot_upload_more_images">Cannot upload more images</string>
     <string name="edit_post">Edit Post</string>
     <string name="edit_review">Edit Review</string>
@@ -1686,7 +1683,7 @@
     <string name="_200">200</string>
     <string name="margherita_npizza">Margherita  Pizza</string>
     <string name="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww">wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww</string>
-    <string name="explore_more_from_jugnoo">Explore more from &appname;</string>
+    <string name="explore_more_from_jugnoo">Explore more from %s</string>
     <string name="what_would_you_like_to_ndo_today">What would you like to do today?</string>
     <string name="orange">Orange</string>
     <string name="ah">ah</string>
@@ -1726,7 +1723,7 @@
     <string name="min_caps">الدقائق</string>
     <string name="your_treat_to_beat_heat_nis_on_the_way">Your treat to beat heat is on the way.</string>
     <string name="order_fruits_amp_veggies_nwhile_you_ride"><![CDATA[Order fruits & veggies while you ride]]></string>
-    <string name="jugnoo_fresh_will_get_them_ndelivered_to">&appname; Fresh will get them delivered to</string>
+    <string name="jugnoo_fresh_will_get_them_ndelivered_to">%s Fresh will get them delivered to</string>
     <string name="order_now">Order Now</string>
     <string name="name_with_colon">Name:</string>
     <string name="user1">User1</string>
@@ -1737,10 +1734,10 @@
     <string name="monthly">Monthly</string>
     <string name="_2388">2388</string>
     <string name="annual">Annual</string>
-    <string name="jugnoo_star_camel_case">&appname; Star</string>
+    <string name="jugnoo_star_camel_case">%s Star</string>
     <string name="_199">199</string>
     <string name="_00">00</string>
-    <string name="retry_with_jugnoo_pay">Retry with &appname; Pay</string>
+    <string name="retry_with_jugnoo_pay">Retry with %s Pay</string>
     <string name="plus">+</string>
     <string name="_2_5_x">2.5 X</string>
     <string name="account">Account</string>
@@ -1810,7 +1807,7 @@
     <string name="cashback_nabc">cashback abc</string>
     <string name="get_a_ride">الحصول على ركوب</string>
     <string name="ac_nservice_nand_repair">AC  Service  and Repair</string>
-    <string name="jugnoo_in">******@&appname;.in</string>
+    <string name="jugnoo_in">******@%s.in</string>
     <string name="_999">******999</string>
     <string name="do_you_really_want_to_delete_this_post_if_you_delete_once_it_will_no_longer_be_available">Do you really want to delete this post? If you delete once it will no longer be available.</string>
     <string name="no_current_offers">No Current Offers</string>
@@ -1851,7 +1848,7 @@
     <string name="type_city_name">Type City Name</string>
     <string name="use_current_location">Use Current Location</string>
     <string name="trending_cities">TRENDING CITIES</string>
-    <string name="finding_a_jugnoo_driver">Finding a &appname; driver...</string>
+    <string name="finding_a_jugnoo_driver">Finding a %s driver...</string>
     <string name="show_more_camel_case">Show More</string>
     <string name="post">Post</string>
     <string name="please_confirm_delivery_address">Please confirm delivery address.</string>
@@ -1881,7 +1878,7 @@
     <string name="search">بحث</string>
     <string name="country_picker_header">حدد الدولة</string>
     <string name="no_country_found">No country found</string>
-    <string name="jugnoo_cash_added">&appname; وأضاف النقدية</string>
+    <string name="jugnoo_cash_added">%s وأضاف النقدية</string>
     <string name="finding_a_driver">العثور على سائق ...</string>
     <string name="confirm_ride_request">تأكيد طلب ركوب</string>
     <string name="please_select_country_code">يرجى تحديد رمز البلد</string>
@@ -1898,7 +1895,7 @@
     <string name="history_caps">التاريخ</string>
     <string name="refer_a_driver_caps">تشير إلى سائق</string>
     <string name="support_caps">الدعم</string>
-    <string name="jugnoo_star_caps">&appnamecaps; نجمة</string>
+    <string name="jugnoo_star_caps">%s نجمة</string>
     <string name="set_preferences_caps">تحديد التفضيلات</string>
     <string name="restarting_your_app">جارٍ إعادة تشغيل تطبيقك ...</string>
     <string name="we_could_not_detect_your_location">لم نتمكن من اكتشاف موقعك. هل أنت متأكد من أنك تريد طلب الحصول على سيارة تلقائيًا في هذا الموقع؟</string>

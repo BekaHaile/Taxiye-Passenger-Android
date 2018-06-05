@@ -1383,7 +1383,7 @@ public class LoginResponse {
 		}
 
 		public String getRideEndGoodFeedbackText(Context context) {
-			return rideEndGoodFeedbackText==null? context.getResources().getString(R.string.end_ride_with_image_text):rideEndGoodFeedbackText;
+			return rideEndGoodFeedbackText==null? context.getResources().getString(R.string.end_ride_with_image_text, context.getString(R.string.app_name)):rideEndGoodFeedbackText;
 		}
 
 		public String getOrderId() {

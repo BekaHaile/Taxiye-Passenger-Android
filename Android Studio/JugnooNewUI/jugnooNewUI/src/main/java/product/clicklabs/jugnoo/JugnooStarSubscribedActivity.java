@@ -86,6 +86,7 @@ public class JugnooStarSubscribedActivity extends RazorpayBaseActivity implement
         cvContainer = (CardView) findViewById(R.id.cvContainer);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.avenirNext(this));
+        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_JUGNOO_STAR);
         //textViewTitle.getPaint().setShader(FeedUtils.textColorGradient(this, textViewTitle));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         imageViewBack.setOnClickListener(this);
@@ -288,7 +289,7 @@ public class JugnooStarSubscribedActivity extends RazorpayBaseActivity implement
 
 
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-                setScreenTitle(getString(R.string.jugnoo_star));
+                setScreenTitle(MyApplication.getInstance().ACTIVITY_NAME_JUGNOO_STAR);
                 //rlFragment.setVisibility(View.GONE);
                 btnUpgradeNow.setVisibility(View.VISIBLE);
             }
@@ -649,7 +650,7 @@ public class JugnooStarSubscribedActivity extends RazorpayBaseActivity implement
         }
 
         rlFragment.setVisibility(View.VISIBLE);
-        textViewTitle.setText(getString(R.string.jugnoo_star));
+        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_JUGNOO_STAR);
         FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
                 .add(container.getId(), StarSubscriptionCheckoutFragment.newInstance(selectedSubId, purchaseType),

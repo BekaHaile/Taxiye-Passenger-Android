@@ -271,6 +271,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             ((TextView) rootView.findViewById(R.id.textViewEndRideConvenienceCharge)).setTypeface(Fonts.mavenLight(activity));
             ((TextView) rootView.findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.mavenLight(activity));
             ((TextView) rootView.findViewById(R.id.textViewEndRideJugnooCash)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView) rootView.findViewById(R.id.textViewEndRideJugnooCash)).setText(getString(R.string.jugnoo_cash, getString(R.string.app_name)));
             ((TextView) rootView.findViewById(R.id.textViewEndRidePaytm)).setTypeface(Fonts.mavenLight(activity));
             ((TextView) rootView.findViewById(R.id.textViewEndRideMobikwik)).setTypeface(Fonts.mavenLight(activity));
             ((TextView) rootView.findViewById(R.id.textViewEndRideFreeCharge)).setTypeface(Fonts.mavenLight(activity));

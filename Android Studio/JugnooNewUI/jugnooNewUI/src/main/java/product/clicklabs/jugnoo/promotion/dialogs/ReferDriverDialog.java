@@ -73,8 +73,10 @@ public class ReferDriverDialog {
 			textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
 
 			((TextView) dialog.findViewById(R.id.textViewCameAcross)).setTypeface(Fonts.mavenRegular(activity));
+			((TextView) dialog.findViewById(R.id.textViewCameAcross)).setText(activity.getString(R.string.came_across_auto_driver, activity.getString(R.string.app_name)));
 			((TextView) dialog.findViewById(R.id.textViewKindlyRecommend)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 			((TextView) dialog.findViewById(R.id.textViewIfTheyAreInterested)).setTypeface(Fonts.mavenRegular(activity));
+			((TextView) dialog.findViewById(R.id.textViewIfTheyAreInterested)).setText(activity.getString(R.string.if_they_are_interested, activity.getString(R.string.app_name)));
 
 			editTextName = (EditText) dialog.findViewById(R.id.editTextName); editTextName.setTypeface(Fonts.mavenRegular(activity));
 			editTextPhone = (EditText) dialog.findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.mavenRegular(activity));

@@ -67,6 +67,7 @@ public class JugnooStarActivity extends RazorpayBaseActivity implements View.OnC
 
 
         tvSubTitle = (TextView) findViewById(R.id.tvSubTitle); tvSubTitle.setTypeface(Fonts.mavenRegular(this));
+        tvSubTitle.setText(getString(R.string.jugnoo_Star_title, getString(R.string.app_name)));
         rlPlan1 = (RelativeLayout) findViewById(R.id.rlPlan1); rlPlan1.setOnClickListener(this); rlPlan1.setVisibility(View.GONE);
         rlPlan2 = (RelativeLayout) findViewById(R.id.rlPlan2); rlPlan2.setOnClickListener(this); rlPlan2.setVisibility(View.GONE);
         ivRadio1 = (ImageView) findViewById(R.id.ivRadio1);

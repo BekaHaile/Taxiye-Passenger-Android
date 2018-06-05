@@ -172,6 +172,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 			ImageView imageViewClose = (ImageView) dialog.findViewById(R.id.imageViewClose);
 			linearLayoutNoCurrentOffers = (LinearLayout)dialog.findViewById(R.id.linearLayoutNoCurrentOffers);
 			textViewNoCurrentOffers = (TextView)dialog.findViewById(R.id.textViewNoCurrentOffers);textViewNoCurrentOffers.setTypeface(Fonts.mavenMedium(activity));
+			textViewNoCurrentOffers.setText(activity.getString(R.string.no_current_offer_popup_text, activity.getString(R.string.app_name)));
 			tvAvailableOffers = (TextView) dialog.findViewById(R.id.tvAvailableOffers); tvAvailableOffers.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 			buttonInviteFriends = (Button)dialog.findViewById(R.id.buttonInviteFriends);buttonInviteFriends.setTypeface(Fonts.mavenMedium(activity));
 			imageViewOffers = (ImageView)dialog.findViewById(R.id.imageViewOffers);
