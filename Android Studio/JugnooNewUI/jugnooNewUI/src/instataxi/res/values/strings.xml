@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE resources [
-    <!ENTITY appname "LiveCabs">
-    <!ENTITY appnamecaps "LIVECABS">
+    <!ENTITY appname "InstaTaxi">
+    <!ENTITY appnamecaps "INSTATAXI">
     <!ENTITY currency "\u20B9">
     ]>
 <resources>
