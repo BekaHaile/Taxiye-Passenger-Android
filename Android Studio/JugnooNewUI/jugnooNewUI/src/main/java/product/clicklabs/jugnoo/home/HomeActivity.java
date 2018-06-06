@@ -364,8 +364,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private RelativeLayout changeLocalityLayout, relativeLayoutPoolInfoBar, relativeLayoutRideEndWithImage;
     private LinearLayout linearlayoutChangeLocalityInner;
     private View viewPoolInfoBarAnim;
+    private View findDriverJugnooAnimation;
     private AnimationDrawable jugnooAnimation;
-    private ImageView findDriverJugnooAnimation, imageViewThumbsDown, imageViewThumbsUp, ivEndRideType,
+    private ImageView imageViewThumbsDown, imageViewThumbsUp, ivEndRideType,
             imageViewPaymentModeConfirm, imageViewRideEndWithImage;
     private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
     private LinearLayout llPayOnline;
@@ -735,8 +736,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         tvBidTimer.setTypeface(Fonts.mavenMedium(this));
         initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn);
         initialCancelRideBtn.setTypeface(Fonts.mavenRegular(this));
-        findDriverJugnooAnimation = (ImageView) findViewById(R.id.findDriverJugnooAnimation);
-        jugnooAnimation = (AnimationDrawable) findDriverJugnooAnimation.getBackground();
+        findDriverJugnooAnimation = findViewById(R.id.findDriverJugnooAnimation);
+        if(findDriverJugnooAnimation instanceof ImageView) {
+            jugnooAnimation = (AnimationDrawable) findDriverJugnooAnimation.getBackground();
+        }
         rvBidsIncoming = (RecyclerView) findViewById(R.id.rvBidsIncoming);
         rvBidsIncoming.setHasFixedSize(false);
         rvBidsIncoming.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -3168,7 +3171,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         fabViewFinal.setVisibility(View.VISIBLE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
                         findDriverJugnooAnimation.setVisibility(View.VISIBLE);
-                        jugnooAnimation.start();
+                        if(findDriverJugnooAnimation instanceof ImageView) {
+                            jugnooAnimation.start();
+                        }
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.VISIBLE);
                         rvBidsIncoming.setVisibility(View.GONE);
@@ -7676,11 +7681,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         relativeLayoutAssigningDropLocationParentSetVisibility(View.GONE);
                         initialCancelRideBtn.setVisibility(View.GONE);
                         findDriverJugnooAnimation.setVisibility(View.VISIBLE);
-                        jugnooAnimation.start();
+                        if(findDriverJugnooAnimation instanceof ImageView) {
+                            jugnooAnimation.start();
+                        }
                     } else {
                         setDropLocationAssigningUI();
                         initialCancelRideBtn.setVisibility(View.VISIBLE);
-                        jugnooAnimation.stop();
+                        if(findDriverJugnooAnimation instanceof ImageView) {
+                            jugnooAnimation.stop();
+                        }
                         findDriverJugnooAnimation.setVisibility(View.GONE);
                     }
                 } catch (Exception e) {
