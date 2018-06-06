@@ -62,7 +62,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:text="@string/jugnoo_fresh_will_get_them_ndelivered_to"
             android:textColor="@color/text_color_dark"
             android:textSize="@dimen/text_size_26"
             android:layout_marginStart="20px"

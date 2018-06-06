@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!DOCTYPE resources
-    [<!ENTITY appname "Hezz Taxi">
-        <!ENTITY currency "\u20B9">
-        <!ENTITY appnamecaps "&appname;">]>
+<!DOCTYPE resources [
+    <!ENTITY currency "\u20B9">
+    ]>
 <resources>
 
-    <string name="app_name">&appname;</string>
 
     <string name="hello_world">Bonne route !</string>
 
@@ -23,7 +21,7 @@
     <!-- \n\n Nos chauffeurs de taxis viennent vous récupérer ou vous êtes et vous dépose où vous voulez-->
 
 
-    <string name="about_1_text">&appname; est la meilleure façàn de se déplacer au Maroc.</string>
+    <string name="about_1_text">%s est la meilleure façàn de se déplacer au Maroc.</string>
 
     <string name="password">Mot de passe</string>
 
@@ -114,9 +112,9 @@
 
     <string name="ride_summary_bad_text">Nos excuses pour le dérangement causé. Nous regrettons toute difficulté que vous avez rencontrée avec nous. Veuillez nous laisser un message pour savoir plus sur le problème.</string>
 
-    <string name="no_current_offer_popup_text">Obtenez des réductions sur vos trajets en partageant l\'application &appname; à vos amis. </string>
+    <string name="no_current_offer_popup_text">Obtenez des réductions sur vos trajets en partageant l\'application %s à vos amis. </string>
 
-    <string name="end_ride_with_image_text">Offrez à votre ami un &appname; chaque parrainage vaut 5 &amp; Obtenez-en un pour vous aussi. </string>
+    <string name="end_ride_with_image_text">Offrez à votre ami un %s chaque parrainage vaut 5 &amp; Obtenez-en un pour vous aussi. </string>
 
     <!-- wallet screen-->
 
@@ -156,7 +154,7 @@
 
     <string name="thanks_for_ordering_with_us">Merci de nous avoir choisis</string>
 
-    <string name="jugnoo_jeanie">&appname; </string>
+    <string name="jugnoo_jeanie">%s </string>
 
     <!-- Account Settings Strings -->
 
@@ -356,9 +354,9 @@ En vous inscrivant, vous acceptez nos
 
     <string name="user_debt_pay_via_wallet">Payer via le portefeuille</string>
 
-    <string name="user_debt_settle_balance_message">Veuillez régulariser votre solde de votre portefeuille &appname; %s avant une nouvelle transaction</string>
+    <string name="user_debt_settle_balance_message">Veuillez régulariser votre solde de votre portefeuille %s %s avant une nouvelle transaction</string>
 
-    <string name="user_debt_settle_balance_message_fresh">Veuillez régulariser votre solde de votre portefeuille &appname; %s avant une nouvelle transaction</string>
+    <string name="user_debt_settle_balance_message_fresh">Veuillez régulariser votre solde de votre portefeuille %s %s avant une nouvelle transaction</string>
 
     <!-- NL Signup Multiple Accounts-->
 
@@ -825,7 +823,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="mpesa">MPESA</string>
 
-    <string name="jugnoo_cash">&appname; Cash</string>
+    <string name="jugnoo_cash">%s Cash</string>
 
     <string name="add_cash">Ajouter du Cash</string>
 
@@ -881,7 +879,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="tnc_applied">Termes et conditions appliqués</string>
 
-    <string name="jugnoo_cash_tnc">1. &appname; Cash si présente serait la première source de déduction pour votre trajet. \ N 2. &appname; L'argent comptant ajouté jusqu'au 21 janvier 2016 expirera le 31 mars 2016. \ n 3. &appname; Cash ajouté après le 21 janvier 2016 expirera après un mois de crédit.</string>
+    <string name="jugnoo_cash_tnc">1. %s Cash si présente serait la première source de déduction pour votre trajet. \ N 2. %s L'argent comptant ajouté jusqu'au 21 janvier 2016 expirera le 31 mars 2016. \ n 3. %s Cash ajouté après le 21 janvier 2016 expirera après un mois de crédit.</string>
 
     <!-- Support Screen-->
 
@@ -931,7 +929,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="priority_tip_format">Conseils prioritaires %sx</string>
 
-    <string name="call_jugnoo">Appeler &appname;</string>
+    <string name="call_jugnoo">Appeler %s</string>
 
     <string name="star_please_fill_required_information">* Veuillez remplir les informations requises</string>
 
@@ -974,7 +972,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="send_invites">Envoyer des invitations</string>
 
-    <string name="send_invites_2">à des amis qui n'ont pas essayé &appname;</string>
+    <string name="send_invites_2">à des amis qui n'ont pas essayé %s</string>
 
     <string name="delete_emergency_contact_message">Êtes-vous sûr de vouloir supprimer ce contact de votre liste d'urgence?</string>
 
@@ -990,11 +988,11 @@ En vous inscrivant, vous acceptez nos
 
     <string name="configure_your_emergency_contacts">Configurez vos contacts d\'urgence</string>
 
-    <string name="inform_your_friends">Informez vos amis et votre, famille de votre position actuelle chaque fois que vous utilisez &appname;</string>
+    <string name="inform_your_friends">Informez vos amis et votre, famille de votre position actuelle chaque fois que vous utilisez %s</string>
 
     <string name="everything_is_alright_caps">TOUT VA BIEN</string>
 
-    <string name="you_have_disabled_jugnoo_emergency">Vous avez désactivé le &appname;. Mode d'urgence</string>
+    <string name="you_have_disabled_jugnoo_emergency">Vous avez désactivé le %s. Mode d'urgence</string>
 
     <string name="please_select_some_contacts_first">Veuillez d'abord sélectionner des contacts</string>
 
@@ -1010,7 +1008,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="team_vs_team_format">%1$s Vs %2$s</string>
 
-    <string name="t20_terms">Devinez le gagnant du match T20 aujourd'hui après que votre tour commence et gagnez des offres excitantes de &appname;</string>
+    <string name="t20_terms">Devinez le gagnant du match T20 aujourd'hui après que votre tour commence et gagnez des offres excitantes de %s</string>
 
     <string name="who_do_you_think_will_win_today">Qui pensez-vous va gagner aujourd'hui?</string>
 
@@ -1122,11 +1120,11 @@ En vous inscrivant, vous acceptez nos
 
     <string name="refer_a_driver">Parrainer un chauffeur</string>
 
-    <string name="came_across_auto_driver">Rouler avec un chauffeur pas encore au courant de &appname;?</string>
+    <string name="came_across_auto_driver">Rouler avec un chauffeur pas encore au courant de %s?</string>
 
     <string name="kindly_recommend_us_to_them">Veuillez nous recommander à eux.</string>
 
-    <string name="if_they_are_interested">S'il vous plaît aidez-nous à améliorer &appname; et augmenter le revenu des conducteurs. </string>
+    <string name="if_they_are_interested">S'il vous plaît aidez-nous à améliorer %s et augmenter le revenu des conducteurs. </string>
 
     <string name="name_of_driver">Nom du chauffeur</string>
 
@@ -1289,7 +1287,7 @@ TARIF DE BASE :
 
     <string name="jugnoo_pokemon">POKEMON RADAR</string>
 
-    <string name="jugnoo_fab">&appname; </string>
+    <string name="jugnoo_fab">%s </string>
 
     <!--For fresh Application-->
 
@@ -1366,7 +1364,7 @@ TARIF DE BASE :
 
     <string name="yes">Oui</string>
 
-    <string name="rate_app_dialog_title">Trouvez-vous &appname; utile?</string>
+    <string name="rate_app_dialog_title">Trouvez-vous %s utile?</string>
 
     <string name="rate_app_dialog_message">Essayez de nous noter sur play store !</string>
 
@@ -1396,7 +1394,7 @@ TARIF DE BASE :
 
     <string name="enter_topup_card_code">Entrez le code de la carte de recharge</string>
 
-    <string name="recharge_jc_topup_info">Recharger &appname; Cash</string>
+    <string name="recharge_jc_topup_info">Recharger %s Cash</string>
 
     <string name="topup_code_empty">Topup code vide</string>
 
@@ -1476,7 +1474,7 @@ TARIF DE BASE :
 
     <string name="select_an_offer">Sélectionnez une offre</string>
 
-    <string name="jugnoo_offerings">&appname; offres</string>
+    <string name="jugnoo_offerings">%s offres</string>
 
     <string name="side_menu">Barre menu</string>
 
@@ -1674,7 +1672,7 @@ TARIF DE BASE :
 
     <string name="account_management">Compte Management</string>
 
-    <string name="jugnoo_pay">&appname; paiement</string>
+    <string name="jugnoo_pay">%s paiement</string>
 
     <string name="reset_account_alert_message">Après la réinitialisation du compte, votre adresse de paiement sera effacée et vous serez déconnecté de l'application. Êtes-vous sur de vouloir continuer ?</string>
 
@@ -1700,7 +1698,7 @@ TARIF DE BASE :
 
     <string name="make_payment_with_mpin">effectuer des paiements avec votre MPIN sur une plate-forme NPCI sécurisée</string>
 
-    <string name="phone_number_registered_with_jugnoo">Le numéro de téléphone enregistré avec &appname; doit être lié à votre compte bancaire.</string>
+    <string name="phone_number_registered_with_jugnoo">Le numéro de téléphone enregistré avec %s doit être lié à votre compte bancaire.</string>
 
     <string name="registered_number_should_be">Le numéro enregistré doit être la valeur par défaut préférée pour nos SMS et les appels pour les mises à jour régulières</string>
 
@@ -1738,9 +1736,9 @@ TARIF DE BASE :
 
     <string name="minimum_order_rupee_short_format"> \u2022 Min \u20B9%s</string>
 
-    <string name="jugnoo_star">&appname; star</string>
+    <string name="jugnoo_star">%s star</string>
 
-    <string name="jugnoo_Star_title">Livraison gratuite, cashback et offres. Tout pour &appname; STARS.</string>
+    <string name="jugnoo_Star_title">Livraison gratuite, cashback et offres. Tout pour %s STARS.</string>
 
     <string name="no">Non</string>
 
@@ -1764,7 +1762,7 @@ TARIF DE BASE :
 
     <string name="star_savings_no_priority_tip">Économies d'étoiles: aucun conseil prioritaire sur ce trajet</string>
 
-    <string name="become_a_jugnoo_star">Devenir un &appname; star</string>
+    <string name="become_a_jugnoo_star">Devenir un %s star</string>
 
     <string name="add_to_avail_unlimited_free_deliveries">Ajouter pour bénéficier des livraisons gratuites illimitées</string>
 
@@ -1846,7 +1844,7 @@ TARIF DE BASE :
 
     <string name="zoom_view">zoom sur mes transactions</string>
 
-    <string name="star_could_not_be_added">&appname; star couldn't be added. Please try next time.</string>
+    <string name="star_could_not_be_added">%s star couldn't be added. Please try next time.</string>
 
     <string name="claim_gift">Cadeau de réclamation</string>
 
@@ -1908,7 +1906,7 @@ TARIF DE BASE :
 
     <string name="or_login_with">Ou connectez-vous avec</string>
 
-    <string name="welcome_to_jugnoo">Bienvenue à &appname;</string>
+    <string name="welcome_to_jugnoo">Bienvenue à %s</string>
 
     <string name="or_signup_with">Ou inscrivez-vous avec</string>
 
@@ -2535,14 +2533,14 @@ from %s in your UPI app.
 
     -<string name="label_add_store_text">
 
-<b>Suggest a missing store to &appname;</b>
+<b>Suggest a missing store to %s</b>
 
 </string>
 
 
     -<string name="label_add_store_text_oh_snap">
 
-<b>Suggest a store to &appname;</b>
+<b>Suggest a store to %s</b>
 
 </string>
 
@@ -2554,7 +2552,7 @@ from %s in your UPI app.
 
     <string name="title_suggest_store">SUGGEST A STORE</string>
 
-    <string name="txt_jugnoo_connections">Your &appname; Connections</string>
+    <string name="txt_jugnoo_connections">Your %s Connections</string>
 
     <string name="txt_new_message">Nouveau Message</string>
 
@@ -2562,7 +2560,7 @@ from %s in your UPI app.
 
     <string name="txt_contacts_syncing">Your contacts are syncing…</string>
 
-    <string name="txt_no_jugnoo_connections">No &appname; connections!</string>
+    <string name="txt_no_jugnoo_connections">No %s connections!</string>
 
 
     -<string-array name="search_tab_names">
@@ -2579,7 +2577,7 @@ from %s in your UPI app.
 
     <string name="txt_related_to">Related to \"%s\"</string>
 
-    <string name="jugnoo_taxi">&appname;</string>
+    <string name="jugnoo_taxi">%s</string>
 
     <string name="faqs">FAQs</string>
 
@@ -2747,7 +2745,7 @@ from %s in your UPI app.
 
     <string name="share_with">Partager avec...</string>
 
-    <string name="you_havent_tried_app_yet">Vous n'avez pas encore essayé &appname;.</string>
+    <string name="you_havent_tried_app_yet">Vous n'avez pas encore essayé %s.</string>
 
     <string name="some_error_occured_tap_to_retry">Une erreur est survenue, appuyez pour réessayer</string>
 
@@ -2931,7 +2929,7 @@ from %s in your UPI app.
 
     <string name="service_seen_by_agent">Service seen by agent</string>
 
-    <string name="pay_unsuccessful_message">Your payment via &appname; Pay was unsuccessful. In case, any money was debited from your bank account, it will be auto-credited in some time.</string>
+    <string name="pay_unsuccessful_message">Your payment via %s Pay was unsuccessful. In case, any money was debited from your bank account, it will be auto-credited in some time.</string>
 
     <string name="cannot_upload_more_images">Cannot upload more images</string>
 
@@ -3031,7 +3029,7 @@ from %s in your UPI app.
 
     <string name="wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww">wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww</string>
 
-    <string name="explore_more_from_jugnoo">Explore more from &appname;</string>
+    <string name="explore_more_from_jugnoo">Explore more from %s</string>
 
     <string name="what_would_you_like_to_ndo_today">What would you like to do today?</string>
 
@@ -3115,7 +3113,7 @@ from %s in your UPI app.
 -<![CDATA[Order fruits & veggies while you ride]]>
 </string>
 
-    <string name="jugnoo_fresh_will_get_them_ndelivered_to">&appname; Fresh will get them delivered to</string>
+    <string name="jugnoo_fresh_will_get_them_ndelivered_to">%s Fresh will get them delivered to</string>
 
     <string name="order_now">Commander maintenant</string>
 
@@ -3137,13 +3135,13 @@ from %s in your UPI app.
 
     <string name="annual">Annual</string>
 
-    <string name="jugnoo_star_camel_case">&appname; Star</string>
+    <string name="jugnoo_star_camel_case">%s Star</string>
 
     <string name="_199">199</string>
 
     <string name="_00">00</string>
 
-    <string name="retry_with_jugnoo_pay">Retry with &appname; Pay</string>
+    <string name="retry_with_jugnoo_pay">Retry with %s Pay</string>
 
     <string name="plus">+</string>
 
@@ -3423,7 +3421,7 @@ from %s in your UPI app.
 
     <string name="pay_via_format">Pay via %s</string>
 
-    <string name="jugnoo_cash_added">&appname; Cash added</string>
+    <string name="jugnoo_cash_added">%s Cash added</string>
 
     <string name="finding_a_driver">On entrain de vous chercher votre chauffeur...</string>
 
@@ -3461,7 +3459,7 @@ from %s in your UPI app.
 
     <string name="support_caps">SUPPORT</string>
 
-    <string name="jugnoo_star_caps">&appname; ÉTOILE</string>
+    <string name="jugnoo_star_caps">%s ÉTOILE</string>
 
     <string name="set_preferences_caps">RÉGLER LES PRÉFÉRENCES</string>
 

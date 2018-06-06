@@ -152,7 +152,9 @@ public class JSONParser implements Constants {
 
 
         String jugnooCashTNC = userData.optString(KEY_JUGNOO_CASH_TNC,
-                context.getResources().getString(R.string.jugnoo_cash_tnc));
+                context.getString(R.string.jugnoo_cash_tnc, context.getString(R.string.app_name),
+                context.getString(R.string.app_name),
+                context.getString(R.string.app_name)));
 
         String inAppSupportPanelVersion = userData.optString(KEY_SP_IN_APP_SUPPORT_PANEL_VERSION, "0");
 
@@ -302,7 +304,7 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(Constants.KEY_SUPPORT_EMAIL,
                     userData.optString(Constants.KEY_SUPPORT_EMAIL, context.getString(R.string.default_support_email)));
             Prefs.with(context).save(Constants.KEY_SUPPORT_EMAIL_SUBJECT,
-                    userData.optString(Constants.KEY_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject)));
+                    userData.optString(Constants.KEY_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject, context.getString(R.string.app_name))));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -317,16 +319,16 @@ public class JSONParser implements Constants {
             String cancellationChargesPopupTextLine1 = autoData.optString("cancellation_charges_popup_text_line1", "");
             String cancellationChargesPopupTextLine2 = autoData.optString("cancellation_charges_popup_text_line2", "");
             String inRideSendInviteTextBold = autoData.optString("in_ride_send_invite_text_bold", context.getResources().getString(R.string.send_invites));
-            String inRideSendInviteTextNormal = autoData.optString("in_ride_send_invite_text_normal", context.getResources().getString(R.string.send_invites_2));
+            String inRideSendInviteTextNormal = autoData.optString("in_ride_send_invite_text_normal", context.getString(R.string.send_invites_2, context.getString(R.string.app_name)));
             String inRideSendInviteTextBoldV2 = autoData.optString("in_ride_send_invite_text_bold_v2", context.getResources().getString(R.string.send_invites));
-            String inRideSendInviteTextNormalV2 = autoData.optString("in_ride_send_invite_text_normal_v2", context.getResources().getString(R.string.send_invites_2));
+            String inRideSendInviteTextNormalV2 = autoData.optString("in_ride_send_invite_text_normal_v2", context.getString(R.string.send_invites_2, context.getString(R.string.app_name)));
             int rideStartInviteTextDeepIndexV2 = autoData.optInt("ride_start_invite_text_deep_index_v2", 0);
             String confirmScreenFareEstimateEnable = autoData.optString("confirm_screen_fare_estimate_enabled", "0");
             String poolDestinationPopupText1 = autoData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
             String poolDestinationPopupText2 = autoData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
             String poolDestinationPopupText3 = autoData.optString("pool_destination_popup_text3", context.getResources().getString(R.string.you_will_not_change_dest));
             int rideEndGoodFeedbackViewType = autoData.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
-            String rideEndGoodFeedbackText = autoData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getResources().getString(R.string.end_ride_with_image_text));
+            String rideEndGoodFeedbackText = autoData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getString(R.string.end_ride_with_image_text, context.getString(R.string.app_name)));
             String baseFarePoolText = autoData.optString("base_fare_pool_text", "");
 
             Prefs.with(context).save(Constants.KEY_SHOW_POKEMON_DATA, autoData.optInt(KEY_SHOW_POKEMON_DATA, 0));

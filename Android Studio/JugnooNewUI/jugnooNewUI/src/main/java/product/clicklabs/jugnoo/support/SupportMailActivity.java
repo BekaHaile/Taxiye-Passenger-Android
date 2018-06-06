@@ -68,7 +68,7 @@ public class SupportMailActivity extends BaseAppCompatActivity implements View.O
 							new String[]{Prefs.with(this).getString(Constants.KEY_SUPPORT_EMAIL,
 									getString(R.string.default_support_email))},
 							Prefs.with(this).getString(Constants.KEY_SUPPORT_EMAIL_SUBJECT,
-									getString(R.string.support_mail_subject)),
+									getString(R.string.support_mail_subject, getString(R.string.app_name))),
 							etMessage.getText().toString().trim());
 					etMessage.setText("");
 				}

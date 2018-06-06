@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.promotion;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,7 +63,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
-import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -129,6 +127,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         buttonApplyPromo.setTypeface(Fonts.mavenRegular(this));
         editTextPromoCode = (EditText) findViewById(R.id.editTextPromoCode);
         textViewFreeRides = (TextView) findViewById(R.id.textViewFreeRides); textViewFreeRides.setTypeface(Fonts.mavenMedium(this));
+        textViewFreeRides.setText(getString(R.string.want_free_rides, getString(R.string.app_name)));
         imageViewFreeRideAuto = (ImageView) findViewById(R.id.imageViewFreeRideAuto);
 
         linearLayoutNoOffers = (LinearLayout) findViewById(R.id.linearLayoutNoOffers);

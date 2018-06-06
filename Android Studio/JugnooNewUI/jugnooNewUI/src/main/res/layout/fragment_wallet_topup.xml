@@ -79,7 +79,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10px"
-                        android:text="@string/jugnoo_cash"
                         android:visibility="visible"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_50" />

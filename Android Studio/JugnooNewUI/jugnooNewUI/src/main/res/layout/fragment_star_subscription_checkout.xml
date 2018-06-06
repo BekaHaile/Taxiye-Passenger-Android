@@ -159,6 +159,7 @@
                     android:layout_marginBottom="@dimen/px_20">
 
                     <TextView
+                        android:id="@+id/tvJugnooCashLabel"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
@@ -433,7 +434,6 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/px_10"
                         android:layout_toEndOf="@+id/ivStar"
-                        android:text="@string/jugnoo_star_camel_case"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32"/>
 

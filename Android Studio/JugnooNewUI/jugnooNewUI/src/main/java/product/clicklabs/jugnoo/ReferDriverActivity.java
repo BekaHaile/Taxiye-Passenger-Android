@@ -68,8 +68,10 @@ public class ReferDriverActivity extends BaseActivity  {
         linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
 
         ((TextView) findViewById(R.id.textViewCameAcross)).setTypeface(Fonts.mavenRegular(this));
+        ((TextView) findViewById(R.id.textViewCameAcross)).setText(getString(R.string.came_across_auto_driver, getString(R.string.app_name)));
         ((TextView) findViewById(R.id.textViewKindlyRecommend)).setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
         ((TextView) findViewById(R.id.textViewIfTheyAreInterested)).setTypeface(Fonts.mavenRegular(this));
+        ((TextView) findViewById(R.id.textViewIfTheyAreInterested)).setText(getString(R.string.if_they_are_interested, getString(R.string.app_name)));
         textViewScroll = (TextView) findViewById(R.id.textViewScroll);
 
         editTextName = (EditText) findViewById(R.id.editTextName); editTextName.setTypeface(Fonts.mavenLight(this));

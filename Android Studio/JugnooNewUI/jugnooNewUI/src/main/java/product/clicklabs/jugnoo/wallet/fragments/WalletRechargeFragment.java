@@ -129,6 +129,7 @@ public class WalletRechargeFragment extends Fragment {
 		textViewTitleEdit = (TextView) rootView.findViewById(R.id.textViewTitleEdit); textViewTitleEdit.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 		textViewAddCashHelp = (TextView) rootView.findViewById(R.id.textViewAddCashHelp); textViewAddCashHelp.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewAddCashHelp.setText(getString(R.string.add_paytm_money_help_text, getString(R.string.app_name)));
 
 		imageViewWalletIcon = (ImageView) rootView.findViewById(R.id.imageViewWalletIcon);
 		textViewCurrentBalance = (TextView) rootView.findViewById(R.id.textViewCurrentBalance);	textViewCurrentBalance.setTypeface(Fonts.mavenRegular(paymentActivity));

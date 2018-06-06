@@ -48,6 +48,7 @@ public class EmergencyDisableDialog {
 			textHead.setTypeface(Fonts.mavenMedium(activity));
 			TextView textViewMessage = (TextView) dialog.findViewById(R.id.textMessage);
 			textViewMessage.setTypeface(Fonts.mavenRegular(activity));
+			textViewMessage.setText(activity.getString(R.string.you_have_disabled_jugnoo_emergency, activity.getString(R.string.app_name)));
 
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override

@@ -143,6 +143,7 @@ public class SupportFAQItemFragment extends Fragment implements Constants, GAAct
 		((TextView)rootView.findViewById(R.id.textViewCallDriver)).setTypeface(Fonts.mavenRegular(activity));
 		relativeLayoutCallJugnoo = (RelativeLayout)rootView.findViewById(R.id.relativeLayoutCallJugnoo);
 		((TextView)rootView.findViewById(R.id.textViewCallJugnoo)).setTypeface(Fonts.mavenRegular(activity));
+		((TextView)rootView.findViewById(R.id.textViewCallJugnoo)).setText(getString(R.string.call_jugnoo, getString(R.string.app_name)));
 
 		textViewSubtitle.setText(parentName);
 		textViewDescription.setText(item.getText());

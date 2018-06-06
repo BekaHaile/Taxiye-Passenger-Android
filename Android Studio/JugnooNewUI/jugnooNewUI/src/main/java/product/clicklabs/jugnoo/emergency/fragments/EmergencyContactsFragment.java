@@ -127,6 +127,7 @@ public class EmergencyContactsFragment extends Fragment {
 		linearLayoutNoContacts = (LinearLayout) rootView.findViewById(R.id.linearLayoutNoContacts);
 		((TextView)rootView.findViewById(R.id.textViewConfigureContacts)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 		((TextView)rootView.findViewById(R.id.textViewInformYourFriends)).setTypeface(Fonts.mavenLight(activity));
+		((TextView)rootView.findViewById(R.id.textViewInformYourFriends)).setText(getString(R.string.inform_your_friends, getString(R.string.app_name)));
 
 		textViewEdit.setVisibility(View.VISIBLE);
 		linearLayoutContactsList.setVisibility(View.VISIBLE);

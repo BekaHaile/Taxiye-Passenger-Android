@@ -144,7 +144,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private int orderId;
     private boolean isFromFatafatChat;
     private LinearLayout llFatafatChatPay,llTotalAmount,llJugnooCash,llAmtToBePaid;
-    private TextView tvTotalAmount,tvJugnooCash,tvAmtToBePaid;
+    private TextView tvTotalAmount,tvJugnooCashLabel, tvJugnooCash,tvAmtToBePaid;
     // indicates if upi is pending
     private boolean isUpiPending;
     // amount after jugnoo cash deduction
@@ -234,6 +234,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             rlStarUpgrade = (RelativeLayout) rootView.findViewById(R.id.rlStarUpgrade);
             cvStarPlans = (CardView) rootView.findViewById(R.id.cvStarPlans);
             tvPaymentPlan = (TextView) rootView.findViewById(R.id.tvPaymentPlan); tvPaymentPlan.setTypeface(Fonts.mavenMedium(activity));
+            tvPaymentPlan.setText(MyApplication.getInstance().ACTIVITY_NAME_JUGNOO_STAR);
             tvPlanAmount = (TextView) rootView.findViewById(R.id.tvPlanAmount); tvPlanAmount.setTypeface(Fonts.mavenMedium(activity));
             bPlaceOrder = (Button) rootView.findViewById(R.id.bPlaceOrder); bPlaceOrder.setTypeface(Fonts.mavenMedium(activity)); bPlaceOrder.setOnClickListener(onClickListenerPaymentOptionSelector);
             linearLayoutWalletContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutWalletContainer);
@@ -287,6 +288,8 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             llJugnooCash = (LinearLayout) rootView.findViewById(R.id.llJugnooCash);
             llAmtToBePaid = (LinearLayout) rootView.findViewById(R.id.llAmtToBePaid);
             tvTotalAmount = (TextView) rootView.findViewById(R.id.tvTotalAmount);
+            tvJugnooCashLabel = (TextView) rootView.findViewById(R.id.tvJugnooCashLabel);
+            tvJugnooCashLabel.setText(getString(R.string.jugnoo_cash, getString(R.string.app_name)));
             tvJugnooCash = (TextView) rootView.findViewById(R.id.tvJugnooCash);
             tvAmtToBePaid = (TextView) rootView.findViewById(R.id.tvAmtToBePaid);
             tvTotalFareValue = (TextView) rootView.findViewById(R.id.tvTotalFareValue); tvTotalFareValue.setTypeface(tvTotalFareValue.getTypeface(), Typeface.BOLD);

@@ -206,6 +206,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
         relativeLayoutJugnooJeanie = (RelativeLayout)findViewById(R.id.relativeLayoutJugnooJeanie);
         textViewJugnooJeanie = (TextView)findViewById(R.id.textViewJugnooJeanie); textViewJugnooJeanie.setTypeface(Fonts.mavenMedium(this));
+        textViewJugnooJeanie.setText(getString(R.string.jugnoo_jeanie, getString(R.string.app_name)));
         imageViewJugnooJeanie = (ImageView)findViewById(R.id.imageViewJugnooJeanie);
         relativeLayoutJugnooJeanie.setVisibility(View.GONE);
         if(Prefs.with(AccountActivity.this).getInt(SPLabels.SHOW_JUGNOO_JEANIE, 0) == 1){
@@ -228,6 +229,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
         relativeLayoutFAB = (LinearLayout) findViewById(R.id.relativeLayoutFAB);
         textViewFAB = (TextView)findViewById(R.id.textViewFAB); textViewFAB.setTypeface(Fonts.mavenMedium(this));
+        textViewFAB.setText(getString(R.string.jugnoo_fab, getString(R.string.app_name)));
         imageViewFABQuestion = (ImageView)findViewById(R.id.imageViewFABQuestion);
         imageViewFAB = (ImageView)findViewById(R.id.imageViewFAB);
         relativeLayoutFAB.setVisibility(View.GONE);

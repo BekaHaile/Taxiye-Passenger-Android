@@ -119,6 +119,7 @@ public class FABViewTest implements GACategory, GAAction {
             relativeLayoutFABTest.setVisibility(View.GONE);
             rlGenieHelp = (RelativeLayout) view.findViewById(R.id.rlGenieHelp);
             tvGenieHelp = (TextView) view.findViewById(R.id.tvGenieHelp);
+            tvGenieHelp.setText(activity.getString(R.string.explore_more_from_jugnoo, activity.getString(R.string.app_name)));
             ivJeanieHelp = (ImageView) view.findViewById(R.id.ivJeanieHelp);
             tvGenieExpandMessage = (TextView) view.findViewById(R.id.tvGenieExpandMessage);
             tvGenieExpandMessage.setVisibility(View.GONE);

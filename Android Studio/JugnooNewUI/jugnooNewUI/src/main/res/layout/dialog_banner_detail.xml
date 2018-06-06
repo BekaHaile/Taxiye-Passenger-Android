@@ -29,7 +29,6 @@
             android:id="@+id/textViewDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/about_1_text"
             android:gravity="center"
             android:padding="20px"
             android:textColor="@color/text_color"

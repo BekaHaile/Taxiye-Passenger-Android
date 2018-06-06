@@ -481,8 +481,7 @@
                 android:layout_marginBottom="30px"
                 android:gravity="center"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32"
-                android:text="@string/end_ride_with_image_text"/>
+                android:textSize="@dimen/text_size_32"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

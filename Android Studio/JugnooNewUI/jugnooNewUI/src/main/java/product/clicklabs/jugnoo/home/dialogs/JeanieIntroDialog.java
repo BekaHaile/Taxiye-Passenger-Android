@@ -48,6 +48,7 @@ public class JeanieIntroDialog {
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 			((TextView) dialog.findViewById(R.id.textViewJugnooJeanie)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+			((TextView)dialog.findViewById(R.id.textViewJugnooJeanie)).setText(activity.getString(R.string.jugnoo_jeanie, activity.getString(R.string.app_name)));
 			((TextView) dialog.findViewById(R.id.textViewSwitchTo)).setTypeface(Fonts.mavenMedium(activity));
 			((TextView) dialog.findViewById(R.id.textViewAutos)).setTypeface(Fonts.mavenMedium(activity));
 			TextView textViewAutosDesc = (TextView) dialog.findViewById(R.id.textViewAutosDesc); textViewAutosDesc.setTypeface(Fonts.mavenMedium(activity));

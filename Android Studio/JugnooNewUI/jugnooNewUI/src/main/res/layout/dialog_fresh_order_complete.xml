@@ -47,7 +47,7 @@
                 android:layout_marginStart="15px"
                 android:layout_marginEnd="15px"
                 android:gravity="center"
-                android:text="@string/thank_you_for_placing_order"
+                android:text="@string/thank_you_for_placing_order_meals"
                 android:textColor="@color/text_color_dark"
                 android:textSize="@dimen/text_size_32"
                 />

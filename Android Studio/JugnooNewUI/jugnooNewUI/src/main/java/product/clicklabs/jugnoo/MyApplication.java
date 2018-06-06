@@ -134,7 +134,7 @@ public class MyApplication extends Application {
         ACTIVITY_NAME_REFER_A_DRIVER = getResources().getString(R.string.refer_a_driver_caps);
         ACTIVITY_NAME_SUPPORT = getResources().getString(R.string.support_caps);
         ACTIVITY_NAME_ABOUT = getResources().getString(R.string.about_caps);
-        ACTIVITY_NAME_JUGNOO_STAR = getResources().getString(R.string.jugnoo_star_caps);
+        ACTIVITY_NAME_JUGNOO_STAR = getResources().getString(R.string.jugnoo_star_caps, getString(R.string.app_name).toUpperCase());
         ACTIVITY_NAME_NOTIFICATION_SETTING = getResources().getString(R.string.set_preferences_caps);
 
     }

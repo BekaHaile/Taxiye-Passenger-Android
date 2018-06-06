@@ -60,6 +60,7 @@ public class RateAppDialog {
 
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 			TextView textViewTitle = (TextView) dialog.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+			textViewTitle.setText(activity.getString(R.string.rate_app_dialog_title, activity.getString(R.string.app_name)));
 			TextView textViewMessage = (TextView) dialog.findViewById(R.id.textViewMessage); textViewMessage.setTypeface(Fonts.mavenMedium(activity));
 			Button buttonYes = (Button) dialog.findViewById(R.id.buttonYes); buttonYes.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 			Button buttonMaybe = (Button) dialog.findViewById(R.id.buttonMaybe); buttonMaybe.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
