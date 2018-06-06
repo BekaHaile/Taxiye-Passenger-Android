@@ -33,7 +33,7 @@
 
 
 
-    <string name="operator_token">6e1314631d098db197321244c93fb7c5</string>
+    <string name="operator_token">99f30666b06f54717b21328fcd5a0c7c</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">911</string>
     <string name="facebook_page_id">instataxi</string>
@@ -52,11 +52,11 @@
     <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bg">@integer/view_visible</integer>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
-    <drawable name="splash_background_drawable">@drawable/splash_back</drawable>
+    <drawable name="splash_background_drawable">@color/black</drawable>
     <drawable name="login_background_drawable">@color/white</drawable>
     <integer name="show_social_login">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
-    <integer name="show_splash_logo_text_login">@integer/view_visible</integer>
+    <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
 
     <string name="file_provider_name">com.instataxi.fileprovider</string>
     <string name="web_landing_page">https://instataxi.in</string>
@@ -71,6 +71,6 @@
     <string name="pictures_path">InstaTaxi/InstaTaxi Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
-    <bool name="show_about">@integer/view_invisible</bool>
+    <bool name="show_about">false</bool>
     <bool name="show_change_languge">false</bool>
 </resources>
