@@ -35,7 +35,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.BuildConfig;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -81,7 +83,7 @@ public class StripeAddCardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_card, container, false);
-        stripe = new Stripe(getActivity(), BuildConfig.STRIPE_KEY);
+        stripe = new Stripe(getActivity(), Config.getServerUrl().equals(Config.getLiveServerUrl())? BuildConfig.STRIPE_KEY_LIVE:BuildConfig.STRIPE_KEY_DEV);
         ButterKnife.bind(this, rootView);
         textViewTitle.setTypeface(Fonts.avenirNext(getActivity()));
         updateIcon(null);

@@ -30,7 +30,10 @@ public class EndRideData {
 	private int showPaymentOptions, paymentOption;
 	private int operatorId;
 	private String currency;
-	
+	private String distanceUnit;
+	private double paidUsingStripe;
+	private String last_4;
+
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
 					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
 					   double fare, double luggageCharge, double convenienceCharge, double discount, double paidUsingWallet,
@@ -38,7 +41,7 @@ public class EndRideData {
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
 					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled,
 					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, double paidUsingFreeCharge,double paidUsingMpesa, double paidUsingRazorpay,
-					   int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
+					   double paidUsingStripe,String last_4,int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
 					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags, int showPaymentOptions,
 					   int paymentOption, int operatorId, String currency){
 		this.totalRide = totalRide;
@@ -108,6 +111,9 @@ public class EndRideData {
 		this.showPaymentOptions = showPaymentOptions;
 		this.operatorId = operatorId;
 		this.currency = currency;
+		this.distanceUnit = distanceUnit;
+		this.paidUsingStripe = paidUsingStripe;
+		this.last_4 = last_4;
 	}
 
 
@@ -246,5 +252,21 @@ public class EndRideData {
 
 	public void setCurrency(String currency) {
 		this.currency = currency;
+	}
+
+	public String getDistanceUnit() {
+		return distanceUnit;
+	}
+
+	public void setDistanceUnit(String distanceUnit) {
+		this.distanceUnit = distanceUnit;
+	}
+
+	public double getPaidUsingStripe() {
+		return paidUsingStripe;
+	}
+
+	public String getLast_4() {
+		return last_4;
 	}
 }

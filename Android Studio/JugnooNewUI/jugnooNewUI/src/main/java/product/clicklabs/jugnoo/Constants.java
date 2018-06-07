@@ -840,6 +840,8 @@ public interface Constants {
     String KEY_REMAINING = "remaining";
     String KEY_RAZOR_PAY_DEDUCTED = "razor_pay_deducted";
     String KEY_PAID_USING_RAZORPAY = "paid_using_razorpay";
+    String KEY_PAID_USING_STRIPE = "paid_using_stripe";
+    String KEY_LAST_4 = "last_4";
     String KEY_DESCRIPTION = "description";
     String KEY_CURRENCY = "currency";
     String KEY_IS_RAZORPAY_ENABLED = "is_razorpay_enabled";

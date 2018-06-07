@@ -49,6 +49,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.WalletCore;
 
 
 @SuppressLint("ValidFragment")
@@ -68,7 +69,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
     RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
             relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm,
-            relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay,relativeLayoutPaidUsingMpesa;
+            relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay,rlPaidUsingStripeCard,relativeLayoutPaidUsingMpesa;
     LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
     RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare, relativeLayoutFinalFare;
     NonScrollListView listViewEndRideDiscounts;
@@ -78,7 +79,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             textViewEndRideMobikwikValue, textViewEndRideFreeChargeValue,
             textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
             textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue,
-            tvIncludeToll, tvEndRideRazorpay, tvEndRideRazorpayValue,textViewEndRideMpesaValue;
+            tvIncludeToll, tvEndRideRazorpay,tvEndRideStripeCard, tvEndRideRazorpayValue,tvEndRideStripeCardValue,textViewEndRideMpesaValue;
     TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
     Button buttonEndRideOk;
     EndRideDiscountsAdapter endRideDiscountsAdapter;
@@ -213,7 +214,9 @@ public class RideSummaryFragment extends Fragment implements Constants {
             textViewEndRideMpesaValue = (TextView) rootView.findViewById(R.id.textViewEndRideMpesaValue);
             textViewEndRideMpesaValue.setTypeface(Fonts.mavenRegular(activity));
             tvEndRideRazorpay = (TextView) rootView.findViewById(R.id.tvEndRideRazorpay); tvEndRideRazorpay.setTypeface(Fonts.mavenLight(activity));
+            tvEndRideStripeCard = (TextView) rootView.findViewById(R.id.tvEndRideStripeCard); tvEndRideStripeCard.setTypeface(Fonts.mavenLight(activity));
             tvEndRideRazorpayValue = (TextView) rootView.findViewById(R.id.tvEndRideRazorpayValue); tvEndRideRazorpayValue.setTypeface(Fonts.mavenRegular(activity));
+            tvEndRideStripeCardValue = (TextView) rootView.findViewById(R.id.tvEndRideStripeCardValue); tvEndRideStripeCardValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideToBePaidValue = (TextView) rootView.findViewById(R.id.textViewEndRideToBePaidValue);
             textViewEndRideToBePaidValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideBaseFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideBaseFareValue);
@@ -239,6 +242,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             relativeLayoutPaidUsingFreeCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingFreeCharge);
             relativeLayoutPaidUsingMpesa = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingMpesa);
             rlPaidUsingRazorpay = (RelativeLayout) rootView.findViewById(R.id.rlPaidUsingRazorpay);
+            rlPaidUsingStripeCard = (RelativeLayout) rootView.findViewById(R.id.rlPaidUsingStripeCard);
             linearLayoutEndRideTime = (LinearLayout) rootView.findViewById(R.id.linearLayoutEndRideTime);
             relativeLayoutEndRideWaitTime = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideWaitTime);
             imageViewEndRideDriverIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideDriverIcon);
@@ -508,6 +512,19 @@ public class RideSummaryFragment extends Fragment implements Constants {
                     tvEndRideRazorpayValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.paidUsingRazorpay));
                 } else{
                     rlPaidUsingRazorpay.setVisibility(View.GONE);
+                }
+                if(Utils.compareDouble(endRideData.getPaidUsingStripe(), 0) > 0){
+                    rlPaidUsingStripeCard.setVisibility(View.VISIBLE);
+                    if(!TextUtils.isEmpty(endRideData.getLast_4())){
+                        tvEndRideStripeCard.setText(WalletCore.getStripeCardDisplayString(activity,endRideData.getLast_4()));
+
+                    }else{
+                        tvEndRideStripeCard.setText(MyApplication.getInstance().getWalletCore().getStripeCardName(activity));
+
+                    }
+                    tvEndRideStripeCardValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.getPaidUsingStripe()));
+                } else{
+                    rlPaidUsingStripeCard.setVisibility(View.GONE);
                 }
 
                 textViewEndRideToBePaidValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.toPay));
