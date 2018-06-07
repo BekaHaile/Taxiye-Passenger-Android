@@ -20,6 +20,7 @@ import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
 import retrofit.Callback;
@@ -597,5 +598,10 @@ public interface ApiService {
     @POST("/select_the_bid")
     void selectTheBid(@FieldMap Map<String, String> params,
                                 Callback<FeedCommonResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/add_card_to_customer_account")
+    void addCardToCustomer(@FieldMap Map<String, String> params,
+                           Callback<StripeCardResponse> callback);
 
 }

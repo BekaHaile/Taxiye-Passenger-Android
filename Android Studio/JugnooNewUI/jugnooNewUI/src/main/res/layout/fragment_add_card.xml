@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:tag="@string/dont_touch_me"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:text="@string/add_card_title"
+            android:textSize="18sp"
+            style="@style/title"/>
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            style="@style/back_image"/>
+    </RelativeLayout>
+
+
+
+     <LinearLayout
+         android:orientation="vertical"
+         android:layout_marginTop="35dp"
+         android:layout_marginLeft="10dp"
+         android:layout_marginRight="10dp"
+         android:layout_below="@id/topBar"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
+         
+
+
+
+
+             <com.stripe.android.view.CardNumberEditText
+                 android:id="@+id/edt_card_number"
+                 android:drawablePadding="10dp"
+                 android:textColor="@color/text_color"
+                 android:textColorHint="@color/text_color_hint"
+                 app:typekitFont="@string/maven_r"
+                 android:layout_marginBottom="10dp"
+                 android:background="@drawable/bottom_border_grey"
+                 android:textCursorDrawable="@drawable/cursor_black"
+                 android:hint="@string/hint_card_number"
+                 android:layout_width="match_parent"
+                 android:padding="10dp"
+                 android:imeOptions="actionDone"
+                 android:inputType="number"
+                 android:maxLength="19"
+                 android:focusable="true"
+                 android:focusableInTouchMode="true"
+                 android:visibility="visible"
+                 android:layout_height="wrap_content"
+                 android:nextFocusRight="@+id/edt_date"
+                 android:nextFocusForward="@+id/edt_date"
+                 android:nextFocusDown="@+id/edt_date"/>
+
+             <LinearLayout
+                 android:orientation="horizontal"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content">
+
+
+                <com.stripe.android.view.ExpiryDateEditText
+                    android:id="@+id/edt_date"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
+                    android:background="@drawable/bottom_border_grey"
+                    app:typekitFont="@string/maven_r"
+                    android:textCursorDrawable="@drawable/cursor_black"
+                    android:layout_marginRight="10dp"
+                    android:hint="@string/hint_date"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="date"
+                    android:maxLength="5"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:visibility="visible"
+                    android:nextFocusRight="@+id/edt_cvv"
+                    android:nextFocusForward="@+id/edt_cvv"
+                    android:nextFocusDown="@+id/edt_cvv"
+                    android:nextFocusLeft="@id/edt_cvv"
+                    android:nextFocusUp="@id/edt_card_number"/>
+
+                <com.stripe.android.view.StripeEditText
+                    android:id="@+id/edt_cvv"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
+                    android:background="@drawable/bottom_border_grey"
+                    app:typekitFont="@string/maven_r"
+                    android:layout_marginLeft="10dp"
+                    android:textCursorDrawable="@drawable/cursor_black"
+                    android:hint="@string/hint_cvv"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:maxLength="4"
+                    android:nextFocusLeft="@id/edt_date"
+                    android:nextFocusUp="@id/edt_date"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:visibility="visible"/>
+
+
+             </LinearLayout>
+
+
+
+
+             <Button
+                 android:id="@+id/btn_add_card"
+                 android:layout_marginTop="50dp"
+                 android:layout_gravity="center"
+                 android:background="@drawable/capsule_theme_color_selector"
+                 android:textColor="@color/white"
+                 android:text="@string/save"
+                 android:textAllCaps="true"
+                 app:typekitFont="@string/maven_r"
+                 android:paddingStart="15dp"
+                 android:paddingEnd="15dp"
+                 android:layout_marginLeft="30dp"
+                 android:layout_marginRight="30dp"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content" />
+
+
+     </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="6px"
+            android:layout_below="@+id/topBar"
+            android:background="@drawable/shadow_down"
+            />
+</RelativeLayout>
+

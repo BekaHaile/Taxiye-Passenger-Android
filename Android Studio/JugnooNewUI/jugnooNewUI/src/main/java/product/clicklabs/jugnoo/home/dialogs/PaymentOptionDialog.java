@@ -20,6 +20,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.wallet.WalletCore;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 /**
@@ -33,13 +34,13 @@ public class PaymentOptionDialog implements View.OnClickListener {
     private Callback callback;
     private Dialog dialog = null;
     private LinearLayout linearLayoutWalletContainer;
-    private RelativeLayout relativeLayoutPaytm;
+    private RelativeLayout relativeLayoutPaytm,relativeLayoutStripeCard;
     private RelativeLayout relativeLayoutMobikwik;
     private RelativeLayout relativeLayoutFreeCharge;
     private RelativeLayout relativeLayoutMpesa;
     private LinearLayout linearLayoutCash, llOtherModesToPay ;
-    private ImageView radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa;
-    private TextView textViewPaytm, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue, textViewFreeCharge, textViewFreeChargeValue, tvOtherModesToPay, textViewMpesa,textViewMpesaValue;
+    private ImageView radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard,ivStripeCardIcon;
+    private TextView textViewPaytm,textViewStripeCard, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue, textViewFreeCharge, textViewFreeChargeValue, tvOtherModesToPay, textViewMpesa,textViewMpesaValue;
 
     public PaymentOptionDialog(HomeActivity activity, Callback callback) {
         this.activity = activity;
@@ -66,6 +67,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
             linearLayoutWalletContainer = (LinearLayout) dialog.findViewById(R.id.linearLayoutWalletContainer);
             relativeLayoutPaytm = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPaytm);
+            relativeLayoutStripeCard = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutStripeCard);
             relativeLayoutMobikwik = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutMobikwik);
             relativeLayoutFreeCharge = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutFreeCharge);
             linearLayoutCash = (LinearLayout) dialog.findViewById(R.id.linearLayoutCash);
@@ -76,6 +78,8 @@ public class PaymentOptionDialog implements View.OnClickListener {
             imageViewRadioFreeCharge = (ImageView) dialog.findViewById(R.id.imageViewRadioFreeCharge);
             radioBtnCash = (ImageView) dialog.findViewById(R.id.radio_cash);
             imageViewRadioMpesa = (ImageView) dialog.findViewById(R.id.imageViewRadioMpesa);
+            imageViewRadioStripeCard = (ImageView) dialog.findViewById(R.id.imageViewRadioStripeCard);
+            ivStripeCardIcon = (ImageView) dialog.findViewById(R.id.ivStripeCardIcon);
             ivOtherModesToPay = (ImageView) dialog.findViewById(R.id.ivOtherModesToPay);
 
 
@@ -83,6 +87,8 @@ public class PaymentOptionDialog implements View.OnClickListener {
             textViewPaytmValue.setTypeface(Fonts.mavenLight(activity));
             textViewPaytm = (TextView) dialog.findViewById(R.id.textViewPaytm);
             textViewPaytm.setTypeface(Fonts.mavenLight(activity));
+            textViewStripeCard = (TextView) dialog.findViewById(R.id.textViewStripeCard);
+            textViewStripeCard.setTypeface(Fonts.mavenLight(activity));
             textViewMobikwikValue = (TextView) dialog.findViewById(R.id.textViewMobikwikValue);
             textViewMobikwikValue.setTypeface(Fonts.mavenLight(activity));
             textViewMobikwik = (TextView) dialog.findViewById(R.id.textViewMobikwik);
@@ -99,6 +105,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
             tvOtherModesToPay = (TextView) dialog.findViewById(R.id.tvOtherModesToPay);
 
             relativeLayoutPaytm.setOnClickListener(this);
+            relativeLayoutStripeCard.setOnClickListener(this);
             relativeLayoutMobikwik.setOnClickListener(this);
             relativeLayoutFreeCharge.setOnClickListener(this);
             linearLayoutCash.setOnClickListener(this);
@@ -175,6 +182,10 @@ public class PaymentOptionDialog implements View.OnClickListener {
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.FREECHARGE);
                     callback.onPaymentModeUpdated();
                     break;
+                case R.id.relativeLayoutStripeCard:
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.STRIPE_CARDS);
+                    callback.onPaymentModeUpdated();
+                    break;
             }
             activity.showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
         } catch (Exception e) {
@@ -187,17 +198,19 @@ public class PaymentOptionDialog implements View.OnClickListener {
             Data.autoData.setPickupPaymentOption(MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption()));
             if (PaymentOption.PAYTM.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
-                paymentSelection(radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa);
+                paymentSelection(radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard);
             } else if (PaymentOption.MOBIKWIK.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
-                paymentSelection(imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa);
+                paymentSelection(imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard);
             } else if (PaymentOption.FREECHARGE.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
-                paymentSelection(imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash, ivOtherModesToPay, imageViewRadioMpesa);
+                paymentSelection(imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard);
             } else if (PaymentOption.MPESA.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
-                paymentSelection(imageViewRadioMpesa, ivOtherModesToPay, imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash);
+                paymentSelection(imageViewRadioMpesa, ivOtherModesToPay, imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash,imageViewRadioStripeCard);
             } else if (PaymentOption.RAZOR_PAY.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
-                paymentSelection(ivOtherModesToPay, imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash, imageViewRadioMpesa);
+                paymentSelection(ivOtherModesToPay, imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash, imageViewRadioMpesa,imageViewRadioStripeCard);
+            }else if (PaymentOption.STRIPE_CARDS.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
+                paymentSelection(imageViewRadioStripeCard, imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash, imageViewRadioMpesa,ivOtherModesToPay);
             } else {
-                paymentSelection(radioBtnCash, radioBtnPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa);
+                paymentSelection(radioBtnCash, radioBtnPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard);
             }
             dialog.dismiss();
         } catch (Exception e) {
@@ -205,18 +218,18 @@ public class PaymentOptionDialog implements View.OnClickListener {
         }
     }
 
-    private void paymentSelection(ImageView selected, ImageView unSelected, ImageView unSelected2, ImageView unSelected3, ImageView unSelected4, ImageView unSelected5) {
+    private void paymentSelection(ImageView selected, ImageView... unSelectedImageViews) {
         try {
             selected.setImageResource(R.drawable.ic_radio_button_selected);
-            unSelected.setImageResource(R.drawable.ic_radio_button_normal);
-            unSelected2.setImageResource(R.drawable.ic_radio_button_normal);
-            unSelected3.setImageResource(R.drawable.ic_radio_button_normal);
-            unSelected4.setImageResource(R.drawable.ic_radio_button_normal);
-            unSelected5.setImageResource(R.drawable.ic_radio_button_normal);
+            for(ImageView unselected: unSelectedImageViews){
+                unselected.setImageResource(R.drawable.ic_radio_button_normal);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     public void updatePreferredPaymentOptionUI() {
         try {
@@ -299,6 +312,14 @@ public class PaymentOptionDialog implements View.OnClickListener {
                                 && Data.autoData != null && Data.autoData.isRazorpayEnabled()) {
                             linearLayoutWalletContainer.addView(llOtherModesToPay);
                             tvOtherModesToPay.setText(paymentModeConfigData.getDisplayName());
+                        }else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
+                            linearLayoutWalletContainer.addView(relativeLayoutStripeCard);
+                            if(paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0){
+                               WalletCore.getStripeCardDisplayString(activity,paymentModeConfigData.getCardsData().get(0),textViewStripeCard,ivStripeCardIcon);
+                            }else{
+                                ivStripeCardIcon.setImageResource(R.drawable.ic_card_default);
+                                textViewStripeCard.setText(activity.getString(R.string.add_card_payments));
+                            }
                         }
                     }
                 }

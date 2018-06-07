@@ -131,7 +131,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                     if(showLoader) {
                         DialogPopup.dismissLoadingDialog();
                     }
-                    if(isCancelled())
+                    if(isCancelled() || activity.isFinishing())
                         return;
 
                     try {
@@ -141,7 +141,8 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
 						} else {
                             apiCommonCallback.onFinish();
-							if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag())) {
+							if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage()==null?feedCommonResponse.getError():feedCommonResponse.getMessage(),
+                                    feedCommonResponse.getFlag())) {
 								DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage());
 							}
 						}
@@ -162,7 +163,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                     if(showLoader) {
                         DialogPopup.dismissLoadingDialog();
                     }
-                    if(isCancelled())
+                    if(isCancelled() || activity.isFinishing())
                         return;
                     error.printStackTrace();
                     apiCommonCallback.onFinish();
@@ -256,6 +257,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 break;
             case SELECT_BID:
                 RestClient.getApiService().selectTheBid(params, callback);
+                break;
+            case ADD_CARD_API:
+                RestClient.getApiService().addCardToCustomer(params, callback);
                 break;
             case FETCH_CHAT:
                 RestClient.getChatApiService().fetchChat(params, callback);

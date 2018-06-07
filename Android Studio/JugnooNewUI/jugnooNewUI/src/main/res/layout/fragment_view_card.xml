@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:tag="@string/dont_touch_me"
+    android:background="@color/white"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:text="@string/view_card_title"
+            android:textSize="18sp"
+            app:typekitFont="@string/maven_r"
+            style="@style/title"/>
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_centerVertical="true"
+            android:padding="10dp"
+            android:src="@drawable/ic_back_pay_selector"
+            android:scaleType="centerInside"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/white_selector"
+            android:rotationY="@integer/locale_mirror_flip"/>
+
+
+
+
+        <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:id="@+id/ivMore"
+            android:padding="10dp"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:layout_marginEnd="10dp"
+            android:layout_centerVertical="true"
+           android:src="@drawable/ic_more_vert"/>
+
+
+    </RelativeLayout>
+
+
+
+
+
+    <TextView
+        android:id="@+id/tv_card"
+        android:layout_marginTop="20dp"
+        android:textAllCaps="true"
+        android:textSize="20sp"
+        android:maxLines="1"
+        android:gravity="left"
+        android:text="eqeqweqwe"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingBottom="15dp"
+        android:drawablePadding="5dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/bottom_border_grey"
+        android:layout_marginRight="20dp"
+        android:layout_below="@id/topBar"
+        android:visibility="gone"
+        app:typekitFont="@string/maven_r"
+        android:textColor="@color/text_color"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+
+
+
+
+
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:layout_below="@+id/topBar"
+        android:background="@drawable/shadow_down"
+        />
+
+
+
+
+
+</RelativeLayout>
+

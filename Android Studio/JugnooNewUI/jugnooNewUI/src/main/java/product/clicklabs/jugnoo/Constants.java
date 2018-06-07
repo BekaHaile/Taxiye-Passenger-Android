@@ -389,6 +389,7 @@ public interface Constants {
     String KEY_PAYTM = "paytm";
     String KEY_MOBIKWIK = "mobikwik";
     String KEY_MPESA = "mpesa";
+    String KEY_STRIPE_CARDS = "stripe_cards";
     String KEY_RAZORPAY = "razorpay";
     String KEY_UPI_RAZORPAY = "upi_razorpay";
     String KEY_BALANCE = "balance";
@@ -718,6 +719,7 @@ public interface Constants {
     String KEY_DRIVER_PHONE_NO = "driver_phone_no";
     String KEY_UPI_HANDLE = "upi_handle";
     String KEY_JUGNOO_VPA_HANDLE = "jugnoo_vpa_handle";
+    String KEY_CARDS_DATA = "cards_data";
     String PAGE_COUNT = "pageCount";
     String COUNT_RECORDS = "count_records";
     String KEY_CLOSE_TRACKING = "close_tracking";

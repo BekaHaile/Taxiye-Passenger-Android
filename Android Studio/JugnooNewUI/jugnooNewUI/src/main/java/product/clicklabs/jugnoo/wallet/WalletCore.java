@@ -3,8 +3,12 @@ package product.clicklabs.jugnoo.wallet;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
@@ -29,11 +33,13 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.dialogs.WalletSelectionErrorDialog;
 import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
+import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
+import static com.stripe.android.model.Card.BRAND_RESOURCE_MAP;
 import static product.clicklabs.jugnoo.Constants.KEY_DISPLAY_NAME;
 import static product.clicklabs.jugnoo.Constants.KEY_JUGNOO_VPA_HANDLE;
 import static product.clicklabs.jugnoo.Constants.KEY_OFFER_TEXT;
@@ -360,6 +366,8 @@ public class WalletCore {
             return R.drawable.ic_cards_grey;
         }else if(paymentOption == PaymentOption.MPESA.getOrdinal()){
             return R.drawable.ic_mpesa_small;
+        } else if(paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()){
+            return R.drawable.ic_card_default;
         } else {
 			return R.drawable.ic_cash_small;
 		}
@@ -390,6 +398,8 @@ public class WalletCore {
                         Data.userData.getFreeChargeBalanceStr());
             } else if(paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()){
 				return getRazorpayName(context);
+            }else if(paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()){
+				return getStripeCardName(context);
             }else if(paymentOption == PaymentOption.MPESA.getOrdinal()){
 				return getMPesaName(context);
             } else {
@@ -410,6 +420,22 @@ public class WalletCore {
 			}
 		}
 		return name;
+	}
+
+	public String getStripeCardName(Context context){
+		String name = context.getString(R.string.card);
+		for(PaymentModeConfigData configData : getPaymentModeConfigDatas()){
+			if(configData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()){
+				if(!TextUtils.isEmpty(configData.getDisplayName())){
+					name = configData.getDisplayName();
+
+				}
+				break;
+			}
+		}
+		return name;
+
+
 	}
 	public String getMPesaName(Context context) {
 		String name = context.getString(R.string.mpesa);
@@ -432,6 +458,8 @@ public class WalletCore {
                 return context.getResources().getString(R.string.freecharge);
             } else if(paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()){
                 return getPaymentOptionBalanceText(paymentOption);
+            }else if(paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()){
+                return getStripeCardName(context);
             } else if(paymentOption == PaymentOption.MPESA.getOrdinal()){
                 return context.getString(R.string.mpesa);
             } else {
@@ -577,7 +605,7 @@ public class WalletCore {
 				PaymentModeConfigData paymentModeConfigData = new PaymentModeConfigData(ji.getString(Constants.KEY_NAME),
 						ji.getInt(Constants.KEY_ENABLED), ji.optString(KEY_OFFER_TEXT, null), ji.optString(KEY_DISPLAY_NAME, null),
 						ji.optString(KEY_UPI_HANDLE, null),ji.optString(KEY_JUGNOO_VPA_HANDLE,null),
-						ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""));
+						ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""),ji.optJSONArray(Constants.KEY_CARDS_DATA));
 				paymentModeConfigDatas.add(paymentModeConfigData);
 			}
 		} catch (Exception e){
@@ -596,7 +624,7 @@ public class WalletCore {
 				PaymentModeConfigData paymentModeConfigData = new PaymentModeConfigData(ji.getString(Constants.KEY_NAME),
 						ji.getInt(Constants.KEY_ENABLED), ji.optString(KEY_OFFER_TEXT, null), ji.optString(KEY_DISPLAY_NAME, null),
 						ji.optString(KEY_UPI_HANDLE, null),ji.optString(KEY_JUGNOO_VPA_HANDLE,null),
-						ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""));
+						ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""),ji.optJSONArray(Constants.KEY_CARDS_DATA));
 				if(paymentModeConfigDatas.indexOf(paymentModeConfigData) > -1) {
 					paymentModeConfigDatas.set(paymentModeConfigDatas.indexOf(paymentModeConfigData), paymentModeConfigData);
 				}
@@ -674,6 +702,10 @@ public class WalletCore {
 							|| paymentModeConfigData.getPaymentOption() == PaymentOption.MPESA.getOrdinal()
 							|| paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()
 							) {
+						paymentModeConfigDataDefault = paymentModeConfigData;
+						break;
+					} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()&&
+							paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0){
 						paymentModeConfigDataDefault = paymentModeConfigData;
 						break;
 					}
@@ -757,6 +789,8 @@ public class WalletCore {
 			return PaymentOption.ICICI_UPI;
 		} else if(PaymentOption.MPESA.getOrdinal() == paymentOption){
 			return PaymentOption.MPESA;
+		}else if(PaymentOption.STRIPE_CARDS.getOrdinal() == paymentOption){
+			return PaymentOption.STRIPE_CARDS;
 		}else{
 			return PaymentOption.CASH;
 		}
@@ -793,7 +827,7 @@ public class WalletCore {
 									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
 									activity.startActivity(intent);
 									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-									activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPaymentOptionDialog().dismiss();
+									activity.getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -805,7 +839,7 @@ public class WalletCore {
 									if(Data.userData.getMobikwikEnabled() != 1 && Data.userData.getFreeChargeEnabled() != 1){
 										Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
 										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPaymentOptionDialog().dismiss();
+										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
 									}
 								} catch (Exception e) {
 									e.printStackTrace();
@@ -847,7 +881,7 @@ public class WalletCore {
 									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MOBIKWIK.getOrdinal());
 									activity.startActivity(intent);
 									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-									activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPaymentOptionDialog().dismiss();
+									activity.getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -859,7 +893,7 @@ public class WalletCore {
 									if(Data.userData.getPaytmEnabled() != 1 && Data.userData.getFreeChargeEnabled() != 1){
 										Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
 										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPaymentOptionDialog().dismiss();
+										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
 									}
 								} catch (Exception e) {
 									e.printStackTrace();
@@ -907,7 +941,7 @@ public class WalletCore {
                                     if(Data.userData.getPaytmEnabled() != 1 && Data.userData.getMobikwikEnabled() != 1){
 										Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
                                         activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-                                        activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getPaymentOptionDialog().dismiss();
+                                        activity.getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -921,16 +955,39 @@ public class WalletCore {
                     }
                 }
 
-            }
-			else if(paymentOption == PaymentOption.MPESA){
+            }else if(paymentOption==PaymentOption.STRIPE_CARDS){
+
+				PaymentModeConfigData stripeConfigData= getStripeConfigData();
+				if(stripeConfigData==null)return;
+
+
+				if(stripeConfigData.getCardsData()==null || stripeConfigData.getCardsData().size()==0){
+					try {
+						Intent intent = new Intent(activity, PaymentActivity.class);
+						intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
+						intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.STRIPE_CARDS.getOrdinal());
+						activity.startActivity(intent);
+						activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return;
+				}
+
+
+				Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
+				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+
+
+		  } else if(paymentOption == PaymentOption.MPESA){
 //				if(Data.autoData.getPickupPaymentOption() == PaymentOption.PAYTM.getOrdinal()){
 //					FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
 //				}
 				Data.autoData.setPickupPaymentOption(PaymentOption.MPESA.getOrdinal());
 				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
 //				FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "cash");
-			}
-			else {
+			} else {
 				Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
 				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
 			}
@@ -1113,8 +1170,33 @@ public class WalletCore {
 							.openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.JUGNOO_PAY.getOrdinal());
 					callbackPaymentOptionSelector.onWalletAdd(PaymentOption.JUGNOO_PAY);
 				}
-			}
-			else if(paymentOption == PaymentOption.CASH){
+			}else if(paymentOption==PaymentOption.STRIPE_CARDS){
+
+
+				PaymentModeConfigData stripeConfigData= getStripeConfigData();
+				if(stripeConfigData==null)return;
+
+
+				if(stripeConfigData.getCardsData()==null || stripeConfigData.getCardsData().size()==0){
+					try {
+						Intent intent = new Intent(activity, PaymentActivity.class);
+						intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
+						intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.STRIPE_CARDS.getOrdinal());
+						activity.startActivity(intent);
+						activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return;
+				}
+
+				callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.STRIPE_CARDS);
+
+
+
+
+			} else if(paymentOption == PaymentOption.CASH){
 				callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.CASH);
 			}
 		} catch (Exception e) {
@@ -1124,5 +1206,78 @@ public class WalletCore {
 
 	public void faEventAddWallet(int paymentOption, String suffix){
 	}
+
+	/**
+	 *
+	 *
+	 * @param stripeCardData Card Data object to add
+	 * @return Adds a card to stripe Config data and returns the stripe config data
+	 */
+	public PaymentModeConfigData updateStripeCards(ArrayList<StripeCardData> stripeCardData) {
+		if(paymentModeConfigDatas==null)return null;
+		PaymentModeConfigData stripeConfigData = getStripeConfigData();
+		if(stripeConfigData==null)return null;
+
+		 stripeConfigData.setCardsData(stripeCardData);
+
+		return stripeConfigData;
+
+
+	}
+
+	@Nullable
+	public PaymentModeConfigData getStripeConfigData() {
+		PaymentModeConfigData stripeConfigData = null;
+		for(PaymentModeConfigData paymentModeConfigData:paymentModeConfigDatas){
+			if(paymentModeConfigData.getPaymentOption()== PaymentOption.STRIPE_CARDS.getOrdinal()){
+
+				stripeConfigData = paymentModeConfigData;
+			}
+		}
+		return stripeConfigData;
+	}
+
+
+	@NonNull
+	public static String getStripeCardDisplayString(Context context, String last_4) {
+		StringBuilder formString = new StringBuilder();
+
+		for (int i = 0; i < 12; i++) {
+			if (i != 0 && i % 4 == 0) {
+				formString.append(" ");
+			}
+			formString.append(context.getString(R.string.bullet));
+
+		}
+		formString.append(" ");
+		formString.append(last_4);
+		return formString.toString();
+	}
+	private static int getBrandImage(String brand){
+
+
+		int brandImage = R.drawable.ic_card_default;
+
+		if(!TextUtils.isEmpty(brand) &&  BRAND_RESOURCE_MAP.get(brand)!=com.stripe.android.R.drawable.ic_unknown){
+			brandImage =  BRAND_RESOURCE_MAP.get(brand);
+		}
+
+		return brandImage;
+
+	}
+
+
+
+	@NonNull
+	public static void getStripeCardDisplayString(Context context, StripeCardData stripeCardData, TextView textView, ImageView imageView) {
+
+		String strpeCardString = getStripeCardDisplayString(context,stripeCardData.getLast4());
+		textView.setText(strpeCardString);
+		imageView.setImageResource(getBrandImage(stripeCardData.getBrand()));
+
+	}
+
+
+
 
 }

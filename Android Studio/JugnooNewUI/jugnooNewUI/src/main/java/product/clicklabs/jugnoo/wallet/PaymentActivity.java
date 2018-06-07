@@ -7,6 +7,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
@@ -14,6 +16,9 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.stripe.StripeAddCardFragment;
+import product.clicklabs.jugnoo.stripe.StripeCardsStateListener;
+import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -22,13 +27,14 @@ import product.clicklabs.jugnoo.wallet.fragments.WalletFragment;
 import product.clicklabs.jugnoo.wallet.fragments.WalletRechargeFragment;
 import product.clicklabs.jugnoo.wallet.fragments.WalletTransactionsFragment;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
 
 
 /**
  * Created by socomo30 on 7/8/15.
  */
-public class PaymentActivity extends BaseFragmentActivity{
+public class PaymentActivity extends BaseFragmentActivity implements StripeCardsStateListener{
 
 	private final String TAG = PaymentActivity.class.getSimpleName();
 
@@ -74,10 +80,18 @@ public class PaymentActivity extends BaseFragmentActivity{
 		}
 		else if(PaymentActivityPath.ADD_WALLET.getOrdinal() == paymentActivityPathInt){
 			int walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.fragLayout, AddWalletFragment.newInstance(walletType), AddWalletFragment.class.getName())
-					.addToBackStack(AddWalletFragment.class.getName())
-					.commitAllowingStateLoss();
+			if(walletType==PaymentOption.STRIPE_CARDS.getOrdinal()){
+				getSupportFragmentManager().beginTransaction()
+						.add(R.id.fragLayout,new StripeAddCardFragment(), StripeAddCardFragment.class.getName())
+						.addToBackStack(StripeAddCardFragment.class.getName())
+						.commitAllowingStateLoss();
+			}else{
+				getSupportFragmentManager().beginTransaction()
+						.add(R.id.fragLayout, AddWalletFragment.newInstance(walletType), AddWalletFragment.class.getName())
+						.addToBackStack(AddWalletFragment.class.getName())
+						.commitAllowingStateLoss();
+			}
+
 		}
 
 		setWalletAddMoneyState(WalletAddMoneyState.INIT);
@@ -249,5 +263,18 @@ public class PaymentActivity extends BaseFragmentActivity{
 	public void setWalletAddMoneyState(WalletAddMoneyState walletAddMoneyState) {
 		this.walletAddMoneyState = walletAddMoneyState;
 	}
+
+	@Override
+	public void onCardsUpdated(ArrayList<StripeCardData> stripeCardData) {
+		PaymentModeConfigData stripeConfigData  = MyApplication.getInstance().getWalletCore().updateStripeCards(stripeCardData);
+		if(getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName())!=null){
+
+			WalletFragment walletFragment = ((WalletFragment)getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName()));
+			walletFragment.setStripePaymentUI(stripeConfigData);
+
+		}
+	}
+
+
 
 }

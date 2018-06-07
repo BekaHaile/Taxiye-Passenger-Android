@@ -1844,6 +1844,12 @@
     <string name="distance_km_away_format">%skm away</string>
     <string name="distance_m_away_format">%sm away</string>
     <string name="bids_received">Bids received</string>
+    <string name="select_a_bid">Select a bid</string>
+    <string name="stripe">Stripe</string>
+    <string name="view_card_title">CREDIT CARD</string>
+    <string name="add_credit_card">Add Credit Card</string>
+    <string name="view_card_wallet">View Card</string>
+    <string name="add_card_payments">Add Card</string>
     <string name="tap_a_bid">Tap a bid</string>
     <string name="ride_in_progress">Ride in progress</string>
     <string name="driver_enroute">Driver Enroute</string>

@@ -36,6 +36,7 @@ public enum ApiName {
     OFFERING_VISBILITY_API,
     FETCH_CONTACTS,
     SELECT_BID,
+    ADD_CARD_API,
     FETCH_CHAT,
     POST_CHAT
 }
