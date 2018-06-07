@@ -886,4 +886,6 @@ public interface Constants {
     String KEY_DISTANCE_UNIT = "distance_unit";
     String KEY_SUPPORT_EMAIL = "support_email";
     String KEY_SUPPORT_EMAIL_SUBJECT = "support_email_subject";
+    String KEY_INVOICE_ICON = "invoice_icon";
+    String KEY_MARKER_ICON = "marker_icon";
 }

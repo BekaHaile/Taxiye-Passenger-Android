@@ -697,7 +697,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		markerOptions.anchor(xAnchor, yAnchor);
 		markerOptions.icon(BitmapDescriptorFactory
 				.fromBitmap(CustomMapMarkerCreator
-						.createMarkerBitmapForResource(activity, assl, resId, width, height)));
+						.createMarkerBitmapForResource(activity, resId, width, height)));
 		return markerOptions;
 	}
 
@@ -843,7 +843,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		}
 
 		etaMarkerBitmap = CustomMapMarkerCreator
-				.getTextBitmap(getActivity(), assl, value,suffix, getResources().getDimensionPixelSize(R.dimen.text_size_22));
+				.getTextBitmap(getActivity(), value,suffix, getResources().getDimensionPixelSize(R.dimen.text_size_22));
 
 		return etaMarkerBitmap;
 

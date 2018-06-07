@@ -363,7 +363,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                     markerOptions.zIndex(1);
                     markerOptions.rotation((float) jTrackingLog0.getDouble(Constants.KEY_BEARING));
                     markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                            .createMarkerBitmapForResource(this, assl, R.drawable.ic_auto_marker)));
+                            .createMarkerBitmapForResource(this, R.drawable.ic_auto_marker)));
                     final Marker driverMarker = map.addMarker(markerOptions);
 
                     Gson gson = new Gson();

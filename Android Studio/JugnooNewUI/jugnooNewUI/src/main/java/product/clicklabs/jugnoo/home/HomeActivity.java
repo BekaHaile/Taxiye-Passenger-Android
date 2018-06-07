@@ -2921,14 +2921,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                        genieLayout.setVisibility(View.GONE);
                         mapLayout.setVisibility(View.VISIBLE);
                         endRideReviewRl.setVisibility(View.VISIBLE);
-                        if (Data.autoData.getEndRideData().getIsPooled() == 1) {
+                        if (Data.autoData.getEndRideData().getIsPooled() == 1
+                                && TextUtils.isEmpty(Data.autoData.getEndRideData().getIconUrl())) {
                             ivEndRideType.setImageResource(R.drawable.ic_history_pool);
                         } else {
-                            try {
-                                ivEndRideType.setImageResource(Data.autoData.getAssignedDriverInfo().getVehicleIconSet().getIconInvoice());
-                            } catch (Exception e) {
-                                ivEndRideType.setImageResource(R.drawable.ic_auto_grey);
-                            }
+                            HomeUtil.setVehicleIcon(this, ivEndRideType, Data.autoData.getEndRideData().getIconUrl(),
+                                    Data.autoData.getAssignedDriverInfo().getVehicleIconSet().getIconInvoice(), null);
                         }
 
                         scrollViewRideSummary.scrollTo(0, 0);
@@ -3211,12 +3209,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()))
                                     || Data.autoData.getDropLatLng() != null) {
                                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                        .getTextAssignBitmap(HomeActivity.this, assl,
+                                        .getTextAssignBitmap(HomeActivity.this,
                                                 slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
                                                 getResources().getDimensionPixelSize(R.dimen.text_size_22))));
                             } else {
                                 markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                                        .getTextBitmap(HomeActivity.this, assl,
+                                        .getTextBitmap(HomeActivity.this,
                                                 slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
                                                 getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
                             }
@@ -3276,19 +3274,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                             if (driverLocationMarker == null) {
                                 clearMap();
-
-                                driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
+                                driverLocationMarker = getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo());
                                 if (Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0) {
                                     driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
                                 } else {
                                     driverLocationMarker.setRotation((float) Data.autoData.getAssignedDriverInfo().getBearing());
                                 }
-//                                MyApplication.getInstance().getDatabase2().insertTrackingLogs(Integer.parseInt(Data.autoData.getcEngagementId()),
-//                                        Data.autoData.getAssignedDriverInfo().latLng,
-//                                        driverLocationMarker.getRotation(),
-//                                        TrackingLogModeValue.RESET.getOrdinal(),
-//                                        Data.autoData.getAssignedDriverInfo().latLng, 0);
-                                Log.i("marker added", "REQUEST_FINAL");
                             } else {
                                 MarkerAnimation.clearAsyncList();
                                 MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
@@ -3351,8 +3342,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             Log.e("Data.autoData.getAssignedDriverInfo().latLng", "=" + Data.autoData.getAssignedDriverInfo().latLng);
                             if (driverLocationMarker == null) {
                                 clearMap();
-
-                                driverLocationMarker = map.addMarker(getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo()));
+                                driverLocationMarker = getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo());
                                 if (Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0) {
                                     driverLocationMarker.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
                                 }
@@ -3361,7 +3351,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                         driverLocationMarker.getRotation(),
                                         TrackingLogModeValue.RESET.getOrdinal(),
                                         Data.autoData.getAssignedDriverInfo().latLng, 0);
-                                Log.i("marker added", "REQUEST_FINAL");
 
                                 if (Data.autoData.getDropLatLng() != null) {
                                     setDropLocationMarker();
@@ -4173,12 +4162,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     if (Data.autoData.getDropLatLng() != null) {
                         pickupLocationMarker.setIcon(BitmapDescriptorFactory
                                 .fromBitmap(CustomMapMarkerCreator
-                                        .getTextAssignBitmap(HomeActivity.this, assl, Data.autoData.getAssignedDriverInfo().getEta(),
+                                        .getTextAssignBitmap(HomeActivity.this, Data.autoData.getAssignedDriverInfo().getEta(),
                                                 getResources().getDimensionPixelSize(R.dimen.text_size_24))));
                     } else {
                         pickupLocationMarker.setIcon(BitmapDescriptorFactory
                                 .fromBitmap(CustomMapMarkerCreator
-                                        .getTextBitmap(HomeActivity.this, assl, Data.autoData.getAssignedDriverInfo().getEta(),
+                                        .getTextBitmap(HomeActivity.this, Data.autoData.getAssignedDriverInfo().getEta(),
                                                 getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
                     }
                 } catch (Exception e) {
@@ -5327,37 +5316,35 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if (inRide) {
             markerOptions.icon(BitmapDescriptorFactory
                     .fromBitmap(CustomMapMarkerCreator
-                            .createPinMarkerBitmapStart(HomeActivity.this, assl)));
-        } else {
-            if (Data.autoData.getDropLatLng() != null) {
+                            .createPinMarkerBitmapStart(HomeActivity.this)));
+        } else{
+            if(Data.autoData.getDropLatLng() != null){
                 markerOptions.icon(BitmapDescriptorFactory
                         .fromBitmap(CustomMapMarkerCreator
-                                .getTextAssignBitmap(HomeActivity.this, assl, Data.autoData.getAssignedDriverInfo().getEta(),
+                                .getTextAssignBitmap(HomeActivity.this, Data.autoData.getAssignedDriverInfo().getEta(),
                                         getResources().getDimensionPixelSize(R.dimen.text_size_24))));
             } else {
                 markerOptions.icon(BitmapDescriptorFactory
                         .fromBitmap(CustomMapMarkerCreator
-                                .getTextBitmap(HomeActivity.this, assl, Data.autoData.getAssignedDriverInfo().getEta(),
+                                .getTextBitmap(HomeActivity.this, Data.autoData.getAssignedDriverInfo().getEta(),
                                         getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
             }
         }
         return markerOptions;
     }
 
-    public MarkerOptions getAssignedDriverCarMarkerOptions(DriverInfo driverInfo) {
+    public Marker getAssignedDriverCarMarkerOptions(DriverInfo driverInfo){
         MarkerOptions markerOptions1 = new MarkerOptions();
         markerOptions1.title("driver position");
         markerOptions1.snippet("");
         markerOptions1.position(driverInfo.latLng);
         markerOptions1.anchor(0.5f, 0.5f);
         markerOptions1.zIndex(HOME_MARKER_ZINDEX);
-        markerOptions1.icon(BitmapDescriptorFactory.fromBitmap(driverInfo.getMarkerBitmap(HomeActivity.this, assl)));
-        return markerOptions1;
+        return driverInfo.addMarkerToMap(driverInfo.getMarkerUrl(), this, map, markerOptions1);
     }
 
     private final float HOME_MARKER_ZINDEX = 2.0f;
-
-    public Marker addDriverMarkerForCustomer(DriverInfo driverInfo, int resourceId) {
+    public Marker addDriverMarkerForCustomer(DriverInfo driverInfo, String markerUrl) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.title("driver shown to customer");
         markerOptions.snippet("" + driverInfo.userId);
@@ -5365,8 +5352,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         markerOptions.anchor(0.5f, 0.5f);
         markerOptions.zIndex(HOME_MARKER_ZINDEX);
         markerOptions.rotation((float) driverInfo.getBearing());
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(driverInfo.getMarkerBitmap(HomeActivity.this, assl)));
-        return map.addMarker(markerOptions);
+        return driverInfo.addMarkerToMap(markerUrl, this, map, markerOptions);
     }
 
 
@@ -5380,7 +5366,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             markerOptions.snippet("");
             markerOptions.position(latLng);
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                    .getTextBitmap(HomeActivity.this, assl,
+                    .getTextBitmap(HomeActivity.this,
                             slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
                             getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
             currentLocationMarker = map.addMarker(markerOptions);
@@ -5416,8 +5402,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     || Data.autoData.getPickupPaymentOption() == PaymentOption.CASH.getOrdinal())
                                     ) {
                                 driver.setVehicleIconSet(region.getVehicleIconSet().getName());
-                                markersDriversFindADriver.add(addDriverMarkerForCustomer(driver,
-                                        region.getVehicleIconSet().getIconMarker()));
+                                markersDriversFindADriver.add(addDriverMarkerForCustomer(Data.autoData.getDriverInfos().get(i), region.getImages().getMarkerIcon()));
                                 regionDriversCount++;
                             }
                         }
@@ -5431,21 +5416,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         } else {
                             textViewCentrePinETA.setText(region.getEta());
                         }
-
-                        /*if(Data.autoData.getDropLatLng() != null){
-                            MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
-                            poolMarkerOptionEnd.title("End");
-                            poolMarkerOptionEnd.position(Data.autoData.getDropLatLng());
-                            poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(HomeActivity.this,
-                                    assl, R.drawable.pin_ball_end)));
-                            dropInitialMarker = map.addMarker(poolMarkerOptionEnd);
-                        }*/
                     }
                 }
             }
-//			if (userMode == UserMode.PASSENGER && (passengerScreenMode == PassengerScreenMode.P_ASSIGNING)) {
-//				addUserCurrentLocationAddressMarker(userLatLng);
-//			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -6355,9 +6328,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (lastSavedLatLng != null) {
                     Data.autoData.getAssignedDriverInfo().latLng = lastSavedLatLng;
                 }
-                MarkerOptions markerOptions = getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo());
-                markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createMarkerBitmapForResource(this, assl, R.drawable.ic_marker_transparent)));
-                driverMarkerInRide = map.addMarker(markerOptions);
+                driverMarkerInRide = getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo());
+                driverMarkerInRide.setIcon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                        .createMarkerBitmapForResource(HomeActivity.this, R.drawable.ic_marker_transparent)));
                 getDropLocationPathAndDisplay(Data.autoData.getAssignedDriverInfo().latLng, true, null);
                 if (driverMarkerInRide.getRotation() == 0f) {
                     if (Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0) {
@@ -6562,7 +6535,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         markerOptions.snippet("");
         markerOptions.position(customerLatLng);
         markerOptions.zIndex(HOME_MARKER_ZINDEX);
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapEnd(HomeActivity.this, assl)));
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapEnd(HomeActivity.this)));
         return markerOptions;
     }
 
@@ -7005,12 +6978,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             int operatorId = jObj.optInt(KEY_OPERATOR_ID, 0);
             String iconSet = jObj.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
             String currency = jObj.optString(KEY_CURRENCY);
+            String vehicleIconUrl = jObj.optString(Constants.KEY_MARKER_ICON);
             Prefs.with(this).save(Constants.KEY_EMERGENCY_NO, jObj.optString(KEY_EMERGENCY_NO, getString(R.string.police_number)));
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
-                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency));
+                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);
@@ -8434,7 +8408,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                poolMarkerOptionStart.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(HomeActivity.this,
 //                        assl, R.drawable.pin_ball_start)));
                     poolMarkerOptionStart.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                            .getTextAssignBitmap(HomeActivity.this, assl,
+                            .getTextAssignBitmap(HomeActivity.this,
                                     slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
                                     getResources().getDimensionPixelSize(R.dimen.text_size_24))));
                     pickupLocationMarker = map.addMarker(poolMarkerOptionStart);
@@ -8443,8 +8417,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     poolMarkerOptionEnd.title("End");
                     poolMarkerOptionEnd.position(Data.autoData.getDropLatLng());
                     poolMarkerOptionEnd.zIndex(HOME_MARKER_ZINDEX);
-                    poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapEnd(HomeActivity.this,
-                            assl)));
+                    poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapEnd(HomeActivity.this
+                    )));
                     //map.addMarker(poolMarkerEnd);
                     map.addMarker(poolMarkerOptionEnd);
 
@@ -10016,8 +9990,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     markerOptions.position(specialPicupLatLng);
                     markerOptions.anchor(0.5f, 0.5f);
                     markerOptions.zIndex(zIndex);
-                    markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                            .createMarkerBitmapForResource(HomeActivity.this, assl, R.drawable.ic_special_location_pin, 37f, 37f)));
+                        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                                .createMarkerBitmapForResource(HomeActivity.this, R.drawable.ic_special_location_pin, 37f, 37f)));
                     markersSpecialPickup.add(map.addMarker(markerOptions));
                     markerOptionsSpecialPickup.add(markerOptions);
                 }

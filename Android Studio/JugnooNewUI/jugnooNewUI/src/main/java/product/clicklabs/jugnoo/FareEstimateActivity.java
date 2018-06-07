@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -285,14 +284,14 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                             markerOptionsS.title(getString(R.string.start));
                             markerOptionsS.position(sourceLatLng);
                             markerOptionsS.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
-                                    assl, R.drawable.pin_ball_start)));
+									R.drawable.pin_ball_start)));
                             mapLite.addMarker(markerOptionsS);
 
                             MarkerOptions markerOptionsE = new MarkerOptions();
                             markerOptionsE.title(getString(R.string.start));
                             markerOptionsE.position(destLatLng);
                             markerOptionsE.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
-                                    assl, R.drawable.pin_ball_end)));
+									R.drawable.pin_ball_end)));
                             mapLite.addMarker(markerOptionsE);
 
 

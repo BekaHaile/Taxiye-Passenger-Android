@@ -215,6 +215,9 @@ public class HistoryResponse {
         @SerializedName("icon_set")
         @Expose
         private String iconSet;
+        @SerializedName("history_icon")
+        @Expose
+        private String historyIcon;
         @SerializedName("ride_type")
         @Expose
         private Integer rideType;
@@ -1135,9 +1138,6 @@ public class HistoryResponse {
         }
 
         public String getIconSet() {
-            if(iconSet == null){
-                iconSet = "";
-            }
             return iconSet;
         }
 
@@ -1151,6 +1151,14 @@ public class HistoryResponse {
 
         public void setDistanceUnit(String distanceUnit) {
             this.distanceUnit = distanceUnit;
+        }
+
+        public String getHistoryIcon() {
+            return historyIcon;
+        }
+
+        public void setHistoryIcon(String historyIcon) {
+            this.historyIcon = historyIcon;
         }
     }
 

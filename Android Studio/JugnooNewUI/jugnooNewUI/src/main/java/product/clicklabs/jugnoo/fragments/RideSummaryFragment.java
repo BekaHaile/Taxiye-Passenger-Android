@@ -41,6 +41,7 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -381,7 +382,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 relativeLayoutMap.setVisibility(View.VISIBLE);
                 relativeLayoutRideSummary.setVisibility(View.VISIBLE);
 
-                imageViewEndRideAutoIcon.setImageResource(endRideData.getVehicleIconSet().getIconInvoice());
+                int fallbackResourceId = endRideData.getVehicleIconSet().getIconInvoice();
+                HomeUtil.setVehicleIcon(activity, imageViewEndRideAutoIcon, endRideData.getIconUrl(), fallbackResourceId, null);
 
                 textViewEndRideDriverName.setText(endRideData.driverName);
                 textViewEndRideDriverCarNumber.setText(endRideData.driverCarNumber);

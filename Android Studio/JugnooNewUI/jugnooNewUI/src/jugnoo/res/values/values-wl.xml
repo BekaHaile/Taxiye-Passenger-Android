@@ -50,8 +50,8 @@
     <dimen name="splash_logo_height">53dp</dimen>
     <dimen name="splash_logo_top_margin">125dp</dimen>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
-    <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
-    <integer name="show_splash_logo_text">@integer/view_gone</integer>
+    <integer name="show_splash_logo_text_login">@integer/view_gone</integer>
+    <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_top_bg">@integer/view_visible</integer>
     <integer name="show_splash_bottom_bg">@integer/view_visible</integer>
     <integer name="show_splash_bg">@integer/view_invisible</integer>

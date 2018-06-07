@@ -244,10 +244,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 //		FlurryAgent.onEndSession(this);
 	}
 
-//	@Override
-//	protected void attachBaseContext(Context newBase) {
-//		super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
-//	}
 
 	@Override
 	public void onStart() {
@@ -1713,6 +1709,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				imageViewBack.setVisibility(View.VISIBLE);
 				llContainer.setVisibility(View.VISIBLE);
 				rlPhoneLogin.setVisibility(View.VISIBLE);
+				editTextPhoneNumber.setError(null);
 				editTextPhoneNumber.setText(Utils.retrievePhoneNumberTenChars(phoneNoToFillInInHouseLogin, Utils.getCountryCode(this)));
 				animRightToLeft(rlLoginSignupNew, rlPhoneLogin, duration);
 

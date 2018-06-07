@@ -87,10 +87,6 @@ public class BaseFragmentActivity extends FragmentActivity {
 		LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
 	}
 
-//	@Override
-//	protected void attachBaseContext(Context newBase) {
-//		super.attachBaseContext(TypekitContextWrapper.wrap(newBase));
-//	}
 
 	private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
@@ -103,7 +99,6 @@ public class BaseFragmentActivity extends FragmentActivity {
 	};
 	@Override
 	protected void attachBaseContext(Context newBase) {
-		super.attachBaseContext(LocaleHelper.onAttach(TypekitContextWrapper.wrap(newBase), newBase.getString(R.string.default_lang)));
-//		super.attachBaseContext();
+		super.attachBaseContext(TypekitContextWrapper.wrap(LocaleHelper.onAttach(newBase, newBase.getString(R.string.default_lang))));
 	}
 }

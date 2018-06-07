@@ -86,6 +86,8 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (viewholder instanceof ViewHolder && orderHistory != null) {
             ViewHolder holder = (ViewHolder) viewholder;
             holder.relative.setTag(position);
+            int padding = (int) (ASSL.minRatio() * 12f);
+            holder.imageViewProductType.setPaddingRelative(padding, padding, padding, padding);
             if (orderHistory.getProductType() == ProductType.AUTO.getOrdinal()) {
                 holder.textViewStatus.setText(R.string.status_colon);
                 holder.textViewId.setText(R.string.id_colon);
@@ -102,7 +104,9 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 try {
                     int vehicleType = orderHistory.getVehicleType();
                     int rideType = orderHistory.getRideType();
-                    holder.imageViewProductType.setImageResource(getVehicleTypeDrawable(vehicleType, rideType, orderHistory.getIconSet()));
+                    int resourceId = getVehicleTypeDrawable(vehicleType, rideType, orderHistory.getIconSet());
+                    HomeUtil.setVehicleIcon(activity, holder.imageViewProductType, orderHistory.getHistoryIcon(),
+                            resourceId, holder.callback);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -312,6 +316,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
         public RelativeLayout relativeLayoutTo;
         public RelativeLayout relative;
         public ImageView ivOrderStatusIcon;
+        public CustomCallback callback;
 
         public ViewHolder(View convertView, Activity context) {
             super(convertView);
@@ -343,6 +348,30 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             relativeLayoutTo = (RelativeLayout) convertView.findViewById(R.id.relativeLayoutTo);
             ivOrderStatusIcon = (ImageView) convertView.findViewById(R.id.iv_order_status_icon);
+            callback = new CustomCallback(imageViewProductType);
+        }
+    }
+
+    private class CustomCallback implements com.squareup.picasso.Callback {
+
+        private ImageView imageView;
+
+        private CustomCallback(ImageView imageView) {
+            this.imageView = imageView;
+        }
+
+
+        @Override
+        public void onSuccess() {
+            if(imageView != null) {
+                imageView.setPaddingRelative(0, 0, 0, 0);
+                imageView.setBackground(null);
+            }
+        }
+
+        @Override
+        public void onError() {
+
         }
     }
 
@@ -368,10 +397,10 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private int getVehicleTypeDrawable(int vehicleType, int rideType, String iconSet) {
-        try {
+        if(!TextUtils.isEmpty(iconSet)) {
             VehicleIconSet vehicleIconSet = HomeUtil.getVehicleIconSet(iconSet);
             return vehicleIconSet.getIconInvoice();
-        } catch (Exception e) {
+        } else {
             if (vehicleType == VehicleTypeValue.AUTOS.getOrdinal()) {
                 if (rideType == RideTypeValue.POOL.getOrdinal()) {
                     return R.drawable.ic_pool_white;

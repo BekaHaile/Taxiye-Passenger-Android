@@ -20,11 +20,15 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
+import com.squareup.picasso.OkHttpDownloader;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.branch.referral.Branch;
 import io.fabric.sdk.android.Fabric;
@@ -443,6 +447,18 @@ public class MyApplication extends Application {
 
     public Locale getCurrentLocale() {
         return getResources().getConfiguration().locale;
+    }
+
+    private static Picasso picassoSingleton;
+    public static Picasso getPicasso(Context context){
+        if(picassoSingleton == null){
+            OkHttpClient okHttpClient = new OkHttpClient();
+            okHttpClient.setConnectTimeout(40, TimeUnit.SECONDS);
+            picassoSingleton = new Picasso.Builder(context)
+                    .downloader(new OkHttpDownloader(okHttpClient))
+                    .build();
+        }
+        return picassoSingleton;
     }
 
 }
