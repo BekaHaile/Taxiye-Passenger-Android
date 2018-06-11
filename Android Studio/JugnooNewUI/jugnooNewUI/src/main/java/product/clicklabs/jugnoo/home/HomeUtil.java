@@ -475,10 +475,12 @@ public class HomeUtil {
 		}
 	}
 
-	public static void setVehicleIcon(Context context, ImageView imageView, String imageUrl, int resId, Callback callback){
+	public static void setVehicleIcon(Context context, ImageView imageView, String imageUrl, int resId, boolean loadingPlaceholder, Callback callback){
 		if(!TextUtils.isEmpty(imageUrl)) {
 			Picasso.with(context).load(imageUrl)
-					.placeholder(resId).error(resId).into(imageView, callback);
+					.placeholder(loadingPlaceholder ? R.drawable.ic_vehicle_loader : resId)
+					.error(resId)
+					.into(imageView, callback);
 		} else {
 			imageView.setImageResource(resId);
 		}

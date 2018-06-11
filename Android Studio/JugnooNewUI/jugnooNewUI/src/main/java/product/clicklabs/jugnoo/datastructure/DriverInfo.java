@@ -259,13 +259,18 @@ public class DriverInfo {
 		this.chatEnabled = chatEnabled;
 	}
 
-	private Bitmap getMarkerBitmap(Activity activity){
-		if(vehicleIconSet == VehicleIconSet.ERICKSHAW){
+	private Bitmap getMarkerBitmap(Activity activity, boolean loader){
+		if(loader) {
 			return CustomMapMarkerCreator.createMarkerBitmapForResource(activity,
-					vehicleIconSet.getIconMarker(), 34f, 52f);
+					R.drawable.ic_vehicle_loader, 51f, 71f);
 		} else {
-			return CustomMapMarkerCreator
-					.createMarkerBitmapForResource(activity, vehicleIconSet.getIconMarker());
+			if (vehicleIconSet == VehicleIconSet.ERICKSHAW) {
+				return CustomMapMarkerCreator.createMarkerBitmapForResource(activity,
+						vehicleIconSet.getIconMarker(), 34f, 52f);
+			} else {
+				return CustomMapMarkerCreator
+						.createMarkerBitmapForResource(activity, vehicleIconSet.getIconMarker());
+			}
 		}
 	}
 
@@ -320,7 +325,7 @@ public class DriverInfo {
 
 	public Marker addMarkerToMap(String markerUrl, final Activity context, final GoogleMap map, final MarkerOptions markerOptions){
 		if(!TextUtils.isEmpty(markerUrl)){
-			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmap(context)));
+			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmap(context, true)));
 			final Marker marker = map.addMarker(markerOptions);
 			RequestCreator requestCreator = MyApplication.getPicasso(context).load(markerUrl)
 					.resize(Utils.dpToPx(context, 27), Utils.dpToPx(context, 34));
@@ -347,7 +352,7 @@ public class DriverInfo {
 			PicassoTools.into(requestCreator, target);
 			return marker;
 		} else {
-			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmap(context)));
+			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmap(context, false)));
 			return map.addMarker(markerOptions);
 		}
 	}

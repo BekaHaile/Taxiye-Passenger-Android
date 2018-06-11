@@ -106,7 +106,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     int rideType = orderHistory.getRideType();
                     int resourceId = getVehicleTypeDrawable(vehicleType, rideType, orderHistory.getIconSet());
                     HomeUtil.setVehicleIcon(activity, holder.imageViewProductType, orderHistory.getHistoryIcon(),
-                            resourceId, holder.callback);
+                            resourceId, false, holder.callback);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

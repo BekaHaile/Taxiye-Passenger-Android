@@ -383,7 +383,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 relativeLayoutRideSummary.setVisibility(View.VISIBLE);
 
                 int fallbackResourceId = endRideData.getVehicleIconSet().getIconInvoice();
-                HomeUtil.setVehicleIcon(activity, imageViewEndRideAutoIcon, endRideData.getIconUrl(), fallbackResourceId, null);
+                HomeUtil.setVehicleIcon(activity, imageViewEndRideAutoIcon, endRideData.getIconUrl(), fallbackResourceId, true, null);
 
                 textViewEndRideDriverName.setText(endRideData.driverName);
                 textViewEndRideDriverCarNumber.setText(endRideData.driverCarNumber);

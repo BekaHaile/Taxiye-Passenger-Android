@@ -2926,7 +2926,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             ivEndRideType.setImageResource(R.drawable.ic_history_pool);
                         } else {
                             HomeUtil.setVehicleIcon(this, ivEndRideType, Data.autoData.getEndRideData().getIconUrl(),
-                                    Data.autoData.getAssignedDriverInfo().getVehicleIconSet().getIconInvoice(), null);
+                                    Data.autoData.getAssignedDriverInfo().getVehicleIconSet().getIconInvoice(), true, null);
                         }
 
                         scrollViewRideSummary.scrollTo(0, 0);
