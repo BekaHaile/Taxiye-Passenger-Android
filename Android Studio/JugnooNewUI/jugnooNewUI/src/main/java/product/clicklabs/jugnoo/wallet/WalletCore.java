@@ -733,9 +733,8 @@ public class WalletCore {
 	 * @return payment option with highest order coming from server in case of payment option not known to rides
 	 */
 	public int validatePaymentOptionForRidesOffering(int paymentOptionInt) {
-		if (paymentOptionInt == PaymentOption.PAYTM.getOrdinal()
-				|| paymentOptionInt == PaymentOption.MOBIKWIK.getOrdinal()
-				|| paymentOptionInt == PaymentOption.FREECHARGE.getOrdinal()) {
+		if (paymentOptionInt == PaymentOption.ICICI_UPI.getOrdinal()
+				) {
 			try {
 				PaymentModeConfigData paymentModeConfigDataDefault = null;
 				for (PaymentModeConfigData paymentModeConfigData : getPaymentModeConfigDatas()) {
@@ -761,11 +760,11 @@ public class WalletCore {
 				if (paymentModeConfigDataDefault != null) {
 					return paymentModeConfigDataDefault.getPaymentOption();
 				} else {
-					return paymentOptionInt;
+					return PaymentOption.CASH.getOrdinal();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
-				return paymentOptionInt;
+				return PaymentOption.CASH.getOrdinal();
 			}
 		} else {
 			return paymentOptionInt;

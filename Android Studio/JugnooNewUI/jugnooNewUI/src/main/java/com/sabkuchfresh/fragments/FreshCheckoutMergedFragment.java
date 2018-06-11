@@ -2111,6 +2111,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             e.printStackTrace();
         }
 
+        setPaymentOptionVisibility();
+    }
+
+    private void setPaymentOptionVisibility() {
         try {
             if (isMenusOrDeliveryOpen()) {
                 setPaymentOptionVisibility(activity.getVendorOpened().getApplicablePaymentMode());
@@ -2566,7 +2570,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                         updateCouponsDataView();
                                         updateCartDataView();
                                         setPaymentOptionUI();
-                                        setPaymentOptionVisibility(getPaymentInfoMode());
+                                        setPaymentOptionVisibility();
 
                                         try {
                                             if (cartChangedRefreshCheckout) {
