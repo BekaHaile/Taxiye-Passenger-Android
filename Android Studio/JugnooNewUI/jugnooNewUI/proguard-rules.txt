@@ -197,5 +197,6 @@
 # fugu notification channel
 -dontwarn android.app.NotificationChannel
 -dontwarn com.fugu.FuguNotificationConfig
+-dontwarn org.npci.upi.security.pinactivitycomponent.GetCredential
 
 
