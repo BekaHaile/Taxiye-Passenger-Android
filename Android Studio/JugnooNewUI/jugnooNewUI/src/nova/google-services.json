@@ -1,58 +1,31 @@
 {
   "project_info": {
-    "project_number": "259458780933",
-    "firebase_url": "https://progressive-taxi-a0c03.firebaseio.com",
-    "project_id": "progressive-taxi-a0c03",
-    "storage_bucket": "progressive-taxi-a0c03.appspot.com"
+    "project_number": "600721837225",
+    "firebase_url": "https://nova-adc2c.firebaseio.com",
+    "project_id": "nova-adc2c",
+    "storage_bucket": "nova-adc2c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:259458780933:android:df1c7dbf2cc8d303",
+        "mobilesdk_app_id": "1:600721837225:android:bf002fa99a6d8db3",
         "android_client_info": {
-          "package_name": "product.clicklabs.progressive.driver"
+          "package_name": "production.nova.customer"
         }
       },
       "oauth_client": [
         {
-          "client_id": "259458780933-vqsoschtjnql4snlst0bejmalvqk7nf0.apps.googleusercontent.com",
+          "client_id": "600721837225-u78nff8f7fpqm943cb84j8p4afjrllqd.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "600721837225-u78nff8f7fpqm943cb84j8p4afjrllqd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDL96no_9dXS-ERNJs3qxOAu3lQW4RrUbY"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:259458780933:android:825ae3c0e7d46d55",
-        "android_client_info": {
-          "package_name": "production.progressive.customer"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "259458780933-vqsoschtjnql4snlst0bejmalvqk7nf0.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDL96no_9dXS-ERNJs3qxOAu3lQW4RrUbY"
+          "current_key": "AIzaSyDHV56xoRPZtU1IKphUC22klfJydil7eN8"
         }
       ],
       "services": {
