@@ -787,7 +787,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
         setMenuItemsAdapter();
 
-        getAllowedAuthChannels();
+        if(!getResources().getBoolean(R.bool.force_inhouse_login)) {
+            getAllowedAuthChannels();
+        }
 
         if(getResources().getBoolean(R.bool.show_change_languge)) {
             relativeLayoutChangeLanguage.setVisibility(View.VISIBLE);

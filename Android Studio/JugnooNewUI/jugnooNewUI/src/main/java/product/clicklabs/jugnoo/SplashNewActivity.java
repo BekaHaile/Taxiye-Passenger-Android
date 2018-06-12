@@ -2345,7 +2345,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						}
 
 						//"login_channel": 0 //0-Default fbAccountKit, 1-Inhouse apis
-						Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
+						if(getResources().getBoolean(R.bool.force_inhouse_login)) {
+							Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL,1);
+						}else{
+							Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
+						}
 
 						if(countryPicker.getAllCountries().size() > 1){
 							rlCountryCode.setEnabled(true);
