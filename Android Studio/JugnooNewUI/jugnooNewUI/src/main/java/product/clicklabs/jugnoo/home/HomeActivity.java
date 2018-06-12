@@ -1576,9 +1576,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         } else {
                             submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
                                     rating, feedbackStr, feedbackReasons);
-                            if(rating > 3) {
-                                goodFeedbackViewType();
-                            }
                             flurryEventGAForTransaction();
                         }
                     }
