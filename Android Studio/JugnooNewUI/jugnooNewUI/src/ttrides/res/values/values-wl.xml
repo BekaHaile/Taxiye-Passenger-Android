@@ -20,7 +20,8 @@
             ic_launcher
             notification_icon
     -->
-    <string name="app_name">TT RidesShare</string>
+
+    <string name="app_name">TT RideShare</string>
 
     <string name="google_maps_api_key">AIzaSyBCcnNzpyLi5ND2KKi9MShjWkyRh6c-on4</string>
     <string name="google_maps_api_server_key">AIzaSyALcnx6JGyfBANXyk_r54pFPW2dZya8SjA</string>
@@ -36,7 +37,7 @@
 
     <string name="operator_token">83ebe9d9d65fdac16460da388822bc38</string>
     <string name="support_number">+2549023121121</string>
-    <string name="police_number">911</string>
+    <string name="police_number">999</string>
     <string name="facebook_page_id">TTRidesShare</string>
     <string name="facebook_page_name">TTRidesShare</string>
 
@@ -77,5 +78,7 @@
     <bool name="show_change_languge">false</bool>
 
     <bool name="ride_feedback_rating_bar">true</bool>
-
+    <!--default support email for SupportMailActivity if not coming from server-->
+    <string name="default_support_email">support@ttrides.in</string>
+    <bool name="support_email_page_enabled">true</bool>
 </resources>
