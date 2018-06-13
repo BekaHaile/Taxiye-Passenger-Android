@@ -104,6 +104,7 @@ import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.TransactionUtils;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
+import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -350,7 +351,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     TextView textViewRSTotalFareValue, textViewRSCashPaidValue;
     LinearLayout linearLayoutRSViewInvoice, linearLayoutSendInvites, linearLayoutPaymentModeConfirm;
 
-    RatingBar ratingBarRSFeedback;
+    RatingBarMenuFeedback ratingBarRSFeedback;
     TextView textViewRSWhatImprove, textViewRSOtherError;
     NonScrollGridView gridViewRSFeedbackReasons;
     FeedbackReasonsAdapter feedbackReasonsAdapter;
@@ -515,6 +516,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private RecyclerView rvBidsIncoming;
     private BidsPlacedAdapter bidsPlacedAdapter;
+
+    private RelativeLayout rlThumbsType;
+    private LinearLayout llRatingFeedbackType;
 
     @SuppressLint("NewApi")
     @Override
@@ -860,8 +864,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         tvChatCount = (TextView) findViewById(R.id.tvChatCount); tvChatCount.setTypeface(Fonts.mavenMedium(this));
 
 
-        ratingBarRSFeedback = (RatingBar) findViewById(R.id.ratingBarRSFeedback);
-        ratingBarRSFeedback.setRating(0);
+        ratingBarRSFeedback = (RatingBarMenuFeedback) findViewById(R.id.ratingBarRSFeedback);
+        ratingBarRSFeedback.setScore(0, false);
         textViewRSWhatImprove = (TextView) findViewById(R.id.textViewRSWhatImprove);
         textViewRSWhatImprove.setTypeface(Fonts.mavenLight(this));
         textViewRSOtherError = (TextView) findViewById(R.id.textViewRSOtherError);
@@ -1491,24 +1495,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
 
-        editTextRSFeedback.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scrollViewRideSummary.smoothScrollTo(0, buttonRSSubmitFeedback.getBottom());
-            }
-        });
-        editTextRSFeedback.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    scrollViewRideSummary.smoothScrollTo(0, buttonRSSubmitFeedback.getBottom());
-                }
-            }
-        });
 
-        ratingBarRSFeedback.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+        ratingBarRSFeedback.setOnScoreChanged(new RatingBarMenuFeedback.IRatingBarCallbacks() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+            public void scoreChanged(float score) {
                 try {
                     if (Data.autoData.getFeedbackReasons().size() > 0) {
                         if (rating > 0 && rating <= 3) {
@@ -1540,6 +1530,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     @Override
                     public void keyboardOpened() {
                         editTextRSFeedback.setHint("");
+                        scrollViewRideSummary.smoothScrollTo(0, buttonRSSubmitFeedback.getBottom());
                     }
 
                     @Override
@@ -1555,8 +1546,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onClick(View v) {
                 try {
                     String feedbackStr = editTextRSFeedback.getText().toString().trim();
-                    //int rating = (int) ratingBarRSFeedback.getRating();
-                    //rating = Math.abs(rating);
+                    rating = Math.abs(Math.round(ratingBarRSFeedback.getScore()));
                     Log.e("rating screen =", "= feedbackStr = " + feedbackStr + " , rating = " + rating);
 
                     String feedbackReasons = feedbackReasonsAdapter.getSelectedReasons();
@@ -1565,17 +1555,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     if (0 == rating) {
                         DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.we_take_your_feedback_seriously));
                     } else {
-                        if (Data.autoData.getFeedbackReasons().size() > 0 && rating <= 3) {
-                            if (feedbackReasons.length() > 0) {
-                                if (isLastReasonSelected && feedbackStr.length() == 0) {
-                                    textViewRSOtherError.setText(getString(R.string.star_required));
-                                    return;
-                                }
-                            } else {
-                                DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.please_provide_reason_for_rating));
-                                return;
-                            }
-                        }
+//                        if (Data.autoData.getFeedbackReasons().size() > 0 && rating <= 3) {
+//                            if (feedbackReasons.length() > 0) {
+//                                if (isLastReasonSelected && feedbackStr.length() == 0) {
+//                                    textViewRSOtherError.setText(getString(R.string.star_required));
+//                                    return;
+//                                }
+//                            } else {
+//                                DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.please_provide_reason_for_rating));
+//                                return;
+//                            }
+//                        }
 
                         if (feedbackStr.length() > 300) {
                             editTextRSFeedback.requestFocus();
@@ -1634,22 +1624,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         rating = 5;
                         submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
                                 rating, "", "");
-                        if (Data.userData != null) {
-                            if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()) {
-                                endRideWithImages(R.drawable.ride_end_image_1);
-                            } else if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()) {
-                                endRideWithImages(R.drawable.ride_end_image_2);
-                            } else if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()) {
-                                endRideWithImages(R.drawable.ride_end_image_3);
-                            } else if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()) {
-                                endRideWithImages(R.drawable.ride_end_image_4);
-                            } else if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
-                                endRideWithGif();
-                            }
-                            disableEmergencyModeIfNeeded(Data.autoData.getcEngagementId());
-                            updateTopBar();
-                            topBar.imageViewHelp.setVisibility(View.GONE);
-                        }
+                        goodFeedbackViewType();
                         GAUtils.event(RIDES, RIDE + FINISHED, THUMB_UP + CLICKED);
                     }
                 } catch (Exception e) {
@@ -1748,6 +1723,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         }
 
+        rlThumbsType = (RelativeLayout) findViewById(R.id.rlThumbsType);
+        llRatingFeedbackType = (LinearLayout) findViewById(R.id.llRatingFeedbackType);
+
+        if(getResources().getBoolean(R.bool.ride_feedback_rating_bar)){
+            rlThumbsType.setVisibility(View.GONE);
+            llRatingFeedbackType.setVisibility(View.VISIBLE);
+        } else {
+            rlThumbsType.setVisibility(View.VISIBLE);
+            llRatingFeedbackType.setVisibility(View.GONE);
+        }
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -1824,6 +1810,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
+    }
+
+    private void goodFeedbackViewType() {
+        if (Data.userData != null) {
+			if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal()) {
+				endRideWithImages(R.drawable.ride_end_image_1);
+			} else if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_2.getOrdinal()) {
+				endRideWithImages(R.drawable.ride_end_image_2);
+			} else if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_3.getOrdinal()) {
+				endRideWithImages(R.drawable.ride_end_image_3);
+			} else if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_IMAGE_4.getOrdinal()) {
+				endRideWithImages(R.drawable.ride_end_image_4);
+			} else if (Data.autoData.getRideEndGoodFeedbackViewType() == RideEndGoodFeedbackViewType.RIDE_END_GIF.getOrdinal()) {
+				endRideWithGif();
+			}
+			disableEmergencyModeIfNeeded(Data.autoData.getcEngagementId());
+			updateTopBar();
+			topBar.imageViewHelp.setVisibility(View.GONE);
+		}
     }
 
     public TransactionUtils getTransactionUtils() {
@@ -2930,7 +2935,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
 
                         scrollViewRideSummary.scrollTo(0, 0);
-                        ratingBarRSFeedback.setRating(0f);
+                        ratingBarRSFeedback.setScore(0f,false);
                         setZeroRatingView();
                         relativeLayoutRideEndWithImage.setVisibility(View.GONE);
                         relativeLayoutGreat.setVisibility(View.GONE);
