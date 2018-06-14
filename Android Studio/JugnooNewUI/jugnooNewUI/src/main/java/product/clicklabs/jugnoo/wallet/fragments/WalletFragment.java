@@ -334,7 +334,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		try{
 			orderPaymentModes();
 			if(Data.userData != null){
-				textViewJugnooCashBalanceValue.setText(String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())));
+				textViewJugnooCashBalanceValue.setText(!getResources().getBoolean(R.bool.wallet_amount_sidemenu)?Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance()):String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())));
 				textViewJugnooCashBalanceValue.setTextColor(Data.userData.getJugnooBalanceColor(paymentActivity));
 
 				if(Data.userData.getPaytmEnabled() == 1){

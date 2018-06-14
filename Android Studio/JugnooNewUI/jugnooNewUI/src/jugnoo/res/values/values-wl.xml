@@ -72,4 +72,6 @@
     <bool name="force_mpesa_payment">false</bool>
     <integer name="show_about">@integer/view_visible</integer>
     <bool name="show_change_languge">false</bool>
+    <bool name="wallet_amount_sidemenu">true</bool>
+    <integer name="send_invites_visibility">@integer/view_gone</integer>
 </resources>

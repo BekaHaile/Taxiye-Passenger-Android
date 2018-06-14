@@ -38,8 +38,8 @@
     <string name="operator_token">83ebe9d9d65fdac16460da388822bc38</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">999</string>
-    <string name="facebook_page_id">TTRidesShare</string>
-    <string name="facebook_page_name">TTRidesShare</string>
+    <string name="facebook_page_id">TTRideShare</string>
+    <string name="facebook_page_name">TTRideShare</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
@@ -61,17 +61,17 @@
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
 
-    <string name="file_provider_name">com.ttridesshare.fileprovider</string>
-    <string name="web_landing_page">https://ttridesshare.in</string>
+    <string name="file_provider_name">com.ttrideshare.fileprovider</string>
+    <string name="web_landing_page">https://ttrideshare.in</string>
     <string name="smart_url">http://smarturl.it/ttridesshare</string>
-    <string name="db_name">ttridesshare_database</string>
+    <string name="db_name">ttrideshare_database</string>
     <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
-    <string name="app_domain">ttridesshare.in</string>
-    <string name="app_host_name">www.ttridesshare.in</string>
-    <string name="branch_domain">share.ttridesshare.in</string>
-    <string name="app_scheme">ttridesshare</string>
+    <string name="app_domain">ttrideshare.in</string>
+    <string name="app_host_name">www.ttrideshare.in</string>
+    <string name="branch_domain">share.ttrideshare.in</string>
+    <string name="app_scheme">ttrideshare</string>
 
-    <string name="pictures_path">TTRidesShare/TTRidesShare Pictures</string>
+    <string name="pictures_path">TTRideShare/TTRideShare Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
     <integer name="show_about">@integer/view_invisible</integer>
