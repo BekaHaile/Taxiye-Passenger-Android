@@ -26,7 +26,7 @@
     <string name="google_maps_api_key">AIzaSyBCcnNzpyLi5ND2KKi9MShjWkyRh6c-on4</string>
     <string name="google_maps_api_server_key">AIzaSyALcnx6JGyfBANXyk_r54pFPW2dZya8SjA</string>
     <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
-    <string name="fb_app_id">782131025144439</string>
+    <string name="fb_app_id">227615331160869</string>
     <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
     <string name="ak_login_protocol_scheme">ak782131025144439</string>
     <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
@@ -57,7 +57,9 @@
     <drawable name="login_logo_icon_drawable">@drawable/ic_login_logo</drawable>
     <drawable name="splash_background_drawable">@color/theme_color</drawable>
     <drawable name="login_background_drawable">@color/black</drawable>
-    <integer name="show_social_login">@integer/view_invisible</integer>
+    <integer name="show_social_login">@integer/view_visible</integer>
+    <integer name="show_facebook_login">@integer/view_visible</integer>
+    <integer name="show_google_login">@integer/view_gone</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
 

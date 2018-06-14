@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutFinalDropLocationClick"
