@@ -71,9 +71,10 @@
     <string name="pictures_path">InstaTaxi/InstaTaxi Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
-    <bool name="show_about">false</bool>
+    <bool name="show_about">true</bool>
     <bool name="show_change_languge">false</bool>
     <!--default support email for SupportMailActivity if not coming from server-->
     <string name="default_support_email">support@instataxi.in</string>
     <bool name="support_email_page_enabled">true</bool>
+    <integer name="send_invites_visibility">@integer/view_gone</integer>
 </resources>

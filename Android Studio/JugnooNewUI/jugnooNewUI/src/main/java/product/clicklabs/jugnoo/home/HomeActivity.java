@@ -3457,7 +3457,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         buttonCancelRide.setVisibility(View.GONE);
                         buttonAddMoneyToWallet.setVisibility(View.GONE);
-                        linearLayoutSendInvites.setVisibility(View.VISIBLE);
+                        if(getResources().getInteger(R.integer.send_invites_visibility)==getResources().getInteger(R.integer.view_visible)) {
+                            linearLayoutSendInvites.setVisibility(View.VISIBLE);
+                        }
                         updateInRideAddMoneyToWalletButtonText();
                         setPaymentOptionInRide();
 
