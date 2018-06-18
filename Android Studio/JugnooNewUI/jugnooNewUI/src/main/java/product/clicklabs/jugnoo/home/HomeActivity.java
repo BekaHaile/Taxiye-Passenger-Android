@@ -56,7 +56,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -101,6 +100,7 @@ import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
+import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.TransactionUtils;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
@@ -4668,6 +4668,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         startActivity(new Intent(HomeActivity.this, ChatActivity.class));
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
         GAUtils.event(RIDES, DRIVER_ENROUTE, CHAT + GAAction.BUTTON + CLICKED);
+    }
+
+    public CallbackPaymentOptionSelector getCallbackPaymentOptionSelector() {
+        return callbackPaymentOptionSelector;
     }
 
 
@@ -10214,4 +10218,28 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 });
     }
+
+    private CallbackPaymentOptionSelector callbackPaymentOptionSelector = new CallbackPaymentOptionSelector() {
+        @Override
+        public void onPaymentOptionSelected(PaymentOption paymentOption) {
+            Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
+            getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+            getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
+        }
+
+        @Override
+        public void onWalletAdd(PaymentOption paymentOption) {
+            getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
+        }
+
+        @Override
+        public String getAmountToPrefill() {
+            return "";
+        }
+
+        @Override
+        public void onWalletOptionClick() {
+            showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
+        }
+    };
 }

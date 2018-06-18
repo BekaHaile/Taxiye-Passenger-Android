@@ -121,27 +121,27 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         try {
             switch (v.getId()) {
                 case R.id.relativeLayoutPaytm:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.PAYTM);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.PAYTM, activity.getCallbackPaymentOptionSelector());
                     break;
                 case R.id.relativeLayoutMpesa:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.MPESA);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.MPESA, activity.getCallbackPaymentOptionSelector());
                     break;
 
                 case R.id.relativeLayoutMobikwik:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.MOBIKWIK);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.MOBIKWIK, activity.getCallbackPaymentOptionSelector());
                     break;
 
                 case R.id.linearLayoutCash:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.CASH);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.CASH, activity.getCallbackPaymentOptionSelector());
                     break;
                 case R.id.llOtherModesToPay:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.RAZOR_PAY);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.RAZOR_PAY, activity.getCallbackPaymentOptionSelector());
                     break;
                 case R.id.relativeLayoutFreeCharge:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.FREECHARGE);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.FREECHARGE, activity.getCallbackPaymentOptionSelector());
                     break;
                 case R.id.relativeLayoutStripeCard:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.STRIPE_CARDS);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.STRIPE_CARDS, activity.getCallbackPaymentOptionSelector());
                     break;
             }
             activity.showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());

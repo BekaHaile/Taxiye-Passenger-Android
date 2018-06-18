@@ -527,7 +527,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     public PaymentOptionDialog paymentOptionDialog;
     public PaymentOptionDialog getPaymentOptionDialog(){
         if(paymentOptionDialog == null){
-            paymentOptionDialog = new PaymentOptionDialog(activity, new PaymentOptionDialog.Callback() {
+            paymentOptionDialog = new PaymentOptionDialog(activity, activity.getCallbackPaymentOptionSelector(), new PaymentOptionDialog.Callback() {
                 @Override
                 public void onDialogDismiss() {
 

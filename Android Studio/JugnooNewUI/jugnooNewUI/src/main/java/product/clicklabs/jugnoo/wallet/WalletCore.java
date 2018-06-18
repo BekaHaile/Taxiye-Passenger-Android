@@ -796,204 +796,6 @@ public class WalletCore {
 	}
 
 
-	public void paymentOptionSelectionBeforeRequestRide(final HomeActivity activity, PaymentOption paymentOption){
-		try {
-			if(paymentOption == PaymentOption.PAYTM){
-				if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() > 0) {
-					Data.autoData.setPickupPaymentOption(PaymentOption.PAYTM.getOrdinal());
-					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-				}
-				else if(Data.userData.getPaytmEnabled() == 1 && Data.userData.getPaytmBalance() < 0){
-					new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
-						@Override
-						public void onPositiveClick() {
-
-						}
-
-						@Override
-						public void onNegativeClick() {
-
-						}
-					}).show(activity.getResources().getString(R.string.paytm_error_case_select_cash), true);
-				} else{
-					if(Data.userData.getPaytmEnabled() == 1) {
-						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
-							@Override
-							public void onPositiveClick() {
-								try {
-									Intent intent = new Intent(activity, PaymentActivity.class);
-									intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
-									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
-									activity.startActivity(intent);
-									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-									activity.getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-
-							@Override
-							public void onNegativeClick() {
-								try {
-									if(Data.userData.getMobikwikEnabled() != 1 && Data.userData.getFreeChargeEnabled() != 1){
-										Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
-										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
-									}
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						}).show(activity.getResources().getString(R.string.paytm_no_cash), false);
-					}
-					else{
-						MyApplication.getInstance().getWalletCore()
-								.openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.PAYTM.getOrdinal());
-					}
-				}
-			}
-			else if(paymentOption == PaymentOption.MOBIKWIK){
-				if(Data.userData.getMobikwikEnabled() == 1 && Data.userData.getMobikwikBalance() > 0) {
-					Data.autoData.setPickupPaymentOption(PaymentOption.MOBIKWIK.getOrdinal());
-					activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-				}
-				else if(Data.userData.getMobikwikEnabled() == 1 && Data.userData.getMobikwikBalance() < 0){
-					new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
-						@Override
-						public void onPositiveClick() {
-
-						}
-
-						@Override
-						public void onNegativeClick() {
-
-						}
-					}).show(activity.getResources().getString(R.string.mobikwik_error_select_cash), true);
-				} else{
-					if(Data.userData.getMobikwikEnabled() == 1) {
-						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
-							@Override
-							public void onPositiveClick() {
-								try {
-									Intent intent = new Intent(activity, PaymentActivity.class);
-									intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
-									intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MOBIKWIK.getOrdinal());
-									activity.startActivity(intent);
-									activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-									activity.getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-
-							@Override
-							public void onNegativeClick() {
-								try {
-									if(Data.userData.getPaytmEnabled() != 1 && Data.userData.getFreeChargeEnabled() != 1){
-										Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
-										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-										activity.getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
-									}
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-							}
-						}).show(activity.getResources().getString(R.string.mobikwik_no_cash), false);
-					}
-					else{
-						MyApplication.getInstance().getWalletCore()
-								.openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.MOBIKWIK.getOrdinal());
-					}
-				}
-			} else if(paymentOption == PaymentOption.FREECHARGE){
-                if(Data.userData.getFreeChargeEnabled() == 1 && Data.userData.getFreeChargeBalance() > 0) {
-					Data.autoData.setPickupPaymentOption(PaymentOption.FREECHARGE.getOrdinal());
-                    activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-                }
-				else if(Data.userData.getFreeChargeEnabled() == 1 && Data.userData.getFreeChargeBalance() < 0){
-                    new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
-                        @Override
-                        public void onPositiveClick() {
-
-                        }
-
-                        @Override
-                        public void onNegativeClick() {
-
-                        }
-                    }).show(activity.getResources().getString(R.string.freecharge_error_case_select_cash), true);
-                } else{
-                    if(Data.userData.getFreeChargeEnabled() == 1) {
-                        new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
-                            @Override
-                            public void onPositiveClick() {
-                                Intent intent = new Intent(activity, PaymentActivity.class);
-                                intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal());
-                                intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.FREECHARGE.getOrdinal());
-                                activity.startActivity(intent);
-                                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                            }
-
-                            @Override
-                            public void onNegativeClick() {
-                                try {
-                                    if(Data.userData.getPaytmEnabled() != 1 && Data.userData.getMobikwikEnabled() != 1){
-										Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
-                                        activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-                                        activity.getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }).show(activity.getResources().getString(R.string.freecharge_no_cash), false);
-                    }
-                    else{
-                        MyApplication.getInstance().getWalletCore()
-                                .openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.FREECHARGE.getOrdinal());
-                    }
-                }
-
-            }else if(paymentOption==PaymentOption.STRIPE_CARDS){
-
-				PaymentModeConfigData stripeConfigData= getStripeConfigData();
-				if(stripeConfigData==null)return;
-
-
-				if(stripeConfigData.getCardsData()==null || stripeConfigData.getCardsData().size()==0){
-					try {
-						Intent intent = new Intent(activity, PaymentActivity.class);
-						intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
-						intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.STRIPE_CARDS.getOrdinal());
-						activity.startActivity(intent);
-						activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-						activity.getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					return;
-				}
-
-
-				Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
-				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-
-
-		  } else if(paymentOption == PaymentOption.MPESA){
-//				if(Data.autoData.getPickupPaymentOption() == PaymentOption.PAYTM.getOrdinal()){
-//					FlurryEventLogger.event(activity, FlurryEventNames.CHANGED_MODE_FROM_PAYTM_TO_CASH);
-//				}
-				Data.autoData.setPickupPaymentOption(PaymentOption.MPESA.getOrdinal());
-				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-//				FlurryEventLogger.eventGA(Constants.REVENUE + Constants.SLASH + Constants.ACTIVATION + Constants.SLASH + Constants.RETENTION, "b_payment_mode", "cash");
-			} else {
-				Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
-				activity.getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 
 
@@ -1183,7 +985,7 @@ public class WalletCore {
 						intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.STRIPE_CARDS.getOrdinal());
 						activity.startActivity(intent);
 						activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-
+						callbackPaymentOptionSelector.onWalletAdd(PaymentOption.STRIPE_CARDS);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1195,8 +997,8 @@ public class WalletCore {
 
 
 
-			} else if(paymentOption == PaymentOption.CASH){
-				callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.CASH);
+			} else {
+				callbackPaymentOptionSelector.onPaymentOptionSelected(paymentOption);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

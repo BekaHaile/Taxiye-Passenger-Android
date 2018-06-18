@@ -1035,6 +1035,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         public String getAmountToPrefill() {
             return dfNoDecimal.format(Math.ceil(payableAmount()));
         }
+
+        @Override
+        public void onWalletOptionClick() {
+
+        }
     };
 
 
