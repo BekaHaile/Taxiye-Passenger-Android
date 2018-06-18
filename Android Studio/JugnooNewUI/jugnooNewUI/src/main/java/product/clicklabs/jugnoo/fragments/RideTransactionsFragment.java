@@ -180,14 +180,26 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 
 		getRecentRidesAPI(activity, true);
 		setActivityTitle();
-		if(activity instanceof RideTransactionsActivity){
-			((RideTransactionsActivity)activity).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-			((RideTransactionsActivity)activity).rlFilter.setVisibility(View.VISIBLE);
-		}
+		enableDrawerFilter();
 
 		return rootView;
 	}
 
+	private void enableDrawerFilter() {
+		if(activity instanceof RideTransactionsActivity){
+			int offerings = Data.userData.getAutosEnabled()
+					+ Data.userData.getMealsEnabled()
+					+ Data.userData.getFreshEnabled()
+					+ Data.userData.getMenusEnabled()
+					+ Data.userData.getDeliveryCustomerEnabled()
+					+ Data.userData.getProsEnabled()
+					+ Data.userData.getFeedEnabled();
+			if(offerings > 1) {
+				((RideTransactionsActivity) activity).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+				((RideTransactionsActivity) activity).rlFilter.setVisibility(View.VISIBLE);
+			}
+		}
+	}
 
 
 	@Override
@@ -199,10 +211,7 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 				Data.isOrderCancelled = false;
 				getRecentRidesAPI(activity, true);
 			}
-			if(activity instanceof RideTransactionsActivity){
-				((RideTransactionsActivity)activity).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-				((RideTransactionsActivity)activity).rlFilter.setVisibility(View.VISIBLE);
-			}
+			enableDrawerFilter();
 		} else {
 			if(activity instanceof RideTransactionsActivity){
 				((RideTransactionsActivity)activity).getDrawerLayout().setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
