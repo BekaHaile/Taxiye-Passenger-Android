@@ -181,6 +181,7 @@
                     android:layout_width="268px"
                     android:layout_height="@dimen/splash_button_height"
                     android:gravity="center_horizontal"
+                    android:visibility="@integer/show_facebook_login"
                     android:background="@drawable/capsule_login_button_selector">
 
                     <Button
@@ -215,6 +216,7 @@
                     android:layout_height="@dimen/splash_button_height"
                     android:layout_marginStart="@dimen/px_20"
                     android:gravity="center_horizontal"
+                    android:visibility="@integer/show_google_login"
                     android:background="@drawable/capsule_login_button_selector">
 
                     <Button

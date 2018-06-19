@@ -20,12 +20,13 @@
             ic_launcher
             notification_icon
     -->
-    <string name="app_name">TT Rides Share</string>
+
+    <string name="app_name">TT RideShare</string>
 
     <string name="google_maps_api_key">AIzaSyBCcnNzpyLi5ND2KKi9MShjWkyRh6c-on4</string>
     <string name="google_maps_api_server_key">AIzaSyALcnx6JGyfBANXyk_r54pFPW2dZya8SjA</string>
     <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
-    <string name="fb_app_id">782131025144439</string>
+    <string name="fb_app_id">227615331160869</string>
     <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
     <string name="ak_login_protocol_scheme">ak782131025144439</string>
     <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
@@ -34,11 +35,11 @@
 
 
 
-    <string name="operator_token">6e1314631d098db197321244c93fb7c5</string>
+    <string name="operator_token">83ebe9d9d65fdac16460da388822bc38</string>
     <string name="support_number">+2549023121121</string>
-    <string name="police_number">911</string>
-    <string name="facebook_page_id">TTRidesShare</string>
-    <string name="facebook_page_name">TTRidesShare</string>
+    <string name="police_number">999</string>
+    <string name="facebook_page_id">TTRideShare</string>
+    <string name="facebook_page_name">TTRideShare</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
@@ -56,26 +57,31 @@
     <drawable name="login_logo_icon_drawable">@drawable/ic_login_logo</drawable>
     <drawable name="splash_background_drawable">@color/theme_color</drawable>
     <drawable name="login_background_drawable">@color/black</drawable>
-    <integer name="show_social_login">@integer/view_invisible</integer>
+    <integer name="show_social_login">@integer/view_visible</integer>
+    <integer name="show_facebook_login">@integer/view_visible</integer>
+    <integer name="show_google_login">@integer/view_gone</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
 
-    <string name="file_provider_name">com.ttridesshare.fileprovider</string>
-    <string name="web_landing_page">https://ttridesshare.in</string>
+    <string name="file_provider_name">com.ttrideshare.fileprovider</string>
+    <string name="web_landing_page">https://ttrideshare.in</string>
     <string name="smart_url">http://smarturl.it/ttridesshare</string>
-    <string name="db_name">ttridesshare_database</string>
+    <string name="db_name">ttrideshare_database</string>
     <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
-    <string name="app_domain">ttridesshare.in</string>
-    <string name="app_host_name">www.ttridesshare.in</string>
-    <string name="branch_domain">share.ttridesshare.in</string>
-    <string name="app_scheme">ttridesshare</string>
+    <string name="app_domain">ttrideshare.in</string>
+    <string name="app_host_name">www.ttrideshare.in</string>
+    <string name="branch_domain">share.ttrideshare.in</string>
+    <string name="app_scheme">ttrideshare</string>
 
-    <string name="pictures_path">TTRidesShare/TTRidesShare Pictures</string>
+    <string name="pictures_path">TTRideShare/TTRideShare Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
     <integer name="show_about">@integer/view_invisible</integer>
     <bool name="show_change_languge">false</bool>
 
     <bool name="ride_feedback_rating_bar">true</bool>
-
+    <!--default support email for SupportMailActivity if not coming from server-->
+    <string name="default_support_email">support@ttrides.in</string>
+    <bool name="support_email_page_enabled">true</bool>
+    <integer name="send_invites_visibility">@integer/view_gone</integer>
 </resources>

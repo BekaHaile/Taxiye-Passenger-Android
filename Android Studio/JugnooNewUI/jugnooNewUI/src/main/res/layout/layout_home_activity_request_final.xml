@@ -391,7 +391,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="80px"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:orientation="vertical"
                 android:splitMotionEvents="false">
@@ -404,7 +404,7 @@
                 <Button
                     android:id="@+id/buttonCancelRide"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="80px"
                     android:background="@drawable/bg_theme_color_selector"
                     android:textColor="@android:color/white"
                     android:text="@string/cancel_ride"
@@ -417,7 +417,7 @@
                 <Button
                     android:id="@+id/buttonAddMoneyToWallet"
                     android:layout_width="359px"
-                    android:layout_height="match_parent"
+                    android:layout_height="80px"
                     android:background="@color/menu_item_selector_color"
                     android:text="@string/add_paytm_cash"
                     android:textAllCaps="true"
@@ -429,11 +429,11 @@
                 <LinearLayout
                     android:id="@+id/linearLayoutSendInvites"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@color/menu_item_selector_color"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:visibility="visible">
+                    android:visibility="@integer/send_invites_visibility">
 
                     <TextView
                         android:id="@+id/textViewSendInvites"
@@ -442,7 +442,10 @@
                         android:text="@string/send_invites"
                         android:textAllCaps="true"
                         android:textColor="@color/theme_color"
-                        android:textSize="@dimen/text_size_26" />
+                        android:textSize="@dimen/text_size_26"
+                        android:layout_marginTop="20px"
+                        android:layout_marginBottom="20px"
+                        />
 
                     <TextView
                         android:id="@+id/textViewSendInvites2"

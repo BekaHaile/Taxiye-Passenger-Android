@@ -79,7 +79,7 @@
             android:layout_height="@dimen/splash_logo_height"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/ic_splash_logo"
+            android:src="@drawable/login_logo_icon_drawable"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:tag="@string/dont_touch_me"

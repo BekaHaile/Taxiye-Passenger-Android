@@ -72,8 +72,6 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 
 	View rootView;
     private PaymentActivity paymentActivity;
-	private ImageView imageViewJugnooAnimation;
-	private AnimationDrawable jugnooAnimation;
 	private int pay = 0;
 
 	public static WalletTransactionsFragment newInstance(int pay){
@@ -129,10 +127,6 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 		});
 		recyclerViewWalletTransactions.setAdapter(walletTransactionsAdapter);
 
-		imageViewJugnooAnimation = (ImageView)rootView.findViewById(R.id.imageViewJugnooAnimation);
-		jugnooAnimation = (AnimationDrawable) imageViewJugnooAnimation.getBackground();
-
-		//textViewTitle.getPaint().setShader(FeedUtils.textColorGradient(getActivity(), textViewTitle));
 
         imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -199,8 +193,7 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 	
 	public void getTransactionInfoAsync(final Activity activity) {
 		if (MyApplication.getInstance().isOnline()) {
-			imageViewJugnooAnimation.setVisibility(View.VISIBLE);
-			jugnooAnimation.start();
+			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 			callRefreshAPI(activity);
 		} else {
 			retryDialog(DialogErrorType.NO_NET);
@@ -312,15 +305,13 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 							exception.printStackTrace();
 							updateListData(getString(R.string.some_error_occured), true);
 						}
-						imageViewJugnooAnimation.setVisibility(View.GONE);
-						jugnooAnimation.stop();
+						DialogPopup.dismissLoadingDialog();
 					}
 
 					@Override
 					public void failure(RetrofitError error) {
 						Log.e(TAG, "getTransactionHistory error="+error.toString());
-						imageViewJugnooAnimation.setVisibility(View.GONE);
-						jugnooAnimation.stop();
+						DialogPopup.dismissLoadingDialog();
 						updateListData(getString(R.string.some_error_occured), true);
 					}
 				};

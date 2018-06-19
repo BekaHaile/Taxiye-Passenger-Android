@@ -189,8 +189,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 } else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_wallet_selector);
                     try {
-                        holder.textViewValue.setText(String.format(activity.getResources()
-                                        .getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
+                        holder.textViewValue.setText(!activity.getResources().getBoolean(R.bool.wallet_amount_sidemenu)? Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance()):String.format(activity.getResources()
+                                .getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
                         holder.textViewValue.setVisibility(View.VISIBLE);
                     } catch (Exception e) {
                         e.printStackTrace();
