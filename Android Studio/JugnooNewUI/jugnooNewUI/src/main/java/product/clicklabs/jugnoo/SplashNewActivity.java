@@ -1363,6 +1363,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			@Override
 			public void afterTextChanged(Editable s) {
+				if(s.length()==1&&s.toString().equalsIgnoreCase("0")){
+					editTextPhoneNumber.setText("");
+				}
 				textViewPhoneNumberRequired.setVisibility((s.length() == 0)?View.VISIBLE:View.GONE);
 			}
 		});
