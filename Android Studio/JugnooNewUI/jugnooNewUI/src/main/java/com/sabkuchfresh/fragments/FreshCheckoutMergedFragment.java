@@ -1040,6 +1040,21 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         public void onWalletOptionClick() {
 
         }
+
+        @Override
+        public int getSelectedPaymentOption() {
+            return activity.getPaymentOption().getOrdinal();
+        }
+
+        @Override
+        public void setSelectedPaymentOption(int paymentOption) {
+            activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getPaymentOptionFromInt(paymentOption));
+        }
+
+        @Override
+        public boolean isRazorpayEnabled() {
+            return true;
+        }
     };
 
 

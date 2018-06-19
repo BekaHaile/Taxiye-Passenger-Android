@@ -10241,5 +10241,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         public void onWalletOptionClick() {
             showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
         }
+
+        @Override
+        public int getSelectedPaymentOption() {
+            return Data.autoData.getPickupPaymentOption();
+        }
+
+        @Override
+        public void setSelectedPaymentOption(int paymentOption) {
+            Data.autoData.setPickupPaymentOption(paymentOption);
+        }
+
+        @Override
+        public boolean isRazorpayEnabled() {
+            return Data.autoData != null && Data.autoData.isRazorpayEnabled();
+        }
     };
 }

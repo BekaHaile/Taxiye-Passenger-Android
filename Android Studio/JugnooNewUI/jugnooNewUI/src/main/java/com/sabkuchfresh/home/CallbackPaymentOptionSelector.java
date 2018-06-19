@@ -11,4 +11,7 @@ public interface CallbackPaymentOptionSelector{
     void onWalletAdd(PaymentOption paymentOption);
     String getAmountToPrefill();
     void onWalletOptionClick();
+    int getSelectedPaymentOption();
+    void setSelectedPaymentOption(int paymentOption);
+    boolean isRazorpayEnabled();
 }

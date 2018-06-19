@@ -907,6 +907,21 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         public void onWalletOptionClick() {
 
         }
+
+        @Override
+        public int getSelectedPaymentOption() {
+            return getPaymentOption().getOrdinal();
+        }
+
+        @Override
+        public void setSelectedPaymentOption(int paymentOption) {
+            setPaymentOption(MyApplication.getInstance().getWalletCore().getPaymentOptionFromInt(paymentOption));
+        }
+
+        @Override
+        public boolean isRazorpayEnabled() {
+            return true;
+        }
     };
 
     private void setPaymentOptionUI() {
