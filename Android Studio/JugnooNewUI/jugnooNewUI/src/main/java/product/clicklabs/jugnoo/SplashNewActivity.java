@@ -51,6 +51,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.country.picker.Country;
 import com.country.picker.CountryPicker;
@@ -1362,11 +1363,17 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			}
 
 			@Override
-			public void afterTextChanged(Editable s) {
-				if(s.length()==1&&s.toString().equalsIgnoreCase("0")){
-					editTextPhoneNumber.setText("");
-				}
-				textViewPhoneNumberRequired.setVisibility((s.length() == 0)?View.VISIBLE:View.GONE);
+			public void afterTextChanged(Editable s) {if (s.toString().startsWith("0")) {
+                if(s.length()>1) {
+                    editTextPhoneNumber.setText(s.toString().substring(1));
+                }
+                else {
+                    editTextPhoneNumber.setText("");
+                }
+                Toast.makeText(SplashNewActivity.this,"Phone number should not start with 0",Toast.LENGTH_SHORT).show();
+            } else {
+                textViewPhoneNumberRequired.setVisibility((s.length() == 0) ? View.VISIBLE : View.GONE);
+            }
 			}
 		});
 		new HomeUtil().forceRTL(this);
