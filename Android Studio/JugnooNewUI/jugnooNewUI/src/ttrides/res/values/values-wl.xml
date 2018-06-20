@@ -84,4 +84,5 @@
     <string name="default_support_email">support@ttrides.in</string>
     <bool name="support_email_page_enabled">true</bool>
     <integer name="send_invites_visibility">@integer/view_gone</integer>
+    <bool name="specified_country_search_result_enabled">true</bool>
 </resources>
