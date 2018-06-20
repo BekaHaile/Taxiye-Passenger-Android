@@ -1646,11 +1646,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							rating, "", "");
                     if (Data.isFuguChatEnabled()) {
                         fuguCustomerHelpRides(false);
+                    }  else if(Data.isEmailSupportEnabled()){
+                        startActivity(new Intent(HomeActivity.this, SupportMailActivity.class));
                     } else {
-                        if(getResources().getBoolean(R.bool.support_email_page_enabled)){
-                            startActivity(new Intent(HomeActivity.this, SupportMailActivity.class));
-                            return;
-                        }
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
                         intent.putExtra(INTENT_KEY_FROM_BAD, 1);
                         intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
@@ -3457,7 +3455,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         buttonCancelRide.setVisibility(View.GONE);
                         buttonAddMoneyToWallet.setVisibility(View.GONE);
-                        if(getResources().getInteger(R.integer.send_invites_visibility)==getResources().getInteger(R.integer.view_visible)) {
+
+                        if(TextUtils.isEmpty(Data.autoData.getInRideSendInviteTextBoldV2())
+                                && TextUtils.isEmpty(Data.autoData.getInRideSendInviteTextNormalV2())){
+                            linearLayoutSendInvites.setVisibility(View.GONE);
+                        } else if(getResources().getInteger(R.integer.send_invites_visibility)==getResources().getInteger(R.integer.view_visible)) {
                             linearLayoutSendInvites.setVisibility(View.VISIBLE);
                         }
                         updateInRideAddMoneyToWalletButtonText();
@@ -7972,11 +7974,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 public void onInAppCustomerSupportClick(View view) {
                     if (Data.isFuguChatEnabled()) {
                         fuguCustomerHelpRides(true);
+                    } else if(Data.isEmailSupportEnabled()){
+                        activity.startActivity(new Intent(activity, SupportMailActivity.class));
                     } else {
-                        if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
-                            activity.startActivity(new Intent(activity, SupportMailActivity.class));
-                            return;
-                        }
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
                         intent.putExtra(KEY_ENGAGEMENT_ID, Integer.parseInt(Data.autoData.getcEngagementId()));
                         startActivity(intent);

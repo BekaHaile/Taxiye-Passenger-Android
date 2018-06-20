@@ -304,11 +304,9 @@ public class RideSummaryFragment extends Fragment implements Constants {
                                 e.printStackTrace();
                                 Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
                             }
+                        } else if(Data.isEmailSupportEnabled()){
+                            activity.startActivity(new Intent(activity, SupportMailActivity.class));
                         } else {
-                            if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
-                                activity.startActivity(new Intent(activity, SupportMailActivity.class));
-                                return;
-                            }
                             new TransactionUtils().openRideIssuesFragment(activity,
                                     ((RideTransactionsActivity) activity).getContainer(),
                                     engagementId, -1, endRideData, items, 0, false, autosStatus, null, -1, -1, "");

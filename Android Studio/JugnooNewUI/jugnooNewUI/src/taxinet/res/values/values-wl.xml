@@ -73,5 +73,4 @@
 
     <!--default support email for SupportMailActivity if not coming from server-->
     <string name="default_support_email">support@taxinet.in</string>
-    <bool name="support_email_page_enabled">true</bool>
 </resources>

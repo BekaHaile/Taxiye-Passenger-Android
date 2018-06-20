@@ -562,13 +562,14 @@ public class Data {
 
     }
 
+    public static final int FUGU_APP_TYPE = 1;
     public static void initializeFuguHandler(Activity context, CaptureUserData userData) {
-        int APP_TYPE = 1;
-
         if (Config.getConfigMode() == ConfigMode.LIVE) {
-            FuguConfig.init(APP_TYPE, context.getString(R.string.fugu_key), context, "live", userData,context.getString(R.string.file_provider_name));
+            FuguConfig.init(Prefs.with(context).getInt(Constants.KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE),
+                    Prefs.with(context).getString(Constants.KEY_FUGU_APP_KEY, context.getString(R.string.fugu_key)),
+                    context, "live", userData,context.getString(R.string.file_provider_name));
         } else {
-            FuguConfig.init(APP_TYPE, context.getString(R.string.fugu_key_test), context, "test", userData,context.getString(R.string.file_provider_name));
+            FuguConfig.init(FUGU_APP_TYPE, context.getString(R.string.fugu_key_test), context, "test", userData,context.getString(R.string.file_provider_name));
         }
 
         FuguConfig.getInstance().setHomeUpIndicatorDrawableId(R.drawable.ic_back_selector);
@@ -626,6 +627,18 @@ public class Data {
         }
         return false;
     }
+    public static boolean isEmailSupportEnabled() {
+        if(Data.userData != null) {
+            ArrayList<MenuInfo> itemsToShow = Data.userData.getMenuInfoList();
+            for (MenuInfo menuInfo : itemsToShow) {
+                if (MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     private static Bundle fuguChatBundle;
 

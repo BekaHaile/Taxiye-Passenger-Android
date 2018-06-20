@@ -31,7 +31,6 @@ import product.clicklabs.jugnoo.datastructure.NotificationData;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
-import product.clicklabs.jugnoo.support.SupportMailActivity;
 import product.clicklabs.jugnoo.t20.T20Activity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -246,10 +245,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 activity.startActivity(intent);
             }
             else if(AppLinkIndex.SUPPORT.getOrdinal() == deepInt){
-                if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
-                    activity.startActivity(new Intent(activity, SupportMailActivity.class));
-                    return;
-                }
                 intent.setClass(activity, SupportActivity.class);
                 activity.startActivity(intent);
             }
