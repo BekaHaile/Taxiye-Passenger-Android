@@ -888,4 +888,6 @@ public interface Constants {
     String KEY_SUPPORT_EMAIL_SUBJECT = "support_email_subject";
     String KEY_INVOICE_ICON = "invoice_icon";
     String KEY_MARKER_ICON = "marker_icon";
+    String KEY_FUGU_APP_KEY = "fugu_app_key";
+    String KEY_FUGU_APP_TYPE = "fugu_app_type";
 }

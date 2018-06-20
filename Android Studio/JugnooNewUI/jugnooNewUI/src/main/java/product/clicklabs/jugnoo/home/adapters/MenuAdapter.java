@@ -256,6 +256,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_chat_selector);
 
+                }else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_chat_selector);
+
                 }
                 else{
                     hideLayout(holder.relative);
@@ -588,10 +591,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
             else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)) {
-                if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
-                    activity.startActivity(new Intent(activity, SupportMailActivity.class));
-                    return;
-                }
                 activity.startActivity(new Intent(activity, SupportActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
@@ -611,6 +610,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(tag)){
                 FuguConfig.getInstance().showConversations(activity,activity.getString(R.string.fugu_support_title));
 
+            }
+            else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(tag)){
+                activity.startActivity(new Intent(activity, SupportMailActivity.class));
             }
             else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
                 openOffering(Config.getFreshClientId(), activity,latLng);

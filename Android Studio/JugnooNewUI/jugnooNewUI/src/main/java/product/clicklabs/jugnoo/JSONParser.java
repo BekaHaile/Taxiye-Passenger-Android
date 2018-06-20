@@ -344,6 +344,11 @@ public class JSONParser implements Constants {
             String referAllTitleLogin = autoData.optString(KEY_REFER_ALL_TITLE_LOGIN, "");
             int isRazorpayEnabled = autoData.optInt(KEY_IS_RAZORPAY_ENABLED, 0);
 
+            String fuguAppKey = autoData.optString(KEY_FUGU_APP_KEY, context.getString(R.string.fugu_key));
+            int fuguAppType = autoData.optInt(KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE);
+            Prefs.with(context).save(Constants.KEY_FUGU_APP_KEY, fuguAppKey);
+            Prefs.with(context).save(Constants.KEY_FUGU_APP_TYPE, fuguAppType);
+
 
             NearbyPickupRegions nearbyPickupRegionses = autosData.getNearbyPickupRegions();
 
