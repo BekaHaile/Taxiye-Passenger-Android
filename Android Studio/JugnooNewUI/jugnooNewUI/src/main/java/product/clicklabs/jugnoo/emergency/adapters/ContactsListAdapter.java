@@ -1,18 +1,35 @@
 package product.clicklabs.jugnoo.emergency.adapters;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.country.picker.Country;
+import com.country.picker.CountryPicker;
+import com.country.picker.OnCountryPickerListener;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
+import product.clicklabs.jugnoo.emergency.fragments.AddEmergencyContactsFragment;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -25,14 +42,16 @@ import product.clicklabs.jugnoo.utils.Utils;
 public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapter.ViewHolder> {
 
     private final String TAG = ContactsListAdapter.class.getSimpleName();
-    private Activity activity;
+    private FragmentActivity activity;
+    private AddEmergencyContactsFragment fragment;
     private int rowLayout;
-    private ArrayList<ContactBean> contactBeans = new ArrayList<>();
+    public ArrayList<ContactBean> contactBeans = new ArrayList<>();
     private int selectedCount;
     private Callback callback;
     private ListMode listMode;
+    public static Dialog dialog;
 
-    public ContactsListAdapter(ArrayList<ContactBean> contactBeans, Activity activity, int rowLayout,
+    public ContactsListAdapter(ArrayList<ContactBean> contactBeans, FragmentActivity activity, int rowLayout,
                                Callback callback, ListMode listMode) {
         this.contactBeans = contactBeans;
         this.activity = activity;
@@ -41,16 +60,26 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         this.callback = callback;
         this.listMode = listMode;
     }
+    public ContactsListAdapter(ArrayList<ContactBean> contactBeans, FragmentActivity activity, int rowLayout,
+                               Callback callback, ListMode listMode,AddEmergencyContactsFragment fragment) {
+        this.contactBeans = contactBeans;
+        this.activity = activity;
+        this.rowLayout = rowLayout;
+        this.selectedCount = 0;
+        this.callback = callback;
+        this.listMode = listMode;
+        this.fragment = fragment;
+    }
 
-    public synchronized void setList(ArrayList<ContactBean> contactBeans){
+    public synchronized void setList(ArrayList<ContactBean> contactBeans) {
         this.contactBeans = contactBeans;
         notifyDataSetChanged();
     }
 
-    public synchronized void setCountAndNotify(){
+    public synchronized void setCountAndNotify() {
         selectedCount = 0;
-        for(ContactBean contactBean : contactBeans){
-            if(contactBean.isSelected()){
+        for (ContactBean contactBean : contactBeans) {
+            if (contactBean.isSelected()) {
                 selectedCount++;
             }
         }
@@ -76,23 +105,20 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         holder.textViewContactName.setText(contactBean.getName());
         holder.textViewContactNumberType.setText(contactBean.getPhoneNo() + " " + contactBean.getType());
 
-        if(ListMode.ADD_CONTACTS == getListMode()
+        if (ListMode.ADD_CONTACTS == getListMode()
                 || ListMode.SEND_RIDE_STATUS == getListMode()) {
-            holder.imageViewOption.setVisibility(View.VISIBLE);
+            holder.imageViewOption.setVisibility(View.GONE);
             if (contactBean.isSelected()) {
                 holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_checked);
             } else {
                 holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_unchecked);
             }
-        }
-        else if(ListMode.EMERGENCY_CONTACTS == getListMode()){
+        } else if (ListMode.EMERGENCY_CONTACTS == getListMode()) {
             holder.imageViewOption.setVisibility(View.GONE);
-        }
-        else if(ListMode.DELETE_CONTACTS == getListMode()){
+        } else if (ListMode.DELETE_CONTACTS == getListMode()) {
             holder.imageViewOption.setVisibility(View.VISIBLE);
             holder.imageViewOption.setImageResource(R.drawable.ic_cross_grey);
-        }
-        else if(ListMode.CALL_CONTACTS == getListMode()){
+        } else if (ListMode.CALL_CONTACTS == getListMode()) {
             holder.imageViewOption.setVisibility(View.VISIBLE);
             holder.imageViewOption.setImageResource(R.drawable.ic_phone_green);
         }
@@ -102,7 +128,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         holder.relative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int position = (int) v.getTag();
+                final int position = (int) v.getTag();
                 if (ListMode.ADD_CONTACTS == getListMode()) {
                     if (contactBeans.get(position).isSelected()) {
                         contactBeans.get(position).setSelected(false);
@@ -154,34 +180,33 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         public RelativeLayout relative;
         public ImageView imageViewOption;
         public TextView textViewContactName, textViewContactNumberType;
+
         public ViewHolder(View itemView, Activity activity) {
             super(itemView);
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
-            imageViewOption = (ImageView)itemView.findViewById(R.id.imageViewOption);
-            textViewContactName = (TextView)itemView.findViewById(R.id.textViewContactName);
+            imageViewOption = (ImageView) itemView.findViewById(R.id.imageViewOption);
+            textViewContactName = (TextView) itemView.findViewById(R.id.textViewContactName);
             textViewContactName.setTypeface(Fonts.mavenLight(activity));
-            textViewContactNumberType = (TextView)itemView.findViewById(R.id.textViewContactNumberType);
+            textViewContactNumberType = (TextView) itemView.findViewById(R.id.textViewContactNumberType);
             textViewContactNumberType.setTypeface(Fonts.mavenLight(activity));
         }
     }
 
-    public interface Callback{
+    public interface Callback {
         void contactClicked(int position, ContactBean contactBean);
     }
 
 
-    public enum ListMode{
+    public enum ListMode {
         ADD_CONTACTS(0),
         EMERGENCY_CONTACTS(1),
         DELETE_CONTACTS(2),
         CALL_CONTACTS(3),
-        SEND_RIDE_STATUS(4)
-
-        ;
+        SEND_RIDE_STATUS(4);
 
         private int ordinal;
 
-        ListMode(int ordinal){
+        ListMode(int ordinal) {
             this.ordinal = ordinal;
         }
 

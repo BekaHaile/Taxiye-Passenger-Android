@@ -390,10 +390,7 @@
         <item name="android:layout_alignTop">
             @+id/linearLayoutInner
         </item>
-        <item name="android:focusable">
-            true
-        </item>
-        <item name="android:focusableInTouchMode">
+        <item name="android:clickable">
             true
         </item>
         <item name="android:src">

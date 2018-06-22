@@ -2,25 +2,39 @@ package product.clicklabs.jugnoo.emergency.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.country.picker.Country;
+import com.country.picker.CountryPicker;
+import com.country.picker.OnCountryPickerListener;
 import com.tokenautocomplete.FilteredArrayAdapter;
 import com.tokenautocomplete.TokenCompleteTextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -78,6 +92,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 
 	private View rootView;
     private FragmentActivity activity;
+	private Dialog dialog;
 
 	@Override
 	public void onStart() {
@@ -135,12 +150,13 @@ public class AddEmergencyContactsFragment extends Fragment {
 					@Override
 					public void contactClicked(int position, ContactBean contactBean) {
 						if(contactBean.isSelected()){
-							editTextContacts.addObject(contactBean);
+							dialogConfirmEmergencyContact(activity, activity.getString(R.string.confirm) + " " + activity.getString(R.string.emergency_contacts), "",
+									false, contactBean);
 						} else{
 							editTextContacts.removeObject(contactBean);
 						}
 					}
-				}, ContactsListAdapter.ListMode.ADD_CONTACTS);
+				}, ContactsListAdapter.ListMode.ADD_CONTACTS,this);
 		recyclerViewContacts.setAdapter(contactsListAdapter);
 
 		contactsArrayAdapter = new FilteredArrayAdapter<ContactBean>(this.getContext(), R.layout.list_item_contact,
@@ -181,7 +197,9 @@ public class AddEmergencyContactsFragment extends Fragment {
 		editTextContacts.setTokenListener(new TokenCompleteTextView.TokenListener<ContactBean>() {
 			@Override
 			public void onTokenAdded(ContactBean token) {
-				setSelectedObject(true, token);
+				dialogConfirmEmergencyContact(activity, activity.getString(R.string.confirm) + " " + activity.getString(R.string.emergency_contacts), "",
+						false, token);
+
 			}
 
 			@Override
@@ -244,6 +262,26 @@ public class AddEmergencyContactsFragment extends Fragment {
 		}).execute();
 
 		return rootView;
+	}
+
+	public void addEmergencyContact(ContactBean contactBean) {
+		try {
+			JSONArray jsonArray = new JSONArray();
+			if(contactBean.isSelected()){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put(Constants.KEY_NAME, contactBean.getName());
+                jsonObject.put(Constants.KEY_PHONE_NO, contactBean.getPhoneNo());
+                jsonObject.put(Constants.KEY_COUNTRY_CODE, contactBean.getCountryCode());
+                jsonArray.put(jsonObject);
+            }
+			if(jsonArray.length() > 0) {
+                addEmergencyContactsAPI(activity, jsonArray.toString());
+            } else{
+                Utils.showToast(activity, activity.getResources().getString(R.string.please_select_some_contacts_first));
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 
@@ -329,6 +367,144 @@ public class AddEmergencyContactsFragment extends Fragment {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+
+	public void dialogConfirmEmergencyContact(final FragmentActivity activity, String title, String message,
+											  final boolean cancellable, final ContactBean contactBean) {
+		try {
+			dismissAlertPopup();
+
+			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+			dialog.setContentView(R.layout.dialog_confirm_emergency_contact);
+
+			RelativeLayout frameLayout = (RelativeLayout) dialog.findViewById(R.id.rv);
+			new ASSL(activity, frameLayout, 1134, 720, false);
+
+			WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+			layoutParams.dimAmount = 0.6f;
+			dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+			dialog.setCancelable(cancellable);
+			dialog.setCanceledOnTouchOutside(cancellable);
+
+
+			TextView textHead = (TextView) dialog.findViewById(R.id.textHead);
+			textHead.setTypeface(Fonts.mavenRegular(activity));
+			TextView textMessage = (TextView) dialog.findViewById(R.id.textMessage);
+			textMessage.setTypeface(Fonts.mavenLight(activity));
+
+
+			RelativeLayout rlPhone = (RelativeLayout) dialog.findViewById(R.id.rlPhone);
+			LinearLayout llCountryCode = (LinearLayout) dialog.findViewById(R.id.llCountryCode);
+			final TextView tvCountryCode = (TextView) dialog.findViewById(R.id.tvCountryCode);
+			tvCountryCode.setTypeface(Fonts.mavenRegular(activity));
+
+			final EditText editTextPhoneNumber = (EditText) dialog.findViewById(R.id.editTextPhoneNumber);
+			final CountryPicker countryPicker =
+					new CountryPicker.Builder().with(activity)
+							.listener(new OnCountryPickerListener() {
+								@Override
+								public void onSelectCountry(Country country) {
+									tvCountryCode.setText(country.getDialCode());
+								}
+							})
+							.build();
+			tvCountryCode.setText(Utils.getCountryCode(activity));
+			if(countryPicker.getAllCountries().size() > 1){
+				llCountryCode.setEnabled(true);
+				tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_vector_otp, 0);
+			} else {
+				llCountryCode.setEnabled(false);
+				tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+			}
+			llCountryCode.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					countryPicker.showDialog(activity.getSupportFragmentManager());
+				}
+			});
+			editTextPhoneNumber.setText(contactBean.getPhoneNo().replaceFirst("^0+(?!$)", ""));
+			editTextPhoneNumber.addTextChangedListener(new TextWatcher() {
+				@Override
+				public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+				}
+
+				@Override
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+				}
+
+				@Override
+				public void afterTextChanged(Editable s) {
+					if (s.toString().startsWith("0")) {
+						if (s.length() > 1) {
+							editTextPhoneNumber.setText(s.toString().substring(1));
+						} else {
+							editTextPhoneNumber.setText("");
+						}
+						Toast.makeText(activity, "Phone number should not start with 0", Toast.LENGTH_SHORT).show();
+					}
+				}
+			});
+
+			textMessage.setMovementMethod(LinkMovementMethod.getInstance());
+			textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+
+			textHead.setText(title);
+			textMessage.setText(message);
+
+			Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
+			btnOk.setTypeface(Fonts.mavenRegular(activity));
+			ImageView btnClose = (ImageView) dialog.findViewById(R.id.close);
+			btnOk.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					contactBean.setCountryCode(tvCountryCode.getText().toString());
+					contactBean.setPhoneNo(editTextPhoneNumber.getText().toString());
+					addEmergencyContact(contactBean);
+					dialog.dismiss();
+				}
+			});
+
+			btnClose.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+						dialog.dismiss();
+                    try { editTextContacts.removeObject(contactBean); } catch (Exception ignored) {}
+                }
+			});
+
+			frameLayout.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (cancellable) {
+						dialog.dismiss();
+					}
+				}
+			});
+
+			dialog.findViewById(R.id.linearLayoutInner).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+
+				}
+			});
+
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void dismissAlertPopup() {
+		try {
+			if (dialog != null && dialog.isShowing()) {
+				dialog.dismiss();
+			}
+		} catch (Exception e) {
 		}
 	}
 

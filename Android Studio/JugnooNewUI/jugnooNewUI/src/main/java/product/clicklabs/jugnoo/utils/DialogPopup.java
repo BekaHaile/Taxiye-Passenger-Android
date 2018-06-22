@@ -14,7 +14,9 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.View;
@@ -24,8 +26,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 
 
@@ -1025,6 +1029,4 @@ public class DialogPopup {
             e.printStackTrace();
         }
     }
-
-
 }
