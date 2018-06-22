@@ -128,7 +128,7 @@
                         android:singleLine="true"
                         android:textColor="@color/layout_login_signup_text_color"
                         android:textColorHint="@color/text_color_hint"
-                        android:textCursorDrawable="@drawable/cursor_black"
+                        android:textCursorDrawable="@drawable/cursor"
                         android:textSize="@dimen/text_size_34"
                         app:typekitFont="@string/maven_r" />
 
@@ -182,7 +182,7 @@
                         android:singleLine="true"
                         android:textColor="@color/layout_login_signup_text_color"
                         android:textColorHint="@color/text_color_hint"
-                        android:textCursorDrawable="@drawable/cursor_black"
+                        android:textCursorDrawable="@drawable/cursor"
                         android:textSize="@dimen/text_size_34"
                         app:typekitFont="@string/maven_r" />
 

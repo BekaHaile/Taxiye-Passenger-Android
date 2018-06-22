@@ -107,7 +107,9 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
 
         if (ListMode.ADD_CONTACTS == getListMode()
                 || ListMode.SEND_RIDE_STATUS == getListMode()) {
-            holder.imageViewOption.setVisibility(View.GONE);
+            if(ListMode.ADD_CONTACTS == getListMode()) {
+                holder.imageViewOption.setVisibility(View.GONE);
+            }
             if (contactBean.isSelected()) {
                 holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_checked);
             } else {

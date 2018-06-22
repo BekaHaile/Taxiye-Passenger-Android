@@ -62,6 +62,7 @@
     <integer name="show_google_login">@integer/view_gone</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
+    <drawable name="cursor">@drawable/cursor_white</drawable>
 
     <string name="file_provider_name">com.ttrideshare.fileprovider</string>
     <string name="web_landing_page">https://ttrideshare.in</string>

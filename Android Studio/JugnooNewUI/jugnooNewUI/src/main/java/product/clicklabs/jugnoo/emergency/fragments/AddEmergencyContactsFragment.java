@@ -463,7 +463,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 				@Override
 				public void onClick(View view) {
 					contactBean.setCountryCode(tvCountryCode.getText().toString());
-					contactBean.setPhoneNo(editTextPhoneNumber.getText().toString());
+					contactBean.setPhoneNo(tvCountryCode.getText().toString()+editTextPhoneNumber.getText().toString());
 					addEmergencyContact(contactBean);
 					dialog.dismiss();
 				}

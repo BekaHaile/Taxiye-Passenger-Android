@@ -83,4 +83,5 @@
 
     <!--default support email for SupportMailActivity if not coming from server-->
     <string name="default_support_email">support@hezz.in</string>
+    <bool name="show_call_me_option_in_otp">false</bool>
 </resources>
