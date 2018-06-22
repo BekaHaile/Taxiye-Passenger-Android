@@ -207,6 +207,7 @@ import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
@@ -220,7 +221,6 @@ import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
-import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -4896,7 +4896,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
 
                 @Override
-                public void failure() {
+                public void failure(boolean onboardingFlow, String response, LoginResponse loginResponse) {
 
                 }
 
@@ -4915,7 +4915,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
             };
             new ApiLoginUsingAccessToken(FreshActivity.this).hit(Data.userData.accessToken, getSelectedLatLng().latitude, getSelectedLatLng().longitude, lastClientId,
-                    true, callback);
+                    true, callback, false);
 
 
         }else{

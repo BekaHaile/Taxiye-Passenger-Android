@@ -196,7 +196,7 @@
                     android:layout_width="43px"
                     android:layout_height="43px"
                     android:src="@drawable/ic_about_who_we_are"
-                    android:layout_marginLeft="@dimen/px_36"
+                    android:layout_marginStart="@dimen/px_36"
                     android:layout_centerVertical="true"
                     android:tag="mwar"/>
 
@@ -205,7 +205,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/px_110"
+                    android:layout_marginStart="@dimen/px_110"
                     android:text="@string/who_are_we"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />

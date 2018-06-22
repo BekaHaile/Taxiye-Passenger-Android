@@ -2190,7 +2190,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	public void accessTokenLogin(final Activity activity) {
 		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(activity);
 		if (!"".equalsIgnoreCase(pair.first)) {
-			String accessToken = pair.first;
+			final String accessToken = pair.first;
 
 			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
 			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
@@ -2210,8 +2210,14 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				}
 
 				@Override
-				public void failure() {
+				public void failure(boolean onboardingFlow, String response, LoginResponse loginResponse) {
 					loginDataFetched = false;
+					if(onboardingFlow) {
+						loginResponseStr = response;
+						loginResponseData = loginResponse;
+						SplashNewActivity.this.accessToken = accessToken;
+						changeUIState(State.SPLASH_ONBOARDING);
+					}
 				}
 
 						@Override
@@ -2224,7 +2230,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 							ActivityCompat.finishAffinity(activity);
 						}
 
-					});
+					}, true);
 
 		} else {
 			if (MyApplication.getInstance().isOnline()) {
@@ -2612,11 +2618,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			performSignupBackPressed();
 		} else if (State.SPLASH_LOGIN_PHONE_NO == state){
 			changeUIState(State.SPLASH_LS_NEW);
-		} else if(State.SPLASH_ONBOARDING == state){
-			changeUIState(State.SPLASH_LS_NEW);
-			AccessTokenGenerator.saveLogoutToken(this);
-		}
-		else{
+		} else{
 			super.onBackPressed();
 		}
 	}

@@ -217,7 +217,8 @@
                     android:text="@string/skip_this_step"
                     android:textColor="@color/layout_login_signup_text_color"
                     android:textSize="@dimen/px_30"
-                    app:typekitFont="@string/maven_r" />
+                    app:typekitFont="@string/maven_r"
+                    android:visibility="@integer/skip_in_signup_onboarding"/>
 
             </LinearLayout>
 
