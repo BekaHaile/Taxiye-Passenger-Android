@@ -140,7 +140,8 @@
                         android:layout_centerVertical="true"
                         android:text="@string/nl_splash_optional"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22" />
+                        android:textSize="@dimen/text_size_22"
+                        android:visibility="@integer/skip_in_signup_onboarding" />
 
                 </RelativeLayout>
 
@@ -193,7 +194,8 @@
                         android:layout_centerVertical="true"
                         android:text="@string/nl_splash_optional"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22" />
+                        android:textSize="@dimen/text_size_22"
+                        android:visibility="@integer/skip_in_signup_onboarding" />
 
                 </RelativeLayout>
 

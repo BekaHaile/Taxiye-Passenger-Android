@@ -2788,7 +2788,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 		@Override
 		public void afterTextChanged(Editable s) {
-			textViewRequired.setVisibility(s.length() > 0 ? View.GONE : View.VISIBLE);
+			if(getResources().getInteger(R.integer.skip_in_signup_onboarding) == getResources().getInteger(R.integer.view_visible)){
+				textViewRequired.setVisibility(s.length() > 0 ? View.GONE : View.VISIBLE);
+			}
 		}
 	}
 
