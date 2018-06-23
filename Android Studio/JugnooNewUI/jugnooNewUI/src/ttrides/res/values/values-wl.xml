@@ -38,8 +38,8 @@
     <string name="operator_token">83ebe9d9d65fdac16460da388822bc38</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">999</string>
-    <string name="facebook_page_id">TTRideShare</string>
-    <string name="facebook_page_name">TTRideShare</string>
+    <string name="facebook_page_id">2056791887904505</string>
+        <string name="facebook_page_name">ttrideshare</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
