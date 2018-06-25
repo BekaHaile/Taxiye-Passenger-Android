@@ -150,7 +150,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 					@Override
 					public void contactClicked(int position, ContactBean contactBean) {
 						if(contactBean.isSelected()){
-							dialogConfirmEmergencyContact(activity, activity.getString(R.string.confirm) + " " + activity.getString(R.string.emergency_contacts), "",
+							dialogConfirmEmergencyContact(activity, activity.getString(R.string.confirm) + " " +      activity.getString(R.string.emergency_contacts), "",
 									false, contactBean);
 						} else{
 							editTextContacts.removeObject(contactBean);
@@ -197,6 +197,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 		editTextContacts.setTokenListener(new TokenCompleteTextView.TokenListener<ContactBean>() {
 			@Override
 			public void onTokenAdded(ContactBean token) {
+				token.setSelected(true);
 				dialogConfirmEmergencyContact(activity, activity.getString(R.string.confirm) + " " + activity.getString(R.string.emergency_contacts), "",
 						false, token);
 
