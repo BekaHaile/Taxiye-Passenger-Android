@@ -760,8 +760,12 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								Utils.showToast(SplashNewActivity.this, getString(R.string.invalid_email_error));
 								return;
 							}
-							if(TextUtils.isEmpty(name) && TextUtils.isEmpty(email) && TextUtils.isEmpty(referralCode)){
+							if(tvSkip.getVisibility() == View.VISIBLE && TextUtils.isEmpty(name) && TextUtils.isEmpty(email) && TextUtils.isEmpty(referralCode)){
 								tvSkip.performClick();
+								return;
+							}
+							if(tvSkip.getVisibility() != View.VISIBLE && (TextUtils.isEmpty(name) || TextUtils.isEmpty(email))){
+								Utils.showToast(SplashNewActivity.this, getString(R.string.please_enter_name_and_email));
 								return;
 							}
 							apiUpdateUserProfile(SplashNewActivity.this, accessToken, name, email, referralCode);

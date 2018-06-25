@@ -264,10 +264,24 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
 
             @Override
             protected boolean keepObject(ContactBean person, String mask) {
-                mask = mask.toLowerCase();
-                boolean matched = person.getName().toLowerCase().startsWith(mask)
-                        || person.getPhoneNo().toLowerCase().startsWith(mask);
-                return matched;
+//                mask = mask.toLowerCase();
+//                boolean matched = person.getName().toLowerCase().startsWith(mask)
+//                        || person.getPhoneNo().toLowerCase().startsWith(mask);
+//                return matched;
+
+                if(mask.length() > 2) {
+                    mask = mask.toLowerCase();
+
+                    return person.getName().toLowerCase().contains(mask)
+                            || person.getPhoneNo().toLowerCase().contains(mask);
+                } else{
+                    return false;
+                }
+
+
+
+
+
             }
 
         };

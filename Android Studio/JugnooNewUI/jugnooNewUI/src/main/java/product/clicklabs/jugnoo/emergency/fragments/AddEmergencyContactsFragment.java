@@ -185,9 +185,14 @@ public class AddEmergencyContactsFragment extends Fragment {
 
 			@Override
 			protected boolean keepObject(ContactBean person, String mask) {
-				mask = mask.toLowerCase();
-				return person.getName().toLowerCase().startsWith(mask)
-						|| person.getPhoneNo().toLowerCase().startsWith(mask);
+				if(mask.length() > 2) {
+					mask = mask.toLowerCase();
+
+					return person.getName().toLowerCase().contains(mask)
+							|| person.getPhoneNo().toLowerCase().contains(mask);
+				} else{
+					return false;
+				}
 			}
 		};
 

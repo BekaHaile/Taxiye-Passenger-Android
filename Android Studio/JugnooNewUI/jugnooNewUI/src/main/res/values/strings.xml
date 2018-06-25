@@ -1900,5 +1900,6 @@
     <string name="card_number">Card Number</string>
     <string name="expiry_date">Expiry Date</string>
     <string name="cvc">CVC</string>
+    <string name="please_enter_name_and_email">Please enter name and email</string>
 
 </resources>
