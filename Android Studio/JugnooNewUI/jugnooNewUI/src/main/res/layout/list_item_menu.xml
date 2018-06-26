@@ -29,7 +29,7 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/menu_text_margin_left"
         android:text="@string/t20_world_cup_2016"
-        android:textColor="@color/text_color_white_theme_selector"
+        android:textColor="@color/side_menu_text_color"
         android:textSize="@dimen/text_size_38" />
 
     <LinearLayout

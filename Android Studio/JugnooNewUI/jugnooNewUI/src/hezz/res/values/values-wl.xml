@@ -57,6 +57,8 @@
     <integer name="show_splash_logo_text">@integer/view_gone</integer>
     <integer name="show_splash_top_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bg">@integer/view_visible</integer>
+    <integer name="show_login_top_bg">@integer/view_invisible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_visible</integer>
     <color name="splash_logo_color">@color/theme_color</color>
 
     <string name="file_provider_name">com.hezz.fileprovider</string>

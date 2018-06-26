@@ -109,6 +109,7 @@
         android:layout_height="match_parent"
         android:splitMotionEvents="false"
         android:visibility="visible"
+        android:background="@color/side_menu_color"
         android:scrollbars="vertical"
         android:fadeScrollbars="true"
         />
