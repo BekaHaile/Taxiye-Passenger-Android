@@ -19,7 +19,7 @@
         <TextView
             android:id="@+id/textViewTitle"
             style="@style/title"
-            android:text="@string/address_book"/>
+            android:text="@string/profile_saved_location_text"/>
 
         <TextView
             android:id="@+id/tvAbout"
@@ -464,7 +464,7 @@
                             android:layout_marginStart="@dimen/dp_17"
                             android:layout_marginTop="@dimen/dp_17"
                             android:gravity="center"
-                            android:text="@string/address_book"
+                            android:text="@string/profile_saved_location_text"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/sp_14"/>
 

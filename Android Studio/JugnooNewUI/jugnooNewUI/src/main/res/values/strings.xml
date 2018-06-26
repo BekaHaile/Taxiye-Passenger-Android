@@ -804,7 +804,8 @@
     <string name="offers">Offers</string>
     <string name="add_new_address">Add new address</string>
     <string name="could_not_find_address">Could not find address</string>
-    <string name="address_book">My Saved Locations</string>
+    <string name="address_book">Address Book</string>
+    <string name="my_saved_locations">My Saved Locations</string>
     <string name="enter_topup_card_code">Enter Topup Card code</string>
     <string name="recharge_jc_topup_info">Recharge %s Cash with Topup Card</string>
     <string name="topup_code_empty">Topup code empty</string>

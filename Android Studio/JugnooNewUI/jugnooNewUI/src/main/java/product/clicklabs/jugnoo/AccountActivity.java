@@ -965,7 +965,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
 
             scrollView.scrollTo(0, 0);
-            textViewTitle.setText(getAddressBookFragment() == null ? R.string.title_my_profile : R.string.address_book);
+            textViewTitle.setText(getAddressBookFragment() == null ? R.string.title_my_profile : R.string.profile_saved_location_text);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1347,7 +1347,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 }
                 transaction.commitAllowingStateLoss();
 
-                textViewTitle.setText(R.string.address_book);
+                textViewTitle.setText(R.string.profile_saved_location_text);
                 rlMain.setVisibility(View.GONE);
                 tvAbout.setVisibility(View.GONE);
             }
