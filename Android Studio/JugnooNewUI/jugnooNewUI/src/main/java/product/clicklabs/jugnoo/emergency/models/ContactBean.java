@@ -8,6 +8,16 @@ public class ContactBean {
 	private int id;
 	private String name;
 	private String phoneNo;
+
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
+
+	private String countryCode;
 	private String type;
 	private boolean selected;
 	private ContactBeanViewType contactBeanViewType;

@@ -45,8 +45,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/do_you_have_a_referral_code"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/layout_login_signup_text_color"
                     android:textSize="@dimen/px_36"
+                    android:visibility="@integer/show_promo"
                     app:typekitFont="@string/maven_r" />
 
                 <EditText
@@ -68,8 +69,9 @@
                     android:paddingStart="20px"
                     android:singleLine="true"
                     android:textAlignment="viewStart"
+                    android:visibility="@integer/show_promo"
                     android:textAllCaps="true"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/layout_login_signup_text_color"
                     android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@drawable/cursor_black"
                     android:textSize="@dimen/text_size_32"
@@ -80,7 +82,8 @@
                     android:layout_height="2px"
                     android:layout_marginEnd="@dimen/px_90"
                     android:layout_marginStart="@dimen/px_90"
-                    android:src="@color/grey_light" />
+                    android:visibility="@integer/show_promo"
+                    android:src="@color/layout_login_signup_text_color" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -88,7 +91,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/px_86"
                     android:text="@string/please_enter_your_personal_info"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/layout_login_signup_text_color"
                     android:textSize="@dimen/px_32"
                     app:typekitFont="@string/maven_r" />
 
@@ -123,9 +126,9 @@
                         android:paddingEnd="20px"
                         android:paddingStart="20px"
                         android:singleLine="true"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/layout_login_signup_text_color"
                         android:textColorHint="@color/text_color_hint"
-                        android:textCursorDrawable="@drawable/cursor_black"
+                        android:textCursorDrawable="@drawable/cursor"
                         android:textSize="@dimen/text_size_34"
                         app:typekitFont="@string/maven_r" />
 
@@ -137,7 +140,8 @@
                         android:layout_centerVertical="true"
                         android:text="@string/nl_splash_optional"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22" />
+                        android:textSize="@dimen/text_size_22"
+                        android:visibility="@integer/skip_in_signup_onboarding" />
 
                 </RelativeLayout>
 
@@ -176,9 +180,9 @@
                         android:paddingEnd="20px"
                         android:paddingStart="20px"
                         android:singleLine="true"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/layout_login_signup_text_color"
                         android:textColorHint="@color/text_color_hint"
-                        android:textCursorDrawable="@drawable/cursor_black"
+                        android:textCursorDrawable="@drawable/cursor"
                         android:textSize="@dimen/text_size_34"
                         app:typekitFont="@string/maven_r" />
 
@@ -190,7 +194,8 @@
                         android:layout_centerVertical="true"
                         android:text="@string/nl_splash_optional"
                         android:textColor="@color/text_color_hint"
-                        android:textSize="@dimen/text_size_22" />
+                        android:textSize="@dimen/text_size_22"
+                        android:visibility="@integer/skip_in_signup_onboarding" />
 
                 </RelativeLayout>
 
@@ -212,9 +217,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/px_32"
                     android:text="@string/skip_this_step"
-                    android:textColor="@color/grey_969696"
+                    android:textColor="@color/layout_login_signup_text_color"
                     android:textSize="@dimen/px_30"
-                    app:typekitFont="@string/maven_r" />
+                    app:typekitFont="@string/maven_r"
+                    android:visibility="@integer/skip_in_signup_onboarding"/>
 
             </LinearLayout>
 

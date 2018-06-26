@@ -433,6 +433,7 @@
         <item>+46,SE</item>
         <item>+41,CH</item>
         <item>+963,SY</item>
+        <item>+1,TT</item>
         <item>+886,TW</item>
         <item>+992,TJ</item>
         <item>+255,TZ</item>
@@ -1899,5 +1900,6 @@
     <string name="card_number">Card Number</string>
     <string name="expiry_date">Expiry Date</string>
     <string name="cvc">CVC</string>
+    <string name="please_enter_name_and_email">Please enter name and email</string>
 
 </resources>

@@ -43,7 +43,8 @@ public class ApiLoginUsingAccessToken {
 	}
 
 
-	public void hit(String accessToken, final double latitude, final double longitude, String specificClientId, boolean showDialog, final Callback callback){
+	public void hit(String accessToken, final double latitude, final double longitude, String specificClientId, boolean showDialog, final Callback callback,
+					final boolean checkOnboarding){
 
 		if (MyApplication.getInstance().isOnline()) {
 
@@ -95,7 +96,7 @@ public class ApiLoginUsingAccessToken {
 				public void success(LoginResponse loginResponse, Response response) {
 					String responseStr = new String(((TypedByteArray)response.getBody()).getBytes());
 					Log.i(TAG, "loginUsingAccessToken response = " + responseStr);
-					performLoginSuccess(activity, responseStr, loginResponse, callback, new LatLng(latitude, longitude));
+					performLoginSuccess(activity, responseStr, loginResponse, callback, new LatLng(latitude, longitude), checkOnboarding);
 				}
 
 				@Override
@@ -113,7 +114,7 @@ public class ApiLoginUsingAccessToken {
 	}
 
 	public void performLoginSuccess(Activity activity, String response, LoginResponse loginResponse, final Callback callback,
-									final LatLng latLng) {
+									final LatLng latLng, boolean checkOnboarding) {
 		try {
 			JSONObject jObj = new JSONObject(response);
 
@@ -124,19 +125,25 @@ public class ApiLoginUsingAccessToken {
 					if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 						String resp;
 						try {
-							resp = new JSONParser().parseAccessTokenLoginData(activity, response, loginResponse, LoginVia.ACCESS, latLng);
+							if(checkOnboarding && jObj.optJSONObject("user_data").optInt("signup_onboarding", 0) == 1){
+								resp = Constants.KEY_SIGNUP_ONBOARDING;
+							} else {
+								resp = new JSONParser().parseAccessTokenLoginData(activity, response, loginResponse, LoginVia.ACCESS, latLng);
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 							resp = Constants.SERVER_TIMEOUT;
 						}
 						if (resp.contains(Constants.SERVER_TIMEOUT)) {
 							retryDialog(DialogErrorType.SERVER_ERROR, callback);
-							callback.failure();
+							callback.failure(false, null, null);
+						} else if(resp.contains(Constants.KEY_SIGNUP_ONBOARDING)){
+							callback.failure(true, response, loginResponse);
 						} else {
 							callback.success(Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()));
 						}
 					} else{
-						callback.failure();
+						callback.failure(false, null, null);
 					}
 				} else {
 					DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", message,
@@ -154,24 +161,24 @@ public class ApiLoginUsingAccessToken {
 								}
 							}
 							, false, false);
-					callback.failure();
+					callback.failure(false, null, null);
 				}
 			} else{
-				callback.failure();
+				callback.failure(false, null, null);
 			}
 			DialogPopup.dismissLoadingDialog();
 		} catch (Exception exception) {
 			exception.printStackTrace();
 			retryDialog(DialogErrorType.SERVER_ERROR, callback);
 			DialogPopup.dismissLoadingDialog();
-			callback.failure();
+			callback.failure(false, null, null);
 		}
 	}
 
 	public void performLoginFailure(Callback callback) {
 		retryDialog(DialogErrorType.CONNECTION_LOST, callback);
 		DialogPopup.dismissLoadingDialog();
-		callback.failure();
+		callback.failure(false, null, null);
 	}
 
 	private void retryDialog(DialogErrorType dialogErrorType, final Callback callback){
@@ -198,7 +205,7 @@ public class ApiLoginUsingAccessToken {
 	public interface Callback{
 		void noNet();
 		void success(String clientId);
-		void failure();
+		void failure(boolean onboardingFlow, String response, LoginResponse loginResponse);
 		void onRetry(View view);
 		void onNoRetry(View view);
 	}

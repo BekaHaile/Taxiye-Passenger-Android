@@ -38,8 +38,8 @@
     <string name="operator_token">83ebe9d9d65fdac16460da388822bc38</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">999</string>
-    <string name="facebook_page_id">TTRideShare</string>
-    <string name="facebook_page_name">TTRideShare</string>
+    <string name="facebook_page_id">2056791887904505</string>
+        <string name="facebook_page_name">ttrideshare</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
@@ -62,6 +62,7 @@
     <integer name="show_google_login">@integer/view_gone</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
+    <drawable name="cursor">@drawable/cursor_white</drawable>
 
     <string name="file_provider_name">com.ttrideshare.fileprovider</string>
     <string name="web_landing_page">https://ttrideshare.in</string>
@@ -76,11 +77,15 @@
     <string name="pictures_path">TTRideShare/TTRideShare Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
-    <integer name="show_about">@integer/view_invisible</integer>
+    <integer name="show_about">@integer/view_visible</integer>
     <bool name="show_change_languge">false</bool>
 
     <bool name="ride_feedback_rating_bar">true</bool>
     <!--default support email for SupportMailActivity if not coming from server-->
     <string name="default_support_email">support@ttrides.in</string>
     <integer name="send_invites_visibility">@integer/view_gone</integer>
+    <bool name="specified_country_search_result_enabled">true</bool>
+    <bool name="show_call_me_option_in_otp">false</bool>
+    <integer name="show_promo">@integer/view_gone</integer>
+    <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
 </resources>

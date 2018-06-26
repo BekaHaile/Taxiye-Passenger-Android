@@ -124,7 +124,7 @@
     <color name="theme_color_start">#FC644F</color>
     <color name="theme_color_end">#FF9339</color>
     <color name="theme_color_pressed">#99F17B47</color>
-    <color name="theme_color_alpha">#99FD7945</color>
+    <!--<color name="theme_color_alpha">#99FD7945</color>-->
     <color name="text_color_less_light">#9d9d9d</color>
     <color name="text_color_dark">#494958</color>
     <color name="text_color">#595968</color>
@@ -136,7 +136,7 @@
     <color name="text_color_light">#A4A4A4</color>
     <color name="text_color_light_less">#9d9da3</color>
     <color name="sliding_bottom_bg_color">#FAFBFC</color>
-    <color name="text_color_hint">#BCBCBC</color>
+   <!-- <color name="text_color_hint">#BCBCBC</color>-->
     <color name="text_color_hint_anywhere">#B4B4B4</color>
     <color name="nl_white_dark">#E0E0E0</color>
     <color name="menu_item_selector_color">#EEEEEE</color>
