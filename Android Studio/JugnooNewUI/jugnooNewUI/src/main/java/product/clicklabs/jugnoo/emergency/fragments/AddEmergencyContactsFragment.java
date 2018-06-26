@@ -154,7 +154,7 @@ public class AddEmergencyContactsFragment extends Fragment {
 							editTextContacts.removeObject(contactBean);
 						}
 					}
-				}, ContactsListAdapter.ListMode.ADD_CONTACTS,this);
+				}, ContactsListAdapter.ListMode.ADD_CONTACTS);
 		recyclerViewContacts.setAdapter(contactsListAdapter);
 
 		contactsArrayAdapter = new FilteredArrayAdapter<ContactBean>(this.getContext(), R.layout.list_item_contact,
