@@ -1869,6 +1869,7 @@
     <string name="we_could_not_detect_your_location">"Wir konnten Ihren Standort nicht erkennen. Sind Sie sicher, dass Sie ein Auto anfordern möchten, um Sie an diesem Ort abzuholen? "</string>
     <string name="location_accuracy_is_low">"Die Ortsgenauigkeit ist niedrig. Sind Sie sicher, dass Sie ein Auto anfordern möchten, um Sie an diesem Ort abzuholen? "</string>
     <string name="the_pickup_location_you_have_set_is_different">"Der von Ihnen eingestellte Abholort unterscheidet sich von Ihrem aktuellen Standort. Sind Sie sicher, dass dies Ihr Abholort ist? "</string>
+    <string name="number_should_not_start_with_zero">Die Telefonnummer sollte nicht mit 0 beginnen.</string>
 
 
 </resources>

@@ -658,7 +658,8 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
                 public void onClick(View v) {
                     dialog.dismiss();
                     contactBean.setSelected(false);
-                    phoneContactsListAdapter.notifyDataSetChanged();
+                    phoneContactsListAdapter.setCountAndNotify();
+//                    phoneContactsListAdapter.notifyDataSetChanged();
                     //	try { editTextContacts.removeObject(contactBean); } catch (Exception ignored) {}
                 }
             });

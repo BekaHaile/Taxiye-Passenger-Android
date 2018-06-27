@@ -22,9 +22,9 @@
     -->
     <string name="app_name">Hezz Taxi</string>
 
-    <string name="google_maps_api_key">AIzaSyCReMAp5TW8sUMQRqecpPwT-o45UC4J3Lk</string>
-    <string name="google_maps_api_server_key">AIzaSyB7i02FGFHWR5ttygDB4qwmxJ4ESuc-asM</string>
-    <string name="google_server_client_id">198380075127-9mgg4apcupvahut52hfl2ptbkttl2ni8.apps.googleusercontent.com</string>
+    <string name="google_maps_api_key">AIzaSyALkY1H6pkL8WN2HFttCNSC7s15wOhB4d8</string>
+    <string name="google_maps_api_server_key">AIzaSyCe2iQ7hAF3rKrFHPHdIH3nz77i-2spgQQ</string>
+    <string name="google_server_client_id">715827262249-gaad7acs49k1l2ush83sivcqp0e6misb.apps.googleusercontent.com</string>
     <string name="fb_app_id">1969280549993372</string>
     <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
     <string name="ak_login_protocol_scheme">ak782131025144439</string>
@@ -72,9 +72,10 @@
     <string name="pictures_path">Hezz/Hezz Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
-    <integer name="show_about">@integer/view_invisible</integer>
+    <integer name="show_about">@integer/view_visible</integer>
     <bool name="show_change_languge">true</bool>
     <string name="default_lang">fr</string>
+    <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
     <string-array name="languages_to_show">
         <item>en</item>
         <item>ar</item>
@@ -82,6 +83,6 @@
     </string-array>
 
     <!--default support email for SupportMailActivity if not coming from server-->
-    <string name="default_support_email">support@hezz.in</string>
+    <string name="default_support_email">contact@hezz.ma</string>
     <bool name="show_call_me_option_in_otp">false</bool>
 </resources>

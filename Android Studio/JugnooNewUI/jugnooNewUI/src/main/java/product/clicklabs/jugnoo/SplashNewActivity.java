@@ -1374,7 +1374,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
                 else {
                     editTextPhoneNumber.setText("");
                 }
-                Toast.makeText(SplashNewActivity.this,"Phone number should not start with 0",Toast.LENGTH_SHORT).show();
+                Toast.makeText(SplashNewActivity.this, getString(R.string.number_should_not_start_with_zero),Toast.LENGTH_SHORT).show();
             } else {
                 textViewPhoneNumberRequired.setVisibility((s.length() == 0) ? View.VISIBLE : View.GONE);
             }

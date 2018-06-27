@@ -75,7 +75,7 @@ public class EmergencyActivity extends BaseAppCompatActivity {
     }
 
     public static void setEmergencyContactsAllowedToAdd(){
-        if(Data.userData.getEmergencyContactsList() != null){
+        if(Data.userData != null && Data.userData.getEmergencyContactsList() != null){
             EMERGENCY_CONTACTS_ALLOWED_TO_ADD = MAX_EMERGENCY_CONTACTS_ALLOWED_TO_ADD - Data.userData.getEmergencyContactsList().size();
             if(EMERGENCY_CONTACTS_ALLOWED_TO_ADD < 0){
                 EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 0;

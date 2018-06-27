@@ -102,6 +102,7 @@
                     android:paddingEnd="20px"
                     android:maxLines="1"
                     android:maxLength="14"
+                    android:layoutDirection="ltr"
                     android:ellipsize="end"
                     android:textColor="@color/black"
                     android:textColorHint="@color/grey_969696"
