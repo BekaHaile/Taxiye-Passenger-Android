@@ -197,44 +197,38 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_50"
-                android:layout_marginTop="50px">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="70px"
+                android:layout_marginStart="60px"
+                android:layout_marginEnd="60px">
 
                 <ImageView
-                    android:id="@+id/viewstart"
-                    android:layout_width="@dimen/dp_50"
+                    android:layout_width="wrap_content"
                     android:layout_height="2px"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="56px"
-                    android:layout_marginEnd="20px"
                     android:layout_alignParentStart="true"
-                    android:src="@color/text_color"
-                    android:alpha="0.5"
-                    />
+                    android:layout_toStartOf="@+id/textViewRSRateYourRide"
+                    android:src="@color/text_color"/>
 
                 <TextView
                     android:id="@+id/textViewRSRateYourRide"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:layout_toStartOf="@+id/viewend"
-                    android:layout_toEndOf="@+id/viewstart"
-                    android:text="@string/order_expereince"
-                    android:gravity="center"
+                    android:text="@string/how_was_your_experience"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_34" />
+                    android:layout_marginEnd="20px"
+                    android:layout_marginStart="20px"
+                    android:textSize="@dimen/text_size_36"
+                    android:gravity="center"/>
 
                 <ImageView
-                    android:id="@+id/viewend"
-                    android:layout_width="@dimen/dp_50"
+                    android:layout_width="wrap_content"
                     android:layout_height="2px"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="20px"
-                    android:layout_marginEnd="56px"
                     android:layout_alignParentEnd="true"
-                    android:src="@color/text_color"
-                    android:alpha="0.5"
-                    />
+                    android:layout_toEndOf="@+id/textViewRSRateYourRide"
+                    android:src="@color/text_color"/>
             </RelativeLayout>
 
 
@@ -273,7 +267,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="50px"
-                android:gravity="center"
                 android:orientation="horizontal">
 
 

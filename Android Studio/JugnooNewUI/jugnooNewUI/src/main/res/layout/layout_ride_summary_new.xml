@@ -218,14 +218,15 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="70px">
+                android:layout_marginTop="70px"
+                android:layout_marginStart="60px"
+                android:layout_marginEnd="60px">
 
                 <ImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="2px"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="20px"
-                    android:layout_marginStart="60px"
+                    android:layout_alignParentStart="true"
                     android:layout_toStartOf="@+id/textViewRSRateYourRide"
                     android:src="@color/text_color"/>
 
@@ -236,14 +237,16 @@
                     android:layout_centerInParent="true"
                     android:text="@string/how_was_your_experience"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_36"/>
+                    android:layout_marginEnd="20px"
+                    android:layout_marginStart="20px"
+                    android:textSize="@dimen/text_size_36"
+                    android:gravity="center"/>
 
                 <ImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="2px"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="20px"
-                    android:layout_marginEnd="60px"
+                    android:layout_alignParentEnd="true"
                     android:layout_toEndOf="@+id/textViewRSRateYourRide"
                     android:src="@color/text_color"/>
             </RelativeLayout>
@@ -256,7 +259,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10px"
-                android:gravity="center"
                 android:orientation="horizontal">
 
 

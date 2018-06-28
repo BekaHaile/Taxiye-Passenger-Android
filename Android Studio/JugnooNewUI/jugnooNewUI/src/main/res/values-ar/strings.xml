@@ -193,7 +193,7 @@
     <string name="paytm_wallet">Paytm Wallet</string>
     <string name="nl_add_paytm_wallet">Add Paytm Wallet</string>
     <string name="nl_splash_required">مطلوب</string>
-    <string name="nl_splash_optional">optional</string>
+    <string name="nl_splash_optional">اختياري</string>
 
 
     <!-- NL Login-->
@@ -567,7 +567,7 @@
     <string name="contacts">جهات الاتصال</string>
     <string name="edit">تصحيح</string>
     <string name="delete">حذف</string>
-    <string name="send">Send</string>
+    <string name="send">إرسال</string>
     <string name="send_invites">Send invites</string>
     <string name="send_invites_2">to friends who haven\'t tried %s</string>
     <string name="delete_emergency_contact_message">هل أنت متأكد من أنك تريد حذف جهة الاتصال هذه من قائمة الطوارئ الخاصة بك؟</string>
@@ -1317,7 +1317,7 @@
     <string name="label_relevant_categories">RELEVANT CATEGORIES</string>
     <string name="service_date">Service Date</string>
     <string name="service_charges">Service Charges</string>
-    <string name="resend_code_in">%s إعادة إرسال الرمز في0</string>
+    <string name="resend_code_in">%s إعادة إرسال الرمز في</string>
     <string name="call_me_in">%sاتصل بي</string>
     <string name="resend_code">أعد إرسال الرمز</string>
     <string name="call_me">اتصل بي</string>
