@@ -51,7 +51,7 @@
             android:layout_alignParentEnd="true"
             android:visibility="visible"
             android:text="@string/str_new"
-            android:textColor="@color/theme_color"
+            android:textColor="@color/side_menu_text_color_highlight"
             android:textSize="@dimen/text_size_36"
             android:layout_marginEnd="30px"/>
 
@@ -66,7 +66,7 @@
             android:gravity="center"
 
             android:text="@string/rupee_0"
-            android:textColor="@color/theme_color"
+            android:textColor="@color/side_menu_text_color_highlight"
             android:textSize="36px"
             android:visibility="visible" />
 

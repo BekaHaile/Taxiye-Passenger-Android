@@ -85,5 +85,6 @@
 
     <color name="side_menu_color">#2a2f3c</color>
     <color name="side_menu_text_color">@color/white</color>
+    <color name="side_menu_text_color_highlight">@color/white</color>
 
 </resources>
