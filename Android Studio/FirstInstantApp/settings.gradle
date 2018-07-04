@@ -1,0 +1,1 @@
+include ':instantModule', ':app', ':base', ':instantapp'
