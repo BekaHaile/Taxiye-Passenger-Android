@@ -55,8 +55,8 @@
     <integer name="show_splash_bg">@integer/view_visible</integer>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <drawable name="login_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
-    <drawable name="splash_background_drawable">@color/theme_color</drawable>
-    <drawable name="login_background_drawable">@color/black</drawable>
+    <drawable name="splash_background_drawable">@drawable/splash_back_pam</drawable>
+    <drawable name="login_background_drawable">@drawable/splash_back_pam</drawable>
     <integer name="show_social_login">@integer/view_visible</integer>
     <integer name="show_facebook_login">@integer/view_visible</integer>
     <integer name="show_google_login">@integer/view_gone</integer>

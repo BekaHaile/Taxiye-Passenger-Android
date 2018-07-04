@@ -42,7 +42,7 @@
         <string name="facebook_page_name">ttrideshare</string>
 
 
-    <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
+    <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
     <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
     <bool name="force_open_autos">true</bool>
 
