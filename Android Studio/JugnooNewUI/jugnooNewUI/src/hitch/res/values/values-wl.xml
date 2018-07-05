@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <integer name="view_visible">0</integer>
+    <integer name="view_invisible">1</integer>
+    <integer name="view_gone">2</integer>
+
+
+    <!--Other things to change
+        1. google-services.json
+        2. Doc entity in strings.xml
+        3. application_id in build.gradle
+    -->
+
+
+    <!--
+        Icons to change:
+            ic_taxi_logo => ic_splash_logo
+            ic_launcher
+            notification_icon
+    -->
+    <string name="app_name">Hitch</string>
+
+    <string name="google_maps_api_key">AIzaSyCP3eRFMh4l2H8dhfCNRHuWrePFM1N57Nk</string>
+    <string name="google_maps_api_server_key">AIzaSyAnNBsvsiSXWVy67_sSoSIEDFNGxzmd6rc</string>
+    <string name="google_server_client_id">9377941695-hij04k65kufgi1gqvj3uf0n6qj60tj3j.apps.googleusercontent.com</string>
+    <string name="fb_app_id">1969280549993372</string>
+    <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
+    <string name="ak_login_protocol_scheme">ak782131025144439</string>
+    <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
+
+
+
+
+
+    <string name="operator_token">1332f76e2b20d169cbdd1b04a49cef76</string>
+    <string name="support_number">+2549023121121</string>
+    <string name="police_number">911</string>
+    <string name="facebook_page_id">1497119970363540</string>
+    <string name="facebook_page_name">Hezzmaroc</string>
+
+
+    <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
+
+
+    <dimen name="splash_logo_width">135dp</dimen>
+    <dimen name="splash_logo_height">135dp</dimen>
+    <dimen name="splash_logo_top_margin">100dp</dimen>
+    <drawable name="splash_background_drawable">@color/transparent</drawable>
+    <drawable name="login_background_drawable">@color/transparent</drawable>
+    <integer name="show_splash_logo_text">@integer/view_gone</integer>
+    <color name="splash_logo_color">@color/theme_color</color>
+
+    <integer name="show_splash_top_bg">@integer/view_invisible</integer>
+    <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+
+    <string name="file_provider_name">com.hitch.fileprovider</string>
+    <string name="web_landing_page">https://hitch.com</string>
+    <string name="smart_url">http://smarturl.it/hitch</string>
+    <string name="db_name">hitch_database</string>
+    <string name="terms_of_use_url">https://www.hitch.com/#/terms</string>
+    <string name="app_domain">hitch.com</string>
+    <string name="app_host_name">www.hitch.com</string>
+    <string name="branch_domain">share.hitch.com</string>
+    <string name="app_scheme">hitch</string>
+
+    <string name="pictures_path">Hitch/Hitch Pictures</string>
+    <bool name="force_inhouse_login">true</bool>
+    <integer name="show_about">@integer/view_visible</integer>
+    <bool name="show_change_languge">true</bool>
+    <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
+    <string-array name="languages_to_show">
+        <item>en</item>
+        <item>ar</item>
+        <item>fr</item>
+    </string-array>
+
+    <!--default support email for SupportMailActivity if not coming from server-->
+    <string name="default_support_email">contact@hitch.com</string>
+</resources>
