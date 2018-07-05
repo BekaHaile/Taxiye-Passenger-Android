@@ -173,7 +173,7 @@
                         <!--android:digits="@string/digits_characters_numbers"-->
                         <EditText
                             android:id="@+id/editTextUserName"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_white_orange_bb"
                             android:gravity="center_vertical"
@@ -182,6 +182,7 @@
                             android:inputType="text"
                             android:maxLines="1"
                             android:lines="1"
+                            android:text="Mohit"
                             android:scrollHorizontally="true"
                             android:ellipsize="end"
                             android:paddingBottom="@dimen/dp_6"
@@ -199,7 +200,7 @@
 
                             <EditText
                                 android:id="@+id/editTextEmail"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bg_white_orange_bb"
                                 android:gravity="center_vertical"
@@ -229,6 +230,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:background="@color/white"
+                                android:layoutDirection="ltr"
                                 android:orientation="horizontal"
                                 >
                                 <TextView

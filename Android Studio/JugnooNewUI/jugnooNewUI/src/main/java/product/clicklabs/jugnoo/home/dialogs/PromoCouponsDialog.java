@@ -191,7 +191,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
                 } else{
                     listViewPromoCoupons.setVisibility(View.GONE);
                     relativeLayoutBottomButtons.setVisibility(View.GONE);
-                    linearLayoutNoCurrentOffers.setVisibility(View.VISIBLE);
+                    linearLayoutNoCurrentOffers.setVisibility(activity.getResources().getInteger(R.integer.show_invite_friends)==activity.getResources().getInteger(R.integer.view_visible)?View.VISIBLE:View.GONE);
                     imageViewOffers.setImageResource(R.drawable.ic_offer_popup);
                     tvAvailableOffers.setText(activity.getResources().getString(R.string.no_available_offers));
 
