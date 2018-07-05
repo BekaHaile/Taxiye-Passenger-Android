@@ -41,7 +41,7 @@
     <string name="facebook_page_name">livecbstechnology</string>
 
 
-    <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
+    <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
     <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
     <bool name="force_open_autos">true</bool>
 
@@ -86,5 +86,7 @@
     <color name="side_menu_color">#2a2f3c</color>
     <color name="side_menu_text_color">@color/white</color>
     <color name="side_menu_text_color_highlight">@color/white</color>
+
+    <integer name="show_invite_friends">@integer/view_gone</integer>
 
 </resources>
