@@ -21,10 +21,10 @@
             notification_icon
     -->
 
-    <string name="app_name">Comelyt</string>
+    <string name="app_name">Kardi</string>
 
-    <string name="google_maps_api_key">AIzaSyBrU2XQF8xCohlI_zA-ow-yG83HA8DI3FM</string>
-    <string name="google_maps_api_server_key">AIzaSyDmPRWr5xfshk078bTRJstEuSNQQHIbTww</string>
+    <string name="google_maps_api_key">AIzaSyAYtGKg7n3qVyMYz6FI87998DUbsfX4g1w</string>
+    <string name="google_maps_api_server_key">AIzaSyDqjyyl4spaV3g5fdaCBEaYaLaC3tAipTg</string>
     <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
     <string name="fb_app_id">1992033690820340</string>
     <string name="fb_login_protocol_scheme">fb1992033690820340</string>
