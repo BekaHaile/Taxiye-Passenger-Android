@@ -88,5 +88,7 @@
     <color name="side_menu_text_color_highlight">@color/white</color>
 
     <integer name="show_invite_friends">@integer/view_gone</integer>
+    <integer name="show_promo">@integer/view_gone</integer>
+    <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
 
 </resources>
