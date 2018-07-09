@@ -557,7 +557,7 @@
     <string name="call_emergency_contact">Call Emergency Contact</string>
     <string name="call_your_contacts">Call Your Contacts</string>
     <string name="disable_emergency_mode">Disable Emergency Mode</string>
-    <string name="emergency_contacts">Emergency Contacts</string>
+    <string name="emergency_contacts">Add Emergency Contacts</string>
     <string name="add">Add</string>
     <string name="add_contacts">Add Contacts</string>
     <string name="contacts">Contacts</string>
@@ -804,7 +804,7 @@
     <string name="offers">Offers</string>
     <string name="add_new_address">Add new address</string>
     <string name="could_not_find_address">Could not find address</string>
-    <string name="address_book">Address Book</string>
+    <string name="address_book">My Saved Locations</string>
     <string name="my_saved_locations">My Saved Locations</string>
     <string name="enter_topup_card_code">Enter Topup Card code</string>
     <string name="recharge_jc_topup_info">Recharge %s Cash with Topup Card</string>

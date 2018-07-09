@@ -178,7 +178,7 @@
 
     <!-- NL Home Screen -->
     <string name="nl_min_fare">الاجرة الاساسية</string>
-    <string name="nl_offers">OFFERS</string>
+    <string name="nl_offers">عروض</string>
     <string name="nl_change_locality">تغيير المكان</string>
     <string name="get_fare_estimate">الحصول على الأجرة تقدير</string>
     <string name="nl_per_km">Per Km</string>

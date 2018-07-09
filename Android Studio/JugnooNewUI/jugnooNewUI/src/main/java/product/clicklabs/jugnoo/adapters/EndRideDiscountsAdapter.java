@@ -80,15 +80,15 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
 
         DiscountType discountType = discountTypes.get(position);
 
-        if(discountType.getReferenceId() == 0) {
-            holder.textViewDiscount.setText("- " + discountType.name);
-            holder.textViewDiscountValue.setText("-"+String.format(context.getResources()
-                            .getString(R.string.rupees_value_format),
-                    Utils.getMoneyDecimalFormat().format(discountType.value)));
-        } else{
+//        if(discountType.getReferenceId() == 0) {
+//            holder.textViewDiscount.setText("- " + discountType.name);
+//            holder.textViewDiscountValue.setText("-"+String.format(context.getResources()
+//                            .getString(R.string.rupees_value_format),
+//                    Utils.getMoneyDecimalFormat().format(discountType.value)));
+//        } else{
             holder.textViewDiscount.setText(discountType.getName());
             holder.textViewDiscountValue.setText(Utils.formatCurrencyValue(currency, discountType.value));
-        }
+//        }
 
         return convertView;
     }

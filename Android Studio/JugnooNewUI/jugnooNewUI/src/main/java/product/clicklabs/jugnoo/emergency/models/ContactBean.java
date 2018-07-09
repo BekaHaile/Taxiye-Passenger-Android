@@ -23,9 +23,10 @@ public class ContactBean {
 	private ContactBeanViewType contactBeanViewType;
 
 
-	public ContactBean(String name, String phoneNo, String type, ContactBeanViewType contactBeanViewType) {
+	public ContactBean(String name, String phoneNo,String countryCode,String type, ContactBeanViewType contactBeanViewType) {
 		this.name = name;
 		this.phoneNo = phoneNo;
+		this.countryCode = countryCode;
 		this.type = type;
 		this.contactBeanViewType = contactBeanViewType;
 		this.selected = false;
