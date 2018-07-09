@@ -393,7 +393,7 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
         if (Data.userData.getEmergencyContactsList() != null) {
             emergencyContactBeans.clear();
             for (EmergencyContact emergencyContact : Data.userData.getEmergencyContactsList()) {
-                ContactBean contactBean = new ContactBean(emergencyContact.name, emergencyContact.phoneNo, "",
+                ContactBean contactBean = new ContactBean(emergencyContact.name, emergencyContact.phoneNo,emergencyContact.countryCode, "",
                         ContactBean.ContactBeanViewType.CONTACT);
                 contactBean.setId(emergencyContact.id);
                 emergencyContactBeans.add(contactBean);
@@ -428,7 +428,7 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
     private void setSelectedObject(boolean selected, ContactBean contactBean) {
         try {
             int index = phoneContactBeans.indexOf(new ContactBean(contactBean.getName(),
-                    contactBean.getPhoneNo(), contactBean.getType(), ContactBean.ContactBeanViewType.CONTACT));
+                    contactBean.getPhoneNo(),contactBean.getCountryCode(), contactBean.getType(), ContactBean.ContactBeanViewType.CONTACT));
             phoneContactBeans.get(index).setSelected(selected);
             phoneContactsListAdapter.notifyDataSetChanged();
             ((LinearLayoutManager) recyclerViewPhoneContacts.getLayoutManager()).scrollToPositionWithOffset(index, 20);

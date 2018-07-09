@@ -308,7 +308,7 @@ public class AddEmergencyContactsFragment extends Fragment {
     private void setSelectedObject(boolean selected, ContactBean contactBean) {
         try {
             contactBeans.get(contactBeans.indexOf(new ContactBean(contactBean.getName(),
-                    contactBean.getPhoneNo(), contactBean.getType(), ContactBean.ContactBeanViewType.CONTACT))).setSelected(selected);
+                    contactBean.getPhoneNo(),contactBean.getCountryCode(), contactBean.getType(), ContactBean.ContactBeanViewType.CONTACT))).setSelected(selected);
             contactsListAdapter.setCountAndNotify();
         } catch (Exception e) {
             e.printStackTrace();
