@@ -23,11 +23,11 @@
 
     <string name="app_name">Pam Drive</string>
 
-    <string name="google_maps_api_key">AIzaSyBCcnNzpyLi5ND2KKi9MShjWkyRh6c-on4</string>
-    <string name="google_maps_api_server_key">AIzaSyALcnx6JGyfBANXyk_r54pFPW2dZya8SjA</string>
-    <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
-    <string name="fb_app_id">227615331160869</string>
-    <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
+    <string name="google_maps_api_key">AIzaSyCT07NoO3oS97dU5Ke_S4EjeGIqQPkl_-g</string>
+    <string name="google_maps_api_server_key">AIzaSyCUEplvRmXQSo69R81Hc3aAysWr2aQWFZU</string>
+    <string name="google_server_client_id">196730039656-0453s6v4p049c3c947tupnhnhql6dkj4.apps.googleusercontent.com</string>
+    <string name="fb_app_id">405568536597172</string>
+    <string name="fb_client_token">fb12020faa0c4db6bca1546ba355fc21</string>
     <string name="ak_login_protocol_scheme">ak782131025144439</string>
     <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
 
@@ -35,7 +35,7 @@
 
 
 
-    <string name="operator_token">83ebe9d9d65fdac16460da388822bc38</string>
+    <string name="operator_token">0af5e0e5e6ab898cc714f9a5b5545451</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">999</string>
     <string name="facebook_page_id">2056791887904505</string>
