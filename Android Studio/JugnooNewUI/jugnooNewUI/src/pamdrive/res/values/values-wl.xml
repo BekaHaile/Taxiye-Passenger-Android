@@ -21,7 +21,7 @@
             notification_icon
     -->
 
-    <string name="app_name">Pam Drive</string>
+    <string name="app_name">PamDrive</string>
 
     <string name="google_maps_api_key">AIzaSyCT07NoO3oS97dU5Ke_S4EjeGIqQPkl_-g</string>
     <string name="google_maps_api_server_key">AIzaSyCUEplvRmXQSo69R81Hc3aAysWr2aQWFZU</string>
