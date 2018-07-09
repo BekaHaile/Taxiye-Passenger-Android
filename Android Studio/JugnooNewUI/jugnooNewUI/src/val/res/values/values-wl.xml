@@ -80,5 +80,4 @@
 
     <!--Profile Screen-->
     <integer name="top_bar_about">@integer/view_gone</integer>
-    <bool name="show_jugnoo_promo_icon">true</bool>
 </resources>
