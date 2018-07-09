@@ -34,10 +34,10 @@
 
 
     <string name="operator_token">3d83f508c28f09ef4ef0c5aaf0d6c636</string>
-    <string name="support_number">+2549023121121</string>
+    <string name="support_number">+6587766554</string>
     <string name="police_number">999</string>
     <string name="facebook_page_id">2056791887904505</string>
-        <string name="facebook_page_name">Comelyt</string>
+        <string name="facebook_page_name">Kardi</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
@@ -53,8 +53,8 @@
     <integer name="show_splash_bg">@integer/view_visible</integer>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <drawable name="login_logo_icon_drawable">@drawable/ic_login_logo</drawable>
-    <drawable name="splash_background_drawable">@drawable/splash_bg</drawable>
-    <drawable name="login_background_drawable">@color/black</drawable>
+    <drawable name="splash_background_drawable">@color/white</drawable>
+    <drawable name="login_background_drawable">@color/white</drawable>
     <integer name="show_social_login">@integer/view_visible</integer>
     <integer name="show_facebook_login">@integer/view_visible</integer>
     <integer name="show_google_login">@integer/view_gone</integer>
@@ -62,17 +62,17 @@
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
     <drawable name="cursor">@drawable/cursor_white</drawable>
 
-    <string name="file_provider_name">com.ttrideshare.fileprovider</string>
-    <string name="web_landing_page">https://ttrideshare.in</string>
-    <string name="smart_url">http://smarturl.it/ttridesshare</string>
-    <string name="db_name">ttrideshare_database</string>
+    <string name="file_provider_name">com.kardi.fileprovider</string>
+    <string name="web_landing_page">https://kardi.in</string>
+    <string name="smart_url">http://smarturl.it/kardi</string>
+    <string name="db_name">kardi_database</string>
     <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
-    <string name="app_domain">ttrideshare.in</string>
-    <string name="app_host_name">www.ttrideshare.in</string>
-    <string name="branch_domain">share.ttrideshare.in</string>
-    <string name="app_scheme">ttrideshare</string>
+    <string name="app_domain">kardi.in</string>
+    <string name="app_host_name">www.kardi.in</string>
+    <string name="branch_domain">share.kardi.in</string>
+    <string name="app_scheme">kardi</string>
 
-    <string name="pictures_path">TTRideShare/TTRideShare Pictures</string>
+    <string name="pictures_path">Kardi/Kardi Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
     <integer name="show_about">@integer/view_visible</integer>
@@ -80,7 +80,7 @@
 
     <bool name="ride_feedback_rating_bar">true</bool>
     <!--default support email for SupportMailActivity if not coming from server-->
-    <string name="default_support_email">support@ttrides.in</string>
+    <string name="default_support_email">hello@kardi.sg</string>
     <integer name="send_invites_visibility">@integer/view_gone</integer>
     <bool name="specified_country_search_result_enabled">false</bool>
     <bool name="show_call_me_option_in_otp">false</bool>
