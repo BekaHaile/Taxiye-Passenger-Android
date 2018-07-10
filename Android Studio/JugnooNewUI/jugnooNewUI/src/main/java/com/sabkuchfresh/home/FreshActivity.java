@@ -3649,7 +3649,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void openCart(int appType, boolean forceCheckout) {
         if (isMenusOrDeliveryOpen() && getVendorOpened() != null) {
 
-            if(getVendorOpened().getOutOfRadius()==1 && isDeliveryOpenInBackground()){
+            if(getVendorOpened().getOutOfRadius()==1 && isDeliveryOpenInBackground() &&  getMenusFragment()!=null && getMenusFragment().isCustomOrderEnabled()
+                    && Data.getFeedData()!=null){
                 FreshCheckoutMergedFragment.orderViaFatafat(this, FreshCheckoutMergedFragment.prepareItemsInCartForMenus(this,null),null,
                         this,updateCartValuesGetTotalPrice().first);
                 return;
@@ -4614,7 +4615,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return deliveryAddressModel;
     }
 
-    public void setDeliveryAddressModelToSelectedAddress(boolean dontRefresh,boolean pickUpCartAddress) {
+    public boolean setDeliveryAddressModelToSelectedAddress(boolean dontRefresh,boolean pickUpCartAddress) {
         if (deliveryAddressModel == null || pickUpCartAddress) {
             try {
                 String constantStringSp ;
@@ -4632,6 +4633,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             } catch (Exception e) {
             }
         }
+        LatLng latLng = getSelectedLatLng();
         try {
             if (deliveryAddressModel != null) {
                 setSelectedAddress(deliveryAddressModel.getAddress());
@@ -4643,6 +4645,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return MapUtils.distance(latLng, getSelectedLatLng()) > 50;
     }
 
     public class DeliveryAddressModel {
