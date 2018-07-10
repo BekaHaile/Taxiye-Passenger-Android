@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -391,7 +392,7 @@ public class RestaurantReviewsAdapter extends RecyclerView.Adapter<RestaurantRev
 								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
 							}
 						}, activity.getVendorOpened().getName(),
-								activity.getString(R.string.web_landing_page),
+								Prefs.with(activity).getString(Constants.KEY_WEB_LANDING_PAGE, activity.getString(R.string.web_landing_page)),
 								activity.getVendorOpened().getImage(),
 								BranchMetricsUtils.BRANCH_CHANNEL_MENUS_REVIEW_SHARE,
 								map);

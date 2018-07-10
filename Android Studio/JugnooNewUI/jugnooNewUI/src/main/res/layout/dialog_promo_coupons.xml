@@ -49,7 +49,6 @@
         <LinearLayout
             android:id="@+id/linearLayoutNoCurrentOffers"
             android:layout_width="match_parent"
-            android:visibility="@integer/show_invite_friends"
             android:layout_height="wrap_content"
 
             android:orientation="vertical">
@@ -69,8 +68,7 @@
                 android:layout_marginTop="50px"
                 android:background="@color/white"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:visibility="@integer/show_invite_friends">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textViewNoCurrentOffers"

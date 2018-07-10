@@ -627,11 +627,11 @@ public class Data {
         }
         return false;
     }
-    public static boolean isEmailSupportEnabled() {
+    public static boolean isMenuTagEnabled(MenuInfoTags tag) {
         if(Data.userData != null) {
             ArrayList<MenuInfo> itemsToShow = Data.userData.getMenuInfoList();
             for (MenuInfo menuInfo : itemsToShow) {
-                if (MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
+                if (tag.getTag().equalsIgnoreCase(menuInfo.getTag())) {
                     return true;
                 }
             }

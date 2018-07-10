@@ -373,6 +373,13 @@ public class JSONParser implements Constants {
             if(autosData.getCoupons() != null)
                 Data.autoData.getPromoCoupons().addAll(autosData.getCoupons());
 
+            Prefs.with(context).save(Constants.KEY_FACEBOOK_PAGE_ID, autoData.optString(KEY_FACEBOOK_PAGE_ID, context.getString(R.string.facebook_page_id)));
+            Prefs.with(context).save(Constants.KEY_FACEBOOK_PAGE_URL, autoData.optString(KEY_FACEBOOK_PAGE_URL, context.getString(R.string.facebook_page_url)));
+            Prefs.with(context).save(Constants.KEY_WEB_LANDING_PAGE, autoData.optString(KEY_WEB_LANDING_PAGE, context.getString(R.string.web_landing_page)));
+            Prefs.with(context).save(Constants.KEY_SHOW_ABOUT_US, autoData.optInt(KEY_SHOW_ABOUT_US, 1));
+            Prefs.with(context).save(Constants.KEY_SHOW_CHANGE_LANGUAGE, autoData.optInt(KEY_SHOW_CHANGE_LANGUAGE, 0));
+            Prefs.with(context).save(Constants.KEY_DEFAULT_LOCALE, autoData.optString(KEY_DEFAULT_LOCALE, context.getString(R.string.default_lang)));
+            Prefs.with(context).save(Constants.KEY_RIDE_FEEDBACK_RATING_BAR, autoData.optInt(KEY_RIDE_FEEDBACK_RATING_BAR, 0));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -679,7 +686,7 @@ public class JSONParser implements Constants {
     public ReferralMessages parseReferralMessages(Context context, LoginResponse.UserData userData) {
         String referralSharingMessage = "Hey, \nUse "+context.getString(R.string.app_name)+" app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
                 " Use this referral code: " + Data.userData.referralCode + " to get FREE ride" +
-                "\nDownload it from here: "+context.getString(R.string.smart_url);
+                "\nDownload it from here: https://play.google.com/store/apps/details?id="+BuildConfig.APPLICATION_ID;
         String fbShareCaption = "Use " + Data.userData.referralCode + " as code & get a FREE ride";
         String fbShareDescription = "Try "+context.getString(R.string.app_name)+" app to call an auto at your doorsteps with just a tap.";
         String referralCaption = "<center><font face=\"verdana\" size=\"2\">Invite <b>friends</b> and<br/>get <b>FREE rides</b></font></center>";
@@ -1779,6 +1786,11 @@ public class JSONParser implements Constants {
         } catch (Exception ignored){
         }
         return bidInfos;
+    }
+
+    public static void parseSignupOnboardingKeys(Context context, JSONObject jObj){
+        Prefs.with(context).save(Constants.KEY_SHOW_PROMO_ONBOARDING, jObj.optJSONObject(Constants.KEY_USER_DATA).optInt(Constants.KEY_SHOW_PROMO_ONBOARDING, 1));
+        Prefs.with(context).save(Constants.KEY_SHOW_SKIP_ONBOARDING, jObj.optJSONObject(Constants.KEY_USER_DATA).optInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1));
     }
 
 }

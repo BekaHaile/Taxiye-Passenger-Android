@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 
@@ -31,7 +33,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(TypekitContextWrapper.wrap(LocaleHelper.onAttach(newBase, newBase.getString(R.string.default_lang))));
+        super.attachBaseContext(TypekitContextWrapper.wrap(LocaleHelper.onAttach(newBase,
+                Prefs.with(newBase).getString(Constants.KEY_DEFAULT_LOCALE, newBase.getString(R.string.default_lang)))));
     }
 
     @Override

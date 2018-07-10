@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -304,7 +305,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
                                 e.printStackTrace();
                                 Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
                             }
-                        } else if(Data.isEmailSupportEnabled()){
+                        } else if(Data.isMenuTagEnabled(MenuInfoTags.EMAIL_SUPPORT)){
                             activity.startActivity(new Intent(activity, SupportMailActivity.class));
                         } else {
                             new TransactionUtils().openRideIssuesFragment(activity,

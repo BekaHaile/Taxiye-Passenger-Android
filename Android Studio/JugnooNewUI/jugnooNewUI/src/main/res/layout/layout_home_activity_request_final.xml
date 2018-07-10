@@ -432,8 +432,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/menu_item_selector_color"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:visibility="@integer/send_invites_visibility">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/textViewSendInvites"

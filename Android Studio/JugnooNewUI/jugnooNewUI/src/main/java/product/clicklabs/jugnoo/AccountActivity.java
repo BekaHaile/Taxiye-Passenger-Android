@@ -284,6 +284,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
         tvAbout = (TextView) findViewById(R.id.tvAbout);
+        tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT_US, 1) == 1 ? View.VISIBLE : View.GONE);
 
 
         imageViewPokemon.setOnClickListener(new View.OnClickListener() {
@@ -787,11 +788,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
         setMenuItemsAdapter();
 
-        if(!getResources().getBoolean(R.bool.force_inhouse_login)) {
-            getAllowedAuthChannels();
-        }
+        getAllowedAuthChannels();
 
-        if(getResources().getBoolean(R.bool.show_change_languge)) {
+        if(Prefs.with(this).getInt(Constants.KEY_SHOW_CHANGE_LANGUAGE, 0) == 1) {
             relativeLayoutChangeLanguage.setVisibility(View.VISIBLE);
         }
         else {
@@ -1355,9 +1354,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             super.onBackPressed();
             textViewTitle.setText(R.string.title_my_profile);
             rlMain.setVisibility(View.VISIBLE);
-            if(getResources().getInteger(R.integer.show_about) == 0) {
-                tvAbout.setVisibility(View.VISIBLE);
-            }
+            tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT_US, 1) == 1 ? View.VISIBLE : View.GONE);
         }
     }
 

@@ -890,4 +890,17 @@ public interface Constants {
     String KEY_MARKER_ICON = "marker_icon";
     String KEY_FUGU_APP_KEY = "fugu_app_key";
     String KEY_FUGU_APP_TYPE = "fugu_app_type";
+
+
+    String KEY_FACEBOOK_PAGE_ID = "facebook_page_id";
+    String KEY_FACEBOOK_PAGE_URL = "facebook_page_url";
+    String KEY_SHOW_TERMS_OF_USE = "show_terms_of_use";
+    String KEY_TERMS_OF_USE_URL = "terms_of_use_url";
+    String KEY_WEB_LANDING_PAGE = "web_landing_page";
+    String KEY_SHOW_ABOUT_US = "show_about_us";
+    String KEY_SHOW_CHANGE_LANGUAGE = "show_change_language";
+    String KEY_RIDE_FEEDBACK_RATING_BAR = "ride_feedback_rating_bar";
+    String KEY_SHOW_PROMO_ONBOARDING = "show_promo_onboarding";
+    String KEY_SHOW_SKIP_ONBOARDING = "show_skip_onboarding";
+    String KEY_DEFAULT_LOCALE = "default_locale";
 }

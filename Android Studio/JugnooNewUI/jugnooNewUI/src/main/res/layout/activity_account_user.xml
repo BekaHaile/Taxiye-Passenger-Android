@@ -32,7 +32,6 @@
             android:drawablePadding="@dimen/dp_3"
             android:padding="@dimen/dp_10"
             android:tag="@string/dont_touch_me"
-            android:visibility="@integer/show_about"
             android:text="@string/about"
             android:textColor="@color/text_color"
             android:textSize="@dimen/sp_13"

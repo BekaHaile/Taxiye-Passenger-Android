@@ -255,7 +255,6 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
         textViewCounter.setText("0:10");
 
         startOTPTimer();
-        if (getResources().getBoolean(R.bool.show_call_me_option_in_otp)) {
             try {
                 if (!"".equalsIgnoreCase(Prefs.with(OTPConfirmScreen.this).getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
                 } else {
@@ -271,10 +270,6 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
                 e.printStackTrace();
                 tvCallMe.setVisibility(View.GONE);
             }
-        }
-        else {
-            tvCallMe.setVisibility(View.GONE);
-        }
 
         rlOTPTimer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1460,8 +1455,9 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
 
     private void goToLoginOrOnboarding(JSONObject jObj, String responseStr, LoginResponse loginResponse,
                                        LoginVia loginVia) throws Exception {
-        if (jObj.optJSONObject("user_data").optInt("signup_onboarding", 0) == 1) {
-            String authKey = jObj.optJSONObject("user_data").optString("auth_key", "");
+        if (jObj.optJSONObject(KEY_USER_DATA).optInt(KEY_SIGNUP_ONBOARDING, 0) == 1) {
+            String authKey = jObj.optJSONObject(KEY_USER_DATA).optString("auth_key", "");
+            JSONParser.parseSignupOnboardingKeys(this, jObj);
             AccessTokenGenerator.saveAuthKey(this, authKey);
             String authSecret = authKey + Config.getClientSharedSecret();
             accessTokenOnBoarding = SHA256Convertor.getSHA256String(authSecret);

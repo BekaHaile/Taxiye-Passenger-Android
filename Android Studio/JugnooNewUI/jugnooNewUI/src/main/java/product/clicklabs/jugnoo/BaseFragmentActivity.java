@@ -99,6 +99,7 @@ public class BaseFragmentActivity extends FragmentActivity {
 	};
 	@Override
 	protected void attachBaseContext(Context newBase) {
-		super.attachBaseContext(TypekitContextWrapper.wrap(LocaleHelper.onAttach(newBase, newBase.getString(R.string.default_lang))));
+		super.attachBaseContext(TypekitContextWrapper.wrap(LocaleHelper.onAttach(newBase,
+				Prefs.with(newBase).getString(Constants.KEY_DEFAULT_LOCALE, newBase.getString(R.string.default_lang)))));
 	}
 }

@@ -1262,7 +1262,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				@Override
 				public void onClick(View v) {
 					try {
-						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terms_of_use_url)));
+						Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+								Uri.parse(Prefs.with(SplashNewActivity.this).getString(Constants.KEY_TERMS_OF_USE_URL, getString(R.string.terms_of_use_url))));
 						startActivity(browserIntent);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1747,6 +1748,23 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				rlLoginSignupNew.setVisibility(View.GONE);
 
 				GAUtils.trackScreenView(REFERRAL_CODE_SCREEN);
+
+				if(Prefs.with(this).getInt(Constants.KEY_SHOW_PROMO_ONBOARDING, 1) == 1){
+					tvReferralTitle.setVisibility(View.VISIBLE);
+					etReferralCode.setVisibility(View.VISIBLE);
+					findViewById(R.id.ivEtPromoDiv).setVisibility(View.VISIBLE);
+				} else {
+					tvReferralTitle.setVisibility(View.GONE);
+					etReferralCode.setVisibility(View.GONE);
+					findViewById(R.id.ivEtPromoDiv).setVisibility(View.GONE);
+				}
+				if(Prefs.with(this).getInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1) == 1){
+					tvSkip.setVisibility(View.VISIBLE);
+				} else {
+					tvSkip.setVisibility(View.GONE);
+					textViewSNameRequired.setVisibility(View.GONE);
+					textViewSEmailRequired.setVisibility(View.GONE);
+				}
 				break;
 
 			case SPLASH_LS:
@@ -2252,7 +2270,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 	public static boolean allowedAuthChannelsHitOnce = false;
-	public void getAllowedAuthChannels(Activity activity){
+	public void getAllowedAuthChannels(final Activity activity){
 		if (MyApplication.getInstance().isOnline()) {
 			if(allowedAuthChannelsHitOnce){
 				return;
@@ -2365,19 +2383,10 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						}
 
 						//"login_channel": 0 //0-Default fbAccountKit, 1-Inhouse apis
-						if(getResources().getBoolean(R.bool.force_inhouse_login)) {
-							Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL,1);
-						}else{
-							Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
-						}
+						Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
 
-						if(countryPicker.getAllCountries().size() > 1){
-							rlCountryCode.setEnabled(true);
-							tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_vector_otp, 0);
-						} else {
-							rlCountryCode.setEnabled(false);
-							tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
-						}
+						Prefs.with(activity).save(Constants.KEY_TERMS_OF_USE_URL, jObj.optString(Constants.KEY_TERMS_OF_USE_URL, getString(R.string.terms_of_use_url)));
+						tvSTerms.setVisibility(jObj.optInt(Constants.KEY_SHOW_TERMS_OF_USE, 1) == 1 ? View.VISIBLE : View.GONE);
 
 					}catch (Exception e){
 						e.printStackTrace();
@@ -2792,7 +2801,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 		@Override
 		public void afterTextChanged(Editable s) {
-			if(getResources().getInteger(R.integer.skip_in_signup_onboarding) == getResources().getInteger(R.integer.view_visible)){
+			if(Prefs.with(textViewRequired.getContext()).getInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1) == 1){
 				textViewRequired.setVisibility(s.length() > 0 ? View.GONE : View.VISIBLE);
 			}
 		}
@@ -3099,10 +3108,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 //								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									if(jObj.optJSONObject("user_data").optInt("signup_onboarding", 0) == 1){
+									if(jObj.optJSONObject(KEY_USER_DATA).optInt(KEY_SIGNUP_ONBOARDING, 0) == 1){
+										JSONParser.parseSignupOnboardingKeys(activity, jObj);
 										changeUIState(State.SPLASH_ONBOARDING);
 
-										String authKey = jObj.optJSONObject("user_data").optString("auth_key", "");
+										String authKey = jObj.optJSONObject(KEY_USER_DATA).optString("auth_key", "");
 										AccessTokenGenerator.saveAuthKey(SplashNewActivity.this, authKey);
 										String authSecret = authKey + Config.getClientSharedSecret();
 										accessToken = SHA256Convertor.getSHA256String(authSecret);
@@ -4433,9 +4443,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	String phoneNoToFillInInHouseLogin = "";
 	private void goToLoginUsingPhone(String previousLoginPhone){
-		if(getResources().getBoolean(R.bool.force_inhouse_login)) {
-			Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, 1);
-		}
 		if(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1){
 			phoneNoToFillInInHouseLogin = previousLoginPhone;
 			if(phoneNoToFillInInHouseLogin==null || phoneNoToFillInInHouseLogin.trim().length()==0){

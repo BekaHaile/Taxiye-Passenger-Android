@@ -76,12 +76,12 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/ivOfferDivOld"
             android:layout_width="2px"
             android:layout_height="match_parent"
             android:layout_marginBottom="25px"
             android:layout_marginTop="25px"
             android:src="@color/grey_light"
-            android:visibility="@integer/is_autos_offers_enabled"
             />
 
         <TextView
@@ -96,7 +96,6 @@
             android:textAllCaps="true"
             android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_28"
-            android:visibility="@integer/is_autos_offers_enabled"
             />
 
         <ImageView
@@ -252,11 +251,11 @@
                     </LinearLayout>
 
                     <ImageView
+                        android:id="@+id/ivOfferDiv"
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:layout_marginStart="-1dp"
                         android:src="@color/stroke_light_grey_alpha"
-                        android:visibility="@integer/is_autos_offers_enabled"
                         />
 
                     <TextView
@@ -272,7 +271,6 @@
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_26"
-                        android:visibility="@integer/is_autos_offers_enabled"
                         />
 
                 </LinearLayout>
