@@ -36,10 +36,10 @@
 
 
     <string name="operator_token">0af5e0e5e6ab898cc714f9a5b5545451</string>
-    <string name="support_number">+2549023121121</string>
-    <string name="police_number">999</string>
-    <string name="facebook_page_id">2056791887904505</string>
-    <string name="facebook_page_name">pamdrive</string>
+    <string name="support_number">+2348099904442</string>
+    <string name="police_number">199</string>
+    <string name="facebook_page_id">1110113865716816</string>
+    <string name="facebook_page_name">Pamdrive, Nigeria #1 Taxi Company</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
