@@ -21,7 +21,7 @@
             notification_icon
     -->
 
-    <string name="app_name">PamDrive</string>
+    <string name="app_name">Pamdrive</string>
 
     <string name="google_maps_api_key">AIzaSyCT07NoO3oS97dU5Ke_S4EjeGIqQPkl_-g</string>
     <string name="google_maps_api_server_key">AIzaSyCUEplvRmXQSo69R81Hc3aAysWr2aQWFZU</string>
@@ -74,7 +74,7 @@
     <string name="branch_domain">share.pamdrive.in</string>
     <string name="app_scheme">pamdrive</string>
 
-    <string name="pictures_path">PamDrive/PamDrive Pictures</string>
+    <string name="pictures_path">Pamdrive/Pamdrive Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
     <integer name="show_about">@integer/view_visible</integer>
@@ -84,7 +84,7 @@
     <!--default support email for SupportMailActivity if not coming from server-->
     <string name="default_support_email">support@pamdrive.in</string>
     <integer name="send_invites_visibility">@integer/view_gone</integer>
-    <bool name="specified_country_search_result_enabled">true</bool>
+    <bool name="specified_country_search_result_enabled">false</bool>
     <bool name="show_call_me_option_in_otp">false</bool>
     <integer name="show_promo">@integer/view_gone</integer>
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
