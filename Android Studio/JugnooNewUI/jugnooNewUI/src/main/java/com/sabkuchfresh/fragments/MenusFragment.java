@@ -1480,12 +1480,16 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     public boolean toggleFatafatChatIconVisibility(){
-        if(Data.userData!=null && Data.userData.getDeliveryCustomerEnabled()==1 &&
-                activity.getAppType()==AppConstant.ApplicationType.DELIVERY_CUSTOMER  && chatAvailable){
+        if(isCustomOrderEnabled()){
             activity.rlfabViewFatafat.setVisibility(View.VISIBLE);
             return true;
         }
         return false;
+    }
+
+    public boolean isCustomOrderEnabled() {
+        return Data.userData!=null && Data.userData.getDeliveryCustomerEnabled()==1 &&
+                activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER  && chatAvailable;
     }
 
     public boolean isMenusApiInProgress() {

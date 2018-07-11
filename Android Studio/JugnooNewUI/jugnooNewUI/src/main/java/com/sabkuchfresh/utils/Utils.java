@@ -23,7 +23,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
-import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -41,6 +40,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.country.picker.Country;
+import com.country.picker.CountryPicker;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -439,24 +440,13 @@ public class Utils {
 
 
     public static String getCountryZipCode(Context context) {
-
-        String CountryID = "";
-        String CountryZipCode = "";
-
-        TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        // getNetworkCountryIso
-        CountryID = manager.getSimCountryIso().toUpperCase();
-        Log.e("CountryID", "=" + CountryID);
-        String[] rl = context.getResources().getStringArray(R.array.CountryCodes);
-        for (int i = 0; i < rl.length; i++) {
-            String[] g = rl[i].split(",");
-            if (g[1].trim().equals(CountryID.trim())) {
-                CountryZipCode = g[0];
-                return CountryZipCode;
-            }
-        }
-        return "";
-    }
+		Country country = CountryPicker.getCountryFromSIM(context);
+		if (country != null) {
+			return country.getDialCode();
+		} else {
+			return "";
+		}
+	}
 
 
 

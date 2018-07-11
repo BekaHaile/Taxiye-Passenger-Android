@@ -1,35 +1,18 @@
 package product.clicklabs.jugnoo.emergency.adapters;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.country.picker.Country;
-import com.country.picker.CountryPicker;
-import com.country.picker.OnCountryPickerListener;
-
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
-import product.clicklabs.jugnoo.emergency.fragments.AddEmergencyContactsFragment;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -42,16 +25,14 @@ import product.clicklabs.jugnoo.utils.Utils;
 public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapter.ViewHolder> {
 
     private final String TAG = ContactsListAdapter.class.getSimpleName();
-    private FragmentActivity activity;
-    private AddEmergencyContactsFragment fragment;
+    private Activity activity;
     private int rowLayout;
     public ArrayList<ContactBean> contactBeans = new ArrayList<>();
     private int selectedCount;
     private Callback callback;
     private ListMode listMode;
-    public static Dialog dialog;
 
-    public ContactsListAdapter(ArrayList<ContactBean> contactBeans, FragmentActivity activity, int rowLayout,
+    public ContactsListAdapter(ArrayList<ContactBean> contactBeans, Activity activity, int rowLayout,
                                Callback callback, ListMode listMode) {
         this.contactBeans = contactBeans;
         this.activity = activity;
@@ -59,16 +40,6 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         this.selectedCount = 0;
         this.callback = callback;
         this.listMode = listMode;
-    }
-    public ContactsListAdapter(ArrayList<ContactBean> contactBeans, FragmentActivity activity, int rowLayout,
-                               Callback callback, ListMode listMode,AddEmergencyContactsFragment fragment) {
-        this.contactBeans = contactBeans;
-        this.activity = activity;
-        this.rowLayout = rowLayout;
-        this.selectedCount = 0;
-        this.callback = callback;
-        this.listMode = listMode;
-        this.fragment = fragment;
     }
 
     public synchronized void setList(ArrayList<ContactBean> contactBeans) {
@@ -130,7 +101,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         holder.relative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final int position = (int) v.getTag();
+                int position = (int) v.getTag();
                 if (ListMode.ADD_CONTACTS == getListMode()) {
                     if (contactBeans.get(position).isSelected()) {
                         contactBeans.get(position).setSelected(false);

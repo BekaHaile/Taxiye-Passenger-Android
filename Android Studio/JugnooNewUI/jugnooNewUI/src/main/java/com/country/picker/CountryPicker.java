@@ -18,7 +18,7 @@ public class CountryPicker
     implements CountryPickerDialog.CountryPickerDialogInteractionListener {
 
   // region Countries
-  private final Country[] COUNTRIES = {
+  private static final Country[] COUNTRIES = {
       new Country("AD", "Andorra", "+376", R.drawable.flag_ad, "EUR"),
       new Country("AE", "United Arab Emirates", "+971", R.drawable.flag_ae, "AED"),
       new Country("AF", "Afghanistan", "+93", R.drawable.flag_af, "AFN"),
@@ -376,7 +376,7 @@ public class CountryPicker
     sortCountries(this.countries);
   }
 
-  public Country getCountryFromSIM(@NonNull Context context) {
+  public static Country getCountryFromSIM(@NonNull Context context) {
     TelephonyManager telephonyManager =
         (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
     if (telephonyManager != null
@@ -403,11 +403,21 @@ public class CountryPicker
     }
   }
 
-  public Country getCountryByISO(@NonNull String countryIsoCode) {
+  public static Country getCountryByISO(@NonNull String countryIsoCode) {
     countryIsoCode = countryIsoCode.toUpperCase();
     Country country = new Country();
     country.setCode(countryIsoCode);
     int i = Arrays.binarySearch(COUNTRIES, country, new ISOCodeComparator());
+    if (i < 0) {
+      return null;
+    } else {
+      return COUNTRIES[i];
+    }
+  }
+  public static Country getCountryByDialCode(@NonNull String countryDialCode) {
+    Country country = new Country();
+    country.setDialCode(countryDialCode);
+    int i = Arrays.binarySearch(COUNTRIES, country, new DialCodeComparator());
     if (i < 0) {
       return null;
     } else {
@@ -458,6 +468,12 @@ public class CountryPicker
     @Override
     public int compare(Country country, Country nextCountry) {
       return country.getCode().compareTo(nextCountry.getCode());
+    }
+  }
+  public static class DialCodeComparator implements Comparator<Country> {
+    @Override
+    public int compare(Country country, Country nextCountry) {
+      return country.getDialCode().compareTo(nextCountry.getDialCode());
     }
   }
 

@@ -1046,7 +1046,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         fabViewTest.menuLabelsRightTest.open(true);
                     } else if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDeepindex() == -1
                             || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
-                            .getDeepindex() == AppLinkIndex.OPEN_COUPONS_DIALOG.getOrdinal()) {
+                            .getDeepindex() == AppLinkIndex.OPEN_COUPONS_DIALOG.getOrdinal()
+                            || getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0) {
                         if (Data.autoData.getRegions().size() == 1) {
                             slidingBottomPanel.slideOnClick(findViewById(R.id.linearLayoutOffers));
                         } else if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
@@ -2194,6 +2195,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 try {
                     // to check if user has selected some promo coupon from promotions screen
                     slidingBottomPanel.getRequestRideOptionsFragment().selectAutoSelectedCouponAtRequestRide();
+                    showPoolInforBar(false);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -5634,9 +5636,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     String resp = new String(((TypedByteArray) response.getBody()).getBytes());
                                     GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
                                     String address = gapiAddress.getSearchableAddress();
-                                    if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-                                        relativeLayoutPinEtaRotate.setVisibility(View.VISIBLE);
-                                    }
                                     if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                                         textView.setHint(getResources().getString(R.string.getting_address));
                                         textView.setText(address);
