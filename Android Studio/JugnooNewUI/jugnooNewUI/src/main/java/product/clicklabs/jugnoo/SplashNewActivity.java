@@ -203,6 +203,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	private Button btnClaimGift, bPromoSubmit, btnPhoneLogin;
 	private String refreeUserId = "";
 	public static String loginResponseStr;
+	private LinearLayout llOrLayout;
 	private RelativeLayout rlLoginSignupNew, rlMobileNumber, rlLSFacebook, rlLSGoogle, rlPhoneLogin;
 	public static LoginResponse loginResponseData;
 	//private CountryCodePicker countryCodePicker;
@@ -538,6 +539,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			rlMobileNumber = (RelativeLayout) findViewById(R.id.rlMobileNumber);
 			rlLSFacebook = (RelativeLayout) findViewById(R.id.rlLSFacebook);
 			rlLSGoogle = (RelativeLayout) findViewById(R.id.rlLSGoogle);
+			llOrLayout = findViewById(R.id.llOrLayout);
 
 
 			relativeLayoutSignup = (RelativeLayout) findViewById(R.id.relativeLayoutSignup);
@@ -862,7 +864,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 					} else if (State.SIGNUP == state) {
 						performSignupBackPressed();
 					} else if (State.SPLASH_LOGIN_PHONE_NO == state){
-						changeUIState(State.SPLASH_LS_NEW);
+						splashLSState();
 					}
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 				}
@@ -1101,8 +1103,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
                             Data.deepLinkIndex = -1;
                             SplashNewActivity.registerationType = RegisterationType.EMAIL;
                             setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, Data.deepLinkReferralCode));
-                            changeUIState(State.SPLASH_LS_NEW);
-                        }
+							splashLSState();
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -1995,8 +1997,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
     //				changeUIState(State.SIGNUP);
     //			}
             } else if(openLS){
-                changeUIState(State.SPLASH_LS_NEW);
-            }
+				splashLSState();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2259,9 +2261,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				if(getIntent().getData() != null && getIntent().getData().toString().equalsIgnoreCase("jungooautos://open")){
 					sendToRegisterThroughSms(false);
 				} else{
-					changeUIState(State.SPLASH_LS_NEW);
+					splashLSState();
 				}
-				getAllowedAuthChannels(SplashNewActivity.this);
 			} else {
 				changeUIState(State.SPLASH_NO_NET);
 			}
@@ -2384,14 +2385,20 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 						//"login_channel": 0 //0-Default fbAccountKit, 1-Inhouse apis
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
+						rlLSFacebook.setVisibility(jObj.optInt(Constants.KEY_SHOW_FACEBOOK_LOGIN, 1) == 1 ? View.VISIBLE : View.GONE);
+						rlLSGoogle.setVisibility(jObj.optInt(Constants.KEY_SHOW_GOOGLE_LOGIN, 1) == 1 ? View.VISIBLE : View.GONE);
+						llOrLayout.setVisibility((jObj.optInt(Constants.KEY_SHOW_FACEBOOK_LOGIN, 1) == 1
+								|| jObj.optInt(Constants.KEY_SHOW_GOOGLE_LOGIN, 1) == 1) ? View.VISIBLE : View.GONE);
 
 						Prefs.with(activity).save(Constants.KEY_TERMS_OF_USE_URL, jObj.optString(Constants.KEY_TERMS_OF_USE_URL, getString(R.string.terms_of_use_url)));
 						tvSTerms.setVisibility(jObj.optInt(Constants.KEY_SHOW_TERMS_OF_USE, 1) == 1 ? View.VISIBLE : View.GONE);
 
+						allowedAuthChannelsHitOnce = true;
+						splashLSState();
+
 					}catch (Exception e){
 						e.printStackTrace();
 					}
-					allowedAuthChannelsHitOnce = true;
 				}
 
 				@Override
@@ -2621,6 +2628,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		super.onDestroy();
 		ASSL.closeActivity(root);
 		System.gc();
+		allowedAuthChannelsHitOnce = false;
 	}
 
 	@Override
@@ -2630,7 +2638,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		} else if (State.SIGNUP == state) {
 			performSignupBackPressed();
 		} else if (State.SPLASH_LOGIN_PHONE_NO == state){
-			changeUIState(State.SPLASH_LS_NEW);
+			splashLSState();
 		} else{
 			super.onBackPressed();
 		}
@@ -2876,7 +2884,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		} else {
 			FacebookLoginHelper.logoutFacebook();
-			changeUIState(State.SPLASH_LS_NEW);
+			splashLSState();
 		}
 	}
 
@@ -3444,19 +3452,27 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				@Override
 				public void onClick(View v) {
 					SplashNewActivity.registerationType = registerationType;
-					changeUIState(State.SPLASH_LS_NEW);
+					splashLSState();
 				}
 			});
 		} else{
 			SplashNewActivity.registerationType = registerationType;
+			splashLSState();
+		}
+	}
+
+	private void splashLSState() {
+		if(allowedAuthChannelsHitOnce) {
 			changeUIState(State.SPLASH_LS_NEW);
+		} else {
+			getAllowedAuthChannels(this);
 		}
 	}
 
 
 	public void performSignupBackPressed() {
 		FacebookLoginHelper.logoutFacebook();
-		changeUIState(State.SPLASH_LS_NEW);
+		splashLSState();
 	}
 
 	public enum RegisterationType {
@@ -4085,8 +4101,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
     private View.OnClickListener onClickListenerAlreadyRegistered = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            changeUIState(State.SPLASH_LS_NEW);
-        }
+			splashLSState();
+		}
     };
 
 	private void apiClaimGift(){
@@ -4216,8 +4232,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
                                             @Override
                                             public void onClick(View v) {
                                                 setIntent(new Intent().putExtra(KEY_ALREADY_VERIFIED_EMAIL, email));
-                                                changeUIState(State.SPLASH_LS_NEW);
-                                            }
+												splashLSState();
+											}
                                         });
                             } else {
                                 DialogPopup.alertPopup(activity, "", message);

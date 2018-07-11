@@ -903,4 +903,6 @@ public interface Constants {
     String KEY_SHOW_PROMO_ONBOARDING = "show_promo_onboarding";
     String KEY_SHOW_SKIP_ONBOARDING = "show_skip_onboarding";
     String KEY_DEFAULT_LOCALE = "default_locale";
+    String KEY_SHOW_FACEBOOK_LOGIN = "show_facebook_login";
+    String KEY_SHOW_GOOGLE_LOGIN = "show_google_login";
 }
