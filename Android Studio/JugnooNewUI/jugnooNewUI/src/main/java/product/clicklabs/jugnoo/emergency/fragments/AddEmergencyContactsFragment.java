@@ -144,20 +144,20 @@ public class AddEmergencyContactsFragment extends Fragment {
 
         textViewTitle.getPaint().setShader(Utils.textColorGradient(activity, textViewTitle));
 
-        contactBeans = new ArrayList<>();
-        contactsListAdapter = new ContactsListAdapter(contactBeans, activity, R.layout.list_item_contact,
-                new ContactsListAdapter.Callback() {
-                    @Override
-                    public void contactClicked(int position, ContactBean contactBean) {
-                        if (contactBean.isSelected()) {
-                            dialogConfirmEmergencyContact(activity, activity.getString(R.string.confirm) + " " + activity.getString(R.string.emergency_contacts), "",
-                                    false, contactBean);
-                        } else {
-                            editTextContacts.removeObject(contactBean);
-                        }
-                    }
-                }, ContactsListAdapter.ListMode.ADD_CONTACTS, this);
-        recyclerViewContacts.setAdapter(contactsListAdapter);
+		contactBeans = new ArrayList<>();
+		contactsListAdapter = new ContactsListAdapter(contactBeans, activity, R.layout.list_item_contact,
+				new ContactsListAdapter.Callback() {
+					@Override
+					public void contactClicked(int position, ContactBean contactBean) {
+						if(contactBean.isSelected()){
+							dialogConfirmEmergencyContact(activity, activity.getString(R.string.confirm) + " " +      activity.getString(R.string.emergency_contacts), "",
+									false, contactBean);
+						} else{
+							editTextContacts.removeObject(contactBean);
+						}
+					}
+				}, ContactsListAdapter.ListMode.ADD_CONTACTS);
+		recyclerViewContacts.setAdapter(contactsListAdapter);
 
         contactsArrayAdapter = new FilteredArrayAdapter<ContactBean>(this.getContext(), R.layout.list_item_contact,
                 ((List<ContactBean>) contactBeans)) {

@@ -5637,9 +5637,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
                                     String address = gapiAddress.getSearchableAddress();
                                     if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-                                        relativeLayoutPinEtaRotate.setVisibility(View.VISIBLE);
-                                    }
-                                    if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                                         textView.setHint(getResources().getString(R.string.getting_address));
                                         textView.setText(address);
                                         Data.autoData.setPickupAddress(address);
