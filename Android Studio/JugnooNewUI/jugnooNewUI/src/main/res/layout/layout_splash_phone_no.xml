@@ -109,7 +109,7 @@
             android:ellipsize="end"
             android:textColor="@color/layout_login_signup_text_color"
             android:textColorHint="@color/text_color_hint"
-            android:textCursorDrawable="@null"
+            android:textCursorDrawable="@drawable/cursor"
             android:textSize="@dimen/text_size_34"
             app:typekitFont="@string/maven"
             />

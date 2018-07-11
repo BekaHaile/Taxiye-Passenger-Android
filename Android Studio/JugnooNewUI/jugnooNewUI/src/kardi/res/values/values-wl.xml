@@ -36,7 +36,7 @@
     <string name="operator_token">3d83f508c28f09ef4ef0c5aaf0d6c636</string>
     <string name="support_number">+6587766554</string>
     <string name="police_number">999</string>
-    <string name="facebook_page_id">2056791887904505</string>
+    <string name="facebook_page_id">2056791887904505ppppp</string>
         <string name="facebook_page_name">kardi.sg</string>
 
 
@@ -60,7 +60,7 @@
     <integer name="show_google_login">@integer/view_gone</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
-    <drawable name="cursor">@drawable/cursor_white</drawable>
+    <drawable name="cursor">@drawable/cursor_black</drawable>
 
     <string name="file_provider_name">com.kardi.fileprovider</string>
     <string name="web_landing_page">https://kardi.in</string>
