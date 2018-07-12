@@ -462,8 +462,8 @@
         <item>+263,ZW</item>
     </string-array>
 
-    <string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,</string>
-    <string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.\\ </string>
+    <string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789.,</string>
+    <string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 0123456789.\\ </string>
 
 
     <string name="paytm">Paytm</string>

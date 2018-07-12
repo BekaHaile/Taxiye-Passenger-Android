@@ -42,6 +42,7 @@
 
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
+    <integer name="show_social_login">@integer/view_gone</integer>
 
 
     <dimen name="splash_logo_width">150dp</dimen>
@@ -74,10 +75,12 @@
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
     <string-array name="languages_to_show">
         <item>en</item>
-        <item>ar</item>
         <item>fr</item>
+        <item>de</item>
+        <item>es</item>
     </string-array>
 
     <!--default support email for SupportMailActivity if not coming from server-->
     <string name="default_support_email">contact@hitch.com</string>
+    <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
 </resources>
