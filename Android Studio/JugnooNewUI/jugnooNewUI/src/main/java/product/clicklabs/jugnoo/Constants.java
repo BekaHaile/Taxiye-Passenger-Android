@@ -905,4 +905,8 @@ public interface Constants {
     String KEY_DEFAULT_LANG = "default_lang";
     String KEY_SHOW_FACEBOOK_LOGIN = "show_facebook_login";
     String KEY_SHOW_GOOGLE_LOGIN = "show_google_login";
+    String KEY_MAPS_API_CLIENT = "maps_api_client";
+    String KEY_MAPS_API_PRIVATE_KEY = "maps_api_private_key";
+    String KEY_MAPS_API_BROWSER_KEY = "maps_api_browser_key";
+    String KEY_MAPS_API_SIGN = "maps_api_sign";
 }
