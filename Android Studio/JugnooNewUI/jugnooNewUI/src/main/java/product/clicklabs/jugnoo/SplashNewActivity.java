@@ -2271,17 +2271,20 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 	public static boolean allowedAuthChannelsHitOnce = false;
+	private boolean allowedAuthChannelsHitInProgress = false;
 	public void getAllowedAuthChannels(final Activity activity){
 		if (MyApplication.getInstance().isOnline()) {
-			if(allowedAuthChannelsHitOnce){
+			if(allowedAuthChannelsHitOnce || allowedAuthChannelsHitInProgress){
 				return;
 			}
+			allowedAuthChannelsHitInProgress = true;
 			HashMap<String, String> params = new HashMap<>();
 
 			new HomeUtil().putDefaultParams(params);
 			RestClient.getApiService().getAllowedAuthChannels(params, new Callback<SettleUserDebt>() {
 				@Override
 				public void success(SettleUserDebt settleUserDebt, Response response) {
+					allowedAuthChannelsHitInProgress = false;
 					DialogPopup.dismissLoadingDialog();
 					String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 					Log.i(TAG, "Auth channel response = " + responseStr);
@@ -2403,6 +2406,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 				@Override
 				public void failure(RetrofitError error) {
+					allowedAuthChannelsHitInProgress = false;
 					DialogPopup.dismissLoadingDialog();
 				}
 			});
@@ -2628,7 +2632,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		super.onDestroy();
 		ASSL.closeActivity(root);
 		System.gc();
-		allowedAuthChannelsHitOnce = false;
 	}
 
 	@Override

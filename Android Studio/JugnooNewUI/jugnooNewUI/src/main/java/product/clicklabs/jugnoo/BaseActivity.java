@@ -34,7 +34,7 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void attachBaseContext(Context newBase) {
 		super.attachBaseContext(TypekitContextWrapper.wrap(LocaleHelper.onAttach(newBase,
-				Prefs.with(newBase).getString(Constants.KEY_DEFAULT_LOCALE, newBase.getString(R.string.default_lang)))));
+				Prefs.with(newBase).getString(Constants.KEY_DEFAULT_LANG, newBase.getString(R.string.default_lang)))));
 	}
 
 	@Override

@@ -284,7 +284,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
         tvAbout = (TextView) findViewById(R.id.tvAbout);
-        tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT_US, 1) == 1 ? View.VISIBLE : View.GONE);
+        tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT, 1) == 1 ? View.VISIBLE : View.GONE);
 
 
         imageViewPokemon.setOnClickListener(new View.OnClickListener() {
@@ -1354,7 +1354,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             super.onBackPressed();
             textViewTitle.setText(R.string.title_my_profile);
             rlMain.setVisibility(View.VISIBLE);
-            tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT_US, 1) == 1 ? View.VISIBLE : View.GONE);
+            tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT, 1) == 1 ? View.VISIBLE : View.GONE);
         }
     }
 

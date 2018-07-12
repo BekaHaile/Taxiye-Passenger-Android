@@ -376,9 +376,9 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(Constants.KEY_FACEBOOK_PAGE_ID, autoData.optString(KEY_FACEBOOK_PAGE_ID, context.getString(R.string.facebook_page_id)));
             Prefs.with(context).save(Constants.KEY_FACEBOOK_PAGE_URL, autoData.optString(KEY_FACEBOOK_PAGE_URL, context.getString(R.string.facebook_page_url)));
             Prefs.with(context).save(Constants.KEY_WEB_LANDING_PAGE, autoData.optString(KEY_WEB_LANDING_PAGE, context.getString(R.string.web_landing_page)));
-            Prefs.with(context).save(Constants.KEY_SHOW_ABOUT_US, autoData.optInt(KEY_SHOW_ABOUT_US, 1));
+            Prefs.with(context).save(Constants.KEY_SHOW_ABOUT, autoData.optInt(KEY_SHOW_ABOUT, 1));
             Prefs.with(context).save(Constants.KEY_SHOW_CHANGE_LANGUAGE, autoData.optInt(KEY_SHOW_CHANGE_LANGUAGE, 0));
-            Prefs.with(context).save(Constants.KEY_DEFAULT_LOCALE, autoData.optString(KEY_DEFAULT_LOCALE, context.getString(R.string.default_lang)));
+            Prefs.with(context).save(Constants.KEY_DEFAULT_LANG, autoData.optString(KEY_DEFAULT_LANG, context.getString(R.string.default_lang)));
             Prefs.with(context).save(Constants.KEY_RIDE_FEEDBACK_RATING_BAR, autoData.optInt(KEY_RIDE_FEEDBACK_RATING_BAR, 0));
         } catch (Exception e) {
             e.printStackTrace();
@@ -1789,8 +1789,10 @@ public class JSONParser implements Constants {
     }
 
     public static void parseSignupOnboardingKeys(Context context, JSONObject jObj){
-        Prefs.with(context).save(Constants.KEY_SHOW_PROMO_ONBOARDING, jObj.optJSONObject(Constants.KEY_USER_DATA).optInt(Constants.KEY_SHOW_PROMO_ONBOARDING, 1));
-        Prefs.with(context).save(Constants.KEY_SHOW_SKIP_ONBOARDING, jObj.optJSONObject(Constants.KEY_USER_DATA).optInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1));
+        if(jObj.has(Constants.KEY_AUTOS)) {
+            Prefs.with(context).save(Constants.KEY_SHOW_PROMO_ONBOARDING, jObj.optJSONObject(Constants.KEY_AUTOS).optInt(Constants.KEY_SHOW_PROMO_ONBOARDING, 1));
+            Prefs.with(context).save(Constants.KEY_SHOW_SKIP_ONBOARDING, jObj.optJSONObject(Constants.KEY_AUTOS).optInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1));
+        }
     }
 
 }

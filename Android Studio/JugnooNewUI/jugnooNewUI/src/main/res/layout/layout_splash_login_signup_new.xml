@@ -141,7 +141,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/px_32"
                 android:gravity="center"
-                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -181,7 +180,6 @@
                     android:layout_width="268px"
                     android:layout_height="@dimen/splash_button_height"
                     android:gravity="center_horizontal"
-                    android:visibility="gone"
                     android:background="@drawable/capsule_login_button_selector">
 
                     <Button
@@ -216,7 +214,6 @@
                     android:layout_height="@dimen/splash_button_height"
                     android:layout_marginStart="@dimen/px_20"
                     android:gravity="center_horizontal"
-                    android:visibility="gone"
                     android:background="@drawable/capsule_login_button_selector">
 
                     <Button
