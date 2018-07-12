@@ -909,4 +909,5 @@ public interface Constants {
     String KEY_MAPS_API_PRIVATE_KEY = "maps_api_private_key";
     String KEY_MAPS_API_BROWSER_KEY = "maps_api_browser_key";
     String KEY_MAPS_API_SIGN = "maps_api_sign";
+    String KEY_STRIPE_KEY_LIVE = "stripe_key_live";
 }

@@ -35,13 +35,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.BuildConfig;
-import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 import static com.stripe.android.model.Card.BRAND_RESOURCE_MAP;
@@ -83,7 +84,9 @@ public class StripeAddCardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_card, container, false);
-        stripe = new Stripe(getActivity(), Config.getServerUrl().equals(Config.getLiveServerUrl())? BuildConfig.STRIPE_KEY_LIVE:BuildConfig.STRIPE_KEY_DEV);
+        stripe = new Stripe(getActivity(), Config.getServerUrl().equals(Config.getLiveServerUrl())?
+                Prefs.with(getActivity()).getString(Constants.KEY_STRIPE_KEY_LIVE, BuildConfig.STRIPE_KEY_LIVE)
+                :BuildConfig.STRIPE_KEY_DEV);
         ButterKnife.bind(this, rootView);
         textViewTitle.setTypeface(Fonts.avenirNext(getActivity()));
         updateIcon(null);
