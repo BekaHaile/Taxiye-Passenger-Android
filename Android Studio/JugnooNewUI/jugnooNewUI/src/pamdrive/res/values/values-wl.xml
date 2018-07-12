@@ -62,7 +62,7 @@
     <integer name="show_google_login">@integer/view_gone</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
-    <drawable name="cursor">@drawable/cursor_white</drawable>
+    <drawable name="cursor">@drawable/cursor_black</drawable>
 
     <string name="file_provider_name">com.pamdrive.fileprovider</string>
     <string name="web_landing_page">https://pamdrive.in</string>
