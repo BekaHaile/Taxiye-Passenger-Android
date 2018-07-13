@@ -1458,7 +1458,9 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
         if (jObj.optJSONObject(KEY_USER_DATA).optInt(KEY_SIGNUP_ONBOARDING, 0) == 1) {
             String authKey = jObj.optJSONObject(KEY_USER_DATA).optString("auth_key", "");
             JSONParser.parseSignupOnboardingKeys(this, jObj);
-            AccessTokenGenerator.saveAuthKey(this, authKey);
+            if(Prefs.with(this).getInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1) == 1){
+                AccessTokenGenerator.saveAuthKey(this, authKey);
+            }
             String authSecret = authKey + Config.getClientSharedSecret();
             accessTokenOnBoarding = SHA256Convertor.getSHA256String(authSecret);
             backToSplashOboarding = true;

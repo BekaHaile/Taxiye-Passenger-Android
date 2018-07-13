@@ -1720,6 +1720,12 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				}
 				GAUtils.trackScreenView(SIGNUP_LOGIN);
 
+				rlLSFacebook.setVisibility(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_SHOW_FACEBOOK_LOGIN, 1) == 1 ? View.VISIBLE : View.GONE);
+				rlLSGoogle.setVisibility(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_SHOW_GOOGLE_LOGIN, 1) == 1 ? View.VISIBLE : View.GONE);
+				llOrLayout.setVisibility((Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_SHOW_FACEBOOK_LOGIN, 1) == 1
+						|| Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_SHOW_GOOGLE_LOGIN, 1) == 1) ? View.VISIBLE : View.GONE);
+				tvSTerms.setVisibility(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_SHOW_TERMS, 1) == 1 ? View.VISIBLE : View.GONE);
+
 				break;
 
 			case SPLASH_LOGIN_PHONE_NO:
@@ -2388,13 +2394,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 						//"login_channel": 0 //0-Default fbAccountKit, 1-Inhouse apis
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
-						rlLSFacebook.setVisibility(jObj.optInt(Constants.KEY_SHOW_FACEBOOK_LOGIN, 1) == 1 ? View.VISIBLE : View.GONE);
-						rlLSGoogle.setVisibility(jObj.optInt(Constants.KEY_SHOW_GOOGLE_LOGIN, 1) == 1 ? View.VISIBLE : View.GONE);
-						llOrLayout.setVisibility((jObj.optInt(Constants.KEY_SHOW_FACEBOOK_LOGIN, 1) == 1
-								|| jObj.optInt(Constants.KEY_SHOW_GOOGLE_LOGIN, 1) == 1) ? View.VISIBLE : View.GONE);
+						Prefs.with(SplashNewActivity.this).save(Constants.KEY_SHOW_FACEBOOK_LOGIN, jObj.optInt(Constants.KEY_SHOW_FACEBOOK_LOGIN, 1));
+						Prefs.with(SplashNewActivity.this).save(Constants.KEY_SHOW_GOOGLE_LOGIN, jObj.optInt(Constants.KEY_SHOW_GOOGLE_LOGIN, 1));
 
-						Prefs.with(activity).save(Constants.KEY_TERMS_OF_USE_URL, jObj.optString(Constants.KEY_TERMS_OF_USE_URL, getString(R.string.terms_of_use_url)));
-						tvSTerms.setVisibility(jObj.optInt(Constants.KEY_SHOW_TERMS_OF_USE, 1) == 1 ? View.VISIBLE : View.GONE);
+						Prefs.with(SplashNewActivity.this).save(Constants.KEY_TERMS_OF_USE_URL, jObj.optString(Constants.KEY_TERMS_OF_USE_URL, getString(R.string.terms_of_use_url)));
+						Prefs.with(SplashNewActivity.this).save(Constants.KEY_SHOW_TERMS, jObj.optInt(Constants.KEY_SHOW_TERMS, 1));
 
 						allowedAuthChannelsHitOnce = true;
 						splashLSState();
@@ -3124,7 +3128,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 										changeUIState(State.SPLASH_ONBOARDING);
 
 										String authKey = jObj.optJSONObject(KEY_USER_DATA).optString("auth_key", "");
-										AccessTokenGenerator.saveAuthKey(SplashNewActivity.this, authKey);
+										if(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1) == 1){
+											AccessTokenGenerator.saveAuthKey(SplashNewActivity.this, authKey);
+										}
 										String authSecret = authKey + Config.getClientSharedSecret();
 										accessToken = SHA256Convertor.getSHA256String(authSecret);
 									} else{

@@ -894,7 +894,7 @@ public interface Constants {
 
     String KEY_FACEBOOK_PAGE_ID = "facebook_page_id";
     String KEY_FACEBOOK_PAGE_URL = "facebook_page_url";
-    String KEY_SHOW_TERMS_OF_USE = "show_terms_of_use";
+    String KEY_SHOW_TERMS = "show_terms";
     String KEY_TERMS_OF_USE_URL = "terms_of_use_url";
     String KEY_WEB_LANDING_PAGE = "web_landing_page";
     String KEY_SHOW_ABOUT = "show_about";

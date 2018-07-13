@@ -68,6 +68,7 @@ import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FbEvents;
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
@@ -380,6 +381,8 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(KEY_SHOW_CHANGE_LANGUAGE, autoData.optInt(KEY_SHOW_CHANGE_LANGUAGE, 0));
             Prefs.with(context).save(KEY_DEFAULT_LANG, autoData.optString(KEY_DEFAULT_LANG, context.getString(R.string.default_lang)));
             Prefs.with(context).save(KEY_RIDE_FEEDBACK_RATING_BAR, autoData.optInt(KEY_RIDE_FEEDBACK_RATING_BAR, 0));
+
+            LocaleHelper.setLocale(context, Prefs.with(context).getString(KEY_DEFAULT_LANG, context.getString(R.string.default_lang)));
 
             Prefs.with(context).save(KEY_MAPS_API_CLIENT, autoData.optString(KEY_MAPS_API_CLIENT, BuildConfig.MAPS_CLIENT));
             Prefs.with(context).save(KEY_MAPS_API_PRIVATE_KEY, autoData.optString(KEY_MAPS_API_PRIVATE_KEY, BuildConfig.MAPS_PRIVATE_KEY));
