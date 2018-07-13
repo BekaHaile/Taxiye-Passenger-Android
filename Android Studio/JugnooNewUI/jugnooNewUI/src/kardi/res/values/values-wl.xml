@@ -61,6 +61,7 @@
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
     <drawable name="cursor">@drawable/cursor_black</drawable>
+    <integer name="show_invite_friends">@integer/view_gone</integer>
 
     <string name="file_provider_name">com.kardi.fileprovider</string>
     <string name="web_landing_page">https://kardi.in</string>
