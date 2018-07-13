@@ -1889,6 +1889,7 @@
     <string name="arabic">عربى</string>
     <string name="french">français</string>
     <string name="german">Deutsche</string>
+    <string name="spanish">Spanish</string>
     <string name="send_us_a_mail">Send us a mail</string>
     <string name="issue_description">Issue description</string>
     <string name="support_mail_subject">%s Support</string>

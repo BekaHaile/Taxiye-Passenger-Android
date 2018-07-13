@@ -37,8 +37,8 @@
     <string name="operator_token">24a1592fe2e6a9a77d5b0d7b83496d56</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">911</string>
-    <string name="facebook_page_id">1497119970363540</string>
-    <string name="facebook_page_name">Hitch</string>
+    <string name="facebook_page_id">hitchbm</string>
+    <string name="facebook_page_name">hitchbm</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
@@ -71,16 +71,13 @@
     <string name="pictures_path">Hitch/Hitch Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <integer name="show_about">@integer/view_visible</integer>
-    <bool name="show_change_languge">true</bool>
+    <bool name="show_change_languge">false</bool>
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
-    <string-array name="languages_to_show">
-        <item>en</item>
-        <item>fr</item>
-        <item>de</item>
-        <item>es</item>
-    </string-array>
 
     <!--default support email for SupportMailActivity if not coming from server-->
     <string name="default_support_email">contact@hitch.com</string>
+    <integer name="show_promo">@integer/view_gone</integer>
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
+    <integer name="show_invite_friends">@integer/view_gone</integer>
+    <bool name="show_call_me_option_in_otp">false</bool>
 </resources>
