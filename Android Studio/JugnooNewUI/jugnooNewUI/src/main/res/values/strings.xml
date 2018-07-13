@@ -1912,7 +1912,6 @@
     <string name="need_permission_contact_format">%s needs permission to fetch your contacts.</string>
     <string name="need_permission_phone_state_format">%s needs access to your phone state to proceed.</string>
     <string name="need_permission_default_format">%1$s needs %2$s permission to proceed.</string>
-    <string name="settings">Settings</string>
     <string name="running_in_background">Running in background</string>
 
     <!-- Notification channel -->

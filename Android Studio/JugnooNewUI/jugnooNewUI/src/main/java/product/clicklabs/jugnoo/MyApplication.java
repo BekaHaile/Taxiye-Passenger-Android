@@ -386,14 +386,8 @@ public class MyApplication extends MultiDexApplication {
         return android.os.Build.MANUFACTURER + android.os.Build.MODEL;
     }
 
-    private LocationFetcher locationFetcher;
 
-    public LocationFetcher getLocationFetcher() {
-        if (locationFetcher == null) {
-            locationFetcher = new LocationFetcher(this);
-        }
-        return locationFetcher;
-    }
+
 
     private Toast toast;
 

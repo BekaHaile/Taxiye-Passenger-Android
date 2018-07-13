@@ -22,9 +22,10 @@ import com.stripe.android.model.Card;
 
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -45,17 +46,18 @@ public class StripeViewCardFragment extends Fragment {
     private static final String TAG = StripeViewCardFragment.class.getName();
 
 
-    @Bind(R.id.textViewTitle)
+    @BindView(R.id.textViewTitle)
     TextView textViewTitle;
-    @Bind(R.id.tv_card)
+    @BindView(R.id.tv_card)
     TextView tvCard;
-    @Bind(R.id.ivMore)
+    @BindView(R.id.ivMore)
     ImageView ivMore;
     private StripeCardData stripeCardData;
     private static final String ARGS_CARD_DATA = "edit_mode";
     private PopupMenu popupMenu;
 
     private StripeCardsStateListener stripeCardsStateListener;
+    private Unbinder unbinder;
 
 
 
@@ -95,7 +97,7 @@ public class StripeViewCardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_view_card, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder= ButterKnife.bind(this, rootView);
         textViewTitle.setTypeface(Fonts.avenirNext(getActivity()));
         if (stripeCardData != null) {
 
@@ -113,7 +115,10 @@ public class StripeViewCardFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        if(unbinder!=null){
+            unbinder.unbind();
+
+        }
     }
 
     private @Card.CardBrand

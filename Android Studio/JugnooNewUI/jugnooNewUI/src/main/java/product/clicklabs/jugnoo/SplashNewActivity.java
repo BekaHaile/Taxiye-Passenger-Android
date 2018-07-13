@@ -3,10 +3,12 @@ package product.clicklabs.jugnoo;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -15,6 +17,7 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -1376,140 +1379,17 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		new HomeUtil().forceRTL(this);
 	}
 
-	private void startFbAccountKit(PhoneNumber phoneNumber){
-			onLogin(LoginType.PHONE, phoneNumber);
-	}
+
 
 	private interface OnCompleteListener {
 		void onComplete();
 	}
 
-	private void onLogin(final LoginType loginType, PhoneNumber phoneNumber) {
-		final Intent intent = new Intent(this, AccountKitActivity.class);
-		final AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder
-				= new AccountKitConfiguration.AccountKitConfigurationBuilder(
-				loginType,
-				AccountKitActivity.ResponseType.CODE);
-		configurationBuilder.setTheme(R.style.AppLoginTheme_Salmon);
-		configurationBuilder.setTitleType(AccountKitActivity.TitleType.LOGIN);
-		configurationBuilder.setDefaultCountryCode(getCountryCodeSelected());
-		if(phoneNumber != null && !phoneNumber.toString().equalsIgnoreCase("")) {
-			configurationBuilder.setInitialPhoneNumber(phoneNumber);
-		}
-		final AccountKitConfiguration configuration = configurationBuilder.build();
-		intent.putExtra(
-				AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
-				configuration);
-		OnCompleteListener completeListener = new OnCompleteListener() {
-			@Override
-			public void onComplete() {
-				startActivityForResult(intent, FRAMEWORK_REQUEST_CODE);
-			}
-		};
-		switch (loginType) {
-			case EMAIL:
-				final OnCompleteListener getAccountsCompleteListener = completeListener;
-				completeListener = new OnCompleteListener() {
-					@Override
-					public void onComplete() {
-						requestPermissions(
-								android.Manifest.permission.GET_ACCOUNTS,
-								R.string.permissions_get_accounts_title,
-								R.string.permissions_get_accounts_message,
-								getAccountsCompleteListener);
-					}
-				};
-				break;
-			case PHONE:
-				if (configuration.isReceiveSMSEnabled()) {
-					final OnCompleteListener receiveSMSCompleteListener = completeListener;
-					completeListener = new OnCompleteListener() {
-						@Override
-						public void onComplete() {
-							requestPermissions(
-									android.Manifest.permission.RECEIVE_SMS,
-									R.string.permissions_receive_sms_title,
-									R.string.permissions_receive_sms_message,
-									receiveSMSCompleteListener);
-						}
-					};
-				}
-				if (configuration.isReadPhoneStateEnabled()) {
-					final OnCompleteListener readPhoneStateCompleteListener = completeListener;
-					completeListener = new OnCompleteListener() {
-						@Override
-						public void onComplete() {
-							requestPermissions(
-									android.Manifest.permission.READ_PHONE_STATE,
-									R.string.permissions_read_phone_state_title,
-									R.string.permissions_read_phone_state_message,
-									readPhoneStateCompleteListener);
-						}
-					};
-				}
-				break;
-		}
-		completeListener.onComplete();
-	}
 
-	private void requestPermissions(
-			final String permission,
-			final int rationaleTitleResourceId,
-			final int rationaleMessageResourceId,
-			final OnCompleteListener listener) {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-			if (listener != null) {
-				listener.onComplete();
-			}
-			return;
-		}
 
-		checkRequestPermissions(
-				permission,
-				rationaleTitleResourceId,
-				rationaleMessageResourceId,
-				listener);
-	}
 
-	@TargetApi(23)
-	private void checkRequestPermissions(
-			final String permission,
-			final int rationaleTitleResourceId,
-			final int rationaleMessageResourceId,
-			final OnCompleteListener listener) {
-		if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
-			if (listener != null) {
-				listener.onComplete();
-			}
-			return;
-		}
 
-		final int requestCode = nextPermissionsRequestCode++;
-		permissionsListeners.put(requestCode, listener);
 
-		if (shouldShowRequestPermissionRationale(permission)) {
-			new AlertDialog.Builder(this)
-					.setTitle(rationaleTitleResourceId)
-					.setMessage(rationaleMessageResourceId)
-					.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(final DialogInterface dialog, final int which) {
-							requestPermissions(new String[] { permission }, requestCode);
-						}
-					})
-					.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(final DialogInterface dialog, final int which) {
-							// ignore and clean up the listener
-							permissionsListeners.remove(requestCode);
-						}
-					})
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.show();
-		} else {
-			requestPermissions(new String[]{ permission }, requestCode);
-		}
-	}
 
 	@TargetApi(23)
 	@SuppressWarnings("unused")

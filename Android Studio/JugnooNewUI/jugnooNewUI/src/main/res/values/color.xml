@@ -22,7 +22,7 @@
     colors
     <color name="services_name_txt_color">#4a4a4a</color>
     <color name="document_layout_bordor_color">#9b9b9b</color>
-    <color name="design_textinput_error_color_light">#9b9b9b</color>
+    
 
     //
     seekbar
