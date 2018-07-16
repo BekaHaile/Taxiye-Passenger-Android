@@ -2789,7 +2789,7 @@ from %s in your UPI app.
 
     <string name="error_in_fetching_facebook_info">Erreur lors de la récupération des informations de Facebook</string>
 
-    <string name="eta">Heure d'arrivée estimée</string>
+    <string name="eta">ETA</string>
 
     <string name="could_not_open_directions">Impossible d'ouvrir les directions</string>
 

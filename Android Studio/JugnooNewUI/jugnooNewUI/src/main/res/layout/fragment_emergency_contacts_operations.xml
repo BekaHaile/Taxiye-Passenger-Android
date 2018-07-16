@@ -91,6 +91,9 @@
                 <Button
                     android:id="@+id/buttonAddContact"
                     style="@style/ButtonThemeCapsule"
+                    android:layout_width="wrap_content"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
                     android:text="@string/add_contacts"
                     android:layout_centerInParent="true"
                     />
