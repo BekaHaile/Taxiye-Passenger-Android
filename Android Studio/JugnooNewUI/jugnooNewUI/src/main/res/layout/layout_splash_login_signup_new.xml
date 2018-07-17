@@ -47,7 +47,7 @@
                     android:layout_width="@dimen/splash_logo_width"
                     android:layout_height="@dimen/splash_logo_height"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/splash_logo_icon_drawable"
+                    android:src="@drawable/login_logo_icon_drawable"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:tag="@string/dont_touch_me"
@@ -280,5 +280,5 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/splash_bottom_building_bg1"
         android:tag="mwar"
-        android:visibility="@integer/show_splash_bottom_bg" />
+        android:visibility="@integer/show_login_bottom_bg" />
 </RelativeLayout>
