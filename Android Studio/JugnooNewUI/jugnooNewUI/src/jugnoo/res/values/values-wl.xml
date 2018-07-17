@@ -69,7 +69,6 @@
     <bool name="force_inhouse_login">false</bool>
     <bool name="force_mpesa_payment">false</bool>
     <integer name="show_about">@integer/view_visible</integer>
-    <bool name="show_change_languge">false</bool>
     <bool name="wallet_amount_sidemenu">true</bool>
     <bool name="show_jugnoo_promo_icon">true</bool>
 

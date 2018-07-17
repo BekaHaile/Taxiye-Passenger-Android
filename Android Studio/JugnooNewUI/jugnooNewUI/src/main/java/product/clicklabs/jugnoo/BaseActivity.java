@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
-import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 /**
@@ -33,8 +32,7 @@ public class BaseActivity extends Activity {
 
 	@Override
 	protected void attachBaseContext(Context newBase) {
-		super.attachBaseContext(TypekitContextWrapper.wrap(LocaleHelper.onAttach(newBase,
-				Prefs.with(newBase).getString(Constants.KEY_DEFAULT_LANG, newBase.getString(R.string.default_lang)))));
+		super.attachBaseContext(TypekitContextWrapper.wrap(LocaleHelper.onAttach(newBase, LocaleHelper.getLanguage(newBase))));
 	}
 
 	@Override

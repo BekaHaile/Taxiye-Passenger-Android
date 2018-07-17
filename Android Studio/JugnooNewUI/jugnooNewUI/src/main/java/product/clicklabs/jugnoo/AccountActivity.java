@@ -105,7 +105,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     ImageView imageViewEditProfile, ivEditPhone, imageViewEditProfileSave;
 
     RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact;
-    TextView textViewEmergencyContact,textViewChangeLanguage;
+    TextView textViewEmergencyContact;
     LinearLayout linearLayoutPasswordChange;
     RelativeLayout relativeLayoutOldPassword, relativeLayoutNewPassword, relativeLayoutRetypePassword;
     EditText editTextOldPassword, editTextNewPassword, editTextRetypePassword;
@@ -120,7 +120,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
     private LinearLayout linearLayoutPasswordSave;
 
-    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer,relativeLayoutChangeLanguage;
+    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer;
     NonScrollListView listViewSavedLocations;
     RelativeLayout relativeLayoutAddNewAddress;
     View viewStarIcon;
@@ -176,7 +176,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         ((TextView) findViewById(R.id.textViewChangePassword)).setTypeface(Fonts.mavenMedium(this));
         relativeLayoutEmergencyContact = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact);
         textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.mavenMedium(this));
-        textViewChangeLanguage = (TextView) findViewById(R.id.textViewChangeLanguage); textViewChangeLanguage.setTypeface(Fonts.mavenMedium(this));
         linearLayoutPasswordChange = (LinearLayout) findViewById(R.id.linearLayoutPasswordChange);
         imageViewChangePassword = (ImageView) findViewById(R.id.imageViewChangePassword);
         relativeLayoutOldPassword = (RelativeLayout) findViewById(R.id.relativeLayoutOldPassword);
@@ -275,7 +274,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         ((TextView) findViewById(R.id.textViewAddNewAddress)).setTypeface(Fonts.mavenMedium(this));
 
         relativeLayoutAddressBook = (RelativeLayout) findViewById(R.id.relativeLayoutAddressBook);
-        relativeLayoutChangeLanguage = (RelativeLayout) findViewById(R.id.relativeLayoutChangeLanguage);
         textViewAddressBook =  ((TextView)findViewById(R.id.textViewAddressBook));
         textViewAddressBook.setTypeface(Fonts.mavenMedium(this));
 
@@ -714,14 +712,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 }
             }
         });
-        relativeLayoutChangeLanguage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this, ChangeLanguageActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                GAUtils.event(SIDE_MENU, USER + PROFILE, GAAction.CHANGE_LANGUAGE);
-            }
-        });
 
        /* rlJugnooStar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -790,12 +780,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
         getAllowedAuthChannels();
 
-        if(Prefs.with(this).getInt(Constants.KEY_SHOW_CHANGE_LANGUAGE, 0) == 1) {
-            relativeLayoutChangeLanguage.setVisibility(View.VISIBLE);
-        }
-        else {
-            relativeLayoutChangeLanguage.setVisibility(View.GONE);
-        }
 	}
 
 	private AccountMenuItemsAdapter accountMenuItemsAdapter;
@@ -840,6 +824,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 startActivity(new Intent(AccountActivity.this, NotificationCenterActivity.class));
                                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                                 GAUtils.event(SIDE_MENU, USER + PROFILE, JUGNOO + STAR);
+                            } else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.CHANGE_LOCALE.getTag())) {
+                                startActivity(new Intent(AccountActivity.this, ChangeLanguageActivity.class));
+                                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                GAUtils.event(SIDE_MENU, USER + PROFILE, GAAction.CHANGE_LANGUAGE);
                             }
                         }
                     }

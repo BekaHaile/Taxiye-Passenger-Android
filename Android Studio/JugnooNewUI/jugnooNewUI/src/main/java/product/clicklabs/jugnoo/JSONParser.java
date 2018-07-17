@@ -378,11 +378,7 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(KEY_FACEBOOK_PAGE_URL, autoData.optString(KEY_FACEBOOK_PAGE_URL, context.getString(R.string.facebook_page_url)));
             Prefs.with(context).save(KEY_WEB_LANDING_PAGE, autoData.optString(KEY_WEB_LANDING_PAGE, context.getString(R.string.web_landing_page)));
             Prefs.with(context).save(KEY_SHOW_ABOUT, autoData.optInt(KEY_SHOW_ABOUT, 1));
-            Prefs.with(context).save(KEY_SHOW_CHANGE_LANGUAGE, autoData.optInt(KEY_SHOW_CHANGE_LANGUAGE, 0));
-            Prefs.with(context).save(KEY_DEFAULT_LANG, autoData.optString(KEY_DEFAULT_LANG, context.getString(R.string.default_lang)));
             Prefs.with(context).save(KEY_RIDE_FEEDBACK_RATING_BAR, autoData.optInt(KEY_RIDE_FEEDBACK_RATING_BAR, 0));
-
-            LocaleHelper.setLocale(context, Prefs.with(context).getString(KEY_DEFAULT_LANG, context.getString(R.string.default_lang)));
 
             Prefs.with(context).save(KEY_MAPS_API_CLIENT, autoData.optString(KEY_MAPS_API_CLIENT, BuildConfig.MAPS_CLIENT));
             Prefs.with(context).save(KEY_MAPS_API_PRIVATE_KEY, autoData.optString(KEY_MAPS_API_PRIVATE_KEY, BuildConfig.MAPS_PRIVATE_KEY));
@@ -391,6 +387,13 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(KEY_STRIPE_KEY_LIVE, autoData.optString(KEY_STRIPE_KEY_LIVE, BuildConfig.STRIPE_KEY_LIVE));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void parseAndSetLocale(Context context, JSONObject autoData) {
+        if(autoData.has(KEY_DEFAULT_LANG) && Prefs.with(context).getString(KEY_DEFAULT_LANG, "eee").equals("eee")) {
+            Prefs.with(context).save(KEY_DEFAULT_LANG, autoData.optString(KEY_DEFAULT_LANG, context.getString(R.string.default_lang)));
+            LocaleHelper.setLocale(context, Prefs.with(context).getString(KEY_DEFAULT_LANG, context.getString(R.string.default_lang)));
         }
     }
 

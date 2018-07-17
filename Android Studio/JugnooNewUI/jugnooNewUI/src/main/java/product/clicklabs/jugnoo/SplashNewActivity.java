@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -82,6 +83,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import io.branch.referral.Branch;
@@ -112,6 +114,7 @@ import product.clicklabs.jugnoo.utils.FacebookUserData;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleSigninActivity;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.OwnerInfo;
@@ -437,14 +440,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			Data.setFreshData(null);
 
 
-//			FlurryAgent.init(this, Config.getFlurryKey());
-
-
-//			Locale locale = new Locale("en");
-//			Locale.setDefault(locale);
-//			Configuration config = new Configuration();
-//			config.locale = locale;
-//			getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+			LocaleHelper.setLocale(this, LocaleHelper.getLanguage(this));
 
 
 			setContentView(R.layout.activity_splash_new);
@@ -2400,6 +2396,16 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_TERMS_OF_USE_URL, jObj.optString(Constants.KEY_TERMS_OF_USE_URL, getString(R.string.terms_of_use_url)));
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_SHOW_TERMS, jObj.optInt(Constants.KEY_SHOW_TERMS, 1));
 
+						JSONParser.parseAndSetLocale(SplashNewActivity.this, jObj);
+						Locale locale = new Locale(LocaleHelper.getLanguage(activity));
+						Locale.setDefault(locale);
+
+						Configuration config = new Configuration();
+						config.locale = locale;
+						activity.getBaseContext().getResources().updateConfiguration(config,
+								activity.getBaseContext().getResources().getDisplayMetrics());
+						activity.onConfigurationChanged(config);
+
 						allowedAuthChannelsHitOnce = true;
 						splashLSState();
 
@@ -2636,6 +2642,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		super.onDestroy();
 		ASSL.closeActivity(root);
 		System.gc();
+		allowedAuthChannelsHitOnce = false;
 	}
 
 	@Override
@@ -4497,5 +4504,32 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	private String getCountryCodeSelected(){
 		return tvCountryCode.getText().toString();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+
+		textViewNoNet.setText(R.string.no_internet_connection);
+		((TextView)findViewById(R.id.tvLoginSignupWith)).setText(R.string.login_signup_with);
+		((TextView)findViewById(R.id.tvMobileNumber)).setText(R.string.mobile_string);
+		((TextView)findViewById(R.id.textViewLoginOr)).setText(R.string.or);
+		((TextView)findViewById(R.id.tvFacebook)).setText(R.string.nl_login_facebook);
+		((TextView)findViewById(R.id.tvGoogle)).setText(R.string.nl_login_google);
+		tvSTerms.setText(R.string.nl_splash_terms);
+		tvReferralTitle.setText(R.string.do_you_have_a_referral_code);
+		etReferralCode.setHint(R.string.enter_promocode_optional);
+		((TextView)findViewById(R.id.tvEnterPersonalDetails)).setText(R.string.please_enter_your_personal_info);
+		etOnboardingName.setHint(R.string.your_full_name);
+		etOnboardingEmail.setHint(R.string.email_address);
+		textViewSNameRequired.setText(R.string.nl_splash_optional);
+		textViewSEmailRequired.setText(R.string.nl_splash_optional);
+		bPromoSubmit.setText(R.string.next);
+		tvSkip.setText(R.string.skip_this_step);
+		tvCountryCode.setHint(R.string.code);
+		editTextPhoneNumber.setHint(R.string.phone_number);
+		textViewPhoneNumberRequired.setText(R.string.nl_splash_required);
+		btnPhoneLogin.setText(R.string.continue_text);
+
 	}
 }

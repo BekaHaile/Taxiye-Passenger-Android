@@ -3,6 +3,8 @@ package product.clicklabs.jugnoo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -11,7 +13,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import product.clicklabs.jugnoo.adapters.LanguagesAdapter;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.model.FetchActiveLocaleResponse;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
@@ -23,13 +35,12 @@ public class ChangeLanguageActivity extends BaseActivity {
     FrameLayout relative;
     RelativeLayout rlTransparent;
 
-    TextView textViewTitle, tvCountDownTimer;
-    ImageView imageViewBack, ivEnglish, ivArabic, ivFrench, ivGerman;
+    TextView textViewTitle;
+    ImageView imageViewBack;
 
-    RelativeLayout relativeLayoutEnglish, relativeLayoutFrench, relativeLayoutArabic, relativeLayoutGerman;
-    TextView textViewEnglish, textViewFrench, textViewArabic, textViewGerman;
-    private final String TAG = "Change Language";
-    Bundle bundle;
+    RecyclerView rvLanguages;
+    LanguagesAdapter adapter;
+
     TextView textViewCounter;
     ImageView imageViewYellowLoadingBar;
     RelativeLayout rlRestartTimer;
@@ -61,70 +72,23 @@ public class ChangeLanguageActivity extends BaseActivity {
 
 
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        tvCountDownTimer = (TextView) findViewById(R.id.tvCountDownTimer);
         textViewTitle.setTypeface(Fonts.avenirNext(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-        ivEnglish = (ImageView) findViewById(R.id.ivEnglish);
-        ivArabic = (ImageView) findViewById(R.id.ivArabic);
-        ivFrench = (ImageView) findViewById(R.id.ivFrench);
-        ivGerman = (ImageView) findViewById(R.id.ivGerman);
 
-        relativeLayoutEnglish = (RelativeLayout) findViewById(R.id.relativeLayoutEnglish);
-        relativeLayoutFrench = (RelativeLayout) findViewById(R.id.relativeLayoutFrench);
-        relativeLayoutArabic = (RelativeLayout) findViewById(R.id.relativeLayoutArabic);
-        relativeLayoutGerman = (RelativeLayout) findViewById(R.id.relativeLayoutGerman);
-
-        textViewEnglish = (TextView) findViewById(R.id.textViewEnglish);
-        textViewEnglish.setTypeface(Fonts.mavenLight(this));
-        textViewFrench = (TextView) findViewById(R.id.textViewFrench);
-        textViewFrench.setTypeface(Fonts.mavenLight(this));
-        textViewArabic = (TextView) findViewById(R.id.textViewArabic);
-        textViewArabic.setTypeface(Fonts.mavenLight(this));
-        textViewGerman = (TextView) findViewById(R.id.textViewGerman);
-        textViewGerman.setTypeface(Fonts.mavenLight(this));
+        rvLanguages = (RecyclerView) findViewById(R.id.rvLanguages);
+        rvLanguages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        adapter = new LanguagesAdapter(this, rvLanguages, new LanguagesAdapter.Callback() {
+            @Override
+            public void onLanguageClick(FetchActiveLocaleResponse.Locale locale) {
+                if (!LocaleHelper.getLanguage(ChangeLanguageActivity.this).equalsIgnoreCase(locale.getLocale())) {
+                    updateLocaleApi(locale.getLocale());
+                }
+            }
+        });
+        rvLanguages.setAdapter(adapter);
 
         textViewTitle.setText(getResources().getString(R.string.change_language_caps));
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
-
-        relativeLayoutEnglish.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (!LocaleHelper.getLanguage(ChangeLanguageActivity.this).equalsIgnoreCase("en")) {
-                    updateViews("en");
-                }
-            }
-        });
-
-        relativeLayoutFrench.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (!LocaleHelper.getLanguage(ChangeLanguageActivity.this).equalsIgnoreCase("fr")) {
-                    updateViews("fr");
-                }
-            }
-        });
-
-        relativeLayoutArabic.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (!LocaleHelper.getLanguage(ChangeLanguageActivity.this).equalsIgnoreCase("ar")) {
-                    updateViews("ar");
-                }
-            }
-        });
-
-        relativeLayoutGerman.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (!LocaleHelper.getLanguage(ChangeLanguageActivity.this).equalsIgnoreCase("de")) {
-                    updateViews("de");
-                }
-            }
-        });
 
 
         imageViewBack.setOnClickListener(new OnClickListener() {
@@ -134,49 +98,7 @@ public class ChangeLanguageActivity extends BaseActivity {
                 performBackPressed();
             }
         });
-        languagesToShow();
-        showSelectedLanguage();
-    }
-
-    public void showSelectedLanguage() {
-        if (LocaleHelper.getLanguage(this).equalsIgnoreCase("en")) {
-            ivEnglish.setVisibility(View.VISIBLE);
-            ivArabic.setVisibility(View.GONE);
-            ivFrench.setVisibility(View.GONE);
-            ivGerman.setVisibility(View.GONE);
-        } else if (LocaleHelper.getLanguage(this).equalsIgnoreCase("fr")) {
-            ivEnglish.setVisibility(View.GONE);
-            ivArabic.setVisibility(View.GONE);
-            ivFrench.setVisibility(View.VISIBLE);
-            ivGerman.setVisibility(View.GONE);
-        } else if (LocaleHelper.getLanguage(this).equalsIgnoreCase("ar")) {
-            ivEnglish.setVisibility(View.GONE);
-            ivArabic.setVisibility(View.VISIBLE);
-            ivFrench.setVisibility(View.GONE);
-            ivGerman.setVisibility(View.GONE);
-        } else if (LocaleHelper.getLanguage(this).equalsIgnoreCase("de")) {
-            ivEnglish.setVisibility(View.GONE);
-            ivArabic.setVisibility(View.GONE);
-            ivFrench.setVisibility(View.GONE);
-            ivGerman.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void languagesToShow() {
-        String[] languages = getResources().getStringArray(R.array.languages_to_show);
-        for (int i = 0; i < languages.length; i++) {
-            if (languages[i].equalsIgnoreCase("en")) {
-                relativeLayoutEnglish.setVisibility(View.VISIBLE);
-            } else if (languages[i].equalsIgnoreCase("fr")) {
-                relativeLayoutFrench.setVisibility(View.VISIBLE);
-            } else if (languages[i].equalsIgnoreCase("de")) {
-                relativeLayoutGerman.setVisibility(View.VISIBLE);
-            } else if (languages[i].equalsIgnoreCase("ar")) {
-                relativeLayoutArabic.setVisibility(View.VISIBLE);
-            } else if (languages[i].equalsIgnoreCase("es")) {
-                relativeLayoutArabic.setVisibility(View.VISIBLE);
-            }
-        }
+		fetchActiveLocalesApi();
     }
 
     private void updateViews(String languageCode) {
@@ -244,14 +166,8 @@ public class ChangeLanguageActivity extends BaseActivity {
 
         @Override
         public void onFinish() {
-            //finishAffinity();
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
             startActivity(new Intent(ChangeLanguageActivity.this, SplashNewActivity.class));
-//                }
-//            },1000);
-
+            finish();
         }
     }
 
@@ -261,5 +177,42 @@ public class ChangeLanguageActivity extends BaseActivity {
         } else {
             rlRestartTimer.setVisibility(View.VISIBLE);
         }
+    }
+
+
+    private void updateLocaleApi(final String locale){
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_UPDATED_LOCALE, locale);
+
+        new ApiCommon<SettleUserDebt>(this).execute(params, ApiName.UPDATE_USER_PROFILE,
+                new APICommonCallback<SettleUserDebt>() {
+            @Override
+            public void onSuccess(SettleUserDebt settleUserDebt, String message, int flag) {
+                updateViews(locale);
+            }
+
+            @Override
+            public boolean onError(SettleUserDebt settleUserDebt, String message, int flag) {
+                return false;
+            }
+        });
+
+    }
+    private void fetchActiveLocalesApi(){
+        HashMap<String, String> params = new HashMap<>();
+
+        new ApiCommon<FetchActiveLocaleResponse>(this).execute(params, ApiName.FETCH_ACTIVE_LOCALES,
+                new APICommonCallback<FetchActiveLocaleResponse>() {
+            @Override
+            public void onSuccess(FetchActiveLocaleResponse settleUserDebt, String message, int flag) {
+                adapter.setList((ArrayList<FetchActiveLocaleResponse.Locale>) settleUserDebt.getLocaleSet());
+            }
+
+            @Override
+            public boolean onError(FetchActiveLocaleResponse settleUserDebt, String message, int flag) {
+                return false;
+            }
+        });
+
     }
 }

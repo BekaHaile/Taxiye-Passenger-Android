@@ -31,193 +31,17 @@
             android:layout_height="6px"
             android:background="@drawable/shadow_down" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/menu_item_selector_color"
             android:orientation="vertical"
             android:splitMotionEvents="false">
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutEnglish"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvLanguages"
                 android:layout_width="match_parent"
-                android:layout_height="120px"
-                android:visibility="gone"
-                android:background="@drawable/background_white_yellow_selector">
-
-                <!-- <ImageView
-                     android:layout_width="43px"
-                     android:layout_height="43px"
-                     android:src="@drawable/ic_mpesa_small"
-                     android:layout_marginLeft="@dimen/px_36"
-                     android:layout_centerVertical="true"
-                     android:tag="mwar"/>-->
-
-                <TextView
-                    android:id="@+id/textViewEnglish"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/px_50"
-                    android:text="@string/english"
-                    android:textColor="@color/text_color"
-                    android:textSize="34px" />
-
-                <ImageView
-                    android:id="@+id/ivEnglish"
-                    style="@style/forward_image"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10px"
-                    android:rotation="0"
-                    android:rotationY="0"
-                    android:src="@drawable/ic_fresh_sort_tick_svg"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:src="@color/stroke_color_light" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutArabic"
-                android:layout_width="match_parent"
-                android:layout_height="120px"
-                android:visibility="gone"
-                android:background="@drawable/background_white_yellow_selector">
-
-                <!-- <ImageView
-                     android:layout_width="42px"
-                     android:layout_height="40px"
-                     android:src="@drawable/ic_about_like"
-                     android:layout_marginLeft="@dimen/px_36"
-                     android:layout_centerVertical="true"
-                     android:tag="mwar"/>-->
-
-                <TextView
-                    android:id="@+id/textViewArabic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/px_50"
-                    android:text="@string/arabic"
-                    android:textColor="@color/text_color"
-                    android:textSize="34px" />
-
-                <ImageView
-                    android:id="@+id/ivArabic"
-                    style="@style/forward_image"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10px"
-                    android:rotation="0"
-                    android:rotationY="0"
-                    android:src="@drawable/ic_fresh_sort_tick_svg"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:src="@color/stroke_color_light" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutFrench"
-                android:layout_width="match_parent"
-                android:layout_height="120px"
-                android:visibility="gone"
-                android:background="@drawable/background_white_yellow_selector">
-
-                <!--<ImageView
-                    android:layout_width="40px"
-                    android:layout_height="43px"
-                    android:src="@drawable/ic_about_tnc"
-                    android:layout_marginLeft="@dimen/px_36"
-                    android:layout_centerVertical="true"
-                    android:tag="mwar"/>-->
-
-                <TextView
-                    android:id="@+id/textViewFrench"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/px_50"
-                    android:text="@string/french"
-                    android:textColor="@color/text_color"
-                    android:textSize="34px" />
-
-                <ImageView
-                    android:id="@+id/ivFrench"
-                    style="@style/forward_image"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10px"
-                    android:rotationY="0"
-                    android:rotation="0"
-                    android:src="@drawable/ic_fresh_sort_tick_svg"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:src="@color/text_color_hint" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutGerman"
-                android:layout_width="match_parent"
-                android:layout_height="120px"
-                android:visibility="gone"
-                android:background="@drawable/background_white_yellow_selector">
-
-                <!--<ImageView
-                    android:layout_width="34px"
-                    android:layout_height="46px"
-                    android:src="@drawable/ic_about_privacy"
-                    android:layout_marginLeft="@dimen/px_36"
-                    android:layout_centerVertical="true"
-                    android:tag="mwar"/>-->
-
-                <TextView
-                    android:id="@+id/textViewGerman"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/px_50"
-                    android:text="@string/german"
-                    android:textColor="@color/text_color"
-                    android:textSize="34px" />
-
-                <ImageView
-                    android:id="@+id/ivGerman"
-                    style="@style/forward_image"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="10px"
-                    android:rotationY="0"
-                    android:rotation="0"
-                    android:src="@drawable/ic_fresh_sort_tick_svg"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="2px"
-                    android:layout_alignParentBottom="true"
-                    android:src="@color/stroke_color_light" />
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/tvCountDownTimer"
-                style="@style/title"
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/px_100"
-                android:gravity="center"
-                android:text="@string/change_language"
-                android:visibility="gone" />
+                android:layout_height="match_parent"/>
 
             <RelativeLayout
                 android:id="@+id/rlRestartTimer"
@@ -290,7 +114,7 @@
 
             </RelativeLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 
     <RelativeLayout

@@ -8,6 +8,7 @@ import java.util.Map;
 import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
+import product.clicklabs.jugnoo.retrofit.model.FetchActiveLocaleResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
@@ -603,5 +604,9 @@ public interface ApiService {
     @POST("/add_card_to_customer_account")
     void addCardToCustomer(@FieldMap Map<String, String> params,
                            Callback<StripeCardResponse> callback);
+    @FormUrlEncoded
+    @POST("/fetch_active_locales")
+    void fetchActiveLocales(@FieldMap Map<String, String> params,
+                           Callback<FetchActiveLocaleResponse> callback);
 
 }
