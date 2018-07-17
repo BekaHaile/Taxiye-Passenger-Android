@@ -42,7 +42,7 @@
         <string name="facebook_page_name">smartride</string>
 
 
-    <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
+    <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
     <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
     <bool name="force_open_autos">true</bool>
 
@@ -84,6 +84,7 @@
     <!--default support email for SupportMailActivity if not coming from server-->
     <string name="default_support_email">support@smartride.in</string>
     <integer name="send_invites_visibility">@integer/view_gone</integer>
+    <integer name="show_invite_friends">@integer/view_gone</integer>
     <bool name="specified_country_search_result_enabled">false</bool>
     <bool name="show_call_me_option_in_otp">false</bool>
     <integer name="show_promo">@integer/view_gone</integer>
