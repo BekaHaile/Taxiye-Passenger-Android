@@ -38,8 +38,8 @@
     <string name="operator_token">0433d618542f67e56e5d23a2ef61e78b</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">999</string>
-    <string name="facebook_page_id">2056791887904505</string>
-        <string name="facebook_page_name">smartride</string>
+    <string name="facebook_page_id">""</string>
+        <string name="facebook_page_name">""</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
@@ -52,6 +52,7 @@
     <dimen name="splash_logo_top_margin">100dp</dimen>
     <integer name="show_splash_top_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bg">@integer/view_visible</integer>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <drawable name="login_logo_icon_drawable">@drawable/ic_login_logo</drawable>
