@@ -205,7 +205,13 @@ public class ChangeLanguageActivity extends BaseActivity {
                 new APICommonCallback<FetchActiveLocaleResponse>() {
             @Override
             public void onSuccess(FetchActiveLocaleResponse settleUserDebt, String message, int flag) {
-                adapter.setList((ArrayList<FetchActiveLocaleResponse.Locale>) settleUserDebt.getLocaleSet());
+                ArrayList<FetchActiveLocaleResponse.Locale> locales = new ArrayList<>();
+                for(FetchActiveLocaleResponse.Locale locale : settleUserDebt.getLocaleSet()){
+                    if(BaseActivity.isLocaleSupported(ChangeLanguageActivity.this, locale.getName())){
+                        locales.add(locale);
+                    }
+                }
+                adapter.setList(locales);
             }
 
             @Override

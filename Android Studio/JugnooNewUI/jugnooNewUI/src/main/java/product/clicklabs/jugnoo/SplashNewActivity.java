@@ -2642,7 +2642,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		super.onDestroy();
 		ASSL.closeActivity(root);
 		System.gc();
-		allowedAuthChannelsHitOnce = false;
 	}
 
 	@Override

@@ -1903,5 +1903,6 @@
     <string name="cvc">CVC</string>
     <string name="please_enter_name_and_email">Please enter name and email</string>
     <string name="number_should_not_start_with_zero">Phone number should not start with 0</string>
+    <string name="toll_charge">Toll Charge</string>
 
 </resources>

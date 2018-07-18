@@ -911,4 +911,5 @@ public interface Constants {
     String KEY_STRIPE_KEY_LIVE = "stripe_key_live";
     String KEY_UPDATED_LOCALE = "updated_locale";
     String KEY_LOCALE = "locale";
+    String KEY_TOLL_CHARGE = "toll_charge";
 }
