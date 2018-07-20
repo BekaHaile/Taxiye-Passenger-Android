@@ -301,7 +301,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction, P
 
         }
         else {
-            mPermissionCommon.getPermission(REQ_CODE_PERMISSION_IMAGE,false,false,
+            mPermissionCommon.getPermission(REQ_CODE_PERMISSION_IMAGE, false,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 

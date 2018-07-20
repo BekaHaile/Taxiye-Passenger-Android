@@ -4305,7 +4305,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private void fetchContacts(){
-        if(getPermissionCommon().isGranted(Manifest.permission.READ_CONTACTS)){
+        if(getPermissionCommon().isGranted(Manifest.permission.READ_CONTACTS,this)){
             Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
             syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
             syncContactsIntent.putExtra("session_id", Data.autoData.getcSessionId());
@@ -4316,7 +4316,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             dismissReferAllDialog();
         }
         else {
-            getPermissionCommon().getPermission(REQ_CODE_PERMISSION_CONTACT,false, true, Manifest.permission.READ_CONTACTS);
+            getPermissionCommon().getPermission(REQ_CODE_PERMISSION_CONTACT, Manifest.permission.READ_CONTACTS);
         }
     }
 

@@ -56,7 +56,7 @@ public class BaseFragment extends Fragment implements PermissionCommon.Permissio
 	}
 
 	public void requestLocationPermissionExplicit(int requestCode){
-		getPermissionCommon().getPermission(requestCode, true, true, android.Manifest.permission.ACCESS_FINE_LOCATION);
+		getPermissionCommon().getPermission(requestCode, true, android.Manifest.permission.ACCESS_FINE_LOCATION);
 	}
 
 	public void requestLocationUpdatesExplicit(){

@@ -132,7 +132,7 @@ public final class PermissionCommon {
 
             case REQUEST_CODE_RATIONAL:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    getPermission(requestCodeInitiated, false, true, permissionsInitiated); //continues to check again if all permissions have been granted or there is still a rational permission pending
+                    getPermission(requestCodeInitiated, true, permissionsInitiated); //continues to check again if all permissions have been granted or there is still a rational permission pending
                 else {
                     if (shouldShowRationalPermission(permissions[0])) {
 
@@ -194,17 +194,16 @@ public final class PermissionCommon {
 
     /**
      * @param requestCode     request code corresponding to set of permissions that would be returned onGranted() or onDenied()
-     * @param isLocation
      * @param showRationale
      * @param permissionArray set of permissions needed for the feature
      */
 
-    public void getPermission(int requestCode, boolean isLocation, boolean showRationale, final String... permissionArray) {
+    public void getPermission(int requestCode, boolean showRationale, final String... permissionArray) {
 
 
         // Android code Build is lower than Marshmallow no need to check for permissions
 
-        if (!isLocation && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             permissionListener.permissionGranted(requestCode);
 
             return;

@@ -1351,7 +1351,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     public void onRequestPermissionsResult(final int requestCode,
                                            final @NonNull String permissions[],
                                            final @NonNull int[] grantResults) {
-        fbAccountKit.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
 
     public void apiChangeContactNumberUsingFB(final Activity activity, final String fbAccessToken) {

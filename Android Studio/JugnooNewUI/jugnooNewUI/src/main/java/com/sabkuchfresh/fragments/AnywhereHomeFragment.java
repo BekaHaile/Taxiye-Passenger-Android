@@ -577,7 +577,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             picker.startActivity(AnywhereHomeFragment.this,activity,REQUEST_CODE_SELECT_IMAGES);
         }
         else {
-            mPermissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION,false,false
+            mPermissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION, false
                     , Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 

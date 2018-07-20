@@ -303,7 +303,7 @@ public class PickerActivity extends AppCompatActivity implements PermissionCommo
 
         }
         else {
-            mPermissionCommon.getPermission(REQ_CODE_PERMISSION_CAMERA, false, false,
+            mPermissionCommon.getPermission(REQ_CODE_PERMISSION_CAMERA, false,
                     Manifest.permission.CAMERA);
         }
 

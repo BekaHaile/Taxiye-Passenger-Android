@@ -325,7 +325,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 }
             }
             else {
-                mPermissionCommon.getPermission(REQ_CODE_PERMISSION_CONTACT,false, true, Manifest.permission.READ_CONTACTS);
+                mPermissionCommon.getPermission(REQ_CODE_PERMISSION_CONTACT, true, Manifest.permission.READ_CONTACTS);
             }
 
 

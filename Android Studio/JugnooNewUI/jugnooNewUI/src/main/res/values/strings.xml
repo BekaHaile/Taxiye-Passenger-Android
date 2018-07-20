@@ -1917,6 +1917,9 @@
     <!-- Notification channel -->
     <string name="notification_channel_default">Notifications</string>
     <string name="notification_channel_description_default">Latest Updates</string>
+    <string name="i_am_sure">I\'m Sure</string>
+    <string name="sms_permission_optional_message">%s needs this permission to auto-detect OTP. Are you sure you want to proceed?</string>
+    <string name="are_you_sure">Are you sure you want to proceed?</string>
 
 
 </resources>

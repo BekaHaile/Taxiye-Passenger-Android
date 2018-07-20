@@ -201,7 +201,7 @@ public class EmergencyContactsFragment extends Fragment implements PermissionCom
 						}
 						else {
 							final int REQ_CODE_CONTACT = 1000;
-							mPermissionCommon.getPermission(REQ_CODE_CONTACT,false, true, Manifest.permission.READ_CONTACTS);
+							mPermissionCommon.getPermission(REQ_CODE_CONTACT, true, Manifest.permission.READ_CONTACTS);
 						}
 
 						break;

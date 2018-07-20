@@ -61,8 +61,7 @@ import retrofit.RetrofitError;
  * Created by cl-macmini-01 on 2/6/18.
  */
 
-public class NewConversationActivity extends BaseAppCompatActivity implements View.OnClickListener, TextWatcher
-,PermissionCommon.PermissionListener{
+public class NewConversationActivity extends BaseAppCompatActivity implements View.OnClickListener, TextWatcher,PermissionCommon.PermissionListener{
 
     private EditText etSearchConnections;
     private ImageButton imgBtnSync;
@@ -335,7 +334,7 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
         }
         else {
             final int REQ_CODE_CONTACTS = 1000;
-            mPermissionCommon.getPermission(REQ_CODE_CONTACTS,false, true, Manifest.permission.READ_CONTACTS);
+            mPermissionCommon.getPermission(REQ_CODE_CONTACTS, true, Manifest.permission.READ_CONTACTS);
         }
 
     }

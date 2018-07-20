@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,8 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.fugu.FuguConfig;
 
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
@@ -101,13 +100,13 @@ public class BaseAppCompatActivity extends AppCompatActivity implements Permissi
 
 	public PermissionCommon getPermissionCommon() {
 		if (permissionCommon == null) {
-			permissionCommon = new PermissionCommon(this);
+			permissionCommon = new PermissionCommon(this).setCallback(this);
 		}
 		return permissionCommon;
 	}
 
 	public void requestLocationPermissionAndUpdates(){
-		if(!PermissionCommon.hasPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+		if(!PermissionCommon.isGranted(android.Manifest.permission.ACCESS_FINE_LOCATION,this)
 				&& shouldRequestLocationPermission()) {
 			requestLocationPermissionExplicit();
 		} else {
@@ -120,7 +119,7 @@ public class BaseAppCompatActivity extends AppCompatActivity implements Permissi
 	}
 
 	public void requestLocationPermissionExplicit(int requestCode){
-		getPermissionCommon().getPermission(requestCode, true, true, android.Manifest.permission.ACCESS_FINE_LOCATION);
+		getPermissionCommon().getPermission(requestCode,  android.Manifest.permission.ACCESS_FINE_LOCATION);
 	}
 
 	public void requestLocationUpdatesExplicit(){
@@ -141,10 +140,16 @@ public class BaseAppCompatActivity extends AppCompatActivity implements Permissi
 	}
 
 	@Override
-	public void permissionDenied(int requestCode) {
+	public boolean permissionDenied(int requestCode, boolean neverAsk) {
 		if (requestCode == REQUEST_CODE_PERMISSION_LOCATION) {
 
 		}
+		return false;
+	}
+
+	@Override
+	public void onRationalRequestIntercepted() {
+
 	}
 
 	@Override
@@ -170,7 +175,7 @@ public class BaseAppCompatActivity extends AppCompatActivity implements Permissi
 	}
 
 	public void requestExternalStoragePermission(){
-		getPermissionCommon().getPermission(REQUEST_CODE_PERMISSION_STORAGE, false, false, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//		getPermissionCommon().getPermission(REQUEST_CODE_PERMISSION_STORAGE, false, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 	}
 
 	public void openFugu() {

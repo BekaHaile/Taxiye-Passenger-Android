@@ -17,7 +17,6 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -80,8 +79,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -98,6 +95,7 @@ import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
@@ -115,7 +113,6 @@ import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.OwnerInfo;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
@@ -210,6 +207,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	LinearLayout rlCountryCode;
 	private TextView tvCountryCode;
 	private CountryPicker countryPicker;
+	private boolean askedForSmsPermissionAlertOnce ;
 
 
 	public void resetFlags() {
@@ -236,6 +234,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	private FBAccountKit fbAccountKit;
 	private EditText editTextPhoneNumber;
 	private TextView textViewPhoneNumberRequired;
+	private static final int REQUEST_CODE_RECIEVE_SMS = 0x123;
 
 	public static boolean openHomeSwitcher = false;
 
@@ -903,7 +902,27 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			rlMobileNumber.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					goToLoginUsingPhone("");
+
+					getPermissionCommon().setCallback(new PermissionCommon.PermissionListener() {
+						@Override
+						public void permissionGranted(int requestCode) {
+							goToLoginUsingPhone("");
+
+						}
+
+						@Override
+						public boolean permissionDenied(int requestCode, boolean neverAsk) {
+							goToLoginUsingPhone("");
+							return false;
+						}
+
+						@Override
+						public void onRationalRequestIntercepted() {
+							goToLoginUsingPhone("");
+						}
+
+
+					}).getPermission(REQUEST_CODE_RECIEVE_SMS,PermissionCommon.SKIP_RATIONAL_REQUEST,true,Manifest.permission.RECEIVE_SMS);
 					GAUtils.event(JUGNOO, LOGIN_SIGNUP, MOBILE+CLICKED);
 				}
 			});
@@ -1398,7 +1417,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 										   final @NonNull String permissions[],
 										   final @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		fbAccountKit.onRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
 
 	private void moveViewToScreenCenter(final View view){
@@ -2634,7 +2652,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			Log.e("Google Play Service Error ", "=" + resp);
 			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
 		} else {
-			if (PermissionCommon.hasPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+			if (PermissionCommon.isGranted( android.Manifest.permission.ACCESS_FINE_LOCATION,this)) {
 				LocationInit.showLocationAlertDialog(this);
 			}
 			requestLocationPermissionAndUpdates();
@@ -4267,7 +4285,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
         private String getSmsFindVerificationLink(long diff) {
             String link = "";
             try {
-            	if(!PermissionCommon.hasPermission(SplashNewActivity.this, Manifest.permission.READ_SMS)){
+            	if(!PermissionCommon.isGranted(Manifest.permission.READ_SMS,SplashNewActivity.this)){
             		return "";
 				}
                 Uri uri = Uri.parse("content://sms/inbox");

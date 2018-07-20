@@ -174,7 +174,7 @@ public abstract class ImageSelectFragment extends Fragment implements Permission
             picker.startActivity(ImageSelectFragment.this, activity, REQUEST_CODE_SELECT_IMAGE);
         }
         else {
-            mPermissionCommon.getPermission(REQ_CODE_PERMISSION_IMAGE,false,false,
+            mPermissionCommon.getPermission(REQ_CODE_PERMISSION_IMAGE, false,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
 

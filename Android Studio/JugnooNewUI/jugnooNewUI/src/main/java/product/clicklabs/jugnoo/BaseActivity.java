@@ -94,7 +94,7 @@ public class BaseActivity extends Activity implements PermissionCommon.Permissio
 	}
 
 	public void requestLocationPermissionExplicit(int requestCode){
-		getPermissionCommon().getPermission(requestCode, true, true, android.Manifest.permission.ACCESS_FINE_LOCATION);
+		getPermissionCommon().getPermission(requestCode, true, android.Manifest.permission.ACCESS_FINE_LOCATION);
 	}
 
 	public void requestLocationUpdatesExplicit(){
@@ -137,7 +137,7 @@ public class BaseActivity extends Activity implements PermissionCommon.Permissio
 
 	public void requestReceiveSMSPermission(){
 		if(!PermissionCommon.hasPermission(this, android.Manifest.permission.RECEIVE_SMS)){
-			getPermissionCommon().getPermission(REQUEST_CODE_PERMISSION_RECEIVE_SMS, false, true, Manifest.permission.RECEIVE_SMS);
+			getPermissionCommon().getPermission(REQUEST_CODE_PERMISSION_RECEIVE_SMS, true, Manifest.permission.RECEIVE_SMS);
 		}
 	}
 
