@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
+import product.clicklabs.jugnoo.ChangeLanguageActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeSwitcherActivity;
@@ -250,6 +251,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         e.printStackTrace();
                     }*/
                 } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_support_selector);
+                } else if(MenuInfoTags.CHANGE_LOCALE.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_support_selector);
                 } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_about_selector);
@@ -592,6 +595,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             }
             else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)) {
                 activity.startActivity(new Intent(activity, SupportActivity.class));
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+            }
+            else if(MenuInfoTags.CHANGE_LOCALE.getTag().equalsIgnoreCase(tag)) {
+                activity.startActivity(new Intent(activity, ChangeLanguageActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
             } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(tag)){

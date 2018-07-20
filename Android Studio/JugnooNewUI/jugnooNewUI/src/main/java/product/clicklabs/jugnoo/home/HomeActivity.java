@@ -717,6 +717,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewCouponApplied = (TextView) findViewById(R.id.tv_coupon_applied);
         textViewPoolInfo1.setTypeface(Fonts.mavenMedium(this));
         textViewCouponApplied.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
+        if(Data.isMenuTagEnabled(MenuInfoTags.OFFERS)) {
+            relativeLayoutOfferConfirm.setVisibility(View.VISIBLE);
+            findViewById(R.id.ivOfferConfirmDiv).setVisibility(View.VISIBLE);
+        } else {
+            relativeLayoutOfferConfirm.setVisibility(View.GONE);
+            findViewById(R.id.ivOfferConfirmDiv).setVisibility(View.GONE);
+        }
 
 
         //Location error layout
@@ -1577,6 +1584,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         } else {
                             submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
                                     rating, feedbackStr, feedbackReasons);
+                            goodFeedbackViewType();
                             flurryEventGAForTransaction();
                         }
                     }
@@ -1647,7 +1655,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							rating, "", "");
                     if (Data.isFuguChatEnabled()) {
                         fuguCustomerHelpRides(false);
-                    }  else if(Data.isEmailSupportEnabled()){
+                    }  else if(Data.isMenuTagEnabled(MenuInfoTags.EMAIL_SUPPORT)){
                         startActivity(new Intent(HomeActivity.this, SupportMailActivity.class));
                     } else {
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
@@ -1679,12 +1687,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onClick(View v) {
                 try {
                     if (Data.autoData.getEndRideData() != null) {
-                        if (getResources().getBoolean(R.bool.force_mpesa_payment)) {
-                            if (Data.autoData.getEndRideData().toPay > 0
+                        if (Data.autoData.getEndRideData().toPay > 0
                                     && Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.MPESA.getOrdinal()
                                     && Data.autoData.getEndRideData().getShowPaymentOptions() == 1) {
                                 initiateRideEndPaymentAPI(Data.autoData.getEndRideData().engagementId, PaymentOption.MPESA.getOrdinal());
-                            }
                         } else {
                             linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.ONLINE_PAYMENT);
                         }
@@ -1728,7 +1734,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         rlThumbsType = (RelativeLayout) findViewById(R.id.rlThumbsType);
         llRatingFeedbackType = (LinearLayout) findViewById(R.id.llRatingFeedbackType);
 
-        if(getResources().getBoolean(R.bool.ride_feedback_rating_bar)){
+        if(Prefs.with(this).getInt(Constants.KEY_RIDE_FEEDBACK_RATING_BAR, 0) == 1){
             rlThumbsType.setVisibility(View.GONE);
             llRatingFeedbackType.setVisibility(View.VISIBLE);
         } else {
@@ -2971,7 +2977,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
                             });
                         }
-                        if (getResources().getBoolean(R.bool.force_mpesa_payment)) {
+                        if (Data.autoData != null && Data.autoData.getEndRideData() != null &&
+                                Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.MPESA.getOrdinal()) {
                             tvPayOnlineIn.setText(getString(R.string.pay_via_format,
                                     MyApplication.getInstance().getWalletCore().getMPesaName(this)));
                         }
@@ -3461,7 +3468,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if(TextUtils.isEmpty(Data.autoData.getInRideSendInviteTextBoldV2())
                                 && TextUtils.isEmpty(Data.autoData.getInRideSendInviteTextNormalV2())){
                             linearLayoutSendInvites.setVisibility(View.GONE);
-                        } else if(getResources().getInteger(R.integer.send_invites_visibility)==getResources().getInteger(R.integer.view_visible)) {
+                        } else if(Data.isMenuTagEnabled(MenuInfoTags.FREE_RIDES)) {
                             linearLayoutSendInvites.setVisibility(View.VISIBLE);
                         }
                         updateInRideAddMoneyToWalletButtonText();
@@ -7973,7 +7980,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 public void onInAppCustomerSupportClick(View view) {
                     if (Data.isFuguChatEnabled()) {
                         fuguCustomerHelpRides(true);
-                    } else if(Data.isEmailSupportEnabled()){
+                    } else if(Data.isMenuTagEnabled(MenuInfoTags.EMAIL_SUPPORT)){
                         activity.startActivity(new Intent(activity, SupportMailActivity.class));
                     } else {
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);

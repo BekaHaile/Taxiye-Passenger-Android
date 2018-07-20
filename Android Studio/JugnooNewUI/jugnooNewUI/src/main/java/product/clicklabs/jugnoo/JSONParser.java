@@ -68,6 +68,7 @@ import product.clicklabs.jugnoo.t20.models.Team;
 import product.clicklabs.jugnoo.utils.BranchMetricsUtils;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.FbEvents;
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
@@ -373,8 +374,26 @@ public class JSONParser implements Constants {
             if(autosData.getCoupons() != null)
                 Data.autoData.getPromoCoupons().addAll(autosData.getCoupons());
 
+            Prefs.with(context).save(KEY_FACEBOOK_PAGE_ID, autoData.optString(KEY_FACEBOOK_PAGE_ID, context.getString(R.string.facebook_page_id)));
+            Prefs.with(context).save(KEY_FACEBOOK_PAGE_URL, autoData.optString(KEY_FACEBOOK_PAGE_URL, context.getString(R.string.facebook_page_url)));
+            Prefs.with(context).save(KEY_WEB_LANDING_PAGE, autoData.optString(KEY_WEB_LANDING_PAGE, context.getString(R.string.web_landing_page)));
+            Prefs.with(context).save(KEY_SHOW_ABOUT, autoData.optInt(KEY_SHOW_ABOUT, 1));
+            Prefs.with(context).save(KEY_RIDE_FEEDBACK_RATING_BAR, autoData.optInt(KEY_RIDE_FEEDBACK_RATING_BAR, 0));
+
+            Prefs.with(context).save(KEY_MAPS_API_CLIENT, autoData.optString(KEY_MAPS_API_CLIENT, BuildConfig.MAPS_CLIENT));
+            Prefs.with(context).save(KEY_MAPS_API_PRIVATE_KEY, autoData.optString(KEY_MAPS_API_PRIVATE_KEY, BuildConfig.MAPS_PRIVATE_KEY));
+            Prefs.with(context).save(KEY_MAPS_API_BROWSER_KEY, autoData.optString(KEY_MAPS_API_BROWSER_KEY, BuildConfig.MAPS_BROWSER_KEY));
+            Prefs.with(context).save(KEY_MAPS_API_SIGN, autoData.optInt(KEY_MAPS_API_SIGN, BuildConfig.MAPS_APIS_SIGN ? 1 : 0));
+            Prefs.with(context).save(KEY_STRIPE_KEY_LIVE, autoData.optString(KEY_STRIPE_KEY_LIVE, BuildConfig.STRIPE_KEY_LIVE));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static void parseAndSetLocale(Context context, JSONObject autoData) {
+        if(autoData.has(KEY_DEFAULT_LANG) && Prefs.with(context).getString(KEY_DEFAULT_LANG, "eee").equals("eee")) {
+            Prefs.with(context).save(KEY_DEFAULT_LANG, autoData.optString(KEY_DEFAULT_LANG, context.getString(R.string.default_lang)));
+            LocaleHelper.setLocale(context, Prefs.with(context).getString(KEY_DEFAULT_LANG, context.getString(R.string.default_lang)));
         }
     }
 
@@ -679,7 +698,7 @@ public class JSONParser implements Constants {
     public ReferralMessages parseReferralMessages(Context context, LoginResponse.UserData userData) {
         String referralSharingMessage = "Hey, \nUse "+context.getString(R.string.app_name)+" app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
                 " Use this referral code: " + Data.userData.referralCode + " to get FREE ride" +
-                "\nDownload it from here: "+context.getString(R.string.smart_url);
+                "\nDownload it from here: https://play.google.com/store/apps/details?id="+BuildConfig.APPLICATION_ID;
         String fbShareCaption = "Use " + Data.userData.referralCode + " as code & get a FREE ride";
         String fbShareDescription = "Try "+context.getString(R.string.app_name)+" app to call an auto at your doorsteps with just a tap.";
         String referralCaption = "<center><font face=\"verdana\" size=\"2\">Invite <b>friends</b> and<br/>get <b>FREE rides</b></font></center>";
@@ -880,6 +899,7 @@ public class JSONParser implements Constants {
         parseFuguChannelDetails(jLastRideData, fuguChannelData);
         int showPaymentOptions = jLastRideData.optInt(Constants.KEY_SHOW_PAYMENT_OPTIONS, 0);
         int paymentOption = jLastRideData.optInt(Constants.KEY_PREFERRED_PAYMENT_MODE, PaymentOption.CASH.getOrdinal());
+        double tollCharge = jLastRideData.optDouble(Constants.KEY_TOLL_CHARGE, 0.0);
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -897,7 +917,7 @@ public class JSONParser implements Constants {
                 sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge,paidUsingMpesa,paidUsingRazorpay,paidUsingStripeCard, last_4, totalRide, status, supportNumber
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
-                showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl);
+                showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge);
 	}
 
 
@@ -1779,6 +1799,13 @@ public class JSONParser implements Constants {
         } catch (Exception ignored){
         }
         return bidInfos;
+    }
+
+    public static void parseSignupOnboardingKeys(Context context, JSONObject jObj){
+        if(jObj.has(Constants.KEY_AUTOS)) {
+            Prefs.with(context).save(Constants.KEY_SHOW_PROMO_ONBOARDING, jObj.optJSONObject(Constants.KEY_AUTOS).optInt(Constants.KEY_SHOW_PROMO_ONBOARDING, 1));
+            Prefs.with(context).save(Constants.KEY_SHOW_SKIP_ONBOARDING, jObj.optJSONObject(Constants.KEY_AUTOS).optInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1));
+        }
     }
 
 }

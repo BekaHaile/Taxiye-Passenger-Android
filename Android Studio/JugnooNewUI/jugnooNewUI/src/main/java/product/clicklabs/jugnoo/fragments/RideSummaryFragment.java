@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -70,13 +71,13 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
     ImageView imageViewEndRideAutoIcon, imageViewEndRideDriverIcon;
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
-    RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
+    RelativeLayout relativeLayoutTollCharge, relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
             relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm,
             relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay,rlPaidUsingStripeCard,relativeLayoutPaidUsingMpesa;
     LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
     RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare, relativeLayoutFinalFare;
     NonScrollListView listViewEndRideDiscounts;
-    TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
+    TextView textViewEndRideFareValue, textViewEndTollChargeValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
             textViewEndRideDiscount, textViewEndRideDiscountValue,
             textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue,
             textViewEndRideMobikwikValue, textViewEndRideFreeChargeValue,
@@ -181,6 +182,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
 			});
 
             relativeLayoutFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFare);
+            relativeLayoutTollCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutTollCharge);
             relativeLayoutRideSummary = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRideSummary);
             relativeLayoutRideSummary.setVisibility(View.GONE);
             scrollViewEndRide = (ScrollView) rootView.findViewById(R.id.scrollViewEndRide);
@@ -202,6 +204,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
             textViewEndRideFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareValue);
             textViewEndRideFareValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndTollChargeValue = (TextView) rootView.findViewById(R.id.textViewEndTollChargeValue);
             textViewEndRideDiscountValue = (TextView) rootView.findViewById(R.id.textViewEndRideDiscountValue);
             textViewEndRideDiscountValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideFinalFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFinalFareValue);
@@ -304,7 +307,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
                                 e.printStackTrace();
                                 Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
                             }
-                        } else if(Data.isEmailSupportEnabled()){
+                        } else if(Data.isMenuTagEnabled(MenuInfoTags.EMAIL_SUPPORT)){
                             activity.startActivity(new Intent(activity, SupportMailActivity.class));
                         } else {
                             new TransactionUtils().openRideIssuesFragment(activity,
@@ -401,6 +404,12 @@ public class RideSummaryFragment extends Fragment implements Constants {
                     relativeLayoutFare.setVisibility(View.GONE);
                     linearLayoutRideDetail.setVisibility(View.GONE);
                     relativeLayoutFinalFare.setVisibility(View.GONE);
+                }
+                if(endRideData.tollCharge > 0.0){
+                    relativeLayoutTollCharge.setVisibility(View.VISIBLE);
+                    textViewEndTollChargeValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.tollCharge));
+                } else {
+                    relativeLayoutTollCharge.setVisibility(View.GONE);
                 }
 
                 if (Utils.compareDouble(endRideData.luggageCharge, 0) > 0) {

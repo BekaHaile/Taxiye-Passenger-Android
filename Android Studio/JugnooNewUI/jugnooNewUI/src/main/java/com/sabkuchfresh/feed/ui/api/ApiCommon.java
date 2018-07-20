@@ -267,6 +267,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case POST_CHAT:
                 RestClient.getChatApiService().postChat(params, callback);
                 break;
+            case UPDATE_USER_PROFILE:
+                RestClient.getApiService().updateUserProfile(params, callback);
+                break;
+            case FETCH_ACTIVE_LOCALES:
+                RestClient.getApiService().fetchActiveLocales(params, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

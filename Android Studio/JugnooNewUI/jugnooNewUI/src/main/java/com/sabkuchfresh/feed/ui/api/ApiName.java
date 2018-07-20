@@ -38,5 +38,8 @@ public enum ApiName {
     SELECT_BID,
     ADD_CARD_API,
     FETCH_CHAT,
-    POST_CHAT
+    POST_CHAT,
+
+    UPDATE_USER_PROFILE,
+    FETCH_ACTIVE_LOCALES
 }

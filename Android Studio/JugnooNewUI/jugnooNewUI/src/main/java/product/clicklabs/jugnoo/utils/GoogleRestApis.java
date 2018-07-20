@@ -11,6 +11,8 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import product.clicklabs.jugnoo.BuildConfig;
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import retrofit.Callback;
@@ -18,9 +20,22 @@ import retrofit.client.Response;
 
 public class GoogleRestApis {
 
+	private static String MAPS_CLIENT(){
+		return Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_MAPS_API_CLIENT, BuildConfig.MAPS_CLIENT);
+	}
+	private static String MAPS_BROWSER_KEY(){
+		return Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_MAPS_API_BROWSER_KEY, BuildConfig.MAPS_BROWSER_KEY);
+	}
+	private static boolean MAPS_APIS_SIGN(){
+		return Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_MAPS_API_SIGN, BuildConfig.MAPS_APIS_SIGN ? 1 : 0) == 1;
+	}
+	private static String MAPS_PRIVATE_KEY(){
+		return Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_MAPS_API_PRIVATE_KEY, BuildConfig.MAPS_PRIVATE_KEY);
+	}
+	
 	public static Response getDirections(String originLatLng, String destLatLng, Boolean sensor,
 										 String mode, Boolean alternatives, String units){
-		if(BuildConfig.MAPS_APIS_SIGN) {
+		if(MAPS_APIS_SIGN()) {
 			String urlToSign = "/maps/api/directions/json?" +
 					"origin=" + originLatLng
 					+ "&destination=" + destLatLng
@@ -28,7 +43,7 @@ public class GoogleRestApis {
 					+ "&mode=" + mode
 					+ "&alternatives=" + alternatives
 					+ "&units=" + units
-					+ "&client=" + BuildConfig.MAPS_CLIENT;
+					+ "&client=" + MAPS_CLIENT();
 			String googleSignature = null;
 			try {
 				googleSignature = generateGoogleSignature(urlToSign);
@@ -36,16 +51,16 @@ public class GoogleRestApis {
 			}
 
 			return RestClient.getGoogleApiService().getDirections(originLatLng, destLatLng,
-					sensor, mode, alternatives, units, BuildConfig.MAPS_CLIENT, googleSignature);
+					sensor, mode, alternatives, units, MAPS_CLIENT(), googleSignature);
 		} else {
 			return RestClient.getGoogleApiService().getDirections(originLatLng, destLatLng,
-					sensor, mode, alternatives, units, BuildConfig.MAPS_BROWSER_KEY);
+					sensor, mode, alternatives, units, MAPS_BROWSER_KEY());
 		}
 	}
 
 	public static void getDirections(String originLatLng, String destLatLng, Boolean sensor,
 										 String mode, Boolean alternatives, String units, Callback<SettleUserDebt> callback){
-		if(BuildConfig.MAPS_APIS_SIGN) {
+		if(MAPS_APIS_SIGN()) {
 			String urlToSign = "/maps/api/directions/json?" +
 					"origin=" + originLatLng
 					+ "&destination=" + destLatLng
@@ -53,7 +68,7 @@ public class GoogleRestApis {
 					+ "&mode=" + mode
 					+ "&alternatives=" + alternatives
 					+ "&units=" + units
-					+ "&client=" + BuildConfig.MAPS_CLIENT;
+					+ "&client=" + MAPS_CLIENT();
 			String googleSignature = null;
 			try {
 				googleSignature = generateGoogleSignature(urlToSign);
@@ -61,23 +76,23 @@ public class GoogleRestApis {
 			}
 
 			RestClient.getGoogleApiService().getDirections(originLatLng, destLatLng,
-					sensor, mode, alternatives, units, BuildConfig.MAPS_CLIENT, googleSignature, callback);
+					sensor, mode, alternatives, units, MAPS_CLIENT(), googleSignature, callback);
 		} else {
 			RestClient.getGoogleApiService().getDirections(originLatLng, destLatLng,
-					sensor, mode, alternatives, units, BuildConfig.MAPS_BROWSER_KEY, callback);
+					sensor, mode, alternatives, units, MAPS_BROWSER_KEY(), callback);
 		}
 	}
 
 	public static Response getDistanceMatrix(String originLatLng, String destLatLng, String language,
 											 Boolean sensor, Boolean alternatives){
-		if(BuildConfig.MAPS_APIS_SIGN) {
+		if(MAPS_APIS_SIGN()) {
 			String urlToSign = "/maps/api/distancematrix/json?" +
 					"origins=" + originLatLng
 					+ "&destinations=" + destLatLng
 					+ "&language=" + language
 					+ "&sensor=" + sensor
 					+ "&alternatives=" + alternatives
-					+ "&client=" + BuildConfig.MAPS_CLIENT;
+					+ "&client=" + MAPS_CLIENT();
 			String googleSignature = null;
 			try {
 				googleSignature = generateGoogleSignature(urlToSign);
@@ -85,58 +100,58 @@ public class GoogleRestApis {
 			}
 
 			return RestClient.getGoogleApiService().getDistanceMatrix(originLatLng, destLatLng, language,
-					sensor, alternatives, BuildConfig.MAPS_CLIENT, googleSignature);
+					sensor, alternatives, MAPS_CLIENT(), googleSignature);
 		} else {
 			return RestClient.getGoogleApiService().getDistanceMatrix(originLatLng, destLatLng, language,
-					sensor, alternatives, BuildConfig.MAPS_BROWSER_KEY);
+					sensor, alternatives, MAPS_BROWSER_KEY());
 		}
 	}
 
 	public static Response geocode(String latLng, String language){
-		if(BuildConfig.MAPS_APIS_SIGN) {
+		if(MAPS_APIS_SIGN()) {
 			String urlToSign = "/maps/api/geocode/json?" +
 					"latlng=" + latLng
 					+ "&language=" + language
 					+ "&sensor=" + false
-					+ "&client=" + BuildConfig.MAPS_CLIENT;
+					+ "&client=" + MAPS_CLIENT();
 			String googleSignature = null;
 			try {
 				googleSignature = generateGoogleSignature(urlToSign);
 			} catch (Exception ignored) {
 			}
 
-			return RestClient.getGoogleApiService().geocode(latLng, language, false, BuildConfig.MAPS_CLIENT, googleSignature);
+			return RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_CLIENT(), googleSignature);
 		} else {
-			return RestClient.getGoogleApiService().geocode(latLng, language, false, BuildConfig.MAPS_BROWSER_KEY);
+			return RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_BROWSER_KEY());
 		}
 	}
 	public static void geocode(String latLng, String language, Callback<GoogleGeocodeResponse> callback){
-		if(BuildConfig.MAPS_APIS_SIGN) {
+		if(MAPS_APIS_SIGN()) {
 			String urlToSign = "/maps/api/geocode/json?" +
 					"latlng=" + latLng
 					+ "&language=" + language
 					+ "&sensor=" + false
-					+ "&client=" + BuildConfig.MAPS_CLIENT;
+					+ "&client=" + MAPS_CLIENT();
 			String googleSignature = null;
 			try {
 				googleSignature = generateGoogleSignature(urlToSign);
 			} catch (Exception ignored) {
 			}
 
-			RestClient.getGoogleApiService().geocode(latLng, language, false, BuildConfig.MAPS_CLIENT, googleSignature, callback);
+			RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_CLIENT(), googleSignature, callback);
 		} else {
-			RestClient.getGoogleApiService().geocode(latLng, language, false, BuildConfig.MAPS_BROWSER_KEY, callback);
+			RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_BROWSER_KEY(), callback);
 		}
 	}
 
 
 	public static Response getDirectionsWaypoints(String strOrigin, String strDestination, String strWaypoints){
-		if(BuildConfig.MAPS_APIS_SIGN) {
+		if(MAPS_APIS_SIGN()) {
 			String urlToSign = "/maps/api/directions/json?" +
 					"origin=" + strOrigin
 					+ "&destination=" + strDestination
 					+ "&waypoints=" + strWaypoints
-					+ "&client=" + BuildConfig.MAPS_CLIENT;
+					+ "&client=" + MAPS_CLIENT();
 			String googleSignature = null;
 			try {
 				googleSignature = generateGoogleSignature(urlToSign);
@@ -145,10 +160,10 @@ public class GoogleRestApis {
 
 
 			return RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination,
-					strWaypoints, BuildConfig.MAPS_CLIENT, googleSignature);
+					strWaypoints, MAPS_CLIENT(), googleSignature);
 		} else {
 			return RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination,
-					strWaypoints, BuildConfig.MAPS_BROWSER_KEY);
+					strWaypoints, MAPS_BROWSER_KEY());
 		}
 	}
 
@@ -156,7 +171,7 @@ public class GoogleRestApis {
 			InvalidKeyException {
 
 		// Convert the key from 'web safe' base 64 to binary
-		String keyString = BuildConfig.MAPS_PRIVATE_KEY;
+		String keyString = MAPS_PRIVATE_KEY();
 		keyString = keyString.replace('-', '+');
 		keyString = keyString.replace('_', '/');
 		// Base64 is JDK 1.8 only - older versions may need to use Apache Commons or similar.

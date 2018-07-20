@@ -32,7 +32,6 @@
             android:drawablePadding="@dimen/dp_3"
             android:padding="@dimen/dp_10"
             android:tag="@string/dont_touch_me"
-            android:visibility="@integer/show_about"
             android:text="@string/about"
             android:textColor="@color/text_color"
             android:textSize="@dimen/sp_13"
@@ -499,36 +498,6 @@
                             android:layout_marginTop="@dimen/dp_17"
                             android:gravity="center"
                             android:text="@string/emergency_contacts"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/sp_14"/>
-
-                    </RelativeLayout>
-                    <RelativeLayout
-                        android:id="@+id/relativeLayoutChangeLanguage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:theme="@style/GreyHighlight"
-                        android:background="?attr/selectableItemBackground"
-                        android:tag="@string/dont_touch_me">
-
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="0.5dp"
-                            android:layout_marginStart="@dimen/dp_12"
-                            android:layout_marginEnd="@dimen/dp_12"
-                            android:background="@color/nl_white_dark"/>
-
-                        <TextView
-                            android:id="@+id/textViewChangeLanguage"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginBottom="@dimen/dp_17"
-                            android:layout_marginStart="@dimen/dp_17"
-                            android:layout_marginTop="@dimen/dp_17"
-                            android:gravity="center"
-                            android:text="@string/change_language"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/sp_14"/>
 

@@ -125,7 +125,8 @@ public class ApiLoginUsingAccessToken {
 					if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 						String resp;
 						try {
-							if(checkOnboarding && jObj.optJSONObject("user_data").optInt("signup_onboarding", 0) == 1){
+							if(checkOnboarding && jObj.optJSONObject(Constants.KEY_USER_DATA).optInt(Constants.KEY_SIGNUP_ONBOARDING, 0) == 1){
+								JSONParser.parseSignupOnboardingKeys(activity, jObj);
 								resp = Constants.KEY_SIGNUP_ONBOARDING;
 							} else {
 								resp = new JSONParser().parseAccessTokenLoginData(activity, response, loginResponse, LoginVia.ACCESS, latLng);
