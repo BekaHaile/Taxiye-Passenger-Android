@@ -1150,7 +1150,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     }
                 });
             }
-            apiFetchWalletBalance.getBalance(true);
+            apiFetchWalletBalance.getBalance(true, false, activity.getSelectedLatLng());
         } catch (Exception e) {
             e.printStackTrace();
         }

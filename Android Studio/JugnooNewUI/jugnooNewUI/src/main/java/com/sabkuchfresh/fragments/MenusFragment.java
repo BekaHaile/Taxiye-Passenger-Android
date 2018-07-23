@@ -172,6 +172,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         rlMainContainer = (RelativeLayout) rootView.findViewById(R.id.rlMainContainer);
         relativeLayoutNoMenus = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutNoMenus);
         tvSuggestStore = (TextView) relativeLayoutNoMenus.findViewById(R.id.tv_add_store);
+        tvSuggestStore.setText(getString(R.string.label_add_store_text_oh_snap, getString(R.string.app_name)));
         llNoMenusAddStore = (LinearLayout)relativeLayoutNoMenus.findViewById(R.id.layout_add_store);
         tvSuggestStore.setOnClickListener(new View.OnClickListener() {
             @Override

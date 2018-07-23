@@ -826,7 +826,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             }
             // for fatafat chat pay send feed client id
             if(isFromFatafatChat){
-                apiFetchWalletBalance.getBalance(true,true);
+                apiFetchWalletBalance.getBalance(true,true, null);
             }
             else {
                 apiFetchWalletBalance.getBalance(true);

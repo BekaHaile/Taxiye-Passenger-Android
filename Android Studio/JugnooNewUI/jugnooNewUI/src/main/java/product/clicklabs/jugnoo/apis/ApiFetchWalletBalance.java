@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.view.View;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -44,7 +46,7 @@ public class ApiFetchWalletBalance {
 	}
 
 
-	public void getBalance(final boolean showDialog, final boolean isFromFatafatChatPay){
+	public void getBalance(final boolean showDialog, final boolean isFromFatafatChatPay, LatLng latLng){
 		try {
 			if (MyApplication.getInstance().isOnline()) {
 
@@ -57,8 +59,8 @@ public class ApiFetchWalletBalance {
 				params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 				params.put(Constants.KEY_CLIENT_ID, isFromFatafatChatPay? Config.getFeedClientId():Config.getLastOpenedClientId(activity));
 				params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
-				params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
-				params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+				params.put(Constants.KEY_LATITUDE, String.valueOf(latLng == null ? Data.latitude : latLng.latitude));
+				params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng == null ? Data.longitude : latLng.longitude));
 
 				final long startTime = System.currentTimeMillis();
 				final ProgressDialog finalProgressDialog = progressDialog;
@@ -116,7 +118,7 @@ public class ApiFetchWalletBalance {
 	}
 
 	public void getBalance(final boolean showDialog) {
-		getBalance(showDialog,false);
+		getBalance(showDialog,false, null);
 	}
 
 	private void retryDialog(DialogErrorType dialogErrorType){
