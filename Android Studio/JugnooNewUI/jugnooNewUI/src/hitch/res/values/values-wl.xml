@@ -20,7 +20,7 @@
             ic_launcher
             notification_icon
     -->
-    <string name="app_name">Hitch</string>
+    <string name="app_name">Hitch Customer</string>
 
     <string name="google_maps_api_key">AIzaSyA9cnlLOey1b9UPXXzReBp6MYhZg1O5sqU</string>
     <string name="google_maps_api_server_key">AIzaSyA9cnlLOey1b9UPXXzReBp6MYhZg1O5sqU</string>
@@ -57,6 +57,7 @@
 
     <integer name="show_splash_top_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_invisible</integer>
 
     <string name="file_provider_name">com.hitch.fileprovider</string>
     <string name="web_landing_page">https://hitch.com</string>
@@ -80,4 +81,5 @@
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
     <integer name="show_invite_friends">@integer/view_gone</integer>
     <bool name="show_call_me_option_in_otp">false</bool>
+    <integer name="visibility_faq">@integer/view_visible</integer>
 </resources>
