@@ -912,4 +912,5 @@ public interface Constants {
     String KEY_UPDATED_LOCALE = "updated_locale";
     String KEY_LOCALE = "locale";
     String KEY_TOLL_CHARGE = "toll_charge";
+    String KEY_CUSTOMER_SUPPORT_NUMBER = "customer_support_number";
 }

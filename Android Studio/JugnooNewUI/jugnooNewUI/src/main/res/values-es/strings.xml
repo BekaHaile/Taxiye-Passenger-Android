@@ -505,7 +505,7 @@
     <string name="loading">Cargando...</string>
 
     <string name="call_us">Call Us</string>
-    <string name="no_driver_nearby_try_again">No hay controladores nearby. \nPlease tratan después de algún tiempo</string>
+    <string name="no_driver_nearby_try_again">Lamentablemente, no hay controladores disponibles cerca \n Por favor, intente después de algún tiempo</string>
     <string name="couldnt_find_drivers_nearby">No se puede encontrar controladores cercana</string>
 
     <string name="tnc_apply">* T &amp; C Aplicada</string>

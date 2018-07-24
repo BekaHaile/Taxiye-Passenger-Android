@@ -503,7 +503,7 @@
     <string name="loading">Loading...</string>
 
     <string name="call_us">Call Us</string>
-    <string name="no_driver_nearby_try_again">No drivers nearby.\nPlease try after some time</string>
+    <string name="no_driver_nearby_try_again">Unfortunately no drivers available nearby \n Please try after sometime</string>
     <string name="couldnt_find_drivers_nearby">Cannot find drivers nearby</string>
 
     <string name="tnc_apply">T&amp;C Apply</string>

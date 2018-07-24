@@ -320,9 +320,9 @@ public class JSONParser implements Constants {
             String cancellationChargesPopupTextLine1 = autoData.optString("cancellation_charges_popup_text_line1", "");
             String cancellationChargesPopupTextLine2 = autoData.optString("cancellation_charges_popup_text_line2", "");
             String inRideSendInviteTextBold = autoData.optString("in_ride_send_invite_text_bold", context.getResources().getString(R.string.send_invites));
-            String inRideSendInviteTextNormal = autoData.optString("in_ride_send_invite_text_normal", context.getString(R.string.send_invites_2, context.getString(R.string.app_name)));
-            String inRideSendInviteTextBoldV2 = autoData.optString("in_ride_send_invite_text_bold_v2", context.getResources().getString(R.string.send_invites));
-            String inRideSendInviteTextNormalV2 = autoData.optString("in_ride_send_invite_text_normal_v2", context.getString(R.string.send_invites_2, context.getString(R.string.app_name)));
+            String inRideSendInviteTextNormal = autoData.optString("in_ride_send_invite_text_normal", "");
+            String inRideSendInviteTextBoldV2 = autoData.optString("in_ride_send_invite_text_bold_v2", "");
+            String inRideSendInviteTextNormalV2 = autoData.optString("in_ride_send_invite_text_normal_v2", "");
             int rideStartInviteTextDeepIndexV2 = autoData.optInt("ride_start_invite_text_deep_index_v2", 0);
             String confirmScreenFareEstimateEnable = autoData.optString("confirm_screen_fare_estimate_enabled", "0");
             String poolDestinationPopupText1 = autoData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
@@ -385,6 +385,7 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(KEY_MAPS_API_BROWSER_KEY, autoData.optString(KEY_MAPS_API_BROWSER_KEY, BuildConfig.MAPS_BROWSER_KEY));
             Prefs.with(context).save(KEY_MAPS_API_SIGN, autoData.optInt(KEY_MAPS_API_SIGN, BuildConfig.MAPS_APIS_SIGN ? 1 : 0));
             Prefs.with(context).save(KEY_STRIPE_KEY_LIVE, autoData.optString(KEY_STRIPE_KEY_LIVE, BuildConfig.STRIPE_KEY_LIVE));
+            Prefs.with(context).save(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, ""));
         } catch (Exception e) {
             e.printStackTrace();
         }

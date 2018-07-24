@@ -505,7 +505,7 @@
     <string name="loading">Wird geladen...</string>
 
     <string name="call_us">Call Us</string>
-    <string name="no_driver_nearby_try_again">Keine Treiber in der Nähe. \nBitte versuchen Sie es \nnach einiger Zeit</string>
+    <string name="no_driver_nearby_try_again">Leider keine Treiber verfügbar in der Nähe \n Bitte versuchen Sie es nach einiger Zeit</string>
     <string name="couldnt_find_drivers_nearby">Kann Fahrer in der Nähe nicht finden</string>
 
     <string name="tnc_apply">T&amp;C Apply</string>

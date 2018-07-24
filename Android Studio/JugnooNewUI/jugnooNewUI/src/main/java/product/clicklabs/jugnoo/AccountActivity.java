@@ -828,6 +828,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 startActivity(new Intent(AccountActivity.this, ChangeLanguageActivity.class));
                                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                                 GAUtils.event(SIDE_MENU, USER + PROFILE, GAAction.CHANGE_LANGUAGE);
+                            } else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.CALL_SUPPORT.getTag())) {
+                                Utils.openCallIntent(AccountActivity.this,
+                                        Prefs.with(AccountActivity.this).getString(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, ""));
                             }
                         }
                     }

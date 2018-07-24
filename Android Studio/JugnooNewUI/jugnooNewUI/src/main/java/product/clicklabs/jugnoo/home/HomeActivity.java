@@ -6733,7 +6733,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void noDriverNearbyToast(String message) {
-        Toast toast = Toast.makeText(HomeActivity.this, message, Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(HomeActivity.this, message, Toast.LENGTH_LONG);
         TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
         if (v != null) v.setGravity(Gravity.CENTER);
         toast.show();
