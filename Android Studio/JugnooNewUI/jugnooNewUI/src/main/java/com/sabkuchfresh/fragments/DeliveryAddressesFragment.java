@@ -81,7 +81,6 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;

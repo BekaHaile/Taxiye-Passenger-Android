@@ -73,7 +73,6 @@ import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.MarkerAnimation;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;

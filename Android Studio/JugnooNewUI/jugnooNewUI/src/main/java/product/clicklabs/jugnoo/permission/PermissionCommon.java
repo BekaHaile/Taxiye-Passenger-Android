@@ -247,6 +247,8 @@ public final class PermissionCommon {
                 return appName + " needs phone State permission to uniquely identify device.";
             case Manifest.permission.WRITE_EXTERNAL_STORAGE:
                 return appName + " needs external storage permission to fetch selected image from gallery.";
+            case Manifest.permission.READ_CONTACTS:
+                return appName + " needs permission to sync your contacts.";
             default:
                 return appName + " needs this permission to proceed.";
         }

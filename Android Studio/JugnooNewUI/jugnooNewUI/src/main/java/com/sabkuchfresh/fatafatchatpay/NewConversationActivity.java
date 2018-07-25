@@ -49,10 +49,10 @@ import product.clicklabs.jugnoo.PaperDBKeys;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.ContactsUploadService;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.CreateChatResponse;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 import retrofit.RetrofitError;
@@ -61,8 +61,9 @@ import retrofit.RetrofitError;
  * Created by cl-macmini-01 on 2/6/18.
  */
 
-public class NewConversationActivity extends BaseAppCompatActivity implements View.OnClickListener, TextWatcher,PermissionCommon.PermissionListener{
+public class NewConversationActivity extends BaseAppCompatActivity implements View.OnClickListener, TextWatcher{
 
+    public static final int REQUEST_CODE_CONTACTS = 1000;
     private EditText etSearchConnections;
     private ImageButton imgBtnSync;
     private RecyclerView rvConnections;
@@ -83,7 +84,22 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_conversation);
-        mPermissionCommon = new PermissionCommon(this);
+        mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+            @Override
+            public void permissionGranted(int requestCode) {
+                performSyncOperation();
+            }
+
+            @Override
+            public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                return true;
+            }
+
+            @Override
+            public void onRationalRequestIntercepted(int requestCode) {
+
+            }
+        }) ;
         initViews();
         registerSyncUpdateReceiver();
 
@@ -324,19 +340,16 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
     private void syncContacts() {
         //DialogPopup.showLoadingDialog(this, "");
 
-        if(mPermissionCommon.isGranted(Manifest.permission.READ_CONTACTS)){
-            showSyncLayout();
-            // start the contact upload sync in background
-            Intent syncContactsIntent = new Intent(this, ContactsUploadService.class);
-            syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-            syncContactsIntent.putExtra(Constants.KEY_COMING_FROM_NEW_CONVERSATION, true);
-            startService(syncContactsIntent);
-        }
-        else {
-            final int REQ_CODE_CONTACTS = 1000;
-            mPermissionCommon.getPermission(REQ_CODE_CONTACTS, true, Manifest.permission.READ_CONTACTS);
-        }
+        mPermissionCommon.getPermission(REQUEST_CODE_CONTACTS, Manifest.permission.READ_CONTACTS);
 
+    }
+    private void performSyncOperation(){
+        showSyncLayout();
+        // start the contact upload sync in background
+        Intent syncContactsIntent = new Intent(this, ContactsUploadService.class);
+        syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+        syncContactsIntent.putExtra(Constants.KEY_COMING_FROM_NEW_CONVERSATION, true);
+        startService(syncContactsIntent);
     }
 
     @Override
@@ -506,14 +519,6 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
         mPermissionCommon.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
 
-    @Override
-    public void permissionGranted(final int requestCode) {
-        syncContacts();
-    }
 
-    @Override
-    public void permissionDenied(final int requestCode) {
-
-    }
 }
 

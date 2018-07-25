@@ -303,14 +303,15 @@
             android:enabled="true"
             android:exported="true"/>
 
-
+<!--
         <receiver android:name="com.sabkuchfresh.fatafatchatpay.ChatCustomActionBroadCastReceiver"
+            android:enabled="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="FUGU_CUSTOM_ACTION_SELECTED"/>
             </intent-filter>
 
-        </receiver>
+        </receiver>-->
 
         <service
             android:name=".FetchAppDataService"

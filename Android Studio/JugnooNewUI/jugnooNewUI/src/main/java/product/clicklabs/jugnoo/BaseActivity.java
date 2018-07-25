@@ -17,7 +17,6 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
