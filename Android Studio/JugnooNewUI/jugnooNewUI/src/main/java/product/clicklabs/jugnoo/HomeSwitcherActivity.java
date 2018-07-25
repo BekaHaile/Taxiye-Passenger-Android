@@ -150,7 +150,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 	protected void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
-		requestLocationPermissionAndUpdates();
+		getLocationFetcher().connect(this, 10000);
 		menuBar.setUserData();
 	}
 

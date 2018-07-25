@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -29,7 +30,6 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.PinEditTextLayout;
@@ -190,7 +190,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			}
 
 		startTimerForRetry();
-		requestReceiveSMSPermission();
 
 	}
 
@@ -209,7 +208,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		super.onResume();
 
 		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, PhoneNoOTPConfirmScreen.class.getName());
-		if(PermissionCommon.hasPermission(this, android.Manifest.permission.RECEIVE_SMS)) {
+		if(PermissionCommon.isGranted( android.Manifest.permission.RECEIVE_SMS,this)) {
 			Utils.enableSMSReceiver(this);
 		}
 
@@ -410,7 +409,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								DialogPopup.dismissLoadingDialog();
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									if(PermissionCommon.hasPermission(activity, android.Manifest.permission.RECEIVE_SMS)) {
+									if(PermissionCommon.isGranted(android.Manifest.permission.RECEIVE_SMS,activity)) {
 										Utils.enableSMSReceiver(PhoneNoOTPConfirmScreen.this);
 									}
 									DialogPopup.alertPopup(activity, "", JSONParser.getServerMessage(jObj));

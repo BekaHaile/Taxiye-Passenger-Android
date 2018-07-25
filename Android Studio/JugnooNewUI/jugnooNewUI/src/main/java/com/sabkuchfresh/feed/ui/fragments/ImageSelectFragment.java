@@ -26,7 +26,8 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
+
 
 import static android.app.Activity.RESULT_OK;
 
@@ -34,7 +35,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Parminder Singh on 3/20/17.
  */
 
-public abstract class ImageSelectFragment extends Fragment implements PermissionCommon.PermissionListener {
+public abstract class ImageSelectFragment extends Fragment {
 
 
     //Images Recycler Variables
@@ -59,7 +60,27 @@ public abstract class ImageSelectFragment extends Fragment implements Permission
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPermissionCommon = new PermissionCommon(this);
+        mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+            @Override
+            public void permissionGranted(int requestCode) {
+                if (picker == null) {
+                    picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
+                }
+
+                picker.setLimit(imageSelected == null ? maxNoImages : maxNoImages - imageSelected.size());
+                picker.startActivity(ImageSelectFragment.this, activity, REQUEST_CODE_SELECT_IMAGE);
+            }
+
+            @Override
+            public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                return true;
+            }
+
+            @Override
+            public void onRationalRequestIntercepted(int requestCode) {
+
+            }
+        });
         if(Data.getFeedData()!=null && Data.getFeedData().getMaxUploadImagesFeed()>0)
             maxNoImages=Data.getFeedData().getMaxUploadImagesFeed();
         else
@@ -164,19 +185,8 @@ public abstract class ImageSelectFragment extends Fragment implements Permission
             return;
         }
 
-        if(mPermissionCommon.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+        mPermissionCommon.getPermission(REQ_CODE_PERMISSION_IMAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-            if (picker == null) {
-                picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
-            }
-
-            picker.setLimit(imageSelected == null ? maxNoImages : maxNoImages - imageSelected.size());
-            picker.startActivity(ImageSelectFragment.this, activity, REQUEST_CODE_SELECT_IMAGE);
-        }
-        else {
-            mPermissionCommon.getPermission(REQ_CODE_PERMISSION_IMAGE, false,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
 
     }
 
@@ -186,17 +196,6 @@ public abstract class ImageSelectFragment extends Fragment implements Permission
         mPermissionCommon.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    @Override
-    public void permissionDenied(final int requestCode) {
-
-    }
-
-    @Override
-    public void permissionGranted(final int requestCode) {
-        if(requestCode == REQ_CODE_PERMISSION_IMAGE){
-            onAddImageClick();
-        }
-    }
 
     public abstract boolean canSubmit();
 

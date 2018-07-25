@@ -3,12 +3,10 @@ package product.clicklabs.jugnoo;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -126,6 +124,47 @@ import retrofit.mime.TypedByteArray;
 
 public class SplashNewActivity extends BaseAppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
 
+	private PermissionCommon.PermissionListener permissionListener = new PermissionCommon.PermissionListener() {
+				@Override
+				public void permissionGranted(int requestCode) {
+					switch (requestCode){
+						case REQUEST_CODE_RECIEVE_SMS:
+								goToLoginUsingPhone("");
+						break;
+						case REQUEST_CODE_LOCATION:
+							LocationInit.showLocationAlertDialog(SplashNewActivity.this);
+							getLocationFetcher().connect(SplashNewActivity.this, 10000);
+							break;
+
+					}
+
+				}
+
+				@Override
+				public boolean permissionDenied(int requestCode, boolean neverAsk) {
+					switch (requestCode){
+						case REQUEST_CODE_RECIEVE_SMS:
+							goToLoginUsingPhone("");
+							return false;
+						default:
+							return false;
+
+					}
+				}
+
+				@Override
+				public void onRationalRequestIntercepted(int requestCode) {
+					switch (requestCode){
+						case REQUEST_CODE_RECIEVE_SMS:
+							goToLoginUsingPhone("");
+							break;
+
+					}
+				}
+
+
+			};;
+
 	@Override
 	public boolean checkOfAT(){
 		return false;
@@ -235,6 +274,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	private EditText editTextPhoneNumber;
 	private TextView textViewPhoneNumberRequired;
 	private static final int REQUEST_CODE_RECIEVE_SMS = 0x123;
+	private static final int REQUEST_CODE_LOCATION = 0x124;
 
 	public static boolean openHomeSwitcher = false;
 
@@ -355,8 +395,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		try {
 
+		try {
+			getPermissionCommon().setCallback(permissionListener);
 			// to check if this is root task or not
 			if (!isTaskRoot()
 					&& getIntent().hasCategory(Intent.CATEGORY_LAUNCHER)
@@ -902,27 +943,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			rlMobileNumber.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-
-					getPermissionCommon().setCallback(new PermissionCommon.PermissionListener() {
-						@Override
-						public void permissionGranted(int requestCode) {
-							goToLoginUsingPhone("");
-
-						}
-
-						@Override
-						public boolean permissionDenied(int requestCode, boolean neverAsk) {
-							goToLoginUsingPhone("");
-							return false;
-						}
-
-						@Override
-						public void onRationalRequestIntercepted() {
-							goToLoginUsingPhone("");
-						}
-
-
-					}).getPermission(REQUEST_CODE_RECIEVE_SMS,PermissionCommon.SKIP_RATIONAL_REQUEST,true,Manifest.permission.RECEIVE_SMS);
+					getPermissionCommon().getPermission(REQUEST_CODE_RECIEVE_SMS,PermissionCommon.SKIP_RATIONAL_REQUEST,true,Manifest.permission.RECEIVE_SMS);
 					GAUtils.event(JUGNOO, LOGIN_SIGNUP, MOBILE+CLICKED);
 				}
 			});
@@ -2652,26 +2673,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			Log.e("Google Play Service Error ", "=" + resp);
 			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
 		} else {
-			if (PermissionCommon.isGranted( android.Manifest.permission.ACCESS_FINE_LOCATION,this)) {
-				LocationInit.showLocationAlertDialog(this);
-			}
-			requestLocationPermissionAndUpdates();
+
+			getPermissionCommon().getPermission(REQUEST_CODE_LOCATION,PermissionCommon.SKIP_RATIONAL_REQUEST,true,Manifest.permission.ACCESS_FINE_LOCATION);
 		}
 	}
 
-	@Override
-	public void permissionGranted(int requestCode) {
-		super.permissionGranted(requestCode);
-		if (requestCode == REQUEST_CODE_PERMISSION_LOCATION) {
-			LocationInit.showLocationAlertDialog(this);
-			getLocationFetcher().connect(this, 10000);
-		}
-	}
-
-	@Override
-	public boolean shouldRequestLocationPermission() {
-		return true;
-	}
 
 	private void initiateDeviceInfoVariables() {
 		try {                                                                                        // to get AppVersion, OS version, country code and device name

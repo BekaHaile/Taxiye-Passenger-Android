@@ -48,11 +48,11 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
@@ -68,7 +68,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by Shankar on 15/11/16.
  */
-public class RestaurantAddReviewFragment extends Fragment implements GAAction, PermissionCommon.PermissionListener {
+public class RestaurantAddReviewFragment extends Fragment implements GAAction{
 
     private final String TAG = RestaurantAddReviewFragment.class.getSimpleName();
 
@@ -125,9 +125,24 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction, P
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_restaurant_add_review, container, false);
-        mPermissionCommon = new PermissionCommon(this);
-        fetchArguments();
+        mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+            @Override
+            public void permissionGranted(int requestCode) {
+                pickImage();
+            }
 
+            @Override
+            public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                return true;
+            }
+
+            @Override
+            public void onRationalRequestIntercepted(int requestCode) {
+
+            }
+        });
+
+        fetchArguments();
         activity = (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
         maxNoImages = activity.getReviewImageCount();
@@ -280,7 +295,7 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction, P
         ibAccessCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pickImage();
+                mPermissionCommon.getPermission(REQ_CODE_PERMISSION_IMAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
             }
         });
@@ -288,22 +303,14 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction, P
 
     private void pickImage(){
 
-        if(mPermissionCommon.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-
-            etFeedback.setText(etFeedback.getText().toString().trim());
-            int alreadyPresent = objectList == null ? 0 : objectList.size();
-            if(picker==null){
-                picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
-            }
-
-            picker.setLimit(maxNoImages -alreadyPresent);
-            picker.startActivity(RestaurantAddReviewFragment.this,activity,REQUEST_CODE_SELECT_IMAGES);
-
+        etFeedback.setText(etFeedback.getText().toString().trim());
+        int alreadyPresent = objectList == null ? 0 : objectList.size();
+        if(picker==null){
+            picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
         }
-        else {
-            mPermissionCommon.getPermission(REQ_CODE_PERMISSION_IMAGE, false,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
+
+        picker.setLimit(maxNoImages -alreadyPresent);
+        picker.startActivity(RestaurantAddReviewFragment.this,activity,REQUEST_CODE_SELECT_IMAGES);
 
     }
 
@@ -741,15 +748,5 @@ public class RestaurantAddReviewFragment extends Fragment implements GAAction, P
         return etFeedback;
     }
 
-    @Override
-    public void permissionGranted(final int requestCode) {
-        if(requestCode == REQ_CODE_PERMISSION_IMAGE){
-            pickImage();
-        }
-    }
 
-    @Override
-    public void permissionDenied(final int requestCode) {
-
-    }
 }

@@ -53,11 +53,11 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.LocationUpdateService;
 import product.clicklabs.jugnoo.home.SyncIntentService;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
@@ -762,7 +762,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 
 					}else if (PushFlags.CUSTOMER_EMERGENCY_LOCATION.getOrdinal() == flag){
-						if(PermissionCommon.hasPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+						if(PermissionCommon.isGranted(android.Manifest.permission.ACCESS_FINE_LOCATION,this)) {
 							if (!Utils.isServiceRunning(this, LocationUpdateService.class.getName())) {
 								Intent intent = new Intent(this, LocationUpdateService.class);
 								intent.putExtra(KEY_ONE_SHOT, true);
@@ -899,7 +899,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
     }
 
 	private void startLocationUpdateService(){
-		if(PermissionCommon.hasPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+		if(PermissionCommon.isGranted(android.Manifest.permission.ACCESS_FINE_LOCATION,this)) {
 			if (!"".equalsIgnoreCase(Prefs.with(this).getString(SP_CURRENT_ENGAGEMENT_ID, ""))
 					&& Prefs.with(this).getLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
 					LOCATION_UPDATE_INTERVAL) > 0

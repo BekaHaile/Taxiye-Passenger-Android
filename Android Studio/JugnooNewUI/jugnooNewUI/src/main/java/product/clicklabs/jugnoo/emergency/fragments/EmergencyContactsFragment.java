@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -46,7 +47,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -62,8 +62,9 @@ import retrofit.mime.TypedByteArray;
  */
 
 @SuppressLint("ValidFragment")
-public class EmergencyContactsFragment extends Fragment implements PermissionCommon.PermissionListener {
+public class EmergencyContactsFragment extends Fragment  {
 
+	public static final int REQUEST_CODE_CONTACT = 1000;
 	private final String TAG = EmergencyContactsFragment.class.getSimpleName();
 	private RelativeLayout relative;
 
@@ -109,7 +110,22 @@ public class EmergencyContactsFragment extends Fragment implements PermissionCom
         rootView = inflater.inflate(R.layout.fragment_emergency_contacts, container, false);
         activity = getActivity();
 
-        mPermissionCommon = new PermissionCommon(this);
+        mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+			@Override
+			public void permissionGranted(int requestCode) {
+				openAddEmergencyContactsFragments();
+			}
+
+			@Override
+			public boolean permissionDenied(int requestCode, boolean neverAsk) {
+				return true;
+			}
+
+			@Override
+			public void onRationalRequestIntercepted(int requestCode) {
+
+			}
+		});
 
 		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
 		try {
@@ -195,15 +211,7 @@ public class EmergencyContactsFragment extends Fragment implements PermissionCom
 						break;
 
 					case R.id.buttonAddContact:
-
-						if(mPermissionCommon.isGranted(android.Manifest.permission.READ_CONTACTS)){
-							openAddEmergencyContactsFragments();
-						}
-						else {
-							final int REQ_CODE_CONTACT = 1000;
-							mPermissionCommon.getPermission(REQ_CODE_CONTACT, true, Manifest.permission.READ_CONTACTS);
-						}
-
+						mPermissionCommon.getPermission(REQUEST_CODE_CONTACT, Manifest.permission.READ_CONTACTS);
 						break;
 
 				}
@@ -374,13 +382,5 @@ public class EmergencyContactsFragment extends Fragment implements PermissionCom
 		}
 	}
 
-	@Override
-	public void permissionGranted(final int requestCode) {
-	  openAddEmergencyContactsFragments();
-	}
 
-	@Override
-	public void permissionDenied(final int requestCode) {
-
-	}
 }

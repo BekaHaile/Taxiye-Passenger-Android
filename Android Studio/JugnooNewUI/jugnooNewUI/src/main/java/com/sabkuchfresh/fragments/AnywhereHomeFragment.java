@@ -72,11 +72,11 @@ import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.model.FatafatUploadImageInfo;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.RetrofitError;
@@ -90,7 +90,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Parminder Saini on 09/10/17.
  */
 
-public class AnywhereHomeFragment extends Fragment implements GACategory, GAAction, PermissionCommon.PermissionListener {
+public class AnywhereHomeFragment extends Fragment implements GACategory, GAAction {
 
     public static final RelativeSizeSpan RELATIVE_SIZE_SPAN = new RelativeSizeSpan(1.15f);
     public static final int MIN_BUFFER_TIME_MINS = 30;
@@ -225,7 +225,22 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_anywhere_home, container, false);
         activity.fragmentUISetup(this);
-        mPermissionCommon = new PermissionCommon(this);
+        mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+            @Override
+            public void permissionGranted(int requestCode) {
+                pickImages();
+            }
+
+            @Override
+            public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                return true;
+            }
+
+            @Override
+            public void onRationalRequestIntercepted(int requestCode) {
+
+            }
+        });
         unbinder = ButterKnife.bind(this, rootView);
         try {
             product.clicklabs.jugnoo.utils.Utils.hideSoftKeyboard(activity, edtTaskDescription);
@@ -555,9 +570,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
             case R.id.ivUploadImage:
             case R.id.cvUploadImages:
-
-                pickImages();
-
+                mPermissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 break;
         }
     }
@@ -567,19 +580,13 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
      */
     private void pickImages() {
 
-        if(mPermissionCommon.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-            int alreadyPresent = imageObjectList == null ? 0 : imageObjectList.size();
-            if(picker==null){
-                picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
-            }
+        int alreadyPresent = imageObjectList == null ? 0 : imageObjectList.size();
+        if(picker==null){
+            picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
+        }
 
-            picker.setLimit(maxNoImages -alreadyPresent);
-            picker.startActivity(AnywhereHomeFragment.this,activity,REQUEST_CODE_SELECT_IMAGES);
-        }
-        else {
-            mPermissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION, false
-                    , Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
+        picker.setLimit(maxNoImages -alreadyPresent);
+        picker.startActivity(AnywhereHomeFragment.this,activity,REQUEST_CODE_SELECT_IMAGES);
 
     }
 
@@ -1084,17 +1091,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         }
     }
 
-    @Override
-    public void permissionGranted(final int requestCode) {
-        if(requestCode == REQ_CODE_IMAGE_PERMISSION){
-            pickImages();
-        }
-    }
-
-    @Override
-    public void permissionDenied(final int requestCode) {
-
-    }
 
     private class PromoTextWatcher implements TextWatcher {
         private TextView textView;

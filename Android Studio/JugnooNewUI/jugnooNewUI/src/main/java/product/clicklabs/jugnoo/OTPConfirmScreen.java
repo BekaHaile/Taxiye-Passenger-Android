@@ -36,6 +36,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -43,7 +44,6 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -295,7 +295,6 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
             }
         }, 100);
 
-		requestReceiveSMSPermission();
 	}
 
     private void startOTPTimer() {
@@ -397,11 +396,11 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
         super.onResume();
 
 		Prefs.with(this).save(SP_OTP_SCREEN_OPEN, OTPConfirmScreen.class.getName());
-		if(PermissionCommon.hasPermission(this, Manifest.permission.RECEIVE_SMS)) {
+		if(PermissionCommon.isGranted(Manifest.permission.RECEIVE_SMS,this)) {
 			Utils.enableSMSReceiver(this);
 		}
 
-		requestLocationPermissionAndUpdates();
+        getLocationFetcher().connect(this, 10000);
 		HomeActivity.checkForAccessTokenChange(this);
 
     }
@@ -598,7 +597,7 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								DialogPopup.dismissLoadingDialog();
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									if(PermissionCommon.hasPermission(activity, Manifest.permission.RECEIVE_SMS)) {
+									if(PermissionCommon.isGranted(Manifest.permission.RECEIVE_SMS,activity)) {
 										Utils.enableSMSReceiver(OTPConfirmScreen.this);
 									}
 									startOTPTimer();

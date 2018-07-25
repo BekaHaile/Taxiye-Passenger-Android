@@ -59,8 +59,8 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.RetrofitError;
 
@@ -68,7 +68,7 @@ import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 
 public class FeedHomeFragment extends Fragment implements GACategory, GAAction, DeletePostDialog.DeleteDialogCallback
-        , EditPostPopup.EditPostDialogCallback, PermissionCommon.PermissionListener {
+        , EditPostPopup.EditPostDialogCallback {
 
 
     private static final int SHOW_ADDPOST_ON_IDLE_DELAY_MILLIS = 2000;
@@ -111,7 +111,22 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         if (context instanceof FreshActivity) {
             activity = (FreshActivity) context;
             activity.registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_CONTACTS_UPLOADED));
-            mPermissionCommon = new PermissionCommon(this);
+            mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+                @Override
+                public void permissionGranted(int requestCode) {
+                    startContactSync();
+                }
+
+                @Override
+                public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                    return true;
+                }
+
+                @Override
+                public void onRationalRequestIntercepted(int requestCode) {
+
+                }
+            });
         }
     }
 
@@ -286,7 +301,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
 
-        startContactSync();
+        mPermissionCommon.getPermission(REQ_CODE_PERMISSION_CONTACT, Manifest.permission.READ_CONTACTS);
 
         // To check if user has clicked on some post id's push notification from sp_post_id_to_open
         activity.getHandler().postDelayed(new Runnable() {
@@ -315,17 +330,11 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private void startContactSync() {
         try {
 
-            if(mPermissionCommon.isGranted(Manifest.permission.READ_CONTACTS)){
-
-                if (Data.getFeedData() != null && Data.getFeedData().getContactsSynced() != null && Data.getFeedData().getContactsSynced() == 0) {
-                    Intent syncContactsIntent = new Intent(activity, FeedContactsUploadService.class);
-                    syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                    activity.startService(syncContactsIntent);
-                    Data.getFeedData().setContactsSynced(1);
-                }
-            }
-            else {
-                mPermissionCommon.getPermission(REQ_CODE_PERMISSION_CONTACT, true, Manifest.permission.READ_CONTACTS);
+            if (Data.getFeedData() != null && Data.getFeedData().getContactsSynced() != null && Data.getFeedData().getContactsSynced() == 0) {
+                Intent syncContactsIntent = new Intent(activity, FeedContactsUploadService.class);
+                syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                activity.startService(syncContactsIntent);
+                Data.getFeedData().setContactsSynced(1);
             }
 
 
@@ -877,15 +886,5 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         return recyclerView.getScrollState()!=SCROLL_STATE_IDLE || isFragmentHidden;
     }
 
-    @Override
-    public void permissionGranted(final int requestCode) {
-        if(requestCode == REQ_CODE_PERMISSION_CONTACT){
-            startContactSync();
-        }
-    }
 
-    @Override
-    public void permissionDenied(final int requestCode) {
-
-    }
 }

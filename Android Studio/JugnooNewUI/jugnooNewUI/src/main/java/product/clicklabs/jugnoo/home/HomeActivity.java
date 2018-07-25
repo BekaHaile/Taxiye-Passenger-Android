@@ -201,6 +201,7 @@ import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogHelper;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
@@ -231,7 +232,6 @@ import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.MarkerAnimation;
 import product.clicklabs.jugnoo.utils.NonScrollGridView;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.SelectorBitmapLoader;
@@ -2132,7 +2132,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewCancellation.setVisibility(View.GONE);
             }
 
-            if(PermissionCommon.hasPermission(this, Manifest.permission.READ_SMS) && Data.userData.getGetGogu() == 1) {
+            if(PermissionCommon.isGranted(Manifest.permission.READ_SMS,this) && Data.userData.getGetGogu() == 1) {
                 new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();
             }
 
@@ -2823,11 +2823,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     OnClickListener mapMyLocationClick = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(PermissionCommon.hasPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                navigateToCurrLoc(true);
-            } else {
-                requestLocationPermissionExplicit();
-            }
+            requestLocationPermissionExplicit();
         }
     };
 
@@ -3713,7 +3709,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 || PassengerScreenMode.P_IN_RIDE == mode)
                 && Prefs.with(this).getLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, LOCATION_UPDATE_INTERVAL) > 0) {
             if(!Utils.isServiceRunning(this, LocationUpdateService.class.getName())) {
-                startInRideLocationService();
+                getPermissionCommon().getPermission(REQUEST_CODE_LOCATION_SERVICE,  android.Manifest.permission.ACCESS_FINE_LOCATION);
             }
         } else{
             Intent intent = new Intent(this, LocationUpdateService.class);
@@ -3722,13 +3718,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void startInRideLocationService() {
-        if(PermissionCommon.hasPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-            Intent intent = new Intent(this, LocationUpdateService.class);
-            intent.putExtra(KEY_ONE_SHOT, false);
-            startService(intent);
-        } else {
-            requestLocationPermissionExplicit(REQUEST_CODE_LOCATION_SERVICE);
-        }
+        Intent intent = new Intent(this, LocationUpdateService.class);
+        intent.putExtra(KEY_ONE_SHOT, false);
+        startService(intent);
     }
 
     private BroadcastReceiver receiver;
@@ -7278,12 +7270,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     public void initializeFusedLocationFetchers() {
-        requestLocationPermissionAndUpdates();
+        getLocationFetcher().connect(this, 10000);
         initializeHighSpeedAccuracyFusedLocationFetcher();
     }
 
     private void initializeHighSpeedAccuracyFusedLocationFetcher(){
-        if (PermissionCommon.hasPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (PermissionCommon.isGranted(android.Manifest.permission.ACCESS_FINE_LOCATION,this)) {
             destroyHighSpeedAccuracyFusedLocationFetcher();
             if (checkForInitialMyLocationButtonClick()) {
                 if (highSpeedAccuracyLF == null) {

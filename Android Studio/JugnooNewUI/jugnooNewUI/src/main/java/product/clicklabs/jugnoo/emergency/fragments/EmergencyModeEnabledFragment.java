@@ -70,7 +70,7 @@ public class EmergencyModeEnabledFragment extends BaseFragment {
 	public void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(activity);
-		requestLocationPermissionAndUpdates();
+		getLocationFetcher().connect(this, 10000);
 	}
 
 	@Override
@@ -154,16 +154,22 @@ public class EmergencyModeEnabledFragment extends BaseFragment {
 
 
 
-		callEmergencyAlert();
+		requestLocationPermissionExplicit();
+
+
 
 
 
 		return rootView;
 	}
 
+	@Override
+	public void permissionGranted(int requestCode) {
+		if(requestCode==REQUEST_CODE_PERMISSION_LOCATION){
+			callEmergencyAlert();
+		}
 
-
-
+	}
 
 	public void callEmergencyAlert(){
 		int modeEnabled = Prefs.with(activity).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);

@@ -51,12 +51,12 @@ import java.util.Locale;
 
 import de.greenrobot.event.EventBus;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 
-public class PickerActivity extends AppCompatActivity implements PermissionCommon.PermissionListener {
+public class PickerActivity extends AppCompatActivity {
 
 
     public static final int NO_LIMIT = -1;
@@ -87,12 +87,18 @@ public class PickerActivity extends AppCompatActivity implements PermissionCommo
     private TextView toolbarTitle;
     private RecyclerView recyclerViewSelectedImages;
     private String[] permissionsRequestArray;
-    private PermissionCommon mPermissionCommon;
+//    private PermissionCommon mPermissionCommon;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mPermissionCommon = new PermissionCommon(this);
+//        mPermissionCommon = new PermissionCommon(this);
+
+        if(!PermissionCommon.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE,this)){
+            finish();
+            onCancel();
+        }
+
         if(savedInstanceState==null)
           mPickOptions = (EventBus.getDefault().getStickyEvent(Events.OnPublishPickOptionsEvent.class)).options;
         else
@@ -280,32 +286,25 @@ public class PickerActivity extends AppCompatActivity implements PermissionCommo
             return;
         }
 
-        if(mPermissionCommon.isGranted(Manifest.permission.CAMERA)){
-
-            if (!mPickOptions.videosEnabled) {
-                capturePhoto();
-                return;
-            }
+        if (!mPickOptions.videosEnabled) {
+            capturePhoto();
+            return;
+        }
 
 
-            new AlertDialog.Builder(this).setTitle(R.string.dialog_choose_camera_title)
-                    .setItems(new String[]{getResources().getString(R.string.dialog_choose_camera_item_0), getResources().getString(R.string.dialog_choose_camera_item_1)}, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (which == 0) {
-                                //   capturePhoto();
-                            } else {
-                                //captureVideo();
-                            }
+        new AlertDialog.Builder(this).setTitle(R.string.dialog_choose_camera_title)
+                .setItems(new String[]{getResources().getString(R.string.dialog_choose_camera_item_0), getResources().getString(R.string.dialog_choose_camera_item_1)}, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            //   capturePhoto();
+                        } else {
+                            //captureVideo();
                         }
-                    })
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show();
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
 
-        }
-        else {
-            mPermissionCommon.getPermission(REQ_CODE_PERMISSION_CAMERA, false,
-                    Manifest.permission.CAMERA);
-        }
 
     }
 
@@ -971,7 +970,7 @@ public class PickerActivity extends AppCompatActivity implements PermissionCommo
 
     }
 
-    @Override
+   /* @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mPermissionCommon.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -987,5 +986,5 @@ public class PickerActivity extends AppCompatActivity implements PermissionCommo
     @Override
     public void permissionDenied(final int requestCode) {
 
-    }
+    }*/
 }

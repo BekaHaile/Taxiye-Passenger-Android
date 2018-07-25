@@ -290,6 +290,13 @@ public final class PermissionCommon {
         return ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED;
     }
 
+    public static boolean isGranted(String permission,Context activity) {
+
+        return ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED;
+    }
+
+
+
     /**
      * @param permission permission to check
      * @return returns human readable format of the permission

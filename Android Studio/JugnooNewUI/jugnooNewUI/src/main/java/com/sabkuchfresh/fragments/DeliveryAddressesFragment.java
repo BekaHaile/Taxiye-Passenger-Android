@@ -147,10 +147,13 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 
     @OnClick(R.id.bMyLocation)
     void zoomToCurrentLocation(){
-        if (PermissionCommon.hasPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
+        requestLocationPermissionExplicit();
+    }
+
+    @Override
+    public void permissionGranted(int requestCode) {
+        if(requestCode == REQUEST_CODE_PERMISSION_LOCATION){
             animateToCurrent();
-        } else {
-            requestLocationPermissionExplicit();
         }
     }
 
@@ -166,12 +169,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
         }
     }
 
-    @Override
-    public void permissionGranted(int requestCode) {
-        if(requestCode == REQUEST_CODE_PERMISSION_LOCATION){
-            animateToCurrent();
-        }
-    }
+
 
     private LatLng getCurrentLatLng(){
         return new LatLng(Data.latitude, Data.longitude);
@@ -705,6 +703,8 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
         super.onResume();
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         enableMapMyLocation(googleMap);
+        getLocationFetcher().connect(this, 10000);
+
     }
 
     @Override

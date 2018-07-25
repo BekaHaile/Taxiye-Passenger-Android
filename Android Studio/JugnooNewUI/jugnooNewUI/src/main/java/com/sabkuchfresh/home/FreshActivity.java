@@ -1178,7 +1178,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     fetchWalletBalance(this);
                 }
 
-                requestLocationPermissionAndUpdates();
+                getLocationFetcher().connect(this, 10000);
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
                         Data.userData.getIntegratedJugnooEnabled() == 1) {

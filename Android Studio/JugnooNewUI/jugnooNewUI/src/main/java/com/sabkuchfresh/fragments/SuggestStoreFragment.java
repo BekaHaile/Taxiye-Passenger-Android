@@ -46,8 +46,8 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.RetrofitError;
 import retrofit.mime.MultipartTypedOutput;
@@ -60,7 +60,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by cl-macmini-01 on 1/23/18.
  */
 
-public class SuggestStoreFragment extends Fragment implements PermissionCommon.PermissionListener {
+public class SuggestStoreFragment extends Fragment  {
 
     public static final int ID_SELECT_CATEGORY = -1;
     @BindView(R.id.edtBusinessName)
@@ -111,7 +111,22 @@ public class SuggestStoreFragment extends Fragment implements PermissionCommon.P
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable final Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_suggest_store, container, false);
-        mPermissionCommon = new PermissionCommon(this);
+        mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+            @Override
+            public void permissionGranted(int requestCode) {
+                pickImages();
+            }
+
+            @Override
+            public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                return true;
+            }
+
+            @Override
+            public void onRationalRequestIntercepted(int requestCode) {
+
+            }
+        });
         activity.fragmentUISetup(this);
         unbinder = ButterKnife.bind(this, rootView);
         categories = new ArrayList<>();
@@ -365,7 +380,7 @@ public class SuggestStoreFragment extends Fragment implements PermissionCommon.P
                 break;
             case R.id.ivUploadImage:
             case R.id.llUploadImages:
-                pickImages();
+                mPermissionCommon.getPermission(REQ_CODE_PERMISSION_IMAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
                 break;
             default:
                 break;
@@ -397,22 +412,12 @@ public class SuggestStoreFragment extends Fragment implements PermissionCommon.P
      * Allows image selection
      */
     private void pickImages() {
-
-        if(mPermissionCommon.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-
-            int alreadyPresent = imageObjectList == null ? 0 : imageObjectList.size();
-            if(picker ==null){
-                picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
-            }
-
-            picker.setLimit(maxNoImages -alreadyPresent);
-            picker.startActivity(SuggestStoreFragment.this,activity, REQUEST_CODE_SELECT_IMAGES);
-
+        int alreadyPresent = imageObjectList == null ? 0 : imageObjectList.size();
+        if(picker ==null){
+            picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
         }
-        else {
-            mPermissionCommon.getPermission(REQ_CODE_PERMISSION_IMAGE, false,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
+        picker.setLimit(maxNoImages -alreadyPresent);
+        picker.startActivity(SuggestStoreFragment.this,activity, REQUEST_CODE_SELECT_IMAGES);
 
     }
 
@@ -495,15 +500,5 @@ public class SuggestStoreFragment extends Fragment implements PermissionCommon.P
         }
     };
 
-    @Override
-    public void permissionGranted(final int requestCode) {
-        if(requestCode == REQ_CODE_PERMISSION_IMAGE){
-            pickImages();
-        }
-    }
 
-    @Override
-    public void permissionDenied(final int requestCode) {
-
-    }
 }

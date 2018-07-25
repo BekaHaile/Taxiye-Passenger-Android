@@ -105,22 +105,10 @@ public class BaseAppCompatActivity extends AppCompatActivity implements Permissi
 		return permissionCommon;
 	}
 
-	public void requestLocationPermissionAndUpdates(){
-		if(!PermissionCommon.isGranted(android.Manifest.permission.ACCESS_FINE_LOCATION,this)
-				&& shouldRequestLocationPermission()) {
-			requestLocationPermissionExplicit();
-		} else {
-			getLocationFetcher().connect(this, 10000);
-		}
-	}
-
 	public void requestLocationPermissionExplicit(){
-		requestLocationPermissionExplicit(REQUEST_CODE_PERMISSION_LOCATION);
+		getPermissionCommon().getPermission(REQUEST_CODE_PERMISSION_LOCATION,  android.Manifest.permission.ACCESS_FINE_LOCATION);
 	}
 
-	public void requestLocationPermissionExplicit(int requestCode){
-		getPermissionCommon().getPermission(requestCode,  android.Manifest.permission.ACCESS_FINE_LOCATION);
-	}
 
 	public void requestLocationUpdatesExplicit(){
 		getLocationFetcher().connect(this, 10000);
@@ -144,11 +132,11 @@ public class BaseAppCompatActivity extends AppCompatActivity implements Permissi
 		if (requestCode == REQUEST_CODE_PERMISSION_LOCATION) {
 
 		}
-		return false;
+		return true;
 	}
 
 	@Override
-	public void onRationalRequestIntercepted() {
+	public void onRationalRequestIntercepted(int requestCode) {
 
 	}
 

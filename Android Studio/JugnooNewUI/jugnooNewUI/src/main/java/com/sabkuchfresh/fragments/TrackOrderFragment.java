@@ -181,11 +181,7 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 		bMyLocation.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (PermissionCommon.hasPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
-					zoomToDriverAndDrop(null, 0);
-				} else {
-					requestLocationPermissionExplicit();
-				}
+				requestLocationPermissionExplicit();
 			}
 		});
 
@@ -406,6 +402,7 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 			scheduleTimer();
 			enableMapMyLocation(googleMap);
 		}
+		getLocationFetcher().connect(this, 10000);
 	}
 
 	@Override

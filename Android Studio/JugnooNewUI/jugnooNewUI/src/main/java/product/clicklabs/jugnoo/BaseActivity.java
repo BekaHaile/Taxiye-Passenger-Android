@@ -25,7 +25,7 @@ import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 /**
  * Created by clicklabs on 7/3/15.
  */
-public class BaseActivity extends Activity implements PermissionCommon.PermissionListener, LocationUpdate {
+public class BaseActivity extends Activity implements LocationUpdate {
 	public static final int REQUEST_CODE_PERMISSION_LOCATION = 1011;
 	private static final int REQUEST_CODE_PERMISSION_RECEIVE_SMS = 1012;
 
@@ -62,55 +62,7 @@ public class BaseActivity extends Activity implements PermissionCommon.Permissio
 		getLocationFetcher().destroy();
 	}
 
-	@TargetApi(23)
-	@SuppressWarnings("unused")
-	@Override
-	public void onRequestPermissionsResult(final int requestCode,
-										   final @NonNull String permissions[],
-										   final @NonNull int[] grantResults) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		getPermissionCommon().onRequestPermissionsResult(requestCode, permissions, grantResults);
-	}
 
-	private PermissionCommon permissionCommon;
-	public PermissionCommon getPermissionCommon() {
-		if (permissionCommon == null) {
-			permissionCommon = new PermissionCommon(this);
-		}
-		return permissionCommon;
-	}
-
-	public void requestLocationPermissionAndUpdates(){
-		if(!PermissionCommon.hasPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-				&& shouldRequestLocationPermission()) {
-			requestLocationPermissionExplicit();
-		} else {
-			getLocationFetcher().connect(this, 10000);
-		}
-	}
-
-	public void requestLocationPermissionExplicit(){
-		requestLocationPermissionExplicit(REQUEST_CODE_PERMISSION_LOCATION);
-	}
-
-	public void requestLocationPermissionExplicit(int requestCode){
-		getPermissionCommon().getPermission(requestCode, true, android.Manifest.permission.ACCESS_FINE_LOCATION);
-	}
-
-	public void requestLocationUpdatesExplicit(){
-		getLocationFetcher().connect(this, 10000);
-	}
-
-	@Override
-	public void permissionGranted(int requestCode) {
-		if (requestCode == REQUEST_CODE_PERMISSION_LOCATION) {
-			requestLocationUpdatesExplicit();
-		}
-	}
-
-	@Override
-	public void permissionDenied(int requestCode) {
-	}
 
 	@Override
 	public void onLocationChanged(Location location) {

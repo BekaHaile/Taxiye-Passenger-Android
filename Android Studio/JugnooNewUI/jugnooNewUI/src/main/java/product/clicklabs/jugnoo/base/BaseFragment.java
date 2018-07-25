@@ -5,11 +5,13 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
+import com.sabkuchfresh.fragments.TrackOrderFragment;
+
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.utils.PermissionCommon;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 
 /**
  * Created by shankar on 21/03/18.
@@ -23,6 +25,8 @@ public class BaseFragment extends Fragment implements PermissionCommon.Permissio
 		super.onPause();
 		getLocationFetcher().destroy();
 	}
+
+
 
 	@TargetApi(23)
 	@SuppressWarnings("unused")
@@ -42,40 +46,31 @@ public class BaseFragment extends Fragment implements PermissionCommon.Permissio
 		return permissionCommon;
 	}
 
-	public void requestLocationPermissionAndUpdates(){
-		if(!PermissionCommon.hasPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-				&& shouldRequestLocationPermission()) {
-			requestLocationPermissionExplicit();
-		} else {
-			getLocationFetcher().connect(this, 10000);
-		}
-	}
+
 
 	public void requestLocationPermissionExplicit(){
-		requestLocationPermissionExplicit(REQUEST_CODE_PERMISSION_LOCATION);
+		getPermissionCommon().getPermission(REQUEST_CODE_PERMISSION_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION);
 	}
 
-	public void requestLocationPermissionExplicit(int requestCode){
-		getPermissionCommon().getPermission(requestCode, true, android.Manifest.permission.ACCESS_FINE_LOCATION);
-	}
-
-	public void requestLocationUpdatesExplicit(){
-		getLocationFetcher().connect(this, 10000);
-	}
 
 	@Override
 	public void permissionGranted(int requestCode) {
 		if (requestCode == REQUEST_CODE_PERMISSION_LOCATION) {
-			requestLocationUpdatesExplicit();
+			getLocationFetcher().connect(this, 10000);
 		}
 	}
 
 	@Override
-	public void permissionDenied(int requestCode) {
-		if (requestCode == REQUEST_CODE_PERMISSION_LOCATION) {
-
-		}
+	public boolean permissionDenied(int requestCode, boolean neverAsk) {
+		return true;
 	}
+
+	@Override
+	public void onRationalRequestIntercepted(int requestCode) {
+
+	}
+
+
 
 	@Override
 	public void onLocationChanged(Location location) {
@@ -96,7 +91,5 @@ public class BaseFragment extends Fragment implements PermissionCommon.Permissio
 
 	public void locationChanged(Location location){}
 
-	public boolean shouldRequestLocationPermission(){
-		return false;
-	}
+
 }
