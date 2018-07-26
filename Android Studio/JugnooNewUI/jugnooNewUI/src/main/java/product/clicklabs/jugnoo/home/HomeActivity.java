@@ -2626,17 +2626,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             if (myLocation == null) {
                 myLocation = new Location(LocationManager.GPS_PROVIDER);
+                myLocation.setAccuracy(50);
                 myLocation.setLatitude(Data.latitude);
                 myLocation.setLongitude(Data.longitude);
             }
 
             double distance = MapUtils.distance(Data.autoData.getPickupLatLng(), new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-            if (distance > MAP_PAN_DISTANCE_CHECK) {
+//            if (distance > MAP_PAN_DISTANCE_CHECK) {
                 switchRequestRideUI();
                 startTimerRequestRide();
-            } else {
-                checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
-            }
+//            } else {
+//                checkForGPSAccuracyTimer = new CheckForGPSAccuracyTimer(HomeActivity.this, 0, 5000, System.currentTimeMillis(), 60000);
+//            }
             if (Data.TRANSFER_FROM_JEANIE == 1) {
                 Data.TRANSFER_FROM_JEANIE = 0;
             }
@@ -4831,7 +4832,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                         slidingBottomPanel.getImageViewExtraForSliding().performClick();
                         // check if we need to avoid the action click
-                        if (data.getExtras() != null && !data.getExtras().containsKey(Constants.KEY_AVOID_RIDE_ACTION)) {
+                        if (data.getExtras() == null || !data.getExtras().containsKey(Constants.KEY_AVOID_RIDE_ACTION)) {
                             imageViewRideNow.performClick();
                         }
                         activityResumed = false;

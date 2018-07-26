@@ -1,6 +1,7 @@
 package com.sabkuchfresh.fragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.pm.PackageManager;
@@ -81,6 +82,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
+import product.clicklabs.jugnoo.utils.PermissionCommon;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
@@ -152,6 +154,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
     @Override
     public void permissionGranted(int requestCode) {
         if(requestCode == REQUEST_CODE_PERMISSION_LOCATION){
+            getLocationFetcher().connect(this, 10000);
             animateToCurrent();
         }
     }
@@ -580,8 +583,9 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
         return rootView;
     }
 
+    @SuppressLint("MissingPermission")
     private void enableMapMyLocation(GoogleMap googleMap) {
-        if(googleMap != null && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if(googleMap != null && PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION,activity)) {
 			googleMap.setMyLocationEnabled(true);
 		}
     }

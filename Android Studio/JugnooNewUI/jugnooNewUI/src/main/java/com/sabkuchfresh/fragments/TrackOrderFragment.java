@@ -192,6 +192,7 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 	@Override
 	public void permissionGranted(int requestCode) {
 		if(requestCode == REQUEST_CODE_PERMISSION_LOCATION){
+			super.permissionGranted(requestCode);
 			zoomToDriverAndDrop(null, 0);
 		}
 	}

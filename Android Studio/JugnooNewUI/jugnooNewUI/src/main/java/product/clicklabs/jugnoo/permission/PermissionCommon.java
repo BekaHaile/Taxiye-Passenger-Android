@@ -238,9 +238,9 @@ public final class PermissionCommon {
             case Manifest.permission.CAMERA:
                 return appName + " needs permission to access the camera to save images. ";
             case Manifest.permission.ACCESS_COARSE_LOCATION:
-                return appName + " needs permission fetch current location address. ";
+                return appName + " needs permission to fetch current location address.";
             case Manifest.permission.ACCESS_FINE_LOCATION:
-                return appName + " needs permission fetch current location address. ";
+                return appName + " needs permission to fetch current location address.";
             case Manifest.permission.RECEIVE_SMS:
                 return appName + " needs this permission to auto-detect OTP. ";
             case Manifest.permission.READ_PHONE_STATE:

@@ -41,7 +41,7 @@ public class BaseFragment extends Fragment implements PermissionCommon.Permissio
 	private PermissionCommon permissionCommon;
 	private PermissionCommon getPermissionCommon() {
 		if (permissionCommon == null) {
-			permissionCommon = new PermissionCommon(this);
+			permissionCommon = new PermissionCommon(this).setCallback(this);
 		}
 		return permissionCommon;
 	}

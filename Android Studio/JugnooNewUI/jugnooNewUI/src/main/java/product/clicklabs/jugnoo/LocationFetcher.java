@@ -37,6 +37,7 @@ public class LocationFetcher {
 
 	private LocationUpdate locationUpdate;
 	private Activity context;
+	private boolean connected;
 
 
 	private static final String LOCATION_SP = "location_sp",
@@ -50,6 +51,8 @@ public class LocationFetcher {
 	}
 
 	public synchronized void connect(LocationUpdate locationUpdate, long requestInterval) {
+
+		if(connected)return;
 		this.locationUpdate = locationUpdate;
 		destroy();
 		GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
@@ -114,7 +117,12 @@ public class LocationFetcher {
 				});
 
 		mFusedLocationClient.requestLocationUpdates(locationrequest,
-				mLocationCallback, Looper.myLooper());
+				mLocationCallback, Looper.myLooper()).addOnCompleteListener(new OnCompleteListener<Void>() {
+			@Override
+			public void onComplete(@NonNull Task<Void> task) {
+				connected = true;
+			}
+		});
     }
 
 
@@ -168,6 +176,7 @@ public class LocationFetcher {
 					.addOnCompleteListener(context, new OnCompleteListener<Void>() {
 						@Override
 						public void onComplete(@NonNull Task<Void> task) {
+							connected = false;
 						}
 					});
 		}catch(Exception e){
@@ -218,4 +227,7 @@ public class LocationFetcher {
 	}
 
 
+	public boolean isConnected() {
+		return connected;
+	}
 }
