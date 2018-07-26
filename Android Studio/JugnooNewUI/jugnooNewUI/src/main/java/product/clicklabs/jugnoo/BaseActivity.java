@@ -80,17 +80,11 @@ public class BaseActivity extends Activity implements LocationUpdate {
 		return locationFetcher;
 	}
 
-	public void locationChanged(Location location){}
 
-	public boolean shouldRequestLocationPermission(){
-		return false;
-	}
 
-	public void requestReceiveSMSPermission(){
-		if(!PermissionCommon.hasPermission(this, android.Manifest.permission.RECEIVE_SMS)){
-			getPermissionCommon().getPermission(REQUEST_CODE_PERMISSION_RECEIVE_SMS, true, Manifest.permission.RECEIVE_SMS);
-		}
-	}
+
+
+
 
 	private static final int WIDTH_PX = 200;
 	private static final int HEIGHT_PX = 80;

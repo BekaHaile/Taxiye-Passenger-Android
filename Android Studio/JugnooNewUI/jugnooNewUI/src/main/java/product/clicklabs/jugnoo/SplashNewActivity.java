@@ -77,6 +77,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
