@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -78,6 +79,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -398,7 +400,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		super.onCreate(savedInstanceState);
 
 		try {
-			getPermissionCommon().setCallback(permissionListener);
+			HashMap<String,String> rationalMap = (new HashMap<>());
+			rationalMap.put(Manifest.permission.ACCESS_FINE_LOCATION,
+			BuildConfig.FLAVOR.equals("jugnoo")?getString(R.string.perm_location_rational_splash_jugnoo,getString(R.string.app_name)):
+			getString(R.string.perm_location_rational_splash,getString(R.string.app_name)));
+			getPermissionCommon().setCallback(permissionListener).setMessageMap(rationalMap);
 			// to check if this is root task or not
 			if (!isTaskRoot()
 					&& getIntent().hasCategory(Intent.CATEGORY_LAUNCHER)

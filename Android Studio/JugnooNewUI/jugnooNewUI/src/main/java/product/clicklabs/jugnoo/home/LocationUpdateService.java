@@ -224,11 +224,11 @@ public class LocationUpdateService extends Service {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIF_CHANNEL_DEFAULT);
 		builder.setAutoCancel(true);
 		builder.setContentTitle(getString(R.string.app_name));
-		builder.setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.running_in_background)));
-		builder.setContentText(getString(R.string.running_in_background));
+		builder.setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.ride_in_progress)));
+		builder.setContentText(getString(R.string.ride_in_progress));
 		builder.setTicker(getString(R.string.app_name));
 		builder.setWhen(when);
-		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
+		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
 		builder.setSmallIcon(R.mipmap.notification_icon);
 		builder.setChannelId(Constants.NOTIF_CHANNEL_DEFAULT);
 		builder.setContentIntent(intent);

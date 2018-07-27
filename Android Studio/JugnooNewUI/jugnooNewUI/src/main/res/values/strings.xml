@@ -1906,20 +1906,27 @@
     <string name="number_should_not_start_with_zero">Phone number should not start with 0</string>
     <string name="toll_charge">Toll Charge</string>
     <string name="label_add_store_text_oh_snap"><b>Suggest a store to %s</b></string>
+
+
+    <!--Strings related to permissions-->
     <string name="you_have_disabled_permission_format">You have disabled the permission to %s. Please enable from app settings to allow access.</string>
     <string name="need_permission_camera_format">%s needs permission to access the camera to capture image.</string>
     <string name="need_permission_location_format">%s needs permission to fetch your location address.</string>
-    <string name="need_permission_contact_format">%s needs permission to fetch your contacts.</string>
+    <string name="need_permission_contact_format">%s needs permission to sync your contacts.</string>
     <string name="need_permission_phone_state_format">%s needs access to your phone state to proceed.</string>
-    <string name="need_permission_default_format">%1$s needs %2$s permission to proceed.</string>
-    <string name="running_in_background">Running in background</string>
+    <string name="need_permission_sms_format">%s needs permission to auto-detect OTP.</string>
+    <string name="need_permission_storage_format">%s needs storage permission to view and upload photos.</string>
+    <string name="need_permission_format">%s needs permission to proceed.</string>
+    <string name="sms_permission_optional_message">%s needs permission to auto-detect OTP. Are you sure you want to proceed?</string>
+    <string name="are_you_sure">Are you sure you want to proceed?</string>
+    <string name="i_am_sure">I\'m Sure</string>
+    <string name="perm_location_rational_splash">%s would need location permission to show you nearby drivers.</string>
+    <string name="perm_location_rational_splash_jugnoo">%s would need location permission to show you nearby drivers or services.</string>
+    <string name="grant">GRANT</string>
+
 
     <!-- Notification channel -->
     <string name="notification_channel_default">Notifications</string>
     <string name="notification_channel_description_default">Latest Updates</string>
-    <string name="sms_permission_optional_message">%s needs this permission to auto-detect OTP. Are you sure you want to proceed?</string>
-    <string name="are_you_sure">Are you sure you want to proceed?</string>
-    <string name="i_am_sure">I\'m Sure</string>
-
 
 </resources>

@@ -136,9 +136,7 @@ public final class PermissionCommon {
                             if(!shouldShowRationalPermission(permission)){
 
 
-
-                                String messageToShow = "You have disabled the permission to " + getPermissionLabel(permission) + ".Please go to app settings to allow permission";
-
+                                String messageToShow = activity.getString(R.string.you_have_disabled_permission_format,getPermissionLabel(permission));
                                 //this means the user has blocked a permission and chosen "Never ask again" for the that permission.
 
 
@@ -194,7 +192,7 @@ public final class PermissionCommon {
                 else {
                     if (!shouldShowRationalPermission(permissions[0])) {
 
-                        String messageToShow = "You have disabled the permission to " + getPermissionLabel(permissions[0]) + ".Please go to app settings to allow permission";
+                        String messageToShow = activity.getString(R.string.you_have_disabled_permission_format,getPermissionLabel(permissions[0]));
                         //activity means the user has blocked a permission and chosen "Never ask again" for the same
                         if(permissionListener!=null){
                             if(permissionListener.permissionDenied(requestCodeInitiated, true)){
@@ -236,21 +234,21 @@ public final class PermissionCommon {
 
         switch (permission) {
             case Manifest.permission.CAMERA:
-                return appName + " needs permission to access the camera to save images. ";
+                return activity.getString(R.string.need_permission_camera_format, appName);
             case Manifest.permission.ACCESS_COARSE_LOCATION:
-                return appName + " needs permission to fetch current location address.";
+                return activity.getString(R.string.need_permission_location_format, appName);
             case Manifest.permission.ACCESS_FINE_LOCATION:
-                return appName + " needs permission to fetch current location address.";
+                return activity.getString(R.string.need_permission_location_format, appName);
             case Manifest.permission.RECEIVE_SMS:
-                return appName + " needs this permission to auto-detect OTP. ";
+                return activity.getString(R.string.need_permission_sms_format, appName);
             case Manifest.permission.READ_PHONE_STATE:
-                return appName + " needs phone State permission to uniquely identify device.";
+                return activity.getString(R.string.need_permission_phone_state_format, appName);
             case Manifest.permission.WRITE_EXTERNAL_STORAGE:
-                return appName + " needs external storage permission to fetch selected image from gallery.";
+                return activity.getString(R.string.need_permission_storage_format, appName);
             case Manifest.permission.READ_CONTACTS:
-                return appName + " needs permission to sync your contacts.";
+                return activity.getString(R.string.need_permission_contact_format, appName);
             default:
-                return appName + " needs this permission to proceed.";
+                return activity.getString(R.string.need_permission_format, appName);
         }
 
     }
@@ -328,7 +326,7 @@ public final class PermissionCommon {
 
                 }
 
-                getRationalSnackBar(getRationalMessage(permission)).setAction("OK", new View.OnClickListener() {
+                getRationalSnackBar(getRationalMessage(permission)).setAction(activity.getString(R.string.ok), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         requestPermissions(new String[]{permission}, REQUEST_CODE_RATIONAL);
@@ -413,16 +411,8 @@ public final class PermissionCommon {
             view.setVisibility(View.VISIBLE);
             snackBarPermissionDenied = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
             snackBarPermissionDenied.setActionTextColor(ContextCompat.getColor(activity, R.color.theme_color));
-//            snackBarPermissionDenied.getView().setBackgroundColor(ContextCompat.getColor(activity, android.R.color.holo_red_dark));
             ((TextView) snackBarPermissionDenied.getView().findViewById(android.support.design.R.id.snackbar_text)).setMaxLines(5);
-            snackBarPermissionDenied.setAction("Dismiss", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    snackBarPermissionDenied.dismiss();
-                }
-            });
-
-            snackBarPermissionDenied.setAction("Grant", new View.OnClickListener() {
+            snackBarPermissionDenied.setAction(activity.getString(R.string.grant), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     snackBarPermissionDenied.dismiss();
@@ -445,7 +435,6 @@ public final class PermissionCommon {
         if (snackBarRational == null) {
             snackBarRational = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
             snackBarRational.setActionTextColor(ContextCompat.getColor(activity, R.color.theme_color));
-//            snackBarRational.getView().setBackgroundColor(ContextCompat.getColor(activity, android.R.color.holo_blue_dark));
             ((TextView) snackBarRational.getView().findViewById(android.support.design.R.id.snackbar_text)).setMaxLines(5);
 
         }
