@@ -26,21 +26,21 @@
     <string name="google_maps_api_key">AIzaSyC0LUM94aPlHwPRQaUd3wp0b4wZn4xMbmo</string>
     <string name="google_maps_api_server_key">AIzaSyCEm85JFw4AT9cPgqnPutN8yUgVlWeFeZ4</string>
     <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
-    <string name="fb_app_id">227615331160869</string>
-    <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
+    <string name="fb_app_id">1543678282405495</string>
+    <string name="fb_client_token">584dc6f63e9d39f3933802b249eeb53e</string>
     <string name="ak_login_protocol_scheme">ak782131025144439</string>
     <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
-
-
-
 
 
     <string name="operator_token">0433d618542f67e56e5d23a2ef61e78b</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">999</string>
-    <string name="facebook_page_id">""</string>
-        <string name="facebook_page_name">""</string>
+    <string name="facebook_page_id">214323992611315</string>
+    <string name="facebook_page_name">Smart Ride</string>
 
+
+    <string name="facebook_page_url">https://www.facebook.com/Smart-Ride-214323992611315/</string>
+    <string name="default_lang">en</string>
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
     <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
@@ -69,7 +69,7 @@
     <string name="web_landing_page">https://smartride.in</string>
     <string name="smart_url">http://smarturl.it/smartride</string>
     <string name="db_name">smartride_database</string>
-    <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
+    <string name="terms_of_use_url">http://smartride.id/privacypolicy.html</string>
     <string name="app_domain">smartride.in</string>
     <string name="app_host_name">www.smartride.in</string>
     <string name="branch_domain">share.smartride.in</string>

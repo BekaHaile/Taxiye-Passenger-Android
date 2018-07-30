@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                                         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="2px"
-        android:layout_marginStart="25px"
-        android:layout_marginEnd="25px"
-        android:layout_marginTop="25px"
-        card_view:cardBackgroundColor="@color/white"
-        card_view:cardCornerRadius="@dimen/button_corner_radius">
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="2px"
+                                        android:layout_marginEnd="25px"
+                                        android:layout_marginStart="25px"
+                                        android:layout_marginTop="25px"
+                                        card_view:cardBackgroundColor="@color/white"
+                                        card_view:cardCornerRadius="@dimen/button_corner_radius">
 
         <RelativeLayout
             android:id="@+id/relative"
-            android:background="@drawable/bg_transparent_menu_item_selector"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_transparent_menu_item_selector">
 
             <ImageView
                 android:id="@+id/imageViewProductType"
                 android:layout_width="64px"
                 android:layout_height="64px"
-               android:layout_marginStart="20px"
+                android:layout_marginStart="20px"
                 android:layout_marginTop="@dimen/px_20"
                 android:background="@drawable/circle_grocery_new"
                 android:padding="12px"
                 android:src="@drawable/ic_groceries_new_vector"
-                android:tag="mwar" />
+                android:tag="mwar"/>
 
             <RelativeLayout
-                android:layout_toEndOf="@id/imageViewProductType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/imageViewProductType"
                 android:splitMotionEvents="false"
                 >
 
@@ -54,29 +54,30 @@
                             android:id="@+id/textViewStatus"
                             android:layout_width="100px"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="20px"
                             android:layout_marginEnd="20px"
+                            android:layout_marginStart="20px"
                             android:text="@string/order_status_colon"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_24" />
+                            android:textSize="@dimen/text_size_24"/>
 
                         <TextView
-                            android:layout_toEndOf="@id/textViewStatus"
                             android:id="@+id/textViewStatusValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/textViewStatus"
                             android:text="@string/or"
                             android:textColor="@color/text_color_blue"
-                            android:textSize="@dimen/text_size_24" />
+                            android:textSize="@dimen/text_size_24"/>
+
                         <ImageView
                             android:id="@+id/iv_order_status_icon"
-                            android:layout_marginStart="@dimen/px_10"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_tick_copy"
-                            android:layout_toEndOf="@id/textViewStatusValue"
                             android:layout_width="26px"
-                            android:visibility="gone"
-                            android:layout_height="26px" />
+                            android:layout_height="26px"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/px_10"
+                            android:layout_toEndOf="@id/textViewStatusValue"
+                            android:src="@drawable/ic_tick_copy"
+                            android:visibility="gone"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -88,21 +89,21 @@
                             android:id="@+id/textViewId"
                             android:layout_width="100px"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="20px"
                             android:layout_marginEnd="20px"
+                            android:layout_marginStart="20px"
                             android:text="@string/order_id_colon"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_24" />
+                            android:textSize="@dimen/text_size_24"/>
 
                         <TextView
                             android:id="@+id/textViewIdValue"
-                            android:layout_toEndOf="@id/textViewId"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/textViewId"
 
                             android:text="@string/_1234"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_24" />
+                            android:textSize="@dimen/text_size_24"/>
                     </RelativeLayout>
 
 
@@ -115,11 +116,11 @@
                             android:id="@+id/textViewFrom"
                             android:layout_width="100px"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="20px"
                             android:layout_marginEnd="@dimen/px_20"
+                            android:layout_marginStart="20px"
                             android:text="@string/from_colon"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_24" />
+                            android:textSize="@dimen/text_size_24"/>
 
                         <TextView
                             android:id="@+id/textViewFromValue"
@@ -128,7 +129,7 @@
                             android:layout_toEndOf="@id/textViewFrom"
                             android:text="@string/sample_address"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_24" />
+                            android:textSize="@dimen/text_size_24"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -142,11 +143,11 @@
                             android:id="@+id/textViewTo"
                             android:layout_width="100px"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="20px"
                             android:layout_marginEnd="20px"
+                            android:layout_marginStart="20px"
                             android:text="@string/to_colon"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_22" />
+                            android:textSize="@dimen/text_size_22"/>
 
                         <TextView
                             android:id="@+id/textViewToValue"
@@ -155,7 +156,7 @@
                             android:layout_toEndOf="@id/textViewTo"
                             android:text="@string/sample_address"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_22" />
+                            android:textSize="@dimen/text_size_22"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -168,11 +169,11 @@
                             android:id="@+id/textViewDetails"
                             android:layout_width="100px"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="20px"
                             android:layout_marginEnd="20px"
+                            android:layout_marginStart="20px"
                             android:text="@string/address_colon"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_24" />
+                            android:textSize="@dimen/text_size_24"/>
 
                         <TextView
                             android:id="@+id/textViewDetailsValue"
@@ -181,7 +182,7 @@
                             android:layout_toEndOf="@id/textViewDetails"
                             android:text="@string/_15_aug_2016_05_30pm_8_5_km"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_24" />
+                            android:textSize="@dimen/text_size_24"/>
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -190,24 +191,23 @@
                     android:id="@+id/viewExtra"
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_below="@+id/linearLayoutMain" />
-
+                    android:layout_below="@+id/linearLayoutMain"/>
 
                 <TextView
                     android:id="@+id/textViewAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
+                    android:layout_width="230px"
+                    android:layout_height="80px"
+                    android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginEnd="30px"
-                    android:layout_marginTop="24px"
-                    android:singleLine="true"
+                    android:layout_marginRight="30px"
+                    android:layout_marginTop="20px"
+                    android:layout_marginEnd="20px"
+                    android:autoSizeMaxTextSize="@dimen/text_size_40"
+                    android:autoSizeMinTextSize="30px"
+                    android:autoSizeTextType="uniform"
+                    android:gravity="end|top"
                     android:text="@string/rupee_0"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_40" />
-
-
-
+                    android:textColor="@color/text_color"/>
 
             </RelativeLayout>
         </RelativeLayout>
