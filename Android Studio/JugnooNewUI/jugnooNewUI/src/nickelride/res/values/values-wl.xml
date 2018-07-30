@@ -31,16 +31,16 @@
 
     <string name="app_name">NickelRide</string>
 
-    <string name="google_maps_api_key">AIzaSyDsJfrc1s83KH5CETe21pPi3YmNWbc1lUo</string>
-    <string name="google_maps_api_server_key">AIzaSyDM3AwP5eMdvosUOLeCrl3PZSFeRNhHT0g</string>
-    <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
-    <string name="fb_app_id">221198591833189</string>
-    <string name="fb_client_token">020d6d767cb2eb40619f1594c4233adc</string>
+    <string name="google_maps_api_key">AIzaSyByBfiSz9PmAdJbrGwbpPAugDgjjrxLa9s</string>
+    <string name="google_maps_api_server_key">AIzaSyBHMjQS4DDlv_n6lWJE4rgZIm14jPHidDw</string>
+    <string name="google_server_client_id">676585448141-f3dii9e8cv66dh004ncfvmsuk1d2bsln.apps.googleusercontent.com</string>
+    <string name="fb_app_id">""</string>
+    <string name="fb_client_token">""</string>
     <string name="ak_login_protocol_scheme">ak782131025144439</string>
     <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
 
 
-    <string name="operator_token">fe64556b1be2fc4939cabb114df60660</string>
+    <string name="operator_token">9672385cbae165f34516284950625e0b</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">999</string>
     <string name="facebook_page_id">""</string>
