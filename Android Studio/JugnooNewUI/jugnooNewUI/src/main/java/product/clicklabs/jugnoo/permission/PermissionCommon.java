@@ -159,7 +159,7 @@ public final class PermissionCommon {
 
                     if(showRetryAlertOnFirstDenial){
                         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                        builder.setMessage(getRationalMessage(permissionDenied) +  activity.getString(R.string.are_you_sure))
+                        builder.setMessage(getRationalMessage(permissionDenied) + " " + activity.getString(R.string.are_you_sure))
                                 .setNegativeButton(activity.getString(R.string.i_am_sure), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -310,30 +310,34 @@ public final class PermissionCommon {
 
         //this loop checks for any rationalPermission and stops the process un till the user reacts to the first rational permission if found
         //if granted the process continues again from onRequestPermissionResult() if not granted we wait for user's further input
-        for (final String permission : permissionsToAsk) {
+
+        if(rationalOperationRequired!=SKIP_RATIONAL_MESSAGE){
+            for (final String permission : permissionsToAsk) {
 
 
 
-            if (shouldShowRationalPermission(permission) && rationalOperationRequired!=SKIP_RATIONAL_MESSAGE) {
-                if(rationalOperationRequired==SKIP_RATIONAL_REQUEST){
-                    if(permissionListener!=null)permissionListener.onRationalRequestIntercepted(requestCodeInitiated);
+                if (shouldShowRationalPermission(permission)) {
+                    if(rationalOperationRequired==SKIP_RATIONAL_REQUEST){
+                        if(permissionListener!=null)permissionListener.onRationalRequestIntercepted(requestCodeInitiated);
+                        return;
+                    }
+
+
+                    getRationalSnackBar(getRationalMessage(permission)).setAction(activity.getString(R.string.ok), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{permission}, REQUEST_CODE_RATIONAL);
+
+                        }
+                    }).show();
+
                     return;
                 }
 
 
-                getRationalSnackBar(getRationalMessage(permission)).setAction(activity.getString(R.string.ok), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        requestPermissions(new String[]{permission}, REQUEST_CODE_RATIONAL);
-
-                    }
-                }).show();
-
-                return;
             }
-
-
         }
+
         //At activity point if shouldAsk is true there is no rational Permission that exists and  No explanation needed, we can request for the permissions.
         requestPermissions(permissionsToAsk.toArray(new String[permissionsToAsk.size()]), REQUEST_CODE);
 

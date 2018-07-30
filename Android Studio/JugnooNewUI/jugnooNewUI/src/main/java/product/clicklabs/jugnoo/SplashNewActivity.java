@@ -3,10 +3,12 @@ package product.clicklabs.jugnoo;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -127,6 +129,7 @@ import retrofit.mime.TypedByteArray;
 
 public class SplashNewActivity extends BaseAppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
 
+	private AlertDialog dialogLocationPermission;
 	private PermissionCommon.PermissionListener permissionListener = new PermissionCommon.PermissionListener() {
 				@Override
 				public void permissionGranted(int requestCode) {
@@ -135,8 +138,18 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								goToLoginUsingPhone("");
 						break;
 						case REQUEST_CODE_LOCATION:
-							LocationInit.showLocationAlertDialog(SplashNewActivity.this);
-							getLocationFetcher().connect(SplashNewActivity.this, 10000);
+							try {
+								if(dialogLocationPermission!=null){
+									dialogLocationPermission.dismiss();
+								}
+								isLocationOnGrantCalled = true;
+								showLocationEnableDialog();
+								DialogPopup.dismissLoadingDialog();
+								Log.e("deviceToken received", "> " + MyApplication.getInstance().getDeviceToken());
+								accessTokenLogin(SplashNewActivity.this);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 							break;
 
 					}
@@ -148,6 +161,38 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 					switch (requestCode){
 						case REQUEST_CODE_RECIEVE_SMS:
 							goToLoginUsingPhone("");
+						return false;
+						case REQUEST_CODE_LOCATION:
+
+
+							if(locationBuilderPermission==null){
+								locationBuilderPermission = new AlertDialog.Builder(SplashNewActivity.this);
+								locationBuilderPermission.setMessage(getString(R.string.need_permission_location_format, getString(R.string.app_name))).setCancelable(false);
+
+							}
+
+							if(neverAsk){
+								locationBuilderPermission.setPositiveButton(getString(R.string.settings), new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										PermissionCommon.openSettingsScreen(SplashNewActivity.this);
+
+									}
+								});
+
+
+							}else{
+								locationBuilderPermission.setPositiveButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										goToAccessTokenLogin();
+
+									}
+								});
+							}
+
+							dialogLocationPermission = locationBuilderPermission.show();
+
 							return false;
 						default:
 							return false;
@@ -167,6 +212,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 			};;
+	private boolean isLocationOnGrantCalled;
+	private AlertDialog.Builder locationBuilderPermission;
 
 	@Override
 	public boolean checkOfAT(){
@@ -950,7 +997,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			rlMobileNumber.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					getPermissionCommon().getPermission(REQUEST_CODE_RECIEVE_SMS,PermissionCommon.SKIP_RATIONAL_REQUEST,true,Manifest.permission.RECEIVE_SMS);
+					getPermissionCommon().getPermission(REQUEST_CODE_RECIEVE_SMS,PermissionCommon.SKIP_RATIONAL_MESSAGE,true,Manifest.permission.RECEIVE_SMS);
 					GAUtils.event(JUGNOO, LOGIN_SIGNUP, MOBILE+CLICKED);
 				}
 			});
@@ -1915,7 +1962,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
     //				changeUIState(State.SIGNUP);
     //			}
             } else if(openLS){
-				splashLSState();
+				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)) {
+					splashLSState();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2011,13 +2060,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	};
 
 	private void goToAccessTokenLogin() {
-		try {
-			DialogPopup.dismissLoadingDialog();
-			Log.e("deviceToken received", "> " + MyApplication.getInstance().getDeviceToken());
-			accessTokenLogin(SplashNewActivity.this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		getPermissionCommon().getPermission(REQUEST_CODE_LOCATION,PermissionCommon.SKIP_RATIONAL_MESSAGE,Manifest.permission.ACCESS_FINE_LOCATION);
 	}
 
 
@@ -2039,6 +2082,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			changeUIState(State.SPLASH_ONBOARDING);
 		}
 
+
 	}
 
 	@Override
@@ -2049,7 +2093,13 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	public void retryAccessTokenLogin() {
 		try {
 			if (State.LOGIN != state && State.SIGNUP != state && resumed) {
-				buttonRefresh.performClick();
+				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION,this) && !isLocationOnGrantCalled){
+					buttonRefresh.performClick();
+				}
+			}
+
+			if(!PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION,this) && dialogLocationPermission!=null && !dialogLocationPermission.isShowing()){
+				dialogLocationPermission.show();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2680,8 +2730,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			Log.e("Google Play Service Error ", "=" + resp);
 			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
 		} else {
-
-			getPermissionCommon().getPermission(REQUEST_CODE_LOCATION,PermissionCommon.SKIP_RATIONAL_REQUEST,true,Manifest.permission.ACCESS_FINE_LOCATION);
+			LocationInit.showLocationAlertDialog(SplashNewActivity.this);
+			getLocationFetcher().connect(SplashNewActivity.this, 10000);
 		}
 	}
 
