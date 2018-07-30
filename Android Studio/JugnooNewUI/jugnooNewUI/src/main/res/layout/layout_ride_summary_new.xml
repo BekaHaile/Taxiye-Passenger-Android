@@ -218,14 +218,15 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="70px">
+                android:layout_marginTop="70px"
+                android:layout_marginStart="60px"
+                android:layout_marginEnd="60px">
 
                 <ImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="2px"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="20px"
-                    android:layout_marginStart="60px"
+                    android:layout_alignParentStart="true"
                     android:layout_toStartOf="@+id/textViewRSRateYourRide"
                     android:src="@color/text_color"/>
 
@@ -236,38 +237,28 @@
                     android:layout_centerInParent="true"
                     android:text="@string/how_was_your_experience"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_36"/>
+                    android:layout_marginEnd="20px"
+                    android:layout_marginStart="20px"
+                    android:textSize="@dimen/text_size_36"
+                    android:gravity="center"/>
 
                 <ImageView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="2px"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="20px"
-                    android:layout_marginEnd="60px"
+                    android:layout_alignParentEnd="true"
                     android:layout_toEndOf="@+id/textViewRSRateYourRide"
                     android:src="@color/text_color"/>
             </RelativeLayout>
 
 
 
-            <RatingBar
-                android:id="@+id/ratingBarRSFeedback"
-                style="@style/YellowRatingBarNew"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="30px"
-                android:numStars="5"
-                android:visibility="gone"
-                android:rating="1"
-                android:stepSize="1.0"/>
-
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/rlThumbsType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10px"
-                android:gravity="center"
                 android:orientation="horizontal">
 
 
@@ -276,7 +267,6 @@
                     android:id="@+id/imageViewThumbsDown"
                     android:layout_width="238px"
                     android:layout_height="238px"
-                    android:layout_marginStart="20px"
                     android:contentDescription="@string/bad_feedback"
                     android:src="@drawable/ic_thumbs_down_selector"
                     android:tag="mwar"/>
@@ -287,43 +277,63 @@
                     android:layout_height="238px"
                     android:layout_marginStart="50px"
                     android:contentDescription="@string/great_feedback"
-                    android:layout_marginEnd="20px"
                     android:src="@drawable/ic_thumbs_up_selector"
-                    android:tag="mwar"/>
-
-
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20px">
+                    android:tag="mwar"
+                    android:layout_toEndOf="@+id/imageViewThumbsDown"/>
 
                 <TextView
                     android:id="@+id/textViewThumbsDown"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/bad"
-                    android:layout_marginStart="180px"
                     android:textAllCaps="true"
+                    android:gravity="center"
                     android:textColor="@color/text_color"
                     android:visibility="visible"
-                    android:textSize="@dimen/text_size_30"/>
+                    android:textSize="@dimen/text_size_30"
+                    android:layout_below="@+id/imageViewThumbsDown"
+                    android:layout_alignStart="@+id/imageViewThumbsDown"
+                    android:layout_alignEnd="@+id/imageViewThumbsDown"
+                    />
 
                 <TextView
                     android:id="@+id/textViewThumbsUp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/great"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="145px"
                     android:textAllCaps="true"
+                    android:gravity="center"
                     android:textColor="@color/text_color"
                     android:visibility="visible"
-                    android:textSize="@dimen/text_size_30"/>
+                    android:textSize="@dimen/text_size_30"
+                    android:layout_below="@+id/imageViewThumbsUp"
+                    android:layout_alignStart="@+id/imageViewThumbsUp"
+                    android:layout_alignEnd="@+id/imageViewThumbsUp"/>
+
             </RelativeLayout>
 
+            <LinearLayout
+                android:id="@+id/llRatingFeedbackType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <com.sabkuchfresh.utils.RatingBarMenuFeedback
+                    android:id="@+id/ratingBarRSFeedback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="15dp"
+                    android:numStars="5"
+                    android:rating="0"
+                    android:tag="@string/dont_touch_me"
+                    app:halfStars="false"
+                    app:maxStars="5"
+                    app:onlyForDisplay="false"
+                    app:starOff="@drawable/ic_menu_feedback_star_off"
+                    app:starOn="@drawable/ic_menu_feedback_star_on" />
 
             <TextView
                 android:id="@+id/textViewRSWhatImprove"
@@ -358,7 +368,6 @@
                 android:layout_marginTop="20px"
                 android:background="@drawable/background_white_rounded_bordered"
                 android:gravity="start"
-                android:visibility="gone"
                 android:hint="@string/leave_a_comment"
                 android:padding="20px"
                 android:scrollbars="vertical"
@@ -388,8 +397,7 @@
                 android:id="@+id/buttonRSSubmitFeedback"
                 style="@style/ButtonTheme"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10px"
-                android:visibility="gone"
+                android:layout_marginBottom="50px"
                 android:layout_marginTop="20px"
                 android:text="@string/submit_feedback_caps"
                 />
@@ -406,6 +414,8 @@
                 android:visibility="gone"
                 android:textColor="@color/text_color_light_selector"
                 android:textSize="@dimen/button_small_text_size"/>
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textViewRSScroll"

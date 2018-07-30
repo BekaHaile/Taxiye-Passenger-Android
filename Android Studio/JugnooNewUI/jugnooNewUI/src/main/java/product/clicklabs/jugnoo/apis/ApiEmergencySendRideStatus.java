@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
+import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -45,7 +46,7 @@ public class ApiEmergencySendRideStatus {
 		this.callback = callback;
 	}
 
-	public void emergencySendRideStatusMessage(String engagementId, ArrayList<String> selectedContacts) {
+	public void emergencySendRideStatusMessage(String engagementId, ArrayList<ContactBean> selectedContacts) {
 		try {
 			if(MyApplication.getInstance().isOnline()) {
 
@@ -56,10 +57,11 @@ public class ApiEmergencySendRideStatus {
 				params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
 
 				JSONArray jsonArray = new JSONArray();
-				for(String contact : selectedContacts){
+				for(ContactBean contact : selectedContacts){
 					if(jsonArray.length() < EmergencyActivity.MAX_EMERGENCY_CONTACTS_TO_SEND_RIDE_STATUS) {
 						JSONObject jsonObject = new JSONObject();
-						jsonObject.put(Constants.KEY_PHONE_NO, contact);
+						jsonObject.put(Constants.KEY_PHONE_NO, contact.getPhoneNo());
+						jsonObject.put(Constants.KEY_COUNTRY_CODE, contact.getCountryCode());
 						jsonArray.put(jsonObject);
 					}
 				}

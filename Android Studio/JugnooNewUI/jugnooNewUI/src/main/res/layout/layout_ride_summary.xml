@@ -177,6 +177,37 @@
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
                         </RelativeLayout>
+                        <!-- toll charge -->
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutTollCharge"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14px">
+
+                            <TextView
+                                android:id="@+id/textViewEndTollCharge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="30px"
+                                android:gravity="center_vertical"
+                                android:text="@string/toll_charge"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26"
+                                app:typekitFont="maven"/>
+
+
+                            <TextView
+                                android:id="@+id/textViewEndTollChargeValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
+                                android:text="@string/_0"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26"
+                                app:typekitFont="maven"/>
+                        </RelativeLayout>
 
 
                         <!-- luggage charge -->

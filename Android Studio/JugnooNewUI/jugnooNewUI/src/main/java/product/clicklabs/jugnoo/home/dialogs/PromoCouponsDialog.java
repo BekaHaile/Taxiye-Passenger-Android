@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -191,7 +192,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
                 } else{
                     listViewPromoCoupons.setVisibility(View.GONE);
                     relativeLayoutBottomButtons.setVisibility(View.GONE);
-                    linearLayoutNoCurrentOffers.setVisibility(View.VISIBLE);
+                    linearLayoutNoCurrentOffers.setVisibility(Data.isMenuTagEnabled(MenuInfoTags.FREE_RIDES)?View.VISIBLE:View.GONE);
                     imageViewOffers.setImageResource(R.drawable.ic_offer_popup);
                     tvAvailableOffers.setText(activity.getResources().getString(R.string.no_available_offers));
 

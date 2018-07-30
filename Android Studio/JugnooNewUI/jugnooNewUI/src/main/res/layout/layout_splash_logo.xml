@@ -77,8 +77,9 @@
         android:id="@+id/ivBottom"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
-        android:background="@drawable/splash_bottom_building_bg1"
+        android:src="@drawable/splash_bottom_building_bg1"
         android:layout_alignParentBottom="true"
+        android:scaleType="@integer/scale_type"
         android:visibility="@integer/show_splash_bottom_bg"
         android:tag="mwar" />
     </RelativeLayout>

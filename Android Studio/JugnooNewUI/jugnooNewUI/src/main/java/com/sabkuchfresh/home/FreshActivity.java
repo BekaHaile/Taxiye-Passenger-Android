@@ -207,6 +207,7 @@ import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportRideIssuesFragment;
@@ -220,7 +221,6 @@ import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
-import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -3649,7 +3649,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void openCart(int appType, boolean forceCheckout) {
         if (isMenusOrDeliveryOpen() && getVendorOpened() != null) {
 
-            if(getVendorOpened().getOutOfRadius()==1 && isDeliveryOpenInBackground()){
+            if(getVendorOpened().getOutOfRadius()==1 && isDeliveryOpenInBackground() &&  getMenusFragment()!=null && getMenusFragment().isCustomOrderEnabled()
+                    && Data.getFeedData()!=null){
                 FreshCheckoutMergedFragment.orderViaFatafat(this, FreshCheckoutMergedFragment.prepareItemsInCartForMenus(this,null),null,
                         this,updateCartValuesGetTotalPrice().first);
                 return;
@@ -4614,7 +4615,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return deliveryAddressModel;
     }
 
-    public void setDeliveryAddressModelToSelectedAddress(boolean dontRefresh,boolean pickUpCartAddress) {
+    public boolean setDeliveryAddressModelToSelectedAddress(boolean dontRefresh,boolean pickUpCartAddress) {
         if (deliveryAddressModel == null || pickUpCartAddress) {
             try {
                 String constantStringSp ;
@@ -4632,6 +4633,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             } catch (Exception e) {
             }
         }
+        LatLng latLng = getSelectedLatLng();
         try {
             if (deliveryAddressModel != null) {
                 setSelectedAddress(deliveryAddressModel.getAddress());
@@ -4643,6 +4645,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return MapUtils.distance(latLng, getSelectedLatLng()) > 50;
     }
 
     public class DeliveryAddressModel {
@@ -4896,7 +4899,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
 
                 @Override
-                public void failure() {
+                public void failure(boolean onboardingFlow, String response, LoginResponse loginResponse) {
 
                 }
 
@@ -4915,7 +4918,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 }
             };
             new ApiLoginUsingAccessToken(FreshActivity.this).hit(Data.userData.accessToken, getSelectedLatLng().latitude, getSelectedLatLng().longitude, lastClientId,
-                    true, callback);
+                    true, callback, false);
 
 
         }else{

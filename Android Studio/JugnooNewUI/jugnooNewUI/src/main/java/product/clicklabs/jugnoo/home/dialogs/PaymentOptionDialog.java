@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.home.dialogs;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -11,13 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.wallet.WalletCore;
@@ -30,8 +32,9 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
     private final String TAG = PaymentOptionDialog.class.getSimpleName();
     Bundle bundle = new Bundle();
-    private HomeActivity activity;
+    private Activity activity;
     private Callback callback;
+    private CallbackPaymentOptionSelector callbackPaymentOptionSelector;
     private Dialog dialog = null;
     private LinearLayout linearLayoutWalletContainer;
     private RelativeLayout relativeLayoutPaytm,relativeLayoutStripeCard;
@@ -42,9 +45,10 @@ public class PaymentOptionDialog implements View.OnClickListener {
     private ImageView radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard,ivStripeCardIcon;
     private TextView textViewPaytm,textViewStripeCard, textViewPaytmValue, textViewMobikwik, textViewMobikwikValue, textViewFreeCharge, textViewFreeChargeValue, tvOtherModesToPay, textViewMpesa,textViewMpesaValue;
 
-    public PaymentOptionDialog(HomeActivity activity, Callback callback) {
+    public PaymentOptionDialog(Activity activity, CallbackPaymentOptionSelector callbackPaymentOptionSelector, Callback callback) {
         this.activity = activity;
         this.callback = callback;
+        this.callbackPaymentOptionSelector = callbackPaymentOptionSelector;
     }
 
     public PaymentOptionDialog show() {
@@ -157,37 +161,37 @@ public class PaymentOptionDialog implements View.OnClickListener {
         try {
             switch (v.getId()) {
                 case R.id.relativeLayoutPaytm:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.PAYTM);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.PAYTM, callbackPaymentOptionSelector);
                     callback.onPaymentModeUpdated();
                     break;
 
                 case R.id.relativeLayoutMobikwik:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.MOBIKWIK);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.MOBIKWIK, callbackPaymentOptionSelector);
                     callback.onPaymentModeUpdated();
                     break;
 
                 case R.id.linearLayoutCash:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.CASH);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.CASH, callbackPaymentOptionSelector);
                     callback.onPaymentModeUpdated();
                     break;
                 case R.id.relativeLayoutMpesa:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.MPESA);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.MPESA, callbackPaymentOptionSelector);
                     callback.onPaymentModeUpdated();
                     break;
                 case R.id.llOtherModesToPay:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.RAZOR_PAY);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.RAZOR_PAY, callbackPaymentOptionSelector);
                     callback.onPaymentModeUpdated();
                     break;
                 case R.id.relativeLayoutFreeCharge:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.FREECHARGE);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.FREECHARGE, callbackPaymentOptionSelector);
                     callback.onPaymentModeUpdated();
                     break;
                 case R.id.relativeLayoutStripeCard:
-                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionBeforeRequestRide(activity, PaymentOption.STRIPE_CARDS);
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.STRIPE_CARDS, callbackPaymentOptionSelector);
                     callback.onPaymentModeUpdated();
                     break;
             }
-            activity.showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
+            callbackPaymentOptionSelector.onWalletOptionClick();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -195,19 +199,19 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
     private void setSelectedPaymentOptionUI() {
         try {
-            Data.autoData.setPickupPaymentOption(MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption()));
-            if (PaymentOption.PAYTM.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
+            callbackPaymentOptionSelector.setSelectedPaymentOption(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionAccAvailability(callbackPaymentOptionSelector.getSelectedPaymentOption()));
+            if (PaymentOption.PAYTM.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard);
-            } else if (PaymentOption.MOBIKWIK.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
+            } else if (PaymentOption.MOBIKWIK.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard);
-            } else if (PaymentOption.FREECHARGE.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
+            } else if (PaymentOption.FREECHARGE.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard);
-            } else if (PaymentOption.MPESA.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
+            } else if (PaymentOption.MPESA.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(imageViewRadioMpesa, ivOtherModesToPay, imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash,imageViewRadioStripeCard);
-            } else if (PaymentOption.RAZOR_PAY.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
+            } else if (PaymentOption.RAZOR_PAY.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(ivOtherModesToPay, imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash, imageViewRadioMpesa,imageViewRadioStripeCard);
-            }else if (PaymentOption.STRIPE_CARDS.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
+            }else if (PaymentOption.STRIPE_CARDS.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(imageViewRadioStripeCard, imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash, imageViewRadioMpesa,ivOtherModesToPay);
             } else {
                 paymentSelection(radioBtnCash, radioBtnPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard);
@@ -233,8 +237,8 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
     public void updatePreferredPaymentOptionUI() {
         try {
-            Data.autoData.setPickupPaymentOption(MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption()));
+            callbackPaymentOptionSelector.setSelectedPaymentOption(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionAccAvailability(callbackPaymentOptionSelector.getSelectedPaymentOption()));
 
             textViewPaytmValue.setText(String.format(activity.getResources()
                     .getString(R.string.rupees_value_format), Data.userData.getPaytmBalanceStr()));
@@ -248,9 +252,6 @@ public class PaymentOptionDialog implements View.OnClickListener {
                     .getString(R.string.rupees_value_format), Data.userData.getFreeChargeBalanceStr()));
             textViewFreeChargeValue.setTextColor(Data.userData.getFreeChargeBalanceColor(activity));
 
-//            textViewMpesaValue.setText(String.format(activity.getResources()
-//                    .getString(R.string.rupees_value_format), Data.userData.getFreeChargeBalanceStr()));
-//            textViewMpesaValue.setTextColor(Data.userData.getFreeChargeBalanceColor(activity));
 
             if (Data.userData.getPaytmEnabled() == 1) {
                 textViewPaytmValue.setVisibility(View.VISIBLE);
@@ -273,13 +274,6 @@ public class PaymentOptionDialog implements View.OnClickListener {
                 textViewFreeChargeValue.setVisibility(View.GONE);
                 textViewFreeCharge.setText(activity.getResources().getString(R.string.add_freecharge_wallet));
             }
-//            if (Data.userData.getFreeChargeEnabled() == 1) {
-//                textViewMpesaValue.setVisibility(View.VISIBLE);
-//                textViewMpesa.setText(activity.getResources().getString(R.string.freecharge_wallet));
-//            } else {
-//                textViewMpesaValue.setVisibility(View.GONE);
-//                textViewMpesa.setText(activity.getResources().getString(R.string.add_freecharge_wallet));
-//            }
 
             setSelectedPaymentOptionUI();
 
@@ -309,7 +303,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
                         else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
                             linearLayoutWalletContainer.addView(linearLayoutCash);
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()
-                                && Data.autoData != null && Data.autoData.isRazorpayEnabled()) {
+                                && callbackPaymentOptionSelector.isRazorpayEnabled()) {
                             linearLayoutWalletContainer.addView(llOtherModesToPay);
                             tvOtherModesToPay.setText(paymentModeConfigData.getDisplayName());
                         }else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {

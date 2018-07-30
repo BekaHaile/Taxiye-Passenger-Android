@@ -505,7 +505,7 @@
     <string name="loading">Cargando...</string>
 
     <string name="call_us">Call Us</string>
-    <string name="no_driver_nearby_try_again">No hay controladores nearby. \nPlease tratan después de algún tiempo</string>
+    <string name="no_driver_nearby_try_again">Lamentablemente, no hay controladores disponibles cerca \n Por favor, intente después de algún tiempo</string>
     <string name="couldnt_find_drivers_nearby">No se puede encontrar controladores cercana</string>
 
     <string name="tnc_apply">* T &amp; C Aplicada</string>
@@ -1869,6 +1869,7 @@
     <string name="we_could_not_detect_your_location">"No pudimos detectar su ubicación. ¿Seguro que quieres solicitar un auto para que te recoja en esta ubicación? "</string>
     <string name="location_accuracy_is_low">"La precisión de ubicación es baja. ¿Seguro que quieres solicitar un auto para que te recoja en esta ubicación? "</string>
     <string name="the_pickup_location_you_have_set_is_different">"La ubicación de recolección que ha establecido es diferente de su ubicación actual. ¿Estás seguro de que este es tu lugar de recogida? "</string>
+    <string name="number_should_not_start_with_zero">El número de teléfono no debe comenzar con 0.</string>
 
 
 </resources>

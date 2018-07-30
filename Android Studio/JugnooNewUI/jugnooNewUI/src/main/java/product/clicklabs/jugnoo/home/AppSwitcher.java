@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.apis.ApiUpdateClientId;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -140,9 +141,6 @@ public class AppSwitcher {
 					}
 				}
 
-				if(activity.getResources().getBoolean(R.bool.force_open_autos)) {
-					clientId = Config.getAutosClientId();
-				}
 
 				intent.putExtra(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, clientId);
 				intent.putExtra(Constants.KEY_APP_SWITCH_BUNDLE, bundle);
@@ -180,7 +178,7 @@ public class AppSwitcher {
 						}
 
 						@Override
-						public void failure() {
+						public void failure(boolean onboardingFlow, String response, LoginResponse loginResponse) {
 
 						}
 
@@ -216,7 +214,7 @@ public class AppSwitcher {
 										}
 
 										@Override
-										public void failure() {
+										public void failure(boolean onboardingFlow, String response, LoginResponse loginResponse) {
 
 										}
 
@@ -229,7 +227,7 @@ public class AppSwitcher {
 										public void onNoRetry(View view) {
 
 										}
-									});
+									}, false);
 						} else {
 							intent.setClass(activity, HomeActivity.class);
 							activity.startActivity(intent);
@@ -241,7 +239,7 @@ public class AppSwitcher {
 					} else if (clientId.equalsIgnoreCase(Config.getFreshClientId()) && !(activity instanceof FreshActivity)) {
 						if (Data.getFreshData() == null) {
 							new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-									true, callback);
+									true, callback, false);
 						} else {
 							intent.setClass(activity, FreshActivity.class);
 							activity.startActivity(intent);
@@ -254,7 +252,7 @@ public class AppSwitcher {
 					} else if (clientId.equalsIgnoreCase(Config.getMealsClientId()) && !(activity instanceof FreshActivity)) {
 						if (Data.getMealsData() == null) {
 							new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-									true, callback);
+									true, callback, false);
 						} else {
 							intent.setClass(activity, FreshActivity.class);
 							activity.startActivity(intent);
@@ -267,7 +265,7 @@ public class AppSwitcher {
 					} else if (clientId.equalsIgnoreCase(Config.getGroceryClientId()) && !(activity instanceof FreshActivity)) {
 						if (Data.getGroceryData() == null) {
 							new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-									true, callback);
+									true, callback, false);
 						} else {
 							intent.setClass(activity, FreshActivity.class);
 							activity.startActivity(intent);
@@ -280,7 +278,7 @@ public class AppSwitcher {
 				} else if (clientId.equalsIgnoreCase(Config.getMenusClientId()) && !(activity instanceof FreshActivity)) {
 					if (Data.getMenusData() == null) {
 						new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-								true, callback);
+								true, callback, false);
 					} else {
 						intent.setClass(activity, FreshActivity.class);
 						activity.startActivity(intent);
@@ -293,7 +291,7 @@ public class AppSwitcher {
 				}else if (clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && !(activity instanceof FreshActivity)) {
 					if (Data.getDeliveryCustomerData() == null) {
 						new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-								true, callback);
+								true, callback, false);
 					} else {
 						intent.setClass(activity, FreshActivity.class);
 						activity.startActivity(intent);
@@ -330,7 +328,7 @@ public class AppSwitcher {
 									}
 
 									@Override
-									public void failure() {
+									public void failure(boolean onboardingFlow, String response, LoginResponse loginResponse) {
 
 									}
 
@@ -343,7 +341,7 @@ public class AppSwitcher {
 									public void onNoRetry(View view) {
 
 									}
-								});
+								}, false);
 					} else {
 						// intent.setClass(activity, MainActivity.class);
 						intent.setClass(activity, PayTutorial.class);
@@ -362,7 +360,7 @@ public class AppSwitcher {
 				else if (clientId.equalsIgnoreCase(Config.getFeedClientId()) && !(activity instanceof FreshActivity)) {
 						if (Data.getFeedData() == null) {
 							new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-									true, callback);
+									true, callback, false);
 						} else {
 							intent.setClass(activity, FreshActivity.class);
 							activity.startActivity(intent);
@@ -376,7 +374,7 @@ public class AppSwitcher {
 					else if (clientId.equalsIgnoreCase(Config.getProsClientId()) && !(activity instanceof FreshActivity)) {
 						if (Data.getProsData() == null) {
 							new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-									true, callback);
+									true, callback, false);
 						} else {
 							intent.setClass(activity, FreshActivity.class);
 							activity.startActivity(intent);
@@ -404,7 +402,7 @@ public class AppSwitcher {
 							|| (clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId()) && Data.getDeliveryCustomerData() == null)
 							) {
 						new ApiLoginUsingAccessToken(activity).hit(Data.userData.accessToken, latLng.latitude, latLng.longitude, clientId,
-								true, callback);
+								true, callback, false);
 					} else {
 							intent.setClass(activity, FreshActivity.class);
 							activity.startActivity(intent);

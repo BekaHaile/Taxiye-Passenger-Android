@@ -38,7 +38,7 @@
     <string name="support_number">+2549023121121</string>
     <string name="police_number">911</string>
     <string name="facebook_page_id">val</string>
-    <string name="facebook_page_name">val</string>
+    <string name="facebook_page_url">val</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
@@ -74,4 +74,6 @@
     <bool name="force_mpesa_payment">false</bool>
     <integer name="show_about">@integer/view_invisible</integer>
     <bool name="show_change_languge">false</bool>
+    <!--default support email for SupportMailActivity if not coming from server-->
+    <string name="default_support_email">support@livecabs.in</string>
 </resources>

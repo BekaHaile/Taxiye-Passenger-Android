@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 
@@ -146,6 +145,7 @@ public class  RideTransactionsActivity extends BaseAppCompatActivity implements 
 		rlDeliveryCustomer.setOnClickListener(offeringFilterClickListener);
 		rlPros.setOnClickListener(offeringFilterClickListener);
 		rlFeed.setOnClickListener(offeringFilterClickListener);
+		drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
 
 		if(Data.userData != null){
 
@@ -155,8 +155,6 @@ public class  RideTransactionsActivity extends BaseAppCompatActivity implements 
 			rlDeliveryCustomer.setVisibility(Data.userData.getDeliveryCustomerEnabled() == 1 ? View.VISIBLE : View.GONE);
 			rlPros.setVisibility(Data.userData.getProsEnabled() == 1 ? View.VISIBLE : View.GONE);
 			rlFeed.setVisibility(Data.userData.getFeedEnabled() == 1? View.VISIBLE : View.GONE);
-		} else {
-			drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.END);
 		}
 
 		drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {

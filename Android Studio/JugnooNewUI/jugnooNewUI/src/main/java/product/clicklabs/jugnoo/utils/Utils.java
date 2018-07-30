@@ -25,10 +25,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -47,6 +45,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.country.picker.Country;
+import com.country.picker.CountryPicker;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tagmanager.DataLayer;
@@ -76,7 +76,6 @@ import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
@@ -385,71 +384,39 @@ public class Utils implements GAAction, GACategory{
 
 
     public static String getCountryCode(Context context) {
-
-        String CountryID = "";
-        String CountryZipCode = "";
-
-        TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        // getNetworkCountryIso
-		try {
-			CountryID = manager.getSimCountryIso().toUpperCase();
-			Log.e("CountryID", "=" + CountryID);
-			String[] rl = context.getResources().getStringArray(R.array.CountryCodes);
-			for (String aRl : rl) {
-				String[] g = aRl.split(",");
-				if (g[1].trim().equals(CountryID.trim())) {
-					CountryZipCode = g[0];
-					return CountryZipCode;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		Country country = CountryPicker.getCountryFromSIM(context);
+		if (country != null) {
+			return country.getDialCode();
+		} else {
+			return "";
 		}
-		return "";
     }
 
 	public static String getCountryCodeFromCountryIso(Context context, String countryIso) {
-		String CountryZipCode = "";
-		try {
-			String[] rl = context.getResources().getStringArray(R.array.CountryCodes);
-			for (String aRl : rl) {
-				String[] g = aRl.split(",");
-				if (g[1].trim().equals(countryIso.trim())) {
-					CountryZipCode = g[0];
-					return CountryZipCode;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		Country country = CountryPicker.getCountryByISO(countryIso);
+		if (country != null) {
+			return country.getDialCode();
+		} else {
+			return "";
 		}
-		return "";
 	}
 
 	public static String getCountryIsoFromCode(Context context, String code) {
-		try {
-			String[] rl = context.getResources().getStringArray(R.array.CountryCodes);
-			for (String aRl : rl) {
-				String[] g = aRl.split(",");
-				if (g[0].trim().equals(code.trim())) {
-					return g[1];
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		Country country = CountryPicker.getCountryByDialCode(code);
+		if (country != null) {
+			return country.getCode();
+		} else {
+			return "";
 		}
-		return "IN";
 	}
 
 	public static String getSimCountryIso(Context context) {
-		String CountryID = "IN";
-		TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-		// getNetworkCountryIso
-		try {
-			CountryID = manager.getSimCountryIso().toUpperCase();
-		} catch (Exception e) {
-			e.printStackTrace();
+		Country country = CountryPicker.getCountryFromSIM(context);
+		if (country != null) {
+			return country.getCode();
+		} else {
+			return "";
 		}
-		return CountryID;
 	}
 
 

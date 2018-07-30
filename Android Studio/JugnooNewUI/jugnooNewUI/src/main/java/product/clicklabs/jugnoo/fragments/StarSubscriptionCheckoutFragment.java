@@ -826,7 +826,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             }
             // for fatafat chat pay send feed client id
             if(isFromFatafatChat){
-                apiFetchWalletBalance.getBalance(true,true);
+                apiFetchWalletBalance.getBalance(true,true, null);
             }
             else {
                 apiFetchWalletBalance.getBalance(true);
@@ -901,6 +901,26 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         @Override
         public String getAmountToPrefill() {
             return "";
+        }
+
+        @Override
+        public void onWalletOptionClick() {
+
+        }
+
+        @Override
+        public int getSelectedPaymentOption() {
+            return getPaymentOption().getOrdinal();
+        }
+
+        @Override
+        public void setSelectedPaymentOption(int paymentOption) {
+            setPaymentOption(MyApplication.getInstance().getWalletCore().getPaymentOptionFromInt(paymentOption));
+        }
+
+        @Override
+        public boolean isRazorpayEnabled() {
+            return true;
         }
     };
 

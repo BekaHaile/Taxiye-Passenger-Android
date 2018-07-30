@@ -433,6 +433,7 @@
         <item>+46,SE</item>
         <item>+41,CH</item>
         <item>+963,SY</item>
+        <item>+1,TT</item>
         <item>+886,TW</item>
         <item>+992,TJ</item>
         <item>+255,TZ</item>
@@ -502,7 +503,7 @@
     <string name="loading">Loading...</string>
 
     <string name="call_us">Call Us</string>
-    <string name="no_driver_nearby_try_again">No drivers nearby.\nPlease try after some time</string>
+    <string name="no_driver_nearby_try_again">Unfortunately no drivers available nearby \n Please try after sometime</string>
     <string name="couldnt_find_drivers_nearby">Cannot find drivers nearby</string>
 
     <string name="tnc_apply">T&amp;C Apply</string>
@@ -556,7 +557,7 @@
     <string name="call_emergency_contact">Call Emergency Contact</string>
     <string name="call_your_contacts">Call Your Contacts</string>
     <string name="disable_emergency_mode">Disable Emergency Mode</string>
-    <string name="emergency_contacts">Emergency Contacts</string>
+    <string name="emergency_contacts">Add Emergency Contacts</string>
     <string name="add">Add</string>
     <string name="add_contacts">Add Contacts</string>
     <string name="contacts">Contacts</string>
@@ -803,7 +804,8 @@
     <string name="offers">Offers</string>
     <string name="add_new_address">Add new address</string>
     <string name="could_not_find_address">Could not find address</string>
-    <string name="address_book">Address Book</string>
+    <string name="address_book">My Saved Locations</string>
+    <string name="my_saved_locations">My Saved Locations</string>
     <string name="enter_topup_card_code">Enter Topup Card code</string>
     <string name="recharge_jc_topup_info">Recharge %s Cash with Topup Card</string>
     <string name="topup_code_empty">Topup code empty</string>
@@ -1899,5 +1901,9 @@
     <string name="card_number">Card Number</string>
     <string name="expiry_date">Expiry Date</string>
     <string name="cvc">CVC</string>
+    <string name="please_enter_name_and_email">Please enter name and email</string>
+    <string name="number_should_not_start_with_zero">Phone number should not start with 0</string>
+    <string name="toll_charge">Toll Charge</string>
+    <string name="label_add_store_text_oh_snap"><b>Suggest a store to %s</b></string>
 
 </resources>

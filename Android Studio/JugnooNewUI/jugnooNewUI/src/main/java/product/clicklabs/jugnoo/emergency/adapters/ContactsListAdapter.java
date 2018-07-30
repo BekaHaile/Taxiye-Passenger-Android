@@ -27,7 +27,7 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
     private final String TAG = ContactsListAdapter.class.getSimpleName();
     private Activity activity;
     private int rowLayout;
-    private ArrayList<ContactBean> contactBeans = new ArrayList<>();
+    public ArrayList<ContactBean> contactBeans = new ArrayList<>();
     private int selectedCount;
     private Callback callback;
     private ListMode listMode;
@@ -42,15 +42,15 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         this.listMode = listMode;
     }
 
-    public synchronized void setList(ArrayList<ContactBean> contactBeans){
+    public synchronized void setList(ArrayList<ContactBean> contactBeans) {
         this.contactBeans = contactBeans;
         notifyDataSetChanged();
     }
 
-    public synchronized void setCountAndNotify(){
+    public synchronized void setCountAndNotify() {
         selectedCount = 0;
-        for(ContactBean contactBean : contactBeans){
-            if(contactBean.isSelected()){
+        for (ContactBean contactBean : contactBeans) {
+            if (contactBean.isSelected()) {
                 selectedCount++;
             }
         }
@@ -76,23 +76,22 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         holder.textViewContactName.setText(contactBean.getName());
         holder.textViewContactNumberType.setText(contactBean.getPhoneNo() + " " + contactBean.getType());
 
-        if(ListMode.ADD_CONTACTS == getListMode()
+        if (ListMode.ADD_CONTACTS == getListMode()
                 || ListMode.SEND_RIDE_STATUS == getListMode()) {
-            holder.imageViewOption.setVisibility(View.VISIBLE);
+            if(ListMode.ADD_CONTACTS == getListMode()) {
+                holder.imageViewOption.setVisibility(View.GONE);
+            }
             if (contactBean.isSelected()) {
                 holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_checked);
             } else {
                 holder.imageViewOption.setImageResource(R.drawable.checkbox_signup_unchecked);
             }
-        }
-        else if(ListMode.EMERGENCY_CONTACTS == getListMode()){
+        } else if (ListMode.EMERGENCY_CONTACTS == getListMode()) {
             holder.imageViewOption.setVisibility(View.GONE);
-        }
-        else if(ListMode.DELETE_CONTACTS == getListMode()){
+        } else if (ListMode.DELETE_CONTACTS == getListMode()) {
             holder.imageViewOption.setVisibility(View.VISIBLE);
             holder.imageViewOption.setImageResource(R.drawable.ic_cross_grey);
-        }
-        else if(ListMode.CALL_CONTACTS == getListMode()){
+        } else if (ListMode.CALL_CONTACTS == getListMode()) {
             holder.imageViewOption.setVisibility(View.VISIBLE);
             holder.imageViewOption.setImageResource(R.drawable.ic_phone_green);
         }
@@ -154,34 +153,33 @@ public class ContactsListAdapter extends RecyclerView.Adapter<ContactsListAdapte
         public RelativeLayout relative;
         public ImageView imageViewOption;
         public TextView textViewContactName, textViewContactNumberType;
+
         public ViewHolder(View itemView, Activity activity) {
             super(itemView);
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
-            imageViewOption = (ImageView)itemView.findViewById(R.id.imageViewOption);
-            textViewContactName = (TextView)itemView.findViewById(R.id.textViewContactName);
+            imageViewOption = (ImageView) itemView.findViewById(R.id.imageViewOption);
+            textViewContactName = (TextView) itemView.findViewById(R.id.textViewContactName);
             textViewContactName.setTypeface(Fonts.mavenLight(activity));
-            textViewContactNumberType = (TextView)itemView.findViewById(R.id.textViewContactNumberType);
+            textViewContactNumberType = (TextView) itemView.findViewById(R.id.textViewContactNumberType);
             textViewContactNumberType.setTypeface(Fonts.mavenLight(activity));
         }
     }
 
-    public interface Callback{
+    public interface Callback {
         void contactClicked(int position, ContactBean contactBean);
     }
 
 
-    public enum ListMode{
+    public enum ListMode {
         ADD_CONTACTS(0),
         EMERGENCY_CONTACTS(1),
         DELETE_CONTACTS(2),
         CALL_CONTACTS(3),
-        SEND_RIDE_STATUS(4)
-
-        ;
+        SEND_RIDE_STATUS(4);
 
         private int ordinal;
 
-        ListMode(int ordinal){
+        ListMode(int ordinal) {
             this.ordinal = ordinal;
         }
 

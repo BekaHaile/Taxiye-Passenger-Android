@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
+import product.clicklabs.jugnoo.ChangeLanguageActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeSwitcherActivity;
@@ -189,8 +190,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 } else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_wallet_selector);
                     try {
-                        holder.textViewValue.setText(String.format(activity.getResources()
-                                        .getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
+                        holder.textViewValue.setText(!activity.getResources().getBoolean(R.bool.wallet_amount_sidemenu)? Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance()):String.format(activity.getResources()
+                                .getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
                         holder.textViewValue.setVisibility(View.VISIBLE);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -251,9 +252,16 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     }*/
                 } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_support_selector);
+                } else if(MenuInfoTags.CHANGE_LOCALE.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_support_selector);
+                } else if(MenuInfoTags.CALL_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_call_grey_theme_selector);
                 } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_about_selector);
                 }else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_chat_selector);
+
+                }else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_chat_selector);
 
                 }
@@ -588,13 +596,16 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
             else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(tag)) {
-                if(activity.getResources().getBoolean(R.bool.support_email_page_enabled)){
-                    activity.startActivity(new Intent(activity, SupportMailActivity.class));
-                    return;
-                }
                 activity.startActivity(new Intent(activity, SupportActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
+            }
+            else if(MenuInfoTags.CHANGE_LOCALE.getTag().equalsIgnoreCase(tag)) {
+                activity.startActivity(new Intent(activity, ChangeLanguageActivity.class));
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+            } else if (MenuInfoTags.CALL_SUPPORT.getTag().equalsIgnoreCase(tag)) {
+                Utils.openCallIntent(activity, Prefs.with(activity).getString(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, ""));
             } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, AboutActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -611,6 +622,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(tag)){
                 FuguConfig.getInstance().showConversations(activity,activity.getString(R.string.fugu_support_title));
 
+            }
+            else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(tag)){
+                activity.startActivity(new Intent(activity, SupportMailActivity.class));
             }
             else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
                 openOffering(Config.getFreshClientId(), activity,latLng);

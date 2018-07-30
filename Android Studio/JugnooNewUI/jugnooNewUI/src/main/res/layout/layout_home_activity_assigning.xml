@@ -108,13 +108,7 @@
                     android:visibility="gone"
                     />
                 
-                <ImageView
-                    android:id="@+id/findDriverJugnooAnimation"
-                    android:layout_width="@dimen/jugnoo_anim_loading_height"
-                    android:layout_height="@dimen/jugnoo_anim_loading_height"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="20px"
-                    android:background="@drawable/loader_new_frame_anim" />
+                <include layout="@layout/layout_jugnoo_loading_anim"/>
 
                 <Button
                     android:id="@+id/initialCancelRideBtn"

@@ -8,14 +8,25 @@ public class ContactBean {
 	private int id;
 	private String name;
 	private String phoneNo;
+
+	public String getCountryCode() {
+		return countryCode;
+	}
+
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
+
+	private String countryCode;
 	private String type;
 	private boolean selected;
 	private ContactBeanViewType contactBeanViewType;
 
 
-	public ContactBean(String name, String phoneNo, String type, ContactBeanViewType contactBeanViewType) {
+	public ContactBean(String name, String phoneNo,String countryCode,String type, ContactBeanViewType contactBeanViewType) {
 		this.name = name;
 		this.phoneNo = phoneNo;
+		this.countryCode = countryCode;
 		this.type = type;
 		this.contactBeanViewType = contactBeanViewType;
 		this.selected = false;

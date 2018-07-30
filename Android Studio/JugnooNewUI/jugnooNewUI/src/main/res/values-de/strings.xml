@@ -505,7 +505,7 @@
     <string name="loading">Wird geladen...</string>
 
     <string name="call_us">Call Us</string>
-    <string name="no_driver_nearby_try_again">Keine Treiber in der Nähe. \nBitte versuchen Sie es \nnach einiger Zeit</string>
+    <string name="no_driver_nearby_try_again">Leider keine Treiber verfügbar in der Nähe \n Bitte versuchen Sie es nach einiger Zeit</string>
     <string name="couldnt_find_drivers_nearby">Kann Fahrer in der Nähe nicht finden</string>
 
     <string name="tnc_apply">T&amp;C Apply</string>
@@ -1869,6 +1869,7 @@
     <string name="we_could_not_detect_your_location">"Wir konnten Ihren Standort nicht erkennen. Sind Sie sicher, dass Sie ein Auto anfordern möchten, um Sie an diesem Ort abzuholen? "</string>
     <string name="location_accuracy_is_low">"Die Ortsgenauigkeit ist niedrig. Sind Sie sicher, dass Sie ein Auto anfordern möchten, um Sie an diesem Ort abzuholen? "</string>
     <string name="the_pickup_location_you_have_set_is_different">"Der von Ihnen eingestellte Abholort unterscheidet sich von Ihrem aktuellen Standort. Sind Sie sicher, dass dies Ihr Abholort ist? "</string>
+    <string name="number_should_not_start_with_zero">Die Telefonnummer sollte nicht mit 0 beginnen.</string>
 
 
 </resources>

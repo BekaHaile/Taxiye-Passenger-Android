@@ -185,11 +185,7 @@ public class HomeUtil {
 
 
 	public void putDefaultParams(Map<String, String> params){
-		params.put(Constants.KEY_APP_VERSION, String.valueOf(MyApplication.getInstance().appVersion()));
-		params.put(Constants.KEY_DEVICE_TYPE, Data.DEVICE_TYPE);
-		params.put(Constants.KEY_LOGIN_TYPE, String.valueOf(0));
-		params.put(Constants.KEY_OPERATOR_TOKEN, MyApplication.getInstance().getString(R.string.operator_token));
-		params.put(Constants.KEY_CUSTOMER_PACKAGE_NAME, MyApplication.getInstance().getPackageName());
+		addDefaultParams(params);
 	}
 
 	public static void addDefaultParams(Map<String, String> params){
@@ -198,6 +194,7 @@ public class HomeUtil {
 		params.put(Constants.KEY_LOGIN_TYPE, String.valueOf(0));
 		params.put(Constants.KEY_OPERATOR_TOKEN, MyApplication.getInstance().getString(R.string.operator_token));
 		params.put(Constants.KEY_CUSTOMER_PACKAGE_NAME, MyApplication.getInstance().getPackageName());
+		params.put(Constants.KEY_LOCALE, LocaleHelper.getLanguage(MyApplication.getInstance()));
 	}
 
 	public void putDefaultParamsMultipart(MultipartTypedOutput multipartTypedOutput){
@@ -206,6 +203,7 @@ public class HomeUtil {
 		multipartTypedOutput.addPart(Constants.KEY_LOGIN_TYPE, new TypedString(String.valueOf(0)));
 		multipartTypedOutput.addPart(Constants.KEY_OPERATOR_TOKEN, new TypedString(MyApplication.getInstance().getString(R.string.operator_token)));
 		multipartTypedOutput.addPart(Constants.KEY_CUSTOMER_PACKAGE_NAME, new TypedString(MyApplication.getInstance().getPackageName()));
+		multipartTypedOutput.addPart(Constants.KEY_LOCALE, new TypedString(LocaleHelper.getLanguage(MyApplication.getInstance())));
 	}
 
 	public ArrayList<SearchResult> getSavedPlacesWithHomeWork(Activity activity){

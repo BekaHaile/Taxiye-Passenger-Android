@@ -37,11 +37,11 @@
     <string name="operator_token">5bb40d7c0caa35d207433fe74302e7c2</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">911</string>
-    <string name="facebook_page_id">252184564966458</string>
-    <string name="facebook_page_name">jugnoose</string>
+    <string name="facebook_page_id">204825336990225</string>
+    <string name="facebook_page_name">TaxiNet-Kenya</string>
 
 
-    <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
+    <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
     <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
     <bool name="force_open_autos">true</bool>
 
@@ -50,9 +50,12 @@
     <dimen name="splash_logo_height">135dp</dimen>
     <dimen name="splash_logo_top_margin">100dp</dimen>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
-    <integer name="show_splash_logo_text">@integer/view_gone</integer>
-    <integer name="show_splash_top_bg">@integer/view_visible</integer>
+    <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
+    <integer name="show_splash_logo_text">@integer/view_invisible</integer>
+    <integer name="show_splash_top_bg">@integer/view_invisible</integer>
     <integer name="show_splash_hezz_bg">@integer/view_invisible</integer>
+    <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_social_login">@integer/view_invisible</integer>
     <color name="splash_logo_color">@color/theme_color</color>
 
     <string name="file_provider_name">com.teaxinet.fileprovider</string>
@@ -68,6 +71,12 @@
     <string name="pictures_path">Taxinet/Taxinet Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
-    <integer name="show_about">@integer/view_invisible</integer>
+    <integer name="show_about">@integer/view_visible</integer>
     <bool name="show_change_languge">false</bool>
+    <integer name="show_invite_friends">@integer/view_visible</integer>
+    <integer name="send_invites_visibility">@integer/view_gone</integer>
+
+    <!--default support email for SupportMailActivity if not coming from server-->
+    <string name="default_support_email">support@taxinet.in</string>
+    <bool name="show_call_me_option_in_otp">false</bool>
 </resources>

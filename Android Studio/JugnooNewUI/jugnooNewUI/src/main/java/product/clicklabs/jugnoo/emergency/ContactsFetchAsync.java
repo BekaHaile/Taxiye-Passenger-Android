@@ -82,7 +82,7 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 							phone = phone.replace(" ","");
 							phone = phone.replace("-", "");
 							if (phone != null && Utils.validPhoneNumber(phone)) {
-								contactBeans.add(new ContactBean(name, phone, type, ContactBean.ContactBeanViewType.CONTACT));
+								contactBeans.add(new ContactBean(name, phone,"", type, ContactBean.ContactBeanViewType.CONTACT));
 							}
 						}
 						pCur.close();

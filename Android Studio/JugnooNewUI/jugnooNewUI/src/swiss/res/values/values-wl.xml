@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <integer name="view_visible">0</integer>
+    <integer name="view_invisible">1</integer>
+    <integer name="view_gone">2</integer>
+
+
+    <!--Other things to change
+        1. google-services.json
+        2. Doc entity in strings.xml
+        3. application_id in build.gradle
+    -->
+
+
+    <!--
+        Icons to change:
+            ic_taxi_logo => ic_splash_logo
+            ic_launcher
+            notification_icon
+    -->
+    <string name="app_name">Swiss Taxi</string>
+
+    <string name="google_maps_api_key">AIzaSyDL96no_9dXS-ERNJs3qxOAu3lQW4RrUbY</string>
+    <string name="google_maps_api_server_key">AIzaSyCURolQ4eIj04nAmW9XFCgfs9AyYnWrHKA</string>
+    <string name="google_server_client_id">abc</string>
+    <string name="fb_app_id">123</string>
+    <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
+    <string name="ak_login_protocol_scheme">ak782131025144439</string>
+    <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
+
+
+
+
+
+    <string name="operator_token">3914602e89c1fbd678d25a3ae8f1ec45</string>
+    <string name="support_number">+2549023121121</string>
+    <string name="police_number">911</string>
+    <string name="facebook_page_id">154731591915566</string>
+    <string name="facebook_page_name">Swiss-Taxi-Services-LLC-154731591915566</string>
+
+
+    <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
+    <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
+    <integer name="show_social_login">@integer/view_gone</integer>
+    <bool name="force_open_autos">true</bool>
+
+
+    <dimen name="splash_logo_width">135dp</dimen>
+    <dimen name="splash_logo_height">135dp</dimen>
+    <dimen name="splash_logo_top_margin">100dp</dimen>
+    <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
+    <integer name="show_splash_logo_text">@integer/view_visible</integer>
+    <color name="splash_logo_color">@color/theme_color</color>
+
+    <string name="file_provider_name">com.swiss.fileprovider</string>
+    <string name="web_landing_page">https://jugnoo.in</string>
+    <string name="smart_url">http://smarturl.it/jugnoo</string>
+    <string name="db_name">swiss_database</string>
+    <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
+    <string name="app_domain">jugnoo.in</string>
+    <string name="app_host_name">www.jugnoo.in</string>
+    <string name="branch_domain">share.jugnoo.in</string>
+    <string name="app_scheme">swiss</string>
+
+    <string name="pictures_path">Swiss/Swiss Pictures</string>
+    <bool name="force_inhouse_login">true</bool>
+    <bool name="force_mpesa_payment">false</bool>
+    <integer name="show_about">@integer/view_invisible</integer>
+    <bool name="show_change_languge">false</bool>
+
+    <!--default support email for SupportMailActivity if not coming from server-->
+    <string name="default_support_email">Swiss@yahoo.com</string>
+</resources>

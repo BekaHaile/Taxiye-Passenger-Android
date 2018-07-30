@@ -122,6 +122,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsRecyclerAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -1035,6 +1036,26 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         public String getAmountToPrefill() {
             return dfNoDecimal.format(Math.ceil(payableAmount()));
         }
+
+        @Override
+        public void onWalletOptionClick() {
+
+        }
+
+        @Override
+        public int getSelectedPaymentOption() {
+            return activity.getPaymentOption().getOrdinal();
+        }
+
+        @Override
+        public void setSelectedPaymentOption(int paymentOption) {
+            activity.setPaymentOption(MyApplication.getInstance().getWalletCore().getPaymentOptionFromInt(paymentOption));
+        }
+
+        @Override
+        public boolean isRazorpayEnabled() {
+            return true;
+        }
     };
 
 
@@ -1129,7 +1150,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     }
                 });
             }
-            apiFetchWalletBalance.getBalance(true);
+            apiFetchWalletBalance.getBalance(true, false, activity.getSelectedLatLng());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1683,7 +1704,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                                 @Override
                                                 public void onClick(View v) {
                                                     if (emptyCart == 1) {
-                                                        clearMenusCartAndGoToMenusFragment();
+                                                        clearMenusCartAndGoToMenusFragment(true);
                                                     } else if (isMenusOrDeliveryOpen()
                                                             && ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag
                                                             && isEmpty == 1) {
@@ -2601,7 +2622,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                             @Override
                                             public void onClick(View v) {
                                                 if (emptyCart == 1) {
-                                                    clearMenusCartAndGoToMenusFragment();
+                                                    clearMenusCartAndGoToMenusFragment(true);
                                                 } else if (redirect == 1) {
                                                     if (activity.getFreshSearchFragment() != null) {
                                                         activity.performBackPressed(false);
@@ -3369,17 +3390,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         return type == AppConstant.ApplicationType.FRESH;
     }
 
-    private void clearMenusCartAndGoToMenusFragment() {
-        activity.clearMenusCart(activity.getAppType());
+    private void clearMenusCartAndGoToMenusFragment(boolean clearCart) {
+       if(clearCart) activity.clearMenusCart(activity.getAppType());
         if(activity.getVendorMenuFragment() != null) {
-            activity.setRefreshCart(true);
+            if(clearCart)activity.setRefreshCart(true);
             activity.performBackPressed(false);
         }
         if(activity.getMerchantInfoFragment() != null) {
-            activity.setRefreshCart(true);
+            if(clearCart) activity.setRefreshCart(true);
             activity.performBackPressed(false);
         }
-        activity.setRefreshCart(true);
+        if(clearCart)activity.setRefreshCart(true);
         activity.performBackPressed(false);
     }
 
@@ -3479,16 +3500,21 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        clearMenusCartAndGoToMenusFragment();
+                        clearMenusCartAndGoToMenusFragment(true);
                         Utils.showToast(activity, activity.getString(R.string.your_cart_has_been_cleared));
                     }
                 },
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        activity.setDeliveryAddressModelToSelectedAddress(true,true);
-						deliveryAddressUpdated = true;
-                        getCheckoutDataAPI(selectedSubscription, false);
+                        boolean addressChanged = activity.setDeliveryAddressModelToSelectedAddress(true,true);
+                        if(addressChanged){
+                            deliveryAddressUpdated = true;
+                            getCheckoutDataAPI(selectedSubscription, false);
+                        }else {
+                            clearMenusCartAndGoToMenusFragment(false);
+                        }
+
                     }
                 }, false, false);
     }

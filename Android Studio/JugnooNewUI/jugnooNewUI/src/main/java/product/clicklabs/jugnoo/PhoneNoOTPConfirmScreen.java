@@ -177,18 +177,16 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			performBackPressed();
 		}
 
-
-		try{
-			if(1 == Prefs.with(this).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 1)) {
-				tvCallMe.setVisibility(View.VISIBLE);
-			}
-			else{
+			try {
+				if (1 == Prefs.with(this).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 1)) {
+					tvCallMe.setVisibility(View.VISIBLE);
+				} else {
+					tvCallMe.setVisibility(View.GONE);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 				tvCallMe.setVisibility(View.GONE);
 			}
-		} catch(Exception e){
-			e.printStackTrace();
-			tvCallMe.setVisibility(View.GONE);
-		}
 
 		startTimerForRetry();
 

@@ -31,6 +31,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
@@ -74,6 +75,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     private TextView textViewPaymentModeValueMS, textViewMinFareMSValue, textVieGetFareEstimateMS, textViewPriorityTipValueMS,
             textViewMaxPeople, textViewOffers, textViewOffersMode, textViewMinFareMS,
             textViewPriorityTipValue;
+    private ImageView ivOfferDiv, ivOfferDivOld;
     private RelativeLayout relativeLayoutPriorityTipMS;
 
     private LinearLayout llRideDetailsOptions, llStarSavings;
@@ -124,6 +126,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         textViewPaymentModeValueMS = (TextView) rootView.findViewById(R.id.textViewPaymentModeValueMS);
         textViewPaymentModeValueMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewOffersMode = (TextView) rootView.findViewById(R.id.textViewOffersMode);
+        ivOfferDivOld = (ImageView) rootView.findViewById(R.id.ivOfferDivOld);
         textViewOffersMode.setTypeface(Fonts.mavenMedium(activity));
 
         linearLayoutMinFareMS = (LinearLayout) rootView.findViewById(R.id.linearLayoutMinFareMS);
@@ -134,7 +137,19 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         textViewMaxPeople = (TextView) rootView.findViewById(R.id.textViewMaxPeople);
         textViewMaxPeople.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewOffers = (TextView) rootView.findViewById(R.id.textViewOffers);
+        ivOfferDiv = (ImageView) rootView.findViewById(R.id.ivOfferDiv);
         textViewOffers.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+        if(Data.isMenuTagEnabled(MenuInfoTags.OFFERS)){
+            textViewOffers.setVisibility(View.VISIBLE);
+            ivOfferDiv.setVisibility(View.VISIBLE);
+            textViewOffersMode.setVisibility(View.VISIBLE);
+            ivOfferDivOld.setVisibility(View.VISIBLE);
+        } else {
+            textViewOffers.setVisibility(View.GONE);
+            ivOfferDiv.setVisibility(View.GONE);
+            textViewOffersMode.setVisibility(View.GONE);
+            ivOfferDivOld.setVisibility(View.GONE);
+        }
 
         textVieGetFareEstimateMS = (TextView) rootView.findViewById(R.id.textVieGetFareEstimateMS);
         textVieGetFareEstimateMS.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
@@ -527,7 +542,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     public PaymentOptionDialog paymentOptionDialog;
     public PaymentOptionDialog getPaymentOptionDialog(){
         if(paymentOptionDialog == null){
-            paymentOptionDialog = new PaymentOptionDialog(activity, new PaymentOptionDialog.Callback() {
+            paymentOptionDialog = new PaymentOptionDialog(activity, activity.getCallbackPaymentOptionSelector(), new PaymentOptionDialog.Callback() {
                 @Override
                 public void onDialogDismiss() {
 

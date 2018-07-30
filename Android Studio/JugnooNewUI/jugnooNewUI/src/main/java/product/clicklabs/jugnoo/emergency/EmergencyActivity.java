@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -18,7 +18,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 
 
-public class EmergencyActivity extends BaseFragmentActivity {
+public class EmergencyActivity extends BaseAppCompatActivity {
 
     private final String TAG = EmergencyActivity.class.getSimpleName();
 
@@ -74,7 +74,7 @@ public class EmergencyActivity extends BaseFragmentActivity {
     }
 
     public static void setEmergencyContactsAllowedToAdd(){
-        if(Data.userData.getEmergencyContactsList() != null){
+        if(Data.userData != null && Data.userData.getEmergencyContactsList() != null){
             EMERGENCY_CONTACTS_ALLOWED_TO_ADD = MAX_EMERGENCY_CONTACTS_ALLOWED_TO_ADD - Data.userData.getEmergencyContactsList().size();
             if(EMERGENCY_CONTACTS_ALLOWED_TO_ADD < 0){
                 EMERGENCY_CONTACTS_ALLOWED_TO_ADD = 0;

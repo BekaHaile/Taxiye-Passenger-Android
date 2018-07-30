@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    android:soundEffectsEnabled="false"
-    >
+    android:soundEffectsEnabled="false">
 
     <LinearLayout
         android:id="@+id/linearLayoutInner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_white_rounded"
-        android:orientation="vertical"
-        android:splitMotionEvents="false"
         android:layout_centerInParent="true"
         android:layout_margin="40px"
+        android:background="@drawable/background_white_rounded"
+        android:orientation="vertical"
         android:soundEffectsEnabled="false"
-        >
+        android:splitMotionEvents="false">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -30,29 +27,30 @@
                 android:id="@+id/imageViewOffers"
                 android:layout_width="94px"
                 android:layout_height="63px"
-                android:tag="mwar"
-                android:layout_marginTop="22px"
+                android:layout_centerVertical="true"
                 android:layout_marginBottom="22px"
                 android:layout_marginStart="@dimen/px_96"
+                android:layout_marginTop="22px"
                 android:src="@drawable/ic_offer_popup"
-                android:layout_centerVertical="true"/>
+                android:tag="mwar" />
 
             <TextView
                 android:id="@+id/tvAvailableOffers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10px"
+                android:layout_toEndOf="@+id/imageViewOffers"
                 android:text="@string/select_an_offer"
                 android:textColor="@color/white"
-                android:textSize="@dimen/px_42"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/imageViewOffers"
-                android:layout_marginStart="10px"/>
+                android:textSize="@dimen/px_42" />
         </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/linearLayoutNoCurrentOffers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:orientation="vertical">
 
             <ImageView
@@ -61,34 +59,34 @@
                 android:layout_height="233px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/px_42"
-                android:tag="mwar"
-                android:src="@drawable/ic_logo_white_bg"/>
+                android:src="@drawable/ic_logo_white_bg"
+                android:tag="mwar" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50px"
-            android:gravity="center_horizontal"
-            android:background="@color/white"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textViewNoCurrentOffers"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/no_current_offer_popup_text"
-                android:textSize="@dimen/text_size_32"
-                android:layout_marginTop="@dimen/px_30"
-                android:textColor="@color/text_color"
-                android:gravity="center"/>
-
-            <Button
-                android:id="@+id/buttonInviteFriends"
                 android:layout_marginTop="50px"
-                android:text="@string/invite_friends"
-                android:layout_marginBottom="@dimen/px_40"
-                style="@style/ButtonTheme"/>
-        </LinearLayout>
+                android:background="@color/white"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewNoCurrentOffers"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/px_30"
+                    android:gravity="center"
+                    android:text="@string/no_current_offer_popup_text"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_32" />
+
+                <Button
+                    android:id="@+id/buttonInviteFriends"
+                    style="@style/ButtonTheme"
+                    android:layout_marginBottom="@dimen/px_40"
+                    android:layout_marginTop="50px"
+                    android:text="@string/invite_friends" />
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -96,54 +94,49 @@
             android:id="@+id/listViewPromoCoupons"
             android:layout_width="match_parent"
             android:layout_height="260px"
-            android:splitMotionEvents="false"
-            android:visibility="visible"
-            android:scrollbars="vertical"
+            android:layout_marginBottom="30px"
             android:divider="@color/transparent"
             android:dividerHeight="0px"
             android:fadeScrollbars="true"
-            android:layout_marginBottom="30px"
-            >
-        </ListView>
+            android:scrollbars="vertical"
+            android:splitMotionEvents="false"
+            android:visibility="visible"></ListView>
 
 
         <RelativeLayout
             android:id="@+id/relativeLayoutBottomButtons"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
+
             <Button
                 android:id="@+id/buttonSkip"
                 android:layout_width="320px"
                 android:layout_height="96px"
-                android:textColor="@color/text_color_light_selector"
                 android:background="@drawable/bg_transparent_menu_item_selector_color_blr_selector"
-                android:textSize="@dimen/text_size_34"
                 android:text="@string/cancel"
-                />
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_34" />
 
             <Button
                 android:id="@+id/buttonContinue"
                 android:layout_width="320px"
                 android:layout_height="96px"
-                android:textColor="@color/text_color_light_selector"
-                android:background="@drawable/bg_transparent_menu_item_selector_color_brr_selector"
-                android:textSize="@dimen/text_size_34"
-                android:text="@string/ok"
                 android:layout_alignParentEnd="true"
-                />
-            
+                android:background="@drawable/bg_transparent_menu_item_selector_color_brr_selector"
+                android:text="@string/ok"
+                android:textColor="@color/text_color_light_selector"
+                android:textSize="@dimen/text_size_34" />
+
             <View
                 android:layout_width="2px"
                 android:layout_height="50px"
                 android:layout_centerInParent="true"
-                android:background="@color/stroke_color_light"
-                />
+                android:background="@color/stroke_color_light" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
-                android:background="@color/stroke_color_light"
-                />
+                android:background="@color/stroke_color_light" />
 
         </RelativeLayout>
 
@@ -151,8 +144,7 @@
 
     <ImageView
         android:id="@+id/imageViewClose"
-        android:visibility="gone"
         style="@style/cross_popup"
-        />
+        android:visibility="gone" />
 
 </RelativeLayout>

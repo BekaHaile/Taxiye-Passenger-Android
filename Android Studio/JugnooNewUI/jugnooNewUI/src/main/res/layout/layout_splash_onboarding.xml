@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@string/do_you_have_a_referral_code"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/layout_login_signup_text_color"
                     android:textSize="@dimen/px_36"
                     app:typekitFont="@string/maven_r" />
 
@@ -69,26 +69,28 @@
                     android:singleLine="true"
                     android:textAlignment="viewStart"
                     android:textAllCaps="true"
-                    android:textColor="@color/black_text"
+                    android:textColor="@color/layout_login_signup_text_color"
                     android:textColorHint="@color/text_color_hint"
                     android:textCursorDrawable="@drawable/cursor_black"
                     android:textSize="@dimen/text_size_32"
                     app:typekitFont="@string/maven_r" />
 
                 <ImageView
+                    android:id="@+id/ivEtPromoDiv"
                     android:layout_width="match_parent"
                     android:layout_height="2px"
                     android:layout_marginEnd="@dimen/px_90"
                     android:layout_marginStart="@dimen/px_90"
-                    android:src="@color/grey_light" />
+                    android:src="@color/layout_login_signup_text_color" />
 
                 <TextView
+                    android:id="@+id/tvEnterPersonalDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/px_86"
                     android:text="@string/please_enter_your_personal_info"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/layout_login_signup_text_color"
                     android:textSize="@dimen/px_32"
                     app:typekitFont="@string/maven_r" />
 
@@ -115,17 +117,16 @@
                         android:layout_marginStart="28px"
                         android:layout_toStartOf="@+id/textViewSNameRequired"
                         android:background="#0000"
-                        android:digits="@string/digits_characters_numbers"
                         android:gravity="center_vertical"
                         android:hint="@string/your_full_name"
-                        android:inputType="textNoSuggestions|textCapWords"
+                        android:inputType="textNoSuggestions|textCapWords|textPersonName"
                         android:maxLength="50"
                         android:paddingEnd="20px"
                         android:paddingStart="20px"
                         android:singleLine="true"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/layout_login_signup_text_color"
                         android:textColorHint="@color/text_color_hint"
-                        android:textCursorDrawable="@drawable/cursor_black"
+                        android:textCursorDrawable="@drawable/cursor"
                         android:textSize="@dimen/text_size_34"
                         app:typekitFont="@string/maven_r" />
 
@@ -176,9 +177,9 @@
                         android:paddingEnd="20px"
                         android:paddingStart="20px"
                         android:singleLine="true"
-                        android:textColor="@color/text_color"
+                        android:textColor="@color/layout_login_signup_text_color"
                         android:textColorHint="@color/text_color_hint"
-                        android:textCursorDrawable="@drawable/cursor_black"
+                        android:textCursorDrawable="@drawable/cursor"
                         android:textSize="@dimen/text_size_34"
                         app:typekitFont="@string/maven_r" />
 
@@ -212,9 +213,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/px_32"
                     android:text="@string/skip_this_step"
-                    android:textColor="@color/grey_969696"
+                    android:textColor="@color/layout_login_signup_text_color"
                     android:textSize="@dimen/px_30"
-                    app:typekitFont="@string/maven_r" />
+                    app:typekitFont="@string/maven_r"/>
 
             </LinearLayout>
 

@@ -329,7 +329,10 @@ public class Region {
 	public StateListDrawable getRequestSelector(Context context){
 		if(vehicleType == VehicleTypeValue.AUTOS.getOrdinal() && rideType == RideTypeValue.POOL.getOrdinal()){
 			return Utils.getSelector(context, R.drawable.ic_auto_pool_request_normal, R.drawable.ic_auto_pool_request_selected);
-		} else {
+		}
+		else if(vehicleType == VehicleTypeValue.BIKES.getOrdinal() && rideType == RideTypeValue.POOL.getOrdinal()){
+			return Utils.getSelector(context, R.drawable.ic_bike_request_normal, R.drawable.ic_bike_request_pressed);
+		}else {
 			return getVehicleIconSet().getRequestSelector(context);
 		}
 	}
