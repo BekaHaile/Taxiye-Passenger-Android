@@ -85,6 +85,7 @@
     <string name="default_support_email">support@ttrides.in</string>
     <integer name="send_invites_visibility">@integer/view_gone</integer>
     <bool name="specified_country_search_result_enabled">true</bool>
+    <string name="specified_country_search_result">TT</string>
     <bool name="show_call_me_option_in_otp">false</bool>
     <integer name="show_promo">@integer/view_gone</integer>
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
