@@ -1928,5 +1928,7 @@
     <!-- Notification channel -->
     <string name="notification_channel_default">Notifications</string>
     <string name="notification_channel_description_default">Latest Updates</string>
+    <string name="grant_contact_permission">You will have to grant contacts permission to view your contacts here.Please Press the button below to proceed.</string>
+    <string name="grant_permission">Grant Permission</string>
 
 </resources>

@@ -1,9 +1,11 @@
 package product.clicklabs.jugnoo.emergency.fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -50,6 +52,7 @@ import product.clicklabs.jugnoo.emergency.FragTransUtils;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -96,6 +99,60 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
     private static final String LIST_MODE = "listMode";
     private Dialog dialog;
     private boolean isFromEdiText;
+    private PermissionCommon permissionCommon ;
+    private static final int REQUEST_CODE_ADD_CONTACT = 50;
+    private static final int REQUEST_CODE_VIEW_CONTACTS = 51;
+    private static final int REQUEST_CODE_VIEW_CONTACTS_ON_CREATE = 52;
+    private PermissionCommon.PermissionListener permissionListener = new PermissionCommon.PermissionListener() {
+                @Override
+                public void permissionGranted(int requestCode) {
+
+                    isGrantCalled = true;
+                    rootView.findViewById(R.id.llPermission).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.layoutContacts).setVisibility(View.VISIBLE);
+                    new ContactsFetchAsync(activity, phoneContactBeans, new ContactsFetchAsync.Callback() {
+                        @Override
+                        public void onPreExecute() {
+                        }
+
+                        @Override
+                        public void onPostExecute(ArrayList<ContactBean> contactBeans) {
+                            phoneContactsListAdapter.notifyDataSetChanged();
+                        }
+                    }).execute();
+
+                    if (requestCode == REQUEST_CODE_ADD_CONTACT) {
+                        new FragTransUtils().openAddEmergencyContactsFragment(activity,
+                                ((EmergencyActivity) activity).getContainer());
+                    }
+
+                }
+
+                @Override
+                public boolean permissionDenied(int requestCode, boolean neverAsk) {
+
+                    if (requestCode == REQUEST_CODE_VIEW_CONTACTS) {
+
+                        if (neverAsk) {
+                            PermissionCommon.openSettingsScreen(activity);
+                        }
+
+                        return false;
+
+                    } else if (requestCode == REQUEST_CODE_VIEW_CONTACTS_ON_CREATE) {
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                @Override
+                public void onRationalRequestIntercepted(int requestCode) {
+
+                }
+            };;
+    private boolean firstTime;
+    private boolean isGrantCalled;
 
     public static EmergencyContactOperationsFragment newInstance(String engagementId, ContactsListAdapter.ListMode listMode) {
         EmergencyContactOperationsFragment emergencyContactOperationsFragment = new EmergencyContactOperationsFragment();
@@ -126,6 +183,15 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
     public void onResume() {
         super.onResume();
         HomeActivity.checkForAccessTokenChange(activity);
+        if(permissionCommon!=null){
+            if(PermissionCommon.isGranted(Manifest.permission.READ_CONTACTS,activity) && !isGrantCalled){
+                permissionListener.permissionGranted(REQUEST_CODE_VIEW_CONTACTS);
+             }else if(firstTime){
+                firstTime = false;
+                permissionCommon.getPermission(REQUEST_CODE_VIEW_CONTACTS_ON_CREATE,PermissionCommon.SKIP_RATIONAL_MESSAGE,Manifest.permission.READ_CONTACTS);
+
+            }
+        }
     }
 
     @Override
@@ -152,7 +218,7 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
         }
 
         activity = getActivity();
-
+        permissionCommon = new PermissionCommon(this).setCallback(permissionListener);
         relative = (RelativeLayout) rootView.findViewById(R.id.relative);
         try {
             new ASSL(activity, relative, 1134, 720, false);
@@ -177,6 +243,8 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
         textViewOr.setTypeface(Fonts.mavenLight(activity));
         buttonAddContact = (Button) rootView.findViewById(R.id.buttonAddContact);
         buttonAddContact.setTypeface(Fonts.mavenRegular(activity));
+        ((Button)rootView.findViewById(R.id.buttonGrantPermission)).setTypeface(Fonts.mavenRegular(activity));
+        ((TextView)rootView.findViewById(R.id.text_permission)).setTypeface(Fonts.mavenRegular(activity));
         buttonAddContact.setVisibility(View.GONE);
         relativeLayoutOr.setVisibility(View.GONE);
 
@@ -312,8 +380,10 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
                         break;
 
                     case R.id.buttonAddContact:
-                        new FragTransUtils().openAddEmergencyContactsFragment(activity,
-                                ((EmergencyActivity) activity).getContainer());
+                        permissionCommon.getPermission(REQUEST_CODE_ADD_CONTACT, Manifest.permission.READ_CONTACTS);
+                        break;
+                    case R.id.buttonGrantPermission:
+                        permissionCommon.getPermission(REQUEST_CODE_VIEW_CONTACTS,PermissionCommon.SKIP_RATIONAL_MESSAGE,Manifest.permission.READ_CONTACTS);
                         break;
                 }
             }
@@ -324,19 +394,10 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
         textViewSend.setOnClickListener(onClickListener);
         linearLayoutMain.setOnClickListener(onClickListener);
         buttonAddContact.setOnClickListener(onClickListener);
+        rootView.findViewById(R.id.buttonGrantPermission).setOnClickListener(onClickListener);
 
         setEmergencyContactsToList();
 
-        new ContactsFetchAsync(activity, phoneContactBeans, new ContactsFetchAsync.Callback() {
-            @Override
-            public void onPreExecute() {
-            }
-
-            @Override
-            public void onPostExecute(ArrayList<ContactBean> contactBeans) {
-                phoneContactsListAdapter.notifyDataSetChanged();
-            }
-        }).execute();
 
 
         KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll,
@@ -362,6 +423,13 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
             textViewSend.setVisibility(View.GONE);
             textViewTitle.setText(activity.getResources().getString(R.string.call_your_contacts));
         }
+
+        if(!PermissionCommon.isGranted(Manifest.permission.READ_CONTACTS,getActivity())){
+            rootView.findViewById(R.id.layoutContacts).setVisibility(View.GONE);
+            rootView.findViewById(R.id.llPermission).setVisibility(View.VISIBLE);
+
+        }
+        firstTime = true;
 
         return rootView;
     }
@@ -693,6 +761,12 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
             }
         } catch (Exception e) {
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(permissionCommon!=null)permissionCommon.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
 
 

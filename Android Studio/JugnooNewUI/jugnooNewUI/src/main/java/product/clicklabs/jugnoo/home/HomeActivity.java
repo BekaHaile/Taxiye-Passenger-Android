@@ -3710,7 +3710,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 || PassengerScreenMode.P_IN_RIDE == mode)
                 && Prefs.with(this).getLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, LOCATION_UPDATE_INTERVAL) > 0) {
             if(!Utils.isServiceRunning(this, LocationUpdateService.class.getName())) {
-                getPermissionCommon().getPermission(REQUEST_CODE_LOCATION_SERVICE,  android.Manifest.permission.ACCESS_FINE_LOCATION);
+                    if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION,this)){
+                        permissionGranted(REQUEST_CODE_LOCATION_SERVICE);
+                    }
+
+               /* if(Prefs.with(this).getBoolean(ASK_LOCATION_PERMISSION_BEFORE_RIDE))
+                getPermissionCommon().getPermission(REQUEST_CODE_LOCATION_SERVICE,  android.Manifest.permission.ACCESS_FINE_LOCATION);*/
             }
         } else{
             Intent intent = new Intent(this, LocationUpdateService.class);
@@ -4525,8 +4530,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if (userMode == UserMode.PASSENGER &&
                                     (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
                                 if (map != null && myLocation != null && !isSpecialPickupScreenOpened()) {
-                                    initialMyLocationBtn.performClick();
-                                    mapTouched = true;
+                                    if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION,this)){
+                                        initialMyLocationBtn.performClick();
+                                        mapTouched = true;
+                                  }
+
                                     try {
                                         LatLng currLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
                                         Data.setLatLngOfJeanieLastShown(currLatLng);

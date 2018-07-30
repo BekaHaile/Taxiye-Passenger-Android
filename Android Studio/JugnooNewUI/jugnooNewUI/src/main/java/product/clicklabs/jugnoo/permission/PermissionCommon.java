@@ -314,17 +314,12 @@ public final class PermissionCommon {
 
 
 
-            if (shouldShowRationalPermission(permission)) {
+            if (shouldShowRationalPermission(permission) && rationalOperationRequired!=SKIP_RATIONAL_MESSAGE) {
                 if(rationalOperationRequired==SKIP_RATIONAL_REQUEST){
                     if(permissionListener!=null)permissionListener.onRationalRequestIntercepted(requestCodeInitiated);
                     return;
                 }
 
-                if(rationalOperationRequired==SKIP_RATIONAL_MESSAGE){
-                    requestPermissions(new String[]{permission}, REQUEST_CODE_RATIONAL);
-                    return;
-
-                }
 
                 getRationalSnackBar(getRationalMessage(permission)).setAction(activity.getString(R.string.ok), new View.OnClickListener() {
                     @Override
@@ -467,7 +462,7 @@ public final class PermissionCommon {
     }
 
 
-    public void openSettingsScreen(Activity activity){
+    public static void openSettingsScreen(Activity activity){
         Intent intent = new Intent();
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
