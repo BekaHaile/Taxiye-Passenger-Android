@@ -454,7 +454,7 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 							latLngsWayPoints.add(latLngCurr);
 							latLngsWayPoints.add(latLngDriver);
 //							latLngsWayPoints.add(deliveryLatLng);
-							Pair<List<LatLng>, String> pair = apiGoogleDirectionWaypoints.setData(latLngsWayPoints, false,activity.getString(R.string.google_maps_api_server_key)).syncHit();
+							Pair<List<LatLng>, String> pair = apiGoogleDirectionWaypoints.setData(latLngsWayPoints, false).syncHit();
 							final List<LatLng> list = pair.first;
 							final String result = pair.second;
 							activity.runOnUiThread(new Runnable() {
@@ -593,7 +593,7 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 														new LatLngInterpolator.LinearFixed(), animateRoute, googleMap,
 														pathColor,
 														untrackedPathColor,
-														pathWidth, callbackAnim, getString(R.string.google_maps_api_server_key), fastDuration);
+														pathWidth, callbackAnim, fastDuration);
 												latLngsDriverAnim.clear();
 												latLngsDriverAnim.addAll(latLngsAnimateDriver);
 											} else {

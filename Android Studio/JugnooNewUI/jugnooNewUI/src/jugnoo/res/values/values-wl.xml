@@ -23,7 +23,6 @@
     <string name="app_name">Jugnoo</string>
 
     <string name="google_maps_api_key">AIzaSyCq8gpxpimVz88o9K0FnLTWRjpgEPy2eW0</string>
-    <string name="google_maps_api_server_key">AIzaSyClJX3QZF2zKXuwhDKY8XpmDfa0Jzjk_HI</string>
     <string name="google_server_client_id">506849624961-c9bbl632kfgtvqcq2b55rubibcnpnfhg.apps.googleusercontent.com</string>
     <string name="fb_app_id">782131025144439</string>
     <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>

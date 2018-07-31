@@ -1066,6 +1066,9 @@ public class Utils implements GAAction, GACategory{
 	public static String formatCurrencyValue(String currency, double value){
 		if(TextUtils.isEmpty(currency)){
 			currency = "INR";
+		} else if(currency.equalsIgnoreCase("BMD") || currency.equalsIgnoreCase("TTD")){
+			int digits = Currency.getInstance(currency).getDefaultFractionDigits();
+			return String.format("%s%."+digits+"f", "$", value);
 		}
 		NumberFormat format = NumberFormat.getCurrencyInstance(MyApplication.getInstance().getCurrentLocale());
 		format.setCurrency(Currency.getInstance(currency));

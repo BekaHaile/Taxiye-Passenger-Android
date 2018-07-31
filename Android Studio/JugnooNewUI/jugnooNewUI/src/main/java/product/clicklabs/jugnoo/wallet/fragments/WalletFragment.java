@@ -26,9 +26,7 @@ import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.stripe.StripeAddCardFragment;
-import product.clicklabs.jugnoo.stripe.StripeCardsStateListener;
 import product.clicklabs.jugnoo.stripe.StripeViewCardFragment;
-import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -394,7 +392,6 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 			ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
 			if(paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0){
 				linearLayoutWalletContainer.removeAllViews();
-				linearLayoutWalletContainer.addView(relativeLayoutJugnooCash);
 				for(PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas){
 					if(paymentModeConfigData.getEnabled() == 1) {
 						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
@@ -407,6 +404,8 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 							linearLayoutWalletContainer.addView(relativeLayoutStripe);
 							setStripePaymentUI(paymentModeConfigData);
 
+						} else if(paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()){
+							linearLayoutWalletContainer.addView(relativeLayoutJugnooCash);
 						}
 					}
 				}
