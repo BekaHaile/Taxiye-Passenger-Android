@@ -1907,6 +1907,7 @@
     <string name="number_should_not_start_with_zero">Phone number should not start with 0</string>
     <string name="toll_charge">Toll Charge</string>
     <string name="label_add_store_text_oh_snap"><b>Suggest a store to %s</b></string>
+    <string name="please_add_card_to_proceed">Please add card to proceed</string>
 
 
     <!--Strings related to permissions-->

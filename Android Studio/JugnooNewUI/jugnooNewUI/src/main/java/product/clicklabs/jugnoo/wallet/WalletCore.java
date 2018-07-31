@@ -177,7 +177,7 @@ public class WalletCore {
 							public void onNegativeClick() {
 								openSlidePanelOfHomeActivity(activity);
 							}
-						}).show(activity.getResources().getString(R.string.paytm_error_case_select_cash), true);
+						}).show(activity.getResources().getString(R.string.paytm_error_case_select_cash), true, null);
 					} else{
 						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
 							@Override
@@ -189,7 +189,7 @@ public class WalletCore {
 							public void onNegativeClick() {
 								openSlidePanelOfHomeActivity(activity);
 							}
-						}).show(activity.getResources().getString(R.string.paytm_no_cash), false);
+						}).show(activity.getResources().getString(R.string.paytm_no_cash), false, null);
 					}
 				}
 			}
@@ -211,7 +211,7 @@ public class WalletCore {
 							public void onNegativeClick() {
 								openSlidePanelOfHomeActivity(activity);
 							}
-						}).show(activity.getResources().getString(R.string.mobikwik_error_select_cash), true);
+						}).show(activity.getResources().getString(R.string.mobikwik_error_select_cash), true, null);
 					} else{
 						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
 							@Override
@@ -224,7 +224,7 @@ public class WalletCore {
 								openSlidePanelOfHomeActivity(activity);
 
 							}
-						}).show(activity.getResources().getString(R.string.mobikwik_no_cash), false);
+						}).show(activity.getResources().getString(R.string.mobikwik_no_cash), false, null);
 					}
 				}
 			} else if(paymentOption == PaymentOption.FREECHARGE.getOrdinal()) {
@@ -247,7 +247,7 @@ public class WalletCore {
 
 
 							}
-						}).show(activity.getResources().getString(R.string.freecharge_error_case_select_cash), true);
+						}).show(activity.getResources().getString(R.string.freecharge_error_case_select_cash), true, null);
 					} else{
 						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
 							@Override
@@ -259,14 +259,48 @@ public class WalletCore {
 							public void onNegativeClick() {
 								openSlidePanelOfHomeActivity(activity);
 							}
-						}).show(activity.getResources().getString(R.string.freecharge_no_cash), false);
+						}).show(activity.getResources().getString(R.string.freecharge_no_cash), false, null);
 					}
 				}
-            }
+            } else if(paymentOption==PaymentOption.STRIPE_CARDS.getOrdinal()){
+
+
+				PaymentModeConfigData stripeConfigData= getStripeConfigData();
+				if(stripeConfigData==null){
+					return false;
+				}
+
+
+				if(stripeConfigData.getCardsData()==null || stripeConfigData.getCardsData().size()==0){
+						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
+							@Override
+							public void onPositiveClick() {
+								stripeAddCardIntent(activity);
+							}
+
+							@Override
+							public void onNegativeClick() {
+								openSlidePanelOfHomeActivity(activity);
+							}
+						}).show(activity.getString(R.string.please_add_card_to_proceed), false, activity.getString(R.string.ok));
+					return false;
+				}
+
+				callRequestRide = true;
+
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return callRequestRide;
+	}
+
+	public void stripeAddCardIntent(Activity activity) {
+		Intent intent = new Intent(activity, PaymentActivity.class);
+		intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
+		intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.STRIPE_CARDS.getOrdinal());
+		activity.startActivity(intent);
+		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
 
 	private void openSlidePanelOfHomeActivity(Activity activity) {
@@ -704,8 +738,8 @@ public class WalletCore {
 							) {
 						paymentModeConfigDataDefault = paymentModeConfigData;
 						break;
-					} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()&&
-							paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0){
+					} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()){
+						//&& paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0
 						paymentModeConfigDataDefault = paymentModeConfigData;
 						break;
 					}
@@ -817,7 +851,7 @@ public class WalletCore {
 						public void onNegativeClick() {
 
 						}
-					}).show(activity.getResources().getString(R.string.paytm_error_case_select_cash), true);
+					}).show(activity.getResources().getString(R.string.paytm_error_case_select_cash), true, null);
 				} else{
 					if(Data.userData.getPaytmEnabled() == 1) {
 						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
@@ -847,7 +881,7 @@ public class WalletCore {
 									e.printStackTrace();
 								}
 							}
-						}).show(activity.getResources().getString(R.string.paytm_no_cash), false);
+						}).show(activity.getResources().getString(R.string.paytm_no_cash), false, null);
 					}
 					else{
 						MyApplication.getInstance().getWalletCore()
@@ -871,7 +905,7 @@ public class WalletCore {
 						public void onNegativeClick() {
 
 						}
-					}).show(activity.getResources().getString(R.string.mobikwik_error_select_cash), true);
+					}).show(activity.getResources().getString(R.string.mobikwik_error_select_cash), true, null);
 				} else{
 					if(Data.userData.getMobikwikEnabled() == 1) {
 						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
@@ -901,7 +935,7 @@ public class WalletCore {
 									e.printStackTrace();
 								}
 							}
-						}).show(activity.getResources().getString(R.string.mobikwik_no_cash), false);
+						}).show(activity.getResources().getString(R.string.mobikwik_no_cash), false, null);
 					}
 					else{
 						MyApplication.getInstance().getWalletCore()
@@ -925,7 +959,7 @@ public class WalletCore {
 						public void onNegativeClick() {
 
 						}
-					}).show(activity.getResources().getString(R.string.freecharge_error_case_select_cash), true);
+					}).show(activity.getResources().getString(R.string.freecharge_error_case_select_cash), true, null);
 				} else{
 					if(Data.userData.getFreeChargeEnabled() == 1) {
 						new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
@@ -954,7 +988,7 @@ public class WalletCore {
 									e.printStackTrace();
 								}
 							}
-						}).show(activity.getResources().getString(R.string.freecharge_no_cash), false);
+						}).show(activity.getResources().getString(R.string.freecharge_no_cash), false, null);
 					}
 					else{
 						MyApplication.getInstance().getWalletCore()
@@ -980,11 +1014,7 @@ public class WalletCore {
 
 				if(stripeConfigData.getCardsData()==null || stripeConfigData.getCardsData().size()==0){
 					try {
-						Intent intent = new Intent(activity, PaymentActivity.class);
-						intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
-						intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.STRIPE_CARDS.getOrdinal());
-						activity.startActivity(intent);
-						activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+						stripeAddCardIntent(activity);
 						callbackPaymentOptionSelector.onWalletAdd(PaymentOption.STRIPE_CARDS);
 					} catch (Exception e) {
 						e.printStackTrace();
