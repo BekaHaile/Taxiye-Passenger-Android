@@ -185,7 +185,7 @@
                     android:layout_alignParentBottom="true"
                     android:src="@color/stroke_color_light" />
             </RelativeLayout>
-            
+
             <RelativeLayout
                 android:id="@+id/relativeLayoutAbout"
                 android:layout_width="match_parent"
@@ -221,7 +221,43 @@
                     android:layout_alignParentBottom="true"
                     android:src="@color/stroke_color_light" />
             </RelativeLayout>
-            
+            <RelativeLayout
+                android:id="@+id/relativeLayoutFAQ"
+                android:layout_width="match_parent"
+                android:layout_height="120px"
+                android:background="@drawable/background_white_yellow_selector"
+                android:visibility="@integer/visibility_faq">
+
+                <ImageView
+                    android:layout_width="43px"
+                    android:layout_height="43px"
+                    android:src="@drawable/ic_about_who_we_are"
+                    android:layout_marginStart="@dimen/px_36"
+                    android:layout_centerVertical="true"
+                    android:tag="mwar"/>
+
+                <TextView
+                    android:id="@+id/textViewFAQ"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/px_110"
+                    android:text="@string/faqs"
+                    android:textColor="@color/text_color"
+                    android:textSize="34px" />
+
+                <ImageView
+                    android:layout_alignParentEnd="true"
+                    style="@style/forward_image"
+                    android:layout_marginRight="10px" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_alignParentBottom="true"
+                    android:src="@color/stroke_color_light" />
+            </RelativeLayout>
+
         </LinearLayout>
     </LinearLayout>
 

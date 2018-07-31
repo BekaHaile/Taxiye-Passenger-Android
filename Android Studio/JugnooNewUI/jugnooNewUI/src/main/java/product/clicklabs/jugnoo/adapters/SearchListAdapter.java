@@ -341,7 +341,9 @@ public class SearchListAdapter extends BaseAdapter{
         try {
 			if (!refreshingAutoComplete) {
 				searchListActionsHandler.onSearchPre();
-                AutocompleteFilter autocompleteFilter = new AutocompleteFilter.Builder().setCountry("TT").build();
+                AutocompleteFilter autocompleteFilter = new AutocompleteFilter.Builder()
+						.setCountry(context.getString(R.string.specified_country_search_result))
+						.build();
 				Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, searchText,
 						new LatLngBounds.Builder().include(latLng).build(),
                        this.context.getResources().getBoolean(R.bool.specified_country_search_result_enabled)? autocompleteFilter:null).setResultCallback(new ResultCallback<AutocompletePredictionBuffer>() {

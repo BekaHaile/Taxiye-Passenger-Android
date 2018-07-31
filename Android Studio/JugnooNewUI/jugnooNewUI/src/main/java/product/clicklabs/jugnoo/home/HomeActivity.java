@@ -3324,7 +3324,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             } else {
                                 MarkerAnimation.clearAsyncList();
                                 MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0, 0, 0, true, getString(R.string.google_maps_api_server_key));
+                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0, 0, 0, true);
                             }
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), false));
                         }
@@ -3399,7 +3399,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             } else {
                                 MarkerAnimation.clearAsyncList();
                                 MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0, 0, 0, true, getString(R.string.google_maps_api_server_key));
+                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0, 0, 0, true);
                             }
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
                         }
@@ -6162,7 +6162,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                                                     public void onAnimNotDone() {
 
                                                                                     }
-                                                                                }, false, null, 0, 0, 0, false, getString(R.string.google_maps_api_server_key));
+                                                                                }, false, null, 0, 0, 0, false);
                                                                         updateDriverETAText(passengerScreenMode);
                                                                     }
                                                                 }
@@ -6559,7 +6559,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                         MarkerAnimation.animateMarkerOnList(driverMarkerInRide, latLngsListForDriverAnimation,
                                                 new LatLngInterpolator.LinearFixed(), true, map,
                                                 RIDE_ELAPSED_PATH_COLOR,
-                                                untrackedPathColor, ASSL.Xscale() * 7f, null, getString(R.string.google_maps_api_server_key), false);
+                                                untrackedPathColor, ASSL.Xscale() * 7f, null, false);
                                     } else {
                                         MarkerAnimation.clearPolylines();
                                     }
