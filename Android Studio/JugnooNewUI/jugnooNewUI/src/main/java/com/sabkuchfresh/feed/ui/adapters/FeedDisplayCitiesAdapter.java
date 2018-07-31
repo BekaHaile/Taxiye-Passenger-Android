@@ -15,7 +15,7 @@ import com.sabkuchfresh.home.FreshActivity;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
 
@@ -121,7 +121,7 @@ public class FeedDisplayCitiesAdapter extends RecyclerView.Adapter<FeedDisplayCi
     }
 
     static class DisplayCitiesViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.tv_city_name)
+        @BindView(R.id.tv_city_name)
         TextView tvCityName;
 
         DisplayCitiesViewHolder(View view, final ItemListener itemListener) {

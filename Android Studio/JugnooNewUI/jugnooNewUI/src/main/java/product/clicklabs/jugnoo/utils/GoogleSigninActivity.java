@@ -2,7 +2,7 @@ package product.clicklabs.jugnoo.utils;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -22,7 +22,7 @@ import static product.clicklabs.jugnoo.Constants.KEY_GOOGLE_PARCEL;
 /**
  * Created by socomo20 on 12/18/15.
  */
-public class GoogleSigninActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GoogleSigninActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
 	private static final String TAG = "GoogleSigninActivity";
 	private static final int RC_SIGN_IN = 9001;

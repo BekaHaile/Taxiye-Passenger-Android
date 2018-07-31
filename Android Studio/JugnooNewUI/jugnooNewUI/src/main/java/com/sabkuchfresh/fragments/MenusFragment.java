@@ -494,7 +494,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
 
         try {
-            GAUtils.event(GACategory.FATAFAT3, GAAction.FATAFAT_CATEGORY, category.getCategoryName() + " " + GAAction.CLICKED);
+            if(category != null) {
+                GAUtils.event(GACategory.FATAFAT3, GAAction.FATAFAT_CATEGORY, category.getCategoryName() + " " + GAAction.CLICKED);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -23,7 +23,7 @@ import com.sabkuchfresh.adapters.CheckoutRequestCancellationAdapter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.R;
@@ -34,27 +34,27 @@ import product.clicklabs.jugnoo.R;
 
 public class CheckoutRequestPaymentDialog extends Dialog {
 
-    @Bind(R.id.dismiss_view)
+    @BindView(R.id.dismiss_view)
     View dismissView;
-    @Bind(R.id.tv_label_request)
+    @BindView(R.id.tv_label_request)
     TextView tvLabelRequest;
-    @Bind(R.id.tv_label_expiry_time)
+    @BindView(R.id.tv_label_expiry_time)
     TextView tvLabelExpiryTime;
-    @Bind(R.id.layout_payment_status)
+    @BindView(R.id.layout_payment_status)
     LinearLayout layoutPaymentStatus;
-    @Bind(R.id.layout_cancel_payment)
+    @BindView(R.id.layout_cancel_payment)
     LinearLayout layoutCancelPayment;
-    @Bind(R.id.tv_value_expiry)
+    @BindView(R.id.tv_value_expiry)
     TextView tvValueExpiry;
-    @Bind(R.id.progressBar)
+    @BindView(R.id.progressBar)
     ProgressBar progressBar;
-    @Bind(R.id.recycler_cancellation_reasons)
+    @BindView(R.id.recycler_cancellation_reasons)
     RecyclerView recyclerCancellationReasons;
-    @Bind(R.id.btn_back)
+    @BindView(R.id.btn_back)
     Button btnBack;
-    @Bind(R.id.btn_submit)
+    @BindView(R.id.btn_submit)
     Button btnSubmit;
-    @Bind(R.id.btn_try_again)
+    @BindView(R.id.btn_try_again)
     Button btnTryAgain;
     private long timerStartedAt;
     private long expiryTimeMilliSecs;

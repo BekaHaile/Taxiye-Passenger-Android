@@ -1,9 +1,11 @@
 package product.clicklabs.jugnoo.emergency.fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -37,6 +39,7 @@ import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -59,8 +62,9 @@ import retrofit.mime.TypedByteArray;
  */
 
 @SuppressLint("ValidFragment")
-public class EmergencyContactsFragment extends Fragment {
+public class EmergencyContactsFragment extends Fragment  {
 
+	public static final int REQUEST_CODE_CONTACT = 1000;
 	private final String TAG = EmergencyContactsFragment.class.getSimpleName();
 	private RelativeLayout relative;
 
@@ -78,6 +82,7 @@ public class EmergencyContactsFragment extends Fragment {
 
 	private View rootView;
     private FragmentActivity activity;
+    private PermissionCommon mPermissionCommon;
 
 	@Override
 	public void onStart() {
@@ -99,12 +104,28 @@ public class EmergencyContactsFragment extends Fragment {
 		HomeActivity.checkForAccessTokenChange(activity);
 	}
 
+
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_emergency_contacts, container, false);
-
-
         activity = getActivity();
+
+        mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+			@Override
+			public void permissionGranted(int requestCode) {
+				openAddEmergencyContactsFragments();
+			}
+
+			@Override
+			public boolean permissionDenied(int requestCode, boolean neverAsk) {
+				return true;
+			}
+
+			@Override
+			public void onRationalRequestIntercepted(int requestCode) {
+
+			}
+		});
 
 		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
 		try {
@@ -190,8 +211,7 @@ public class EmergencyContactsFragment extends Fragment {
 						break;
 
 					case R.id.buttonAddContact:
-						new FragTransUtils().openAddEmergencyContactsFragment(activity,
-								((EmergencyActivity)activity).getContainer());
+						mPermissionCommon.getPermission(REQUEST_CODE_CONTACT, Manifest.permission.READ_CONTACTS);
 						break;
 
 				}
@@ -211,6 +231,16 @@ public class EmergencyContactsFragment extends Fragment {
 		return rootView;
 	}
 
+	private void openAddEmergencyContactsFragments() {
+		new FragTransUtils().openAddEmergencyContactsFragment(activity,
+				((EmergencyActivity)activity).getContainer());
+	}
+
+	@Override
+	public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		mPermissionCommon.onRequestPermissionsResult(requestCode,permissions,grantResults);
+	}
 
 	private void performBackPressed() {
 		if(activity instanceof EmergencyActivity){
@@ -351,5 +381,6 @@ public class EmergencyContactsFragment extends Fragment {
 			e.printStackTrace();
 		}
 	}
+
 
 }

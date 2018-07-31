@@ -32,7 +32,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Constants;
@@ -57,11 +57,11 @@ import retrofit.mime.TypedByteArray;
  * Created by cl-macmini-38 on 9/22/16.
  */
 public class TranscCompletedActivity extends BaseActivity {
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolBar;
-    @Bind(R.id.toolbar_title)
+    @BindView(R.id.toolbar_title)
     TextView toolbarTitleTxt;
-    @Bind(R.id.back_btn)
+    @BindView(R.id.back_btn)
     ImageButton backBtn;
 
     @OnClick(R.id.back_btn)
@@ -69,21 +69,21 @@ public class TranscCompletedActivity extends BaseActivity {
         onBackPressed();
     }
 
-    @Bind(R.id.paid_txt)
+    @BindView(R.id.paid_txt)
     TextView textViewPaid;
 
-    @Bind(R.id.message_txt)
+    @BindView(R.id.message_txt)
     TextView msgTxt;
-    @Bind(R.id.message)
+    @BindView(R.id.message)
     TextView textViewMessage;
 
-    @Bind(R.id.contact_name_txt)
+    @BindView(R.id.contact_name_txt)
     TextView contactNameTxt;
-    @Bind(R.id.mobile_txt)
+    @BindView(R.id.mobile_txt)
     TextView mobileTxt;
-    @Bind(R.id.contact_image)
+    @BindView(R.id.contact_image)
     ImageView contactImg;
-    @Bind(R.id.ok_btn)
+    @BindView(R.id.ok_btn)
     Button buttonOk;
 
     @OnClick(R.id.ok_btn)

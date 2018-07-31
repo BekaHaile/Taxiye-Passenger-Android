@@ -195,7 +195,13 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
             }
         });
 
-        updateOffersCount();
+        relativeLayoutMultipleSupplyMain.post(new Runnable() {
+            @Override
+            public void run() {
+                updateOffersCount();
+            }
+        });
+
         updatePaymentOption();
 
         try {

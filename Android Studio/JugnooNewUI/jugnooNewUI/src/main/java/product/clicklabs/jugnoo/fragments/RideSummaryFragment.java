@@ -99,14 +99,14 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
     private static final String RIDE_CANCELLED = "rideCancelled", AUTO_STATUS = "autosStatus", END_RIDE_DATA = "endRideData";
 
-    public static RideSummaryFragment newInstance(int engagementId, EndRideData endRideData, boolean rideCancelled, int autosStatus){
+    public static RideSummaryFragment newInstance(int engagementId, EndRideData endRideData, boolean rideCancelled, int autosStatus) {
         RideSummaryFragment rideSummaryFragment = new RideSummaryFragment();
 
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.KEY_ENGAGEMENT_ID, engagementId);
         bundle.putBoolean(RIDE_CANCELLED, rideCancelled);
         bundle.putInt(AUTO_STATUS, autosStatus);
-        if(endRideData != null){
+        if (endRideData != null) {
             bundle.putString(END_RIDE_DATA, new Gson().toJson(endRideData, EndRideData.class));
         }
         rideSummaryFragment.setArguments(bundle);
@@ -131,12 +131,12 @@ public class RideSummaryFragment extends Fragment implements Constants {
         super.onStop();
     }
 
-    private void parseFromArguments(){
+    private void parseFromArguments() {
         this.engagementId = getArguments().getInt(Constants.KEY_ENGAGEMENT_ID, -1);
         this.rideCancelled = getArguments().getBoolean(RIDE_CANCELLED, false);
         this.autosStatus = getArguments().getInt(AUTO_STATUS, EngagementStatus.ENDED.getOrdinal());
         String endRideDataStr = getArguments().getString(END_RIDE_DATA, Constants.EMPTY_JSON_OBJECT);
-        if(!Constants.EMPTY_JSON_OBJECT.equalsIgnoreCase(endRideDataStr)){
+        if (!Constants.EMPTY_JSON_OBJECT.equalsIgnoreCase(endRideDataStr)) {
             endRideData = new Gson().fromJson(endRideDataStr, EndRideData.class);
         }
     }
@@ -154,14 +154,13 @@ public class RideSummaryFragment extends Fragment implements Constants {
             relativeLayoutMap = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMap);
             relativeLayoutMap.setVisibility(View.GONE);
             ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapLite)).getMapAsync(new OnMapReadyCallback() {
-				@Override
-				public void onMapReady(GoogleMap googleMap) {
-					mapLite = googleMap;
-					if (mapLite != null) {
-						mapLite.getUiSettings().setAllGesturesEnabled(false);
-						mapLite.getUiSettings().setZoomControlsEnabled(false);
-						mapLite.setMyLocationEnabled(false);
-						mapLite.getUiSettings().setTiltGesturesEnabled(false);
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    mapLite = googleMap;
+                    if (mapLite != null) {
+                        mapLite.getUiSettings().setAllGesturesEnabled(false);
+                        mapLite.getUiSettings().setZoomControlsEnabled(false);
+                        mapLite.getUiSettings().setTiltGesturesEnabled(false);
 						mapLite.getUiSettings().setMyLocationButtonEnabled(false);
 						mapLite.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 

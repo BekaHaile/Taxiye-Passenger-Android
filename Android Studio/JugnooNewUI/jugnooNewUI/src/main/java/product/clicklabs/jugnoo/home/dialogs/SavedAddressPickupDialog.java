@@ -41,7 +41,6 @@ public class SavedAddressPickupDialog implements GACategory, GAAction {
 	public Dialog show() {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
 			dialog.setContentView(R.layout.dialog_saved_address_pickup_request);
 
 			RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.rv);

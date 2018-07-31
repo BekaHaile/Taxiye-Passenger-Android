@@ -23,40 +23,41 @@ import com.sabkuchfresh.utils.DirectionsGestureListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 
 
 public class RestaurantImageFragment extends Fragment {
 
-    @Bind(R.id.iv_rest_collapse_image)
+    @BindView(R.id.iv_rest_collapse_image)
     ImageView backgroundImageView;
 
-    @Bind(R.id.tv_rest_title)
+    @BindView(R.id.tv_rest_title)
     TextView tvRestTitle;
 
-    @Bind(R.id.tvCollapRestaurantRating)
+    @BindView(R.id.tvCollapRestaurantRating)
     TextView tvCollapRestaurantRating;
 
-    @Bind(R.id.llCollapRatingStars)
+    @BindView(R.id.llCollapRatingStars)
     LinearLayout llCollapRatingStars;
 
-    @Bind(R.id.tvCollapRestaurantDeliveryTime)
+    @BindView(R.id.tvCollapRestaurantDeliveryTime)
     TextView tvCollapRestaurantDeliveryTime;
 
-    @Bind(R.id.layout_rest_details)
+    @BindView(R.id.layout_rest_details)
     RelativeLayout layoutRestDetails;
 
-    @Bind(R.id.iv_rest_original_image)
+    @BindView(R.id.iv_rest_original_image)
     ImageView ivRestOriginalImage;
 
-    @Bind(R.id.llCollapseRating)
+    @BindView(R.id.llCollapseRating)
     LinearLayout llCollapseRating;
-    @Bind(R.id.tvFeedHyperLink)
+    @BindView(R.id.tvFeedHyperLink)
     public TextView tvFeedHyperLink;
-    @Bind(R.id.shadow_view)
+    @BindView(R.id.shadow_view)
     View shadowView;
 
     private FreshActivity activity;
@@ -86,12 +87,12 @@ public class RestaurantImageFragment extends Fragment {
         if (context instanceof FreshActivity)
             activity = (FreshActivity) context;
     }
-
+    Unbinder unbinder;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.restaurant_collapse_details, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         setupDetails(false);
 
@@ -217,7 +218,7 @@ public class RestaurantImageFragment extends Fragment {
 
         if (loadBlurredImageTask != null && !loadBlurredImageTask.isCancelled())
             loadBlurredImageTask.cancel(true);
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         activity.resetCollapseToolbar();
         super.onDestroyView();
     }

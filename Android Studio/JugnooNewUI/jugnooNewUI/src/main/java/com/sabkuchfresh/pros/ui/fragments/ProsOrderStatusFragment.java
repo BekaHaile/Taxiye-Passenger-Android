@@ -33,9 +33,10 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -71,55 +72,55 @@ import static product.clicklabs.jugnoo.MyApplication.getInstance;
 
 public class ProsOrderStatusFragment extends Fragment implements GAAction, GACategory {
 
-	@Bind(R.id.tv2r)
+	@BindView(R.id.tv2r)
 	TextView tv2r;
-	@Bind(R.id.tv3r)
+	@BindView(R.id.tv3r)
 	TextView tv3r;
-	@Bind(R.id.ivDeliveryPlaceFeed)
+	@BindView(R.id.ivDeliveryPlaceFeed)
 	ImageView ivDeliveryPlaceFeed;
-	@Bind(R.id.tvDeliveryPlace)
+	@BindView(R.id.tvDeliveryPlace)
 	TextView tvDeliveryPlace;
-	@Bind(R.id.llDeliveryPlaceFeed)
+	@BindView(R.id.llDeliveryPlaceFeed)
 	LinearLayout llDeliveryPlaceFeed;
-	@Bind(R.id.tvDeliveryToValFeed)
+	@BindView(R.id.tvDeliveryToValFeed)
 	TextView tvDeliveryToValFeed;
-	@Bind(R.id.tvAmountValue)
+	@BindView(R.id.tvAmountValue)
 	TextView tvAmountValue;
-	@Bind(R.id.ivPaidVia)
+	@BindView(R.id.ivPaidVia)
 	ImageView ivPaidVia;
-	@Bind(R.id.tvPaidViaValue)
+	@BindView(R.id.tvPaidViaValue)
 	TextView tvPaidViaValue;
-	@Bind(R.id.bNeedHelpFeed)
+	@BindView(R.id.bNeedHelpFeed)
 	Button bNeedHelpFeed;
-	@Bind(R.id.bCancelOrder)
+	@BindView(R.id.bCancelOrder)
 	Button bCancelOrder;
-	@Bind(R.id.tv1r)
+	@BindView(R.id.tv1r)
 	TextView tv1r;
-	@Bind(R.id.tv1l)
+	@BindView(R.id.tv1l)
 	TextView tv1l;
-	@Bind(R.id.tv2l)
+	@BindView(R.id.tv2l)
 	TextView tv2l;
-	@Bind(R.id.tv3l)
+	@BindView(R.id.tv3l)
 	TextView tv3l;
-	@Bind(R.id.tv4l)
+	@BindView(R.id.tv4l)
 	TextView tv4l;
-	@Bind(R.id.ivFromPlace)
+	@BindView(R.id.ivFromPlace)
 	ImageView ivFromPlace;
-	@Bind(R.id.tvFromPlace)
+	@BindView(R.id.tvFromPlace)
 	TextView tvFromPlace;
-	@Bind(R.id.llFromPlace)
+	@BindView(R.id.llFromPlace)
 	LinearLayout llFromPlace;
-	@Bind(R.id.tvFromToVal)
+	@BindView(R.id.tvFromToVal)
 	TextView tvFromToVal;
-	@Bind(R.id.llFromAddress)
+	@BindView(R.id.llFromAddress)
 	LinearLayout llFromAddress;
-	@Bind(R.id.tv5l)
+	@BindView(R.id.tv5l)
 	TextView tv5l;
-	@Bind(R.id.tvTaskDetails)
+	@BindView(R.id.tvTaskDetails)
 	TextView tvTaskDetails;
-	@Bind(R.id.llAmount)
+	@BindView(R.id.llAmount)
 	LinearLayout llAmount;
-	@Bind(R.id.llPaidVia)
+	@BindView(R.id.llPaidVia)
 	LinearLayout llPaidVia;
 
 	private Activity activity;
@@ -151,6 +152,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 		}
 	}
 
+	Unbinder unbinder;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_pros_order_status, container, false);
@@ -160,7 +162,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 		setActivityUI();
 
 
-		ButterKnife.bind(this, rootView);
+		unbinder = ButterKnife.bind(this, rootView);
 
 		if (activity instanceof SupportActivity) {
 			bNeedHelpFeed.setVisibility(View.GONE);
@@ -206,7 +208,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		ButterKnife.unbind(this);
+		unbinder.unbind();
 	}
 
 	@OnClick({R.id.bNeedHelp, R.id.bCancelOrder})

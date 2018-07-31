@@ -1,12 +1,13 @@
 package product.clicklabs.jugnoo.utils;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
+import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 
 /**
@@ -82,7 +83,9 @@ public class OwnerInfo {
 
             try {
                 TelephonyManager tMgr = (TelephonyManager)MainActivity.getSystemService(Context.TELEPHONY_SERVICE);
-                phone= tMgr.getLine1Number();
+                if (ActivityCompat.checkSelfPermission(MainActivity, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+                    phone = tMgr.getLine1Number();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 phone = null;

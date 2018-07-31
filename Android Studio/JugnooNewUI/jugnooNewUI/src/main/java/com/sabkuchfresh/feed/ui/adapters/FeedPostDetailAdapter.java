@@ -34,7 +34,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -357,20 +357,20 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
 
 
      static class UserCommentViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.iv_profile_pic)
+        @BindView(R.id.iv_profile_pic)
         ImageView ivUserCommentPic;
-        @Bind(R.id.tv_user_name_and_comment)
+        @BindView(R.id.tv_user_name_and_comment)
         TextView tvUserNameAndComment;
 
-        @Bind(R.id.tv_time_posted)
+        @BindView(R.id.tv_time_posted)
         TextView tvUserTimePosted;
-         @Bind(R.id.line_bottom)
+         @BindView(R.id.line_bottom)
          View lineBottom;
-         @Bind(R.id.ll_delete_comment)
+         @BindView(R.id.ll_delete_comment)
          LinearLayout ivDeleteComment;
-         @Bind(R.id.swipe)
+         @BindView(R.id.swipe)
          SwipeLayout swipeLayout;
-         @Bind(R.id.rl_comment)
+         @BindView(R.id.rl_comment)
          RelativeLayout rlComment;
 
          UserCommentViewHolder(final View view, final ItemListener itemListener) {
@@ -389,11 +389,11 @@ public class FeedPostDetailAdapter extends RecyclerSwipeAdapter<RecyclerView.Vie
 
     public class MyCommentViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.iv_profile_pic)
+        @BindView(R.id.iv_profile_pic)
         ImageView ivMyProfilePic;
-        @Bind(R.id.tv_user_name)
+        @BindView(R.id.tv_user_name)
         TextView tvMyUserName;
-        @Bind(R.id.edt_comment)
+        @BindView(R.id.edt_comment)
         EditText edtComment;
 
 

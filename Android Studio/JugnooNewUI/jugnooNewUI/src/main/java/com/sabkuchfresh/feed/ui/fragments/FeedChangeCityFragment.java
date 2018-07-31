@@ -26,9 +26,10 @@ import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.R;
 import retrofit.RetrofitError;
 
@@ -39,31 +40,32 @@ import retrofit.RetrofitError;
 public class FeedChangeCityFragment extends FeedBaseFragment {
 
 
-    @Bind(R.id.edt_city_name)
+    @BindView(R.id.edt_city_name)
     EditText edtCityName;
-    @Bind(R.id.tv_label_or)
+    @BindView(R.id.tv_label_or)
     TextView tvLabelOr;
-    @Bind(R.id.btn_use_current_location)
+    @BindView(R.id.btn_use_current_location)
     Button btnUseCurrentLocation;
-    @Bind(R.id.layout_use_current_location)
+    @BindView(R.id.layout_use_current_location)
     LinearLayout layoutUseCurrentLocation;
-    @Bind(R.id.label_trending_cities)
+    @BindView(R.id.label_trending_cities)
     TextView labelTrendingCities;
-    @Bind(R.id.rl_trending_cities)
+    @BindView(R.id.rl_trending_cities)
     RecyclerView rlTrendingCities;
-    @Bind(R.id.rl_search_results)
+    @BindView(R.id.rl_search_results)
     RecyclerView rlSearchResults;
-    @Bind(R.id.blur_view)
+    @BindView(R.id.blur_view)
     View blurView;
     private FeedDisplayCitiesAdapter searchCitiesAdapter;
     private FeedDisplayCitiesAdapter trendingCitiesAdapter;
 
+    Unbinder unbinder;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_feed_select_city, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
 
         //Search Cities
         searchCitiesAdapter = new FeedDisplayCitiesAdapter((FreshActivity) getActivity(), null, rlSearchResults, new FeedDisplayCitiesAdapter.Callback() {
@@ -167,7 +169,7 @@ public class FeedChangeCityFragment extends FeedBaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @OnClick(R.id.btn_use_current_location)

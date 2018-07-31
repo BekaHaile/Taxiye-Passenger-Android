@@ -2,9 +2,7 @@ package com.sabkuchfresh.utils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -14,7 +12,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Resources;
-import android.graphics.BitmapFactory;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.location.Location;
@@ -23,6 +20,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -69,7 +67,6 @@ import java.util.zip.GZIPOutputStream;
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -656,53 +653,6 @@ public class Utils {
 	}
 
 
-    public static void notificationManager(Context context, String message, int NOTIFICATION_ID) {
-
-        try {
-            long when = System.currentTimeMillis();
-
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-            Log.v("message", "," + message);
-
-            Intent notificationIntent = new Intent(context, SplashNewActivity.class);
-
-
-            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-            builder.setAutoCancel(true);
-            builder.setContentTitle(context.getString(R.string.app_name));
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-            builder.setContentText(message);
-            builder.setTicker(message);
-
-
-//            if (ring) {
-//                builder.setLights(Color.GREEN, 500, 500);
-//            } else {
-                builder.setDefaults(Notification.DEFAULT_ALL);
-//            }
-
-            builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher));
-            builder.setSmallIcon(R.mipmap.notification_icon);
-            builder.setContentIntent(intent);
-
-
-            Notification notification = builder.build();
-            notificationManager.notify(NOTIFICATION_ID, notification);
-
-//            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-//            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-//            wl.acquire(15000);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
 
 

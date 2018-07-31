@@ -1,6 +1,7 @@
 package com.sabkuchfresh.feed.ui.fragments;
 
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,6 +59,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.RetrofitError;
@@ -64,7 +67,8 @@ import retrofit.RetrofitError;
 import static android.support.v7.widget.RecyclerView.SCROLL_STATE_IDLE;
 
 
-public class FeedHomeFragment extends Fragment implements GACategory, GAAction, DeletePostDialog.DeleteDialogCallback, EditPostPopup.EditPostDialogCallback {
+public class FeedHomeFragment extends Fragment implements GACategory, GAAction, DeletePostDialog.DeleteDialogCallback
+        , EditPostPopup.EditPostDialogCallback {
 
 
     private static final int SHOW_ADDPOST_ON_IDLE_DELAY_MILLIS = 2000;
@@ -90,6 +94,8 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     private long notificationsSeenCount = 0;
     private int UPDATE_NOTIFICATION_COUNT_INTERVAL = 15 * 1000;
     private boolean isResumed;
+    private PermissionCommon mPermissionCommon;
+    private final static int REQ_CODE_PERMISSION_CONTACT = 1000;
 
 
     public FeedHomeFragment() {
@@ -105,6 +111,22 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         if (context instanceof FreshActivity) {
             activity = (FreshActivity) context;
             activity.registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_CONTACTS_UPLOADED));
+            mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+                @Override
+                public void permissionGranted(int requestCode) {
+                    startContactSync();
+                }
+
+                @Override
+                public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                    return true;
+                }
+
+                @Override
+                public void onRationalRequestIntercepted(int requestCode) {
+
+                }
+            });
         }
     }
 
@@ -279,7 +301,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
         activity.setLocalityAddressFirstTime(AppConstant.ApplicationType.FEED);
 
-        startContactSync();
+        mPermissionCommon.getPermission(REQ_CODE_PERMISSION_CONTACT, Manifest.permission.READ_CONTACTS);
 
         // To check if user has clicked on some post id's push notification from sp_post_id_to_open
         activity.getHandler().postDelayed(new Runnable() {
@@ -307,15 +329,24 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
 
     private void startContactSync() {
         try {
+
             if (Data.getFeedData() != null && Data.getFeedData().getContactsSynced() != null && Data.getFeedData().getContactsSynced() == 0) {
                 Intent syncContactsIntent = new Intent(activity, FeedContactsUploadService.class);
                 syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 activity.startService(syncContactsIntent);
                 Data.getFeedData().setContactsSynced(1);
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionCommon.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
 
     private void setUpSwipeRefreshLayout(View rootView) {
@@ -854,4 +885,6 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
     public boolean shouldTranslateFeedHomeAddPost() {
         return recyclerView.getScrollState()!=SCROLL_STATE_IDLE || isFragmentHidden;
     }
+
+
 }

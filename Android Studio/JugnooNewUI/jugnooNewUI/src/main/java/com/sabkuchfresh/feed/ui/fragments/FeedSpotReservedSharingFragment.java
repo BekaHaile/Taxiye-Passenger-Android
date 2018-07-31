@@ -20,8 +20,9 @@ import com.sabkuchfresh.home.FreshActivity;
 
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -36,30 +37,30 @@ import product.clicklabs.jugnoo.utils.Utils;
 public class FeedSpotReservedSharingFragment extends Fragment implements GACategory, GAAction, View.OnClickListener {
 
 
-	@Bind(R.id.tvRankDescription)
+	@BindView(R.id.tvRankDescription)
 	TextView tvRankDescription;
-	@Bind(R.id.tvWantEarlyAccessMessage)
+	@BindView(R.id.tvWantEarlyAccessMessage)
 	TextView tvWantEarlyAccessMessage;
-	@Bind(R.id.tvShareFB)
+	@BindView(R.id.tvShareFB)
 	TextView tvShareFB;
-	@Bind(R.id.tvShareTweet)
+	@BindView(R.id.tvShareTweet)
 	TextView tvShareTweet;
-	@Bind(R.id.tvShareEmail)
+	@BindView(R.id.tvShareEmail)
 	TextView tvShareEmail;
-	@Bind(R.id.tvShareWhatsapp)
+	@BindView(R.id.tvShareWhatsapp)
 	TextView tvShareWhatsapp;
-	@Bind(R.id.tvMoreSharingOptions)
+	@BindView(R.id.tvMoreSharingOptions)
 	TextView tvMoreSharingOptions;
-	@Bind(R.id.tvWantEarlyAccess)
+	@BindView(R.id.tvWantEarlyAccess)
 	TextView tvWantEarlyAccess;
 
 	FreshActivity activity;
-
+	Unbinder unbinder;
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_feed_spot_reserved_sharing, container, false);
-		ButterKnife.bind(this, rootView);
+		unbinder = ButterKnife.bind(this, rootView);
 		activity = (FreshActivity) getActivity();
 		activity.fragmentUISetup(this);
 
@@ -99,7 +100,7 @@ public class FeedSpotReservedSharingFragment extends Fragment implements GACateg
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		ButterKnife.unbind(this);
+		unbinder.unbind();
 	}
 
 	@Override

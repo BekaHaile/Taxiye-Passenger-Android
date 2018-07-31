@@ -69,7 +69,6 @@ public class FatafatTutorialDialog {
     private void init() {
         mTutorialDialog = new Dialog(mContext);
         mTutorialDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mTutorialDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
         mTutorialDialog.setContentView(R.layout.layout_fatafat_tutorial);
         WindowManager.LayoutParams layoutParams = mTutorialDialog.getWindow().getAttributes();
         layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;

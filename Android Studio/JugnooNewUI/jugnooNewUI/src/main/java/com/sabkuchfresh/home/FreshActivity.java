@@ -43,6 +43,7 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -169,7 +170,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.paperdb.Paper;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
@@ -179,7 +180,6 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.DeleteCacheIntentService;
 import product.clicklabs.jugnoo.JSONParser;
-import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.OrderStatusFragment;
 import product.clicklabs.jugnoo.PaperDBKeys;
@@ -697,7 +697,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             }
 
 
-            createAppCart(lastClientId);
+            createAppCart(lastClientId, true);
 
             if (lastClientId.equalsIgnoreCase(Config.getMealsClientId())) {
                 Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.MEALS);
@@ -1178,7 +1178,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     fetchWalletBalance(this);
                 }
 
-                MyApplication.getInstance().getLocationFetcher().connect(locationUpdate, 60000l);
+                getLocationFetcher().connect(this, 10000);
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1 &&
                         Data.userData.getIntegratedJugnooEnabled() == 1) {
@@ -2995,9 +2995,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
 
-        MyApplication.getInstance().getLocationFetcher().destroy();
-        Log.e("FreshActivity", "onPause");
-
     }
 
     public void saveItemListToSPDB() {
@@ -3193,14 +3190,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void clearCart() {
         Paper.book().delete(DB_FRESH_CART);
         Paper.book().delete(DB_PREVIOUS_VENDOR);
-        createAppCart(Config.getFreshClientId());
+        createAppCart(Config.getFreshClientId(), true);
         updateItemListFromSPDB();
     }
 
     public void clearMealCart() {
         Paper.book().delete(DB_MEALS_CART);
         Paper.book().delete(DB_PREVIOUS_VENDOR);
-        createAppCart(Config.getMealsClientId());
+        createAppCart(Config.getMealsClientId(), true);
         updateItemListFromSPDB();
     }
 
@@ -3213,7 +3210,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         Prefs.with(this).remove(appType== AppConstant.ApplicationType.MENUS?Constants.CART_STATUS_REORDER_ID:Constants.CART_STATUS_REORDER_ID_CUSTOMER_DELIVERY);
         Paper.book().delete(appType==AppConstant.ApplicationType.MENUS?DB_MENUS_CART:DB_DELIVERY_CUSTOMER_CART);
-        createAppCart(appType== AppConstant.ApplicationType.MENUS?Config.getMenusClientId():Config.getDeliveryCustomerClientId());
+        createAppCart(appType== AppConstant.ApplicationType.MENUS?Config.getMenusClientId():Config.getDeliveryCustomerClientId(), true);
         updateItemListFromSPDB();
     }
 
@@ -4814,7 +4811,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
             builderSingle.setTitle(R.string.call);
 
-            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+            final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.textview_simple);
             arrayAdapter.addAll(arr);
 
             builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
@@ -4874,6 +4871,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     }
     public void switchOffering(final String lastClientId){
+
+        createAppCart(lastClientId, false);
 
         if(!isLoginDataAvailable(lastClientId)){
             ApiLoginUsingAccessToken.Callback callback = new ApiLoginUsingAccessToken.Callback() {
@@ -5029,27 +5028,21 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
 
-    private LocationUpdate locationUpdate = new LocationUpdate() {
-        @Override
-        public void onLocationChanged(Location location) {
-            Data.latitude = location.getLatitude();
-            Data.longitude = location.getLongitude();
-
-            if (!isLocationChangeCheckedAfterResume && shouldRefreshAddress(FreshActivity.this)) {
-                LatLng currentLatlng = new LatLng(Data.latitude,Data.longitude);
-                if(MapUtils.distance(currentLatlng,getSelectedLatLng())>500) {
-                    setSelectedLatLng(currentLatlng);
-                    setSelectedAddress("");
-                    setSelectedAddressType("");
-                    setSelectedAddressId(0);
-                    saveOfferingLastAddress(getAppType());
-                    setLocalityAddressFirstTime(getAppType());
-                }
+    @Override
+    public void locationChanged(Location location) {
+        if (!isLocationChangeCheckedAfterResume && shouldRefreshAddress(FreshActivity.this)) {
+            LatLng currentLatlng = new LatLng(Data.latitude,Data.longitude);
+            if(MapUtils.distance(currentLatlng,getSelectedLatLng())>500) {
+                setSelectedLatLng(currentLatlng);
+                setSelectedAddress("");
+                setSelectedAddressType("");
+                setSelectedAddressId(0);
+                saveOfferingLastAddress(getAppType());
+                setLocalityAddressFirstTime(getAppType());
             }
-            isLocationChangeCheckedAfterResume=true;
         }
-    };
-
+        isLocationChangeCheckedAfterResume=true;
+    }
 
     /**
      * Sets restaurant's delivery time to textView provided and colorResId to its drawable
@@ -5321,19 +5314,27 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public AppCart getCart(){
         return getAppType()== AppConstant.ApplicationType.MEALS?appCartMeals:appCart;
     }
-    private void createAppCart(String clientId){
+    private void createAppCart(String clientId, boolean forceNew){
         if(clientId.equalsIgnoreCase(Config.getFreshClientId())){
-            appCart = Paper.book().read(DB_FRESH_CART, new AppCart());
+            if(appCart == null || forceNew) {
+                appCart = Paper.book().read(DB_FRESH_CART, new AppCart());
+            }
             appCart.removeEmptyItems();
         }
         else if(clientId.equalsIgnoreCase(Config.getMealsClientId())){
-            appCartMeals = Paper.book().read(DB_MEALS_CART, new AppCart());
+            if(appCartMeals == null || forceNew) {
+                appCartMeals = Paper.book().read(DB_MEALS_CART, new AppCart());
+            }
             appCartMeals.removeEmptyItems();
         }
         else if(clientId.equalsIgnoreCase(Config.getMenusClientId())){
-            menusCart = Paper.book().read(DB_MENUS_CART, new MenusCart());
+            if(menusCart == null || forceNew) {
+                menusCart = Paper.book().read(DB_MENUS_CART, new MenusCart());
+            }
         }else if(clientId.equalsIgnoreCase(Config.getDeliveryCustomerClientId())){
-            deliveryCustomerCart = Paper.book().read(DB_DELIVERY_CUSTOMER_CART, new MenusCart());
+            if(deliveryCustomerCart == null || forceNew) {
+                deliveryCustomerCart = Paper.book().read(DB_DELIVERY_CUSTOMER_CART, new MenusCart());
+            }
         }
     }
     private void saveAppCart(){
@@ -5510,14 +5511,18 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         }
     }
 
-    @Bind(R.id.llCheckoutBar)
-	public LinearLayout llCheckoutBar;
-	@Bind(R.id.tvCheckoutItemsCount)
+    @BindView(R.id.llCheckoutBar)
+    LinearLayout llCheckoutBar;
+	@BindView(R.id.tvCheckoutItemsCount)
 	TextView tvCheckoutItemsCount;
-	@Bind(R.id.tvCartAmount)
+	@BindView(R.id.tvCartAmount)
 	TextView tvCartAmount;
-    @Bind(R.id.vCheckoutShadow)
+    @BindView(R.id.vCheckoutShadow)
     View vCheckoutShadow;
+
+    public LinearLayout getLlCheckoutBar(){
+        return llCheckoutBar;
+    }
 
     private FreshSortDialog freshSortDialog;
     public void openFreshSortDialog() {
@@ -5689,30 +5694,30 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
 
-    @Bind(R.id.llAddToCart)
+    @BindView(R.id.llAddToCart)
     public LinearLayout llAddToCart;
-    @Bind(R.id.rlAddToCart)
+    @BindView(R.id.rlAddToCart)
 	public RelativeLayout rlAddToCart;
-	@Bind(R.id.tvItemTotalValue)
+	@BindView(R.id.tvItemTotalValue)
 	public TextView tvItemTotalValue;
 
-    @Bind(R.id.llPayViewContainer)
+    @BindView(R.id.llPayViewContainer)
     public LinearLayout llPayViewContainer;
-    @Bind(R.id.rlSliderContainer)
+    @BindView(R.id.rlSliderContainer)
     public RelativeLayout rlSliderContainer;
-    @Bind(R.id.viewAlpha)
+    @BindView(R.id.viewAlpha)
     public View viewAlpha;
-    @Bind(R.id.relativeLayoutSlider)
+    @BindView(R.id.relativeLayoutSlider)
     public RelativeLayout relativeLayoutSlider;
-    @Bind(R.id.tvSlide)
+    @BindView(R.id.tvSlide)
     public TextView tvSlide;
-    @Bind(R.id.sliderText)
+    @BindView(R.id.sliderText)
     public TextView sliderText;
-    @Bind(R.id.buttonPlaceOrder)
+    @BindView(R.id.buttonPlaceOrder)
     public Button buttonPlaceOrder;
-    @Bind(R.id.tvFeedHyperLink)
+    @BindView(R.id.tvFeedHyperLink)
     public TextView tvFeedHyperLink;
-    @Bind(R.id.bRequestBooking) public Button bRequestBooking;
+    @BindView(R.id.bRequestBooking) public Button bRequestBooking;
 
     public void setFeedArrowToTextView(TextView tvFeedHyperLink){
         Spannable spannable = new SpannableString(getString(R.string.back_arrow));
@@ -5813,7 +5818,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
 
 
-    @Bind(R.id.llRightDrawer)
+    @BindView(R.id.llRightDrawer)
     public LinearLayout llRightDrawer;
 
     public MenusFilterFragment getMenusFilterFragment(){
@@ -5846,7 +5851,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public MenusCart getMenusCart(){
         MenusCart menusCart1 = getAppType()== AppConstant.ApplicationType.MENUS?menusCart:deliveryCustomerCart;
         if(menusCart1 == null){
-            createAppCart(Config.getLastOpenedClientId(this));
+            createAppCart(Config.getLastOpenedClientId(this), true);
         }
         return getAppType()== AppConstant.ApplicationType.MENUS?menusCart:deliveryCustomerCart;
     }

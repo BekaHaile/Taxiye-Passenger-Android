@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +13,10 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.location.Location;
+import android.support.annotation.NonNull;
 
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
@@ -19,7 +24,9 @@ import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 /**
  * Created by clicklabs on 7/3/15.
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends Activity implements LocationUpdate {
+	public static final int REQUEST_CODE_PERMISSION_LOCATION = 1011;
+	private static final int REQUEST_CODE_PERMISSION_RECEIVE_SMS = 1012;
 
     @Override
     public void startActivity(Intent intent) {
@@ -51,7 +58,33 @@ public class BaseActivity extends Activity {
 	protected void onPause() {
 		super.onPause();
 		Data.activityResumed = false;
+		getLocationFetcher().destroy();
 	}
+
+
+
+	@Override
+	public void onLocationChanged(Location location) {
+		HomeActivity.myLocation = location;
+		Data.loginLatitude = location.getLatitude();
+		Data.loginLongitude = location.getLongitude();
+		Data.latitude = location.getLatitude();
+		Data.longitude = location.getLongitude();
+	}
+
+	private LocationFetcher locationFetcher;
+	public LocationFetcher getLocationFetcher(){
+		if(locationFetcher == null){
+			locationFetcher = new LocationFetcher(this);
+		}
+		return locationFetcher;
+	}
+
+
+
+
+
+
 
 	private static final int WIDTH_PX = 200;
 	private static final int HEIGHT_PX = 80;

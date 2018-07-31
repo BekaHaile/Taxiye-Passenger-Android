@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.emergency.fragments;
 import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +15,10 @@ import android.widget.TextView;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.LocationFetcher;
-import product.clicklabs.jugnoo.LocationUpdate;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiEmergencyAlert;
 import product.clicklabs.jugnoo.apis.ApiEmergencyDisable;
+import product.clicklabs.jugnoo.base.BaseFragment;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.FragTransUtils;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
@@ -40,7 +38,7 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 
 @SuppressLint("ValidFragment")
-public class EmergencyModeEnabledFragment extends Fragment {
+public class EmergencyModeEnabledFragment extends BaseFragment {
 
 	private RelativeLayout relative;
 
@@ -53,7 +51,6 @@ public class EmergencyModeEnabledFragment extends Fragment {
 
 	private View rootView;
     private FragmentActivity activity;
-	private LocationFetcher locationFetcher = null;
 	private Location location;
 
 	private String driverId, engagementId;
@@ -73,25 +70,14 @@ public class EmergencyModeEnabledFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(activity);
-		if(locationFetcher != null) {
-			locationFetcher.connect(locationUpdate, 1000);
-		}
+		getLocationFetcher().connect(this, 10000);
 	}
 
 	@Override
-	public void onPause() {
-		super.onPause();
-		if(locationFetcher != null) {
-			locationFetcher.destroy();
-		}
+	public void locationChanged(Location location) {
+		super.locationChanged(location);
+		EmergencyModeEnabledFragment.this.location = location;
 	}
-
-	private LocationUpdate locationUpdate = new LocationUpdate() {
-		@Override
-		public void onLocationChanged(Location location) {
-			EmergencyModeEnabledFragment.this.location = location;
-		}
-	};
 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -166,21 +152,24 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		buttonCallEmergencyContact.setOnClickListener(onClickListener);
 		buttonDisableEmergencyMode.setOnClickListener(onClickListener);
 
-		if(locationFetcher == null) {
-			locationFetcher = new LocationFetcher(MyApplication.getInstance());
-		}
 
 
-		callEmergencyAlert();
+		requestLocationPermissionExplicit();
+
+
 
 
 
 		return rootView;
 	}
 
+	@Override
+	public void permissionGranted(int requestCode) {
+		if(requestCode==REQUEST_CODE_PERMISSION_LOCATION){
+			callEmergencyAlert();
+		}
 
-
-
+	}
 
 	public void callEmergencyAlert(){
 		int modeEnabled = Prefs.with(activity).getInt(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
@@ -201,12 +190,12 @@ public class EmergencyModeEnabledFragment extends Fragment {
 
 				@Override
 				public double getSavedLatitude() {
-					return locationFetcher.getSavedLatFromSP();
+					return LocationFetcher.getSavedLatFromSP(activity);
 				}
 
 				@Override
 				public double getSavedLongitude() {
-					return locationFetcher.getSavedLngFromSP();
+					return LocationFetcher.getSavedLngFromSP(activity);
 				}
 			}).raiseEmergencyAlertAPI(getLocation(), "", driverId, engagementId);
 		} else{
@@ -253,13 +242,6 @@ public class EmergencyModeEnabledFragment extends Fragment {
 		}
 	}
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		if(locationFetcher != null) {
-			locationFetcher.destroy();
-		}
-	}
 
 	@Override
 	public void onDestroy() {

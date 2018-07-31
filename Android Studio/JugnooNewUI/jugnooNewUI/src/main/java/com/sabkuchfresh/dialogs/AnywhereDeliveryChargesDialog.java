@@ -15,8 +15,6 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.FreshActivity;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,7 +93,6 @@ public class AnywhereDeliveryChargesDialog {
 	@NonNull
 	private void init() {
 		dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-		dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
 		dialog.setContentView(R.layout.dialog_anywhere_delivery_charges);
 
 		RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);
