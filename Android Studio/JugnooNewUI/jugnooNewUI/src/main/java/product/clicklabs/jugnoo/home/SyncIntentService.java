@@ -1,11 +1,13 @@
 package product.clicklabs.jugnoo.home;
 
+import android.Manifest;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Pair;
 
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 
 public class SyncIntentService extends IntentService {
 
@@ -23,7 +25,7 @@ public class SyncIntentService extends IntentService {
 			String startTime = intent.getStringExtra(Constants.KEY_START_TIME);
 			String endTime = intent.getStringExtra(Constants.KEY_END_TIME);
 			Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(this);
-			if (!"".equalsIgnoreCase(pair.first)) {
+			if (PermissionCommon.isGranted( Manifest.permission.READ_SMS,this) && !"".equalsIgnoreCase(pair.first)) {
 				new FetchAndSendMessages(this, pair.first, true, startTime, endTime).syncUp();
 			}
 		} catch (Exception e){

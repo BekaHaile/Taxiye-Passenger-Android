@@ -9,9 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
 import product.clicklabs.jugnoo.R;
@@ -27,18 +28,19 @@ import product.clicklabs.jugnoo.utils.NonScrollListView;
 public class ViewJugnooStarBenefitsFragment extends Fragment {
 
 
-    @Bind(R.id.rvBenefits)
+    @BindView(R.id.rvBenefits)
     NonScrollListView rvBenefits;
-    @Bind(R.id.btnUpgradeNow)
+    @BindView(R.id.btnUpgradeNow)
     Button btnUpgradeNow;
-    @Bind(R.id.rootLayout)
+    @BindView(R.id.rootLayout)
     RelativeLayout rootLayout;
 
+    Unbinder unbinder;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootview = inflater.inflate(R.layout.fragment_jstar_view_benefits, container, false);
-        ButterKnife.bind(this, rootview);
+        unbinder = ButterKnife.bind(this, rootview);
         try {
             if (rootLayout != null) {
                 new ASSL(getActivity(), rootLayout, 1134, 720, false);
@@ -61,7 +63,7 @@ public class ViewJugnooStarBenefitsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @OnClick(R.id.btnUpgradeNow)

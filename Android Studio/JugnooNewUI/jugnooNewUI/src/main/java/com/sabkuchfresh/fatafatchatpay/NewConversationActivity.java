@@ -1,13 +1,14 @@
 package com.sabkuchfresh.fatafatchatpay;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -41,12 +42,14 @@ import java.util.Comparator;
 import java.util.HashMap;
 
 import io.paperdb.Paper;
+import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.PaperDBKeys;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.ContactsUploadService;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.CreateChatResponse;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -58,8 +61,9 @@ import retrofit.RetrofitError;
  * Created by cl-macmini-01 on 2/6/18.
  */
 
-public class NewConversationActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher {
+public class NewConversationActivity extends BaseAppCompatActivity implements View.OnClickListener, TextWatcher{
 
+    public static final int REQUEST_CODE_CONTACTS = 1000;
     private EditText etSearchConnections;
     private ImageButton imgBtnSync;
     private RecyclerView rvConnections;
@@ -73,12 +77,29 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
     private Animation rotateAnim;
     private ImageView ivContactSync;
     private RelativeLayout rlSync;
+    private PermissionCommon mPermissionCommon;
     private TextView tvJugnooConnection;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_conversation);
+        mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+            @Override
+            public void permissionGranted(int requestCode) {
+                performSyncOperation();
+            }
+
+            @Override
+            public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                return true;
+            }
+
+            @Override
+            public void onRationalRequestIntercepted(int requestCode) {
+
+            }
+        }) ;
         initViews();
         registerSyncUpdateReceiver();
 
@@ -233,6 +254,9 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
      */
     private void fetchContacts(final boolean showLoader) {
 
+        if(Data.userData == null){
+            return;
+        }
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 
@@ -315,6 +339,11 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
      */
     private void syncContacts() {
         //DialogPopup.showLoadingDialog(this, "");
+
+        mPermissionCommon.getPermission(REQUEST_CODE_CONTACTS, Manifest.permission.READ_CONTACTS);
+
+    }
+    private void performSyncOperation(){
         showSyncLayout();
         // start the contact upload sync in background
         Intent syncContactsIntent = new Intent(this, ContactsUploadService.class);
@@ -484,5 +513,12 @@ public class NewConversationActivity extends AppCompatActivity implements View.O
                     }
                 });
     }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        mPermissionCommon.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
+
 }
 

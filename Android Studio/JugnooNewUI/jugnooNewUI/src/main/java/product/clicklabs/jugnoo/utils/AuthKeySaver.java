@@ -43,7 +43,6 @@ public class AuthKeySaver {
 				writer.close();
 			}
 		} catch (Exception e1) {
-            Log.w("e1", "="+e1);
 		}
 	}
 	
@@ -63,7 +62,6 @@ public class AuthKeySaver {
         	try {
 				in.close();
 			} catch (Exception e) {
-                Log.w("e1", "=" + e);
 			}
         }
         return authKey;

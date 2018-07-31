@@ -91,7 +91,6 @@ public class Log {
 						writer.close();
 						
 					} catch (Exception e1) {
-						e1.printStackTrace();
 					}
 				}
 			}).start();
@@ -116,7 +115,6 @@ public class Log {
 			}
 			return folder;
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return null;
 	}
@@ -130,7 +128,6 @@ public class Log {
 			}
 			return gpxfile;
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return null;
 	}
@@ -150,7 +147,6 @@ public class Log {
 						writer.close();
 					}
 				} catch (Exception e1) {
-					e1.printStackTrace();
 				}
 			}
 		}).start();
@@ -170,7 +166,6 @@ public class Log {
 			}
 			folder.delete();
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -178,7 +173,6 @@ public class Log {
 		try {
 			deleteFolder(getPathLogFolder());
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 	

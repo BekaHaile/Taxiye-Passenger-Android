@@ -53,7 +53,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
@@ -787,64 +787,64 @@ public class FeedHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
 
     public static class ViewHolderReviewImage extends RecyclerView.ViewHolder {
-        @Bind(R.id.iv_owner_profile_pic)
+        @BindView(R.id.iv_owner_profile_pic)
         ImageView ivFeedOwnerPic;
-        @Bind(R.id.tv_feed_owner_title)
+        @BindView(R.id.tv_feed_owner_title)
         TextView tvFeedOwnerTitle;
-        @Bind(R.id.tv_feed_description)
+        @BindView(R.id.tv_feed_description)
         TextView tvFeedDescription;
-        @Bind(R.id.iv_place_image)
+        @BindView(R.id.iv_place_image)
         ImageView ivPlaceImage;
-        @Bind(R.id.line_below_images_pager)
+        @BindView(R.id.line_below_images_pager)
         View lineBelowImagesPager;
-        @Bind(R.id.tv_user_commented_name)
+        @BindView(R.id.tv_user_commented_name)
         NoScrollTextView tvUserCommentedName;
 
-        @Bind(R.id.tv_action_comment)
+        @BindView(R.id.tv_action_comment)
         TextView tvComment;
-        @Bind(R.id.tv_action_like)
+        @BindView(R.id.tv_action_like)
         TextView tvLike;
-        @Bind(R.id.view_action_like)
+        @BindView(R.id.view_action_like)
         LinearLayout viewActionLike;
-        @Bind(R.id.view_action_comment)
+        @BindView(R.id.view_action_comment)
         LinearLayout viewActionComment;
-    /*    @Bind(R.id.iv_user_commented_pic)
+    /*    @BindView(R.id.iv_user_commented_pic)
         ImageView ivUserCommentedPic;*/
-    /*    @Bind(R.id.tv_feed_rating)
+    /*    @BindView(R.id.tv_feed_rating)
         TextView tvFeedRating;*/
-        @Bind(R.id.tv_restaurant_feed_address)
+        @BindView(R.id.tv_restaurant_feed_address)
         TextView tvFeedAddress;
-        @Bind(R.id.layout_user_activity_heading)
+        @BindView(R.id.layout_user_activity_heading)
         RelativeLayout layoutUserActivity;
 
-        @Bind(R.id.iv_user_profile_pic)
+        @BindView(R.id.iv_user_profile_pic)
         ImageView ivUserProfilePic;
-        @Bind(R.id.tv_user_activity_time)
+        @BindView(R.id.tv_user_activity_time)
         TextView tvUserActivityTime;
-        @Bind(R.id.tv_user_activity_title)
+        @BindView(R.id.tv_user_activity_title)
         TextView tvUserActivityTitle;
-        @Bind(R.id.tv_owner_feed_time)
+        @BindView(R.id.tv_owner_feed_time)
         TextView tvOwnerTime;
-        @Bind(R.id.vShadowDown)
+        @BindView(R.id.vShadowDown)
         View shadow;
-        @Bind(R.id.root_layout_item)
+        @BindView(R.id.root_layout_item)
         RelativeLayout layoutItem;
-        @Bind(R.id.ib_arrow_more)
+        @BindView(R.id.ib_arrow_more)
         TextView tvMore;
-        @Bind(R.id.vpReviewImages)
+        @BindView(R.id.vpReviewImages)
         ViewPager vpReviewImages;
         DisplayFeedHomeImagesAdapter displayFeedHomeImagesAdapter;
-        @Bind(R.id.tabDots)
+        @BindView(R.id.tabDots)
         TabLayout tabDots;
-        @Bind(R.id.layout_actual_post)
+        @BindView(R.id.layout_actual_post)
         RelativeLayout layoutActualPost;
-        @Bind(R.id.layout_comment)
+        @BindView(R.id.layout_comment)
         RelativeLayout  layoutComment;
-        @Bind(R.id.like_button_animate)
+        @BindView(R.id.like_button_animate)
         LikeButton likeButtonAnimate;
-        @Bind(R.id.view_like)
+        @BindView(R.id.view_like)
         View viewLike;
-        @Bind(R.id.shadow_tab)
+        @BindView(R.id.shadow_tab)
         View shadowTab;
 
 

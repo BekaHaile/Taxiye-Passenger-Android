@@ -171,7 +171,12 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
         } catch (Exception e) {
         }
 
-        update();
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                update();
+            }
+        });
 
     }
 

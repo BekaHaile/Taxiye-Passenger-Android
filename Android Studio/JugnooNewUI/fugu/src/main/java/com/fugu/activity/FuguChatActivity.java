@@ -2029,7 +2029,7 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
 
         try {
             if (FuguConfig.getInstance().getTargetSDKVersion() > 22 &&
-                    grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 switch (requestCode) {
 
                     case PERMISSION_CONSTANT_CAMERA:
@@ -2052,7 +2052,7 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                 }
             } else if (FuguConfig.getInstance().getTargetSDKVersion() <= 22 &&
                     grantResults.length > 0
-                    && FuguConfig.getInstance().isPermissionGranted(FuguChatActivity.this, Manifest.permission.CAMERA)
+//                    && FuguConfig.getInstance().isPermissionGranted(FuguChatActivity.this, Manifest.permission.CAMERA)
                     && FuguConfig.getInstance().isPermissionGranted(FuguChatActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 switch (requestCode) {
 

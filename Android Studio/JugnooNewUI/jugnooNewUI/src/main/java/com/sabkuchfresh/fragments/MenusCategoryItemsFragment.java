@@ -221,7 +221,7 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                                         new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                activity.llCheckoutBar.performClick();
+                                                activity.getLlCheckoutBar().performClick();
                                             }
                                         }, new View.OnClickListener() {
                                             @Override

@@ -20,9 +20,10 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -43,13 +44,13 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 public class PromoDescriptionFragment extends Fragment {
 
-	@Bind(R.id.tvOfferingName)
+	@BindView(R.id.tvOfferingName)
 	TextView tvOfferingName;
-	@Bind(R.id.tvOfferTitle)
+	@BindView(R.id.tvOfferTitle)
 	TextView tvOfferTitle;
-	@Bind(R.id.tvOfferExpireDate)
+	@BindView(R.id.tvOfferExpireDate)
 	TextView tvOfferExpireDate;
-	@Bind(R.id.tvOfferTerms)
+	@BindView(R.id.tvOfferTerms)
 	TextView tvOfferTerms;
 	private View rootView;
 	private Context context;
@@ -84,11 +85,12 @@ public class PromoDescriptionFragment extends Fragment {
 		}
 	}
 
+	Unbinder unbinder;
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		rootView = inflater.inflate(R.layout.fragment_promo_description, container, false);
-		ButterKnife.bind(this, rootView);
+		unbinder = ButterKnife.bind(this, rootView);
 
 		parseArguments();
 
@@ -120,7 +122,7 @@ public class PromoDescriptionFragment extends Fragment {
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		ButterKnife.unbind(this);
+		unbinder.unbind();
 	}
 
 	@OnClick(R.id.bUseCoupon)

@@ -80,7 +80,9 @@ import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
 import product.clicklabs.jugnoo.BuildConfig;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.GCMIntentService;
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -624,7 +626,7 @@ public class Utils implements GAAction, GACategory{
         try {
             long when = System.currentTimeMillis();
 
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = GCMIntentService.getNotificationManager(context, Constants.NOTIF_CHANNEL_DEFAULT);
 
             Log.v("message", "," + message);
 
@@ -634,10 +636,11 @@ public class Utils implements GAAction, GACategory{
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, Constants.NOTIF_CHANNEL_DEFAULT);
             builder.setAutoCancel(true);
             builder.setContentTitle(context.getString(R.string.app_name));
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
+            builder.setChannelId(Constants.NOTIF_CHANNEL_DEFAULT);
             builder.setContentText(message);
             builder.setTicker(message);
 

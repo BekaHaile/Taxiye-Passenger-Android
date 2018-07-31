@@ -38,7 +38,6 @@ public class FareDetailsDialog {
 	public FareDetailsDialog show() {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
 			dialog.setContentView(R.layout.dialog_fare_details);
 
 			RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);

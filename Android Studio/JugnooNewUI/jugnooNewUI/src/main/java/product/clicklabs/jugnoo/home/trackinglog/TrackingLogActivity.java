@@ -1,19 +1,21 @@
 package product.clicklabs.jugnoo.home.trackinglog;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Property;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -93,6 +95,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
     protected void onResume() {
         super.onResume();
         HomeActivity.checkForAccessTokenChange(this);
+        enableMapMyLocation(map);
     }
 
     @Override
@@ -109,8 +112,10 @@ public class TrackingLogActivity extends BaseFragmentActivity {
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
 
         linearLayoutForm = (LinearLayout) findViewById(R.id.linearLayoutForm);
-        editTextEngagementId = (EditText) findViewById(R.id.editTextEngagementId); editTextEngagementId.setTypeface(Fonts.mavenMedium(this));
-        buttonSubmit = (Button) findViewById(R.id.buttonSubmit); buttonSubmit.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+        editTextEngagementId = (EditText) findViewById(R.id.editTextEngagementId);
+        editTextEngagementId.setTypeface(Fonts.mavenMedium(this));
+        buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
+        buttonSubmit.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
 
         recyclerViewLogs = (RecyclerView) findViewById(R.id.recyclerViewLogs);
         recyclerViewLogs.setLayoutManager(new LinearLayoutManager(this));
@@ -139,7 +144,8 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                 if (map != null) {
                     map.getUiSettings().setAllGesturesEnabled(true);
                     map.getUiSettings().setZoomControlsEnabled(true);
-                    map.setMyLocationEnabled(true);
+                    enableMapMyLocation(map);
+
                     map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 }
             }
@@ -148,7 +154,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
         state = ScreenState.FORM;
         switchScreenState(state);
 
-        imageViewBack.setOnClickListener(new OnClickListener() {
+        imageViewBack.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -156,7 +162,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
             }
         });
 
-        buttonSubmit.setOnClickListener(new OnClickListener() {
+        buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String engagementId = editTextEngagementId.getText().toString().trim();
@@ -175,6 +181,11 @@ public class TrackingLogActivity extends BaseFragmentActivity {
 
     }
 
+    private void enableMapMyLocation(GoogleMap googleMap) {
+        if(googleMap != null && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            googleMap.setMyLocationEnabled(true);
+        }
+    }
 
     public void performBackPressed() {
         if(state == ScreenState.MAP){

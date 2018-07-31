@@ -12,15 +12,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.ProductType;
@@ -35,17 +35,17 @@ import product.clicklabs.jugnoo.utils.ASSL;
 public class NewFeedbackFragment extends Fragment {
 
 
-    @Bind(R.id.tv_view_invoice)
+    @BindView(R.id.tv_view_invoice)
     TextView tvViewInvoice;
-    @Bind(R.id.tv_rate_experience)
+    @BindView(R.id.tv_rate_experience)
     TextView tvRateExperience;
-    @Bind(R.id.rating_bar)
+    @BindView(R.id.rating_bar)
     RatingBarMenuFeedback ratingBar;
-    @Bind(R.id.edt_feedback_title)
+    @BindView(R.id.edt_feedback_title)
     EditText edtFeedbackTitle;
-    @Bind(R.id.edt_feedback_descc)
+    @BindView(R.id.edt_feedback_descc)
     EditText edtFeedbackDescc;
-    @Bind(R.id.btn_submit)
+    @BindView(R.id.btn_submit)
     Button btnSubmit;
     private FreshActivity activity;
     private int viewType;
@@ -60,6 +60,7 @@ public class NewFeedbackFragment extends Fragment {
     private RateAppDialogContent rateAppDialogContent;
     private LinearLayout mainLayout;
 
+    Unbinder unbinder;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -69,7 +70,7 @@ public class NewFeedbackFragment extends Fragment {
         activity = (FreshActivity) getActivity();
         mainLayout = (LinearLayout) rootView.findViewById(R.id.root_layout);
         new ASSL(activity, mainLayout, 1134, 720, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
         activity.fragmentUISetup(this);
 
 
@@ -118,7 +119,7 @@ public class NewFeedbackFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @OnClick({R.id.tv_view_invoice, R.id.btn_submit})

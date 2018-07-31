@@ -101,7 +101,6 @@ public class ApiLoginUsingAccessToken {
 
 				@Override
 				public void failure(RetrofitError error) {
-					Log.e(TAG, "loginUsingAccessToken error="+error.toString());
 					performLoginFailure(callback);
 				}
 			});

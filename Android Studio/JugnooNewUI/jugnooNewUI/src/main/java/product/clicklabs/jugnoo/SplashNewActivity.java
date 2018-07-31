@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -14,15 +15,14 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
-import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -62,9 +62,6 @@ import com.facebook.CallbackManager;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.PhoneNumber;
-import com.facebook.accountkit.ui.AccountKitActivity;
-import com.facebook.accountkit.ui.AccountKitConfiguration;
-import com.facebook.accountkit.ui.LoginType;
 import com.facebook.appevents.AppEventsLogger;
 import com.fugu.FuguConfig;
 import com.google.android.gms.common.ConnectionResult;
@@ -101,6 +98,7 @@ import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
@@ -131,12 +129,97 @@ import retrofit.mime.TypedByteArray;
 
 public class SplashNewActivity extends BaseAppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
 
+	private AlertDialog dialogLocationPermission;
+	private PermissionCommon.PermissionListener permissionListener = new PermissionCommon.PermissionListener() {
+				@Override
+				public void permissionGranted(int requestCode) {
+					switch (requestCode){
+						case REQUEST_CODE_RECIEVE_SMS:
+								goToLoginUsingPhone("");
+						break;
+						case REQUEST_CODE_LOCATION:
+							try {
+								if(dialogLocationPermission!=null){
+									dialogLocationPermission.dismiss();
+								}
+								isLocationOnGrantCalled = true;
+								showLocationEnableDialog();
+								DialogPopup.dismissLoadingDialog();
+								Log.e("deviceToken received", "> " + MyApplication.getInstance().getDeviceToken());
+								accessTokenLogin(SplashNewActivity.this);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+							break;
+
+					}
+
+				}
+
+				@Override
+				public boolean permissionDenied(int requestCode, boolean neverAsk) {
+					switch (requestCode){
+						case REQUEST_CODE_RECIEVE_SMS:
+							goToLoginUsingPhone("");
+						return false;
+						case REQUEST_CODE_LOCATION:
+
+
+							if(locationBuilderPermission==null){
+								locationBuilderPermission = new AlertDialog.Builder(SplashNewActivity.this);
+								locationBuilderPermission.setMessage(getString(R.string.need_permission_location_format, getString(R.string.app_name))).setCancelable(false);
+
+							}
+
+							if(neverAsk){
+								locationBuilderPermission.setPositiveButton(getString(R.string.settings), new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										PermissionCommon.openSettingsScreen(SplashNewActivity.this);
+
+									}
+								});
+
+
+							}else{
+								locationBuilderPermission.setPositiveButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int which) {
+										goToAccessTokenLogin();
+
+									}
+								});
+							}
+
+							dialogLocationPermission = locationBuilderPermission.show();
+
+							return false;
+						default:
+							return false;
+
+					}
+				}
+
+				@Override
+				public void onRationalRequestIntercepted(int requestCode) {
+					switch (requestCode){
+						case REQUEST_CODE_RECIEVE_SMS:
+							goToLoginUsingPhone("");
+							break;
+
+					}
+				}
+
+
+			};;
+	private boolean isLocationOnGrantCalled;
+	private AlertDialog.Builder locationBuilderPermission;
+
 	@Override
 	public boolean checkOfAT(){
 		return false;
 	}
 
-	//adding drop location
 
 	RelativeLayout root, rlSplashLogo;
 	LinearLayout linearLayoutMain, llLoginContainer;
@@ -213,6 +296,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	LinearLayout rlCountryCode;
 	private TextView tvCountryCode;
 	private CountryPicker countryPicker;
+	private boolean askedForSmsPermissionAlertOnce ;
 
 
 	public void resetFlags() {
@@ -236,10 +320,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	private static final int FRAMEWORK_REQUEST_CODE = 1;
 
 	private int nextPermissionsRequestCode = 4000;
-	private final Map<Integer, OnCompleteListener> permissionsListeners = new HashMap<>();
 	private FBAccountKit fbAccountKit;
 	private EditText editTextPhoneNumber;
 	private TextView textViewPhoneNumberRequired;
+	private static final int REQUEST_CODE_RECIEVE_SMS = 0x123;
+	private static final int REQUEST_CODE_LOCATION = 0x124;
 
 	public static boolean openHomeSwitcher = false;
 
@@ -360,8 +445,13 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		try {
 
+		try {
+			HashMap<String,String> rationalMap = (new HashMap<>());
+			rationalMap.put(Manifest.permission.ACCESS_FINE_LOCATION,
+			BuildConfig.FLAVOR.equals("jugnoo")?getString(R.string.perm_location_rational_splash_jugnoo,getString(R.string.app_name)):
+			getString(R.string.perm_location_rational_splash,getString(R.string.app_name)));
+			getPermissionCommon().setCallback(permissionListener).setMessageMap(rationalMap);
 			// to check if this is root task or not
 			if (!isTaskRoot()
 					&& getIntent().hasCategory(Intent.CATEGORY_LAUNCHER)
@@ -907,7 +997,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			rlMobileNumber.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					goToLoginUsingPhone("");
+					getPermissionCommon().getPermission(REQUEST_CODE_RECIEVE_SMS,PermissionCommon.SKIP_RATIONAL_MESSAGE,true,Manifest.permission.RECEIVE_SMS);
 					GAUtils.event(JUGNOO, LOGIN_SIGNUP, MOBILE+CLICKED);
 				}
 			});
@@ -1271,7 +1361,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			initiateDeviceInfoVariables();
 			startService(new Intent(this, PushPendingCallsService.class));
-			showLocationEnableDialog();
 
 			//getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
@@ -1305,7 +1394,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		}
 
 		logSome();
-
+		showLocationEnableDialog();
 
         if(Utils.isAppInstalled(this, POKEMON_GO_APP_PACKAGE)
                 && Prefs.with(this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, -1) == -1){
@@ -1317,17 +1406,19 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverDeviceToken,
 				new IntentFilter(INTENT_ACTION_DEVICE_TOKEN_UPDATE));
 
-		llSignupMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llSignupMain, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
+        if(llSignupMain != null) {
+			llSignupMain.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llSignupMain, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
+				@Override
+				public void keyboardOpened() {
 
-			}
+				}
 
-			@Override
-			public void keyBoardClosed() {
+				@Override
+				public void keyBoardClosed() {
 
-			}
-		}));
+				}
+			}));
+		}
 
 		llLoginContainer.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llLoginContainer, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
 			@Override
@@ -1382,140 +1473,17 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		new HomeUtil().forceRTL(this);
 	}
 
-	private void startFbAccountKit(PhoneNumber phoneNumber){
-			onLogin(LoginType.PHONE, phoneNumber);
-	}
+
 
 	private interface OnCompleteListener {
 		void onComplete();
 	}
 
-	private void onLogin(final LoginType loginType, PhoneNumber phoneNumber) {
-		final Intent intent = new Intent(this, AccountKitActivity.class);
-		final AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder
-				= new AccountKitConfiguration.AccountKitConfigurationBuilder(
-				loginType,
-				AccountKitActivity.ResponseType.CODE);
-		configurationBuilder.setTheme(R.style.AppLoginTheme_Salmon);
-		configurationBuilder.setTitleType(AccountKitActivity.TitleType.LOGIN);
-		configurationBuilder.setDefaultCountryCode(getCountryCodeSelected());
-		if(phoneNumber != null && !phoneNumber.toString().equalsIgnoreCase("")) {
-			configurationBuilder.setInitialPhoneNumber(phoneNumber);
-		}
-		final AccountKitConfiguration configuration = configurationBuilder.build();
-		intent.putExtra(
-				AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
-				configuration);
-		OnCompleteListener completeListener = new OnCompleteListener() {
-			@Override
-			public void onComplete() {
-				startActivityForResult(intent, FRAMEWORK_REQUEST_CODE);
-			}
-		};
-		switch (loginType) {
-			case EMAIL:
-				final OnCompleteListener getAccountsCompleteListener = completeListener;
-				completeListener = new OnCompleteListener() {
-					@Override
-					public void onComplete() {
-						requestPermissions(
-								android.Manifest.permission.GET_ACCOUNTS,
-								R.string.permissions_get_accounts_title,
-								R.string.permissions_get_accounts_message,
-								getAccountsCompleteListener);
-					}
-				};
-				break;
-			case PHONE:
-				if (configuration.isReceiveSMSEnabled()) {
-					final OnCompleteListener receiveSMSCompleteListener = completeListener;
-					completeListener = new OnCompleteListener() {
-						@Override
-						public void onComplete() {
-							requestPermissions(
-									android.Manifest.permission.RECEIVE_SMS,
-									R.string.permissions_receive_sms_title,
-									R.string.permissions_receive_sms_message,
-									receiveSMSCompleteListener);
-						}
-					};
-				}
-				if (configuration.isReadPhoneStateEnabled()) {
-					final OnCompleteListener readPhoneStateCompleteListener = completeListener;
-					completeListener = new OnCompleteListener() {
-						@Override
-						public void onComplete() {
-							requestPermissions(
-									android.Manifest.permission.READ_PHONE_STATE,
-									R.string.permissions_read_phone_state_title,
-									R.string.permissions_read_phone_state_message,
-									readPhoneStateCompleteListener);
-						}
-					};
-				}
-				break;
-		}
-		completeListener.onComplete();
-	}
 
-	private void requestPermissions(
-			final String permission,
-			final int rationaleTitleResourceId,
-			final int rationaleMessageResourceId,
-			final OnCompleteListener listener) {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-			if (listener != null) {
-				listener.onComplete();
-			}
-			return;
-		}
 
-		checkRequestPermissions(
-				permission,
-				rationaleTitleResourceId,
-				rationaleMessageResourceId,
-				listener);
-	}
 
-	@TargetApi(23)
-	private void checkRequestPermissions(
-			final String permission,
-			final int rationaleTitleResourceId,
-			final int rationaleMessageResourceId,
-			final OnCompleteListener listener) {
-		if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
-			if (listener != null) {
-				listener.onComplete();
-			}
-			return;
-		}
 
-		final int requestCode = nextPermissionsRequestCode++;
-		permissionsListeners.put(requestCode, listener);
 
-		if (shouldShowRequestPermissionRationale(permission)) {
-			new AlertDialog.Builder(this)
-					.setTitle(rationaleTitleResourceId)
-					.setMessage(rationaleMessageResourceId)
-					.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(final DialogInterface dialog, final int which) {
-							requestPermissions(new String[] { permission }, requestCode);
-						}
-					})
-					.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-						@Override
-						public void onClick(final DialogInterface dialog, final int which) {
-							// ignore and clean up the listener
-							permissionsListeners.remove(requestCode);
-						}
-					})
-					.setIcon(android.R.drawable.ic_dialog_alert)
-					.show();
-		} else {
-			requestPermissions(new String[]{ permission }, requestCode);
-		}
-	}
 
 	@TargetApi(23)
 	@SuppressWarnings("unused")
@@ -1523,12 +1491,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	public void onRequestPermissionsResult(final int requestCode,
 										   final @NonNull String permissions[],
 										   final @NonNull int[] grantResults) {
-		final OnCompleteListener permissionsListener = permissionsListeners.remove(requestCode);
-		if (permissionsListener != null
-				&& grantResults.length > 0
-				&& grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-			permissionsListener.onComplete();
-		}
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 	}
 
 	private void moveViewToScreenCenter(final View view){
@@ -1999,7 +1962,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
     //				changeUIState(State.SIGNUP);
     //			}
             } else if(openLS){
-				splashLSState();
+				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)) {
+					splashLSState();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2023,7 +1988,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	};
 
 	public void getDeviceToken() {
-		boolean mockLocationEnabled = Utils.mockLocationEnabled(MyApplication.getInstance().getLocationFetcher().getLocationUnchecked());
+		boolean mockLocationEnabled = Utils.mockLocationEnabled(getLocationFetcher().getLocationUnchecked());
 		if (mockLocationEnabled) {
 			DialogPopup.alertPopupWithListener(SplashNewActivity.this, "",
 					getResources().getString(R.string.disable_mock_location),
@@ -2031,7 +1996,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 						@Override
 						public void onClick(View v) {
-							MyApplication.getInstance().getLocationFetcher().destroy();
+							getLocationFetcher().destroy();
 							startActivity(new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS));
 							finish();
 						}
@@ -2095,13 +2060,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	};
 
 	private void goToAccessTokenLogin() {
-		try {
-			DialogPopup.dismissLoadingDialog();
-			Log.e("deviceToken received", "> " + MyApplication.getInstance().getDeviceToken());
-			accessTokenLogin(SplashNewActivity.this);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		getPermissionCommon().getPermission(REQUEST_CODE_LOCATION,PermissionCommon.SKIP_RATIONAL_MESSAGE,Manifest.permission.ACCESS_FINE_LOCATION);
 	}
 
 
@@ -2110,7 +2069,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	protected void onResume() {
 		super.onResume();
 
-		MyApplication.getInstance().getLocationFetcher().connect(locationUpdate, 1000);
+		requestLocationUpdatesExplicit();
 
 		retryAccessTokenLogin();
 		resumed = true;
@@ -2123,13 +2082,24 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			changeUIState(State.SPLASH_ONBOARDING);
 		}
 
+
 	}
 
+	@Override
+	protected void onPause() {
+		super.onPause();
+	}
 
 	public void retryAccessTokenLogin() {
 		try {
 			if (State.LOGIN != state && State.SIGNUP != state && resumed) {
-				buttonRefresh.performClick();
+				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION,this) && !isLocationOnGrantCalled){
+					buttonRefresh.performClick();
+				}
+			}
+
+			if(!PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION,this) && dialogLocationPermission!=null && !dialogLocationPermission.isShowing()){
+				dialogLocationPermission.show();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2137,16 +2107,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	}
 
 
-	@Override
-	protected void onPause() {
-		try {
-			MyApplication.getInstance().getLocationFetcher().destroy();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		super.onPause();
-
-	}
 
 	@Override
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
@@ -2168,7 +2128,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	private void afterDataReceived(int requestCode, int resultCode, Intent data) {
 		if (LocationInit.LOCATION_REQUEST_CODE == requestCode) {
-            if (0 == resultCode) {
+            if (RESULT_CANCELED == resultCode) {
                 Data.locationSettingsNoPressed = true;
                 Data.locationAddressSettingsNoPressed = true;
             }
@@ -2218,8 +2178,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		if (!"".equalsIgnoreCase(pair.first)) {
 			final String accessToken = pair.first;
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
 			getApiLoginUsingAccessToken().hit(accessToken, Data.loginLatitude, Data.loginLongitude, null,
 					false, new ApiLoginUsingAccessToken.Callback() {
@@ -2764,16 +2724,17 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 
-
 	private void showLocationEnableDialog() {
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if (resp != ConnectionResult.SUCCESS) {
 			Log.e("Google Play Service Error ", "=" + resp);
 			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
 		} else {
-			LocationInit.showLocationAlertDialog(this);
+			LocationInit.showLocationAlertDialog(SplashNewActivity.this);
+			getLocationFetcher().connect(SplashNewActivity.this, 10000);
 		}
 	}
+
 
 	private void initiateDeviceInfoVariables() {
 		try {                                                                                        // to get AppVersion, OS version, country code and device name
@@ -2906,8 +2867,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
 			HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
 			params.put("phone_no", phoneNumber);
 			params.put(Constants.KEY_COUNTRY_CODE, countryCode);
@@ -3038,8 +2999,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
 			if(googleRegister){
 				params.put("google_access_token", Data.googleSignInAccount.getIdToken());
@@ -3195,8 +3156,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
 
 			params.put("user_fb_id", Data.facebookUserData.fbId);
@@ -3312,8 +3273,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
 			params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
@@ -3567,7 +3528,10 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			phoneFetchedName = "";
 			phoneFetchedEmail = "";
 			TelephonyManager tMgr = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-			String mPhoneNumber = tMgr.getLine1Number();
+			String mPhoneNumber = "";
+			if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+				mPhoneNumber = tMgr.getLine1Number();
+			}
 			editTextSPhone.setText(mPhoneNumber);
 			SplashNewActivity.registerationType = registerationType;
 			if (RegisterationType.FACEBOOK == SplashNewActivity.registerationType) {
@@ -3728,8 +3692,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
             HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
             params.put("user_name", name);
             params.put("phone_no", phoneNo);
@@ -3849,8 +3813,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
             HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
             params.put("user_fb_id", Data.facebookUserData.fbId);
             params.put("user_fb_name", Data.facebookUserData.firstName + " " + Data.facebookUserData.lastName);
@@ -3964,8 +3928,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
             HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
             params.put("google_access_token", Data.googleSignInAccount.getIdToken());
 
@@ -4186,8 +4150,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
             HashMap<String, String> params = new HashMap<>();
 
-			Data.loginLatitude = MyApplication.getInstance().getLocationFetcher().getLatitude();
-			Data.loginLongitude = MyApplication.getInstance().getLocationFetcher().getLongitude();
+			Data.loginLatitude = getLocationFetcher().getLatitude();
+			Data.loginLongitude = getLocationFetcher().getLongitude();
 
             params.put("email", email);
             params.put("password", "");
@@ -4384,6 +4348,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
         private String getSmsFindVerificationLink(long diff) {
             String link = "";
             try {
+            	if(!PermissionCommon.isGranted(Manifest.permission.READ_SMS,SplashNewActivity.this)){
+            		return "";
+				}
                 Uri uri = Uri.parse("content://sms/inbox");
                 long now = System.currentTimeMillis();
                 long last1 = now - diff;    //in millis
@@ -4463,13 +4430,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		unSelected3.setImageResource(R.drawable.ic_radio_button_normal);
 	}
 
-	private LocationUpdate locationUpdate = new LocationUpdate() {
-		@Override
-		public void onLocationChanged(Location location) {
-			Data.loginLatitude = location.getLatitude();
-			Data.loginLongitude = location.getLongitude();
-		}
-	};
 
 
 	String phoneNoToFillInInHouseLogin = "";

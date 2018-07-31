@@ -53,9 +53,10 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -79,103 +80,103 @@ import retrofit.mime.TypedString;
 
 public class MerchantInfoFragment extends Fragment implements GAAction {
 
-    @Bind(R.id.tvMerchantName)
+    @BindView(R.id.tvMerchantName)
     TextView tvMerchantName;
-    @Bind(R.id.tvReviewCount)
+    @BindView(R.id.tvReviewCount)
     TextView tvReviewCount;
-    @Bind(R.id.tvOpensAt)
+    @BindView(R.id.tvOpensAt)
     TextView tvOpensAt;
-    @Bind(R.id.bOrderOnline)
+    @BindView(R.id.bOrderOnline)
     Button bOrderOnline;
-    @Bind(R.id.tvMerchantAddress)
+    @BindView(R.id.tvMerchantAddress)
     TextView tvMerchantAddress;
-    @Bind(R.id.rvTopReviews)
+    @BindView(R.id.rvTopReviews)
     RecyclerView rvTopReviews;
-    @Bind(R.id.llSeeAll)
+    @BindView(R.id.llSeeAll)
     LinearLayout llSeeAll;
-    @Bind(R.id.tvSeeAllReviews)
+    @BindView(R.id.tvSeeAllReviews)
     TextView tvSeeAllReviews;
-    @Bind(R.id.progressWheel)
+    @BindView(R.id.progressWheel)
     ProgressWheel progressWheel;
-    @Bind(R.id.tvReviewsHeader)
+    @BindView(R.id.tvReviewsHeader)
     TextView tvReviewsHeader;
-    @Bind(R.id.tvNoReviews)
+    @BindView(R.id.tvNoReviews)
     TextView tvNoReviews;
-    @Bind(R.id.scrollView)
+    @BindView(R.id.scrollView)
     NestedScrollView scrollView;
-    @Bind(R.id.tvCuisines)
+    @BindView(R.id.tvCuisines)
     TextView tvCuisines;
-    @Bind(R.id.tv_delivers_in)
+    @BindView(R.id.tv_delivers_in)
     TextView tvDeliversIn;
-    @Bind(R.id.tv_min_order_amt)
+    @BindView(R.id.tv_min_order_amt)
     TextView tvMinOrderAmt;
-    @Bind(R.id.tvOffer)
+    @BindView(R.id.tvOffer)
     TextView tvOffer;
-    @Bind(R.id.llOffer)
+    @BindView(R.id.llOffer)
     LinearLayout llOffer;
-    @Bind(R.id.tvOpenStatus)
+    @BindView(R.id.tvOpenStatus)
     TextView tvOpenStatus;
-    @Bind(R.id.layout_order_details)
+    @BindView(R.id.layout_order_details)
     RelativeLayout layoutOrderDetails;
-    @Bind(R.id.tvlabelBullet)
+    @BindView(R.id.tvlabelBullet)
     TextView tvlabelBullet;
-    @Bind(R.id.ratingBarReview)
+    @BindView(R.id.ratingBarReview)
     RatingBarMenuFeedback ratingBarReview;
-    @Bind(R.id.etReview)
+    @BindView(R.id.etReview)
     EditText etReview;
-    @Bind(R.id.tvSubmitReview)
+    @BindView(R.id.tvSubmitReview)
     TextView tvSubmitReview;
-    @Bind(R.id.tvReviewTextCount)
+    @BindView(R.id.tvReviewTextCount)
     TextView tvReviewTextCount;
-    @Bind(R.id.tvRateRestaurant)
+    @BindView(R.id.tvRateRestaurant)
     TextView tvRateRestaurant;
-    @Bind(R.id.vAddReviewSep)
+    @BindView(R.id.vAddReviewSep)
     View vAddReviewSep;
-    @Bind(R.id.photos_count)
+    @BindView(R.id.photos_count)
     TextView photosCount;
-    @Bind(R.id.recycler_view_photos)
+    @BindView(R.id.recycler_view_photos)
     RecyclerView recyclerViewPhotos;
-    @Bind(R.id.layout_photos)
+    @BindView(R.id.layout_photos)
     LinearLayout layoutPhotos;
-    @Bind(R.id.tvMerchantPhone)
+    @BindView(R.id.tvMerchantPhone)
     TextView tvMerchantPhone;
-    @Bind(R.id.tvOutOfRadiusFatafatBanner)
+    @BindView(R.id.tvOutOfRadiusFatafatBanner)
     TextView tvOutOfRadiusFatafatBanner;
-    @Bind(R.id.llMyReview)
+    @BindView(R.id.llMyReview)
     LinearLayout llMyReview;
-    @Bind(R.id.llRatingStars)
+    @BindView(R.id.llRatingStars)
     LinearLayout llRatingStars;
-    @Bind(R.id.tvRating)
+    @BindView(R.id.tvRating)
     TextView tvRating;
-    @Bind(R.id.divider_below_details)
+    @BindView(R.id.divider_below_details)
     View dividerBelowDetails;
-    @Bind(R.id.llLocate)
+    @BindView(R.id.llLocate)
     LinearLayout llLocate;
-    @Bind(R.id.llPay)
+    @BindView(R.id.llPay)
     LinearLayout llPay;
-    @Bind(R.id.llChatNow)
+    @BindView(R.id.llChatNow)
     LinearLayout llChatNow;
-    @Bind(R.id.ivPay)
+    @BindView(R.id.ivPay)
     ImageView ivPay;
-    @Bind(R.id.ivChatNow)
+    @BindView(R.id.ivChatNow)
     ImageView ivChatNow;
-    @Bind(R.id.label_delivers_in)
+    @BindView(R.id.label_delivers_in)
     TextView labelDeliversIn;
-    @Bind(R.id.view_center_order)
+    @BindView(R.id.view_center_order)
     View viewCenterOrder;
-    @Bind(R.id.label_min_order_amt)
+    @BindView(R.id.label_min_order_amt)
     TextView labelMinOrderAmt;
-    @Bind(R.id.tvMerchantMinOrder)
+    @BindView(R.id.tvMerchantMinOrder)
     TextView tvMerchantMinOrder;
-    @Bind(R.id.llMerchantMinOrderStrip)
+    @BindView(R.id.llMerchantMinOrderStrip)
     LinearLayout llMerchantMinOrderStrip;
-    @Bind(R.id.ivStarRestaurantRating)
+    @BindView(R.id.ivStarRestaurantRating)
     ImageView ivStarRestaurantRating;
-    @Bind(R.id.tvRestaurantRating)
+    @BindView(R.id.tvRestaurantRating)
     TextView tvRestaurantRating;
-    @Bind(R.id.tvRatingReview)
+    @BindView(R.id.tvRatingReview)
     TextView tvRatingReview;
-    @Bind(R.id.llRatingParent)
+    @BindView(R.id.llRatingParent)
     LinearLayout llRatingParent;
 
     private View rootView;
@@ -189,11 +190,11 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     public MerchantInfoFragment() {
     }
 
-
+    Unbinder unbinder;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_merchant_info, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
         photosCount.setTypeface(photosCount.getTypeface(), Typeface.BOLD);
         activity = (FreshActivity) getActivity();
         makeBold(tvMinOrderAmt, tvDeliversIn, tvMerchantName, tvReviewCount, tvReviewsHeader);
@@ -595,7 +596,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
     public void onDestroyView() {
         super.onDestroyView();
         removeRunnable();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @OnClick({R.id.llChatNow, R.id.tvMerchantPhone, R.id.bOrderOnline, R.id.llSeeAll, R.id.tvMerchantAddress,

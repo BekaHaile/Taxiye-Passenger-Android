@@ -3,11 +3,10 @@ package com.sabkuchfresh.feed.ui.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.PermissionChecker;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -27,6 +26,8 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
+
 
 import static android.app.Activity.RESULT_OK;
 
@@ -41,12 +42,14 @@ public abstract class ImageSelectFragment extends Fragment {
     protected String[] permissionsRequest;
     protected Picker picker;
     protected static final int REQUEST_CODE_SELECT_IMAGE = 106;
+    private static final int REQ_CODE_PERMISSION_IMAGE = 1004;
     protected EditReviewImagesAdapter editReviewImagesAdapter;
     protected RecyclerView displayImagesRecycler;
     protected ScrollView scrollView;
     public ArrayList<Object> imageSelected;
     protected FreshActivity activity;
     protected int maxNoImages;
+    private PermissionCommon mPermissionCommon;
 
 
     //This object would only be intialised if we are editing post
@@ -57,6 +60,27 @@ public abstract class ImageSelectFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+            @Override
+            public void permissionGranted(int requestCode) {
+                if (picker == null) {
+                    picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
+                }
+
+                picker.setLimit(imageSelected == null ? maxNoImages : maxNoImages - imageSelected.size());
+                picker.startActivity(ImageSelectFragment.this, activity, REQUEST_CODE_SELECT_IMAGE);
+            }
+
+            @Override
+            public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                return true;
+            }
+
+            @Override
+            public void onRationalRequestIntercepted(int requestCode) {
+
+            }
+        });
         if(Data.getFeedData()!=null && Data.getFeedData().getMaxUploadImagesFeed()>0)
             maxNoImages=Data.getFeedData().getMaxUploadImagesFeed();
         else
@@ -153,8 +177,6 @@ public abstract class ImageSelectFragment extends Fragment {
 
     public void onAddImageClick() {
 
-
-
         if(!canUploadImages())
             return;
 
@@ -163,35 +185,15 @@ public abstract class ImageSelectFragment extends Fragment {
             return;
         }
 
+        mPermissionCommon.getPermission(REQ_CODE_PERMISSION_IMAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
 
-        if (PermissionChecker.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED ||
-                PermissionChecker.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE) != PermissionChecker.PERMISSION_GRANTED) {
-            if (permissionsRequest == null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    permissionsRequest = new String[2];
-                    permissionsRequest[0] = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-                    permissionsRequest[1] = Manifest.permission.READ_EXTERNAL_STORAGE;
-                }
-                {
-                    permissionsRequest = new String[1];
-                    permissionsRequest[0] = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-                }
-            }
+    }
 
-
-            (ImageSelectFragment.this).requestPermissions(permissionsRequest, 20);
-            return;
-        }
-
-
-        if (picker == null) {
-            picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
-        }
-
-
-        picker.setLimit(imageSelected == null ? maxNoImages : maxNoImages - imageSelected.size());
-        picker.startActivity(ImageSelectFragment.this, activity, REQUEST_CODE_SELECT_IMAGE);
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mPermissionCommon.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 

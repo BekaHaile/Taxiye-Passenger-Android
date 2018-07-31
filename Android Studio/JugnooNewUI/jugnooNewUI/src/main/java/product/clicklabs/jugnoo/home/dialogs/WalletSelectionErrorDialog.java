@@ -28,7 +28,6 @@ public class WalletSelectionErrorDialog {
 	public Dialog show(String message, boolean walletError) {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
 			dialog.setContentView(R.layout.dialog_wallet_selection_error);
 
 			RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);

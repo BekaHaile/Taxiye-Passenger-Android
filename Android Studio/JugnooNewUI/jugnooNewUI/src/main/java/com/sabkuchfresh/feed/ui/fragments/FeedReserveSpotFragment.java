@@ -30,9 +30,10 @@ import com.sabkuchfresh.home.FreshActivity;
 
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -47,33 +48,33 @@ import retrofit.RetrofitError;
 public class FeedReserveSpotFragment extends Fragment implements GACategory, GAAction {
 
 
-    @Bind(R.id.layout_meter_feed_users)
+    @BindView(R.id.layout_meter_feed_users)
     LinearLayout layoutMeterFeedUsers;
-    @Bind(R.id.tv_placeholder_feed_introudction)
+    @BindView(R.id.tv_placeholder_feed_introudction)
     TextView tvPlaceholderFeedIntroudction;
-    @Bind(R.id.btn_reserve_spot)
+    @BindView(R.id.btn_reserve_spot)
     Button btnReserveSpot;
-    @Bind(R.id.tv_rank_description)
+    @BindView(R.id.tv_rank_description)
     TextView tvRankDescription;
     FreshActivity activity;
-    @Bind(R.id.ivBg)
+    @BindView(R.id.ivBg)
     ImageView ivBg;
-    @Bind(R.id.vSpacing)
+    @BindView(R.id.vSpacing)
     View vSpacing;
 
-	@Bind(R.id.rlCreateHandle)
+	@BindView(R.id.rlCreateHandle)
 	RelativeLayout rlCreateHandle;
-	@Bind(R.id.etCreateHandle)
+	@BindView(R.id.etCreateHandle)
 	EditText etCreateHandle;
-	@Bind(R.id.bSubmit)
+	@BindView(R.id.bSubmit)
 	Button bSubmit;
 
-
+    Unbinder unbinder;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_feed_reserve_my_spot, container, false);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
         activity= (FreshActivity) getActivity();
         activity.fragmentUISetup(this);
         if(Data.getFeedData() != null) {
@@ -167,7 +168,7 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @OnClick(R.id.btn_reserve_spot)

@@ -867,6 +867,8 @@ public interface Constants {
     String KEY_PROMO_CODE = "promo_code";
     String PAYER_USER_IDENTIFIER = "payer_user_identifier";
     String PAYEE_PHONE_NUMBER="payee_phone_no";
+    String NOTIF_CHANNEL_DEFAULT = "default_007";
+    String STOP_FOREGROUND = "stop_foreground";
     String KEY_OPERATOR_ID="operator_id";
     String KEY_OPERATOR_TOKEN = "operator_token";
     String KEY_COUNTRY_CODE = "country_code";

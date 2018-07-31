@@ -31,9 +31,10 @@ import com.stripe.android.view.StripeEditText;
 
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
@@ -54,19 +55,20 @@ public class StripeAddCardFragment extends Fragment {
 
     private static final String TAG = StripeAddCardFragment.class.getName();
 
-    @Bind(R.id.btn_add_card)
+    @BindView(R.id.btn_add_card)
     Button btnAddCard;
     Stripe stripe;
-    @Bind(R.id.edt_card_number)
+    @BindView(R.id.edt_card_number)
     CardNumberEditText edtCardNumber;
-    @Bind(R.id.edt_date)
+    @BindView(R.id.edt_date)
     ExpiryDateEditText edtDate;
-    @Bind(R.id.edt_cvv)
+    @BindView(R.id.edt_cvv)
     StripeEditText edtCvv;
-    @Bind(R.id.textViewTitle)
+    @BindView(R.id.textViewTitle)
     TextView textViewTitle;
 
     private StripeCardsStateListener stripeCardsStateListener;
+    private Unbinder unbinder;
 
 
 
@@ -87,7 +89,7 @@ public class StripeAddCardFragment extends Fragment {
         stripe = new Stripe(getActivity(), Config.getServerUrl().equals(Config.getLiveServerUrl())?
                 Prefs.with(getActivity()).getString(Constants.KEY_STRIPE_KEY_LIVE, BuildConfig.STRIPE_KEY_LIVE)
                 :BuildConfig.STRIPE_KEY_DEV);
-        ButterKnife.bind(this, rootView);
+        unbinder = ButterKnife.bind(this, rootView);
         textViewTitle.setTypeface(Fonts.avenirNext(getActivity()));
         updateIcon(null);
         edtCardNumber.setErrorColor(ContextCompat.getColor(getActivity(), R.color.red_status));
@@ -124,8 +126,8 @@ public class StripeAddCardFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
-    }
+        if(unbinder!=null)unbinder.unbind();
+        }
 
     @OnClick({R.id.imageViewBack, R.id.btn_add_card})
     public void onViewClicked(View view) {
