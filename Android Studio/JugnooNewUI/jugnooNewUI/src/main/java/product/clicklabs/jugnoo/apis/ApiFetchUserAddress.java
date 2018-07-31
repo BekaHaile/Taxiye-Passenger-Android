@@ -57,7 +57,6 @@ public class ApiFetchUserAddress {
 					@Override
 					public void success(FetchUserAddressResponse fetchUserAddressResponse, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i(TAG, "customerFetchUserAddress response = " + responseStr);
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());

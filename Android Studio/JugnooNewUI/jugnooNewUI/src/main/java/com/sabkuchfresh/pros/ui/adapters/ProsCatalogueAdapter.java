@@ -22,7 +22,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -287,45 +287,45 @@ public class ProsCatalogueAdapter extends RecyclerView.Adapter<RecyclerView.View
 	}
 
 	public class ViewHolderStatus extends RecyclerView.ViewHolder {
-		@Bind(R.id.tvServiceName)
+		@BindView(R.id.tvServiceName)
 		TextView tvServiceName;
-		@Bind(R.id.ivPaidVia)
+		@BindView(R.id.ivPaidVia)
 		ImageView ivPaidVia;
-		@Bind(R.id.tvPaidViaValue)
+		@BindView(R.id.tvPaidViaValue)
 		TextView tvPaidViaValue;
-		@Bind(R.id.tvServiceDateTime)
+		@BindView(R.id.tvServiceDateTime)
 		TextView tvServiceDateTime;
-		@Bind(R.id.ivStatus0)
+		@BindView(R.id.ivStatus0)
 		ImageView ivStatus0;
-		@Bind(R.id.lineStatus1)
+		@BindView(R.id.lineStatus1)
 		View lineStatus1;
-		@Bind(R.id.ivStatus1)
+		@BindView(R.id.ivStatus1)
 		ImageView ivStatus1;
-		@Bind(R.id.lineStatus2)
+		@BindView(R.id.lineStatus2)
 		View lineStatus2;
-		@Bind(R.id.ivStatus2)
+		@BindView(R.id.ivStatus2)
 		ImageView ivStatus2;
-		@Bind(R.id.lineStatus3)
+		@BindView(R.id.lineStatus3)
 		View lineStatus3;
-		@Bind(R.id.ivStatus3)
+		@BindView(R.id.ivStatus3)
 		ImageView ivStatus3;
-		@Bind(R.id.llOrderPath)
+		@BindView(R.id.llOrderPath)
 		LinearLayout llOrderPath;
-		@Bind(R.id.tvStatus0)
+		@BindView(R.id.tvStatus0)
 		TextView tvStatus0;
-		@Bind(R.id.tvStatus1)
+		@BindView(R.id.tvStatus1)
 		TextView tvStatus1;
-		@Bind(R.id.tvStatus2)
+		@BindView(R.id.tvStatus2)
 		TextView tvStatus2;
-		@Bind(R.id.tvStatus3)
+		@BindView(R.id.tvStatus3)
 		TextView tvStatus3;
-		@Bind(R.id.relativeStatusBar)
+		@BindView(R.id.relativeStatusBar)
 		RelativeLayout relativeStatusBar;
-		@Bind(R.id.tvNeedHelp)
+		@BindView(R.id.tvNeedHelp)
 		TextView tvNeedHelp;
-		@Bind(R.id.tvViewDetails)
+		@BindView(R.id.tvViewDetails)
 		TextView tvViewDetails;
-		@Bind(R.id.llMain)
+		@BindView(R.id.llMain)
 		LinearLayout llMain;
 
 		ViewHolderStatus(final View view, final ItemListener itemListener) {

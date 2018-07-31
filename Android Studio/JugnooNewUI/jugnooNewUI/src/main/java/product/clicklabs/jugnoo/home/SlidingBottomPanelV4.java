@@ -15,6 +15,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.adapters.SlidingBottomFragmentAdapter;
@@ -157,13 +158,25 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
         view.findViewById(R.id.linearLayoutCash).setOnClickListener(slideOnClickListener);
         view.findViewById(R.id.linearLayoutFare).setOnClickListener(slideOnClickListener);
         view.findViewById(R.id.linearLayoutOffers).setOnClickListener(slideOnClickListener);
+        if(Data.isMenuTagEnabled(MenuInfoTags.OFFERS)) {
+            view.findViewById(R.id.linearLayoutOffers).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.ivOffersSingleDiv).setVisibility(View.VISIBLE);
+        } else {
+            view.findViewById(R.id.linearLayoutOffers).setVisibility(View.GONE);
+            view.findViewById(R.id.ivOffersSingleDiv).setVisibility(View.GONE);
+        }
 
         try {
             updateBottomPanel(Data.autoData.getRegions().size());
         } catch (Exception e) {
         }
 
-        update();
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                update();
+            }
+        });
 
     }
 

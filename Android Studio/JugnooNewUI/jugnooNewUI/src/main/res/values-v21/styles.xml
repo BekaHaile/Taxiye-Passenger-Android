@@ -3,13 +3,14 @@
 
     <style name="TransparentTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/transparent</item>
-        <item name="colorPrimaryDark">@color/white_less_dark</item>
+        <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/white_less_dark</item>
         <item name="colorControlNormal">#e2e2e2</item>
         <item name="colorControlActivated">@color/theme_color</item>
         <item name="colorControlHighlight">@color/white_less_dark</item>
         <item name="android:textColorHint">#595968</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="android:alertDialogTheme">@style/Theme.AppCompat.Light.Dialog.Alert</item>
     </style>
 
     <style name="back_image">

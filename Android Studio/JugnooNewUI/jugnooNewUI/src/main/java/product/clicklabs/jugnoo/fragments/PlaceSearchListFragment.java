@@ -1,12 +1,15 @@
 package product.clicklabs.jugnoo.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
@@ -328,13 +331,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				if(newState== BottomSheetBehavior.STATE_COLLAPSED){
 					openSetLocationOnMapMode();
 					if(googleMap!=null){
-						googleMap.setMyLocationEnabled(true);
-						googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+						enableMapMyLocation(googleMap, true);
 					}
 				}else{
 					if(googleMap!=null){
-						googleMap.setMyLocationEnabled(false);
-						googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+						enableMapMyLocation(googleMap, false);
 
 					}
 				}
@@ -426,6 +427,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		searchListAdapter.addSavedLocationsToList();
 		updateSavedPlacesLists();
 		showSearchLayout();
+		enableMapMyLocation(googleMap, true);
 	}
 
 	@Override
@@ -569,7 +571,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				PlaceSearchListFragment.this.googleMap = googleMap;
 				if (googleMap != null) {
 					googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-					googleMap.setMyLocationEnabled(false);
+					enableMapMyLocation(googleMap, true);
 					googleMap.getUiSettings().setMyLocationButtonEnabled(false);
 //					setupMapAndButtonMargins();
 					moveCameraToCurrent();
@@ -611,6 +613,14 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			}
 		});
 	}
+
+	private void enableMapMyLocation(GoogleMap googleMap, boolean enabled) {
+		if(googleMap != null && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+			googleMap.setMyLocationEnabled(enabled);
+			googleMap.getUiSettings().setMyLocationButtonEnabled(enabled);
+		}
+	}
+
 	private void moveCameraToCurrent(){
 		if(getView() != null && googleMap != null) {
 			if (activity instanceof AddPlaceActivity

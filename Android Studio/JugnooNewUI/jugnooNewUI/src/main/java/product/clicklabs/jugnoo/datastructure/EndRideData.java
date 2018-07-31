@@ -16,7 +16,7 @@ public class EndRideData {
 	public String driverCarNumber, driverImage,
 		pickupAddress, dropAddress,
 		pickupTime, dropTime;
-	public double fare, luggageCharge, convenienceCharge, discount, paidUsingWallet, toPay,
+	public double fare, tollCharge, luggageCharge, convenienceCharge, discount, paidUsingWallet, toPay,
 		distance, rideTime, waitTime, baseFare, fareFactor, finalFare, sumAdditionalCharges;
 	public double paidUsingPaytm, paidUsingMobikwik, paidUsingFreeCharge,paidUsingMpesa, paidUsingRazorpay;
 	public int waitingChargesApplicable;
@@ -44,7 +44,7 @@ public class EndRideData {
 					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, double paidUsingFreeCharge,double paidUsingMpesa, double paidUsingRazorpay,
 					   double paidUsingStripe,String last_4,int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
 					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags, int showPaymentOptions,
-					   int paymentOption, int operatorId, String currency, String distanceUnit, String iconUrl){
+					   int paymentOption, int operatorId, String currency, String distanceUnit, String iconUrl, double tollCharge){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -56,6 +56,7 @@ public class EndRideData {
 		this.dropTime = dropTime;
 
 		this.fare = fare;
+		this.tollCharge = tollCharge;
 		this.luggageCharge = luggageCharge;
 		this.convenienceCharge = convenienceCharge;
 		this.discount = discount;

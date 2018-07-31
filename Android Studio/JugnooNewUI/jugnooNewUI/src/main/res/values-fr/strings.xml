@@ -869,7 +869,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="call_us">Appelez-nous</string>
 
-    <string name="no_driver_nearby_try_again">Pas de chauffeurs à proximité.Veuillez essayer après un certain temps</string>
+    <string name="no_driver_nearby_try_again">Malheureusement aucun pilote disponible à proximité \n S'il vous plaît essayer après un certain temps</string>
 
     <string name="couldnt_find_drivers_nearby">Impossible de trouver des chauffeurs à proximité</string>
 
@@ -2789,7 +2789,7 @@ from %s in your UPI app.
 
     <string name="error_in_fetching_facebook_info">Erreur lors de la récupération des informations de Facebook</string>
 
-    <string name="eta">Heure d'arrivée estimée</string>
+    <string name="eta">ETA</string>
 
     <string name="could_not_open_directions">Impossible d'ouvrir les directions</string>
 

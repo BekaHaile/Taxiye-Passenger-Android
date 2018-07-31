@@ -31,17 +31,19 @@ import com.stripe.android.view.StripeEditText;
 
 import java.util.HashMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.BuildConfig;
-import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 import static com.stripe.android.model.Card.BRAND_RESOURCE_MAP;
@@ -53,19 +55,20 @@ public class StripeAddCardFragment extends Fragment {
 
     private static final String TAG = StripeAddCardFragment.class.getName();
 
-    @Bind(R.id.btn_add_card)
+    @BindView(R.id.btn_add_card)
     Button btnAddCard;
     Stripe stripe;
-    @Bind(R.id.edt_card_number)
+    @BindView(R.id.edt_card_number)
     CardNumberEditText edtCardNumber;
-    @Bind(R.id.edt_date)
+    @BindView(R.id.edt_date)
     ExpiryDateEditText edtDate;
-    @Bind(R.id.edt_cvv)
+    @BindView(R.id.edt_cvv)
     StripeEditText edtCvv;
-    @Bind(R.id.textViewTitle)
+    @BindView(R.id.textViewTitle)
     TextView textViewTitle;
 
     private StripeCardsStateListener stripeCardsStateListener;
+    private Unbinder unbinder;
 
 
 
@@ -83,8 +86,10 @@ public class StripeAddCardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_add_card, container, false);
-        stripe = new Stripe(getActivity(), Config.getServerUrl().equals(Config.getLiveServerUrl())? BuildConfig.STRIPE_KEY_LIVE:BuildConfig.STRIPE_KEY_DEV);
-        ButterKnife.bind(this, rootView);
+        stripe = new Stripe(getActivity(), Config.getServerUrl().equals(Config.getLiveServerUrl())?
+                Prefs.with(getActivity()).getString(Constants.KEY_STRIPE_KEY_LIVE, BuildConfig.STRIPE_KEY_LIVE)
+                :BuildConfig.STRIPE_KEY_DEV);
+        unbinder = ButterKnife.bind(this, rootView);
         textViewTitle.setTypeface(Fonts.avenirNext(getActivity()));
         updateIcon(null);
         edtCardNumber.setErrorColor(ContextCompat.getColor(getActivity(), R.color.red_status));
@@ -121,8 +126,8 @@ public class StripeAddCardFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
-    }
+        if(unbinder!=null)unbinder.unbind();
+        }
 
     @OnClick({R.id.imageViewBack, R.id.btn_add_card})
     public void onViewClicked(View view) {

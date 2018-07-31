@@ -39,6 +39,7 @@ import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -70,13 +71,13 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
     ImageView imageViewEndRideAutoIcon, imageViewEndRideDriverIcon;
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
-    RelativeLayout relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
+    RelativeLayout relativeLayoutTollCharge, relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
             relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm,
             relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay,rlPaidUsingStripeCard,relativeLayoutPaidUsingMpesa;
     LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
     RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare, relativeLayoutFinalFare;
     NonScrollListView listViewEndRideDiscounts;
-    TextView textViewEndRideFareValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
+    TextView textViewEndRideFareValue, textViewEndTollChargeValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
             textViewEndRideDiscount, textViewEndRideDiscountValue,
             textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue,
             textViewEndRideMobikwikValue, textViewEndRideFreeChargeValue,
@@ -98,14 +99,14 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
     private static final String RIDE_CANCELLED = "rideCancelled", AUTO_STATUS = "autosStatus", END_RIDE_DATA = "endRideData";
 
-    public static RideSummaryFragment newInstance(int engagementId, EndRideData endRideData, boolean rideCancelled, int autosStatus){
+    public static RideSummaryFragment newInstance(int engagementId, EndRideData endRideData, boolean rideCancelled, int autosStatus) {
         RideSummaryFragment rideSummaryFragment = new RideSummaryFragment();
 
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.KEY_ENGAGEMENT_ID, engagementId);
         bundle.putBoolean(RIDE_CANCELLED, rideCancelled);
         bundle.putInt(AUTO_STATUS, autosStatus);
-        if(endRideData != null){
+        if (endRideData != null) {
             bundle.putString(END_RIDE_DATA, new Gson().toJson(endRideData, EndRideData.class));
         }
         rideSummaryFragment.setArguments(bundle);
@@ -130,12 +131,12 @@ public class RideSummaryFragment extends Fragment implements Constants {
         super.onStop();
     }
 
-    private void parseFromArguments(){
+    private void parseFromArguments() {
         this.engagementId = getArguments().getInt(Constants.KEY_ENGAGEMENT_ID, -1);
         this.rideCancelled = getArguments().getBoolean(RIDE_CANCELLED, false);
         this.autosStatus = getArguments().getInt(AUTO_STATUS, EngagementStatus.ENDED.getOrdinal());
         String endRideDataStr = getArguments().getString(END_RIDE_DATA, Constants.EMPTY_JSON_OBJECT);
-        if(!Constants.EMPTY_JSON_OBJECT.equalsIgnoreCase(endRideDataStr)){
+        if (!Constants.EMPTY_JSON_OBJECT.equalsIgnoreCase(endRideDataStr)) {
             endRideData = new Gson().fromJson(endRideDataStr, EndRideData.class);
         }
     }
@@ -153,14 +154,13 @@ public class RideSummaryFragment extends Fragment implements Constants {
             relativeLayoutMap = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMap);
             relativeLayoutMap.setVisibility(View.GONE);
             ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapLite)).getMapAsync(new OnMapReadyCallback() {
-				@Override
-				public void onMapReady(GoogleMap googleMap) {
-					mapLite = googleMap;
-					if (mapLite != null) {
-						mapLite.getUiSettings().setAllGesturesEnabled(false);
-						mapLite.getUiSettings().setZoomControlsEnabled(false);
-						mapLite.setMyLocationEnabled(false);
-						mapLite.getUiSettings().setTiltGesturesEnabled(false);
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    mapLite = googleMap;
+                    if (mapLite != null) {
+                        mapLite.getUiSettings().setAllGesturesEnabled(false);
+                        mapLite.getUiSettings().setZoomControlsEnabled(false);
+                        mapLite.getUiSettings().setTiltGesturesEnabled(false);
 						mapLite.getUiSettings().setMyLocationButtonEnabled(false);
 						mapLite.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
@@ -181,6 +181,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
 			});
 
             relativeLayoutFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFare);
+            relativeLayoutTollCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutTollCharge);
             relativeLayoutRideSummary = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRideSummary);
             relativeLayoutRideSummary.setVisibility(View.GONE);
             scrollViewEndRide = (ScrollView) rootView.findViewById(R.id.scrollViewEndRide);
@@ -202,6 +203,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
             textViewEndRideFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareValue);
             textViewEndRideFareValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndTollChargeValue = (TextView) rootView.findViewById(R.id.textViewEndTollChargeValue);
             textViewEndRideDiscountValue = (TextView) rootView.findViewById(R.id.textViewEndRideDiscountValue);
             textViewEndRideDiscountValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideFinalFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFinalFareValue);
@@ -304,7 +306,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
                                 e.printStackTrace();
                                 Utils.showToast(activity, activity.getString(R.string.something_went_wrong));
                             }
-                        } else if(Data.isEmailSupportEnabled()){
+                        } else if(Data.isMenuTagEnabled(MenuInfoTags.EMAIL_SUPPORT)){
                             activity.startActivity(new Intent(activity, SupportMailActivity.class));
                         } else {
                             new TransactionUtils().openRideIssuesFragment(activity,
@@ -401,6 +403,12 @@ public class RideSummaryFragment extends Fragment implements Constants {
                     relativeLayoutFare.setVisibility(View.GONE);
                     linearLayoutRideDetail.setVisibility(View.GONE);
                     relativeLayoutFinalFare.setVisibility(View.GONE);
+                }
+                if(endRideData.tollCharge > 0.0){
+                    relativeLayoutTollCharge.setVisibility(View.VISIBLE);
+                    textViewEndTollChargeValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.tollCharge));
+                } else {
+                    relativeLayoutTollCharge.setVisibility(View.GONE);
                 }
 
                 if (Utils.compareDouble(endRideData.luggageCharge, 0) > 0) {

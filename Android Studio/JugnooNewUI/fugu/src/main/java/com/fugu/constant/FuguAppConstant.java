@@ -1,9 +1,5 @@
 package com.fugu.constant;
 
-import android.os.Environment;
-
-import java.io.File;
-
 /**
  * Created by Bhavya Rattan on 10/05/17
  * Click Labs
@@ -69,8 +65,6 @@ public interface FuguAppConstant {
     String FUGU_CUSTOM_ACTION_SELECTED = "FUGU_CUSTOM_ACTION_SELECTED";
     String FUGU_CUSTOM_ACTION_PAYLOAD = "FUGU_CUSTOM_ACTION_PAYLOAD";
 
-    String IMAGE_DIRECTORY = Environment.getExternalStorageDirectory() + File.separator + "fugu" +
-            File.separator + "picture";
     String CONVERSATION = "conversation";
     String NOTIFICATION_TYPE = "notification_type";
     String USER_ID = "user_id";

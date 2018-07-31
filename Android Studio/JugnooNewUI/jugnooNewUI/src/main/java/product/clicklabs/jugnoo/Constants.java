@@ -867,6 +867,8 @@ public interface Constants {
     String KEY_PROMO_CODE = "promo_code";
     String PAYER_USER_IDENTIFIER = "payer_user_identifier";
     String PAYEE_PHONE_NUMBER="payee_phone_no";
+    String NOTIF_CHANNEL_DEFAULT = "default_007";
+    String STOP_FOREGROUND = "stop_foreground";
     String KEY_OPERATOR_ID="operator_id";
     String KEY_OPERATOR_TOKEN = "operator_token";
     String KEY_COUNTRY_CODE = "country_code";
@@ -890,4 +892,27 @@ public interface Constants {
     String KEY_MARKER_ICON = "marker_icon";
     String KEY_FUGU_APP_KEY = "fugu_app_key";
     String KEY_FUGU_APP_TYPE = "fugu_app_type";
+
+
+    String KEY_FACEBOOK_PAGE_ID = "facebook_page_id";
+    String KEY_FACEBOOK_PAGE_URL = "facebook_page_url";
+    String KEY_SHOW_TERMS = "show_terms";
+    String KEY_TERMS_OF_USE_URL = "terms_of_use_url";
+    String KEY_WEB_LANDING_PAGE = "web_landing_page";
+    String KEY_SHOW_ABOUT = "show_about";
+    String KEY_RIDE_FEEDBACK_RATING_BAR = "ride_feedback_rating_bar";
+    String KEY_SHOW_PROMO_ONBOARDING = "show_promo";
+    String KEY_SHOW_SKIP_ONBOARDING = "show_skip_onboarding";
+    String KEY_DEFAULT_LANG = "default_lang";
+    String KEY_SHOW_FACEBOOK_LOGIN = "show_facebook_login";
+    String KEY_SHOW_GOOGLE_LOGIN = "show_google_login";
+    String KEY_MAPS_API_CLIENT = "maps_api_client";
+    String KEY_MAPS_API_PRIVATE_KEY = "maps_api_private_key";
+    String KEY_MAPS_API_BROWSER_KEY = "maps_api_browser_key";
+    String KEY_MAPS_API_SIGN = "maps_api_sign";
+    String KEY_STRIPE_KEY_LIVE = "stripe_key_live";
+    String KEY_UPDATED_LOCALE = "updated_locale";
+    String KEY_LOCALE = "locale";
+    String KEY_TOLL_CHARGE = "toll_charge";
+    String KEY_CUSTOMER_SUPPORT_NUMBER = "customer_support_number";
 }

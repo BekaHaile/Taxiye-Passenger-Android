@@ -1,10 +1,13 @@
 package product.clicklabs.jugnoo.home;
 
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -17,13 +20,13 @@ import product.clicklabs.jugnoo.utils.Log;
 
 public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,GoogleApiClient.OnConnectionFailedListener {
 
-	
+
 	private final String TAG = this.getClass().getSimpleName();
 
 	private GoogleApiClient googleApiClient;
 	private LocationRequest locationrequest;
 	private PendingIntent locationIntent;
-	
+
 	private long requestInterval;
 	private Context context;
 
@@ -39,9 +42,9 @@ public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,Go
 		this.requestInterval = requestInterval;
 		connect();
 	}
-	
-	
-	
+
+
+
 	public boolean isConnected(){
 		return googleApiClient != null && googleApiClient.isConnected();
 	}
@@ -57,9 +60,9 @@ public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,Go
 			Log.e("Google Play Service Error ","="+resp);
 		}
 	}
-	
-	
-	
+
+
+
 	public void destroy(){
 		try{
 			Log.e("location","destroy");
@@ -101,7 +104,9 @@ public class LocationFetcherBG implements GoogleApiClient.ConnectionCallbacks,Go
 			createLocationRequest(interval);
 			Intent intent = new Intent(context, LocationReceiverBG.class);
 			locationIntent = PendingIntent.getBroadcast(context, LOCATION_PI_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-			LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationrequest, locationIntent);
+			if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+				LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationrequest, locationIntent);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

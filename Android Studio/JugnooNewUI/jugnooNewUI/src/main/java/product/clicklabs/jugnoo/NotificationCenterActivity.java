@@ -272,8 +272,8 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
             textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX);
             mNotificationSettingBtn.setVisibility(View.VISIBLE);
             linearLayoutContainer.setVisibility(View.GONE);
+            swipeRefreshLayout.setVisibility(View.VISIBLE);
             if (myNotificationAdapter.getListSize() > 0) {
-                swipeRefreshLayout.setVisibility(View.VISIBLE);
                 linearLayoutNoNotifications.setVisibility(View.GONE);
             } else {
                 linearLayoutNoNotifications.setVisibility(View.VISIBLE);

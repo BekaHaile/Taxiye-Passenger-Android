@@ -47,7 +47,7 @@
                     android:layout_width="@dimen/splash_logo_width"
                     android:layout_height="@dimen/splash_logo_height"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/splash_logo_icon_drawable"
+                    android:src="@drawable/login_logo_icon_drawable"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:tag="@string/dont_touch_me"
@@ -90,6 +90,7 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/tvLoginSignupWith"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_signup_with"
@@ -122,6 +123,7 @@
                     android:textSize="@dimen/text_size_34" />
 
                 <TextView
+                    android:id="@+id/tvMobileNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mobile_string"
@@ -136,11 +138,11 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/llOrLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/px_32"
                 android:gravity="center"
-                android:visibility="@integer/show_social_login"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -173,7 +175,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/px_32"
                 android:gravity="center_horizontal"
-                android:visibility="@integer/show_social_login"
                 android:orientation="horizontal">
 
                 <RelativeLayout
@@ -181,7 +182,6 @@
                     android:layout_width="268px"
                     android:layout_height="@dimen/splash_button_height"
                     android:gravity="center_horizontal"
-                    android:visibility="@integer/show_facebook_login"
                     android:background="@drawable/capsule_login_button_selector">
 
                     <Button
@@ -198,6 +198,7 @@
                         android:textSize="@dimen/text_size_34" />
 
                     <TextView
+                        android:id="@+id/tvFacebook"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/nl_login_facebook"
@@ -216,7 +217,6 @@
                     android:layout_height="@dimen/splash_button_height"
                     android:layout_marginStart="@dimen/px_20"
                     android:gravity="center_horizontal"
-                    android:visibility="@integer/show_google_login"
                     android:background="@drawable/capsule_login_button_selector">
 
                     <Button
@@ -233,6 +233,7 @@
                         android:textSize="@dimen/text_size_34" />
 
                     <TextView
+                        android:id="@+id/tvGoogle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/nl_login_google"
@@ -253,7 +254,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/px_70"
-                android:visibility="@integer/show_terms"
                 android:text="@string/nl_splash_terms"
                 android:textColor="@color/document_layout_bordor_color"
                 android:textSize="@dimen/text_size_24" />
@@ -280,5 +280,5 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/splash_bottom_building_bg1"
         android:tag="mwar"
-        android:visibility="@integer/show_splash_bottom_bg" />
+        android:visibility="@integer/show_login_bottom_bg" />
 </RelativeLayout>

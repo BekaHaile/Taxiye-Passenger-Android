@@ -30,7 +30,7 @@ public class AccessTokenGenerator {
 	@SuppressWarnings("deprecation")
 	public static void saveAuthKey(Context context, String authKey) {
 		AuthKeySaver.writeAuthToFile(authKey);
-		SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+		SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_PRIVATE);
 		Editor editor = pref.edit();
 		editor.putString("authKey", authKey);
 		editor.commit();
@@ -39,7 +39,7 @@ public class AccessTokenGenerator {
 	@SuppressWarnings("deprecation")
 	public static void saveLogoutToken(Context context) {
 		AuthKeySaver.writeAuthToFile(LOGOUT);
-		SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+		SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_PRIVATE);
 		Editor editor = pref.edit();
 		editor.putString("authKey", "");
 		editor.commit();
@@ -47,7 +47,7 @@ public class AccessTokenGenerator {
 	
 	@SuppressWarnings("deprecation")
 	public static void updateFreshInstall(Context context) {
-		SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+		SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_PRIVATE);
 		Editor editor = pref.edit();
 		editor.putString("freshInstall", "no");
 		editor.commit();
@@ -83,7 +83,7 @@ public class AccessTokenGenerator {
 		
 		
 		if(AuthKeySaver.NOT_FOUND.equalsIgnoreCase(authKey)){
-			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_PRIVATE);
 			authKey = pref.getString("authKey", "");
 			
 			if("".equalsIgnoreCase(authKey)){																		// SP returns empty
@@ -100,7 +100,7 @@ public class AccessTokenGenerator {
 		else if(LOGOUT.equalsIgnoreCase(authKey)){
 			authKey = "";
 //			saveAuthKey(context, authKey);
-			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_PRIVATE);
 			Editor editor = pref.edit();
 			editor.putString("authKey", "");
 			editor.commit();
@@ -122,7 +122,7 @@ public class AccessTokenGenerator {
 //            }
 //		}
 		else{
-			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_WORLD_READABLE);
+			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_PRIVATE);
 			String freshInstall = pref.getString("freshInstall", "");
 			
 			if("".equalsIgnoreCase(freshInstall)){

@@ -128,7 +128,7 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 								new View.OnClickListener() {
 									@Override
 									public void onClick(View v) {
-										activity.llCheckoutBar.performClick();
+										activity.getLlCheckoutBar().performClick();
 									}
 								}, new View.OnClickListener() {
 									@Override

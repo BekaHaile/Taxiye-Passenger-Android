@@ -5,7 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.home.fragments.SlidingBottomCashFragment;
 import product.clicklabs.jugnoo.home.fragments.SlidingBottomFareFragment;
 import product.clicklabs.jugnoo.home.fragments.SlidingBottomOffersFragment;
@@ -20,7 +22,7 @@ public class SlidingBottomFragmentAdapter extends FragmentPagerAdapter {
 	public SlidingBottomFragmentAdapter(Context context, FragmentManager fm) {
 		super(fm);
 		this.context = context;
-		isOffersEnabled = context.getResources().getInteger(R.integer.is_autos_offers_enabled)!=context.getResources().getInteger(R.integer.view_gone);
+		isOffersEnabled = Data.isMenuTagEnabled(MenuInfoTags.OFFERS);
 	}
 
 	@Override

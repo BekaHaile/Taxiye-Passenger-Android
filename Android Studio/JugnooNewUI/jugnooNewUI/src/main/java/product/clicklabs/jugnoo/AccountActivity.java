@@ -1,12 +1,7 @@
 package product.clicklabs.jugnoo;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -34,9 +29,6 @@ import com.country.picker.OnCountryPickerListener;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.PhoneNumber;
-import com.facebook.accountkit.ui.AccountKitActivity;
-import com.facebook.accountkit.ui.AccountKitConfiguration;
-import com.facebook.accountkit.ui.LoginType;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -48,7 +40,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import product.clicklabs.jugnoo.adapters.AccountMenuItemsAdapter;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
@@ -105,7 +96,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     ImageView imageViewEditProfile, ivEditPhone, imageViewEditProfileSave;
 
     RelativeLayout relativeLayoutChangePassword, relativeLayoutEmergencyContact;
-    TextView textViewEmergencyContact,textViewChangeLanguage;
+    TextView textViewEmergencyContact;
     LinearLayout linearLayoutPasswordChange;
     RelativeLayout relativeLayoutOldPassword, relativeLayoutNewPassword, relativeLayoutRetypePassword;
     EditText editTextOldPassword, editTextNewPassword, editTextRetypePassword;
@@ -120,7 +111,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
     private LinearLayout linearLayoutPasswordSave;
 
-    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer,relativeLayoutChangeLanguage;
+    RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer;
     NonScrollListView listViewSavedLocations;
     RelativeLayout relativeLayoutAddNewAddress;
     View viewStarIcon;
@@ -128,8 +119,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     private RecyclerView rvMenuItems;
     private static final int FRAMEWORK_REQUEST_CODE = 1;
 
-    private int nextPermissionsRequestCode = 4000;
-    private final Map<Integer, AccountActivity.OnCompleteListener> permissionsListeners = new HashMap<>();
     private FBAccountKit fbAccountKit;
     private boolean setJeanieState;
     Bundle bundle = new Bundle();
@@ -176,7 +165,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         ((TextView) findViewById(R.id.textViewChangePassword)).setTypeface(Fonts.mavenMedium(this));
         relativeLayoutEmergencyContact = (RelativeLayout) findViewById(R.id.relativeLayoutEmergencyContact);
         textViewEmergencyContact = (TextView) findViewById(R.id.textViewEmergencyContact); textViewEmergencyContact.setTypeface(Fonts.mavenMedium(this));
-        textViewChangeLanguage = (TextView) findViewById(R.id.textViewChangeLanguage); textViewChangeLanguage.setTypeface(Fonts.mavenMedium(this));
         linearLayoutPasswordChange = (LinearLayout) findViewById(R.id.linearLayoutPasswordChange);
         imageViewChangePassword = (ImageView) findViewById(R.id.imageViewChangePassword);
         relativeLayoutOldPassword = (RelativeLayout) findViewById(R.id.relativeLayoutOldPassword);
@@ -275,7 +263,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         ((TextView) findViewById(R.id.textViewAddNewAddress)).setTypeface(Fonts.mavenMedium(this));
 
         relativeLayoutAddressBook = (RelativeLayout) findViewById(R.id.relativeLayoutAddressBook);
-        relativeLayoutChangeLanguage = (RelativeLayout) findViewById(R.id.relativeLayoutChangeLanguage);
         textViewAddressBook =  ((TextView)findViewById(R.id.textViewAddressBook));
         textViewAddressBook.setTypeface(Fonts.mavenMedium(this));
 
@@ -284,6 +271,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
         tvAbout = (TextView) findViewById(R.id.tvAbout);
+        tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT, 1) == 1 ? View.VISIBLE : View.GONE);
 
 
         imageViewPokemon.setOnClickListener(new View.OnClickListener() {
@@ -713,14 +701,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 }
             }
         });
-        relativeLayoutChangeLanguage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this, ChangeLanguageActivity.class));
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                GAUtils.event(SIDE_MENU, USER + PROFILE, GAAction.CHANGE_LANGUAGE);
-            }
-        });
 
        /* rlJugnooStar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -787,16 +767,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
         setMenuItemsAdapter();
 
-        if(!getResources().getBoolean(R.bool.force_inhouse_login)) {
-            getAllowedAuthChannels();
-        }
+        getAllowedAuthChannels();
 
-        if(getResources().getBoolean(R.bool.show_change_languge)) {
-            relativeLayoutChangeLanguage.setVisibility(View.VISIBLE);
-        }
-        else {
-            relativeLayoutChangeLanguage.setVisibility(View.GONE);
-        }
 	}
 
 	private AccountMenuItemsAdapter accountMenuItemsAdapter;
@@ -841,6 +813,13 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 startActivity(new Intent(AccountActivity.this, NotificationCenterActivity.class));
                                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
                                 GAUtils.event(SIDE_MENU, USER + PROFILE, JUGNOO + STAR);
+                            } else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.CHANGE_LOCALE.getTag())) {
+                                startActivity(new Intent(AccountActivity.this, ChangeLanguageActivity.class));
+                                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                GAUtils.event(SIDE_MENU, USER + PROFILE, GAAction.CHANGE_LANGUAGE);
+                            } else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.CALL_SUPPORT.getTag())) {
+                                Utils.openCallIntent(AccountActivity.this,
+                                        Prefs.with(AccountActivity.this).getString(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, ""));
                             }
                         }
                     }
@@ -1355,9 +1334,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             super.onBackPressed();
             textViewTitle.setText(R.string.title_my_profile);
             rlMain.setVisibility(View.VISIBLE);
-            if(getResources().getInteger(R.integer.show_about) == 0) {
-                tvAbout.setVisibility(View.VISIBLE);
-            }
+            tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT, 1) == 1 ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -1370,151 +1347,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         return textViewTitle;
     }
 
-    private void startFbAccountKit(PhoneNumber phoneNumber){
-            onLogin(LoginType.PHONE, phoneNumber);
-    }
-
-    private interface OnCompleteListener {
-        void onComplete();
-    }
-
-    private void onLogin(final LoginType loginType, PhoneNumber phoneNumber) {
-        final Intent intent = new Intent(this, AccountKitActivity.class);
-        final AccountKitConfiguration.AccountKitConfigurationBuilder configurationBuilder
-                = new AccountKitConfiguration.AccountKitConfigurationBuilder(
-                loginType,
-                AccountKitActivity.ResponseType.CODE);
-        configurationBuilder.setTheme(R.style.AppLoginTheme_Salmon);
-        configurationBuilder.setTitleType(AccountKitActivity.TitleType.LOGIN);
-        if(phoneNumber != null && !phoneNumber.toString().equalsIgnoreCase("")) {
-            //configurationBuilder.setInitialPhoneNumber(phoneNumber);
-        }
-        final AccountKitConfiguration configuration = configurationBuilder.build();
-        intent.putExtra(
-                AccountKitActivity.ACCOUNT_KIT_ACTIVITY_CONFIGURATION,
-                configuration);
-        AccountActivity.OnCompleteListener completeListener = new AccountActivity.OnCompleteListener() {
-            @Override
-            public void onComplete() {
-                startActivityForResult(intent, FRAMEWORK_REQUEST_CODE);
-            }
-        };
-        switch (loginType) {
-            case EMAIL:
-                final AccountActivity.OnCompleteListener getAccountsCompleteListener = completeListener;
-                completeListener = new AccountActivity.OnCompleteListener() {
-                    @Override
-                    public void onComplete() {
-                        requestPermissions(
-                                android.Manifest.permission.GET_ACCOUNTS,
-                                R.string.permissions_get_accounts_title,
-                                R.string.permissions_get_accounts_message,
-                                getAccountsCompleteListener);
-                    }
-                };
-                break;
-            case PHONE:
-                if (configuration.isReceiveSMSEnabled()) {
-                    final AccountActivity.OnCompleteListener receiveSMSCompleteListener = completeListener;
-                    completeListener = new AccountActivity.OnCompleteListener() {
-                        @Override
-                        public void onComplete() {
-                            requestPermissions(
-                                    android.Manifest.permission.RECEIVE_SMS,
-                                    R.string.permissions_receive_sms_title,
-                                    R.string.permissions_receive_sms_message,
-                                    receiveSMSCompleteListener);
-                        }
-                    };
-                }
-                if (configuration.isReadPhoneStateEnabled()) {
-                    final AccountActivity.OnCompleteListener readPhoneStateCompleteListener = completeListener;
-                    completeListener = new AccountActivity.OnCompleteListener() {
-                        @Override
-                        public void onComplete() {
-                            requestPermissions(
-                                    android.Manifest.permission.READ_PHONE_STATE,
-                                    R.string.permissions_read_phone_state_title,
-                                    R.string.permissions_read_phone_state_message,
-                                    readPhoneStateCompleteListener);
-                        }
-                    };
-                }
-                break;
-        }
-        completeListener.onComplete();
-    }
-
-    private void requestPermissions(
-            final String permission,
-            final int rationaleTitleResourceId,
-            final int rationaleMessageResourceId,
-            final AccountActivity.OnCompleteListener listener) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            if (listener != null) {
-                listener.onComplete();
-            }
-            return;
-        }
-
-        checkRequestPermissions(
-                permission,
-                rationaleTitleResourceId,
-                rationaleMessageResourceId,
-                listener);
-    }
-
-    @TargetApi(23)
-    private void checkRequestPermissions(
-            final String permission,
-            final int rationaleTitleResourceId,
-            final int rationaleMessageResourceId,
-            final AccountActivity.OnCompleteListener listener) {
-        if (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED) {
-            if (listener != null) {
-                listener.onComplete();
-            }
-            return;
-        }
-
-        final int requestCode = nextPermissionsRequestCode++;
-        permissionsListeners.put(requestCode, listener);
-
-        if (shouldShowRequestPermissionRationale(permission)) {
-            new AlertDialog.Builder(this)
-                    .setTitle(rationaleTitleResourceId)
-                    .setMessage(rationaleMessageResourceId)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(final DialogInterface dialog, final int which) {
-                            requestPermissions(new String[] { permission }, requestCode);
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(final DialogInterface dialog, final int which) {
-                            permissionsListeners.remove(requestCode);
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-        } else {
-            requestPermissions(new String[]{ permission }, requestCode);
-        }
-    }
-
-    @TargetApi(23)
-    @SuppressWarnings("unused")
     @Override
     public void onRequestPermissionsResult(final int requestCode,
                                            final @NonNull String permissions[],
                                            final @NonNull int[] grantResults) {
-        final AccountActivity.OnCompleteListener permissionsListener = permissionsListeners.remove(requestCode);
-        if (permissionsListener != null
-                && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            permissionsListener.onComplete();
-        }
     }
 
     public void apiChangeContactNumberUsingFB(final Activity activity, final String fbAccessToken) {
@@ -1644,7 +1480,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     }catch (Exception e){
                         e.printStackTrace();
                     }
-                    SplashNewActivity.allowedAuthChannelsHitOnce = true;
+                    SplashNewActivity.allowedAuthChannelsHitOnce = false;
                 }
 
                 @Override

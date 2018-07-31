@@ -20,7 +20,7 @@ import com.sabkuchfresh.analytics.GACategory;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.promotion.models.Promo;
@@ -100,19 +100,19 @@ public class PromoAdapter extends RecyclerView.Adapter<PromoAdapter.ViewHolder> 
 	}
 
 	class ViewHolder extends RecyclerView.ViewHolder{
-		@Bind(R.id.rl)
+		@BindView(R.id.rl)
 		RelativeLayout rl;
-		@Bind(R.id.ivOfferingLine)
+		@BindView(R.id.ivOfferingLine)
 		ImageView ivOfferingLine;
-		@Bind(R.id.ivOfferingIcon)
+		@BindView(R.id.ivOfferingIcon)
 		ImageView ivOfferingIcon;
-		@Bind(R.id.tvOfferingName)
+		@BindView(R.id.tvOfferingName)
 		TextView tvOfferingName;
-		@Bind(R.id.tvPromoTitle)
+		@BindView(R.id.tvPromoTitle)
 		TextView tvPromoTitle;
-		@Bind(R.id.tvPromoExpireTime)
+		@BindView(R.id.tvPromoExpireTime)
 		TextView tvPromoExpireTime;
-		@Bind(R.id.tvPromoInfo)
+		@BindView(R.id.tvPromoInfo)
 		TextView tvPromoInfo;
 
 		ViewHolder(final View view, final ItemListener itemListener) {

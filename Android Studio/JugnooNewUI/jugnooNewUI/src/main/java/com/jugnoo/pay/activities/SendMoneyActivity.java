@@ -30,7 +30,7 @@ import com.sabkuchfresh.utils.AppConstant;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.Data;
@@ -48,11 +48,11 @@ import retrofit.client.Response;
  * Created by cl-macmini-38 on 9/21/16.
  */
 public class SendMoneyActivity extends BaseActivity {
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolBar;
-    @Bind(R.id.toolbar_title)
+    @BindView(R.id.toolbar_title)
     TextView toolbarTitleTxt;
-    @Bind(R.id.back_btn)
+    @BindView(R.id.back_btn)
     ImageButton backBtn;
 
     @OnClick(R.id.back_btn)
@@ -66,15 +66,15 @@ public class SendMoneyActivity extends BaseActivity {
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
-    @Bind(R.id.contact_name_txt)
+    @BindView(R.id.contact_name_txt)
     TextView contactNameTxt;
-    @Bind(R.id.mobile_txt)
+    @BindView(R.id.mobile_txt)
     TextView contactMobileTxt;
-    @Bind(R.id.contact_image)
+    @BindView(R.id.contact_image)
     ImageView contactImage;
-    @Bind(R.id.message_et)
+    @BindView(R.id.message_et)
     EditText messageET;
-    @Bind(R.id.amount_et)
+    @BindView(R.id.amount_et)
     EditText amountET;
     public static SendMoneyActivity sendMoneyActivityObj;
 

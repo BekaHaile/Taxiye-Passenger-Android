@@ -1,16 +1,18 @@
 package com.sabkuchfresh.fragments;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.util.Pair;
@@ -55,6 +57,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.apis.ApiGoogleDirectionWaypoints;
+import product.clicklabs.jugnoo.base.BaseFragment;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
@@ -80,7 +83,7 @@ import retrofit.mime.TypedByteArray;
  * Created by shankar on 29/05/17.
  */
 
-public class TrackOrderFragment extends Fragment implements GACategory, GAAction {
+public class TrackOrderFragment extends BaseFragment implements GACategory, GAAction {
 
 
 	private String accessToken, driverPhoneNo;
@@ -177,13 +180,21 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		bMyLocation.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				zoomToDriverAndDrop(null, 0);
+				requestLocationPermissionExplicit();
 			}
 		});
 
 		LocalBroadcastManager.getInstance(activity).registerReceiver(orderUpdateBroadcast, new IntentFilter(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE));
 
 		return rootView;
+	}
+
+	@Override
+	public void permissionGranted(int requestCode) {
+		if(requestCode == REQUEST_CODE_PERMISSION_LOCATION){
+			super.permissionGranted(requestCode);
+			zoomToDriverAndDrop(null, 0);
+		}
 	}
 
 	private void loadMap() {
@@ -203,7 +214,7 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 					}
 
 					googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-					googleMap.setMyLocationEnabled(false);
+					enableMapMyLocation(googleMap);
 					googleMap.getUiSettings().setCompassEnabled(false);
 
 					googleMap.addMarker(getMarkerOptionsForResource(pickupLatLng, R.drawable.restaurant_map_marker, 40f, 40f, 0.5f, 0.5f, 0));
@@ -389,7 +400,9 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 		super.onResume();
 		if(googleMap != null){
 			scheduleTimer();
+			enableMapMyLocation(googleMap);
 		}
+		getLocationFetcher().connect(this, 10000);
 	}
 
 	@Override
@@ -847,6 +860,12 @@ public class TrackOrderFragment extends Fragment implements GACategory, GAAction
 
 		return etaMarkerBitmap;
 
+	}
+
+	private void enableMapMyLocation(GoogleMap googleMap) {
+		if(googleMap != null && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+			googleMap.setMyLocationEnabled(true);
+		}
 	}
 
 }

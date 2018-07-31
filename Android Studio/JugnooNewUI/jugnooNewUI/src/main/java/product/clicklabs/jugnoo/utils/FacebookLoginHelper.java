@@ -11,16 +11,13 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.AppInviteDialog;
 import com.facebook.share.widget.ShareDialog;
 
 import org.json.JSONObject;
 
 import java.util.Arrays;
 
-import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.R;
 
 /**
@@ -98,7 +95,7 @@ public class FacebookLoginHelper {
 
 
     private void callOpenActiveSession() {
-        LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile", "user_friends", "email", "user_mobile_phone"));
+        LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile", "email"));
     }
 
 
@@ -181,20 +178,6 @@ public class FacebookLoginHelper {
     }
 
 
-    public void appInviteDialog(){
-        String appLinkUrl, previewImageUrl;
-
-        appLinkUrl = "https://play.google.com/store/apps/details?id="+ BuildConfig.APPLICATION_ID;
-        previewImageUrl = "http://graph.facebook.com/717496164959213/picture?width=160&height=160";
-
-        if (AppInviteDialog.canShow()) {
-            AppInviteContent content = new AppInviteContent.Builder()
-                .setApplinkUrl(appLinkUrl)
-                .setPreviewImageUrl(previewImageUrl)
-                .build();
-            AppInviteDialog.show(activity, content);
-        }
-    }
 
 
 

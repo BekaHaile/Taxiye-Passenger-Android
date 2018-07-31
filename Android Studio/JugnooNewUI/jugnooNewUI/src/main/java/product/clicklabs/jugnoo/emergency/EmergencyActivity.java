@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
-import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;

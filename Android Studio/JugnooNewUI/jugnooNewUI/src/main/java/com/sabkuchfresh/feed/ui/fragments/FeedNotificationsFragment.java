@@ -23,32 +23,33 @@ import com.sabkuchfresh.home.FreshActivity;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import product.clicklabs.jugnoo.R;
 
 
 public class FeedNotificationsFragment extends Fragment implements GACategory, GAAction {
 
 
-	@Bind(R.id.rvNotifications)
+	@BindView(R.id.rvNotifications)
 	RecyclerView rvNotifications;
 	FeedNotificationsAdapter notificationsAdapter;
 
-	@Bind(R.id.swipeRefreshLayout)
+	@BindView(R.id.swipeRefreshLayout)
 	SwipeRefreshLayout swipeRefreshLayout;
-	@Bind(R.id.llNoNotifications)
+	@BindView(R.id.llNoNotifications)
 	LinearLayout llNoNotifications;
 
 	FreshActivity activity;
 	private ArrayList<NotificationDatum> notificationData;
 
-
+	Unbinder unbinder;
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_feed_notifications, container, false);
-		ButterKnife.bind(this, rootView);
+		unbinder = ButterKnife.bind(this, rootView);
 		activity = (FreshActivity) getActivity();
 		activity.fragmentUISetup(this);
 
@@ -101,7 +102,7 @@ public class FeedNotificationsFragment extends Fragment implements GACategory, G
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		ButterKnife.unbind(this);
+		unbinder.unbind();
 	}
 
 

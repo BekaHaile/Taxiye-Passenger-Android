@@ -2,9 +2,7 @@ package com.sabkuchfresh.utils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -14,7 +12,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Resources;
-import android.graphics.BitmapFactory;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.location.Location;
@@ -41,6 +38,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.country.picker.Country;
+import com.country.picker.CountryPicker;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -68,7 +67,6 @@ import java.util.zip.GZIPOutputStream;
 import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -439,24 +437,13 @@ public class Utils {
 
 
     public static String getCountryZipCode(Context context) {
-
-        String CountryID = "";
-        String CountryZipCode = "";
-
-        TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        // getNetworkCountryIso
-        CountryID = manager.getSimCountryIso().toUpperCase();
-        Log.e("CountryID", "=" + CountryID);
-        String[] rl = context.getResources().getStringArray(R.array.CountryCodes);
-        for (int i = 0; i < rl.length; i++) {
-            String[] g = rl[i].split(",");
-            if (g[1].trim().equals(CountryID.trim())) {
-                CountryZipCode = g[0];
-                return CountryZipCode;
-            }
-        }
-        return "";
-    }
+		Country country = CountryPicker.getCountryFromSIM(context);
+		if (country != null) {
+			return country.getDialCode();
+		} else {
+			return "";
+		}
+	}
 
 
 
@@ -666,53 +653,6 @@ public class Utils {
 	}
 
 
-    public static void notificationManager(Context context, String message, int NOTIFICATION_ID) {
-
-        try {
-            long when = System.currentTimeMillis();
-
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-
-            Log.v("message", "," + message);
-
-            Intent notificationIntent = new Intent(context, SplashNewActivity.class);
-
-
-            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            PendingIntent intent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-            builder.setAutoCancel(true);
-            builder.setContentTitle(context.getString(R.string.app_name));
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(message));
-            builder.setContentText(message);
-            builder.setTicker(message);
-
-
-//            if (ring) {
-//                builder.setLights(Color.GREEN, 500, 500);
-//            } else {
-                builder.setDefaults(Notification.DEFAULT_ALL);
-//            }
-
-            builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher));
-            builder.setSmallIcon(R.mipmap.notification_icon);
-            builder.setContentIntent(intent);
-
-
-            Notification notification = builder.build();
-            notificationManager.notify(NOTIFICATION_ID, notification);
-
-//            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-//            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-//            wl.acquire(15000);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
 
 

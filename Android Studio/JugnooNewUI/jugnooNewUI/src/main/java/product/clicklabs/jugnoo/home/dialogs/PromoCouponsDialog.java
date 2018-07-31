@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -63,7 +64,6 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 			onDialogOpenPromoSelectOperation = ((HomeActivity)activity).promoSelectionLastOperation;
 			couponSelectedWhenDialogShown =((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
 			dialog.setContentView(R.layout.dialog_promo_coupons);
 			dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 				@Override
@@ -191,7 +191,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
                 } else{
                     listViewPromoCoupons.setVisibility(View.GONE);
                     relativeLayoutBottomButtons.setVisibility(View.GONE);
-                    linearLayoutNoCurrentOffers.setVisibility(activity.getResources().getInteger(R.integer.show_invite_friends)==activity.getResources().getInteger(R.integer.view_visible)?View.VISIBLE:View.GONE);
+                    linearLayoutNoCurrentOffers.setVisibility(Data.isMenuTagEnabled(MenuInfoTags.FREE_RIDES)?View.VISIBLE:View.GONE);
                     imageViewOffers.setImageResource(R.drawable.ic_offer_popup);
                     tvAvailableOffers.setText(activity.getResources().getString(R.string.no_available_offers));
 

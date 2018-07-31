@@ -1,12 +1,10 @@
 package com.fugu;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -612,14 +610,14 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
         FuguConfig.getInstance().activity = activity;
         FuguConfig.getInstance().context = activity;
 
-        if (isPermissionGranted(FuguConfig.getInstance().context, Manifest.permission.READ_PHONE_STATE)) {
+//        if (isPermissionGranted(FuguConfig.getInstance().context, Manifest.permission.READ_PHONE_STATE)) {
             FuguConfig.getInstance().userData = new CaptureUserData();
             sendUserDetails(activity, mResellerToken, mReferenceId);
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                activity.requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_PERMISSION);
-            }
-        }
+//        } else {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                activity.requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_PERMISSION);
+//            }
+//        }
     }
 
     public void updateUserDetails(Activity activity, CaptureUserData userData, String resellerToken, int referenceId) {
@@ -627,17 +625,17 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
         FuguConfig.getInstance().activity = activity;
         FuguConfig.getInstance().context = activity;
         FuguConfig.getInstance().userData = userData;
-        if (isPermissionGranted(FuguConfig.getInstance().context, Manifest.permission.READ_PHONE_STATE)) {
+//        if (isPermissionGranted(FuguConfig.getInstance().context, Manifest.permission.READ_PHONE_STATE)) {
             FuguLog.v("permissionGranted", "permissionGranted");
             sendUserDetails(activity, resellerToken, referenceId);
-        } else {
-            FuguLog.v("permission not Granted", "permission not Granted");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                activity.requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_PERMISSION);
-            } else {
-                FuguLog.v("below M", "below M");
-            }
-        }
+//        } else {
+//            FuguLog.v("permission not Granted", "permission not Granted");
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                activity.requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_PERMISSION);
+//            } else {
+//                FuguLog.v("below M", "below M");
+//            }
+//        }
     }
 
     public static void clearFuguData(Activity activity) {

@@ -150,23 +150,16 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 	protected void onResume() {
 		super.onResume();
 		HomeActivity.checkForAccessTokenChange(this);
-		MyApplication.getInstance().getLocationFetcher().connect(locationUpdate, 10000);
+		getLocationFetcher().connect(this, 10000);
 		menuBar.setUserData();
 	}
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MyApplication.getInstance().getLocationFetcher().destroy();
-    }
 
 
-    private LocationUpdate locationUpdate = new LocationUpdate() {
-        @Override
-        public void onLocationChanged(Location location) {
-			latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        }
-    };
+	@Override
+	public void locationChanged(Location location) {
+		latLng = new LatLng(location.getLatitude(), location.getLongitude());
+	}
 
 
 	private ApiFetchWalletBalance apiFetchWalletBalance = null;

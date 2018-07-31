@@ -14,6 +14,7 @@ import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -29,7 +30,7 @@ public class AboutActivity extends BaseActivity {
 
 
     String facebookPageId;
-    String facebookPageName;
+    String facebookPageUrl;
     private final String  TAG = "About";
     Bundle bundle;
 
@@ -43,8 +44,8 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        facebookPageId = getString(R.string.facebook_page_id);
-        facebookPageName = getString(R.string.facebook_page_name);
+        facebookPageId = Prefs.with(this).getString(Constants.KEY_FACEBOOK_PAGE_ID, getString(R.string.facebook_page_id));
+        facebookPageUrl = Prefs.with(this).getString(Constants.KEY_FACEBOOK_PAGE_URL, getString(R.string.facebook_page_url));
         relative = (RelativeLayout) findViewById(R.id.relative);
         new ASSL(this, (ViewGroup) relative, 1134, 720, false);
 
@@ -93,11 +94,11 @@ public class AboutActivity extends BaseActivity {
                             getPackageManager().getPackageInfo("com.facebook.katana", 0);
                             intent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/" + facebookPageId));
                         } catch (Exception e) {
-                            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/" + facebookPageName));
+                            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(facebookPageUrl));
                         }
                     } else {
                         intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse("https://www.facebook.com/" + facebookPageName));
+                        intent.setData(Uri.parse(facebookPageUrl));
                     }
                     startActivity(intent);
 
@@ -105,7 +106,7 @@ public class AboutActivity extends BaseActivity {
                     e.printStackTrace();
                     Utils.showToast(AboutActivity.this, getString(R.string.facebook_not_installed));
                     Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse("https://www.facebook.com/" + facebookPageName));
+                    intent.setData(Uri.parse(facebookPageUrl));
                     startActivity(intent);
                 }
             }

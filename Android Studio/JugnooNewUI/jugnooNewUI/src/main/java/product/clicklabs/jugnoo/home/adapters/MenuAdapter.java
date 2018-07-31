@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.jugnoo.pay.activities.MainActivity;
 import com.sabkuchfresh.analytics.GAAction;
@@ -31,6 +30,8 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
+import product.clicklabs.jugnoo.BaseAppCompatActivity;
+import product.clicklabs.jugnoo.ChangeLanguageActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HomeSwitcherActivity;
@@ -251,6 +252,10 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     }*/
                 } else if(MenuInfoTags.SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_support_selector);
+                } else if(MenuInfoTags.CHANGE_LOCALE.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_support_selector);
+                } else if(MenuInfoTags.CALL_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_call_grey_theme_selector);
                 } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_about_selector);
                 }else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
@@ -594,6 +599,13 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 activity.startActivity(new Intent(activity, SupportActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 
+            }
+            else if(MenuInfoTags.CHANGE_LOCALE.getTag().equalsIgnoreCase(tag)) {
+                activity.startActivity(new Intent(activity, ChangeLanguageActivity.class));
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+            } else if (MenuInfoTags.CALL_SUPPORT.getTag().equalsIgnoreCase(tag)) {
+                Utils.openCallIntent(activity, Prefs.with(activity).getString(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, ""));
             } else if(MenuInfoTags.ABOUT.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, AboutActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -608,8 +620,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             }
 
             else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(tag)){
-                FuguConfig.getInstance().showConversations(activity,activity.getString(R.string.fugu_support_title));
-
+                if(activity instanceof BaseAppCompatActivity){
+                    ((BaseAppCompatActivity)activity).openFugu();
+                }
             }
             else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, SupportMailActivity.class));

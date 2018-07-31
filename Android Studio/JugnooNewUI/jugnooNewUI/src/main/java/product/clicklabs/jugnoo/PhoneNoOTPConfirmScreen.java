@@ -22,6 +22,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -177,7 +178,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			performBackPressed();
 		}
 
-		if (getResources().getBoolean(R.bool.show_call_me_option_in_otp)) {
 			try {
 				if (1 == Prefs.with(this).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 1)) {
 					tvCallMe.setVisibility(View.VISIBLE);
@@ -188,10 +188,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				e.printStackTrace();
 				tvCallMe.setVisibility(View.GONE);
 			}
-		}
-		else {
-			tvCallMe.setVisibility(View.GONE);
-		}
 
 		startTimerForRetry();
 
@@ -212,7 +208,9 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		super.onResume();
 
 		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, PhoneNoOTPConfirmScreen.class.getName());
-		Utils.enableSMSReceiver(this);
+		if(PermissionCommon.isGranted( android.Manifest.permission.RECEIVE_SMS,this)) {
+			Utils.enableSMSReceiver(this);
+		}
 
 		HomeActivity.checkForAccessTokenChange(this);
 	}
@@ -411,7 +409,9 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								DialogPopup.dismissLoadingDialog();
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									Utils.enableSMSReceiver(PhoneNoOTPConfirmScreen.this);
+									if(PermissionCommon.isGranted(android.Manifest.permission.RECEIVE_SMS,activity)) {
+										Utils.enableSMSReceiver(PhoneNoOTPConfirmScreen.this);
+									}
 									DialogPopup.alertPopup(activity, "", JSONParser.getServerMessage(jObj));
 								}
 							} else {

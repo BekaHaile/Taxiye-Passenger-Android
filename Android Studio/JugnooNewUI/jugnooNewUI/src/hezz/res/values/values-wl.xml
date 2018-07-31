@@ -77,6 +77,7 @@
     <integer name="show_promo">@integer/view_gone</integer>
     <string name="default_lang">fr</string>
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
+    <integer name="send_invites_visibility">@integer/view_gone</integer>
     <integer name="show_invite_friends">@integer/view_gone</integer>
     <string-array name="languages_to_show">
         <item>en</item>
@@ -86,5 +87,6 @@
 
     <!--default support email for SupportMailActivity if not coming from server-->
     <string name="default_support_email">contact@hezz.ma</string>
+    <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
     <bool name="show_call_me_option_in_otp">false</bool>
 </resources>

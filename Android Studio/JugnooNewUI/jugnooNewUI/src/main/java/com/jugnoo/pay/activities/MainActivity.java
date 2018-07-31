@@ -54,9 +54,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -81,8 +82,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MainActivity extends BaseActivity {
-    @Bind(R.id.toolbar)
+public class MainActivity extends BaseAppCompatActivity {
+    @BindView(R.id.toolbar)
     Toolbar mToolBar;
 
     @OnClick(R.id.back_btn)
@@ -151,7 +152,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    @Bind(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
 
 

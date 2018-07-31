@@ -1,8 +1,10 @@
 package product.clicklabs.jugnoo;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -94,7 +96,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             if (rideType == RideTypeValue.POOL.getOrdinal()) {
                 isPooled = 1;
             }
-            if(getIntent().hasExtra(Constants.KEY_COUPON_SELECTED)){
+            if (getIntent().hasExtra(Constants.KEY_COUPON_SELECTED)) {
                 promoCoupon = (PromoCoupon) getIntent().getSerializableExtra(Constants.KEY_COUPON_SELECTED);
 
             }
@@ -132,7 +134,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         textViewTitle.setTypeface(Fonts.avenirNext(this));
         tvCouponApplied.setTypeface(Fonts.mavenRegular(this));
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
-        if(promoCoupon!=null && promoCoupon.getId()!=-1 ){
+        if (promoCoupon != null && promoCoupon.getId() != -1) {
             tvCouponApplied.setVisibility(View.VISIBLE);
             tvCouponApplied.setText(getString(R.string.coupon_applied_format, promoCoupon.getTitle()));
         }else{
@@ -153,7 +155,9 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                     mapLite.getUiSettings().setAllGesturesEnabled(false);
                     mapLite.getUiSettings().setZoomGesturesEnabled(false);
                     mapLite.getUiSettings().setZoomControlsEnabled(false);
-                    mapLite.setMyLocationEnabled(true);
+                    if (ActivityCompat.checkSelfPermission(FareEstimateActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        mapLite.setMyLocationEnabled(true);
+                    }
                     mapLite.getUiSettings().setTiltGesturesEnabled(false);
                     mapLite.getUiSettings().setMyLocationButtonEnabled(false);
                     mapLite.setMapType(GoogleMap.MAP_TYPE_NORMAL);
