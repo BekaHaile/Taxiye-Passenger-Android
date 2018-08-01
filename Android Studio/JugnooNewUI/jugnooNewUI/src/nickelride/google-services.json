@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:676585448141:android:9e2df28ba014ab32",
+        "mobilesdk_app_id": "1:676585448141:android:9898d6d170adc572",
         "android_client_info": {
-          "package_name": "com.nickelride.customer"
+          "package_name": "production.nickelride.customer"
         }
       },
       "oauth_client": [
@@ -39,9 +39,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:676585448141:android:7f13880b9e90700b",
+        "mobilesdk_app_id": "1:676585448141:android:fbfb98b90372d582",
         "android_client_info": {
-          "package_name": "com.nickelride.driver"
+          "package_name": "production.nickelride.driver"
         }
       },
       "oauth_client": [
