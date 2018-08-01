@@ -12,12 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.melnykov.fab.FloatingActionButton;
-
-import product.clicklabs.jugnoo.R;
 import com.picker.image.model.AlbumEntry;
 import com.picker.image.util.Events;
 
 import de.greenrobot.event.EventBus;
+import product.clicklabs.jugnoo.R;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 
@@ -44,16 +43,19 @@ public class ImagesPagerFragment extends Fragment implements PhotoViewAttacher.O
 
     private void removeBehaviorAttr(final ViewGroup container) {
         //If the behavior hasn't been removed then when collapsing the toolbar the layout will resize which is annoying
-
-        final CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) container.getLayoutParams();
-        layoutParams.setBehavior(null);
-        container.setLayoutParams(layoutParams);
+        if(container.getLayoutParams() instanceof CoordinatorLayout.LayoutParams) {
+            final CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) container.getLayoutParams();
+            layoutParams.setBehavior(null);
+            container.setLayoutParams(layoutParams);
+        }
     }
 
     private void addBehaviorAttr(final ViewGroup container) {
-        final CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) container.getLayoutParams();
-        layoutParams.setBehavior(new AppBarLayout.ScrollingViewBehavior());
-        container.setLayoutParams(layoutParams);
+        if(container.getLayoutParams() instanceof CoordinatorLayout.LayoutParams) {
+            final CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) container.getLayoutParams();
+            layoutParams.setBehavior(new AppBarLayout.ScrollingViewBehavior());
+            container.setLayoutParams(layoutParams);
+        }
 
     }
 
@@ -122,7 +124,9 @@ public class ImagesPagerFragment extends Fragment implements PhotoViewAttacher.O
         //Because index starts from 0
         final int realPosition = index + 1;
         final String actionbarTitle = getResources().getString(R.string.image_position_in_view_pager).replace("%", realPosition + "").replace("$", mSelectedAlbum.imageList.size() + "");
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(actionbarTitle);
+        if(((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(actionbarTitle);
+        }
 
     }
 

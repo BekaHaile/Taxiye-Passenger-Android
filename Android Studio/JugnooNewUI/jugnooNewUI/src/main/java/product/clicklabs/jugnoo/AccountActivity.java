@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,9 +31,15 @@ import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.PhoneNumber;
 import com.google.gson.Gson;
+import com.picker.image.model.ImageEntry;
+import com.picker.image.util.Picker;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
+import com.sabkuchfresh.utils.ImageCompression;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -56,6 +63,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.dialogs.JeanieIntroDialog;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogActivity;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.TransactionUtils;
@@ -72,12 +80,17 @@ import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedByteArray;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 
 public class AccountActivity extends BaseFragmentActivity implements GAAction, GACategory, OnCountryPickerListener {
 
     private final String TAG = "View Account";
+    private static final int REQ_CODE_IMAGE_PERMISSION = 1001;
+    private static final int REQUEST_CODE_SELECT_IMAGES=99;
 
 	LinearLayout relative;
 
@@ -90,7 +103,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 	TextView textViewScroll;
 
     ImageView imageViewProfileImage;
-	EditText editTextUserName, editTextEmail, editTextPhone;
+	EditText editTextUserName, editTextLastName, editTextEmail, editTextPhone;
 	TextView tvCountryCode;
     LinearLayout linearLayoutPhone;
     ImageView imageViewEditProfile, ivEditPhone, imageViewEditProfileSave;
@@ -128,11 +141,31 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     private TextView tvAbout;
     private TextView textViewAddressBook;
     private CountryPicker countryPicker;
+    private PermissionCommon permissionCommon;
+    private Picker picker;
+    private ImageCompression imageCompressionTask;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_account_user);
+
+        permissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+            @Override
+            public void permissionGranted(int requestCode) {
+                pickImages();
+            }
+
+            @Override
+            public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                return true;
+            }
+
+            @Override
+            public void onRationalRequestIntercepted(int requestCode) {
+
+            }
+        });
 
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
@@ -151,6 +184,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         imageViewProfileImage = (ImageView) findViewById(R.id.imageViewProfileImage);
 
 		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Fonts.mavenMedium(this));
+        editTextLastName = (EditText) findViewById(R.id.editTextLastName); editTextLastName.setTypeface(Fonts.mavenMedium(this));
 		editTextEmail = (EditText) findViewById(R.id.editTextEmail); editTextEmail.setTypeface(Fonts.mavenMedium(this));
 		editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.mavenMedium(this));
         tvCountryCode = (TextView) findViewById(R.id.tvCountryCode); tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
@@ -396,6 +430,13 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
         });
 
+        imageViewProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                permissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
+        });
+
         imageViewEditProfileSave.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -405,12 +446,22 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     editTextEmail.setError(null);
                     editTextPhone.setError(null);
                     if (editTextUserName.isEnabled()) {
-                        String nameChanged = editTextUserName.getText().toString().trim();
+                        String first = editTextUserName.getText().toString().trim();
+                        String last = editTextLastName.getText().toString().trim();
+                        String nameChanged = (first + " " + last).trim();
                         String emailChanged = editTextEmail.getText().toString().trim();
                         String phoneNoChanged = editTextPhone.getText().toString().trim();
                         String countryCode = tvCountryCode.getText().toString();
                         if(TextUtils.isEmpty(countryCode)){
                             Utils.showToast(AccountActivity.this, getString(R.string.please_select_country_code));
+                            return;
+                        }
+                        if(TextUtils.isEmpty(first)){
+                            Utils.showToast(AccountActivity.this, getString(R.string.please_enter_first_name));
+                            return;
+                        }
+                        if(TextUtils.isEmpty(last)){
+                            Utils.showToast(AccountActivity.this, getString(R.string.please_enter_last_name));
                             return;
                         }
                         phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged, countryCode);
@@ -443,6 +494,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         editTextUserName.setSelection(editTextUserName.getText().length());
                         editTextUserName.setEnabled(true);
                         editTextUserName.setBackgroundResource(R.drawable.bg_white_orange_bb);
+                        editTextLastName.setEnabled(true);
+                        editTextLastName.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         editTextEmail.setEnabled(true);
                         editTextEmail.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         editTextPhone.setEnabled(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1);
@@ -464,6 +517,15 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         });
 
         editTextUserName.setOnEditorActionListener(new OnEditorActionListener() {
+
+            @Override
+            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                editTextLastName.setSelection(editTextLastName.getText().length());
+                editTextLastName.requestFocus();
+                return true;
+            }
+        });
+        editTextLastName.setOnEditorActionListener(new OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
@@ -852,6 +914,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     public void setUserData(){
 		try {
 			editTextUserName.setEnabled(false); editTextUserName.setBackgroundResource(R.drawable.background_white);
+            editTextLastName.setEnabled(false); editTextLastName.setBackgroundResource(R.drawable.background_white);
             editTextEmail.setEnabled(false); editTextEmail.setBackgroundResource(R.drawable.background_white);
             editTextPhone.setEnabled(false); linearLayoutPhone.setBackgroundResource(R.drawable.background_white);
             tvCountryCode.setEnabled(false); tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
@@ -859,11 +922,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             editTextEmail.setError(null);
             editTextPhone.setError(null);
 
-            if(!Data.userData.userName.equalsIgnoreCase("User")) {
-                editTextUserName.setText(Data.userData.userName);
-            } else {
-                editTextUserName.setText("");
-            }
+            setUserNameToFields();
             if(!Data.userData.userEmail.contains("@facebook.com") && !Data.userData.userEmail.toLowerCase().startsWith("guest")
                     && (!Data.userData.userEmail.contains("@app.jugnoo.in"))) {
                 editTextEmail.setText(Data.userData.userEmail);
@@ -873,23 +932,42 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 			editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo, Data.userData.getCountryCode()));
             tvCountryCode.setText(Data.userData.getCountryCode());
 
-			try{
-				if(!"".equalsIgnoreCase(Data.userData.userImage)){
-                    float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-					Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform())
-                            .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop().into(imageViewProfileImage);
-				}
-			} catch(Exception e){
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
+            setUserImage();
+        } catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+    public void setUserImage() {
+        try {
+            if (!"".equalsIgnoreCase(Data.userData.userImage)) {
+                float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform())
+                        .resize((int) (160f * minRatio), (int) (160f * minRatio)).centerCrop().into(imageViewProfileImage);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setUserNameToFields() {
+        if(!Data.userData.userName.equalsIgnoreCase("User")) {
+			int lastIndexOfSpace = Data.userData.userName.lastIndexOf(" ");
+			if(lastIndexOfSpace > -1) {
+				editTextUserName.setText(Data.userData.userName.substring(0, lastIndexOfSpace));
+				editTextLastName.setText(Data.userData.userName.substring(lastIndexOfSpace+1, Data.userData.userName.length()));
+			} else {
+				editTextUserName.setText(Data.userData.userName);
+				editTextLastName.setText("");
+			}
+		} else {
+			editTextUserName.setText("");
+			editTextLastName.setText("");
+		}
+    }
 
 
-	public void performBackPressed(){
+    public void performBackPressed(){
         if(getSupportFragmentManager().getBackStackEntryCount() > 0){
             openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, false);
         }
@@ -1018,9 +1096,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 updateSubscriptionMessage(updatedName);
                                 Data.userData.userName = updatedName;
                                 Data.userData.userEmail = updatedEmail;
-                                if(!Data.userData.userName.equalsIgnoreCase("User")) {
-                                    editTextUserName.setText(Data.userData.userName);
-                                }
+                                setUserNameToFields();
                                 if(!Data.userData.userEmail.contains("@facebook.com") && !Data.userData.userEmail.toLowerCase().startsWith("guest")
                                         && (!Data.userData.userEmail.contains("@app.jugnoo.in"))) {
                                     editTextEmail.setText(Data.userData.userEmail);
@@ -1060,6 +1136,23 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 		}
 
 	}
+
+	private void updateUserProfileImage(final MultipartTypedOutput params){
+        params.addPart(Constants.KEY_CLIENT_ID, new TypedString(Config.getAutosClientId()));
+        params.addPart(Constants.KEY_ACCESS_TOKEN, new TypedString(Data.userData.accessToken));
+        new ApiCommon<SettleUserDebt>(this).showLoader(true).execute(params, ApiName.UPDATE_USER_PROFILE_MULTIPART, new APICommonCallback<SettleUserDebt>() {
+            @Override
+            public void onSuccess(SettleUserDebt settleUserDebt, String message, int flag) {
+                Utils.showToast(AccountActivity.this, message);
+                reloadProfileAPI(AccountActivity.this);
+            }
+
+            @Override
+            public boolean onError(SettleUserDebt settleUserDebt, String message, int flag) {
+                return false;
+            }
+        });
+    }
 
 
 
@@ -1220,6 +1313,56 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 afterDataReceived(requestCode, resultCode, data);
             }
         },300);
+        if(requestCode== REQUEST_CODE_SELECT_IMAGES && resultCode==RESULT_OK){
+            compressImageAndUpload(data);
+        }
+    }
+
+    private void compressImageAndUpload(Intent data) {
+        if(data!=null && data.getSerializableExtra("imagesList")!=null) {
+			ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
+			if (images != null && images.size() != 0) {
+				final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
+
+				//Compress Images if any new added
+				ArrayList<String> imageEntries =null;
+				for(Object image:images){
+					if(image instanceof ImageEntry){
+						if(imageEntries==null)
+							imageEntries= new ArrayList<>();
+
+						imageEntries.add(((ImageEntry) image).path);
+					}
+				}
+
+				if(imageEntries!=null){
+					//upload feedback with new Images
+						imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
+							@Override
+							public void processFinish(ImageCompression.CompressedImageModel[] output) {
+
+								if (output != null) {
+									for (ImageCompression.CompressedImageModel file : output) {
+										if (file != null) {
+											multipartTypedOutput.addPart(Constants.KEY_UPDATED_USER_IMAGE, new TypedFile("image/*", file.getFile()));
+										}
+									}
+
+								}
+								//place order with images
+								updateUserProfileImage(multipartTypedOutput);
+							}
+
+							@Override
+							public void onError() {
+								DialogPopup.dismissLoadingDialog();
+
+							}
+						}, this);
+					imageCompressionTask.execute(imageEntries.toArray(new String[imageEntries.size()]));
+				}
+			}
+		}
     }
 
     private void afterDataReceived(int requestCode, int resultCode, Intent data){
@@ -1348,9 +1491,18 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     }
 
     @Override
-    public void onRequestPermissionsResult(final int requestCode,
-                                           final @NonNull String permissions[],
-                                           final @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        permissionCommon.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
+    private void pickImages() {
+        if(picker == null){
+            picker = new Picker.Builder(this, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.SINGLE_IMAGE).build();
+        }
+        picker.setLimit(1);
+        picker.startActivity(this,REQUEST_CODE_SELECT_IMAGES);
+
     }
 
     public void apiChangeContactNumberUsingFB(final Activity activity, final String fbAccessToken) {

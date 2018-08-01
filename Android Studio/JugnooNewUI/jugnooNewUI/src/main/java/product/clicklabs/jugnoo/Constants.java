@@ -363,6 +363,7 @@ public interface Constants {
     String KEY_UPDATED_USER_NAME = "updated_user_name";
     String KEY_UPDATED_USER_EMAIL = "updated_user_email";
     String KEY_UPDATED_PHONE_NO = "updated_phone_no";
+    String KEY_UPDATED_USER_IMAGE = "updated_user_image";
     String KEY_OLD_PASSWORD = "old_password";
     String KEY_NEW_PASSWORD = "new_password";
 
