@@ -9,6 +9,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
+import product.clicklabs.jugnoo.utils.MapUtils;
 
 /**
  * Created by gurmail on 18/08/16.
@@ -39,6 +40,7 @@ public class AutoData {
     private EndRideData endRideData;
     private LatLng pickupLatLng, dropLatLng;
     private String pickupAddress = "", dropAddress = "";
+    private LatLng pickupAddressMappedLatLng;
     private int dropAddressId;
     private int pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
     private CancelOptionsList cancelOptionsList;
@@ -402,12 +404,19 @@ public class AutoData {
         this.promoCoupons = promoCoupons;
     }
 
-    public String getPickupAddress() {
+    public String getPickupAddress(LatLng latLng) {
+        if(pickupAddressMappedLatLng == null || latLng == null){
+            return "";
+        }
+        if(MapUtils.distance(pickupAddressMappedLatLng, latLng) > 50){
+            return "";
+        }
         return pickupAddress;
     }
 
-    public void setPickupAddress(String pickupAddress) {
+    public void setPickupAddress(String pickupAddress, LatLng latLng) {
         this.pickupAddress = pickupAddress;
+        this.pickupAddressMappedLatLng = latLng;
     }
 
     public String getDropAddress() {

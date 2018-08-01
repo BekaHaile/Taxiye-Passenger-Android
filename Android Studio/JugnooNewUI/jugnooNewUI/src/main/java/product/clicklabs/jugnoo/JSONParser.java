@@ -754,7 +754,7 @@ public class JSONParser implements Constants {
             Data.autoData.setcDriverId(jDriverInfo.getString("id"));
 
             Data.autoData.setPickupLatLng(new LatLng(0, 0));
-            Data.autoData.setPickupAddress("");
+            Data.autoData.setPickupAddress("", null);
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
 
@@ -1049,7 +1049,7 @@ public class JSONParser implements Constants {
                         }
 
                         Data.autoData.setPickupLatLng(new LatLng(assigningLatitude, assigningLongitude));
-                        Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""));
+                        Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""), Data.autoData.getPickupLatLng());
                         parseDropLatLng(jObject1);
                         bidInfos = JSONParser.parseBids(context, Constants.KEY_BIDS, jObject1);
 
@@ -1187,7 +1187,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setcDriverId(userId);
 
                 Data.autoData.setPickupLatLng(new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude)));
-                Data.autoData.setPickupAddress(pickupAddress);
+                Data.autoData.setPickupAddress(pickupAddress, Data.autoData.getPickupLatLng());
                 if((Utils.compareDouble(dropLatitude, 0) == 0) && (Utils.compareDouble(dropLongitude, 0) == 0)){
                     Data.autoData.setDropLatLng(null);
                     Data.autoData.setDropAddress("");

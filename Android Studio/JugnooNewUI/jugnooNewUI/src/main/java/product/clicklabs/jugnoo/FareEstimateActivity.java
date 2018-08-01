@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -231,7 +232,8 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
         try {
             if (rideType != RideTypeValue.POOL.getOrdinal() && Data.autoData.getDropLatLng() != null) {
-				getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng());
+				getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
+                        Data.autoData.getDropLatLng(), Data.autoData.getDropAddress());
 			} else {
 
 				Bundle bundle = new Bundle();
@@ -249,7 +251,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
     }
 
-    private void getDirectionsAndComputeFare(final LatLng sourceLatLng, final LatLng destLatLng) {
+    private void getDirectionsAndComputeFare(final LatLng sourceLatLng, final String sourceAddress, final LatLng destLatLng, final String destAddress) {
         try {
             new ApiFareEstimate(this, new ApiFareEstimate.Callback() {
                 @Override
@@ -314,7 +316,12 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                             }, 500);
                         }
 
-
+                        if(!TextUtils.isEmpty(sourceAddress)){
+                            startAddress = sourceAddress;
+                        }
+                        if(!TextUtils.isEmpty(destAddress)){
+                            endAddress = destAddress;
+                        }
                         textViewPickupLocation.setText(startAddress);
                         String startAdd = textViewPickupLocation.getText().toString();
                         if (startAdd.charAt(startAdd.length() - 1) == ',') {
@@ -467,7 +474,8 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             Data.autoData.setDropLatLng(searchResult.getLatLng());
             Data.autoData.setDropAddress(searchResult.getAddress());
             Data.autoData.setDropAddressId(searchResult.getId());
-            getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), searchResult.getLatLng());
+            getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
+                    searchResult.getLatLng(), Data.autoData.getDropAddress());
             searchResultGlobal = searchResult;
         } catch (Exception e) {
             e.printStackTrace();

@@ -934,7 +934,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 specialPickupSelected = true;
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), getMapAnimateDuration(), null);
                 selectedSpecialPickup = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText() + ", ";
-                textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress());
+                textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
                 GAUtils.event(RIDES, HOME, SPECIAL_PICKUP_CHOOSED);
             }
 
@@ -2025,7 +2025,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 public void onMapUnsettled() {
                     // Map unsettled
                     if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL) {
-
+                        Data.autoData.setPickupAddress("", null);
                     }
                 }
 
@@ -2669,7 +2669,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void snapPickupLocToNearbyAddress(SearchResult searchResult) {
         try {
             Data.autoData.setPickupLatLng(searchResult.getLatLng());
-            Data.autoData.setPickupAddress(searchResult.getAddress());
+            Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
             map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()));
             if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
                 findDriversETACall(true, false, true);
@@ -2761,21 +2761,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 lastPickUp.addAll(fetchLastLocations(SPLabels.LAST_PICK_UP));
                 if (lastPickUp.size() == 0) {
                     if (!addressMatchedWithSavedAddresses(textViewInitialSearch.getText().toString())) {
-                        lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(), ""
+                        lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()), ""
                                 , Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude));
                     }
                 } else {
                     boolean isSame = false;
                     for (int i = 0; i < lastPickUp.size(); i++) {
                         if (textViewInitialSearch.getText().toString().equalsIgnoreCase(lastPickUp.get(i).getName())
-                                && Data.autoData.getPickupAddress().equalsIgnoreCase(lastPickUp.get(i).getAddress())) {
+                                && Data.autoData.getPickupAddress(lastPickUp.get(i).getLatLng()).equalsIgnoreCase(lastPickUp.get(i).getAddress())) {
                             isSame = true;
                             break;
                         }
                     }
                     if (!isSame) {
                         if (!addressMatchedWithSavedAddresses(textViewInitialSearch.getText().toString())) {
-                            lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(), ""
+                            lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()), ""
                                     , Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude));
                         }
                     }
@@ -5275,7 +5275,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 Data.autoData.setPickupLatLng(specialPicupLatLng);
                 specialPickupSelected = true;
                 selectedSpecialPickup = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getText() + ", ";
-                textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress());
+                textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
                 break;
             }
         }
@@ -5653,7 +5653,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             boolean addressNeeded = true;
             if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
-                Data.autoData.setPickupAddress("");
+                Data.autoData.setPickupAddress("", null);
             } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
                     || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
@@ -5674,7 +5674,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 textView.setText("");
                 if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
-                    Data.autoData.setPickupAddress("");
+                    Data.autoData.setPickupAddress("", null);
                 }
                 textView.setHint(R.string.getting_address);
 				GoogleRestApis.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
@@ -5688,12 +5688,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                                         textView.setHint(getResources().getString(R.string.getting_address));
                                         textView.setText(address);
-                                        Data.autoData.setPickupAddress(address);
+                                        Data.autoData.setPickupAddress(address, currentLatLng);
                                         SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
                                                 Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
                                         if (searchResult != null) {
                                             textView.setText(searchResult.getName());
-                                            Data.autoData.setPickupAddress(searchResult.getAddress());
+                                            Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
                                         }
                                     } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
                                             || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
@@ -7015,7 +7015,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             String promoName = JSONParser.getPromoName(this, jObj);
 
             Data.autoData.setPickupLatLng(new LatLng(pickupLatitude, pickupLongitude));
-            Data.autoData.setPickupAddress(jObj.optString(KEY_PICKUP_LOCATION_ADDRESS, Data.autoData.getPickupAddress()));
+            Data.autoData.setPickupAddress(jObj.optString(KEY_PICKUP_LOCATION_ADDRESS,
+                    Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng())), Data.autoData.getPickupLatLng());
             JSONParser.parseDropLatLng(jObj);
 
             double fareFactor = 1.0, bearing = 0.0;
@@ -7438,7 +7439,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 nameValuePairs.put("access_token", Data.userData.accessToken);
                                 nameValuePairs.put("latitude", "" + Data.autoData.getPickupLatLng().latitude);
                                 nameValuePairs.put("longitude", "" + Data.autoData.getPickupLatLng().longitude);
-                                nameValuePairs.put(KEY_PICKUP_LOCATION_ADDRESS, selectedSpecialPickup + Data.autoData.getPickupAddress());
+                                String address = selectedSpecialPickup + Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng());
+                                if(!TextUtils.isEmpty(address)) {
+                                    nameValuePairs.put(KEY_PICKUP_LOCATION_ADDRESS, address);
+                                }
 
                                 //30.7500, 76.7800
 //								nameValuePairs.add(new BasicNameValuePair("latitude", "30.7500"));
@@ -7819,7 +7823,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
             Data.autoData.setPickupLatLng(null);
-            Data.autoData.setPickupAddress("");
+            Data.autoData.setPickupAddress("", null);
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
             Data.autoData.setDropAddressId(0);
@@ -8948,7 +8952,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 });
                 lastSearchLatLng = searchResult.getLatLng();
                 mapTouched = true;
-                Data.autoData.setPickupAddress(searchResult.getAddress());
+                Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
 
                 try {
                     Log.e("searchResult.getThirdPartyAttributions()", "=" + searchResult.getThirdPartyAttributions());
