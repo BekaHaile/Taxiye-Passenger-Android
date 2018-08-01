@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
 
@@ -24,17 +24,17 @@ public abstract class PaySlider {
 
 
     public LinearLayout llPayViewContainer;
-    @Bind(R.id.rlSliderContainer)
+    @BindView(R.id.rlSliderContainer)
     public RelativeLayout rlSliderContainer;
-    @Bind(R.id.viewAlpha)
+    @BindView(R.id.viewAlpha)
     public View viewAlpha;
-    @Bind(R.id.relativeLayoutSlider)
+    @BindView(R.id.relativeLayoutSlider)
     public RelativeLayout relativeLayoutSlider;
-    @Bind(R.id.tvSlide)
+    @BindView(R.id.tvSlide)
     public TextView tvSlide;
-    @Bind(R.id.sliderText)
+    @BindView(R.id.sliderText)
     public TextView sliderText;
-    @Bind(R.id.buttonPlaceOrder)
+    @BindView(R.id.buttonPlaceOrder)
     public Button buttonPlaceOrder;
     private RelativeLayout.LayoutParams paramsF;
     private long animDuration = 150;

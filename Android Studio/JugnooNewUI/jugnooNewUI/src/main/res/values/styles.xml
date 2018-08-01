@@ -4,7 +4,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.NoActionBar">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -63,7 +63,7 @@
             @android:color/white
         </item>
         <item name="colorPrimaryDark">
-            @android:color/white
+            @android:color/black
         </item>
         <item name="colorAccent">
             @color/yellow_jugnoo
@@ -97,7 +97,7 @@
     </style>
 
 
-    <style name="SpinnerStyle" parent="android:Theme.Holo.Light">
+    <style name="SpinnerStyle" parent="Theme.AppCompat.Light">
         <item name="android:divider">
             #ffffff
         </item>
@@ -595,7 +595,7 @@
             @color/transparent
         </item>
         <item name="colorPrimaryDark">
-            @color/white_less_dark
+            @color/black
         </item>
         <item name="colorAccent">
             @color/white_less_dark
@@ -615,6 +615,7 @@
         <item name="android:windowContentTransitions">
             true
         </item>
+        <item name="android:alertDialogTheme">@style/Theme.AppCompat.Light.Dialog.Alert</item>
     </style>
 
 

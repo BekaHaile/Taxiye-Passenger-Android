@@ -23,7 +23,6 @@
     <string name="app_name">Jingos</string>
 
     <string name="google_maps_api_key">AIzaSyDWJIBt2XjtRvhHC9mpSyD6otrmpMMSr9s</string>
-    <string name="google_maps_api_server_key">AIzaSyC3NVQc-v2UY4qcHmj93ZZR5EsvTOvCo8Q</string>
     <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
     <string name="fb_app_id">251198292011565</string>
     <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>

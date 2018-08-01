@@ -231,6 +231,7 @@
                                 android:background="@color/white"
                                 android:layoutDirection="ltr"
                                 android:orientation="horizontal"
+
                                 >
                                 <TextView
                                     android:id="@+id/tvCountryCode"

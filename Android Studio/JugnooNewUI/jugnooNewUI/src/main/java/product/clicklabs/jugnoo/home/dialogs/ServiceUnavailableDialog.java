@@ -34,7 +34,6 @@ public class ServiceUnavailableDialog {
 	public Dialog showServiceUnavailableDialog() {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
 			dialog.setContentView(R.layout.dialog_service_unavailable);
 
 			RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);

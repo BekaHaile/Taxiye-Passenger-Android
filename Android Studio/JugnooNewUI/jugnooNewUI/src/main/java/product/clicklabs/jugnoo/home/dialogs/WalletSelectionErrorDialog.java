@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -25,10 +26,9 @@ public class WalletSelectionErrorDialog {
 		this.callback = callback;
 	}
 
-	public Dialog show(String message, boolean walletError) {
+	public Dialog show(String message, boolean walletError, String okButtonText) {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
 			dialog.setContentView(R.layout.dialog_wallet_selection_error);
 
 			RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);
@@ -47,7 +47,11 @@ public class WalletSelectionErrorDialog {
 			Button buttonPositive = (Button) dialog.findViewById(R.id.buttonPositive); buttonPositive.setTypeface(Fonts.mavenMedium(activity));
 			Button buttonNegative = (Button) dialog.findViewById(R.id.buttonNegative); buttonNegative.setTypeface(Fonts.mavenMedium(activity));
 
-			buttonPositive.setText(R.string.add_money_to_wallet);
+			if (!TextUtils.isEmpty(okButtonText)) {
+				buttonPositive.setText(okButtonText);
+			} else {
+				buttonPositive.setText(R.string.add_money_to_wallet);
+			}
 			buttonNegative.setText(R.string.choose_other_mode_to_pay);
 
 			if(walletError){

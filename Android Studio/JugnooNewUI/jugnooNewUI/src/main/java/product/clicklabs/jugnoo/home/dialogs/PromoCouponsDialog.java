@@ -64,7 +64,6 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 			onDialogOpenPromoSelectOperation = ((HomeActivity)activity).promoSelectionLastOperation;
 			couponSelectedWhenDialogShown =((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
 			dialog.setContentView(R.layout.dialog_promo_coupons);
 			dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 				@Override

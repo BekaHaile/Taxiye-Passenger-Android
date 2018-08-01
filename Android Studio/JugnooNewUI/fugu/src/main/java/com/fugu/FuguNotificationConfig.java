@@ -112,6 +112,17 @@ public class FuguNotificationConfig implements FuguAppConstant {
     public void showNotification(final Context context, final Map<String, String> data) {
         Paper.init(context);
         CommonData.setPushBoolean(true);
+
+        notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ONE_ID,
+                    CHANNEL_ONE_NAME, NotificationManager.IMPORTANCE_HIGH);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
+//            return new Notification.Builder(context, CHANNEL_ONE_ID);
+        }
+
         try {
             JSONObject messageJson = new JSONObject(data.get("message"));
 
@@ -152,7 +163,7 @@ public class FuguNotificationConfig implements FuguAppConstant {
                     if (!notificationSoundEnabled)
                         notificationDefaults = Notification.DEFAULT_LIGHTS;
 
-                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context,CHANNEL_ONE_ID)
                             //     .setTicker(r.getString(R.string.app_name))
                             .setStyle(new NotificationCompat.BigTextStyle().bigText(messageJson.getString("new_message")))
                             //.setSmallIcon(android.R.color.transparent)
@@ -164,7 +175,7 @@ public class FuguNotificationConfig implements FuguAppConstant {
                             .setDefaults(notificationDefaults)
                             .setPriority(priority)
                             .setAutoCancel(true);
-//                    mBuilder.setChannelId(CHANNEL_ONE_ID);
+                    mBuilder.setChannelId(CHANNEL_ONE_ID);
                     Notification notification = mBuilder.build();
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -183,7 +194,6 @@ public class FuguNotificationConfig implements FuguAppConstant {
                         }
                     }
 
-                    notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.notify((int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE), notification);
 
                 } else {
@@ -246,7 +256,7 @@ public class FuguNotificationConfig implements FuguAppConstant {
                 if (!notificationSoundEnabled)
                     notificationDefaults = Notification.DEFAULT_LIGHTS;
 
-                Notification notification = new NotificationCompat.Builder(context)
+                Notification notification = new NotificationCompat.Builder(context, CHANNEL_ONE_ID)
                         //     .setTicker(r.getString(R.string.app_name))
                         .setStyle(new NotificationCompat.BigTextStyle().bigText(messageJson.getString("new_message")))
                         //.setSmallIcon(android.R.color.transparent)
@@ -258,6 +268,7 @@ public class FuguNotificationConfig implements FuguAppConstant {
                         .setDefaults(notificationDefaults)
                         .setPriority(priority)
                         .setAutoCancel(true)
+                        .setChannelId(CHANNEL_ONE_ID)
                         .build();
 
 
@@ -277,21 +288,13 @@ public class FuguNotificationConfig implements FuguAppConstant {
                     }
                 }
 
-                notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.notify((int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE), notification);
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ONE_ID,
-                    CHANNEL_ONE_NAME, NotificationManager.IMPORTANCE_HIGH);
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(notificationChannel);
-            }
-//            return new Notification.Builder(context, CHANNEL_ONE_ID);
-        }
+
     }
 
 }

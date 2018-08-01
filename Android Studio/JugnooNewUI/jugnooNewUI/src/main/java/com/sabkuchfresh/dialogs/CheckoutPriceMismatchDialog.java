@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.adapters.CheckoutChargesAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.R;
@@ -30,15 +30,15 @@ import product.clicklabs.jugnoo.utils.NonScrollListView;
 public class CheckoutPriceMismatchDialog extends Dialog {
 
 
-    @Bind(R.id.listViewCart)
+    @BindView(R.id.listViewCart)
     NonScrollListView listViewCart;
-    @Bind(R.id.rootLayout)
+    @BindView(R.id.rootLayout)
     LinearLayout rootLayout;
-    @Bind(R.id.listViewCharges)
+    @BindView(R.id.listViewCharges)
     NonScrollListView listViewCharges;
-    @Bind(R.id.btn_cancel)
+    @BindView(R.id.btn_cancel)
     Button btnCancel;
-    @Bind(R.id.textViewCartItems)
+    @BindView(R.id.textViewCartItems)
     TextView textViewCartItems;
     private Activity activity;
     private FreshCartItemsAdapter freshCartItemsAdapter;

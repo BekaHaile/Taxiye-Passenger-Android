@@ -4,7 +4,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -18,14 +17,12 @@ import android.widget.TextView;
 import com.jugnoo.pay.adapters.SendMoneyPagerAdapter;
 import com.jugnoo.pay.fragments.ContactsFragment;
 import com.jugnoo.pay.fragments.PaymentFragment;
-import com.sabkuchfresh.fragments.FreshFragment;
 import com.sabkuchfresh.utils.AppConstant;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.promotion.fragments.ReferralActivityFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
@@ -34,17 +31,17 @@ import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
  * Created by cl-macmini-38 on 9/21/16.
  */
 public class SelectContactActivity extends BaseActivity {
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar mToolBar;
-    @Bind(R.id.toolbar_title)
+    @BindView(R.id.toolbar_title)
     TextView toolbarTitleTxt;
-    @Bind(R.id.back_btn)
+    @BindView(R.id.back_btn)
     ImageButton backBtn;
     @OnClick(R.id.back_btn)
     void backBtnClicked() {
         onBackPressed();
     }
-    @Bind(R.id.phone_et)
+    @BindView(R.id.phone_et)
     public EditText searchET;
     private ImageView ivToolbarRefreshContacts;
 

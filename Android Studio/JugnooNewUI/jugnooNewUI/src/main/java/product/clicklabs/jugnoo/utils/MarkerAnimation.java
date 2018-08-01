@@ -97,7 +97,7 @@ public class MarkerAnimation {
     public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition,
                                           final LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim,
                                           boolean animateRoute, GoogleMap googleMap, int pathResolvedColor,
-                                          int untrackedPathColor, float pathWidth, boolean ignoreDistanceCheck, String apiKey) {
+                                          int untrackedPathColor, float pathWidth, boolean ignoreDistanceCheck) {
 
         try {
             if(!ignoreDistanceCheck && MapUtils.distance(marker.getPosition(), finalPosition) < MIN_DISTANCE){
@@ -123,7 +123,7 @@ public class MarkerAnimation {
 			}
 			else{
                 getDirectionsAsyncs.add(new GetDirectionsAsync(engagementId, marker, finalPosition, latLngInterpolator,
-                        callbackAnim, animateRoute, googleMap, pathResolvedColor, untrackedPathColor, pathWidth,apiKey));
+                        callbackAnim, animateRoute, googleMap, pathResolvedColor, untrackedPathColor, pathWidth));
                 if(getDirectionsAsyncs.size() == 1){
                     getDirectionsAsyncs.get(0).execute();
                 }
@@ -144,9 +144,9 @@ public class MarkerAnimation {
 
 
     public static void animateMarkerOnList(Marker marker, List<LatLng> list, final LatLngInterpolator latLngInterpolator, boolean animateRoute,
-                                           GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth, CallbackAnim callback, String apiKey, boolean fastDuration){
+                                           GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth, CallbackAnim callback, boolean fastDuration){
         getDirectionsAsyncs.add(new GetDirectionsAsync("-1", marker, latLngInterpolator, callback, list, animateRoute,
-                googleMap, pathResolvedColor, untrackedPathColor, pathWidth,apiKey, fastDuration));
+                googleMap, pathResolvedColor, untrackedPathColor, pathWidth, fastDuration));
         Log.e("getDirectionsAsyncs.size", "="+getDirectionsAsyncs.size());
         if(getDirectionsAsyncs.size() == 1){
             getDirectionsAsyncs.get(0).execute();
@@ -177,13 +177,12 @@ public class MarkerAnimation {
         GoogleMap googleMap;
         int pathResolvedColor, untrackedPathColor;
         float pathWidth;
-        String apiKey;
         boolean fastDuration;
 
         GetDirectionsAsync(String engagementId, Marker marker, LatLng destination,
                            LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim,
                            boolean animateRoute, GoogleMap googleMap, int pathResolvedColor,
-                           int untrackedPathColor, float pathWidth,String apiKey){
+                           int untrackedPathColor, float pathWidth){
             this.engagementId = engagementId;
             this.source = marker.getPosition();
             this.destination = destination;
@@ -195,13 +194,12 @@ public class MarkerAnimation {
             this.pathResolvedColor = pathResolvedColor;
             this.untrackedPathColor = untrackedPathColor;
             this.pathWidth = pathWidth;
-            this.apiKey = apiKey;
             fastDuration = false;
         }
 
         GetDirectionsAsync(String engagementId, Marker marker, LatLngInterpolator latLngInterpolator,
                            CallbackAnim callbackAnim, List<LatLng> list, boolean animateRoute,
-                           GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth, String apiKey, boolean fastDuration){
+                           GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth, boolean fastDuration){
             this.engagementId = engagementId;
             this.source = marker.getPosition();
             this.destination = (list != null && list.size() > 0) ? list.get(list.size()-1) : null;
@@ -214,7 +212,6 @@ public class MarkerAnimation {
             this.pathResolvedColor = pathResolvedColor;
             this.untrackedPathColor = untrackedPathColor;
             this.pathWidth = pathWidth;
-            this.apiKey = apiKey;
             this.fastDuration = fastDuration;
         }
 

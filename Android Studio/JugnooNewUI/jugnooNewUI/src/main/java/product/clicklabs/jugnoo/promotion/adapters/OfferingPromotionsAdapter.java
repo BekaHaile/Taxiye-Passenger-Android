@@ -13,7 +13,7 @@ import com.sabkuchfresh.analytics.GACategory;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.promotion.OfferingPromotion;
@@ -60,9 +60,9 @@ public class OfferingPromotionsAdapter extends RecyclerView.Adapter<OfferingProm
 	}
 
 	class ViewHolder extends RecyclerView.ViewHolder{
-		@Bind(R.id.tvOfferingName)
+		@BindView(R.id.tvOfferingName)
 		TextView tvOfferingName;
-		@Bind(R.id.rvPromotions)
+		@BindView(R.id.rvPromotions)
 		RecyclerView rvPromotions;
 		PromotionsAdapter promotionsAdapter;
 

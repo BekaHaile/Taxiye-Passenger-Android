@@ -13,7 +13,7 @@ import com.sabkuchfresh.adapters.ItemListener;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -106,11 +106,11 @@ public class AccountMenuItemsAdapter extends RecyclerView.Adapter<AccountMenuIte
     public static class MenuItemViewHolder extends RecyclerView.ViewHolder{
 
 
-        @Bind(R.id.tvJugnooStar)
+        @BindView(R.id.tvJugnooStar)
         TextView tvJugnooStar;
-        @Bind(R.id.textViewValue)
+        @BindView(R.id.textViewValue)
         TextView tvValue;
-        @Bind(R.id.rlJugnooStar)
+        @BindView(R.id.rlJugnooStar)
         RelativeLayout rlRoot;
 
         public MenuItemViewHolder(final View itemView, final ItemListener itemListener, Activity activity) {

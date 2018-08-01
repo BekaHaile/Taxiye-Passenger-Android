@@ -462,8 +462,8 @@
         <item>+263,ZW</item>
     </string-array>
 
-    <string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,</string>
-    <string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.\\ </string>
+    <string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789.,</string>
+    <string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 0123456789.\\ </string>
 
 
     <string name="paytm">Paytm</string>
@@ -1108,6 +1108,7 @@
         Grant permission to read your SMS code from your device to pre-fill.
     </string>
     <string name="permissions_receive_sms_title">Read SMS Code</string>
+    <string name="permission_grant_sms_phone_settings">You have disabled permissions for SMS and Phone. Please grant them from app settings to allow access.</string>
     <string name="login_signup_with">Login / Signup with</string>
     <string name="please_check_tnc">Offer conditions not met. Please review detailed Terms and Conditions for more information</string>
     <string name="checkout_our_different_services_from_here">Checkout our different services from here</string>
@@ -1888,6 +1889,7 @@
     <string name="arabic">عربى</string>
     <string name="french">français</string>
     <string name="german">Deutsche</string>
+    <string name="spanish">Spanish</string>
     <string name="send_us_a_mail">Send us a mail</string>
     <string name="issue_description">Issue description</string>
     <string name="support_mail_subject">%s Support</string>
@@ -1905,5 +1907,30 @@
     <string name="number_should_not_start_with_zero">Phone number should not start with 0</string>
     <string name="toll_charge">Toll Charge</string>
     <string name="label_add_store_text_oh_snap"><b>Suggest a store to %s</b></string>
+    <string name="please_add_card_to_proceed">Please add card to proceed</string>
+
+
+    <!--Strings related to permissions-->
+    <string name="you_have_disabled_permission_format">You have disabled the permission to %s. Please enable from app settings to allow access.</string>
+    <string name="need_permission_camera_format">%s needs permission to access the camera to capture image.</string>
+    <string name="need_permission_location_format">%s needs permission to fetch your location address.</string>
+    <string name="need_permission_contact_format">%s needs permission to sync your contacts.</string>
+    <string name="need_permission_phone_state_format">%s needs access to your phone state to proceed.</string>
+    <string name="need_permission_sms_format">%s needs permission to auto-detect OTP.</string>
+    <string name="need_permission_storage_format">%s needs storage permission to view and upload photos.</string>
+    <string name="need_permission_format">%s needs permission to proceed.</string>
+    <string name="sms_permission_optional_message">%s needs permission to auto-detect OTP. Are you sure you want to proceed?</string>
+    <string name="are_you_sure">Are you sure you want to proceed?</string>
+    <string name="i_am_sure">I\'m Sure</string>
+    <string name="perm_location_rational_splash">%s would need location permission to show you nearby drivers.</string>
+    <string name="perm_location_rational_splash_jugnoo">%s would need location permission to show you nearby drivers or services.</string>
+    <string name="grant">GRANT</string>
+
+
+    <!-- Notification channel -->
+    <string name="notification_channel_default">Notifications</string>
+    <string name="notification_channel_description_default">Latest Updates</string>
+    <string name="grant_contact_permission">You will have to grant contacts permission to view your contacts here.Please Press the button below to proceed.</string>
+    <string name="grant_permission">Grant Permission</string>
 
 </resources>

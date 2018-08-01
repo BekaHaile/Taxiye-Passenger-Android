@@ -1,6 +1,5 @@
 package com.fugu.activity;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -133,13 +132,14 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
         if (CommonData.getUserDetails() != null && CommonData.getConversationList().size() > 0) {
             setUpUI();
             getConversations();
-        } else if (FuguConfig.getInstance().isPermissionGranted(FuguChannelsActivity.this, Manifest.permission.READ_PHONE_STATE)) {
+        } else {//if (FuguConfig.getInstance().isPermissionGranted(FuguChannelsActivity.this, Manifest.permission.READ_PHONE_STATE)) {
             sendUserDetails();
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_PERMISSION);
-            }
         }
+//        else {
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_PERMISSION);
+//            }
+//        }
     }
 
     /**

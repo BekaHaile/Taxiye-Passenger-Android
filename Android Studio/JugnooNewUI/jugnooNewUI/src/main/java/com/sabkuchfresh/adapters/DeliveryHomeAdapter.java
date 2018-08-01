@@ -53,7 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -1990,18 +1990,18 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public class ViewNewOrderStatus extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.tv_order_restaurant)
+        @BindView(R.id.tv_order_restaurant)
         TextView tvOrderRestaurant;
-        @Bind(R.id.tv_order_id)
+        @BindView(R.id.tv_order_id)
         TextView tvOrderId;
-        @Bind(R.id.tv_order_status)
+        @BindView(R.id.tv_order_status)
         TextView tvOrderStatus;
-        @Bind(R.id.tv_order_time)
+        @BindView(R.id.tv_order_time)
         TextView tvOrderTime;
-        @Bind(R.id.tv_order_description)
+        @BindView(R.id.tv_order_description)
         TextView tvOrderDescription;
 
-        @Bind(R.id.rlRootNewOrder)
+        @BindView(R.id.rlRootNewOrder)
         View rlRootNewOrder;
 
         public ViewNewOrderStatus(final View itemView, final ItemListener itemListener) {
@@ -2018,15 +2018,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     class ViewTitleCategory extends RecyclerView.ViewHolder {
-        @Bind(R.id.icon_title)
+        @BindView(R.id.icon_title)
         ImageView iconTitle;
-        @Bind(R.id.tv_cateogory_title)
+        @BindView(R.id.tv_cateogory_title)
         TextView tvCateogoryTitle;
-        @Bind(R.id.tv_category_arrow)
+        @BindView(R.id.tv_category_arrow)
         TextView tvCategoryArrow;
-        @Bind(R.id.iv_category_arrow)
+        @BindView(R.id.iv_category_arrow)
         ImageView ivCategoryArrow;
-        @Bind(R.id.rLCategory)
+        @BindView(R.id.rLCategory)
         RelativeLayout rLCategory;
 
         ViewTitleCategory(View view, final ItemListener itemListener) {
@@ -2042,7 +2042,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     class ViewSeeAll extends RecyclerView.ViewHolder {
-        @Bind(R.id.ll_see_all)
+        @BindView(R.id.ll_see_all)
         LinearLayout llSeeAll;
 
         ViewSeeAll(final View itemView, final ItemListener itemListener) {

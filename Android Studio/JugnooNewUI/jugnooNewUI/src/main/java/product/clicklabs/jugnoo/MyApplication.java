@@ -1,18 +1,21 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.fugu.constant.FuguAppConstant;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
@@ -20,6 +23,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.sabkuchfresh.fatafatchatpay.ChatCustomActionBroadCastReceiver;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
 import com.squareup.picasso.OkHttpDownloader;
@@ -47,7 +51,7 @@ import product.clicklabs.jugnoo.wallet.WalletCore;
 /**
  * Created by socomo20 on 8/22/15.
  */
-public class MyApplication extends Application {
+public class MyApplication extends MultiDexApplication {
 
     public static final String TAG = MyApplication.class
             .getSimpleName();
@@ -69,6 +73,7 @@ public class MyApplication extends Application {
 
     private Bus mBus;
     public Branch branch;
+    private BroadcastReceiver fuguChatCustomActionReceiver;
 
 
     @Override
@@ -140,6 +145,11 @@ public class MyApplication extends Application {
         ACTIVITY_NAME_ABOUT = getResources().getString(R.string.about_caps);
         ACTIVITY_NAME_JUGNOO_STAR = getResources().getString(R.string.jugnoo_star_caps, getString(R.string.app_name).toUpperCase());
         ACTIVITY_NAME_NOTIFICATION_SETTING = getResources().getString(R.string.set_preferences_caps);
+
+        fuguChatCustomActionReceiver = new ChatCustomActionBroadCastReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(FuguAppConstant.FUGU_CUSTOM_ACTION_SELECTED);
+        this.registerReceiver(fuguChatCustomActionReceiver, filter);
 
     }
 
@@ -386,14 +396,8 @@ public class MyApplication extends Application {
         return android.os.Build.MANUFACTURER + android.os.Build.MODEL;
     }
 
-    private LocationFetcher locationFetcher;
 
-    public LocationFetcher getLocationFetcher() {
-        if (locationFetcher == null) {
-            locationFetcher = new LocationFetcher(this);
-        }
-        return locationFetcher;
-    }
+
 
     private Toast toast;
 
@@ -460,5 +464,6 @@ public class MyApplication extends Application {
         }
         return picassoSingleton;
     }
+
 
 }
