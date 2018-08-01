@@ -34,17 +34,17 @@
     <string name="google_maps_api_key">AIzaSyByBfiSz9PmAdJbrGwbpPAugDgjjrxLa9s</string>
     <string name="google_maps_api_server_key">AIzaSyBHMjQS4DDlv_n6lWJE4rgZIm14jPHidDw</string>
     <string name="google_server_client_id">676585448141-f3dii9e8cv66dh004ncfvmsuk1d2bsln.apps.googleusercontent.com</string>
-    <string name="fb_app_id">""</string>
-    <string name="fb_client_token">""</string>
+    <string name="fb_app_id">231655867463744</string>
+    <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
     <string name="ak_login_protocol_scheme">ak782131025144439</string>
     <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
 
 
     <string name="operator_token">9672385cbae165f34516284950625e0b</string>
-    <string name="support_number">+2549023121121</string>
-    <string name="police_number">999</string>
-    <string name="facebook_page_id">""</string>
-    <string name="facebook_page_name">""</string>
+    <string name="support_number">+18559373733</string>
+    <string name="police_number">911</string>
+    <string name="facebook_page_id">1494351767251981</string>
+    <string name="facebook_page_name">TheNickelRide</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
@@ -53,20 +53,20 @@
 
     <integer name="show_login_bottom_bg">@integer/view_gone</integer>
     <color name="splash_logo_color">@color/text_color</color>
-    <dimen name="splash_logo_width">100dp</dimen>
-    <dimen name="splash_logo_height">100dp</dimen>
+    <dimen name="splash_logo_width">200dp</dimen>
+    <dimen name="splash_logo_height">200dp</dimen>
     <dimen name="splash_logo_top_margin">80dp</dimen>
     <integer name="show_splash_top_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bg">@integer/view_visible</integer>
 
     <!--Changed-->
-    <drawable name="splash_background_drawable">@color/white</drawable>
+    <drawable name="splash_background_drawable">#3a9eff</drawable>
     <drawable name="login_background_drawable">@color/white</drawable>
     <!---->
 
-    <drawable name="splash_logo_icon_drawable">@color/white</drawable>
-    <drawable name="login_logo_icon_drawable">@color/white</drawable>
+    <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
+    <drawable name="login_logo_icon_drawable">@drawable/ic_login_logo</drawable>
 
     <integer name="show_social_login">@integer/view_visible</integer>
     <integer name="show_facebook_login">@integer/view_visible</integer>
@@ -94,7 +94,7 @@
     <string name="default_lang">en</string>
     <bool name="ride_feedback_rating_bar">true</bool>
     <!--default support email for SupportMailActivity if not coming from server-->
-    <string name="default_support_email">support@nickelride.in</string>
+    <string name="default_support_email">it@thenickelride.com</string>
     <integer name="send_invites_visibility">@integer/view_gone</integer>
     <bool name="specified_country_search_result_enabled">false</bool>
     <bool name="show_call_me_option_in_otp">false</bool>
@@ -107,7 +107,7 @@
 
 
     <!--hardcode/default values-->
-    <string name="facebook_page_url">https://www.facebook.com/jugnoose</string>
+    <string name="facebook_page_url">https://www.facebook.com/TheNickelRide</string>
     <!--Other things to change
         1. google-services.json
         2. Doc entity in strings.xml
@@ -122,6 +122,9 @@
         <item>es</item>
     </string-array>
 
+
+    <!--<color name="splash_terms_color">@color/white</color>-->
+    <!--<color name="splash_text_OR_text_color">@color/white</color>-->
 
     <integer name="scale_type">@integer/fit_xy</integer>
 </resources>
