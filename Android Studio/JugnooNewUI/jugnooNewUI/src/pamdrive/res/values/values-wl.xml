@@ -21,6 +21,10 @@
             notification_icon
     -->
 
+
+    <string name="facebook_page_url">https://www.facebook.com/PamDrive</string>
+    <string name="default_lang">en</string>
+
     <string name="app_name">Pamdrive</string>
 
     <string name="google_maps_api_key">AIzaSyCT07NoO3oS97dU5Ke_S4EjeGIqQPkl_-g</string>
@@ -30,9 +34,6 @@
     <string name="fb_client_token">fb12020faa0c4db6bca1546ba355fc21</string>
     <string name="ak_login_protocol_scheme">ak782131025144439</string>
     <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
-
-
-
 
 
     <string name="operator_token">0af5e0e5e6ab898cc714f9a5b5545451</string>
@@ -45,6 +46,9 @@
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
     <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
     <bool name="force_open_autos">true</bool>
+
+    <integer name="show_login_bottom_bg">@integer/view_gone</integer>
+    <color name="splash_logo_color">@color/text_color</color>
 
 
     <dimen name="splash_logo_width">150dp</dimen>
@@ -68,7 +72,7 @@
     <string name="web_landing_page">https://pamdrive.in</string>
     <string name="smart_url">http://smarturl.it/pamdrive</string>
     <string name="db_name">pamdrive_database</string>
-    <string name="terms_of_use_url">https://www.pamdrive.in/#/terms</string>
+    <string name="terms_of_use_url">https://pamdrive.com/terms.php</string>
     <string name="app_domain">pamdrive.in</string>
     <string name="app_host_name">www.pamdrive.in</string>
     <string name="branch_domain">share.pamdrive.in</string>
@@ -90,4 +94,7 @@
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
     <string name="profile_saved_location_text">@string/address_book</string>
     <integer name="show_invite_friends">@integer/view_gone</integer>
+    <bool name="wallet_amount_sidemenu">false</bool>
+    <bool name="show_jugnoo_promo_icon">false</bool>
+    <integer name="scale_type">@integer/fit_xy</integer>
 </resources>
