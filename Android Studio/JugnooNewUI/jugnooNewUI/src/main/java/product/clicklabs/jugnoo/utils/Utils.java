@@ -432,7 +432,7 @@ public class Utils implements GAAction, GACategory{
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                Log.e("KeyHash", ","
+                android.util.Log.e("KeyHash", ","
                     + Base64.encodeToString(md.digest(),
                     Base64.DEFAULT));
             }
