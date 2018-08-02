@@ -268,13 +268,14 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_white_grey_selector"
                     android:textSize="@dimen/text_size_34"
-                    app:typekitFont="maven" />
+                    app:typekitFont="maven"
+                    android:layout_marginBottom="10px"/>
 
                 <TextView
                     android:id="@+id/tvSkip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/px_32"
+                    android:layout_marginTop="22px"
                     android:text="@string/skip_this_step"
                     android:textColor="@color/layout_login_signup_text_color"
                     android:textSize="@dimen/px_30"

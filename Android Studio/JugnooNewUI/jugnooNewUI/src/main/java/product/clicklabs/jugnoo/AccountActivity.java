@@ -103,7 +103,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 	TextView textViewScroll;
 
     ImageView imageViewProfileImage;
-	EditText editTextUserName, editTextLastName, editTextEmail, editTextPhone;
+	EditText editTextUserName, editTextEmail, editTextPhone;
 	TextView tvCountryCode;
     LinearLayout linearLayoutPhone;
     ImageView imageViewEditProfile, ivEditPhone, imageViewEditProfileSave;
@@ -184,7 +184,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         imageViewProfileImage = (ImageView) findViewById(R.id.imageViewProfileImage);
 
 		editTextUserName = (EditText) findViewById(R.id.editTextUserName); editTextUserName.setTypeface(Fonts.mavenMedium(this));
-        editTextLastName = (EditText) findViewById(R.id.editTextLastName); editTextLastName.setTypeface(Fonts.mavenMedium(this));
 		editTextEmail = (EditText) findViewById(R.id.editTextEmail); editTextEmail.setTypeface(Fonts.mavenMedium(this));
 		editTextPhone = (EditText) findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.mavenMedium(this));
         tvCountryCode = (TextView) findViewById(R.id.tvCountryCode); tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
@@ -433,7 +432,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         imageViewProfileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                permissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (editTextUserName.isEnabled()) {
+                    permissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }
             }
         });
 
@@ -446,9 +447,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     editTextEmail.setError(null);
                     editTextPhone.setError(null);
                     if (editTextUserName.isEnabled()) {
-                        String first = editTextUserName.getText().toString().trim();
-                        String last = editTextLastName.getText().toString().trim();
-                        String nameChanged = (first + " " + last).trim();
+                        String nameChanged = editTextUserName.getText().toString().trim();
                         String emailChanged = editTextEmail.getText().toString().trim();
                         String phoneNoChanged = editTextPhone.getText().toString().trim();
                         String countryCode = tvCountryCode.getText().toString();
@@ -456,12 +455,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                             Utils.showToast(AccountActivity.this, getString(R.string.please_select_country_code));
                             return;
                         }
-                        if(TextUtils.isEmpty(first)){
-                            Utils.showToast(AccountActivity.this, getString(R.string.please_enter_first_name));
-                            return;
-                        }
-                        if(TextUtils.isEmpty(last)){
-                            Utils.showToast(AccountActivity.this, getString(R.string.please_enter_last_name));
+                        if(TextUtils.isEmpty(nameChanged)){
+                            Utils.showToast(AccountActivity.this, getString(R.string.please_enter_name));
                             return;
                         }
                         phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged, countryCode);
@@ -494,8 +489,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         editTextUserName.setSelection(editTextUserName.getText().length());
                         editTextUserName.setEnabled(true);
                         editTextUserName.setBackgroundResource(R.drawable.bg_white_orange_bb);
-                        editTextLastName.setEnabled(true);
-                        editTextLastName.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         editTextEmail.setEnabled(true);
                         editTextEmail.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         editTextPhone.setEnabled(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1);
@@ -517,15 +510,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         });
 
         editTextUserName.setOnEditorActionListener(new OnEditorActionListener() {
-
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                editTextLastName.setSelection(editTextLastName.getText().length());
-                editTextLastName.requestFocus();
-                return true;
-            }
-        });
-        editTextLastName.setOnEditorActionListener(new OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
@@ -914,7 +898,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     public void setUserData(){
 		try {
 			editTextUserName.setEnabled(false); editTextUserName.setBackgroundResource(R.drawable.background_white);
-            editTextLastName.setEnabled(false); editTextLastName.setBackgroundResource(R.drawable.background_white);
             editTextEmail.setEnabled(false); editTextEmail.setBackgroundResource(R.drawable.background_white);
             editTextPhone.setEnabled(false); linearLayoutPhone.setBackgroundResource(R.drawable.background_white);
             tvCountryCode.setEnabled(false); tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
@@ -952,17 +935,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
     public void setUserNameToFields() {
         if(!Data.userData.userName.equalsIgnoreCase("User")) {
-			int lastIndexOfSpace = Data.userData.userName.lastIndexOf(" ");
-			if(lastIndexOfSpace > -1) {
-				editTextUserName.setText(Data.userData.userName.substring(0, lastIndexOfSpace));
-				editTextLastName.setText(Data.userData.userName.substring(lastIndexOfSpace+1, Data.userData.userName.length()));
-			} else {
-				editTextUserName.setText(Data.userData.userName);
-				editTextLastName.setText("");
-			}
+            editTextUserName.setText(Data.userData.userName);
 		} else {
 			editTextUserName.setText("");
-			editTextLastName.setText("");
 		}
     }
 
@@ -1139,12 +1114,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
 	private void updateUserProfileImage(final MultipartTypedOutput params){
         params.addPart(Constants.KEY_CLIENT_ID, new TypedString(Config.getAutosClientId()));
-        params.addPart(Constants.KEY_ACCESS_TOKEN, new TypedString(Data.userData.accessToken));
         new ApiCommon<SettleUserDebt>(this).showLoader(true).execute(params, ApiName.UPDATE_USER_PROFILE_MULTIPART, new APICommonCallback<SettleUserDebt>() {
             @Override
             public void onSuccess(SettleUserDebt settleUserDebt, String message, int flag) {
                 Utils.showToast(AccountActivity.this, message);
                 reloadProfileAPI(AccountActivity.this);
+                updateMenuBar = true;
             }
 
             @Override
@@ -1180,6 +1155,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     String userName = jObj.getString("user_name");
                                     String email = jObj.getString("user_email");
                                     String phoneNo = jObj.getString("phone_no");
+                                    String userImage = jObj.optString("user_image", Data.userData.userImage);
                                     String countryCode = jObj.optString(Constants.KEY_COUNTRY_CODE, Data.userData.getCountryCode());
                                     if(!countryCode.contains("+")){
                                         countryCode = "+"+countryCode;
@@ -1190,6 +1166,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     Data.userData.userName = userName;
                                     Data.userData.phoneNo = phoneNo;
                                     Data.userData.userEmail = email;
+                                    Data.userData.userImage = userImage;
                                     Data.userData.setCountryCode(countryCode);
                                     Data.userData.emailVerificationStatus = emailVerificationStatus;
 
