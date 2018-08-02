@@ -29,7 +29,7 @@
             notification_icon
     -->
 
-    <string name="app_name">NickelRide</string>
+    <string name="app_name">Nickel Ride</string>
 
     <string name="google_maps_api_key">AIzaSyByBfiSz9PmAdJbrGwbpPAugDgjjrxLa9s</string>
     <string name="google_maps_api_server_key">AIzaSyBHMjQS4DDlv_n6lWJE4rgZIm14jPHidDw</string>
@@ -104,6 +104,13 @@
     <bool name="wallet_amount_sidemenu">false</bool>
     <bool name="show_jugnoo_promo_icon">false</bool>
     <integer name="show_invite_friends">@integer/view_gone</integer>
+
+    <!--for bottom sliding panel-->
+    <bool name="show_sliding_bottom_fragment">false</bool>
+    <integer name="show_sliding_panel_fare_offer_tab">@integer/view_gone</integer>
+
+    <!--show cahs on ride summary-->
+    <integer name="show_amount_on_ride_summary">@integer/view_gone</integer>
 
 
     <!--hardcode/default values-->
