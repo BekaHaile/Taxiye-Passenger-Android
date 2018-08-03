@@ -38,7 +38,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayoutWalletContainer"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="26px"
@@ -98,22 +98,18 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/relativeLayoutStripeCard"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/nl_button_size"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:layout_marginStart="36px"
                 android:layout_marginEnd="36px"
                 android:layout_marginTop="10px"
                 android:visibility="visible"
 
                 >
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="100px"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/imageViewRadioStripeCard"
@@ -138,9 +134,8 @@
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_34"/>
 
-                </LinearLayout>
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutMobikwik"

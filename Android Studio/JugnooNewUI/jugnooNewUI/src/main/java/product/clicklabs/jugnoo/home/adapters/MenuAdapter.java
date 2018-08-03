@@ -192,7 +192,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     try {
                         holder.textViewValue.setText(!activity.getResources().getBoolean(R.bool.wallet_amount_sidemenu)? Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance()):String.format(activity.getResources()
                                 .getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance())));
-                        holder.textViewValue.setVisibility(View.VISIBLE);
+                        holder.textViewValue.setVisibility(View.GONE);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
