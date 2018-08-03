@@ -1868,6 +1868,10 @@
     <string name="location_accuracy_is_low">"Die Ortsgenauigkeit ist niedrig. Sind Sie sicher, dass Sie ein Auto anfordern möchten, um Sie an diesem Ort abzuholen? "</string>
     <string name="the_pickup_location_you_have_set_is_different">"Der von Ihnen eingestellte Abholort unterscheidet sich von Ihrem aktuellen Standort. Sind Sie sicher, dass dies Ihr Abholort ist? "</string>
     <string name="number_should_not_start_with_zero">Die Telefonnummer sollte nicht mit 0 beginnen.</string>
+    <string name="first_name">Vorname</string>
+    <string name="last_name">Familienname</string>
+    <string name="please_enter_first_name">Bitte geben Sie den Vornamen ein</string>
+    <string name="please_enter_last_name">Bitte geben Sie den Nachnamen ein</string>
 
 
 </resources>

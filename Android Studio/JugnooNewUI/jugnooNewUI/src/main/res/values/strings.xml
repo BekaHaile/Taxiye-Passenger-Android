@@ -1932,5 +1932,9 @@
     <string name="notification_channel_description_default">Latest Updates</string>
     <string name="grant_contact_permission">You will have to grant contacts permission to view your contacts here.Please Press the button below to proceed.</string>
     <string name="grant_permission">Grant Permission</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="please_enter_first_name">Please enter first name</string>
+    <string name="please_enter_last_name">Please enter last name</string>
 
 </resources>

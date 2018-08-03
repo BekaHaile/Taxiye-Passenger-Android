@@ -37,6 +37,7 @@ import retrofit.http.POST;
 import retrofit.http.Part;
 import retrofit.http.PartMap;
 import retrofit.http.QueryMap;
+import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedInput;
 
@@ -311,6 +312,9 @@ public interface ApiService {
     @POST("/update_user_profile")
     void updateUserProfile(@FieldMap Map<String, String> params,
                                Callback<SettleUserDebt> callback);
+    @POST("/update_user_profile")
+    void updateUserProfile(@Body MultipartTypedOutput params,
+                            Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
     @POST(("/change_contact_number_using_fb"))

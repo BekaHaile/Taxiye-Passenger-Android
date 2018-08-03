@@ -127,7 +127,10 @@ public class MenuBar {
 		float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
 		if(activity instanceof HomeActivity && ((HomeActivity)activity).activityResumed){
             if(!"".equalsIgnoreCase(Data.userData.userImage)) {
-                Picasso.with(activity).load(Data.userData.userImage).placeholder(ContextCompat.getDrawable(activity, R.drawable.ic_profile_img_placeholder)).transform(new CircleTransform()).error(ContextCompat.getDrawable(activity, R.drawable.ic_profile_img_placeholder))
+                Picasso.with(activity).load(Data.userData.userImage)
+						.placeholder(ContextCompat.getDrawable(activity, R.drawable.ic_profile_img_placeholder))
+						.transform(new CircleTransform())
+						.error(ContextCompat.getDrawable(activity, R.drawable.ic_profile_img_placeholder))
                         .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop()
                         .into(imageViewProfile);
             }else{
@@ -136,7 +139,10 @@ public class MenuBar {
         }
         else{
             if(!"".equalsIgnoreCase(Data.userData.userImage)) {
-                Picasso.with(activity).load(Data.userData.userImage).placeholder(ContextCompat.getDrawable(activity, R.drawable.ic_profile_img_placeholder)).transform(new CircleTransform()).error(ContextCompat.getDrawable(activity,R.drawable.ic_profile_img_placeholder))
+                Picasso.with(activity).load(Data.userData.userImage)
+						.placeholder(ContextCompat.getDrawable(activity, R.drawable.ic_profile_img_placeholder))
+						.transform(new CircleTransform())
+						.error(ContextCompat.getDrawable(activity,R.drawable.ic_profile_img_placeholder))
                         .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop()
                         .into(imageViewProfile);
             }

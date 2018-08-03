@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,9 +31,15 @@ import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.PhoneNumber;
 import com.google.gson.Gson;
+import com.picker.image.model.ImageEntry;
+import com.picker.image.util.Picker;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
+import com.sabkuchfresh.utils.ImageCompression;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -56,6 +63,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.dialogs.JeanieIntroDialog;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogActivity;
+import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.TransactionUtils;
@@ -72,12 +80,17 @@ import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedByteArray;
+import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
 
 
 public class AccountActivity extends BaseFragmentActivity implements GAAction, GACategory, OnCountryPickerListener {
 
     private final String TAG = "View Account";
+    private static final int REQ_CODE_IMAGE_PERMISSION = 1001;
+    private static final int REQUEST_CODE_SELECT_IMAGES=99;
 
 	LinearLayout relative;
 
@@ -128,11 +141,31 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     private TextView tvAbout;
     private TextView textViewAddressBook;
     private CountryPicker countryPicker;
+    private PermissionCommon permissionCommon;
+    private Picker picker;
+    private ImageCompression imageCompressionTask;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_account_user);
+
+        permissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+            @Override
+            public void permissionGranted(int requestCode) {
+                pickImages();
+            }
+
+            @Override
+            public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                return true;
+            }
+
+            @Override
+            public void onRationalRequestIntercepted(int requestCode) {
+
+            }
+        });
 
 		relative = (LinearLayout) findViewById(R.id.relative);
 		new ASSL(this, relative, 1134, 720, false);
@@ -396,6 +429,15 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
         });
 
+        imageViewProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editTextUserName.isEnabled()) {
+                    permissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                }
+            }
+        });
+
         imageViewEditProfileSave.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -411,6 +453,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         String countryCode = tvCountryCode.getText().toString();
                         if(TextUtils.isEmpty(countryCode)){
                             Utils.showToast(AccountActivity.this, getString(R.string.please_select_country_code));
+                            return;
+                        }
+                        if(TextUtils.isEmpty(nameChanged)){
+                            Utils.showToast(AccountActivity.this, getString(R.string.please_enter_name));
                             return;
                         }
                         phoneNoChanged = Utils.retrievePhoneNumberTenChars(phoneNoChanged, countryCode);
@@ -859,11 +905,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             editTextEmail.setError(null);
             editTextPhone.setError(null);
 
-            if(!Data.userData.userName.equalsIgnoreCase("User")) {
-                editTextUserName.setText(Data.userData.userName);
-            } else {
-                editTextUserName.setText("");
-            }
+            setUserNameToFields();
             if(!Data.userData.userEmail.contains("@facebook.com") && !Data.userData.userEmail.toLowerCase().startsWith("guest")
                     && (!Data.userData.userEmail.contains("@app.jugnoo.in"))) {
                 editTextEmail.setText(Data.userData.userEmail);
@@ -873,23 +915,34 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 			editTextPhone.setText(Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo, Data.userData.getCountryCode()));
             tvCountryCode.setText(Data.userData.getCountryCode());
 
-			try{
-				if(!"".equalsIgnoreCase(Data.userData.userImage)){
-                    float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-					Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform())
-                            .resize((int)(160f * minRatio), (int)(160f * minRatio)).centerCrop().into(imageViewProfileImage);
-				}
-			} catch(Exception e){
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
+            setUserImage();
+        } catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+    public void setUserImage() {
+        try {
+            if (!"".equalsIgnoreCase(Data.userData.userImage)) {
+                float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                Picasso.with(this).load(Data.userData.userImage).transform(new CircleTransform())
+                        .resize((int) (160f * minRatio), (int) (160f * minRatio)).centerCrop().into(imageViewProfileImage);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setUserNameToFields() {
+        if(!Data.userData.userName.equalsIgnoreCase("User")) {
+            editTextUserName.setText(Data.userData.userName);
+		} else {
+			editTextUserName.setText("");
+		}
+    }
 
 
-	public void performBackPressed(){
+    public void performBackPressed(){
         if(getSupportFragmentManager().getBackStackEntryCount() > 0){
             openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, false);
         }
@@ -1018,9 +1071,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 updateSubscriptionMessage(updatedName);
                                 Data.userData.userName = updatedName;
                                 Data.userData.userEmail = updatedEmail;
-                                if(!Data.userData.userName.equalsIgnoreCase("User")) {
-                                    editTextUserName.setText(Data.userData.userName);
-                                }
+                                setUserNameToFields();
                                 if(!Data.userData.userEmail.contains("@facebook.com") && !Data.userData.userEmail.toLowerCase().startsWith("guest")
                                         && (!Data.userData.userEmail.contains("@app.jugnoo.in"))) {
                                     editTextEmail.setText(Data.userData.userEmail);
@@ -1061,6 +1112,23 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
 	}
 
+	private void updateUserProfileImage(final MultipartTypedOutput params){
+        params.addPart(Constants.KEY_CLIENT_ID, new TypedString(Config.getAutosClientId()));
+        new ApiCommon<SettleUserDebt>(this).showLoader(true).execute(params, ApiName.UPDATE_USER_PROFILE_MULTIPART, new APICommonCallback<SettleUserDebt>() {
+            @Override
+            public void onSuccess(SettleUserDebt settleUserDebt, String message, int flag) {
+                Utils.showToast(AccountActivity.this, message);
+                reloadProfileAPI(AccountActivity.this);
+                updateMenuBar = true;
+            }
+
+            @Override
+            public boolean onError(SettleUserDebt settleUserDebt, String message, int flag) {
+                return false;
+            }
+        });
+    }
+
 
 
 	public void reloadProfileAPI(final Activity activity) {
@@ -1087,6 +1155,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     String userName = jObj.getString("user_name");
                                     String email = jObj.getString("user_email");
                                     String phoneNo = jObj.getString("phone_no");
+                                    String userImage = jObj.optString("user_image", Data.userData.userImage);
                                     String countryCode = jObj.optString(Constants.KEY_COUNTRY_CODE, Data.userData.getCountryCode());
                                     if(!countryCode.contains("+")){
                                         countryCode = "+"+countryCode;
@@ -1097,6 +1166,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     Data.userData.userName = userName;
                                     Data.userData.phoneNo = phoneNo;
                                     Data.userData.userEmail = email;
+                                    Data.userData.userImage = userImage;
                                     Data.userData.setCountryCode(countryCode);
                                     Data.userData.emailVerificationStatus = emailVerificationStatus;
 
@@ -1220,6 +1290,56 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 afterDataReceived(requestCode, resultCode, data);
             }
         },300);
+        if(requestCode== REQUEST_CODE_SELECT_IMAGES && resultCode==RESULT_OK){
+            compressImageAndUpload(data);
+        }
+    }
+
+    private void compressImageAndUpload(Intent data) {
+        if(data!=null && data.getSerializableExtra("imagesList")!=null) {
+			ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
+			if (images != null && images.size() != 0) {
+				final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
+
+				//Compress Images if any new added
+				ArrayList<String> imageEntries =null;
+				for(Object image:images){
+					if(image instanceof ImageEntry){
+						if(imageEntries==null)
+							imageEntries= new ArrayList<>();
+
+						imageEntries.add(((ImageEntry) image).path);
+					}
+				}
+
+				if(imageEntries!=null){
+					//upload feedback with new Images
+						imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
+							@Override
+							public void processFinish(ImageCompression.CompressedImageModel[] output) {
+
+								if (output != null) {
+									for (ImageCompression.CompressedImageModel file : output) {
+										if (file != null) {
+											multipartTypedOutput.addPart(Constants.KEY_UPDATED_USER_IMAGE, new TypedFile("image/*", file.getFile()));
+										}
+									}
+
+								}
+								//place order with images
+								updateUserProfileImage(multipartTypedOutput);
+							}
+
+							@Override
+							public void onError() {
+								DialogPopup.dismissLoadingDialog();
+
+							}
+						}, this);
+					imageCompressionTask.execute(imageEntries.toArray(new String[imageEntries.size()]));
+				}
+			}
+		}
     }
 
     private void afterDataReceived(int requestCode, int resultCode, Intent data){
@@ -1348,9 +1468,18 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     }
 
     @Override
-    public void onRequestPermissionsResult(final int requestCode,
-                                           final @NonNull String permissions[],
-                                           final @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        permissionCommon.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
+    private void pickImages() {
+        if(picker == null){
+            picker = new Picker.Builder(this, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.SINGLE_IMAGE).build();
+        }
+        picker.setLimit(1);
+        picker.startActivity(this,REQUEST_CODE_SELECT_IMAGES);
+
     }
 
     public void apiChangeContactNumberUsingFB(final Activity activity, final String fbAccessToken) {
