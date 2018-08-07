@@ -87,4 +87,5 @@
     <integer name="show_promo">@integer/view_gone</integer>
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
     <string name="profile_saved_location_text">@string/my_saved_locations</string>
+    <integer name="otp_via_call_enabled">0</integer>
 </resources>

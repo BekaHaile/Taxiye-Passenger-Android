@@ -256,6 +256,7 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
         textViewCounter.setText("0:10");
 
         startOTPTimer();
+        if(getResources().getInteger(R.integer.otp_via_call_enabled) == 1) {
             try {
                 if (!"".equalsIgnoreCase(Prefs.with(OTPConfirmScreen.this).getString(SP_KNOWLARITY_MISSED_CALL_NUMBER, ""))) {
                 } else {
@@ -271,6 +272,9 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
                 e.printStackTrace();
                 tvCallMe.setVisibility(View.GONE);
             }
+        } else {
+            tvCallMe.setVisibility(View.GONE);
+        }
 
         rlOTPTimer.setOnClickListener(new View.OnClickListener() {
             @Override
