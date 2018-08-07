@@ -302,10 +302,6 @@ public class JSONParser implements Constants {
 //                Prefs.with(context).save(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, "");
 //            }
 
-            Prefs.with(context).save(Constants.KEY_SUPPORT_EMAIL,
-                    userData.optString(Constants.KEY_SUPPORT_EMAIL, context.getString(R.string.default_support_email)));
-            Prefs.with(context).save(Constants.KEY_SUPPORT_EMAIL_SUBJECT,
-                    userData.optString(Constants.KEY_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject, context.getString(R.string.app_name))));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -386,6 +382,11 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(KEY_MAPS_API_SIGN, autoData.optInt(KEY_MAPS_API_SIGN, BuildConfig.MAPS_APIS_SIGN ? 1 : 0));
             Prefs.with(context).save(KEY_STRIPE_KEY_LIVE, autoData.optString(KEY_STRIPE_KEY_LIVE, BuildConfig.STRIPE_KEY_LIVE));
             Prefs.with(context).save(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, ""));
+
+            Prefs.with(context).save(Constants.KEY_SUPPORT_EMAIL,
+                    autoData.optString(Constants.KEY_SUPPORT_EMAIL, context.getString(R.string.default_support_email)));
+            Prefs.with(context).save(Constants.KEY_SUPPORT_EMAIL_SUBJECT,
+                    autoData.optString(Constants.KEY_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject, context.getString(R.string.app_name))));
         } catch (Exception e) {
             e.printStackTrace();
         }

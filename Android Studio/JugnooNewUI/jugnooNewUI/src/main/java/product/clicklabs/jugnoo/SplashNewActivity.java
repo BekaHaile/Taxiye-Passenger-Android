@@ -1409,8 +1409,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			e.printStackTrace();
 		}
 
-		logSome();
-		showLocationEnableDialog();
 
         if(Utils.isAppInstalled(this, POKEMON_GO_APP_PACKAGE)
                 && Prefs.with(this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, -1) == -1){
@@ -1547,9 +1545,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	}
 
 
-	private void logSome(){
-		Log.i("Splash", "temp");
-	}
 
 	private void animRightToLeft(RelativeLayout currentView, RelativeLayout newView, int duration){
 		Animation anim1 = AnimationUtils.loadAnimation(this, R.anim.right_in);
@@ -2742,6 +2737,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 	private void showLocationEnableDialog() {
+		if(!PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)){
+			return;
+		}
 		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
 		if (resp != ConnectionResult.SUCCESS) {
 			Log.e("Google Play Service Error ", "=" + resp);
