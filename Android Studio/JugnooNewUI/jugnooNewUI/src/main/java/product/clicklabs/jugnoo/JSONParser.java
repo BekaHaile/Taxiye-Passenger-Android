@@ -383,10 +383,10 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(KEY_STRIPE_KEY_LIVE, autoData.optString(KEY_STRIPE_KEY_LIVE, BuildConfig.STRIPE_KEY_LIVE));
             Prefs.with(context).save(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, ""));
 
-            Prefs.with(context).save(Constants.KEY_SUPPORT_EMAIL,
-                    autoData.optString(Constants.KEY_SUPPORT_EMAIL, context.getString(R.string.default_support_email)));
-            Prefs.with(context).save(Constants.KEY_SUPPORT_EMAIL_SUBJECT,
-                    autoData.optString(Constants.KEY_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject, context.getString(R.string.app_name))));
+            Prefs.with(context).save(Constants.KEY_CUSTOMER_SUPPORT_EMAIL,
+                    autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_EMAIL, context.getString(R.string.default_support_email)));
+            Prefs.with(context).save(Constants.KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT,
+                    autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject, context.getString(R.string.app_name))));
         } catch (Exception e) {
             e.printStackTrace();
         }

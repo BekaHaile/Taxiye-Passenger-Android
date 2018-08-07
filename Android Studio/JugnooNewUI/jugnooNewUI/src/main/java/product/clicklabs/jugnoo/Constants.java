@@ -887,8 +887,8 @@ public interface Constants {
     String KEY_REVERSE_BID_TIME_INTERVAL = "reverse_bid_time_interval";
     String KEY_CREATED_AT = "created_at";
     String KEY_DISTANCE_UNIT = "distance_unit";
-    String KEY_SUPPORT_EMAIL = "support_email";
-    String KEY_SUPPORT_EMAIL_SUBJECT = "support_email_subject";
+    String KEY_CUSTOMER_SUPPORT_EMAIL = "customer_support_email";
+    String KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT = "customer_support_email_subject";
     String KEY_INVOICE_ICON = "invoice_icon";
     String KEY_MARKER_ICON = "marker_icon";
     String KEY_FUGU_APP_KEY = "fugu_app_key";

@@ -65,9 +65,9 @@ public class SupportMailActivity extends BaseAppCompatActivity implements View.O
 				}
 				if(Data.userData != null) {
 					Utils.openMailIntent(this,
-							new String[]{Prefs.with(this).getString(Constants.KEY_SUPPORT_EMAIL,
+							new String[]{Prefs.with(this).getString(Constants.KEY_CUSTOMER_SUPPORT_EMAIL,
 									getString(R.string.default_support_email))},
-							Prefs.with(this).getString(Constants.KEY_SUPPORT_EMAIL_SUBJECT,
+							Prefs.with(this).getString(Constants.KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT,
 									getString(R.string.support_mail_subject, getString(R.string.app_name))),
 							etMessage.getText().toString().trim());
 					etMessage.setText("");
