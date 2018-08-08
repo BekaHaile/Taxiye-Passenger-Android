@@ -1078,6 +1078,17 @@ public class Utils implements GAAction, GACategory{
 		return (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
 	}
 
+	public static String getCurrencySymbol(String currencyCode) {
+		if (TextUtils.isEmpty(currencyCode)) {
+			currencyCode = "INR";
+		} else if(currencyCode.equalsIgnoreCase("BMD") || currencyCode.equalsIgnoreCase("TTD")){
+			return "$";
+		}
+		Currency currency = Currency.getInstance(currencyCode);
+		return currency.getSymbol();
+	}
+
+
 	private static NumberFormat currencyNumberFormat = null;
 	public static String formatCurrencyValue(String currency, double value){
 		if(currencyNumberFormat == null){

@@ -185,6 +185,7 @@ import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
+import product.clicklabs.jugnoo.home.dialogs.DriverTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
@@ -328,7 +329,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     ImageView imageViewInRideDriver;
     TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating;
     RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm;
-    Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver;
+    Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver,buttonTipDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat, relativeLayoutTotalFare;
     TextView textViewIRPaymentOptionValue;
     ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm;
@@ -416,6 +417,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     LocationFetcher highSpeedAccuracyLF = null;
 
     PromoCoupon promoCouponSelectedForRide;
+    private DriverTipDialog driverTipDialog;
 
 
     public static final long LOCATION_UPDATE_TIME_PERIOD = 1 * 10000; //in milliseconds
@@ -813,6 +815,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         buttonAddMoneyToWallet.setTypeface(Fonts.mavenRegular(this));
         buttonCallDriver = (Button) findViewById(R.id.buttonCallDriver);
         buttonCallDriver.setTypeface(Fonts.mavenRegular(this));
+        buttonTipDriver = (Button) findViewById(R.id.buttonTipDriver);
+        buttonTipDriver.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
@@ -1454,6 +1458,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 Utils.callDriverDuringRide(HomeActivity.this);
+            }
+        });
+        buttonTipDriver.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                driverTipDialog = new DriverTipDialog(HomeActivity.this, new DriverTipDialog.Callback() {
+                    @Override
+                    public void onConfirmed(Double amount) {
+                        //call api
+                    }
+
+                    @Override
+                    public void onCancelled() {
+
+                    }
+                },"USD");
+                driverTipDialog.showPriorityTipDialog(5.0);
+
             }
         });
 
