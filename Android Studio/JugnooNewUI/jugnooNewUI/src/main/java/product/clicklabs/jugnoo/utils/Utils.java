@@ -386,6 +386,9 @@ public class Utils implements GAAction, GACategory{
 
 
     public static String getCountryCode(Context context) {
+		if(context.getResources().getInteger(R.integer.apply_default_country_code) == 1){
+			return context.getString(R.string.default_country_code);
+		}
 		Country country = CountryPicker.getCountryFromSIM(context);
 		if (country != null) {
 			return country.getDialCode();
@@ -413,6 +416,9 @@ public class Utils implements GAAction, GACategory{
 	}
 
 	public static String getSimCountryIso(Context context) {
+		if(context.getResources().getInteger(R.integer.apply_default_country_code) == 1){
+			return context.getString(R.string.default_country_iso);
+		}
 		Country country = CountryPicker.getCountryFromSIM(context);
 		if (country != null) {
 			return country.getCode();
