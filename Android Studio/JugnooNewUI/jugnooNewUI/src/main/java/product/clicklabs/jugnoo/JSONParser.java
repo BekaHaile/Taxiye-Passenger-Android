@@ -387,6 +387,8 @@ public class JSONParser implements Constants {
                     autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_EMAIL, context.getString(R.string.default_support_email)));
             Prefs.with(context).save(Constants.KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT,
                     autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject, context.getString(R.string.app_name))));
+
+            Utils.setCurrencyPrecision(context, autoData.optInt(Constants.KEY_CURRENCY_PRECISION, 0));
         } catch (Exception e) {
             e.printStackTrace();
         }

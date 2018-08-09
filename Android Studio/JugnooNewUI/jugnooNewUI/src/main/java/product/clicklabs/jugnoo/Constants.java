@@ -916,4 +916,5 @@ public interface Constants {
     String KEY_LOCALE = "locale";
     String KEY_TOLL_CHARGE = "toll_charge";
     String KEY_CUSTOMER_SUPPORT_NUMBER = "customer_support_number";
+    String KEY_CURRENCY_PRECISION = "currency_precision";
 }

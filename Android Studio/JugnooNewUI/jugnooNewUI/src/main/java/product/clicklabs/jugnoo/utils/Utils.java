@@ -61,6 +61,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.math.RoundingMode;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -1069,16 +1070,34 @@ public class Utils implements GAAction, GACategory{
 		return (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
 	}
 
+	private static NumberFormat currencyNumberFormat = null;
 	public static String formatCurrencyValue(String currency, double value){
+		if(currencyNumberFormat == null){
+			int precision = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CURRENCY_PRECISION, 0);
+			currencyNumberFormat = NumberFormat.getCurrencyInstance(MyApplication.getInstance().getCurrentLocale());
+			currencyNumberFormat.setMinimumFractionDigits(precision);
+			currencyNumberFormat.setMaximumFractionDigits(precision);
+			currencyNumberFormat.setRoundingMode(RoundingMode.HALF_UP);
+			currencyNumberFormat.setGroupingUsed(false);
+		}
 		if(TextUtils.isEmpty(currency)){
 			currency = "INR";
-		} else if(currency.equalsIgnoreCase("BMD") || currency.equalsIgnoreCase("TTD")){
-			int digits = Currency.getInstance(currency).getDefaultFractionDigits();
-			return String.format("%s%."+digits+"f", "$", value);
 		}
-		NumberFormat format = NumberFormat.getCurrencyInstance(MyApplication.getInstance().getCurrentLocale());
-		format.setCurrency(Currency.getInstance(currency));
-		return format.format(value);
+		currencyNumberFormat.setCurrency(Currency.getInstance(currency));
+		String result = currencyNumberFormat.format(value);
+
+		result = result.replaceFirst("\\s", "");
+		result = result.replace("BMD", "$");
+		result = result.replace("TTD", "$");
+		return result;
+
+//		else if(currency.equalsIgnoreCase("BMD") || currency.equalsIgnoreCase("TTD")){
+//			int digits = Currency.getInstance(currency).getDefaultFractionDigits();
+//			return String.format("%s%."+digits+"f", "$", value);
+//		}
+//		NumberFormat format = NumberFormat.getCurrencyInstance(MyApplication.getInstance().getCurrentLocale());
+//		format.setCurrency(Currency.getInstance(currency));
+//		return format.format(value);
 	}
 	public static String formatCurrencyValue(String currency, String value){
 		try {
@@ -1104,6 +1123,31 @@ public class Utils implements GAAction, GACategory{
 		activity.startActivity(Intent.createChooser(email, activity.getString(R.string.choose_email_client)));
 	}
 
+	private static NumberFormat numberFormat = null;
+	private static void initNumberFormat(){
+		int precision = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CURRENCY_PRECISION, 0);
+		numberFormat = NumberFormat.getInstance();
+		numberFormat.setMinimumFractionDigits(precision);
+		numberFormat.setMaximumFractionDigits(precision);
+		numberFormat.setRoundingMode(RoundingMode.HALF_UP);
+		numberFormat.setGroupingUsed(false);
+	}
+	public static void setCurrencyPrecision(Context context, int precision){
+		Prefs.with(context).save(Constants.KEY_CURRENCY_PRECISION, precision);
+		numberFormat = null;
+		currencyNumberFormat = null;
+	}
+	public static double currencyPrecision(double value) {
+		if(numberFormat == null){
+			initNumberFormat();
+		}
+		String result = numberFormat.format(value);
+		if(numberFormat.getMaximumFractionDigits() > 0){
+			return Double.parseDouble(result);
+		} else {
+			return Integer.parseInt(result);
+		}
+	}
 
 }
 

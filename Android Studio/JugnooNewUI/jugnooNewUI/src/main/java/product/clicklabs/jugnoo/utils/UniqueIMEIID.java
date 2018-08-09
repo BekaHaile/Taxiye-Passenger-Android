@@ -9,6 +9,8 @@ import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import product.clicklabs.jugnoo.BuildConfig;
+
 public class UniqueIMEIID {
 
 
@@ -38,11 +40,13 @@ public class UniqueIMEIID {
 		}
 
 
-		androidSecureId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-		if(!TextUtils.isEmpty(imei))return imei;
-		if(!TextUtils.isEmpty(serial))return serial;
+		String suffix = BuildConfig.DEBUG ? "45jio":"";
 
-		return androidSecureId;
+		androidSecureId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		if(!TextUtils.isEmpty(imei))return imei+suffix;
+		if(!TextUtils.isEmpty(serial))return serial+suffix;
+
+		return androidSecureId+suffix;
 
 
 
