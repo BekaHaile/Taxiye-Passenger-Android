@@ -31,8 +31,8 @@
     <string name="google_maps_api_server_key">AIzaSyCUEplvRmXQSo69R81Hc3aAysWr2aQWFZU</string>
     <string name="google_server_client_id">196730039656-0453s6v4p049c3c947tupnhnhql6dkj4.apps.googleusercontent.com</string>
     <string name="fb_app_id">405568536597172</string>
-    <string name="fb_client_token">fb12020faa0c4db6bca1546ba355fc21</string>
-    <string name="ak_login_protocol_scheme">ak782131025144439</string>
+    <string name="fb_client_token">9e4229d793d7dff3aa64205b710cd2a1</string>
+    <string name="ak_login_protocol_scheme">ak405568536597172</string>
     <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
 
 
@@ -79,7 +79,7 @@
     <string name="app_scheme">pamdrive</string>
 
     <string name="pictures_path">Pamdrive/Pamdrive Pictures</string>
-    <bool name="force_inhouse_login">true</bool>
+    <bool name="force_inhouse_login">false</bool>
     <bool name="force_mpesa_payment">false</bool>
     <integer name="show_about">@integer/view_visible</integer>
     <bool name="show_change_languge">false</bool>
