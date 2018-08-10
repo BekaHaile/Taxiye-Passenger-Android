@@ -1704,6 +1704,10 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				rlPhoneLogin.setVisibility(View.VISIBLE);
 				editTextPhoneNumber.setError(null);
 				editTextPhoneNumber.setText(Utils.retrievePhoneNumberTenChars(phoneNoToFillInInHouseLogin, Utils.getCountryCode(this)));
+				tvCountryCode.setText(Utils.getCountryCode(this));
+				if(editTextPhoneNumber.getText().length() == 0) {
+					editTextPhoneNumber.setText(Prefs.with(SplashNewActivity.this).getString(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE, ""));
+				}
 				animRightToLeft(rlLoginSignupNew, rlPhoneLogin, duration);
 
 				break;
@@ -2367,6 +2371,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_TERMS_OF_USE_URL, jObj.optString(Constants.KEY_TERMS_OF_USE_URL, getString(R.string.terms_of_use_url)));
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_SHOW_TERMS, jObj.optInt(Constants.KEY_SHOW_TERMS, 1));
+
+						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_CODE));
+						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE));
+						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_COUNTRY_ISO, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_ISO));
+
 
 						JSONParser.parseAndSetLocale(SplashNewActivity.this, jObj);
 						Locale locale = new Locale(LocaleHelper.getLanguage(activity));
