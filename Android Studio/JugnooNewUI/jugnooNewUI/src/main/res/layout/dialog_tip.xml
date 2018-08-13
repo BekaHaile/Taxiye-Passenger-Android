@@ -30,7 +30,7 @@
             android:layout_height="wrap_content">
 
             <product.clicklabs.jugnoo.widgets.PrefixedEditText
-                android:id="@+id/etCode"
+                android:id="@+id/etTipAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="15dp"

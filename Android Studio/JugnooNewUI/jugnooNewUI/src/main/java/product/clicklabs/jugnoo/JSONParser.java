@@ -1017,6 +1017,8 @@ public class JSONParser implements Constants {
             String currency = null;
             ArrayList<BidInfo> bidInfos = new ArrayList<>();
             String vehicleIconUrl = null;
+            Double tipAmount  = null;
+            boolean tipEnabled = Data.autoData!=null && Data.autoData.getAssignedDriverInfo()!=null && Data.autoData.getAssignedDriverInfo().isTipEnabled();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1083,7 +1085,8 @@ public class JSONParser implements Constants {
                             operatorId = jObject.optInt(KEY_OPERATOR_ID, 0);
                             currency = jObject.optString(KEY_CURRENCY);
                             vehicleIconUrl = jObject.optString(Constants.KEY_MARKER_ICON);
-
+                            tipAmount= jObject.optDouble(Constants.KEY_TIP_AMOUNT);
+                            tipEnabled= jObject.optBoolean(Constants.KEY_TIP_ENABLED,tipEnabled);
                             Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jObject.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
                             try {
@@ -1208,7 +1211,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipEnabled,tipAmount));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

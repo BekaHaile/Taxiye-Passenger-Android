@@ -185,7 +185,7 @@ import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
-import product.clicklabs.jugnoo.home.dialogs.DriverTipDialog;
+import product.clicklabs.jugnoo.home.dialogs.DriverTipInteractor;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
@@ -328,7 +328,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     LinearLayout linearLayoutInRideDriverInfo;
     ImageView imageViewInRideDriver;
     TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating;
-    RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm;
+    RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm,layoutAddedTip;
     Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver,buttonTipDriver;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat, relativeLayoutTotalFare;
     TextView textViewIRPaymentOptionValue;
@@ -417,7 +417,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     LocationFetcher highSpeedAccuracyLF = null;
 
     PromoCoupon promoCouponSelectedForRide;
-    private DriverTipDialog driverTipDialog;
+    private DriverTipInteractor driverTipInteractor;
 
 
     public static final long LOCATION_UPDATE_TIME_PERIOD = 1 * 10000; //in milliseconds
@@ -522,6 +522,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private RelativeLayout rlThumbsType;
     private LinearLayout llRatingFeedbackType;
+    private TextView tvTipAmountLabel,tvEditTip,tvRemoveTip;
 
     @SuppressLint("NewApi")
     @Override
@@ -811,6 +812,30 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide);
         buttonCancelRide.setTypeface(Fonts.mavenRegular(this));
+        layoutAddedTip = findViewById(R.id.layout_added_tip);
+        tvTipAmountLabel = findViewById(R.id.tvTipAmount);
+        tvTipAmountLabel.setTypeface(Fonts.mavenRegular(this));
+        tvEditTip = findViewById(R.id.tvEditTip);
+        tvEditTip.setTypeface(Fonts.mavenRegular(this));
+        tvRemoveTip = findViewById(R.id.tvRemoveTip);
+        tvRemoveTip.setTypeface(Fonts.mavenRegular(this));
+        View.OnClickListener tipClickListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()){
+                    case R.id.tvEditTip:
+                        showDriverTipDialog();
+                        break;
+                    case R.id.tvRemoveTip:
+                        getDriverTipInteractor().deleteTip();
+                        break;
+
+                }
+            }
+        };
+        tvEditTip.setOnClickListener(tipClickListener);
+        tvRemoveTip.setOnClickListener(tipClickListener);
+
         buttonAddMoneyToWallet = (Button) findViewById(R.id.buttonAddMoneyToWallet);
         buttonAddMoneyToWallet.setTypeface(Fonts.mavenRegular(this));
         buttonCallDriver = (Button) findViewById(R.id.buttonCallDriver);
@@ -1463,18 +1488,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         buttonTipDriver.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                driverTipDialog = new DriverTipDialog(HomeActivity.this, new DriverTipDialog.Callback() {
-                    @Override
-                    public void onConfirmed(Double amount) {
-                        //call api
-                    }
-
-                    @Override
-                    public void onCancelled() {
-
-                    }
-                },"USD");
-                driverTipDialog.showPriorityTipDialog(5.0);
+                showDriverTipDialog();
 
             }
         });
@@ -1842,6 +1856,46 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
+    }
+
+    private void showDriverTipDialog() {
+
+        if(Data.autoData==null || Data.autoData.getcEngagementId()==null || Data.autoData.getAssignedDriverInfo()==null
+            || Data.autoData.getAssignedDriverInfo().getCurrency()==null || !Data.autoData.getAssignedDriverInfo().isTipEnabled()){
+            return;
+        }
+
+        getDriverTipInteractor().showPriorityTipDialog( Data.autoData.getAssignedDriverInfo().getTipAmount(),Data.autoData.getAssignedDriverInfo().getCurrency());
+    }
+
+    private DriverTipInteractor getDriverTipInteractor() {
+        if(driverTipInteractor ==null){
+            driverTipInteractor = new DriverTipInteractor(HomeActivity.this, new DriverTipInteractor.Callback() {
+
+                @Override
+                public void onConfirmed(Double amount, String engagementId) {
+
+                    updateDriverTipUI(passengerScreenMode);
+                }
+
+                @Override
+                public void onCancelled() {
+
+                }
+            },Data.autoData.getcEngagementId());
+        }
+        return driverTipInteractor;
+    }
+
+    private void setAddedTipUI() {
+        if(Data.autoData!=null && Data.autoData.getAssignedDriverInfo()!=null
+          && Data.autoData.getAssignedDriverInfo().isTipEnabled() && Data.autoData.getAssignedDriverInfo().getTipAmount()!=null){
+            layoutAddedTip.setVisibility(View.VISIBLE);
+            tvTipAmountLabel.setText(getString(R.string.label_tip_added,
+            Utils.formatCurrencyValue(Data.autoData.getAssignedDriverInfo().getCurrency(),Data.autoData.getAssignedDriverInfo().getTipAmount())));
+        }else {
+            layoutAddedTip.setVisibility(View.GONE);
+        }
     }
 
     private void goodFeedbackViewType() {
@@ -3598,6 +3652,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 updateTopBar();
 
+                updateDriverTipUI(mode);
+
                 openPaytmRechargeDialog();
 
                 showReferAllDialog();
@@ -3629,6 +3685,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateDriverTipUI(PassengerScreenMode mode) {
+        if(mode==PassengerScreenMode.P_IN_RIDE && Data.autoData!=null &&
+                Data.autoData.getAssignedDriverInfo()!=null && Data.autoData.getAssignedDriverInfo().isTipEnabled()){
+            buttonTipDriver.setVisibility(View.VISIBLE);
+            setAddedTipUI();
+        }else{
+            driverTipInteractor = null;
+            layoutAddedTip.setVisibility(View.GONE);
+            buttonTipDriver.setVisibility(View.GONE);
+        }
+
     }
 
     public int updateRideEndPayment() {
@@ -7063,13 +7132,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             int operatorId = jObj.optInt(KEY_OPERATOR_ID, 0);
             String iconSet = jObj.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
             String currency = jObj.optString(KEY_CURRENCY);
+            Double tipAmount = jObj.optDouble(KEY_TIP_AMOUNT);
+            boolean tipEnabled = jObj.optBoolean(KEY_TIP_ENABLED,false);
             String vehicleIconUrl = jObj.optString(Constants.KEY_MARKER_ICON);
             Prefs.with(this).save(Constants.KEY_EMERGENCY_NO, jObj.optString(KEY_EMERGENCY_NO, getString(R.string.police_number)));
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
-                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl));
+                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipEnabled,tipAmount));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);

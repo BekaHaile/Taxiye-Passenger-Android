@@ -603,6 +603,10 @@ public interface ApiService {
     @POST("/select_the_bid")
     void selectTheBid(@FieldMap Map<String, String> params,
                                 Callback<FeedCommonResponse> callback);
+    @FormUrlEncoded
+    @POST("/edit_driver_tip")
+    void editTip(@FieldMap Map<String, String> params,
+                                Callback<FeedCommonResponse> callback);
 
     @FormUrlEncoded
     @POST("/add_card_to_customer_account")

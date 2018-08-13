@@ -18,9 +18,20 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
+
+import java.util.HashMap;
+
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Font;
@@ -32,7 +43,7 @@ import product.clicklabs.jugnoo.widgets.PrefixedEditText;
 /**
  * Created by socomo on 1/4/16.
  */
-public class DriverTipDialog {
+public class DriverTipInteractor {
 
     private Activity activity;
     private String currency;
@@ -40,27 +51,28 @@ public class DriverTipDialog {
     private Dialog driverTipDialog;
     private PrefixedEditText edtAmount;
     private Button actionButton;
+    private String engagementId;
 
     private static final Integer TAG_ACTION_EDIT = 0;
     private static final Integer TAG_ACTION_DONE = 1;
 
-    public DriverTipDialog(Activity activity,  Callback callback,String currency) {
+    public DriverTipInteractor(Activity activity, Callback callback,String engagementId) {
         this.activity = activity;
         this.callback = callback;
-        this.currency = currency;
+        this.engagementId = engagementId;
 
     }
 
 
 
-    public Dialog showPriorityTipDialog(Double tipValue){
+    public Dialog showPriorityTipDialog(Double tipValue,String currency){
         try {
 
             if(driverTipDialog==null){
                 driverTipDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
                 driverTipDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_TopInBottomOut;
                 driverTipDialog.setContentView(R.layout.dialog_tip);
-                edtAmount = driverTipDialog.findViewById(R.id.etCode);
+                edtAmount = driverTipDialog.findViewById(R.id.etTipAmount);
                 ((TextView)driverTipDialog.findViewById(R.id.tvTitle)).setTypeface(Fonts.mavenMedium(activity),Typeface.BOLD);
                 edtAmount.setTypeface(Fonts.mavenMedium(activity));
                 actionButton= driverTipDialog.findViewById(R.id.btn_done);
@@ -76,7 +88,11 @@ public class DriverTipDialog {
                             actionButton.setText(activity.getString(R.string.done));
                       }else{
 
-                            callback.onConfirmed(Double.parseDouble(edtAmount.getText().toString()));
+                            try {
+                                editTip(Double.parseDouble(edtAmount.getText().toString().trim()));
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
+                            }
 
                         }
                     }
@@ -124,7 +140,7 @@ public class DriverTipDialog {
 
 
     public interface Callback{
-        void onConfirmed(Double amount);
+        void onConfirmed(Double amount,String engagementId);
         void onCancelled();
     }
 
@@ -166,5 +182,62 @@ public class DriverTipDialog {
 
         }
     }
+
+
+    private void editTip(final Double amount){
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
+        params.put(Constants.KEY_TIP_AMOUNT, String.valueOf(amount));
+
+        new ApiCommon<>(activity).showLoader(true).execute(params, ApiName.EDIT_TIP,
+                new APICommonCallback<FeedCommonResponse>() {
+
+                    @Override
+                    public void onSuccess(final FeedCommonResponse response, String message, int flag) {
+                       Data.autoData.getAssignedDriverInfo().setTipAmount(amount);
+                        if(driverTipDialog!=null && driverTipDialog.isShowing())driverTipDialog.dismiss();
+                        callback.onConfirmed(amount,engagementId);
+
+                    }
+
+                    @Override
+                    public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        return false;
+                    }
+
+                });
+
+
+
+    }
+
+    public void deleteTip(){
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
+        params.put("is_delete","1");
+
+        new ApiCommon<>(activity).showLoader(true).execute(params, ApiName.EDIT_TIP,
+                new APICommonCallback<FeedCommonResponse>() {
+
+                    @Override
+                    public void onSuccess(final FeedCommonResponse response, String message, int flag) {
+                       Data.autoData.getAssignedDriverInfo().setTipAmount(null);
+                       if(driverTipDialog!=null && driverTipDialog.isShowing())driverTipDialog.dismiss();
+                        callback.onConfirmed(null,engagementId);
+
+                    }
+
+                    @Override
+                    public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        return false;
+                    }
+
+                });
+
+
+
+    }
+
+
 
 }
