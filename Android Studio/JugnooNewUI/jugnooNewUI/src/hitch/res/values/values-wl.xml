@@ -88,4 +88,5 @@
     <integer name="apply_default_country_code">1</integer>
     <string name="default_country_code">+1</string>
     <string name="default_country_iso">BM</string>
+    <integer name="visibility_take_cash">@integer/view_gone</integer>
 </resources>
