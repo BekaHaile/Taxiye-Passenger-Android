@@ -1,1 +1,2 @@
-include ':jugnooNewUI', ':app-release-yesbank', ':SecureComponent-releasev2.1', ':fugu'
+include ':jugnooNewUI', ':fugu'
+//':app-release-yesbank', ':SecureComponent-releasev2.1',
