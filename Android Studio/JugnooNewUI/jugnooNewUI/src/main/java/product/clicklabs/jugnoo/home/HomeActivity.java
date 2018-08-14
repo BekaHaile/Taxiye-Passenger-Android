@@ -71,8 +71,8 @@ import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
 import com.fugu.FuguConfig;
 import com.fugu.FuguNotificationConfig;
-import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
-import com.google.ads.conversiontracking.AdWordsConversionReporter;
+//import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
+//import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.common.ConnectionResult;
@@ -2167,12 +2167,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
 
-        try {
-            AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
-                    "947755540", "cZEMCIHV0GgQlLT2wwM", "50.00", false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
+//                    "947755540", "cZEMCIHV0GgQlLT2wwM", "50.00", false);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         try {
             if (getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE).getBoolean(Constants.KEY_INTERNAL_APP_SWITCH, false)
@@ -4625,16 +4625,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             Utils.hideSoftKeyboard(this, editTextRSFeedback);
 
-            try {
-                AdWordsConversionReporter.registerReferrer(MyApplication.getInstance(), this.getIntent().getData());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                AdWordsAutomatedUsageReporter.enableAutomatedUsageReporting(MyApplication.getInstance(), GOOGLE_ADWORD_CONVERSION_ID);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            try {
+//                AdWordsConversionReporter.registerReferrer(MyApplication.getInstance(), this.getIntent().getData());
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            try {
+//                AdWordsAutomatedUsageReporter.enableAutomatedUsageReporting(MyApplication.getInstance(), GOOGLE_ADWORD_CONVERSION_ID);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
 
             if (AccountActivity.updateMenuBar) {
                 menuBar.setProfileData();
@@ -7589,8 +7589,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     // Add this code to the event you'd like to track in your app.
                                                     // See code examples and learn how to add advanced features like app deep links at:
                                                     //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
-                                                    AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
-                                                            GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
+//                                                    AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
+//                                                            GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
                                                     confirmedScreenOpened = false;
                                                     specialPickupScreenOpened = false;
                                                     if (Data.autoData.getPickupPaymentOption() != PaymentOption.CASH.getOrdinal()) {
@@ -7867,16 +7867,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 // Add this code to the event you'd like to track in your app.
                 // See code examples and learn how to add advanced features like app deep links at:
                 //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
-                AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
-                        GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
+//                AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
+//                        GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
 
             try {
-                AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
-                        "947755540", "BS6QCL3P0GgQlLT2wwM", "0.00", false);
+//                AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
+//                        "947755540", "BS6QCL3P0GgQlLT2wwM", "0.00", false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
