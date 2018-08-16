@@ -258,8 +258,6 @@
                 android:textColor="@color/document_layout_bordor_color"
                 android:textSize="@dimen/text_size_24" />
 
-
-
             <TextView
                 android:id="@+id/textViewForgotPassword"
                 android:layout_width="400px"

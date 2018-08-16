@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <integer name="view_visible">0</integer>
+    <integer name="view_invisible">1</integer>
+    <integer name="view_gone">2</integer>
+
+    <integer name="center">0</integer>
+    <integer name="center_crop">1</integer>
+    <integer name="center_inside">2</integer>
+    <integer name="fit_center">3</integer>
+    <integer name="fit_end">4</integer>
+    <integer name="fit_start">5</integer>
+    <integer name="fit_xy">6</integer>
+    <integer name="matrix">7</integer>
+
+    <!--Other things to change
+        1. google-services.json
+        2. Doc entity in strings.xml
+        3. application_id in build.gradle
+    -->
+
+
+    <!--
+        Icons to change:
+            ic_taxi_logo => ic_splash_logo
+            ic_launcher
+            notification_icon
+    -->
+
+    <string name="app_name">Nickel Ride</string>
+
+    <string name="google_maps_api_key">AIzaSyByBfiSz9PmAdJbrGwbpPAugDgjjrxLa9s</string>
+    <string name="google_maps_api_server_key">AIzaSyBHMjQS4DDlv_n6lWJE4rgZIm14jPHidDw</string>
+    <string name="google_server_client_id">676585448141-f3dii9e8cv66dh004ncfvmsuk1d2bsln.apps.googleusercontent.com</string>
+    <string name="fb_app_id">231655867463744</string>
+    <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
+    <string name="ak_login_protocol_scheme">ak782131025144439</string>
+    <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
+
+
+    <string name="operator_token">9672385cbae165f34516284950625e0b</string>
+    <string name="support_number">+18559373733</string>
+    <string name="police_number">911</string>
+    <string name="facebook_page_id">1494351767251981</string>
+    <string name="facebook_page_name">TheNickelRide</string>
+
+
+    <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
+    <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
+    <bool name="force_open_autos">true</bool>
+
+    <integer name="show_login_bottom_bg">@integer/view_gone</integer>
+    <color name="splash_logo_color">@color/text_color</color>
+    <dimen name="splash_logo_width">200dp</dimen>
+    <dimen name="splash_logo_height">200dp</dimen>
+    <dimen name="splash_logo_top_margin">80dp</dimen>
+    <integer name="show_splash_top_bg">@integer/view_invisible</integer>
+    <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_splash_bg">@integer/view_visible</integer>
+
+    <!--Changed-->
+    <drawable name="splash_background_drawable">#3a9eff</drawable>
+    <drawable name="login_background_drawable">@color/white</drawable>
+    <!---->
+
+    <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
+    <drawable name="login_logo_icon_drawable">@drawable/ic_login_logo</drawable>
+
+    <integer name="show_social_login">@integer/view_visible</integer>
+    <integer name="show_facebook_login">@integer/view_visible</integer>
+    <integer name="show_google_login">@integer/view_gone</integer>
+    <integer name="show_splash_logo_text">@integer/view_invisible</integer>
+    <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
+    <drawable name="cursor">@drawable/cursor_black</drawable>
+
+    <string name="file_provider_name">com.nickelride.fileprovider</string>
+    <string name="web_landing_page">https://nickelride.in</string>
+    <string name="smart_url">http://smarturl.it/nickelride</string>
+    <string name="db_name">nickelride</string>
+    <string name="terms_of_use_url">https://www.nickelride.in/#/terms</string>
+    <string name="app_domain">nickelride.in</string>
+    <string name="app_host_name">www.nickelride.in</string>
+    <string name="branch_domain">share.nickelride.in</string>
+    <string name="app_scheme">nickelride</string>
+
+    <string name="pictures_path">nickelride/nickelride Pictures</string>
+    <bool name="force_inhouse_login">true</bool>
+    <bool name="force_mpesa_payment">false</bool>
+    <integer name="show_about">@integer/view_visible</integer>
+    <bool name="show_change_languge">true</bool>
+
+    <string name="default_lang">en</string>
+    <bool name="ride_feedback_rating_bar">true</bool>
+    <!--default support email for SupportMailActivity if not coming from server-->
+    <string name="default_support_email">it@thenickelride.com</string>
+    <integer name="send_invites_visibility">@integer/view_gone</integer>
+    <bool name="specified_country_search_result_enabled">false</bool>
+    <bool name="show_call_me_option_in_otp">false</bool>
+    <integer name="show_promo">@integer/view_gone</integer>
+    <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
+    <string name="profile_saved_location_text">@string/address_book</string>
+    <bool name="wallet_amount_sidemenu">false</bool>
+    <bool name="show_jugnoo_promo_icon">false</bool>
+    <integer name="show_invite_friends">@integer/view_gone</integer>
+
+    <!--for bottom sliding panel-->
+    <bool name="show_sliding_bottom_fragment">false</bool>
+    <integer name="show_sliding_panel_fare_offer_tab">@integer/view_gone</integer>
+
+    <!--show cahs on ride summary-->
+    <integer name="show_amount_on_ride_summary">@integer/view_gone</integer>
+
+
+    <!--hardcode/default values-->
+    <string name="facebook_page_url">https://www.facebook.com/TheNickelRide</string>
+    <!--Other things to change
+        1. google-services.json
+        2. Doc entity in strings.xml
+        3. application_id in build.gradle
+    -->
+
+    <string-array name="languages_to_show">
+        <item>en</item>
+        <item>ar</item>
+        <item>fr</item>
+        <item>de</item>
+        <item>es</item>
+    </string-array>
+
+
+    <!--<color name="splash_terms_color">@color/white</color>-->
+    <!--<color name="splash_text_OR_text_color">@color/white</color>-->
+
+    <integer name="scale_type">@integer/fit_xy</integer>
+</resources>

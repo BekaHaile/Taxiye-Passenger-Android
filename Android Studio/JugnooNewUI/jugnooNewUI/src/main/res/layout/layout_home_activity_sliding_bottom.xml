@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/linearLayoutSlidingBottomSingle"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              android:id="@+id/linearLayoutSlidingBottomSingle"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
 
     <RelativeLayout
@@ -16,16 +16,17 @@
             android:layout_width="match_parent"
             android:layout_height="135px"
             android:background="@color/white"
-            android:visibility="visible"
+            android:visibility="@integer/show_sliding_panel_fare_offer_tab"
             app:pstsIndicatorHeight="10px"
             app:pstsShouldExpand="true"
             app:pstsUnderlineColor="@color/grey_light"
-            app:pstsUnderlineHeight="2px" />
+            app:pstsUnderlineHeight="2px"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="125px"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="@integer/show_sliding_panel_fare_offer_tab">
 
             <LinearLayout
                 android:id="@+id/linearLayoutCash"
@@ -38,7 +39,7 @@
 
                 <ImageView
                     android:id="@+id/imageViewPaymentOp"
-                    style="@style/payment_option_icon_small" />
+                    style="@style/payment_option_icon_small"/>
 
                 <TextView
                     android:id="@+id/textViewCashValue"
@@ -49,7 +50,7 @@
                     android:text="@string/_200"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_30" />
+                    android:textSize="@dimen/text_size_30"/>
 
             </LinearLayout>
 
@@ -58,7 +59,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="25px"
                 android:layout_marginTop="25px"
-                android:src="@color/stroke_color_light" />
+                android:src="@color/stroke_color_light"/>
 
             <LinearLayout
                 android:id="@+id/linearLayoutFare"
@@ -76,7 +77,7 @@
                     android:gravity="center"
                     android:text="@string/nl_min_fare"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_30" />
+                    android:textSize="@dimen/text_size_30"/>
 
                 <TextView
                     android:id="@+id/textViewMinFareValue"
@@ -86,7 +87,7 @@
                     android:gravity="center"
                     android:text="@string/na"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_30" />
+                    android:textSize="@dimen/text_size_30"/>
 
             </LinearLayout>
 
@@ -116,7 +117,7 @@
                     android:gravity="center"
                     android:text="@string/nl_offers"
                     android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_30" />
+                    android:textSize="@dimen/text_size_30"/>
 
                 <TextView
                     android:id="@+id/textViewOffersValue"
@@ -127,7 +128,7 @@
                     android:text="2"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_30"
-                    android:visibility="visible" />
+                    android:visibility="visible"/>
 
             </LinearLayout>
 
@@ -139,7 +140,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:src="@color/grey_light" />
+        android:src="@color/grey_light"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -150,7 +151,7 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 

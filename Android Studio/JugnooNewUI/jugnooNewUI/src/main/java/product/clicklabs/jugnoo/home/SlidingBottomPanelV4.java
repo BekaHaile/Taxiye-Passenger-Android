@@ -30,7 +30,7 @@ import product.clicklabs.jugnoo.widgets.PagerSlidingTabStrip;
 /**
  * Created by Ankit on 1/7/16.
  */
-public class SlidingBottomPanelV4 implements GAAction, GACategory{
+public class SlidingBottomPanelV4 implements GAAction, GACategory {
 
     private HomeActivity activity;
     private SlidingUpPanelLayout slidingUpPanelLayout;
@@ -52,8 +52,18 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
 
     public SlidingBottomPanelV4(HomeActivity activity, View view) {
         this.activity = activity;
-        heightWithBar = (int) (195 * ASSL.Yscale());
-        heightWithourBar = (int) (125 * ASSL.Yscale());
+        if (activity.getResources().getBoolean(R.bool.show_sliding_bottom_fragment)) {
+            heightWithBar = (int) (195 * ASSL.Yscale());
+            heightWithourBar = (int) (125 * ASSL.Yscale());
+        } else {
+            if (Data.autoData.getRegions().size() > 1) {
+                heightWithBar = 0;
+                heightWithourBar = (int) (125 * ASSL.Yscale());
+            } else {
+                heightWithBar = 0;
+                heightWithourBar = 0;
+            }
+        }
         initComponents(view);
     }
 
@@ -72,31 +82,35 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
         textViewCashValue = (TextView) view.findViewById(R.id.textViewCashValue);
         textViewCashValue.setTypeface(Fonts.mavenMedium(activity));
         imageViewPaymentOp = (ImageView) view.findViewById(R.id.imageViewPaymentOp);
-        imageViewExtraForSliding = (ImageView)view.findViewById(R.id.imageViewExtraForSliding);
-        imageViewSurgeOverSlidingBottom = (ImageView)view.findViewById(R.id.imageViewSurgeOverSlidingBottom);
+        imageViewExtraForSliding = (ImageView) view.findViewById(R.id.imageViewExtraForSliding);
+        imageViewSurgeOverSlidingBottom = (ImageView) view.findViewById(R.id.imageViewSurgeOverSlidingBottom);
 
         requestRideOptionsFragment = ((RequestRideOptionsFragment) activity.getSupportFragmentManager().findFragmentById(R.id.frag));
-        imageViewExtraForSliding = (ImageView)view.findViewById(R.id.imageViewExtraForSliding);
+        imageViewExtraForSliding = (ImageView) view.findViewById(R.id.imageViewExtraForSliding);
         imageViewPriorityTip = (ImageView) view.findViewById(R.id.imageViewPriorityTip);
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.slidingLayout);
-        slidingUpPanelLayout.setParallaxOffset((int) (295 * ASSL.Yscale()));
+        if (activity.getResources().getBoolean(R.bool.show_sliding_bottom_fragment)) {
+            slidingUpPanelLayout.setParallaxOffset((int) (295 * ASSL.Yscale()));
+        }
         updatePannelHeight();
 
+
+//        slidingUpPanelLayout.setVisibility(View.GONE);
         slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
             public void onPanelSlide(View panel, float slideOffset) {
                 try {
                    /* if(slideOffset > 0.2f){
-						activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
+                        activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
 						activity.setFabMarginInitial(true);
 						activity.getFabViewTest().hideJeanieHelpInSession();
 					}*/
                     imageViewExtraForSliding.setVisibility(View.VISIBLE);
                     if (activity.relativeLayoutSearchContainer.getVisibility() == View.GONE
-							&& slideOffset < 1f) {
-						activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
-					}
+                            && slideOffset < 1f) {
+                        activity.relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
+                    }
                     requestRideOptionsFragment.setSurgeImageVisibility();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -142,11 +156,9 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
         tabs.setTextColorResource(R.color.theme_color, R.color.grey_dark);
-        slidingBottomFragmentAdapter = new SlidingBottomFragmentAdapter(activity, activity.getSupportFragmentManager());
-        viewPager.setAdapter(slidingBottomFragmentAdapter);
-        tabs.setViewPager(viewPager);
-
-
+        if (activity.getResources().getBoolean(R.bool.show_sliding_bottom_fragment)) {
+            setViewPager();
+        }
         imageViewExtraForSliding.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,7 +170,7 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
         view.findViewById(R.id.linearLayoutCash).setOnClickListener(slideOnClickListener);
         view.findViewById(R.id.linearLayoutFare).setOnClickListener(slideOnClickListener);
         view.findViewById(R.id.linearLayoutOffers).setOnClickListener(slideOnClickListener);
-        if(Data.isMenuTagEnabled(MenuInfoTags.OFFERS)) {
+        if (Data.isMenuTagEnabled(MenuInfoTags.OFFERS)) {
             view.findViewById(R.id.linearLayoutOffers).setVisibility(View.VISIBLE);
             view.findViewById(R.id.ivOffersSingleDiv).setVisibility(View.VISIBLE);
         } else {
@@ -180,6 +192,15 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
 
     }
 
+    /**
+     *
+     */
+    private void setViewPager() {
+        slidingBottomFragmentAdapter = new SlidingBottomFragmentAdapter(activity, activity.getSupportFragmentManager());
+        viewPager.setAdapter(slidingBottomFragmentAdapter);
+        tabs.setViewPager(viewPager);
+    }
+
     public void update() {
         try {
             updatePannelHeight();
@@ -190,7 +211,7 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
                     textViewOffersValue.setText("-");
                 }
                 requestRideOptionsFragment.initSelectedCoupon();
-            } else{
+            } else {
                 textViewOffersValue.setText("-");
             }
             requestRideOptionsFragment.updateRegionsUI();
@@ -207,11 +228,11 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
         return slidingUpPanelLayout;
     }
 
-    public void updatePannelHeight(){
+    public void updatePannelHeight() {
         try {
-            for(Region region : Data.autoData.getRegions()){
-                if(region.getRideType() == RideTypeValue.POOL.getOrdinal() &&
-                        (region.getOfferTexts() != null && !region.getOfferTexts().getText1().equalsIgnoreCase(""))){
+            for (Region region : Data.autoData.getRegions()) {
+                if (region.getRideType() == RideTypeValue.POOL.getOrdinal() &&
+                        (region.getOfferTexts() != null && !region.getOfferTexts().getText1().equalsIgnoreCase(""))) {
                     //slidingUpPanelLayout.setPanelHeight(heightWithBar);
                     slidingUpPanelLayout.setPanelHeight(heightWithourBar);
                     try {
@@ -230,22 +251,21 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
     }
 
 
-    public RequestRideOptionsFragment getRequestRideOptionsFragment(){
+    public RequestRideOptionsFragment getRequestRideOptionsFragment() {
         return requestRideOptionsFragment;
     }
 
-    public void updateFareFactorUI(int supplyCount){
-        if(supplyCount == 1) {
+    public void updateFareFactorUI(int supplyCount) {
+        if (supplyCount == 1) {
             if (Data.autoData.getFareFactor() > 1 || Data.autoData.getFareFactor() < 1) {
                 imageViewPriorityTip.setVisibility(View.VISIBLE);
             } else {
                 imageViewPriorityTip.setVisibility(View.GONE);
             }
-        } else{
+        } else {
             imageViewPriorityTip.setVisibility(View.GONE);
         }
     }
-
 
 
     private View.OnClickListener slideOnClickListener = new View.OnClickListener() {
@@ -261,59 +281,59 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
         }
         switch (view.getId()) {
             case R.id.linearLayoutCash:
-                if(viewPager.getCurrentItem() == 0){
+                if (viewPager.getCurrentItem() == 0) {
                     slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 } else {
                     viewPager.setCurrentItem(0, true);
                 }
-                GAUtils.event(RIDES, HOME, WALLET+CLICKED);
+                GAUtils.event(RIDES, HOME, WALLET + CLICKED);
                 break;
 
             case R.id.linearLayoutFare:
-                if(viewPager.getCurrentItem() == 1){
+                if (viewPager.getCurrentItem() == 1) {
                     slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 } else {
                     viewPager.setCurrentItem(1, true);
                 }
-                GAUtils.event(RIDES, HOME, FARE_DETAILS+CLICKED);
+                GAUtils.event(RIDES, HOME, FARE_DETAILS + CLICKED);
                 break;
 
             case R.id.linearLayoutOffers:
-                if(viewPager.getCurrentItem() == 2){
+                if (viewPager.getCurrentItem() == 2) {
                     slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 } else {
                     viewPager.setCurrentItem(2, true);
                 }
-                GAUtils.event(RIDES, HOME, OFFER+CLICKED);
+                GAUtils.event(RIDES, HOME, OFFER + CLICKED);
                 break;
         }
     }
 
-    public ViewPager getViewPager(){
+    public ViewPager getViewPager() {
         return viewPager;
     }
 
-    public ImageView getImageViewPaymentOp(){
+    public ImageView getImageViewPaymentOp() {
         return imageViewPaymentOp;
     }
 
-    public TextView getTextViewCashValue(){
+    public TextView getTextViewCashValue() {
         return textViewCashValue;
     }
 
-    public ImageView getImageViewSurgeOverSlidingBottom(){
+    public ImageView getImageViewSurgeOverSlidingBottom() {
         return imageViewSurgeOverSlidingBottom;
     }
 
-    public TextView getTextViewMinFareValue(){
+    public TextView getTextViewMinFareValue() {
         return textViewMinFareValue;
     }
 
-    public void updateBottomPanel(int suppleCount){
-        if(suppleCount > 1) {
+    public void updateBottomPanel(int suppleCount) {
+        if (suppleCount > 1) {
             linearLayoutSlidingBottomSingle.setVisibility(View.GONE);
             linearLayoutSlidingBottom.setVisibility(View.VISIBLE);
-        } else{
+        } else {
             linearLayoutSlidingBottomSingle.setVisibility(View.VISIBLE);
             linearLayoutSlidingBottom.setVisibility(View.GONE);
             activity.getViewPoolInfoBarAnim().setVisibility(View.VISIBLE);
@@ -321,27 +341,27 @@ public class SlidingBottomPanelV4 implements GAAction, GACategory{
         }
     }
 
-    public ImageView getImageViewExtraForSliding(){
+    public ImageView getImageViewExtraForSliding() {
         return imageViewExtraForSliding;
     }
 
-    public void updatePaymentOptions(){
+    public void updatePaymentOptions() {
         try {
-            if(Data.autoData != null
-					&& Data.autoData.getPickupPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()
-					&& !Data.autoData.isRazorpayEnabled()){
-				Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
-			}
-            if(requestRideOptionsFragment != null) {
-				requestRideOptionsFragment.updatePaymentOption();
-			}
+            if (Data.autoData != null
+                    && Data.autoData.getPickupPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()
+                    && !Data.autoData.isRazorpayEnabled()) {
+                Data.autoData.setPickupPaymentOption(PaymentOption.CASH.getOrdinal());
+            }
+            if (requestRideOptionsFragment != null) {
+                requestRideOptionsFragment.updatePaymentOption();
+            }
 
-            if(viewPager != null) {
-				Fragment page = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
-				if (page != null) {
-					((SlidingBottomCashFragment) page).onResume();
-				}
-			}
+            if (viewPager != null) {
+                Fragment page = activity.getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
+                if (page != null) {
+                    ((SlidingBottomCashFragment) page).onResume();
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
