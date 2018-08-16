@@ -1940,4 +1940,5 @@
     <string name ="label_tip_added">Tip Added: %s</string>
     <string name="action_edit"><u>Edit</u></string>
     <string name="action_remove"><u>Remove</u></string>
+    <string name="driver_tip">Driver Tip</string>
 </resources>

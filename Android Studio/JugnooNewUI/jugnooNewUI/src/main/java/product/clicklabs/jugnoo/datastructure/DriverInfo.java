@@ -359,7 +359,7 @@ public class DriverInfo {
 	}
 
 	public Double getTipAmount() {
-		return return tipAmount!=null && tipAmount>0?tipAmount:null;
+		return  tipAmount!=null && tipAmount>0?tipAmount:null;
 	}
 
 	public void setTipAmount(Double tipAmount) {
