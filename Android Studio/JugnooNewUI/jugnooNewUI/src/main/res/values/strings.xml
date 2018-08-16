@@ -1938,4 +1938,6 @@
     <string name="please_enter_last_name">Please enter last name</string>
     <string name="title_add_tip_for_driver">ADD TIP FOR DRIVER</string>
     <string name ="label_tip_added">Tip Added: %s</string>
+    <string name="action_edit"><u>Edit</u></string>
+    <string name="action_remove"><u>Remove</u></string>
 </resources>

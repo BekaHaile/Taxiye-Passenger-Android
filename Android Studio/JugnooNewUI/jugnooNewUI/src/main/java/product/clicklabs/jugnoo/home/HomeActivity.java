@@ -1861,7 +1861,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void showDriverTipDialog() {
 
         if(Data.autoData==null || Data.autoData.getcEngagementId()==null || Data.autoData.getAssignedDriverInfo()==null
-            || Data.autoData.getAssignedDriverInfo().getCurrency()==null || !Data.autoData.getAssignedDriverInfo().isTipEnabled()){
+            || Data.autoData.getAssignedDriverInfo().getCurrency()==null || !Data.autoData.getIsTipEnabled()){
             return;
         }
 
@@ -1888,8 +1888,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void setAddedTipUI() {
-        if(Data.autoData!=null && Data.autoData.getAssignedDriverInfo()!=null
-          && Data.autoData.getAssignedDriverInfo().isTipEnabled() && Data.autoData.getAssignedDriverInfo().getTipAmount()!=null){
+        if(Data.autoData!=null && Data.autoData.getAssignedDriverInfo()!=null &&
+           Data.autoData.getIsTipEnabled() && Data.autoData.getAssignedDriverInfo().getTipAmount()!=null){
             layoutAddedTip.setVisibility(View.VISIBLE);
             tvTipAmountLabel.setText(getString(R.string.label_tip_added,
             Utils.formatCurrencyValue(Data.autoData.getAssignedDriverInfo().getCurrency(),Data.autoData.getAssignedDriverInfo().getTipAmount())));
@@ -3688,8 +3688,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void updateDriverTipUI(PassengerScreenMode mode) {
-        if(mode==PassengerScreenMode.P_IN_RIDE && Data.autoData!=null &&
-                Data.autoData.getAssignedDriverInfo()!=null && Data.autoData.getAssignedDriverInfo().isTipEnabled()){
+        if(mode==PassengerScreenMode.P_IN_RIDE && Data.autoData!=null  &&
+                Data.autoData.getAssignedDriverInfo()!=null &&   Data.autoData.getIsTipEnabled()){
             buttonTipDriver.setVisibility(View.VISIBLE);
             setAddedTipUI();
         }else{
@@ -7133,14 +7133,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             String iconSet = jObj.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
             String currency = jObj.optString(KEY_CURRENCY);
             Double tipAmount = jObj.optDouble(KEY_TIP_AMOUNT);
-            boolean tipEnabled = jObj.optBoolean(KEY_TIP_ENABLED,false);
             String vehicleIconUrl = jObj.optString(Constants.KEY_MARKER_ICON);
             Prefs.with(this).save(Constants.KEY_EMERGENCY_NO, jObj.optString(KEY_EMERGENCY_NO, getString(R.string.police_number)));
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
-                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipEnabled,tipAmount));
+                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);

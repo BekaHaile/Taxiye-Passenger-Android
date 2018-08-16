@@ -345,7 +345,7 @@ public class JSONParser implements Constants {
             int fuguAppType = autoData.optInt(KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE);
             Prefs.with(context).save(Constants.KEY_FUGU_APP_KEY, fuguAppKey);
             Prefs.with(context).save(Constants.KEY_FUGU_APP_TYPE, fuguAppType);
-
+            int isTipEnabled = autoData.optInt(KEY_TIP_ENABLED, 0);
 
             NearbyPickupRegions nearbyPickupRegionses = autosData.getNearbyPickupRegions();
 
@@ -353,7 +353,7 @@ public class JSONParser implements Constants {
 					, cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
 					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
-                    , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2, isRazorpayEnabled);
+                    , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2, isRazorpayEnabled,isTipEnabled);
 
             Data.autoData.setUseRecentLocAtRequest(autosData.getUseRecentLocAtRequest());
             Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());
@@ -1018,7 +1018,6 @@ public class JSONParser implements Constants {
             ArrayList<BidInfo> bidInfos = new ArrayList<>();
             String vehicleIconUrl = null;
             Double tipAmount  = null;
-            boolean tipEnabled = Data.autoData!=null && Data.autoData.getAssignedDriverInfo()!=null && Data.autoData.getAssignedDriverInfo().isTipEnabled();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1086,7 +1085,6 @@ public class JSONParser implements Constants {
                             currency = jObject.optString(KEY_CURRENCY);
                             vehicleIconUrl = jObject.optString(Constants.KEY_MARKER_ICON);
                             tipAmount= jObject.optDouble(Constants.KEY_TIP_AMOUNT);
-                            tipEnabled= jObject.optBoolean(Constants.KEY_TIP_ENABLED,tipEnabled);
                             Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jObject.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
                             try {
@@ -1211,7 +1209,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipEnabled,tipAmount));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

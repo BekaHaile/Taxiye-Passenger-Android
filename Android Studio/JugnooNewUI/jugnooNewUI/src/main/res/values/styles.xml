@@ -412,6 +412,41 @@
             -20px
         </item>
     </style>
+    <style name="cross_popup_dp">
+        <item name="android:layout_width">
+            36dp
+        </item>
+        <item name="android:layout_height">
+            36dp
+        </item>
+        <item name="android:layout_alignEnd">
+            @+id/linearLayoutInner
+        </item>
+        <item name="android:layout_alignTop">
+            @+id/linearLayoutInner
+        </item>
+        <item name="android:clickable">
+            true
+        </item>
+        <item name="android:src">
+            @drawable/ic_cross_popup_selector
+        </item>
+        <item name="android:tag">
+            mwar
+        </item>
+        <item name="android:paddingStart">
+            5dp
+        </item>
+        <item name="android:paddingBottom">
+            5dp
+        </item>
+        <item name="android:layout_marginEnd">
+            -10dp
+        </item>
+        <item name="android:layout_marginTop">
+            -10dp
+        </item>
+    </style>
 
     <style name="title">
         <item name="android:layout_width">

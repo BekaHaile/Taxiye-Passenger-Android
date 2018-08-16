@@ -4,18 +4,11 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Typeface;
 import android.text.Editable;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
@@ -27,16 +20,8 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
-import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
-import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.Font;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.widgets.PrefixedEditText;
 
@@ -65,25 +50,24 @@ public class DriverTipInteractor {
 
 
 
-    public Dialog showPriorityTipDialog(Double tipValue,String currency){
+    public void showPriorityTipDialog(Double tipValue, String currency){
         try {
 
             if(driverTipDialog==null){
                 driverTipDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-                driverTipDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_TopInBottomOut;
                 driverTipDialog.setContentView(R.layout.dialog_tip);
                 edtAmount = driverTipDialog.findViewById(R.id.etTipAmount);
                 ((TextView)driverTipDialog.findViewById(R.id.tvTitle)).setTypeface(Fonts.mavenMedium(activity),Typeface.BOLD);
                 edtAmount.setTypeface(Fonts.mavenMedium(activity));
                 actionButton= driverTipDialog.findViewById(R.id.btn_done);
-                ((TextView)driverTipDialog.findViewById(R.id.btnCancel)).setTypeface(Fonts.mavenMedium(activity));
-                ((TextView)driverTipDialog.findViewById(R.id.btn_done)).setTypeface(Fonts.mavenMedium(activity));
+                actionButton.setTypeface(Fonts.mavenMedium(activity));
 
-                driverTipDialog.findViewById(R.id.btn_done).setOnClickListener(new View.OnClickListener() {
+                actionButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if(v.getTag()!=null && v.getTag()==TAG_ACTION_EDIT){
                             edtAmount.setEnabled(true);
+                            edtAmount.setSelection(edtAmount.getText().toString().length());
                             actionButton.setTag(TAG_ACTION_DONE);
                             actionButton.setText(activity.getString(R.string.done));
                       }else{
@@ -97,7 +81,7 @@ public class DriverTipInteractor {
                         }
                     }
                 });
-                driverTipDialog.findViewById(R.id.btnCancel).setOnClickListener(new View.OnClickListener() {
+                driverTipDialog.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         driverTipDialog.dismiss();
@@ -128,13 +112,12 @@ public class DriverTipInteractor {
             }
 
 
+
             driverTipDialog.show();
 
 
-            return driverTipDialog;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
     }
 

@@ -51,7 +51,6 @@ public class DriverInfo {
 	private String markerUrl;
 	private int paymentMethod;
 	private Double tipAmount;
-	private boolean isTipEnabled;
 	public DriverInfo(String userId){
 		this.userId = userId;
 	}
@@ -84,7 +83,7 @@ public class DriverInfo {
 			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
 					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId,
-					  String currency, String markerUrl,boolean isTipEnabled,Double tipAmount){
+					  String currency, String markerUrl,Double tipAmount){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -116,7 +115,6 @@ public class DriverInfo {
 		this.currency = currency;
 		this.markerUrl = markerUrl;
 		this.tipAmount = tipAmount;
-		this.isTipEnabled = isTipEnabled;
 	}
 
 	//for last ride data
@@ -361,14 +359,11 @@ public class DriverInfo {
 	}
 
 	public Double getTipAmount() {
-		return tipAmount;
+		return return tipAmount!=null && tipAmount>0?tipAmount:null;
 	}
 
 	public void setTipAmount(Double tipAmount) {
 		this.tipAmount = tipAmount;
 	}
 
-	public boolean isTipEnabled() {
-		return isTipEnabled;
-	}
 }

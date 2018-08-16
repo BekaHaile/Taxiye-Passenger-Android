@@ -57,6 +57,7 @@ public class AutoData {
     private PlaceOrderResponse.ReferralPopupContent referralPopupContent;
     private ArrayList<BidInfo> bidInfos;
     private String distanceUnit;
+    private int isTipEnabled;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -65,7 +66,7 @@ public class AutoData {
                     int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText, int referAllStatus, String referAllText,
                     String referAllTitle, int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin,
                     NearbyPickupRegions nearbyPickupRegionses, String inRideSendInviteTextBoldV2, String inRideSendInviteTextNormalV2,
-                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled) {
+                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled) {
         this.destinationHelpText = destinationHelpText;
         this.rideSummaryBadText = rideSummaryBadText;
         this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
@@ -90,6 +91,7 @@ public class AutoData {
         this.inRideSendInviteTextNormalV2 = inRideSendInviteTextNormalV2;
         this.rideStartInviteTextDeepIndexV2 = rideStartInviteTextDeepIndexV2;
         this.isRazorpayEnabled = isRazorpayEnabled;
+        this.isTipEnabled = isTipEnabled;
     }
 
     public String getDestinationHelpText() {
@@ -548,5 +550,9 @@ public class AutoData {
 
     public void setDistanceUnit(String distanceUnit) {
         this.distanceUnit = distanceUnit;
+    }
+
+    public boolean getIsTipEnabled() {
+        return isTipEnabled==1;
     }
 }
