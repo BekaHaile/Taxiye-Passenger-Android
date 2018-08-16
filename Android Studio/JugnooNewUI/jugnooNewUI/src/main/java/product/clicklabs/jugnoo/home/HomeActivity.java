@@ -329,7 +329,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     ImageView imageViewInRideDriver;
     TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating;
     RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm,layoutAddedTip;
-    Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver,buttonTipDriver;
+    Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver,buttonTipDriver,buttonAddTipEndRide;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat, relativeLayoutTotalFare;
     TextView textViewIRPaymentOptionValue;
     ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm;
@@ -841,6 +841,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         buttonCallDriver = (Button) findViewById(R.id.buttonCallDriver);
         buttonCallDriver.setTypeface(Fonts.mavenRegular(this));
         buttonTipDriver = (Button) findViewById(R.id.buttonTipDriver);
+        buttonAddTipEndRide = (Button) findViewById(R.id.buttonAddTipEndRide);
         buttonTipDriver.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
@@ -1492,6 +1493,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             }
         });
+        buttonAddTipEndRide.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDriverTipDialog();
+
+            }
+        });
 
 
         relativeLayoutFinalDropLocationClick.setOnClickListener(new OnClickListener() {
@@ -1875,7 +1883,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 @Override
                 public void onConfirmed(Double amount, String engagementId) {
 
+
+                    if(passengerScreenMode==PassengerScreenMode.P_RIDE_END){
+                        Data.autoData.getEndRideData().toPay += amount;
+                        textViewRSCashPaidValue.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), Data.autoData.getEndRideData().toPay));
+                    }
                     updateDriverTipUI(passengerScreenMode);
+
                 }
 
                 @Override
@@ -3692,8 +3706,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 Data.autoData.getAssignedDriverInfo()!=null &&   Data.autoData.getIsTipEnabled()){
             buttonTipDriver.setVisibility(View.VISIBLE);
             setAddedTipUI();
+        }else if(mode==PassengerScreenMode.P_RIDE_END && Data.autoData!=null  &&
+                Data.autoData.getIsTipEnabled()  &&  Data.autoData.getEndRideData()!=null &&
+                Data.autoData.getEndRideData().getDriverTipAmount()>0){
+           buttonAddTipEndRide.setVisibility(View.VISIBLE);
+
         }else{
             driverTipInteractor = null;
+            buttonAddTipEndRide.setVisibility(View.GONE);
             layoutAddedTip.setVisibility(View.GONE);
             buttonTipDriver.setVisibility(View.GONE);
         }
