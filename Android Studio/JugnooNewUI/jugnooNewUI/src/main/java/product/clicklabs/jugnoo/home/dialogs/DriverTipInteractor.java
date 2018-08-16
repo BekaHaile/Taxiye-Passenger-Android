@@ -8,7 +8,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
@@ -40,6 +39,7 @@ public class DriverTipInteractor {
 
     private static final Integer TAG_ACTION_EDIT = 0;
     private static final Integer TAG_ACTION_DONE = 1;
+    private UpdateCurrencyDrawableWatcher edtAmountWatcher;
 
     public DriverTipInteractor(Activity activity, Callback callback,String engagementId) {
         this.activity = activity;
@@ -90,7 +90,8 @@ public class DriverTipInteractor {
                     }
                 });
 
-                edtAmount.addTextChangedListener(new UpdateCurrencyDrawableWatcher(edtAmount,currency));
+                edtAmountWatcher = new UpdateCurrencyDrawableWatcher(edtAmount, currency);
+                edtAmount.addTextChangedListener(edtAmountWatcher);
                 WindowManager.LayoutParams layoutParams = driverTipDialog.getWindow().getAttributes();
                 layoutParams.dimAmount = 0.6f;
                 driverTipDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
@@ -99,7 +100,9 @@ public class DriverTipInteractor {
             }
 
 
-            if(tipValue!=null){
+
+            edtAmountWatcher.updateCurrencyUnit(currency);
+            if(tipValue!=null && tipValue>0){
                 edtAmount.setText(String.valueOf(tipValue));
                 edtAmount.setEnabled(false);
                 actionButton.setTag(TAG_ACTION_EDIT);
@@ -164,6 +167,13 @@ public class DriverTipInteractor {
         public void afterTextChanged(Editable s) {
 
         }
+
+        void updateCurrencyUnit(String currencyUnit){
+            if(!currencyUnit.equals(this.currencyUnit)){
+                editText.updateTextDrawable(currencyUnit);
+            }
+
+        }
     }
 
 
@@ -177,7 +187,15 @@ public class DriverTipInteractor {
 
                     @Override
                     public void onSuccess(final FeedCommonResponse response, String message, int flag) {
-                       Data.autoData.getAssignedDriverInfo().setTipAmount(amount);
+                        if(Data.autoData!=null && Data.autoData.getAssignedDriverInfo()!=null){
+                            Data.autoData.getAssignedDriverInfo().setTipAmount(amount);
+
+                        }
+                        if(Data.autoData!=null && Data.autoData.getEndRideData()!=null){
+                            Data.autoData.getEndRideData().setDriverTipAmount(amount);
+
+                        }
+
                         if(driverTipDialog!=null && driverTipDialog.isShowing())driverTipDialog.dismiss();
                         callback.onConfirmed(amount,engagementId);
 
@@ -204,7 +222,14 @@ public class DriverTipInteractor {
 
                     @Override
                     public void onSuccess(final FeedCommonResponse response, String message, int flag) {
-                       Data.autoData.getAssignedDriverInfo().setTipAmount(null);
+                        if(Data.autoData!=null && Data.autoData.getAssignedDriverInfo()!=null){
+                            Data.autoData.getAssignedDriverInfo().setTipAmount(null);
+
+                        }
+                        if(Data.autoData!=null && Data.autoData.getEndRideData()!=null){
+                            Data.autoData.getEndRideData().setDriverTipAmount(0.0);
+
+                        }
                        if(driverTipDialog!=null && driverTipDialog.isShowing())driverTipDialog.dismiss();
                         callback.onConfirmed(null,engagementId);
 

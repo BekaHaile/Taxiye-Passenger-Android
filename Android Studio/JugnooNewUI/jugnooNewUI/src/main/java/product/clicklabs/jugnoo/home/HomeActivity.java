@@ -843,6 +843,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         buttonTipDriver = (Button) findViewById(R.id.buttonTipDriver);
         buttonAddTipEndRide = (Button) findViewById(R.id.buttonAddTipEndRide);
         buttonTipDriver.setTypeface(Fonts.mavenRegular(this));
+        buttonAddTipEndRide.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
@@ -1868,12 +1869,28 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void showDriverTipDialog() {
 
-        if(Data.autoData==null || Data.autoData.getcEngagementId()==null || Data.autoData.getAssignedDriverInfo()==null
-            || Data.autoData.getAssignedDriverInfo().getCurrency()==null || !Data.autoData.getIsTipEnabled()){
+        Double amount;
+        String currency;
+        try {
+            if(passengerScreenMode==PassengerScreenMode.P_IN_RIDE){
+                amount = Data.autoData.getAssignedDriverInfo().getTipAmount();
+                currency = Data.autoData.getAssignedDriverInfo().getCurrency();
+            }else if(passengerScreenMode==PassengerScreenMode.P_RIDE_END){
+                amount = Data.autoData.getEndRideData().getDriverTipAmount();
+                currency = Data.autoData.getEndRideData().getCurrency();
+
+            }else{
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        if(Data.autoData==null || Data.autoData.getcEngagementId()==null || !Data.autoData.getIsTipEnabled()){
             return;
         }
 
-        getDriverTipInteractor().showPriorityTipDialog( Data.autoData.getAssignedDriverInfo().getTipAmount(),Data.autoData.getAssignedDriverInfo().getCurrency());
+        getDriverTipInteractor().showPriorityTipDialog(amount,currency);
     }
 
     private DriverTipInteractor getDriverTipInteractor() {
@@ -1883,12 +1900,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 @Override
                 public void onConfirmed(Double amount, String engagementId) {
 
-
                     if(passengerScreenMode==PassengerScreenMode.P_RIDE_END){
-                        Data.autoData.getEndRideData().toPay += amount;
-                        textViewRSCashPaidValue.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), Data.autoData.getEndRideData().toPay));
+                        getRideSummaryAPI(HomeActivity.this,Data.autoData.getcEngagementId());
+                    }else{
+                        updateDriverTipUI(passengerScreenMode);
+
                     }
-                    updateDriverTipUI(passengerScreenMode);
 
                 }
 
@@ -3708,7 +3725,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             setAddedTipUI();
         }else if(mode==PassengerScreenMode.P_RIDE_END && Data.autoData!=null  &&
                 Data.autoData.getIsTipEnabled()  &&  Data.autoData.getEndRideData()!=null &&
-                Data.autoData.getEndRideData().getDriverTipAmount()>0){
+                Data.autoData.getEndRideData().getDriverTipAmount()<=0){
            buttonAddTipEndRide.setVisibility(View.VISIBLE);
 
         }else{

@@ -37,6 +37,10 @@ public class PrefixedEditText extends AppCompatEditText {
 	public TextDrawable getTextDrawable() {
 		return textDrawable;
 	}
+	public TextDrawable updateTextDrawable(String prefix) {
+		this.textDrawable = new TextDrawable(prefix);
+		return  textDrawable;
+	}
 
 	public void setPrefixTextColor(int color) {
 		mPrefixTextColor = ColorStateList.valueOf(color);

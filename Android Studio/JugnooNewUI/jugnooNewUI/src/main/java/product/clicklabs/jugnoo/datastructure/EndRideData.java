@@ -286,4 +286,8 @@ public class EndRideData {
 	public double getDriverTipAmount() {
 		return driverTipAmount;
 	}
+
+	public void setDriverTipAmount(double driverTipAmount) {
+		this.driverTipAmount = driverTipAmount;
+	}
 }

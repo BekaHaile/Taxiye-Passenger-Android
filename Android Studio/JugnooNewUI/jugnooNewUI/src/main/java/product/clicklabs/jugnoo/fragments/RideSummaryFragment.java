@@ -204,6 +204,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
             textViewEndRideFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareValue);
             textViewDriverTipValue = (TextView) rootView.findViewById(R.id.textViewDriverTipValue);
+            textViewDriverTipValue.setTypeface(Fonts.mavenRegular(activity));
+            ((TextView)rootView.findViewById(R.id.textViewEndRideDriverTip)).setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideFareValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndTollChargeValue = (TextView) rootView.findViewById(R.id.textViewEndTollChargeValue);
             textViewEndRideDiscountValue = (TextView) rootView.findViewById(R.id.textViewEndRideDiscountValue);
