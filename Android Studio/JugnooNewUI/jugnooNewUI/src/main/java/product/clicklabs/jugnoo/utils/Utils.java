@@ -1094,15 +1094,15 @@ public class Utils implements GAAction, GACategory{
 	}
 
 	private static NumberFormat currencyNumberFormat = null;
-	public static String formatCurrencyValue(String currency, double value, boolean setMinimumDigits){
+	public static String formatCurrencyValue(String currency, double value, boolean setPrecision){
 		if(currencyNumberFormat == null){
 			currencyNumberFormat = NumberFormat.getCurrencyInstance(MyApplication.getInstance().getCurrentLocale());
 			currencyNumberFormat.setRoundingMode(RoundingMode.HALF_UP);
 			currencyNumberFormat.setGroupingUsed(false);
 		}
 		int precision = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CURRENCY_PRECISION, 0);
-		currencyNumberFormat.setMinimumFractionDigits(setMinimumDigits ? precision : 0);
-		currencyNumberFormat.setMaximumFractionDigits(precision);
+		currencyNumberFormat.setMinimumFractionDigits(setPrecision ? precision : 0);
+		currencyNumberFormat.setMaximumFractionDigits(setPrecision ? precision : Math.max(2, precision));
 
 		if(TextUtils.isEmpty(currency)){
 			currency = "INR";
