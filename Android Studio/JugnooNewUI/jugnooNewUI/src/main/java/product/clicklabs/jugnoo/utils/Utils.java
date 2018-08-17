@@ -1078,16 +1078,21 @@ public class Utils implements GAAction, GACategory{
 		return (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
 	}
 
-	private static NumberFormat currencyNumberFormat = null;
 	public static String formatCurrencyValue(String currency, double value){
+		return formatCurrencyValue(currency, value, true);
+	}
+
+	private static NumberFormat currencyNumberFormat = null;
+	public static String formatCurrencyValue(String currency, double value, boolean setMinimumDigits){
 		if(currencyNumberFormat == null){
-			int precision = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CURRENCY_PRECISION, 0);
 			currencyNumberFormat = NumberFormat.getCurrencyInstance(MyApplication.getInstance().getCurrentLocale());
-			currencyNumberFormat.setMinimumFractionDigits(precision);
-			currencyNumberFormat.setMaximumFractionDigits(precision);
 			currencyNumberFormat.setRoundingMode(RoundingMode.HALF_UP);
 			currencyNumberFormat.setGroupingUsed(false);
 		}
+		int precision = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CURRENCY_PRECISION, 0);
+		currencyNumberFormat.setMinimumFractionDigits(setMinimumDigits ? precision : 0);
+		currencyNumberFormat.setMaximumFractionDigits(precision);
+
 		if(TextUtils.isEmpty(currency)){
 			currency = "INR";
 		}
@@ -1099,13 +1104,6 @@ public class Utils implements GAAction, GACategory{
 		result = result.replace("TTD", "$");
 		return result;
 
-//		else if(currency.equalsIgnoreCase("BMD") || currency.equalsIgnoreCase("TTD")){
-//			int digits = Currency.getInstance(currency).getDefaultFractionDigits();
-//			return String.format("%s%."+digits+"f", "$", value);
-//		}
-//		NumberFormat format = NumberFormat.getCurrencyInstance(MyApplication.getInstance().getCurrentLocale());
-//		format.setCurrency(Currency.getInstance(currency));
-//		return format.format(value);
 	}
 	public static String formatCurrencyValue(String currency, String value){
 		try {
