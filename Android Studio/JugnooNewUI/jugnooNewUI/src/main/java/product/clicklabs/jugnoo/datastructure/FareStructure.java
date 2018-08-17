@@ -57,7 +57,7 @@ public class FareStructure {
 
     public String getDisplayBaseFare(Context context) {
         if(displayBaseFare == null){
-            return Utils.formatCurrencyValue(currency, fixedFare);
+            return Utils.formatCurrencyValue(currency, fixedFare, false);
         } else{
             return displayBaseFare;
         }

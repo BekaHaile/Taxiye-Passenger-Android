@@ -99,8 +99,8 @@ public class FareDetailsDialog {
 
 			textViewMinimumFare.setText(Html.fromHtml(String.format(activity.getResources().getString(R.string.base_fare_format),
 					Data.autoData.getFareStructure().getDisplayBaseFare(activity))));
-			textViewKMValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerKm));
-			textViewMinValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerMin));
+			textViewKMValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerKm, false));
+			textViewMinValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerMin, false));
 			textViewKM.setText(activity.getString(R.string.per_format, Utils.getDistanceUnit(Data.autoData.getFareStructure().getDistanceUnit())));
 
 			Region region = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected();

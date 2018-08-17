@@ -88,8 +88,8 @@ public class SlidingBottomFareFragment extends Fragment implements GAAction, GAC
 
     public void update(){
         try {
-            textViewKMValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerKm));
-            textViewMinValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerMin));
+            textViewKMValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerKm, false));
+            textViewMinValue.setText(Utils.formatCurrencyValue(Data.autoData.getFareStructure().getCurrency(), Data.autoData.getFareStructure().farePerMin, false));
             textViewKM.setText(activity.getString(R.string.per_format, Utils.getDistanceUnit(Data.autoData.getFareStructure().getDistanceUnit())));
 
 
