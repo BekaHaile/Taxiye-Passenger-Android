@@ -345,7 +345,7 @@ public class JSONParser implements Constants {
             int fuguAppType = autoData.optInt(KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE);
             Prefs.with(context).save(Constants.KEY_FUGU_APP_KEY, fuguAppKey);
             Prefs.with(context).save(Constants.KEY_FUGU_APP_TYPE, fuguAppType);
-
+            int isTipEnabled = autoData.optInt(KEY_TIP_ENABLED, 0);
 
             NearbyPickupRegions nearbyPickupRegionses = autosData.getNearbyPickupRegions();
 
@@ -353,7 +353,7 @@ public class JSONParser implements Constants {
 					, cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
 					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
-                    , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2, isRazorpayEnabled);
+                    , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2, isRazorpayEnabled,isTipEnabled);
 
             Data.autoData.setUseRecentLocAtRequest(autosData.getUseRecentLocAtRequest());
             Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());
@@ -904,6 +904,7 @@ public class JSONParser implements Constants {
         int showPaymentOptions = jLastRideData.optInt(Constants.KEY_SHOW_PAYMENT_OPTIONS, 0);
         int paymentOption = jLastRideData.optInt(Constants.KEY_PREFERRED_PAYMENT_MODE, PaymentOption.CASH.getOrdinal());
         double tollCharge = jLastRideData.optDouble(Constants.KEY_TOLL_CHARGE, 0.0);
+        double driverTipAmount = jLastRideData.optDouble(Constants.KEY_TIP_AMOUNT, 0.0);
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -921,7 +922,7 @@ public class JSONParser implements Constants {
                 sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge,paidUsingMpesa,paidUsingRazorpay,paidUsingStripeCard, last_4, totalRide, status, supportNumber
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
-                showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge);
+                showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,driverTipAmount);
 	}
 
 
@@ -1017,6 +1018,7 @@ public class JSONParser implements Constants {
             String currency = null;
             ArrayList<BidInfo> bidInfos = new ArrayList<>();
             String vehicleIconUrl = null;
+            Double tipAmount  = null;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1083,7 +1085,7 @@ public class JSONParser implements Constants {
                             operatorId = jObject.optInt(KEY_OPERATOR_ID, 0);
                             currency = jObject.optString(KEY_CURRENCY);
                             vehicleIconUrl = jObject.optString(Constants.KEY_MARKER_ICON);
-
+                            tipAmount= jObject.optDouble(Constants.KEY_TIP_AMOUNT);
                             Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jObject.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
                             try {
@@ -1208,7 +1210,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

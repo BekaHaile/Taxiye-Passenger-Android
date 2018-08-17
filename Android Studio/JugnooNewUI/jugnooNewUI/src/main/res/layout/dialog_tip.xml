@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/llContent"
+        android:orientation="vertical"
+        android:background="@drawable/background_white_rounded"
+        android:layout_width="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:textColor="@color/theme_color"
+            android:textAllCaps="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="@string/title_add_tip_for_driver"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_black_r_b"
+            android:layout_height="wrap_content">
+
+            <product.clicklabs.jugnoo.widgets.PrefixedEditText
+                android:id="@+id/etTipAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:textSize="15sp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:background="@null"
+                android:hint="@string/enter_amount"
+                android:maxLines="1"
+                android:inputType="numberDecimal"
+                android:paddingStart="80dp"
+                android:paddingEnd="80dp"
+                android:textColor="@color/black"
+                android:textCursorDrawable="@null" />
+
+        </FrameLayout>
+
+
+
+        <Button
+            android:id="@+id/btn_done"
+            style="@style/ButtonTheme"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textAllCaps="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center"
+            android:textSize="15sp"
+            android:gravity="center"
+             android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:minWidth="200dp"
+            android:layout_width="wrap_content"
+            android:text="@string/done"
+            android:layout_height="wrap_content" />
+
+
+
+    </LinearLayout>
+
+
+
+    <ImageView
+        android:layout_alignEnd="@id/llContent"
+        android:layout_alignTop="@id/llContent"
+        android:id="@+id/btn_cancel"
+        style="@style/cross_popup_dp" />
+
+</RelativeLayout>

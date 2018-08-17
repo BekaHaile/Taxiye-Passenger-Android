@@ -50,7 +50,7 @@ public class DriverInfo {
 	private String currency;
 	private String markerUrl;
 	private int paymentMethod;
-
+	private Double tipAmount;
 	public DriverInfo(String userId){
 		this.userId = userId;
 	}
@@ -83,7 +83,7 @@ public class DriverInfo {
 			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
 					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId,
-					  String currency, String markerUrl){
+					  String currency, String markerUrl,Double tipAmount){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -114,6 +114,7 @@ public class DriverInfo {
 		this.operatorId = operatorId;
 		this.currency = currency;
 		this.markerUrl = markerUrl;
+		this.tipAmount = tipAmount;
 	}
 
 	//for last ride data
@@ -355,6 +356,14 @@ public class DriverInfo {
 			markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getMarkerBitmap(context, false)));
 			return map.addMarker(markerOptions);
 		}
+	}
+
+	public Double getTipAmount() {
+		return  tipAmount!=null && tipAmount>0?tipAmount:null;
+	}
+
+	public void setTipAmount(Double tipAmount) {
+		this.tipAmount = tipAmount;
 	}
 
 }

@@ -258,6 +258,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case SELECT_BID:
                 RestClient.getApiService().selectTheBid(params, callback);
                 break;
+            case EDIT_TIP:
+                RestClient.getApiService().editTip(params, callback);
+                break;
             case ADD_CARD_API:
                 RestClient.getApiService().addCardToCustomer(params, callback);
                 break;

@@ -420,6 +420,17 @@
 
             </LinearLayout>
 
+
+            <Button
+                android:id="@+id/buttonAddTipEndRide"
+                style="@style/ButtonTheme"
+                android:visibility="visible"
+                android:textAllCaps="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="30px"
+                android:text="@string/action_add_tip"
+                />
+
             <TextView
                 android:id="@+id/textViewRSScroll"
                 android:layout_width="20px"
