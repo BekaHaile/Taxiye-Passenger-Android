@@ -86,7 +86,6 @@ public class EndRideData {
 		}
 		this.sumAdditionalCharges = sumAdditionalCharges;
 
-		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge - this.discount + this.sumAdditionalCharges;
 
 		this.rideDate = rideDate;
 		this.phoneNumber = phoneNumber;
@@ -119,6 +118,8 @@ public class EndRideData {
 		this.paidUsingStripe = paidUsingStripe;
 		this.last_4 = last_4;
 		this.driverTipAmount = driverTipAmount;
+
+		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge - this.discount + this.sumAdditionalCharges + this.tollCharge + this.driverTipAmount;
 	}
 
 
