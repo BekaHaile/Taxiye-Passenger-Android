@@ -285,6 +285,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/ivDivBeforePaymentOps"
                     android:layout_width="2px"
                     android:layout_height="100px"
                     android:layout_centerVertical="true"

@@ -135,4 +135,5 @@
 
     <integer name="scale_type">@integer/fit_xy</integer>
     <bool name="is_card_mandatory_for_driver_tip">true</bool>
+    <integer name="visibility_ride_history_amount">@integer/view_gone</integer>
 </resources>

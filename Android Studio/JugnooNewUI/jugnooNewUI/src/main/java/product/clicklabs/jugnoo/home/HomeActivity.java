@@ -4336,6 +4336,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewIRPaymentOptionValue.setText(MyApplication.getInstance().getWalletCore()
                         .getPaymentOptionBalanceText(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
             }
+            if(PaymentOption.CASH.getOrdinal() == Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()
+                    && getResources().getInteger(R.integer.visibility_ride_history_amount) == getResources().getInteger(R.integer.view_gone)){
+                imageViewIRPaymentOption.setVisibility(View.GONE);
+                textViewIRPaymentOptionValue.setVisibility(View.GONE);
+                findViewById(R.id.ivDivBeforePaymentOps).setVisibility(View.GONE);
+            } else {
+                imageViewIRPaymentOption.setVisibility(View.VISIBLE);
+                textViewIRPaymentOptionValue.setVisibility(View.VISIBLE);
+                findViewById(R.id.ivDivBeforePaymentOps).setVisibility(View.VISIBLE);
+            }
         } catch (Exception e) {
         }
     }

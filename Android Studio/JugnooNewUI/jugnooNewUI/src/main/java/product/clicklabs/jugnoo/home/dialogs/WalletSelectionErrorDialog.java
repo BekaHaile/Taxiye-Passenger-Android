@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -52,6 +53,7 @@ public class WalletSelectionErrorDialog {
 			} else {
 				buttonPositive.setText(R.string.add_money_to_wallet);
 			}
+			buttonNegative.setVisibility(MyApplication.getInstance().getWalletCore().getEnabledPaymentModesCount() > 1 ? View.VISIBLE : View.GONE);
 			buttonNegative.setText(R.string.choose_other_mode_to_pay);
 
 			if(walletError){

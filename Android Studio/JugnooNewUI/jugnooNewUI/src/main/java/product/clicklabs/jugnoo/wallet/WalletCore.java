@@ -637,6 +637,18 @@ public class WalletCore {
         }
     }
 
+    public int getEnabledPaymentModesCount() {
+        int enabled = 0;
+        try {
+            for (int i = 0; i < paymentModeConfigDatas.size(); i++) {
+                enabled += paymentModeConfigDatas.get(i).getEnabled();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return enabled;
+    }
+
     public void updatePaymentModeConfigDatas(JSONObject jObj) {
         try {
             JSONArray jsonArray = jObj.getJSONArray(Constants.KEY_PAYMENT_MODE_CONFIG_DATA);
