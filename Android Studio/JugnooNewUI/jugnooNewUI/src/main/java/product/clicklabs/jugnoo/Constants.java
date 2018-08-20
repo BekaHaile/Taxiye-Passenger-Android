@@ -395,6 +395,7 @@ public interface Constants {
     String KEY_UPI_RAZORPAY = "upi_razorpay";
     String KEY_BALANCE = "balance";
     String KEY_WALLET_TYPE = "wallet_type";
+    String KEY_ADD_CARD_DRIVER_TIP = "add_card_driver_tip";
     String KEY_AMOUNT = "amount";
     String KEY_ADD_MONEY_URL = "add_money_url";
     String KEY_PAYTM_ENABLED = "paytm_enabled";

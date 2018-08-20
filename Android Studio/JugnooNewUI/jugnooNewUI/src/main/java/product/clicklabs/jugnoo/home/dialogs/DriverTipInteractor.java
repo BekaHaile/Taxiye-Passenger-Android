@@ -2,9 +2,11 @@ package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -19,9 +21,16 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import product.clicklabs.jugnoo.widgets.PrefixedEditText;
 
 /**
@@ -34,7 +43,7 @@ public class DriverTipInteractor {
     private Callback callback;
     private Dialog driverTipDialog;
     private PrefixedEditText edtAmount;
-    private Button actionButton;
+    public Button actionButton;
     private String engagementId;
 
     private static final Integer TAG_ACTION_EDIT = 0;
@@ -72,11 +81,32 @@ public class DriverTipInteractor {
                             actionButton.setText(activity.getString(R.string.done));
                       }else{
 
-                            try {
-                                editTip(Double.parseDouble(edtAmount.getText().toString().trim()));
-                            } catch (NumberFormatException e) {
-                                e.printStackTrace();
+                            PaymentModeConfigData stripePaymentData =   MyApplication.getInstance().getWalletCore().getStripeConfigData();
+                            if(!activity.getResources().getBoolean(R.bool.is_card_mandatory_for_driver_tip) ||
+                               (stripePaymentData!=null &&  stripePaymentData.getCardsData()!=null && stripePaymentData.getCardsData().size()>0)){
+                                try {
+                                    editTip(Double.parseDouble(edtAmount.getText().toString().trim()));
+                                } catch (NumberFormatException e) {
+                                    e.printStackTrace();
+                                }
+
+
+                           }else{
+
+                                DialogPopup.alertPopupWithListener(activity, "", activity.getString(R.string.please_add_card_to_proceed), new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        Intent intent = new Intent(activity, PaymentActivity.class);
+                                        intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
+                                        intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.STRIPE_CARDS.getOrdinal());
+                                        intent.putExtra(Constants.KEY_ADD_CARD_DRIVER_TIP, true);
+                                        activity.startActivityForResult(intent, HomeActivity.REQ_CODE_ADD_CARD_DRIVER_TIP);
+                                        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                                    }
+                                });
                             }
+
 
                         }
                     }

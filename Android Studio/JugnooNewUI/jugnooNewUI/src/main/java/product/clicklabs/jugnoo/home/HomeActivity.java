@@ -523,6 +523,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private RelativeLayout rlThumbsType;
     private LinearLayout llRatingFeedbackType;
     private TextView tvTipAmountLabel,tvEditTip,tvRemoveTip;
+    public static final int REQ_CODE_ADD_CARD_DRIVER_TIP = 0x167;
 
     @SuppressLint("NewApi")
     @Override
@@ -4942,7 +4943,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         super.onActivityResult(requestCode, resultCode, data);
         try {
             if (resultCode == RESULT_OK) {
-                if (requestCode == Constants.REQUEST_CODE_ADD_HOME) {
+                if(requestCode==REQ_CODE_ADD_CARD_DRIVER_TIP){
+                    if(driverTipInteractor!=null && driverTipInteractor.actionButton!=null){
+                        driverTipInteractor.actionButton.performClick();
+                    }
+
+                }else if (requestCode == Constants.REQUEST_CODE_ADD_HOME) {
                     String strResult = data.getStringExtra("PLACE");
                     SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
                     if (searchResult != null) {

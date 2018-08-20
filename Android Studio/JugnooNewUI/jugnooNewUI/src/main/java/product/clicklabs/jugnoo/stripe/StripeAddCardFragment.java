@@ -232,27 +232,10 @@ public class StripeAddCardFragment extends Fragment {
             public void onSuccess(StripeCardResponse stripeCardResponse, String message, int flag) {
 
                 if(stripeCardsStateListener!=null){
-                    stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData());
+                    stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData(),message,true);
                 }
 
-
-                if(getView()==null || getActivity()==null){
-                    return;
-                }
-
-
-                DialogPopup.alertPopupWithListener(getActivity(),"",message, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getActivity().onBackPressed();
-
-                    }
-                });
-
-
-
-
-            }
+             }
 
             @Override
             public boolean onError(StripeCardResponse stripeCardResponse, String message, int flag) {

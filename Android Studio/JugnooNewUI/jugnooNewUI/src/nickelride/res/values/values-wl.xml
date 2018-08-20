@@ -134,4 +134,5 @@
     <!--<color name="splash_text_OR_text_color">@color/white</color>-->
 
     <integer name="scale_type">@integer/fit_xy</integer>
+    <bool name="is_card_mandatory_for_driver_tip">true</bool>
 </resources>

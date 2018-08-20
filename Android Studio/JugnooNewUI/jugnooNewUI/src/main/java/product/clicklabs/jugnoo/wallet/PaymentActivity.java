@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.wallet;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
@@ -20,6 +22,7 @@ import product.clicklabs.jugnoo.stripe.StripeAddCardFragment;
 import product.clicklabs.jugnoo.stripe.StripeCardsStateListener;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.fragments.AddWalletFragment;
@@ -265,15 +268,37 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
 	}
 
 	@Override
-	public void onCardsUpdated(ArrayList<StripeCardData> stripeCardData) {
-		PaymentModeConfigData stripeConfigData  = MyApplication.getInstance().getWalletCore().updateStripeCards(stripeCardData);
-		if(getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName())!=null){
+	public void onCardsUpdated(ArrayList<StripeCardData> stripeCardData, String message, final boolean cardAdded) {
+		PaymentModeConfigData stripeConfigData = MyApplication.getInstance().getWalletCore().updateStripeCards(stripeCardData);
+		if (getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName()) != null) {
 
-			WalletFragment walletFragment = ((WalletFragment)getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName()));
+			WalletFragment walletFragment = ((WalletFragment) getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName()));
 			walletFragment.setStripePaymentUI(stripeConfigData);
 
 		}
+		if (!cardAdded) {
+			if (Data.autoData != null && (Data.autoData.getPickupPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal())) {
+				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
+			}
+		}
+
+		DialogPopup.alertPopupWithListener(PaymentActivity.this, "", message, new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+
+				if (cardAdded && getIntent().getBooleanExtra(Constants.KEY_ADD_CARD_DRIVER_TIP, false)) {
+					setResult(Activity.RESULT_OK);
+					finish();
+				}else{
+					onBackPressed();
+				}
+			}
+
+
+		});
+
 	}
+
 
 
 
