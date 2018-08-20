@@ -1929,6 +1929,7 @@
 
     <!-- Notification channel -->
     <string name="notification_channel_default">Notifications</string>
+    <string name="notification_channel_silent">Updates</string>
     <string name="notification_channel_description_default">Latest Updates</string>
     <string name="grant_contact_permission">You will have to grant contacts permission to view your contacts here.Please Press the button below to proceed.</string>
     <string name="grant_permission">Grant Permission</string>
@@ -1942,4 +1943,5 @@
     <string name="action_remove"><u>Remove</u></string>
     <string name="driver_tip">Driver Tip</string>
     <string name="action_add_tip">Add Tip</string>
+    <string name="cannot_apply_offer_during_ride">Cannot apply offer during ride</string>
 </resources>

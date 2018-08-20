@@ -30,8 +30,10 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -146,6 +148,12 @@ public class PromoDescriptionFragment extends Fragment {
 
 
 	private void applyCoupon(String clientId){
+		if(clientId.equals(Config.getAutosClientId())
+				&& PassengerScreenMode.P_SEARCH != HomeActivity.passengerScreenMode
+				&& PassengerScreenMode.P_INITIAL != HomeActivity.passengerScreenMode){
+			Utils.showToast(requireActivity(), getString(R.string.cannot_apply_offer_during_ride));
+			return;
+		}
 		Prefs.with(context).save(Constants.SP_USE_COUPON_ + clientId, promoCoupon.getId());
 		Prefs.with(context).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, (promoCoupon instanceof CouponInfo));
 		if (!clientId.equals(Config.getAutosClientId())) {

@@ -869,6 +869,7 @@ public interface Constants {
     String PAYER_USER_IDENTIFIER = "payer_user_identifier";
     String PAYEE_PHONE_NUMBER="payee_phone_no";
     String NOTIF_CHANNEL_DEFAULT = "default_007";
+    String NOTIF_CHANNEL_SILENT = "silent";
     String STOP_FOREGROUND = "stop_foreground";
     String KEY_OPERATOR_ID="operator_id";
     String KEY_OPERATOR_TOKEN = "operator_token";
@@ -922,4 +923,5 @@ public interface Constants {
     String KEY_DEFAULT_COUNTRY_CODE = "default_country_code";
     String KEY_DEFAULT_SUB_COUNTRY_CODE = "default_sub_country_code";
     String KEY_DEFAULT_COUNTRY_ISO = "default_country_iso";
+    String ACTION_UPDATE_STATE = "ACTION_UPDATE_STATE";
 }

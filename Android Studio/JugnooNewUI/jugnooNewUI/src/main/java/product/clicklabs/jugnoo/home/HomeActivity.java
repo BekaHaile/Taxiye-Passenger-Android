@@ -3841,6 +3841,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                /* if(Prefs.with(this).getBoolean(ASK_LOCATION_PERMISSION_BEFORE_RIDE))
                 getPermissionCommon().getPermission(REQUEST_CODE_LOCATION_SERVICE,  android.Manifest.permission.ACCESS_FINE_LOCATION);*/
+            } else {
+                Intent intent = new Intent(this, LocationUpdateService.class);
+                intent.putExtra(ACTION_UPDATE_STATE, 1);
+                startService(intent);
             }
         } else {
             Intent intent = new Intent(this, LocationUpdateService.class);
