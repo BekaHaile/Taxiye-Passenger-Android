@@ -52,8 +52,9 @@
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_top_bg">@integer/view_invisible</integer>
-    <integer name="show_splash_hezz_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_top_bg">@integer/view_invisible</integer>
     <integer name="show_social_login">@integer/view_invisible</integer>
     <color name="splash_logo_color">@color/theme_color</color>
 

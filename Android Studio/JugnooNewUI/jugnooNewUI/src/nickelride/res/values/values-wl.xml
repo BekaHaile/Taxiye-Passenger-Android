@@ -51,13 +51,14 @@
     <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
     <bool name="force_open_autos">true</bool>
 
-    <integer name="show_login_bottom_bg">@integer/view_gone</integer>
+    <integer name="show_splash_top_bg">@integer/view_invisible</integer>
+    <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_top_bg">@integer/view_invisible</integer>
     <color name="splash_logo_color">@color/text_color</color>
     <dimen name="splash_logo_width">200dp</dimen>
     <dimen name="splash_logo_height">200dp</dimen>
     <dimen name="splash_logo_top_margin">80dp</dimen>
-    <integer name="show_splash_top_bg">@integer/view_invisible</integer>
-    <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bg">@integer/view_visible</integer>
 
     <!--Changed-->
