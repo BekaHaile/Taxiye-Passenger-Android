@@ -50,6 +50,8 @@
     <dimen name="splash_logo_top_margin">100dp</dimen>
     <integer name="show_splash_top_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_top_bg">@integer/view_invisible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bg">@integer/view_visible</integer>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <drawable name="splash_background_drawable">@color/theme_color</drawable>
