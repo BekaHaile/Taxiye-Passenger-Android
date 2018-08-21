@@ -405,7 +405,9 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 							setStripePaymentUI(paymentModeConfigData);
 
 						} else if(paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()){
-							linearLayoutWalletContainer.addView(relativeLayoutJugnooCash);
+							if(getResources().getInteger(R.integer.visibility_jugnoo_cash_in_wallet) == getResources().getInteger(R.integer.view_visible)) {
+								linearLayoutWalletContainer.addView(relativeLayoutJugnooCash);
+							}
 						}
 					}
 				}
