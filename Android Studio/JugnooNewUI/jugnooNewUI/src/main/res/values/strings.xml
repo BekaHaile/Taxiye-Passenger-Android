@@ -1860,7 +1860,7 @@
     <string name="thank_you_for_valuable_feedback">Thank you for your valuable feedback</string>
     <string name="sorry_no_drivers_available_nearby">Sorry there are no drivers available nearby. We will look into it</string>
     <string name="sorry_all_drivers_busy">Sorry, All our drivers are currently busy. We are unable to offer you services right now. Please try again sometime later.</string>
-    <string name="location_accuracy_low_alert">Location accuracy is low. Are you sure you want to request an auto to pick you at this location?</string>
+    <string name="location_accuracy_low_alert">Location accuracy is low. Are you sure you want to request to pick you at this location?</string>
     <string name="pickup_location_different_from_current_location_alert">The pickup location you have set is different from your current location. Are you sure this is your pickup location?</string>
     <string name="check_balance">Check Balance</string>
     <string name="call_support">Call Support</string>
@@ -1883,7 +1883,7 @@
     <string name="set_preferences_caps">SET PREFERENCES</string>
     <string name="restarting_your_app">Restarting your app...</string>
     <string name="we_could_not_detect_your_location">We could not detect your location. Are you sure you want to request an auto to pick you at this location?</string>
-    <string name="location_accuracy_is_low">Location accuracy is low. Are you sure you want to request an auto to pick you at this location?</string>
+    <string name="location_accuracy_is_low">Location accuracy is low. Are you sure you want to request to pick you at this location?</string>
     <string name="the_pickup_location_you_have_set_is_different">The pickup location you have set is different from your current location. Are you sure this is your pickup location?</string>
     <string name="english">English</string>
     <string name="arabic">عربى</string>
