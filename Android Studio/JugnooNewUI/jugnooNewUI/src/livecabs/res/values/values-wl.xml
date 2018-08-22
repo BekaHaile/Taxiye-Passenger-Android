@@ -6,7 +6,6 @@
     <integer name="view_invisible">1</integer>
     <integer name="view_gone">2</integer>
 
-
     <!--Other things to change
         1. google-services.json
         2. Doc entity in strings.xml
@@ -60,7 +59,7 @@
     <integer name="show_social_login">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
-    <integer name="splash_bg_strip_scaleType">@integer/scale_type_center</integer>
+    <integer name="splash_bg_strip_scaleType">@integer/center_inside</integer>
 
     <string name="file_provider_name">com.livecabs.fileprovider</string>
     <string name="web_landing_page">https://livecabs.com</string>
@@ -89,5 +88,14 @@
     <integer name="show_invite_friends">@integer/view_gone</integer>
     <integer name="show_promo">@integer/view_gone</integer>
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
+
+
+    <!--new-->
+    <drawable name="cursor">@drawable/cursor_black</drawable>
+
+    <!--default support email for SupportMailActivity if not coming from server-->
+    <bool name="specified_country_search_result_enabled">false</bool>
+    <integer name="otp_via_call_enabled">0</integer>
+    <string name="profile_saved_location_text">@string/address_book</string>
 
 </resources>
