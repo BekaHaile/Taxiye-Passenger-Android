@@ -579,6 +579,7 @@
 
                         <!-- to be paid -->
                         <RelativeLayout
+                            android:id="@+id/rlToBePaid"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10px">
@@ -609,6 +610,7 @@
 
 
                         <ImageView
+                            android:id="@+id/ivToBePaid"
                             android:layout_width="540px"
                             android:layout_height="2px"
                             android:layout_gravity="center_horizontal"
@@ -627,6 +629,7 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
+                            android:id="@+id/llBaseFare"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -655,6 +658,7 @@
                         </LinearLayout>
 
                         <ImageView
+                            android:id="@+id/ivSepBaseFare"
                             android:layout_width="2px"
                             android:layout_height="80px"
                             android:background="@color/stroke_color_light" />
@@ -771,6 +775,7 @@
                     </LinearLayout>
 
                     <ImageView
+                        android:id="@+id/ivSepRideDetails"
                         android:layout_width="540px"
                         android:layout_height="2px"
                         android:layout_gravity="center_horizontal"
