@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.home.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,18 +9,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
-import product.clicklabs.jugnoo.home.models.Region;
-import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -64,21 +58,7 @@ public class SlidingBottomFareFragment extends Fragment implements GAAction, GAC
         textViewFareEstimage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Gson gson = new Gson();
-                Intent intent = new Intent(activity, FareEstimateActivity.class);
-                intent.putExtra(Constants.KEY_REGION, gson.toJson(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), Region.class));
-                intent.putExtra(Constants.KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
-                intent.putExtra(Constants.KEY_COUPON_SELECTED,activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
-
-                try {
-                    intent.putExtra(Constants.KEY_LATITUDE, activity.map.getCameraPosition().target.latitude);
-                    intent.putExtra(Constants.KEY_LONGITUDE, activity.map.getCameraPosition().target.longitude);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                //activity.startActivity(intent);
-                activity.startActivityForResult(intent, 4);
-                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                activity.openFareEstimate();
                 GAUtils.event(RIDES, HOME, FARE_ESTIMATE+CLICKED);
             }
         });

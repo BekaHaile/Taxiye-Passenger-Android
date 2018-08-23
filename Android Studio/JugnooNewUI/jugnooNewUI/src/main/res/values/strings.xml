@@ -1944,4 +1944,5 @@
     <string name="driver_tip">Driver Tip</string>
     <string name="action_add_tip">Add Tip</string>
     <string name="cannot_apply_offer_during_ride">Cannot apply offer during ride</string>
+    <string name="set_your_pickup_location">Set your pickup location</string>
 </resources>

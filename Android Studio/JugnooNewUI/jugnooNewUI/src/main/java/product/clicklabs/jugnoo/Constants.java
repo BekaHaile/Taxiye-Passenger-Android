@@ -706,6 +706,8 @@ public interface Constants {
     String KEY_DELIVERY_ID = "delivery_id";
     String KEY_PICKUP_LATITUDE = "pickup_latitude";
     String KEY_PICKUP_LONGITUDE = "pickup_longitude";
+    String KEY_DROP_LATITUDE = "drop_latitude";
+    String KEY_DROP_LONGITUDE = "drop_longitude";
     String KEY_DELIVERY_LATITUDE = "delivery_latitude";
     String KEY_DELIVERY_LONGITUDE = "delivery_longitude";
     String KEY_TRACKING_INFO = "tracking_info";

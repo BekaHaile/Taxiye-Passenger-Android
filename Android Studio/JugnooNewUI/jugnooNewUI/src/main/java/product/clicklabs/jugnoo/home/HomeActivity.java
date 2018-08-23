@@ -1111,20 +1111,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textVieGetFareEstimateConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, FareEstimateActivity.class);
-                intent.putExtra(Constants.KEY_REGION, gson.toJson(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), Region.class));
-                intent.putExtra(Constants.KEY_COUPON_SELECTED, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
-                intent.putExtra(KEY_RIDE_TYPE, slidingBottomPanel
-                        .getRequestRideOptionsFragment().getRegionSelected().getRideType());
-                try {
-                    intent.putExtra(KEY_LATITUDE, map.getCameraPosition().target.latitude);
-                    intent.putExtra(KEY_LONGITUDE, map.getCameraPosition().target.longitude);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                //startActivity(intent);
-                startActivityForResult(intent, FARE_ESTIMATE);
-                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                openFareEstimate();
 
 
             }
@@ -1866,6 +1853,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
+    }
+
+    public void openFareEstimate() {
+        if(Data.autoData == null || Data.autoData.getPickupLatLng() == null){
+            Utils.showToast(this, getString(R.string.set_your_pickup_location));
+            return;
+        }
+        Intent intent = new Intent(HomeActivity.this, FareEstimateActivity.class);
+        intent.putExtra(Constants.KEY_REGION, gson.toJson(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), Region.class));
+        intent.putExtra(Constants.KEY_COUPON_SELECTED, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
+        intent.putExtra(KEY_RIDE_TYPE, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
+        intent.putExtra(KEY_PICKUP_LATITUDE, Data.autoData.getPickupLatLng().latitude);
+        intent.putExtra(KEY_PICKUP_LONGITUDE, Data.autoData.getPickupLatLng().longitude);
+        intent.putExtra(KEY_PICKUP_LOCATION_ADDRESS, Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
+        if(Data.autoData.getDropLatLng() != null) {
+            intent.putExtra(KEY_DROP_LATITUDE, Data.autoData.getDropLatLng().latitude);
+            intent.putExtra(KEY_DROP_LONGITUDE, Data.autoData.getDropLatLng().longitude);
+            intent.putExtra(KEY_DROP_LOCATION_ADDRESS, Data.autoData.getDropAddress());
+        }
+        startActivityForResult(intent, FARE_ESTIMATE);
+        overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 
     private void showDriverTipDialog() {

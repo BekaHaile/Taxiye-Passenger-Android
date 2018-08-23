@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -55,9 +56,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants, GAAction, GACategory {
 
-    private final String TAG = FareEstimateActivity.class.getSimpleName();
-
-    LinearLayout relative;
+    RelativeLayout relative;
 
     TextView textViewTitle;
     ImageView imageViewBack;
@@ -73,12 +72,12 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     public ASSL assl;
 
     private int isPooled = 0, rideType = RideTypeValue.NORMAL.getOrdinal();
-    private LatLng pickupLatLng;
     private SearchResult searchResultGlobal;
     private Region region;
     private PromoCoupon promoCoupon;
     private GoogleApiClient mGoogleApiClient;
-    private TextView tvCouponApplied;
+    private LatLng pickupLatLng, dropLatLng;
+    private String pickupAddress, dropAddress;
 
     @Override
     protected void onResume() {
@@ -91,6 +90,14 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fare_estimate);
         try {
+            pickupLatLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_PICKUP_LATITUDE, Data.latitude),
+                    getIntent().getDoubleExtra(Constants.KEY_PICKUP_LONGITUDE, Data.longitude));
+            pickupAddress = getIntent().getStringExtra(Constants.KEY_PICKUP_LOCATION_ADDRESS);
+            if(getIntent().hasExtra(Constants.KEY_DROP_LATITUDE)){
+                dropLatLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_DROP_LATITUDE, Data.latitude),
+                        getIntent().getDoubleExtra(Constants.KEY_DROP_LONGITUDE, Data.longitude));
+                dropAddress = getIntent().getStringExtra(Constants.KEY_DROP_LOCATION_ADDRESS);
+            }
             Gson gson = new Gson();
             region = gson.fromJson(getIntent().getStringExtra(Constants.KEY_REGION), Region.class);
             rideType = getIntent().getIntExtra(Constants.KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
@@ -106,18 +113,6 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             e.printStackTrace();
         }
 
-        try {
-            double latitude = getIntent().getDoubleExtra(Constants.KEY_LATITUDE, Data.autoData.getPickupLatLng().latitude);
-            double longitude = getIntent().getDoubleExtra(Constants.KEY_LONGITUDE, Data.autoData.getPickupLatLng().longitude);
-            pickupLatLng = new LatLng(latitude, longitude);
-        } catch (Exception e) {
-            e.printStackTrace();
-            try {
-                pickupLatLng = Data.autoData.getPickupLatLng();
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-        }
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -127,14 +122,14 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        relative = (LinearLayout) findViewById(R.id.relative);
+        relative = findViewById(R.id.relative);
         assl = new ASSL(this, relative, 1134, 720, false);
 
-        textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        tvCouponApplied = (TextView) findViewById(R.id.tv_coupon_applied);
+        textViewTitle = findViewById(R.id.textViewTitle);
+        TextView tvCouponApplied = findViewById(R.id.tv_coupon_applied);
         textViewTitle.setTypeface(Fonts.avenirNext(this));
         tvCouponApplied.setTypeface(Fonts.mavenRegular(this));
-        imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+        imageViewBack = findViewById(R.id.imageViewBack);
         if (promoCoupon != null && promoCoupon.getId() != -1) {
             tvCouponApplied.setVisibility(View.VISIBLE);
             tvCouponApplied.setText(getString(R.string.coupon_applied_format, promoCoupon.getTitle()));
@@ -143,10 +138,10 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
         }
 
-        linearLayoutContainer = (LinearLayout) findViewById(R.id.linearLayoutContainer);
+        linearLayoutContainer = findViewById(R.id.linearLayoutContainer);
         linearLayoutContainer.setVisibility(View.VISIBLE);
 
-        relativeLayoutFareEstimateDetails = (RelativeLayout) findViewById(R.id.relativeLayoutFareEstimateDetails);
+        relativeLayoutFareEstimateDetails = findViewById(R.id.relativeLayoutFareEstimateDetails);
 
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapLite)).getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -162,6 +157,9 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                     mapLite.getUiSettings().setTiltGesturesEnabled(false);
                     mapLite.getUiSettings().setMyLocationButtonEnabled(false);
                     mapLite.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    if (pickupLatLng != null) {
+                        mapLite.moveCamera(CameraUpdateFactory.newLatLngZoom(pickupLatLng, 12));
+                    }
 
                     mapLite.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
@@ -175,22 +173,22 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         });
 
 
-        textViewPickupLocation = (TextView) findViewById(R.id.textViewPickupLocation);
+        textViewPickupLocation = findViewById(R.id.textViewPickupLocation);
         textViewPickupLocation.setTypeface(Fonts.mavenLight(this));
-        textViewDropLocation = (TextView) findViewById(R.id.textViewDropLocation);
+        textViewDropLocation = findViewById(R.id.textViewDropLocation);
         textViewDropLocation.setTypeface(Fonts.mavenLight(this));
-        textViewEstimateTime = (TextView) findViewById(R.id.textViewEstimateTime);
+        textViewEstimateTime = findViewById(R.id.textViewEstimateTime);
         textViewEstimateTime.setTypeface(Fonts.mavenMedium(this));
-        textViewEstimateDistance = (TextView) findViewById(R.id.textViewEstimateDistance);
+        textViewEstimateDistance = findViewById(R.id.textViewEstimateDistance);
         textViewEstimateDistance.setTypeface(Fonts.mavenMedium(this));
-        textViewEstimateFare = (TextView) findViewById(R.id.textViewEstimateFare);
+        textViewEstimateFare = findViewById(R.id.textViewEstimateFare);
         textViewEstimateFare.setTypeface(Fonts.mavenMedium(this));
-        textViewConvenienceCharge = (TextView) findViewById(R.id.textViewConvenienceCharge);
+        textViewConvenienceCharge = findViewById(R.id.textViewConvenienceCharge);
         textViewConvenienceCharge.setTypeface(Fonts.mavenLight(this));
         textViewConvenienceCharge.setText("");
-        textViewEstimateFareNote = (TextView) findViewById(R.id.textViewEstimateFareNote);
+        textViewEstimateFareNote = findViewById(R.id.textViewEstimateFareNote);
         textViewEstimateFareNote.setTypeface(Fonts.mavenLight(this));
-        buttonOk = (Button) findViewById(R.id.buttonOk);
+        buttonOk = findViewById(R.id.buttonOk);
         buttonOk.setTypeface(Fonts.mavenRegular(this));
 
         relativeLayoutFareEstimateDetails.setVisibility(View.GONE);
@@ -231,9 +229,8 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         });
 
         try {
-            if (rideType != RideTypeValue.POOL.getOrdinal() && Data.autoData.getDropLatLng() != null) {
-				getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
-                        Data.autoData.getDropLatLng(), Data.autoData.getDropAddress());
+            if (rideType != RideTypeValue.POOL.getOrdinal() && dropLatLng != null) {
+				getDirectionsAndComputeFare(pickupLatLng, pickupAddress, dropLatLng, dropAddress);
 			} else {
 
 				Bundle bundle = new Bundle();
@@ -471,11 +468,12 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     @Override
     public void onPlaceSearchPost(SearchResult searchResult) {
         try {
-            Data.autoData.setDropLatLng(searchResult.getLatLng());
-            Data.autoData.setDropAddress(searchResult.getAddress());
-            Data.autoData.setDropAddressId(searchResult.getId());
-            getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
-                    searchResult.getLatLng(), Data.autoData.getDropAddress());
+            if(Data.autoData != null) {
+                Data.autoData.setDropLatLng(searchResult.getLatLng());
+                Data.autoData.setDropAddress(searchResult.getAddress());
+                Data.autoData.setDropAddressId(searchResult.getId());
+            }
+            getDirectionsAndComputeFare(pickupLatLng, pickupAddress, searchResult.getLatLng(), searchResult.getAddress());
             searchResultGlobal = searchResult;
         } catch (Exception e) {
             e.printStackTrace();
@@ -507,7 +505,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 

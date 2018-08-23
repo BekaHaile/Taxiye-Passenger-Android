@@ -1,7 +1,6 @@
 package product.clicklabs.jugnoo.home.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -26,7 +24,6 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
@@ -239,20 +236,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
 
             } else if(v.getId() == R.id.linearLayoutFareEstimate || v.getId() == R.id.textVieGetFareEstimateMS){
-                Gson gson = new Gson();
-                Intent intent = new Intent(activity, FareEstimateActivity.class);
-                intent.putExtra(Constants.KEY_REGION, gson.toJson(getRegionSelected(), Region.class));
-                intent.putExtra(Constants.KEY_RIDE_TYPE, getRegionSelected().getRideType());
-                intent.putExtra(Constants.KEY_COUPON_SELECTED,getSelectedCoupon());
-
-                try {
-                    intent.putExtra(Constants.KEY_LATITUDE, activity.map.getCameraPosition().target.latitude);
-                    intent.putExtra(Constants.KEY_LONGITUDE, activity.map.getCameraPosition().target.longitude);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                activity.startActivityForResult(intent, 4);
-                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                activity.openFareEstimate();
 
                 GAUtils.event(RIDES, HOME, FARE_ESTIMATE+CLICKED);
             } else if(v.getId() == R.id.textViewOffers || v.getId() == R.id.textViewOffersMode){
