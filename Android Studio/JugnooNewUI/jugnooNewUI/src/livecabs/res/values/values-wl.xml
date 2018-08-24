@@ -35,8 +35,8 @@
     <string name="operator_token">6e1314631d098db197321244c93fb7c5</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">911</string>
-    <string name="facebook_page_id">livecbstechnology</string>
-    <string name="facebook_page_url">livecbstechnology</string>
+    <string name="facebook_page_id">171005023594875</string>
+    <string name="facebook_page_url">https://www.facebook.com/livecbs/</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
