@@ -90,6 +90,6 @@
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
     <string name="profile_saved_location_text">@string/address_book</string>
 
-    <integer name="scale_type">@integer/fit_start</integer>
+    <integer name="splash_bg_strip_scaleType">@integer/center_inside</integer>
 
 </resources>

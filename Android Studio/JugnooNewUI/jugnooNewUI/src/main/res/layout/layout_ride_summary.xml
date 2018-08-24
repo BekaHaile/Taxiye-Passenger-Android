@@ -183,7 +183,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:visibility="visible"
-                            android:layout_marginTop="14px">
+                            android:layout_marginTop="6px">
 
                             <TextView
                                 android:id="@+id/textViewEndRideDriverTip"
@@ -191,7 +191,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="30px"
                                 android:gravity="center_vertical"
-                                android:text="@string/driver_tip"
+                                android:text="@string/tip"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
 
@@ -213,7 +213,7 @@
                             android:id="@+id/relativeLayoutTollCharge"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14px">
+                            android:layout_marginTop="6px">
 
                             <TextView
                                 android:id="@+id/textViewEndTollCharge"
@@ -224,7 +224,7 @@
                                 android:text="@string/toll_charge"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26"
-                                app:typekitFont="maven"/>
+                                app:typekitFont="@string/maven_l"/>
 
 
                             <TextView
@@ -237,7 +237,7 @@
                                 android:text="@string/_0"
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26"
-                                app:typekitFont="maven"/>
+                                app:typekitFont="@string/maven_r"/>
                         </RelativeLayout>
 
 
@@ -302,41 +302,13 @@
                         </RelativeLayout>
 
                         <!-- discount -->
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutEndRideDiscount"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6px">
-
-                            <TextView
-                                android:id="@+id/textViewEndRideDiscount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/discount"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_26" />
-
-
-                            <TextView
-                                android:id="@+id/textViewEndRideDiscountValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginEnd="40px"
-                                android:gravity="center_vertical|end"
-                                android:text="0"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_26" />
-                        </RelativeLayout>
-
                         <product.clicklabs.jugnoo.utils.NonScrollListView
                             android:id="@+id/listViewEndRideDiscounts"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:divider="@color/transparent"
                             android:dividerHeight="2dp"
+                            android:layout_marginTop="4px"
                             android:splitMotionEvents="false"></product.clicklabs.jugnoo.utils.NonScrollListView>
 
 

@@ -1905,7 +1905,7 @@
     <string name="cvc">CVC</string>
     <string name="please_enter_name_and_email">Please enter name and email</string>
     <string name="number_should_not_start_with_zero">Phone number should not start with 0</string>
-    <string name="toll_charge">Toll Charge</string>
+    <string name="toll_charge">Toll Charges</string>
     <string name="label_add_store_text_oh_snap"><b>Suggest a store to %s</b></string>
     <string name="please_add_card_to_proceed">Please add card to proceed</string>
 
@@ -1945,4 +1945,5 @@
     <string name="action_add_tip">Add Tip</string>
     <string name="cannot_apply_offer_during_ride">Cannot apply offer during ride</string>
     <string name="set_your_pickup_location">Set your pickup location</string>
+    <string name="tip">Tip</string>
 </resources>

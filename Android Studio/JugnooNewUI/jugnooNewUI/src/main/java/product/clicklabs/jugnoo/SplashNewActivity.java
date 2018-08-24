@@ -1978,7 +1978,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
     //				changeUIState(State.SIGNUP);
     //			}
             } else if(openLS){
-				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)) {
+				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this) && state != State.SPLASH_LS_NEW) {
 					splashLSState();
 				}
 			}

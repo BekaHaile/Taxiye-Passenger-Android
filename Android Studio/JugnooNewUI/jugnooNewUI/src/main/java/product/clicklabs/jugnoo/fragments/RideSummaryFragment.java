@@ -72,13 +72,12 @@ public class RideSummaryFragment extends Fragment implements Constants {
     ImageView imageViewEndRideAutoIcon, imageViewEndRideDriverIcon;
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
     RelativeLayout relativeLayoutTollCharge, relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
-            relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm,
+            relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm,
             relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay,rlPaidUsingStripeCard,relativeLayoutPaidUsingMpesa, rlToBePaid;
     LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
     RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare,relativeLayoutDriverTip, relativeLayoutFinalFare;
     NonScrollListView listViewEndRideDiscounts;
     TextView textViewEndRideFareValue,textViewDriverTipValue, textViewEndTollChargeValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
-            textViewEndRideDiscount, textViewEndRideDiscountValue,
             textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue,
             textViewEndRideMobikwikValue, textViewEndRideFreeChargeValue,
             textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
@@ -205,11 +204,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
             textViewEndRideFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareValue);
             textViewDriverTipValue = (TextView) rootView.findViewById(R.id.textViewDriverTipValue);
             textViewDriverTipValue.setTypeface(Fonts.mavenRegular(activity));
-            ((TextView)rootView.findViewById(R.id.textViewEndRideDriverTip)).setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideFareValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndTollChargeValue = (TextView) rootView.findViewById(R.id.textViewEndTollChargeValue);
-            textViewEndRideDiscountValue = (TextView) rootView.findViewById(R.id.textViewEndRideDiscountValue);
-            textViewEndRideDiscountValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideFinalFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFinalFareValue);
             textViewEndRideFinalFareValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideJugnooCashValue = (TextView) rootView.findViewById(R.id.textViewEndRideJugnooCashValue);
@@ -244,7 +240,6 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
             relativeLayoutLuggageCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutLuggageCharge);
             relativeLayoutConvenienceCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutConvenienceCharge);
-            relativeLayoutEndRideDiscount = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideDiscount);
             relativeLayoutPaidUsingJugnooCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingJugnooCash);
             relativeLayoutPaidUsingPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingPaytm);
             relativeLayoutPaidUsingMobikwik = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingMobikwik);
@@ -263,8 +258,6 @@ public class RideSummaryFragment extends Fragment implements Constants {
             textViewEndRideLuggageChargeValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideConvenienceChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideConvenienceChargeValue);
             textViewEndRideConvenienceChargeValue.setTypeface(Fonts.mavenRegular(activity));
-            textViewEndRideDiscount = (TextView) rootView.findViewById(R.id.textViewEndRideDiscount);
-            textViewEndRideDiscount.setTypeface(Fonts.mavenLight(activity));
 
             listViewEndRideDiscounts = (NonScrollListView) rootView.findViewById(R.id.listViewEndRideDiscounts);
             endRideDiscountsAdapter = new EndRideDiscountsAdapter(activity);
@@ -279,6 +272,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             ((TextView) rootView.findViewById(R.id.textViewEndRideSummary)).setTypeface(Fonts.mavenMedium(activity));
 
             ((TextView) rootView.findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView)rootView.findViewById(R.id.textViewEndRideDriverTip)).setTypeface(Fonts.mavenLight(activity));
             ((TextView) rootView.findViewById(R.id.textViewEndRideLuggageCharge)).setTypeface(Fonts.mavenLight(activity));
             ((TextView) rootView.findViewById(R.id.textViewEndRideConvenienceCharge)).setTypeface(Fonts.mavenLight(activity));
             ((TextView) rootView.findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.mavenLight(activity));
@@ -459,19 +453,6 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 if (endRideData.discountTypes.size() > 0) {
                     listViewEndRideDiscounts.setVisibility(View.VISIBLE);
                     endRideDiscountsAdapter.setList(endRideData.discountTypes, endRideData.getCurrency());
-                    textViewEndRideDiscountValue.setVisibility(View.GONE);
-                    relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
-                    textViewEndRideDiscount.setVisibility(View.GONE);
-
-                    for (int i = 0; i < endRideData.discountTypes.size(); i++) {
-                        if (endRideData.discountTypes.get(i).getReferenceId() == 0) {
-                            textViewEndRideDiscount.setVisibility(View.VISIBLE);
-                            textViewEndRideDiscount.setText(R.string.discounts);
-                            break;
-                        }
-                    }
-                } else {
-                    relativeLayoutEndRideDiscount.setVisibility(View.GONE);
                 }
 
 

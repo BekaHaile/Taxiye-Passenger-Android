@@ -2,7 +2,7 @@
 <RelativeLayout
     android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="560px"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <TextView
@@ -12,7 +12,7 @@
         android:layout_marginStart="30px"
         android:gravity="center_vertical"
         android:text="@string/discount_with_hiphen"
-        android:textColor="@color/text_color_light"
+        android:textColor="@color/text_color"
         android:textSize="@dimen/text_size_26"/>
 
     <TextView
