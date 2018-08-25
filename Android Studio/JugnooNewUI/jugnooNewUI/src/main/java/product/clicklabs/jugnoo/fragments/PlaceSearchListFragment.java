@@ -47,6 +47,7 @@ import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
+import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -64,6 +65,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class PlaceSearchListFragment extends Fragment implements  Constants {
@@ -702,17 +704,10 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						if (geocodeResponse.results != null && geocodeResponse.results.size() > 0) {
 							lastLatFetched = latLng.latitude;
 							lastLngFetched = latLng.longitude;
+							String resp = new String(((TypedByteArray) response.getBody()).getBytes());
+							GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
 
-							String current_street = geocodeResponse.results.get(0).getStreetNumber();
-							String current_route = geocodeResponse.results.get(0).getRoute();
-							String current_area = geocodeResponse.results.get(0).getLocality();
-							String current_city = geocodeResponse.results.get(0).getCity();
-							String current_pincode = geocodeResponse.results.get(0).getCountry();
-
-							setFetchedAddressToTextView(current_street + (current_street.length() > 0 ? ", " : "")
-									+ current_route + (current_route.length() > 0 ? ", " : "")
-									+ geocodeResponse.results.get(0).getAddAddress()
-									+ ", " + current_city);
+							setFetchedAddressToTextView(gapiAddress.getSearchableAddress());
 							mapSettledCanForward = true;
 						} else {
 							Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));

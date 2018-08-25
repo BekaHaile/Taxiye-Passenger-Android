@@ -3934,7 +3934,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                 DialogPopup.dismissLoadingDialog();
                                 String resp = new String(((TypedByteArray) response.getBody()).getBytes());
                                 GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
-                                String address = gapiAddress.formattedAddress;
+                                String address = gapiAddress.getSearchableAddress();
                                 setSelectedAddress(address);
                                 setSelectedLatLng(currentLatLng);
                                 setSelectedAddressId(0);
