@@ -88,6 +88,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
             holder.relative.setTag(position);
             int padding = (int) (ASSL.minRatio() * 12f);
             holder.imageViewProductType.setPaddingRelative(padding, padding, padding, padding);
+            holder.textViewAmount.setVisibility(View.VISIBLE);
             if (orderHistory.getProductType() == ProductType.AUTO.getOrdinal()) {
                 holder.textViewStatus.setText(R.string.status_colon);
                 holder.textViewId.setText(R.string.id_colon);
@@ -98,6 +99,9 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewToValue.setText(orderHistory.getDropAddress());
                 holder.textViewDetails.setText(R.string.details_colon);
                 holder.textViewAmount.setText(Utils.formatCurrencyValue(orderHistory.getCurrency(), orderHistory.getAmount()));
+                holder.textViewAmount.setVisibility(activity.getResources().getInteger(R.integer.visibility_ride_history_amount)
+                        == activity.getResources().getInteger(R.integer.view_visible) ? View.VISIBLE : View.GONE);
+
                 holder.imageViewProductType.setImageResource(R.drawable.ic_rides);
                 holder.imageViewProductType.setBackgroundResource(R.drawable.circle_theme);
 

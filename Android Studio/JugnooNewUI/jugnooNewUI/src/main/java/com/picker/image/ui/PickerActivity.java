@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -242,9 +241,10 @@ public class PickerActivity extends AppCompatActivity {
     public void onClickDone(View view) {
 
         if (mPickOptions.pickMode == Picker.PickMode.SINGLE_IMAGE) {
-
+/*
             sCheckedImages.add(mCurrentlyDisplayedImage);
-            mCurrentlyDisplayedImage.isPicked = true;
+            mCurrentlyDisplayedImage.isPicked = true;*/
+
         } else {
             //No need to modify sCheckedImages for Multiple images mode
         }
@@ -475,7 +475,9 @@ public class PickerActivity extends AppCompatActivity {
     }
 
     private void handleToolbarVisibility(final boolean show) {
-
+        if(mToolbar == null){
+            return;
+        }
         final AppBarLayout appBarLayout = (AppBarLayout) mToolbar.getParent();
         final CoordinatorLayout rootLayout = (CoordinatorLayout) appBarLayout.getParent();
 
@@ -559,7 +561,7 @@ public class PickerActivity extends AppCompatActivity {
             //Single image pick mode
 
 
-            final ImagesPagerFragment pagerFragment;
+        /*    final ImagesPagerFragment pagerFragment;
 
             if (getSupportFragmentManager().findFragmentByTag(ImagesPagerFragment.TAG) != null) {
 
@@ -573,7 +575,10 @@ public class PickerActivity extends AppCompatActivity {
                     .replace(R.id.fragment_container, pagerFragment, ImagesPagerFragment.TAG)
                     .addToBackStack(ImagesPagerFragment.TAG)
                     .commit();
-
+*/
+            pickImageEvent.imageEntry.isPicked = true;
+            sCheckedImages.add(pickImageEvent.imageEntry);
+            onClickDone(mDoneFab);
 
         }
 

@@ -464,8 +464,6 @@
         <item>+263,ZW</item>
     </string-array>
 
-    <string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,</string>
-    <string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.\\ </string>
 
 
     <string name="paytm">Paytm</string>
@@ -1870,6 +1868,10 @@
     <string name="location_accuracy_is_low">"La precisión de ubicación es baja. ¿Seguro que quieres solicitar un auto para que te recoja en esta ubicación? "</string>
     <string name="the_pickup_location_you_have_set_is_different">"La ubicación de recolección que ha establecido es diferente de su ubicación actual. ¿Estás seguro de que este es tu lugar de recogida? "</string>
     <string name="number_should_not_start_with_zero">El número de teléfono no debe comenzar con 0.</string>
+    <string name="first_name">Nombre de pila</string>
+    <string name="last_name">Apellido</string>
+    <string name="please_enter_first_name">Por favor ingrese su nombre</string>
+    <string name="please_enter_last_name">Por favor ingrese el apellido</string>
 
 
 </resources>

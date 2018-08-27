@@ -25,8 +25,9 @@ public class AboutActivity extends BaseActivity {
     TextView textViewTitle;
     ImageView imageViewBack;
 
-    RelativeLayout relativeLayoutRateUs, relativeLayoutLikeUs, relativeLayoutTNC, relativeLayoutPrivacy, relativeLayoutAbout;
-    TextView textViewRateUs, textViewLikeUs, textViewTNC, textViewPrivacy, textViewAbout;
+    RelativeLayout relativeLayoutRateUs, relativeLayoutLikeUs, relativeLayoutTNC, relativeLayoutPrivacy,
+            relativeLayoutAbout, relativeLayoutFAQ;
+    TextView textViewRateUs, textViewLikeUs, textViewTNC, textViewPrivacy, textViewAbout, textViewFAQ;
 
 
     String facebookPageId;
@@ -58,6 +59,7 @@ public class AboutActivity extends BaseActivity {
         relativeLayoutTNC = (RelativeLayout) findViewById(R.id.relativeLayoutTNC);
         relativeLayoutPrivacy = (RelativeLayout) findViewById(R.id.relativeLayoutPrivacy);
         relativeLayoutAbout = (RelativeLayout) findViewById(R.id.relativeLayoutAbout);
+        relativeLayoutFAQ = (RelativeLayout) findViewById(R.id.relativeLayoutFAQ);
 
         textViewRateUs = (TextView) findViewById(R.id.textViewRateUs);
         textViewRateUs.setTypeface(Fonts.mavenLight(this));
@@ -69,6 +71,8 @@ public class AboutActivity extends BaseActivity {
         textViewPrivacy.setTypeface(Fonts.mavenLight(this));
         textViewAbout = (TextView) findViewById(R.id.textViewAbout);
         textViewAbout.setTypeface(Fonts.mavenLight(this));
+        textViewFAQ = (TextView) findViewById(R.id.textViewFAQ);
+        textViewFAQ.setTypeface(Fonts.mavenLight(this));
 
         textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_ABOUT);
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
@@ -137,6 +141,16 @@ public class AboutActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 HelpParticularActivity.helpSection = HelpSection.ABOUT;
+                startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+        });
+
+        relativeLayoutFAQ.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                HelpParticularActivity.helpSection = HelpSection.FAQ;
                 startActivity(new Intent(AboutActivity.this, HelpParticularActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }

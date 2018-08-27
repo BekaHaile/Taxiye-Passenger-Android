@@ -1,4 +1,4 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
     android:layout_width="match_parent"
@@ -23,17 +23,14 @@
             style="@style/back_image" />
     </RelativeLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:background="@drawable/shadow_down" />
 
     <LinearLayout
         android:id="@+id/linearLayoutContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_below="@+id/topBar">
 
         <!-- Drop location layout -->
 
@@ -47,7 +44,8 @@
         android:layout_height="match_parent"
         android:background="@color/sliding_bottom_bg_color"
         android:gravity="center_horizontal"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:layout_below="@+id/topBar">
 
 
         <RelativeLayout
@@ -336,5 +334,10 @@
 
     </RelativeLayout>
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="6px"
+        android:background="@drawable/shadow_down"
+        android:layout_below="@+id/topBar"/>
 
-</LinearLayout>
+</RelativeLayout>

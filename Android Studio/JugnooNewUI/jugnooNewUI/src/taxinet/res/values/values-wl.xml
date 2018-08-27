@@ -23,7 +23,6 @@
     <string name="app_name">Taxinet</string>
 
     <string name="google_maps_api_key">AIzaSyB8aOETL0HSK0AoQlqrBS6Do87IWVpwBPc</string>
-    <string name="google_maps_api_server_key">AIzaSyCZLBiNvptiJT6i0L3jpYo5X9YrLkNxKys</string>
     <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
     <string name="fb_app_id">782131025144439</string>
     <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
@@ -53,8 +52,9 @@
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_top_bg">@integer/view_invisible</integer>
-    <integer name="show_splash_hezz_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_top_bg">@integer/view_invisible</integer>
     <integer name="show_social_login">@integer/view_invisible</integer>
     <color name="splash_logo_color">@color/theme_color</color>
 

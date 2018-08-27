@@ -114,7 +114,9 @@
                             android:theme="@style/GreyHighlight"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:src="@drawable/profile_save"
-                            android:visibility="visible"/>
+                            android:visibility="visible"
+                            android:tint="@color/theme_color"
+                            />
 
                     </LinearLayout>
 
@@ -231,6 +233,7 @@
                                 android:background="@color/white"
                                 android:layoutDirection="ltr"
                                 android:orientation="horizontal"
+
                                 >
                                 <TextView
                                     android:id="@+id/tvCountryCode"

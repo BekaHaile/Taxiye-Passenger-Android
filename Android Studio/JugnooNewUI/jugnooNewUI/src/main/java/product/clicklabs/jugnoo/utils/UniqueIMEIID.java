@@ -1,18 +1,15 @@
 package product.clicklabs.jugnoo.utils;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.PermissionChecker;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import product.clicklabs.jugnoo.BuildConfig;
-import product.clicklabs.jugnoo.permission.PermissionCommon;
 
 public class UniqueIMEIID {
 
@@ -43,12 +40,13 @@ public class UniqueIMEIID {
 		}
 
 
-		androidSecureId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-		if(!TextUtils.isEmpty(imei))return imei;
-//		if(!TextUtils.isEmpty(meid))return meid;
-		if(!TextUtils.isEmpty(serial))return serial;
+		String suffix = BuildConfig.DEBUG ? "12aj":"";
 
-		return androidSecureId;
+		androidSecureId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+		if(!TextUtils.isEmpty(imei))return imei+suffix;
+		if(!TextUtils.isEmpty(serial))return serial+suffix;
+
+		return androidSecureId+suffix;
 
 
 

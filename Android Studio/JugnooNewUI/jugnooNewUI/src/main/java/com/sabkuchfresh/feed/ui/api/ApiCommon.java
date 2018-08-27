@@ -143,7 +143,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                             apiCommonCallback.onFinish();
 							if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage()==null?feedCommonResponse.getError():feedCommonResponse.getMessage(),
                                     feedCommonResponse.getFlag())) {
-								DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage());
+								DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage()==null?feedCommonResponse.getError():feedCommonResponse.getMessage());
 							}
 						}
                     } catch (Exception e) {
@@ -258,6 +258,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case SELECT_BID:
                 RestClient.getApiService().selectTheBid(params, callback);
                 break;
+            case EDIT_TIP:
+                RestClient.getApiService().editTip(params, callback);
+                break;
             case ADD_CARD_API:
                 RestClient.getApiService().addCardToCustomer(params, callback);
                 break;
@@ -269,6 +272,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 break;
             case UPDATE_USER_PROFILE:
                 RestClient.getApiService().updateUserProfile(params, callback);
+                break;
+            case UPDATE_USER_PROFILE_MULTIPART:
+                RestClient.getApiService().updateUserProfile(multipartTypedOutput, callback);
                 break;
             case FETCH_ACTIVE_LOCALES:
                 RestClient.getApiService().fetchActiveLocales(params, callback);

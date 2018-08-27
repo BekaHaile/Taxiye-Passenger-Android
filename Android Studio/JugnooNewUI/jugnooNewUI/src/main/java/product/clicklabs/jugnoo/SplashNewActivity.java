@@ -22,7 +22,6 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -81,7 +80,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
@@ -245,13 +243,13 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
     TextView textViewEmailRequired, textViewPasswordRequired, textViewForgotPassword;
     Button buttonEmailLogin;
 
-    RelativeLayout relativeLayoutSignup, buttonFacebookLogin, buttonGoogleLogin;
-    EditText editTextSName, editTextSEmail, editTextSPhone, editTextSPassword, editTextSPromo,
-            etOnboardingName, etOnboardingEmail, etReferralCode;
-    TextView textViewSNameRequired, textViewSEmailRequired, textViewSPhoneRequired, textViewSPasswordRequired;
-    Button buttonEmailSignup;
-    TextView textViewSTerms, tvSTerms;
-    RelativeLayout buttonFacebookSignup, buttonGoogleSignup;
+	RelativeLayout relativeLayoutSignup, buttonFacebookLogin, buttonGoogleLogin;
+	EditText editTextSName, editTextSEmail, editTextSPhone, editTextSPassword, editTextSPromo,
+			etOnboardingName, etOnboardingLastName, etOnboardingEmail, etReferralCode;
+	TextView textViewSNameRequired1, textViewSLastNameRequired1, textViewSEmailRequired1, textViewSPhoneRequired, textViewSPasswordRequired;
+	Button buttonEmailSignup;
+	TextView textViewSTerms, tvSTerms;
+	RelativeLayout buttonFacebookSignup, buttonGoogleSignup;
 
     LinearLayout linearLayoutWalletContainer, linearLayoutWalletContainerInner,
             linearLayoutPaytm, linearLayoutMobikwik, linearLayoutFreeCharge, linearLayoutNone, llContainer;
@@ -626,35 +624,31 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
             llOrLayout = findViewById(R.id.llOrLayout);
 
 
-            relativeLayoutSignup = (RelativeLayout) findViewById(R.id.relativeLayoutSignup);
-            editTextSName = (EditText) findViewById(R.id.editTextSName);
-            editTextSName.setTypeface(Fonts.mavenMedium(this));
-            editTextSEmail = (EditText) findViewById(R.id.editTextSEmail);
-            editTextSEmail.setTypeface(Fonts.mavenMedium(this));
-            editTextSPhone = (EditText) findViewById(R.id.editTextSPhone);
-            editTextSPhone.setTypeface(Fonts.mavenMedium(this));
-            editTextSPassword = (EditText) findViewById(R.id.editTextSPassword);
-            editTextSPassword.setTypeface(Fonts.mavenMedium(this));
-            editTextSPromo = (EditText) findViewById(R.id.editTextSPromo);
-            editTextSPromo.setTypeface(Fonts.mavenMedium(this));
-            textViewSNameRequired = (TextView) findViewById(R.id.textViewSNameRequired);
-            textViewSNameRequired.setTypeface(Fonts.mavenMedium(this));
-            textViewSEmailRequired = (TextView) findViewById(R.id.textViewSEmailRequired);
-            textViewSEmailRequired.setTypeface(Fonts.mavenMedium(this));
-            textViewSPhoneRequired = (TextView) findViewById(R.id.textViewSPhoneRequired);
-            textViewSPhoneRequired.setTypeface(Fonts.mavenMedium(this));
-            textViewSPasswordRequired = (TextView) findViewById(R.id.textViewSPasswordRequired);
-            textViewSPasswordRequired.setTypeface(Fonts.mavenMedium(this));
-            ((TextView) findViewById(R.id.textViewSignupOr)).setTypeface(Fonts.mavenMedium(this));
-            ((TextView) findViewById(R.id.textViewSPhone91)).setTypeface(Fonts.mavenMedium(this));
-            buttonEmailSignup = (Button) findViewById(R.id.buttonEmailSignup);
-            buttonEmailSignup.setTypeface(Fonts.mavenRegular(this));
-            buttonFacebookSignup = (RelativeLayout) findViewById(R.id.buttonFacebookSignup);
-            buttonGoogleSignup = (RelativeLayout) findViewById(R.id.buttonGoogleSignup);
-            textViewSTerms = (TextView) findViewById(R.id.textViewSTerms);
-            textViewSTerms.setTypeface(Fonts.mavenMedium(this));
-            tvSTerms = (TextView) findViewById(R.id.tvSTerms);
-            tvSTerms.setTypeface(Fonts.mavenMedium(this));
+			relativeLayoutSignup = (RelativeLayout) findViewById(R.id.relativeLayoutSignup);
+			editTextSName = (EditText) findViewById(R.id.editTextSName);
+			editTextSName.setTypeface(Fonts.mavenMedium(this));
+			editTextSEmail = (EditText) findViewById(R.id.editTextSEmail);
+			editTextSEmail.setTypeface(Fonts.mavenMedium(this));
+			editTextSPhone = (EditText) findViewById(R.id.editTextSPhone);
+			editTextSPhone.setTypeface(Fonts.mavenMedium(this));
+			editTextSPassword = (EditText) findViewById(R.id.editTextSPassword);
+			editTextSPassword.setTypeface(Fonts.mavenMedium(this));
+			editTextSPromo = (EditText) findViewById(R.id.editTextSPromo);
+			editTextSPromo.setTypeface(Fonts.mavenMedium(this));
+			textViewSPhoneRequired = (TextView) findViewById(R.id.textViewSPhoneRequired);
+			textViewSPhoneRequired.setTypeface(Fonts.mavenMedium(this));
+			textViewSPasswordRequired = (TextView) findViewById(R.id.textViewSPasswordRequired);
+			textViewSPasswordRequired.setTypeface(Fonts.mavenMedium(this));
+			((TextView) findViewById(R.id.textViewSignupOr)).setTypeface(Fonts.mavenMedium(this));
+			((TextView) findViewById(R.id.textViewSPhone91)).setTypeface(Fonts.mavenMedium(this));
+			buttonEmailSignup = (Button) findViewById(R.id.buttonEmailSignup);
+			buttonEmailSignup.setTypeface(Fonts.mavenRegular(this));
+			buttonFacebookSignup = (RelativeLayout) findViewById(R.id.buttonFacebookSignup);
+			buttonGoogleSignup = (RelativeLayout) findViewById(R.id.buttonGoogleSignup);
+			textViewSTerms = (TextView) findViewById(R.id.textViewSTerms);
+			textViewSTerms.setTypeface(Fonts.mavenMedium(this));
+			tvSTerms = (TextView) findViewById(R.id.tvSTerms);
+			tvSTerms.setTypeface(Fonts.mavenMedium(this));
 
             linearLayoutWalletContainer = (LinearLayout) findViewById(R.id.linearLayoutWalletContainer);
             linearLayoutWalletContainerInner = (LinearLayout) findViewById(R.id.linearLayoutWalletContainerInner);
@@ -683,26 +677,35 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
             tvScroll = (TextView) findViewById(R.id.tvScroll);
             llSignupMain = (LinearLayout) findViewById(R.id.llSignupMain);
 
-            rlPromo = (RelativeLayout) findViewById(R.id.rlPromo);
-            rlClaimGift = (RelativeLayout) findViewById(R.id.rlClaimGift);
-            ivUser = (ImageView) findViewById(R.id.ivUser);
-            tvGiftFrom = (TextView) findViewById(R.id.tvGiftFrom);
-            tvGiftFrom.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
-            tvGiftDetail = (TextView) findViewById(R.id.tvGiftDetail);
-            tvGiftDetail.setTypeface(Fonts.mavenMedium(this));
-            btnClaimGift = (Button) findViewById(R.id.btnClaimGift);
-            btnClaimGift.setTypeface(Fonts.mavenMedium(this));
-            tvReferralTitle = (TextView) findViewById(R.id.tvReferralTitle);
-            etOnboardingName = (EditText) findViewById(R.id.etOnboardingName);
-            etOnboardingEmail = (EditText) findViewById(R.id.etOnboardingEmail);
-            etReferralCode = (EditText) findViewById(R.id.etReferralCode);
-            bPromoSubmit = (Button) findViewById(R.id.bPromoSubmit);
-            svSignupOnboarding = (ScrollView) findViewById(R.id.svSignupOnboarding);
-            llSignupOnboarding = (LinearLayout) findViewById(R.id.llSignupOnboarding);
-            tvSkip = (TextView) findViewById(R.id.tvSkip);
-            rlPhoneLogin = (RelativeLayout) findViewById(R.id.rlPhoneLogin);
-            rlSignupOnboarding = (RelativeLayout) findViewById(R.id.rlSignupOnboarding);
-            btnPhoneLogin = (Button) findViewById(R.id.btnPhoneLogin);
+			rlPromo = (RelativeLayout) findViewById(R.id.rlPromo);
+			rlClaimGift = (RelativeLayout) findViewById(R.id.rlClaimGift);
+			ivUser = (ImageView) findViewById(R.id.ivUser);
+			tvGiftFrom = (TextView) findViewById(R.id.tvGiftFrom); tvGiftFrom.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD);
+			tvGiftDetail = (TextView) findViewById(R.id.tvGiftDetail); tvGiftDetail.setTypeface(Fonts.mavenMedium(this));
+			btnClaimGift = (Button) findViewById(R.id.btnClaimGift); btnClaimGift.setTypeface(Fonts.mavenMedium(this));
+			tvReferralTitle = (TextView) findViewById(R.id.tvReferralTitle);
+			etOnboardingName = (EditText) findViewById(R.id.etOnboardingName);
+			etOnboardingLastName = (EditText) findViewById(R.id.etOnboardingLastName);
+			etOnboardingEmail = (EditText) findViewById(R.id.etOnboardingEmail);
+			textViewSNameRequired1 = (TextView) findViewById(R.id.textViewSNameRequired1);
+			textViewSNameRequired1.setTypeface(Fonts.mavenMedium(this));
+			textViewSLastNameRequired1 = (TextView) findViewById(R.id.textViewSLastNameRequired1);
+			textViewSLastNameRequired1.setTypeface(Fonts.mavenMedium(this));
+			textViewSEmailRequired1 = (TextView) findViewById(R.id.textViewSEmailRequired1);
+			textViewSEmailRequired1.setTypeface(Fonts.mavenMedium(this));
+
+			etOnboardingName.addTextChangedListener(new CustomTextWatcher(textViewSNameRequired1));
+			etOnboardingLastName.addTextChangedListener(new CustomTextWatcher(textViewSLastNameRequired1));
+			etOnboardingEmail.addTextChangedListener(new CustomTextWatcher(textViewSEmailRequired1));
+
+			etReferralCode = (EditText) findViewById(R.id.etReferralCode);
+			bPromoSubmit = (Button) findViewById(R.id.bPromoSubmit);
+			svSignupOnboarding = (ScrollView) findViewById(R.id.svSignupOnboarding);
+			llSignupOnboarding = (LinearLayout) findViewById(R.id.llSignupOnboarding);
+			tvSkip = (TextView) findViewById(R.id.tvSkip);
+			rlPhoneLogin = (RelativeLayout) findViewById(R.id.rlPhoneLogin);
+			rlSignupOnboarding = (RelativeLayout) findViewById(R.id.rlSignupOnboarding);
+			btnPhoneLogin = (Button) findViewById(R.id.btnPhoneLogin);
 
             ((TextView) findViewById(R.id.tvJugnooTaxiS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
             ((TextView) findViewById(R.id.tvJugnooTaxiLS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
@@ -837,35 +840,47 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
                 }
             });
 
-            bPromoSubmit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try {
-                        if (!TextUtils.isEmpty(loginResponseStr)) {
-                            String name = etOnboardingName.getText().toString().trim();
-                            String email = etOnboardingEmail.getText().toString().trim();
-                            String referralCode = etReferralCode.getText().toString().trim();
-                            if (!TextUtils.isEmpty(email) && !Utils.isEmailValid(email)) {
-                                Utils.showToast(SplashNewActivity.this, getString(R.string.invalid_email_error));
-                                return;
-                            }
-                            if (tvSkip.getVisibility() == View.VISIBLE && TextUtils.isEmpty(name) && TextUtils.isEmpty(email) && TextUtils.isEmpty(referralCode)) {
-                                tvSkip.performClick();
-                                return;
-                            }
-                            if (tvSkip.getVisibility() != View.VISIBLE && (TextUtils.isEmpty(name) || TextUtils.isEmpty(email))) {
-                                Utils.showToast(SplashNewActivity.this, getString(R.string.please_enter_name_and_email));
-                                return;
-                            }
-                            apiUpdateUserProfile(SplashNewActivity.this, accessToken, name, email, referralCode);
-                            Utils.hideSoftKeyboard(SplashNewActivity.this, etOnboardingName);
-                            GAUtils.event(JUGNOO, REFERRAL_CODE_SCREEN, SUBMIT + CLICKED);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+			bPromoSubmit.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						if(!TextUtils.isEmpty(loginResponseStr)) {
+							String first = etOnboardingName.getText().toString().trim();
+							String last = etOnboardingLastName.getText().toString().trim();
+							String email = etOnboardingEmail.getText().toString().trim();
+							if(tvSkip.getVisibility() != View.VISIBLE && TextUtils.isEmpty(first)){
+								Utils.showToast(SplashNewActivity.this, getString(R.string.please_enter_first_name));
+								return;
+							}
+							if(tvSkip.getVisibility() != View.VISIBLE && TextUtils.isEmpty(last)){
+								Utils.showToast(SplashNewActivity.this, getString(R.string.please_enter_last_name));
+								return;
+							}
+							if(tvSkip.getVisibility() != View.VISIBLE && TextUtils.isEmpty(email)){
+								Utils.showToast(SplashNewActivity.this, getString(R.string.please_enter_email));
+								return;
+							}
+
+							String name = first + " " + last;
+							name = name.trim();
+							String referralCode = etReferralCode.getText().toString().trim();
+							if(!TextUtils.isEmpty(email) && !Utils.isEmailValid(email)){
+								Utils.showToast(SplashNewActivity.this, getString(R.string.invalid_email_error));
+								return;
+							}
+							if(tvSkip.getVisibility() == View.VISIBLE && TextUtils.isEmpty(name) && TextUtils.isEmpty(email) && TextUtils.isEmpty(referralCode)){
+								tvSkip.performClick();
+								return;
+							}
+							apiUpdateUserProfile(SplashNewActivity.this, accessToken, name, email, referralCode);
+							Utils.hideSoftKeyboard(SplashNewActivity.this, etOnboardingName);
+							GAUtils.event(JUGNOO, REFERRAL_CODE_SCREEN, SUBMIT+CLICKED);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 
             rlCountryCode.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1171,10 +1186,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
                 }
             });
 
-            editTextSName.addTextChangedListener(new CustomTextWatcher(textViewSNameRequired));
-            editTextSEmail.addTextChangedListener(new CustomTextWatcher(textViewSEmailRequired));
-            editTextSPhone.addTextChangedListener(new CustomTextWatcher(textViewSPhoneRequired));
-            editTextSPassword.addTextChangedListener(new CustomTextWatcher(textViewSPasswordRequired));
+			editTextSPhone.addTextChangedListener(new CustomTextWatcher(textViewSPhoneRequired));
+			editTextSPassword.addTextChangedListener(new CustomTextWatcher(textViewSPasswordRequired));
 
             editTextSName.setOnFocusChangeListener(onFocusChangeListener);
             editTextSEmail.setOnFocusChangeListener(onFocusChangeListener);
@@ -1394,8 +1407,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
             e.printStackTrace();
         }
 
-        logSome();
-        showLocationEnableDialog();
 
         if (Utils.isAppInstalled(this, POKEMON_GO_APP_PACKAGE)
                 && Prefs.with(this).getInt(Constants.SP_POKESTOP_ENABLED_BY_USER, -1) == -1) {
@@ -1525,9 +1536,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
     }
 
 
-    private void logSome() {
-        Log.i("Splash", "temp");
-    }
 
     private void animRightToLeft(RelativeLayout currentView, RelativeLayout newView, int duration) {
         Animation anim1 = AnimationUtils.loadAnimation(this, R.anim.right_in);
@@ -1681,13 +1689,17 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
 
                 break;
 
-            case SPLASH_LOGIN_PHONE_NO:
-                imageViewBack.setVisibility(View.VISIBLE);
-                llContainer.setVisibility(View.VISIBLE);
-                rlPhoneLogin.setVisibility(View.VISIBLE);
-                editTextPhoneNumber.setError(null);
-                editTextPhoneNumber.setText(Utils.retrievePhoneNumberTenChars(phoneNoToFillInInHouseLogin, Utils.getCountryCode(this)));
-                animRightToLeft(rlLoginSignupNew, rlPhoneLogin, duration);
+			case SPLASH_LOGIN_PHONE_NO:
+				imageViewBack.setVisibility(View.VISIBLE);
+				llContainer.setVisibility(View.VISIBLE);
+				rlPhoneLogin.setVisibility(View.VISIBLE);
+				editTextPhoneNumber.setError(null);
+				editTextPhoneNumber.setText(Utils.retrievePhoneNumberTenChars(phoneNoToFillInInHouseLogin, Utils.getCountryCode(this)));
+				tvCountryCode.setText(Utils.getCountryCode(this));
+				if(editTextPhoneNumber.getText().length() == 0) {
+					editTextPhoneNumber.setText(Prefs.with(SplashNewActivity.this).getString(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE, ""));
+				}
+				animRightToLeft(rlLoginSignupNew, rlPhoneLogin, duration);
 
                 break;
 
@@ -1710,23 +1722,24 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
 
                 GAUtils.trackScreenView(REFERRAL_CODE_SCREEN);
 
-                if (Prefs.with(this).getInt(Constants.KEY_SHOW_PROMO_ONBOARDING, 1) == 1) {
-                    tvReferralTitle.setVisibility(View.VISIBLE);
-                    etReferralCode.setVisibility(View.VISIBLE);
-                    findViewById(R.id.ivEtPromoDiv).setVisibility(View.VISIBLE);
-                } else {
-                    tvReferralTitle.setVisibility(View.GONE);
-                    etReferralCode.setVisibility(View.GONE);
-                    findViewById(R.id.ivEtPromoDiv).setVisibility(View.GONE);
-                }
-                if (Prefs.with(this).getInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1) == 1) {
-                    tvSkip.setVisibility(View.VISIBLE);
-                } else {
-                    tvSkip.setVisibility(View.GONE);
-                    textViewSNameRequired.setVisibility(View.GONE);
-                    textViewSEmailRequired.setVisibility(View.GONE);
-                }
-                break;
+				if(Prefs.with(this).getInt(Constants.KEY_SHOW_PROMO_ONBOARDING, 1) == 1){
+					tvReferralTitle.setVisibility(View.VISIBLE);
+					etReferralCode.setVisibility(View.VISIBLE);
+					findViewById(R.id.ivEtPromoDiv).setVisibility(View.VISIBLE);
+				} else {
+					tvReferralTitle.setVisibility(View.GONE);
+					etReferralCode.setVisibility(View.GONE);
+					findViewById(R.id.ivEtPromoDiv).setVisibility(View.GONE);
+				}
+				if(Prefs.with(this).getInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1) == 1){
+					tvSkip.setVisibility(View.VISIBLE);
+				} else {
+					tvSkip.setVisibility(View.GONE);
+					textViewSNameRequired1.setVisibility(View.GONE);
+					textViewSLastNameRequired1.setVisibility(View.GONE);
+					textViewSEmailRequired1.setVisibility(View.GONE);
+				}
+				break;
 
             case SPLASH_LS:
                 imageViewBack.setVisibility(View.GONE);
@@ -1944,24 +1957,24 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
                 SplashNewActivity.registerationType = RegisterationType.EMAIL;
                 setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, referralCode));
                 //if(!TextUtils.isEmpty(refreeUserId)) {
-                if (rlClaimGift.getVisibility() != View.VISIBLE) {
-                    Log.v("In sendToRegisterThroughSms", "start");
-                    rlPromo.setVisibility(View.GONE);
-                    changeUIState(State.CLAIM_GIFT);
-                }
-                //			} else{
-                //				rlPromo.setVisibility(View.VISIBLE);
-                //				changeUIState(State.SIGNUP);
-                //			}
-            } else if (openLS) {
-                if (PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)) {
-                    splashLSState();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+                    if (rlClaimGift.getVisibility() != View.VISIBLE) {
+                        Log.v("In sendToRegisterThroughSms", "start");
+                        rlPromo.setVisibility(View.GONE);
+                        changeUIState(State.CLAIM_GIFT);
+                    }
+    //			} else{
+    //				rlPromo.setVisibility(View.VISIBLE);
+    //				changeUIState(State.SIGNUP);
+    //			}
+            } else if(openLS){
+				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this) && state != State.SPLASH_LS_NEW) {
+					splashLSState();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
     private View.OnClickListener onClickListenerKeybordHide = new View.OnClickListener() {
         @Override
@@ -2342,9 +2355,14 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
                         Prefs.with(SplashNewActivity.this).save(Constants.KEY_TERMS_OF_USE_URL, jObj.optString(Constants.KEY_TERMS_OF_USE_URL, getString(R.string.terms_of_use_url)));
                         Prefs.with(SplashNewActivity.this).save(Constants.KEY_SHOW_TERMS, jObj.optInt(Constants.KEY_SHOW_TERMS, 1));
 
-                        JSONParser.parseAndSetLocale(SplashNewActivity.this, jObj);
-                        Locale locale = new Locale(LocaleHelper.getLanguage(activity));
-                        Locale.setDefault(locale);
+						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_CODE));
+						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE));
+						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_COUNTRY_ISO, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_ISO));
+
+
+						JSONParser.parseAndSetLocale(SplashNewActivity.this, jObj);
+						Locale locale = new Locale(LocaleHelper.getLanguage(activity));
+						Locale.setDefault(locale);
 
                         Configuration config = new Configuration();
                         config.locale = locale;
@@ -2708,16 +2726,20 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
     }
 
 
-    private void showLocationEnableDialog() {
-        int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
-        if (resp != ConnectionResult.SUCCESS) {
-            Log.e("Google Play Service Error ", "=" + resp);
-            DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
-        } else {
-            LocationInit.showLocationAlertDialog(SplashNewActivity.this);
-            getLocationFetcher().connect(SplashNewActivity.this, 10000);
-        }
-    }
+
+	private void showLocationEnableDialog() {
+		if(!PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)){
+			return;
+		}
+		int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getApplicationContext());
+		if (resp != ConnectionResult.SUCCESS) {
+			Log.e("Google Play Service Error ", "=" + resp);
+			DialogPopup.showGooglePlayErrorAlert(SplashNewActivity.this);
+		} else {
+			LocationInit.showLocationAlertDialog(SplashNewActivity.this);
+			getLocationFetcher().connect(SplashNewActivity.this, 10000);
+		}
+	}
 
 
     private void initiateDeviceInfoVariables() {
@@ -4439,26 +4461,28 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
-        textViewNoNet.setText(R.string.no_internet_connection);
-        ((TextView) findViewById(R.id.tvLoginSignupWith)).setText(R.string.login_signup_with);
-        ((TextView) findViewById(R.id.tvMobileNumber)).setText(R.string.mobile_string);
-        ((TextView) findViewById(R.id.textViewLoginOr)).setText(R.string.or);
-        ((TextView) findViewById(R.id.tvFacebook)).setText(R.string.nl_login_facebook);
-        ((TextView) findViewById(R.id.tvGoogle)).setText(R.string.nl_login_google);
-        tvSTerms.setText(R.string.nl_splash_terms);
-        tvReferralTitle.setText(R.string.do_you_have_a_referral_code);
-        etReferralCode.setHint(R.string.enter_promocode_optional);
-        ((TextView) findViewById(R.id.tvEnterPersonalDetails)).setText(R.string.please_enter_your_personal_info);
-        etOnboardingName.setHint(R.string.your_full_name);
-        etOnboardingEmail.setHint(R.string.email_address);
-        textViewSNameRequired.setText(R.string.nl_splash_optional);
-        textViewSEmailRequired.setText(R.string.nl_splash_optional);
-        bPromoSubmit.setText(R.string.next);
-        tvSkip.setText(R.string.skip_this_step);
-        tvCountryCode.setHint(R.string.code);
-        editTextPhoneNumber.setHint(R.string.phone_number);
-        textViewPhoneNumberRequired.setText(R.string.nl_splash_required);
-        btnPhoneLogin.setText(R.string.continue_text);
+		textViewNoNet.setText(R.string.no_internet_connection);
+		((TextView)findViewById(R.id.tvLoginSignupWith)).setText(R.string.login_signup_with);
+		((TextView)findViewById(R.id.tvMobileNumber)).setText(R.string.mobile_string);
+		((TextView)findViewById(R.id.textViewLoginOr)).setText(R.string.or);
+		((TextView)findViewById(R.id.tvFacebook)).setText(R.string.nl_login_facebook);
+		((TextView)findViewById(R.id.tvGoogle)).setText(R.string.nl_login_google);
+		tvSTerms.setText(R.string.nl_splash_terms);
+		tvReferralTitle.setText(R.string.do_you_have_a_referral_code);
+		etReferralCode.setHint(R.string.enter_promocode_optional);
+		((TextView)findViewById(R.id.tvEnterPersonalDetails)).setText(R.string.please_enter_your_personal_info);
+		etOnboardingName.setHint(R.string.first_name);
+		etOnboardingLastName.setHint(R.string.last_name);
+		etOnboardingEmail.setHint(R.string.email_address);
+		textViewSNameRequired1.setText(R.string.nl_splash_optional);
+		textViewSLastNameRequired1.setText(R.string.nl_splash_optional);
+		textViewSEmailRequired1.setText(R.string.nl_splash_optional);
+		bPromoSubmit.setText(R.string.next);
+		tvSkip.setText(R.string.skip_this_step);
+		tvCountryCode.setHint(R.string.code);
+		editTextPhoneNumber.setHint(R.string.phone_number);
+		textViewPhoneNumberRequired.setText(R.string.nl_splash_required);
+		btnPhoneLogin.setText(R.string.continue_text);
 
     }
 }

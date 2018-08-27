@@ -195,28 +195,10 @@ public class StripeViewCardFragment extends Fragment {
         new ApiCommon<StripeCardResponse>(getActivity()).showLoader(true).execute(params, ApiName.ADD_CARD_API, new APICommonCallback<StripeCardResponse>() {
             @Override
             public void onSuccess(StripeCardResponse stripeCardResponse, String message, int flag) {
+
                 if(stripeCardsStateListener!=null){
-                    stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData());
+                    stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData(),message,false);
                 }
-
-                if(getView()==null || getActivity()==null){
-                    return;
-                }
-
-
-                if(Data.autoData!=null && (Data.autoData.getPickupPaymentOption()== PaymentOption.STRIPE_CARDS.getOrdinal())){
-                    MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
-                }
-                DialogPopup.alertPopupWithListener(getActivity(),"",message, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        getActivity().onBackPressed();
-
-                    }
-                });
-
-
-
 
             }
 

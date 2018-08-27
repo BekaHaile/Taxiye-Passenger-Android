@@ -239,6 +239,21 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
         return notificationManager;
 	}
 
+	public static void setSilentNotificationChannel(final Context context, String channel){
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+			CharSequence name = context.getString(R.string.notification_channel_silent);
+			String description = context.getString(R.string.notification_channel_description_default);
+			int importance = NotificationManager.IMPORTANCE_LOW;
+			NotificationChannel mChannel = new NotificationChannel(channel, name, importance);
+			// Configure the notification channel.
+			mChannel.setDescription(description);
+			if (notificationManager != null) {
+				notificationManager.createNotificationChannel(mChannel);
+			}
+		}
+	}
+
 
 	private void generateNotificationForCall(Context context, String title, String message, int notificationId,
 											 String callNumber, String eta, int playSound, String clientID) {

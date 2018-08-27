@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="125px"
         android:background="@color/white"
-        android:orientation="horizontal"
-        android:visibility="visible">
+        android:visibility="@integer/show_sliding_panel_fare_offer_tab"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:id="@+id/linearLayoutFareEstimate"
@@ -161,6 +161,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="300px"
+            android:visibility="@integer/show_sliding_panel_fare_offer_tab"
             android:layout_below="@+id/recyclerViewVehicles"
             android:gravity="center_vertical"
             >

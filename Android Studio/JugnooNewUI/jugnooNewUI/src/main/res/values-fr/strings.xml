@@ -813,9 +813,6 @@ En vous inscrivant, vous acceptez nos
 
 </string-array>
 
-    <string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,</string>
-
-    <string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.\\ </string>
 
     <string name="paytm">Paiements</string>
 
@@ -3468,4 +3465,8 @@ from %s in your UPI app.
     <string name="location_accuracy_is_low">"La précision de localisation est faible. Êtes-vous sûr de vouloir demander un chauffeur pour vous chercher à cet endroit? "</string>
     <string name="the_pickup_location_you_have_set_is_different">"L'emplacement de départ que vous avez défini est différent de votre emplacement actuel. Êtes-vous sûr que c'est le bon? "</string>
     <string name="number_should_not_start_with_zero">Le numéro de téléphone ne doit pas commencer par 0.</string>
+    <string name="first_name">Prénom</string>
+    <string name="last_name">Nom de famille</string>
+    <string name="please_enter_first_name">S\'il vous plaît entrer le prénom</string>
+    <string name="please_enter_last_name">Veuillez entrer le nom de famille</string>
 </resources>

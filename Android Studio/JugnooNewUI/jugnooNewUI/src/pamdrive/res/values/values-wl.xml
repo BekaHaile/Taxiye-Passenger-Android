@@ -40,14 +40,13 @@
     <string name="support_number">+2348099904442</string>
     <string name="police_number">199</string>
     <string name="facebook_page_id">1110113865716816</string>
-    <string name="facebook_page_name">Pamdrive, Nigeria #1 Taxi Company</string>
+    <string name="facebook_page_name">PamDrive</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
     <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
     <bool name="force_open_autos">true</bool>
 
-    <integer name="show_login_bottom_bg">@integer/view_gone</integer>
     <color name="splash_logo_color">@color/text_color</color>
 
 
@@ -56,6 +55,8 @@
     <dimen name="splash_logo_top_margin">100dp</dimen>
     <integer name="show_splash_top_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_top_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bg">@integer/view_visible</integer>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <drawable name="login_logo_icon_drawable">@drawable/ic_splash_logo</drawable>

@@ -23,8 +23,7 @@
 
     <string name="app_name">Kardi</string>
 
-    <string name="google_maps_api_key">AIzaSyAYtGKg7n3qVyMYz6FI87998DUbsfX4g1w</string>
-    <string name="google_maps_api_server_key">AIzaSyDqjyyl4spaV3g5fdaCBEaYaLaC3tAipTg</string>
+    <string name="google_maps_api_key">AIzaSyCsL-gStbpxPNGO0FiCTpHATfI-AGRKIPw</string>
     <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
     <string name="fb_app_id">2094524814124155</string>
     <string name="fb_login_protocol_scheme">fb2094524814124155</string>
@@ -36,7 +35,7 @@
     <string name="operator_token">3d83f508c28f09ef4ef0c5aaf0d6c636</string>
     <string name="support_number">+6587766554</string>
     <string name="police_number">999</string>
-    <string name="facebook_page_id">2056791887904505ppppp</string>
+    <string name="facebook_page_id">443169969455713</string>
         <string name="facebook_page_name">kardi.sg</string>
 
 
@@ -51,6 +50,7 @@
     <integer name="show_splash_top_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bottom_bg">@integer/view_visible</integer>
     <integer name="show_login_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_top_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bg">@integer/view_visible</integer>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <drawable name="login_logo_icon_drawable">@drawable/ic_login_logo</drawable>
@@ -90,6 +90,6 @@
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
     <string name="profile_saved_location_text">@string/address_book</string>
 
-    <integer name="scale_type">@integer/fit_start</integer>
+    <integer name="splash_bg_strip_scaleType">@integer/center_inside</integer>
 
 </resources>

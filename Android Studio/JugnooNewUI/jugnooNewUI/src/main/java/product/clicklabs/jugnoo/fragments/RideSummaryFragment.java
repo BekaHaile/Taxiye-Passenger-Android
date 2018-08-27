@@ -72,13 +72,12 @@ public class RideSummaryFragment extends Fragment implements Constants {
     ImageView imageViewEndRideAutoIcon, imageViewEndRideDriverIcon;
     TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
     RelativeLayout relativeLayoutTollCharge, relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
-            relativeLayoutEndRideDiscount, relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm,
-            relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay,rlPaidUsingStripeCard,relativeLayoutPaidUsingMpesa;
+            relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm,
+            relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay,rlPaidUsingStripeCard,relativeLayoutPaidUsingMpesa, rlToBePaid;
     LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
-    RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare, relativeLayoutFinalFare;
+    RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare,relativeLayoutDriverTip, relativeLayoutFinalFare;
     NonScrollListView listViewEndRideDiscounts;
-    TextView textViewEndRideFareValue, textViewEndTollChargeValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
-            textViewEndRideDiscount, textViewEndRideDiscountValue,
+    TextView textViewEndRideFareValue,textViewDriverTipValue, textViewEndTollChargeValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
             textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue,
             textViewEndRideMobikwikValue, textViewEndRideFreeChargeValue,
             textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
@@ -181,6 +180,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
 			});
 
             relativeLayoutFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFare);
+            relativeLayoutDriverTip = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutDriverTip);
             relativeLayoutTollCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutTollCharge);
             relativeLayoutRideSummary = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRideSummary);
             relativeLayoutRideSummary.setVisibility(View.GONE);
@@ -202,10 +202,10 @@ public class RideSummaryFragment extends Fragment implements Constants {
             textViewEndRideEndTimeValue.setTypeface(Fonts.mavenLight(activity));
 
             textViewEndRideFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFareValue);
+            textViewDriverTipValue = (TextView) rootView.findViewById(R.id.textViewDriverTipValue);
+            textViewDriverTipValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideFareValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndTollChargeValue = (TextView) rootView.findViewById(R.id.textViewEndTollChargeValue);
-            textViewEndRideDiscountValue = (TextView) rootView.findViewById(R.id.textViewEndRideDiscountValue);
-            textViewEndRideDiscountValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideFinalFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideFinalFareValue);
             textViewEndRideFinalFareValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideJugnooCashValue = (TextView) rootView.findViewById(R.id.textViewEndRideJugnooCashValue);
@@ -240,7 +240,6 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
             relativeLayoutLuggageCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutLuggageCharge);
             relativeLayoutConvenienceCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutConvenienceCharge);
-            relativeLayoutEndRideDiscount = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideDiscount);
             relativeLayoutPaidUsingJugnooCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingJugnooCash);
             relativeLayoutPaidUsingPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingPaytm);
             relativeLayoutPaidUsingMobikwik = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingMobikwik);
@@ -253,13 +252,12 @@ public class RideSummaryFragment extends Fragment implements Constants {
             imageViewEndRideDriverIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideDriverIcon);
             linearLayoutRideDetail = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideDetail);
             relativeLayoutFinalFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFinalFare);
+			rlToBePaid = (RelativeLayout) rootView.findViewById(R.id.rlToBePaid);
 
             textViewEndRideLuggageChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideLuggageChargeValue);
             textViewEndRideLuggageChargeValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideConvenienceChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideConvenienceChargeValue);
             textViewEndRideConvenienceChargeValue.setTypeface(Fonts.mavenRegular(activity));
-            textViewEndRideDiscount = (TextView) rootView.findViewById(R.id.textViewEndRideDiscount);
-            textViewEndRideDiscount.setTypeface(Fonts.mavenLight(activity));
 
             listViewEndRideDiscounts = (NonScrollListView) rootView.findViewById(R.id.listViewEndRideDiscounts);
             endRideDiscountsAdapter = new EndRideDiscountsAdapter(activity);
@@ -274,6 +272,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             ((TextView) rootView.findViewById(R.id.textViewEndRideSummary)).setTypeface(Fonts.mavenMedium(activity));
 
             ((TextView) rootView.findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.mavenLight(activity));
+            ((TextView)rootView.findViewById(R.id.textViewEndRideDriverTip)).setTypeface(Fonts.mavenLight(activity));
             ((TextView) rootView.findViewById(R.id.textViewEndRideLuggageCharge)).setTypeface(Fonts.mavenLight(activity));
             ((TextView) rootView.findViewById(R.id.textViewEndRideConvenienceCharge)).setTypeface(Fonts.mavenLight(activity));
             ((TextView) rootView.findViewById(R.id.textViewEndRideFinalFare)).setTypeface(Fonts.mavenLight(activity));
@@ -399,11 +398,22 @@ public class RideSummaryFragment extends Fragment implements Constants {
                     linearLayoutRideDetail.setVisibility(View.VISIBLE);
                     relativeLayoutFinalFare.setVisibility(View.VISIBLE);
                     textViewEndRideFareValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.fare));
+                    rootView.findViewById(R.id.ivSepRideDetails).setVisibility(View.VISIBLE);
                 } else {
                     relativeLayoutFare.setVisibility(View.GONE);
                     linearLayoutRideDetail.setVisibility(View.GONE);
                     relativeLayoutFinalFare.setVisibility(View.GONE);
+                    rootView.findViewById(R.id.ivSepRideDetails).setVisibility(View.GONE);
                 }
+
+                if (endRideData.getDriverTipAmount() > 0) {
+                    relativeLayoutDriverTip.setVisibility(View.VISIBLE);
+                    textViewDriverTipValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(),endRideData.getDriverTipAmount()));
+                } else {
+                    relativeLayoutDriverTip.setVisibility(View.GONE);
+                }
+
+
                 if(endRideData.tollCharge > 0.0){
                     relativeLayoutTollCharge.setVisibility(View.VISIBLE);
                     textViewEndTollChargeValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.tollCharge));
@@ -443,19 +453,6 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 if (endRideData.discountTypes.size() > 0) {
                     listViewEndRideDiscounts.setVisibility(View.VISIBLE);
                     endRideDiscountsAdapter.setList(endRideData.discountTypes, endRideData.getCurrency());
-                    textViewEndRideDiscountValue.setVisibility(View.GONE);
-                    relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
-                    textViewEndRideDiscount.setVisibility(View.GONE);
-
-                    for (int i = 0; i < endRideData.discountTypes.size(); i++) {
-                        if (endRideData.discountTypes.get(i).getReferenceId() == 0) {
-                            textViewEndRideDiscount.setVisibility(View.VISIBLE);
-                            textViewEndRideDiscount.setText(R.string.discounts);
-                            break;
-                        }
-                    }
-                } else {
-                    relativeLayoutEndRideDiscount.setVisibility(View.GONE);
                 }
 
 
@@ -552,6 +549,14 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
                 textViewEndRideFareFactorValue.setText(String.format(getResources().getString(R.string.priority_tip_format), decimalFormat.format(endRideData.fareFactor)));
                 textViewEndRideBaseFareValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.baseFare));
+                if(getResources().getInteger(R.integer.visibility_ride_history_amount) != getResources().getInteger(R.integer.view_visible)){
+					linearLayoutRideDetail.setVisibility(View.VISIBLE);
+					rootView.findViewById(R.id.ivSepRideDetails).setVisibility(View.VISIBLE);
+                    rootView.findViewById(R.id.llBaseFare).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.ivSepBaseFare).setVisibility(View.GONE);
+					rlToBePaid.setVisibility(endRideData.toPay > 0D ? View.VISIBLE : View.GONE);
+                    rootView.findViewById(R.id.ivToBePaid).setVisibility(endRideData.toPay > 0D ? View.VISIBLE : View.GONE);
+                }
                 double totalDistanceInKm = endRideData.distance;
                 String kmsStr = Utils.getDistanceUnit(endRideData.getDistanceUnit());
                 textViewEndRideDistanceValue.setText("" + decimalFormat.format(totalDistanceInKm) + " " + kmsStr);

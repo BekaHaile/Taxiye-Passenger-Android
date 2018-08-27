@@ -4,22 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <ImageView
         android:id="@+id/ivFreeGiftTop"
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:src="@drawable/bg_top_2"
-        android:visibility="@integer/show_splash_top_bg"
+        android:visibility="@integer/show_login_top_bg"
+        android:tag="mwar" />
+
+    <ImageView
+        android:id="@+id/ivBottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_160"
+        android:background="@drawable/splash_bottom_building_bg1"
+        android:layout_alignParentBottom="true"
+        android:visibility="@integer/show_login_bottom_bg"
         android:tag="mwar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/ivFreeGiftTop"
-        android:gravity="center_horizontal"
-        android:layout_above="@+id/ivBottom">
+        android:gravity="center_horizontal">
 
         <ImageView
             android:id="@+id/ivUser"
@@ -69,12 +77,5 @@
 
 
 
-    <ImageView
-        android:id="@+id/ivBottom"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/px_160"
-        android:background="@drawable/splash_bottom_building_bg1"
-        android:layout_alignParentBottom="true"
-        android:tag="mwar" />
 
 </RelativeLayout>

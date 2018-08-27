@@ -302,10 +302,6 @@ public class JSONParser implements Constants {
 //                Prefs.with(context).save(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, "");
 //            }
 
-            Prefs.with(context).save(Constants.KEY_SUPPORT_EMAIL,
-                    userData.optString(Constants.KEY_SUPPORT_EMAIL, context.getString(R.string.default_support_email)));
-            Prefs.with(context).save(Constants.KEY_SUPPORT_EMAIL_SUBJECT,
-                    userData.optString(Constants.KEY_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject, context.getString(R.string.app_name))));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -349,7 +345,7 @@ public class JSONParser implements Constants {
             int fuguAppType = autoData.optInt(KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE);
             Prefs.with(context).save(Constants.KEY_FUGU_APP_KEY, fuguAppKey);
             Prefs.with(context).save(Constants.KEY_FUGU_APP_TYPE, fuguAppType);
-
+            int isTipEnabled = autoData.optInt(KEY_TIP_ENABLED, 0);
 
             NearbyPickupRegions nearbyPickupRegionses = autosData.getNearbyPickupRegions();
 
@@ -357,7 +353,7 @@ public class JSONParser implements Constants {
 					, cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
 					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
-                    , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2, isRazorpayEnabled);
+                    , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2, isRazorpayEnabled,isTipEnabled);
 
             Data.autoData.setUseRecentLocAtRequest(autosData.getUseRecentLocAtRequest());
             Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());
@@ -386,6 +382,13 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(KEY_MAPS_API_SIGN, autoData.optInt(KEY_MAPS_API_SIGN, BuildConfig.MAPS_APIS_SIGN ? 1 : 0));
             Prefs.with(context).save(KEY_STRIPE_KEY_LIVE, autoData.optString(KEY_STRIPE_KEY_LIVE, BuildConfig.STRIPE_KEY_LIVE));
             Prefs.with(context).save(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, ""));
+
+            Prefs.with(context).save(Constants.KEY_CUSTOMER_SUPPORT_EMAIL,
+                    autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_EMAIL, context.getString(R.string.default_support_email)));
+            Prefs.with(context).save(Constants.KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT,
+                    autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject, context.getString(R.string.app_name))));
+
+            Utils.setCurrencyPrecision(context, autoData.optInt(Constants.KEY_CURRENCY_PRECISION, 0));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -754,7 +757,7 @@ public class JSONParser implements Constants {
             Data.autoData.setcDriverId(jDriverInfo.getString("id"));
 
             Data.autoData.setPickupLatLng(new LatLng(0, 0));
-            Data.autoData.setPickupAddress("");
+            Data.autoData.setPickupAddress("", null);
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
 
@@ -901,6 +904,7 @@ public class JSONParser implements Constants {
         int showPaymentOptions = jLastRideData.optInt(Constants.KEY_SHOW_PAYMENT_OPTIONS, 0);
         int paymentOption = jLastRideData.optInt(Constants.KEY_PREFERRED_PAYMENT_MODE, PaymentOption.CASH.getOrdinal());
         double tollCharge = jLastRideData.optDouble(Constants.KEY_TOLL_CHARGE, 0.0);
+        double driverTipAmount = jLastRideData.optDouble(Constants.KEY_TIP_AMOUNT, 0.0);
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -918,7 +922,7 @@ public class JSONParser implements Constants {
                 sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge,paidUsingMpesa,paidUsingRazorpay,paidUsingStripeCard, last_4, totalRide, status, supportNumber
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
-                showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge);
+                showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,driverTipAmount);
 	}
 
 
@@ -1014,6 +1018,7 @@ public class JSONParser implements Constants {
             String currency = null;
             ArrayList<BidInfo> bidInfos = new ArrayList<>();
             String vehicleIconUrl = null;
+            Double tipAmount  = null;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1049,7 +1054,7 @@ public class JSONParser implements Constants {
                         }
 
                         Data.autoData.setPickupLatLng(new LatLng(assigningLatitude, assigningLongitude));
-                        Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""));
+                        Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""), Data.autoData.getPickupLatLng());
                         parseDropLatLng(jObject1);
                         bidInfos = JSONParser.parseBids(context, Constants.KEY_BIDS, jObject1);
 
@@ -1080,7 +1085,7 @@ public class JSONParser implements Constants {
                             operatorId = jObject.optInt(KEY_OPERATOR_ID, 0);
                             currency = jObject.optString(KEY_CURRENCY);
                             vehicleIconUrl = jObject.optString(Constants.KEY_MARKER_ICON);
-
+                            tipAmount= jObject.optDouble(Constants.KEY_TIP_AMOUNT);
                             Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jObject.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
                             try {
@@ -1187,7 +1192,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setcDriverId(userId);
 
                 Data.autoData.setPickupLatLng(new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude)));
-                Data.autoData.setPickupAddress(pickupAddress);
+                Data.autoData.setPickupAddress(pickupAddress, Data.autoData.getPickupLatLng());
                 if((Utils.compareDouble(dropLatitude, 0) == 0) && (Utils.compareDouble(dropLongitude, 0) == 0)){
                     Data.autoData.setDropLatLng(null);
                     Data.autoData.setDropAddress("");
@@ -1205,7 +1210,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

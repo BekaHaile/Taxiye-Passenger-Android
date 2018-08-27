@@ -24,7 +24,6 @@
     <string name="app_name">Comelyt</string>
 
     <string name="google_maps_api_key">AIzaSyBrU2XQF8xCohlI_zA-ow-yG83HA8DI3FM</string>
-    <string name="google_maps_api_server_key">AIzaSyDmPRWr5xfshk078bTRJstEuSNQQHIbTww</string>
     <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
     <string name="fb_app_id">1992033690820340</string>
     <string name="fb_login_protocol_scheme">fb1992033690820340</string>
@@ -45,11 +44,14 @@
     <bool name="force_open_autos">true</bool>
 
 
+
+    <integer name="show_splash_top_bg">@integer/view_invisible</integer>
+    <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_top_bg">@integer/view_invisible</integer>
     <dimen name="splash_logo_width">150dp</dimen>
     <dimen name="splash_logo_height">150dp</dimen>
     <dimen name="splash_logo_top_margin">100dp</dimen>
-    <integer name="show_splash_top_bg">@integer/view_invisible</integer>
-    <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bg">@integer/view_visible</integer>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <drawable name="login_logo_icon_drawable">@drawable/ic_login_logo</drawable>

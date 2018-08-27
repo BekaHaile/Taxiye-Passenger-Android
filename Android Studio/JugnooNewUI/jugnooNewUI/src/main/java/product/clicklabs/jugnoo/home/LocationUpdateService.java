@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Pair;
@@ -57,6 +56,10 @@ public class LocationUpdateService extends Service {
 				stopSelf();
 				return Service.START_NOT_STICKY;
 			}
+			if(intent.getIntExtra(Constants.ACTION_UPDATE_STATE, 0) == 1){
+				updateState();
+				return Service.START_STICKY;
+			}
 			MyApplication.getInstance().initializeServerURL(this);
 			try {
 				oneShot = intent.getBooleanExtra(Constants.KEY_ONE_SHOT, true);
@@ -83,6 +86,12 @@ public class LocationUpdateService extends Service {
 			e.printStackTrace();
 		}
 		return Service.START_NOT_STICKY;
+	}
+
+	private void updateState(){
+		if(!oneShot) {
+			startForeground(101, getNotification());
+		}
 	}
 
 	@Override
@@ -209,7 +218,7 @@ public class LocationUpdateService extends Service {
 	}
 
 	private Notification getNotification() {
-		GCMIntentService.getNotificationManager(this, Constants.NOTIF_CHANNEL_DEFAULT);
+		GCMIntentService.setSilentNotificationChannel(this, Constants.NOTIF_CHANNEL_SILENT);
 		long when = System.currentTimeMillis();
 		Intent notificationIntent;
 		if(HomeActivity.appInterruptHandler != null){
@@ -220,21 +229,26 @@ public class LocationUpdateService extends Service {
 
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent intent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+		int mode = Prefs.with(this).getInt(Constants.SP_CURRENT_STATE, PassengerScreenMode.P_INITIAL.getOrdinal());
+		int strRes = R.string.ride_in_progress;
+		if(PassengerScreenMode.P_REQUEST_FINAL.getOrdinal() == mode){
+			strRes = R.string.driver_enroute;
+		} else if(PassengerScreenMode.P_DRIVER_ARRIVED.getOrdinal() == mode){
+			strRes = R.string.arrived_at_pickup;
+		}
 
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIF_CHANNEL_DEFAULT);
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Constants.NOTIF_CHANNEL_SILENT);
 		builder.setAutoCancel(true);
 		builder.setContentTitle(getString(R.string.app_name));
-		builder.setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.ride_in_progress)));
-		builder.setContentText(getString(R.string.ride_in_progress));
+		builder.setStyle(new NotificationCompat.BigTextStyle().bigText(getString(strRes)));
+		builder.setContentText(getString(strRes));
 		builder.setTicker(getString(R.string.app_name));
 		builder.setWhen(when);
 		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
 		builder.setSmallIcon(R.mipmap.notification_icon);
-		builder.setChannelId(Constants.NOTIF_CHANNEL_DEFAULT);
+		builder.setChannelId(Constants.NOTIF_CHANNEL_SILENT);
 		builder.setContentIntent(intent);
-		if(Build.VERSION.SDK_INT >= 16){
-			builder.setPriority(Notification.PRIORITY_HIGH);
-		}
+		builder.setPriority(Notification.PRIORITY_DEFAULT);
 		return builder.build();
 	}
 

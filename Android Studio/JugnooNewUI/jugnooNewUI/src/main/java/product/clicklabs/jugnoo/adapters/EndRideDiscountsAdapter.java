@@ -63,8 +63,8 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
             holder = new ViewHolderDiscount();
             convertView = mInflater.inflate(R.layout.list_item_end_ride_discount, null);
 
-            holder.textViewDiscount = (TextView) convertView.findViewById(R.id.textViewDiscount); holder.textViewDiscount.setTypeface(Fonts.mavenMedium(context));
-			holder.textViewDiscountValue = (TextView) convertView.findViewById(R.id.textViewDiscountValue); holder.textViewDiscountValue.setTypeface(Fonts.mavenMedium(context));
+            holder.textViewDiscount = (TextView) convertView.findViewById(R.id.textViewDiscount); holder.textViewDiscount.setTypeface(Fonts.mavenLight(context));
+			holder.textViewDiscountValue = (TextView) convertView.findViewById(R.id.textViewDiscountValue); holder.textViewDiscountValue.setTypeface(Fonts.mavenRegular(context));
 
             holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
 
@@ -87,7 +87,7 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
 //                    Utils.getMoneyDecimalFormat().format(discountType.value)));
 //        } else{
             holder.textViewDiscount.setText(discountType.getName());
-            holder.textViewDiscountValue.setText(Utils.formatCurrencyValue(currency, discountType.value));
+            holder.textViewDiscountValue.setText(Utils.formatCurrencyValue(currency, -discountType.value));
 //        }
 
         return convertView;

@@ -86,6 +86,15 @@ public final class Picker implements Serializable{
         fragment.startActivityForResult(intent,reqCode);
 
     }
+    public void startActivity(Activity activity,int reqCode) {
+
+        EventBus.getDefault().postSticky(new Events.OnPublishPickOptionsEvent(this));
+
+        final Intent intent = new Intent(activity, PickerActivity.class);
+
+        activity.startActivityForResult(intent,reqCode);
+
+    }
 
     public void setLimit(int limit){
         this.limit=limit;

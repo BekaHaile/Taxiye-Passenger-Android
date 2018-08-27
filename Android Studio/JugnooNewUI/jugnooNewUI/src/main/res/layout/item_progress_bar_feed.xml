@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/spacing_tiny"
         android:layout_marginBottom="@dimen/spacing_tiny"
-        wheel:matProg_barColor="@color/green_light"
+        wheel:matProg_barColor="@color/theme_color"
         wheel:matProg_barWidth="3dp"
         wheel:matProg_fillRadius="true"
         wheel:matProg_progressIndeterminate="true"

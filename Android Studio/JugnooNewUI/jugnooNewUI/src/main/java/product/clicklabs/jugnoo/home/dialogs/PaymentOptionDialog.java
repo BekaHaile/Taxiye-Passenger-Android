@@ -37,7 +37,8 @@ public class PaymentOptionDialog implements View.OnClickListener {
     private CallbackPaymentOptionSelector callbackPaymentOptionSelector;
     private Dialog dialog = null;
     private LinearLayout linearLayoutWalletContainer;
-    private RelativeLayout relativeLayoutPaytm,relativeLayoutStripeCard;
+    private RelativeLayout relativeLayoutPaytm;
+    private LinearLayout relativeLayoutStripeCard;
     private RelativeLayout relativeLayoutMobikwik;
     private RelativeLayout relativeLayoutFreeCharge;
     private RelativeLayout relativeLayoutMpesa;
@@ -54,7 +55,6 @@ public class PaymentOptionDialog implements View.OnClickListener {
     public PaymentOptionDialog show() {
         try {
             dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-            dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogScale;
             dialog.setContentView(R.layout.dialog_payment_option);
 
             RelativeLayout relative = (RelativeLayout) dialog.findViewById(R.id.relative);
@@ -71,7 +71,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
             linearLayoutWalletContainer = (LinearLayout) dialog.findViewById(R.id.linearLayoutWalletContainer);
             relativeLayoutPaytm = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPaytm);
-            relativeLayoutStripeCard = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutStripeCard);
+            relativeLayoutStripeCard = (LinearLayout) dialog.findViewById(R.id.relativeLayoutStripeCard);
             relativeLayoutMobikwik = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutMobikwik);
             relativeLayoutFreeCharge = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutFreeCharge);
             linearLayoutCash = (LinearLayout) dialog.findViewById(R.id.linearLayoutCash);

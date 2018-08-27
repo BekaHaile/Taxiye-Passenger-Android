@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/px_160"
             android:src="@drawable/splash_top_bg"
-            android:visibility="@integer/show_splash_top_bg"
+            android:visibility="@integer/show_login_top_bg"
             android:tag="mwar" />
 
 
@@ -160,7 +160,7 @@
                     android:gravity="center"
                     android:tag="mwar"
                     android:textColor="@color/text_color"
-                    android:background="@drawable/circle_white_stroke_grey_light"
+                    android:background="@drawable/circle_trnsp_stroke_grey_light"
                     android:textSize="@dimen/text_size_28" />
 
                 <ImageView
@@ -257,8 +257,6 @@
                 android:text="@string/nl_splash_terms"
                 android:textColor="@color/document_layout_bordor_color"
                 android:textSize="@dimen/text_size_24" />
-
-
 
             <TextView
                 android:id="@+id/textViewForgotPassword"

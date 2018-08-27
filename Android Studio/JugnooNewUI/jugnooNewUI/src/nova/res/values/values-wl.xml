@@ -23,7 +23,6 @@
     <string name="app_name">Nova Taxi</string>
 
     <string name="google_maps_api_key">AIzaSyDHV56xoRPZtU1IKphUC22klfJydil7eN8</string>
-    <string name="google_maps_api_server_key">AIzaSyCYWz4zpk_5N2xqEn-rd19j7rlLkRy6hag</string>
     <string name="google_server_client_id">abc</string>
     <string name="fb_app_id">123</string>
     <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
@@ -54,6 +53,8 @@
     <integer name="show_splash_bg">@integer/view_visible</integer>
     <integer name="show_splash_top_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_top_bg">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
     <color name="splash_logo_color">@color/theme_color</color>

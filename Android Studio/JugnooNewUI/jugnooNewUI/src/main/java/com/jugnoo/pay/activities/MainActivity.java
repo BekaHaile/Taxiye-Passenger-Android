@@ -46,9 +46,6 @@ import com.jugnoo.pay.utils.CommonMethods;
 import com.jugnoo.pay.utils.PrefManager;
 import com.jugnoo.pay.utils.SharedPreferencesName;
 import com.sabkuchfresh.utils.AppConstant;
-import com.yesbank.AddAccount;
-import com.yesbank.Registration;
-import com.yesbank.SetMpin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -495,9 +492,9 @@ public class MainActivity extends BaseAppCompatActivity {
             bundle.putString("merchantTxnID", pay.getToken());
             Log.i("sendToSDKRegister", "TOKEN IS : " + pay.getToken());
             bundle.putString("appName", "jugnooApp");
-            Intent intent = new Intent(getApplicationContext(), Registration.class);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, VPA_REGISTER_INTENT_REQUEST_CODE);
+//            Intent intent = new Intent(getApplicationContext(), Registration.class);
+//            intent.putExtras(bundle);
+//            startActivityForResult(intent, VPA_REGISTER_INTENT_REQUEST_CODE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -874,9 +871,9 @@ public class MainActivity extends BaseAppCompatActivity {
         Log.v("merchantTxnID== ", Integer.toString(txnDetails.getOrderId()));
         Log.v("virtualAddress== ", txnDetails.getVpa());
 
-        Intent intent = new Intent(getApplicationContext(), SetMpin.class);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, CHANGE_MPIN_INTENT_REQUEST_CODE);
+//        Intent intent = new Intent(getApplicationContext(), SetMpin.class);
+//        intent.putExtras(bundle);
+//        startActivityForResult(intent, CHANGE_MPIN_INTENT_REQUEST_CODE);
     }
 
     private void changeMPINCallbackApi(SetMPINResponse setMPINResponse) {
@@ -1000,9 +997,9 @@ public class MainActivity extends BaseAppCompatActivity {
                                 bundle.putString("merchantKey", mkey);
                                 bundle.putString("merchantTxnID", merchantTxnID);
                                 bundle.putString("virtualAddress", vpa);     // vijay27@yesb
-                                Intent intent = new Intent(getApplicationContext(), AddAccount.class);
-                                intent.putExtras(bundle);
-                                startActivityForResult(intent, MANAGE_ACCOUNT_INTENT_REQUEST_CODE);
+//                                Intent intent = new Intent(getApplicationContext(), AddAccount.class);
+//                                intent.putExtras(bundle);
+//                                startActivityForResult(intent, MANAGE_ACCOUNT_INTENT_REQUEST_CODE);
                             } else {
                                 DialogPopup.alertPopup(MainActivity.this, "", accountManagementResponse.getMessage());
                             }

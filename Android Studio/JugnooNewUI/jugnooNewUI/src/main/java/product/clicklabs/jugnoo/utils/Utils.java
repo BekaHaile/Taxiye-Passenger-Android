@@ -61,6 +61,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.math.RoundingMode;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -386,6 +387,13 @@ public class Utils implements GAAction, GACategory{
 
 
     public static String getCountryCode(Context context) {
+		String serverCountryCode = Prefs.with(context).getString(Constants.KEY_DEFAULT_COUNTRY_CODE, "");
+		if(!TextUtils.isEmpty(serverCountryCode)){
+			return serverCountryCode;
+		}
+		if(context.getResources().getInteger(R.integer.apply_default_country_code) == 1){
+			return context.getString(R.string.default_country_code);
+		}
 		Country country = CountryPicker.getCountryFromSIM(context);
 		if (country != null) {
 			return country.getDialCode();
@@ -413,6 +421,13 @@ public class Utils implements GAAction, GACategory{
 	}
 
 	public static String getSimCountryIso(Context context) {
+		String serverCountryIso = Prefs.with(context).getString(Constants.KEY_DEFAULT_COUNTRY_ISO, "");
+		if(!TextUtils.isEmpty(serverCountryIso)){
+			return serverCountryIso;
+		}
+		if(context.getResources().getInteger(R.integer.apply_default_country_code) == 1){
+			return context.getString(R.string.default_country_iso);
+		}
 		Country country = CountryPicker.getCountryFromSIM(context);
 		if (country != null) {
 			return country.getCode();
@@ -432,7 +447,7 @@ public class Utils implements GAAction, GACategory{
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                Log.e("KeyHash", ","
+                android.util.Log.e("KeyHash", ","
                     + Base64.encodeToString(md.digest(),
                     Base64.DEFAULT));
             }
@@ -1063,13 +1078,43 @@ public class Utils implements GAAction, GACategory{
 		return (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
 	}
 
+	public static String getCurrencySymbol(String currencyCode) {
+		if (TextUtils.isEmpty(currencyCode)) {
+			currencyCode = "INR";
+		} else if(currencyCode.equalsIgnoreCase("BMD") || currencyCode.equalsIgnoreCase("TTD")){
+			return "$";
+		}
+		Currency currency = Currency.getInstance(currencyCode);
+		return currency.getSymbol();
+	}
+
+
 	public static String formatCurrencyValue(String currency, double value){
+		return formatCurrencyValue(currency, value, true);
+	}
+
+	private static NumberFormat currencyNumberFormat = null;
+	public static String formatCurrencyValue(String currency, double value, boolean setPrecision){
+		if(currencyNumberFormat == null){
+			currencyNumberFormat = NumberFormat.getCurrencyInstance(MyApplication.getInstance().getCurrentLocale());
+			currencyNumberFormat.setRoundingMode(RoundingMode.HALF_UP);
+			currencyNumberFormat.setGroupingUsed(false);
+		}
+		int precision = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CURRENCY_PRECISION, 0);
+		currencyNumberFormat.setMinimumFractionDigits(setPrecision ? precision : 0);
+		currencyNumberFormat.setMaximumFractionDigits(setPrecision ? precision : Math.max(2, precision));
+
 		if(TextUtils.isEmpty(currency)){
 			currency = "INR";
 		}
-		NumberFormat format = NumberFormat.getCurrencyInstance(MyApplication.getInstance().getCurrentLocale());
-		format.setCurrency(Currency.getInstance(currency));
-		return format.format(value);
+		currencyNumberFormat.setCurrency(Currency.getInstance(currency));
+		String result = currencyNumberFormat.format(value);
+
+		result = result.replaceFirst("\\s", "");
+		result = result.replace("BMD", "$");
+		result = result.replace("TTD", "$");
+		return result;
+
 	}
 	public static String formatCurrencyValue(String currency, String value){
 		try {
@@ -1095,6 +1140,31 @@ public class Utils implements GAAction, GACategory{
 		activity.startActivity(Intent.createChooser(email, activity.getString(R.string.choose_email_client)));
 	}
 
+	private static NumberFormat numberFormat = null;
+	private static void initNumberFormat(){
+		int precision = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CURRENCY_PRECISION, 0);
+		numberFormat = NumberFormat.getInstance();
+		numberFormat.setMinimumFractionDigits(precision);
+		numberFormat.setMaximumFractionDigits(precision);
+		numberFormat.setRoundingMode(RoundingMode.HALF_UP);
+		numberFormat.setGroupingUsed(false);
+	}
+	public static void setCurrencyPrecision(Context context, int precision){
+		Prefs.with(context).save(Constants.KEY_CURRENCY_PRECISION, precision);
+		numberFormat = null;
+		currencyNumberFormat = null;
+	}
+	public static double currencyPrecision(double value) {
+		if(numberFormat == null){
+			initNumberFormat();
+		}
+		String result = numberFormat.format(value);
+		if(numberFormat.getMaximumFractionDigits() > 0){
+			return Double.parseDouble(result);
+		} else {
+			return Integer.parseInt(result);
+		}
+	}
 
 }
 

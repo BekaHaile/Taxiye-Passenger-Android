@@ -6,7 +6,6 @@
     <integer name="view_invisible">1</integer>
     <integer name="view_gone">2</integer>
 
-
     <!--Other things to change
         1. google-services.json
         2. Doc entity in strings.xml
@@ -22,8 +21,7 @@
     -->
     <string name="app_name">LiveCabs</string>
 
-    <string name="google_maps_api_key">AIzaSyDWJIBt2XjtRvhHC9mpSyD6otrmpMMSr9s</string>
-    <string name="google_maps_api_server_key">AIzaSyC3NVQc-v2UY4qcHmj93ZZR5EsvTOvCo8Q</string>
+    <string name="google_maps_api_key">AIzaSyBb04rYafl0NsH0jwSlLz1W9DyTYE_T0QM</string>
     <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
     <string name="fb_app_id">782131025144439</string>
     <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
@@ -37,43 +35,67 @@
     <string name="operator_token">6e1314631d098db197321244c93fb7c5</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">911</string>
-    <string name="facebook_page_id">val</string>
-    <string name="facebook_page_url">val</string>
+    <string name="facebook_page_id">171005023594875</string>
+    <string name="facebook_page_url">https://www.facebook.com/livecbs/</string>
 
 
-    <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
+    <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
     <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
     <bool name="force_open_autos">true</bool>
 
 
     <dimen name="splash_logo_width">150dp</dimen>
     <dimen name="splash_logo_height">150dp</dimen>
+    <dimen name="splash_top_bottom_bg_margin">50dp</dimen>
     <dimen name="splash_logo_top_margin">100dp</dimen>
-    <integer name="show_splash_top_bg">@integer/view_invisible</integer>
-    <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_splash_top_bg">@integer/view_visible</integer>
+    <integer name="show_splash_bottom_bg">@integer/view_visible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_top_bg">@integer/view_invisible</integer>
     <integer name="show_splash_bg">@integer/view_visible</integer>
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
-    <drawable name="splash_background_drawable">@drawable/splash_back</drawable>
+    <drawable name="splash_background_drawable">@drawable/splash_back_livecabs</drawable>
     <drawable name="login_background_drawable">@color/white</drawable>
     <integer name="show_social_login">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
-    <integer name="show_splash_logo_text_login">@integer/view_visible</integer>
+    <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
+    <integer name="splash_bg_strip_scaleType">@integer/center_inside</integer>
 
     <string name="file_provider_name">com.livecabs.fileprovider</string>
-    <string name="web_landing_page">https://livecabs.in</string>
+    <string name="web_landing_page">https://livecabs.com</string>
     <string name="smart_url">http://smarturl.it/livecabs</string>
     <string name="db_name">livecabs_database</string>
-    <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
-    <string name="app_domain">livecabs.in</string>
-    <string name="app_host_name">www.livecabs.in</string>
-    <string name="branch_domain">share.livecabs.in</string>
+    <string name="terms_of_use_url">https://www.livecabstechnology.com/#/terms</string>
+    <string name="app_domain">livecabstechnology.com</string>
+    <string name="app_host_name">www.livecabstechnology.com</string>
+    <string name="branch_domain">share.livecabstechnology.com</string>
     <string name="app_scheme">livecabs</string>
 
     <string name="pictures_path">LiveCabs/LiveCabs Pictures</string>
     <bool name="force_inhouse_login">true</bool>
     <bool name="force_mpesa_payment">false</bool>
-    <integer name="show_about">@integer/view_invisible</integer>
+    <integer name="show_about">@integer/view_visible</integer>
     <bool name="show_change_languge">false</bool>
     <!--default support email for SupportMailActivity if not coming from server-->
-    <string name="default_support_email">support@livecabs.in</string>
+    <string name="default_support_email">support@livecabstechnology.com</string>
+
+    <bool name="show_call_me_option_in_otp">false</bool>
+
+    <color name="side_menu_color">#2a2f3c</color>
+    <color name="side_menu_text_color">@color/white</color>
+    <color name="side_menu_text_color_highlight">@color/white</color>
+
+    <integer name="show_invite_friends">@integer/view_gone</integer>
+    <integer name="show_promo">@integer/view_gone</integer>
+    <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
+
+
+    <!--new-->
+    <drawable name="cursor">@drawable/cursor_black</drawable>
+
+    <!--default support email for SupportMailActivity if not coming from server-->
+    <bool name="specified_country_search_result_enabled">false</bool>
+    <integer name="otp_via_call_enabled">0</integer>
+    <string name="profile_saved_location_text">@string/address_book</string>
+
 </resources>

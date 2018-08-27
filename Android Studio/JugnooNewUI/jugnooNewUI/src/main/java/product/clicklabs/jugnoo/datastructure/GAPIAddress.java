@@ -30,20 +30,23 @@ public class GAPIAddress{
 		if(!"".equalsIgnoreCase(street)){
 			address = address + street;
 		}
-		if(!"".equalsIgnoreCase(subLocality)){
+		if(!"".equalsIgnoreCase(subLocality)
+				&& !locality.toLowerCase().contains(subLocality.toLowerCase())
+				&& !administrativeArea.toLowerCase().contains(subLocality.toLowerCase())){
 			if("".equalsIgnoreCase(address)){
 				address = address + subLocality;
 			}
 			else{
-				address = address + " " + subLocality;
+				address = address + ", " + subLocality;
 			}
 		}
-		if(!"".equalsIgnoreCase(locality)){
+		if(!"".equalsIgnoreCase(locality)
+				&& !administrativeArea.toLowerCase().contains(locality.toLowerCase())){
 			if("".equalsIgnoreCase(address)){
 				address = address + locality;
 			}
 			else{
-				address = address + " " + locality;
+				address = address + ", " + locality;
 			}
 		}
 		if(!"".equalsIgnoreCase(administrativeArea)){
@@ -51,7 +54,7 @@ public class GAPIAddress{
 				address = address + administrativeArea;
 			}
 			else{
-				address = address + " " + administrativeArea;
+				address = address + ", " + administrativeArea;
 			}
 		}
 		if(!"".equalsIgnoreCase(country)){
@@ -59,11 +62,11 @@ public class GAPIAddress{
 				address = address + country;
 			}
 			else{
-				address = address + " " + country;
+				address = address + ", " + country;
 			}
 		}
 
-		address = formattedAddress.replace(",", "");
+//		address = formattedAddress.replace(",", "");
 		address = address.replace("-", " ");
 
 		return address;

@@ -9,6 +9,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
+import product.clicklabs.jugnoo.utils.MapUtils;
 
 /**
  * Created by gurmail on 18/08/16.
@@ -39,6 +40,7 @@ public class AutoData {
     private EndRideData endRideData;
     private LatLng pickupLatLng, dropLatLng;
     private String pickupAddress = "", dropAddress = "";
+    private LatLng pickupAddressMappedLatLng;
     private int dropAddressId;
     private int pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
     private CancelOptionsList cancelOptionsList;
@@ -55,6 +57,7 @@ public class AutoData {
     private PlaceOrderResponse.ReferralPopupContent referralPopupContent;
     private ArrayList<BidInfo> bidInfos;
     private String distanceUnit;
+    private int isTipEnabled;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -63,7 +66,7 @@ public class AutoData {
                     int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText, int referAllStatus, String referAllText,
                     String referAllTitle, int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin,
                     NearbyPickupRegions nearbyPickupRegionses, String inRideSendInviteTextBoldV2, String inRideSendInviteTextNormalV2,
-                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled) {
+                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled) {
         this.destinationHelpText = destinationHelpText;
         this.rideSummaryBadText = rideSummaryBadText;
         this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
@@ -88,6 +91,7 @@ public class AutoData {
         this.inRideSendInviteTextNormalV2 = inRideSendInviteTextNormalV2;
         this.rideStartInviteTextDeepIndexV2 = rideStartInviteTextDeepIndexV2;
         this.isRazorpayEnabled = isRazorpayEnabled;
+        this.isTipEnabled = isTipEnabled;
     }
 
     public String getDestinationHelpText() {
@@ -402,12 +406,19 @@ public class AutoData {
         this.promoCoupons = promoCoupons;
     }
 
-    public String getPickupAddress() {
+    public String getPickupAddress(LatLng latLng) {
+        if(pickupAddressMappedLatLng == null || latLng == null){
+            return "";
+        }
+        if(MapUtils.distance(pickupAddressMappedLatLng, latLng) > 50){
+            return "";
+        }
         return pickupAddress;
     }
 
-    public void setPickupAddress(String pickupAddress) {
+    public void setPickupAddress(String pickupAddress, LatLng latLng) {
         this.pickupAddress = pickupAddress;
+        this.pickupAddressMappedLatLng = latLng;
     }
 
     public String getDropAddress() {
@@ -539,5 +550,9 @@ public class AutoData {
 
     public void setDistanceUnit(String distanceUnit) {
         this.distanceUnit = distanceUnit;
+    }
+
+    public boolean getIsTipEnabled() {
+        return isTipEnabled==1;
     }
 }

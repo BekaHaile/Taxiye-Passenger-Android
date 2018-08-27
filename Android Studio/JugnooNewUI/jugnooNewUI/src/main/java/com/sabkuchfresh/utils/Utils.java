@@ -2,7 +2,6 @@ package com.sabkuchfresh.utils;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -19,8 +18,6 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
-import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -38,8 +35,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.country.picker.Country;
-import com.country.picker.CountryPicker;
 import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -436,14 +431,6 @@ public class Utils {
 
 
 
-    public static String getCountryZipCode(Context context) {
-		Country country = CountryPicker.getCountryFromSIM(context);
-		if (country != null) {
-			return country.getDialCode();
-		} else {
-			return "";
-		}
-	}
 
 
 

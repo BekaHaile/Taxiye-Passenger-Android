@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import com.jugnoo.pay.models.MessageRequest;
 import com.jugnoo.pay.models.SendMoneyResponse;
-import com.yesbank.PayActivity;
 
 /**
  * Created by shankar on 12/27/16.
@@ -52,9 +51,9 @@ public class PaySDKUtils {
 		//-----------------------
 
 
-		Intent intent = new Intent(activity, PayActivity.class);
-		intent.putExtras(bundle);
-		activity.startActivityForResult(intent, REQUEST_CODE_SEND_MONEY);
+//		Intent intent = new Intent(activity, PayActivity.class);
+//		intent.putExtras(bundle);
+//		activity.startActivityForResult(intent, REQUEST_CODE_SEND_MONEY);
 	}
 
 

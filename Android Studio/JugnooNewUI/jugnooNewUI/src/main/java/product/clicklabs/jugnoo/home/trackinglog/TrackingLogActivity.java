@@ -450,7 +450,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                             this.onAnimComplete();
                         }
                     }, false, null, 0, 0, 0,
-                    trackingLogItem.getMode().equalsIgnoreCase(TrackingLogModeValue.RESET.getOrdinal()), getString(R.string.google_maps_api_server_key));
+                    trackingLogItem.getMode().equalsIgnoreCase(TrackingLogModeValue.RESET.getOrdinal()));
         }
 
     }

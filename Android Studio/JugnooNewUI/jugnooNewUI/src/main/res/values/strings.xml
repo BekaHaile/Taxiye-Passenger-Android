@@ -462,8 +462,8 @@
         <item>+263,ZW</item>
     </string-array>
 
-    <string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,</string>
-    <string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.\\ </string>
+    <string name="digits_characters_caps_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789.,</string>
+    <string name="digits_characters_numbers">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 0123456789.\\ </string>
 
 
     <string name="paytm">Paytm</string>
@@ -1860,7 +1860,7 @@
     <string name="thank_you_for_valuable_feedback">Thank you for your valuable feedback</string>
     <string name="sorry_no_drivers_available_nearby">Sorry there are no drivers available nearby. We will look into it</string>
     <string name="sorry_all_drivers_busy">Sorry, All our drivers are currently busy. We are unable to offer you services right now. Please try again sometime later.</string>
-    <string name="location_accuracy_low_alert">Location accuracy is low. Are you sure you want to request an auto to pick you at this location?</string>
+    <string name="location_accuracy_low_alert">Location accuracy is low. Are you sure you want to request to pick you at this location?</string>
     <string name="pickup_location_different_from_current_location_alert">The pickup location you have set is different from your current location. Are you sure this is your pickup location?</string>
     <string name="check_balance">Check Balance</string>
     <string name="call_support">Call Support</string>
@@ -1883,12 +1883,13 @@
     <string name="set_preferences_caps">SET PREFERENCES</string>
     <string name="restarting_your_app">Restarting your app...</string>
     <string name="we_could_not_detect_your_location">We could not detect your location. Are you sure you want to request an auto to pick you at this location?</string>
-    <string name="location_accuracy_is_low">Location accuracy is low. Are you sure you want to request an auto to pick you at this location?</string>
+    <string name="location_accuracy_is_low">Location accuracy is low. Are you sure you want to request to pick you at this location?</string>
     <string name="the_pickup_location_you_have_set_is_different">The pickup location you have set is different from your current location. Are you sure this is your pickup location?</string>
     <string name="english">English</string>
     <string name="arabic">عربى</string>
     <string name="french">français</string>
     <string name="german">Deutsche</string>
+    <string name="spanish">Spanish</string>
     <string name="send_us_a_mail">Send us a mail</string>
     <string name="issue_description">Issue description</string>
     <string name="support_mail_subject">%s Support</string>
@@ -1904,8 +1905,9 @@
     <string name="cvc">CVC</string>
     <string name="please_enter_name_and_email">Please enter name and email</string>
     <string name="number_should_not_start_with_zero">Phone number should not start with 0</string>
-    <string name="toll_charge">Toll Charge</string>
+    <string name="toll_charge">Toll Charges</string>
     <string name="label_add_store_text_oh_snap"><b>Suggest a store to %s</b></string>
+    <string name="please_add_card_to_proceed">Please add card to proceed</string>
 
 
     <!--Strings related to permissions-->
@@ -1927,8 +1929,21 @@
 
     <!-- Notification channel -->
     <string name="notification_channel_default">Notifications</string>
+    <string name="notification_channel_silent">Updates</string>
     <string name="notification_channel_description_default">Latest Updates</string>
     <string name="grant_contact_permission">You will have to grant contacts permission to view your contacts here.Please Press the button below to proceed.</string>
     <string name="grant_permission">Grant Permission</string>
-
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="please_enter_first_name">Please enter first name</string>
+    <string name="please_enter_last_name">Please enter last name</string>
+    <string name="title_add_tip_for_driver">ADD TIP FOR DRIVER</string>
+    <string name ="label_tip_added">Tip Added: %s</string>
+    <string name="action_edit"><u>Edit</u></string>
+    <string name="action_remove"><u>Remove</u></string>
+    <string name="driver_tip">Driver Tip</string>
+    <string name="action_add_tip">Add Tip</string>
+    <string name="cannot_apply_offer_during_ride">Cannot apply offer during ride</string>
+    <string name="set_your_pickup_location">Set your pickup location</string>
+    <string name="tip">Tip</string>
 </resources>

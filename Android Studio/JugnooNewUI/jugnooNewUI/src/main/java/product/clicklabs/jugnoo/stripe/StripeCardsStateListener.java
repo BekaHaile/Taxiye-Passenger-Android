@@ -9,8 +9,6 @@ import product.clicklabs.jugnoo.stripe.model.StripeCardData;
  */
 public interface StripeCardsStateListener {
 
-    void onCardsUpdated(ArrayList<StripeCardData> stripeCardData);
-
-
+    void onCardsUpdated(ArrayList<StripeCardData> stripeCardData,String message,boolean cardAdded);
 
 }

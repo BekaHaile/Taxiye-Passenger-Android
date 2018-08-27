@@ -28,12 +28,12 @@ public class ApiGoogleDirectionWaypoints extends AsyncTask<String, Integer, Stri
 
 	}
 
-	public ApiGoogleDirectionWaypoints(ArrayList<LatLng> latLngs, boolean sortArray, Callback callback,String serverApiKey){
-		setData(latLngs, sortArray,serverApiKey);
+	public ApiGoogleDirectionWaypoints(ArrayList<LatLng> latLngs, boolean sortArray, Callback callback){
+		setData(latLngs, sortArray);
 		this.callback = callback;
 	}
 
-	public ApiGoogleDirectionWaypoints setData(ArrayList<LatLng> latLngs, boolean sortArray,String serverApiKey ){
+	public ApiGoogleDirectionWaypoints setData(ArrayList<LatLng> latLngs, boolean sortArray){
 		latLngInit = latLngs.get(0);
 		if(sortArray) {
 			Collections.sort(latLngs, new Comparator<LatLng>() {

@@ -363,6 +363,7 @@ public interface Constants {
     String KEY_UPDATED_USER_NAME = "updated_user_name";
     String KEY_UPDATED_USER_EMAIL = "updated_user_email";
     String KEY_UPDATED_PHONE_NO = "updated_phone_no";
+    String KEY_UPDATED_USER_IMAGE = "updated_user_image";
     String KEY_OLD_PASSWORD = "old_password";
     String KEY_NEW_PASSWORD = "new_password";
 
@@ -394,6 +395,7 @@ public interface Constants {
     String KEY_UPI_RAZORPAY = "upi_razorpay";
     String KEY_BALANCE = "balance";
     String KEY_WALLET_TYPE = "wallet_type";
+    String KEY_ADD_CARD_DRIVER_TIP = "add_card_driver_tip";
     String KEY_AMOUNT = "amount";
     String KEY_ADD_MONEY_URL = "add_money_url";
     String KEY_PAYTM_ENABLED = "paytm_enabled";
@@ -704,6 +706,8 @@ public interface Constants {
     String KEY_DELIVERY_ID = "delivery_id";
     String KEY_PICKUP_LATITUDE = "pickup_latitude";
     String KEY_PICKUP_LONGITUDE = "pickup_longitude";
+    String KEY_DROP_LATITUDE = "drop_latitude";
+    String KEY_DROP_LONGITUDE = "drop_longitude";
     String KEY_DELIVERY_LATITUDE = "delivery_latitude";
     String KEY_DELIVERY_LONGITUDE = "delivery_longitude";
     String KEY_TRACKING_INFO = "tracking_info";
@@ -868,6 +872,7 @@ public interface Constants {
     String PAYER_USER_IDENTIFIER = "payer_user_identifier";
     String PAYEE_PHONE_NUMBER="payee_phone_no";
     String NOTIF_CHANNEL_DEFAULT = "default_007";
+    String NOTIF_CHANNEL_SILENT = "silent";
     String STOP_FOREGROUND = "stop_foreground";
     String KEY_OPERATOR_ID="operator_id";
     String KEY_OPERATOR_TOKEN = "operator_token";
@@ -886,8 +891,8 @@ public interface Constants {
     String KEY_REVERSE_BID_TIME_INTERVAL = "reverse_bid_time_interval";
     String KEY_CREATED_AT = "created_at";
     String KEY_DISTANCE_UNIT = "distance_unit";
-    String KEY_SUPPORT_EMAIL = "support_email";
-    String KEY_SUPPORT_EMAIL_SUBJECT = "support_email_subject";
+    String KEY_CUSTOMER_SUPPORT_EMAIL = "customer_support_email";
+    String KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT = "customer_support_email_subject";
     String KEY_INVOICE_ICON = "invoice_icon";
     String KEY_MARKER_ICON = "marker_icon";
     String KEY_FUGU_APP_KEY = "fugu_app_key";
@@ -915,4 +920,11 @@ public interface Constants {
     String KEY_LOCALE = "locale";
     String KEY_TOLL_CHARGE = "toll_charge";
     String KEY_CUSTOMER_SUPPORT_NUMBER = "customer_support_number";
+    String KEY_TIP_AMOUNT = "tip_amount";
+    String KEY_TIP_ENABLED = "tip_enabled";
+    String KEY_CURRENCY_PRECISION = "currency_precision";
+    String KEY_DEFAULT_COUNTRY_CODE = "default_country_code";
+    String KEY_DEFAULT_SUB_COUNTRY_CODE = "default_sub_country_code";
+    String KEY_DEFAULT_COUNTRY_ISO = "default_country_iso";
+    String ACTION_UPDATE_STATE = "ACTION_UPDATE_STATE";
 }

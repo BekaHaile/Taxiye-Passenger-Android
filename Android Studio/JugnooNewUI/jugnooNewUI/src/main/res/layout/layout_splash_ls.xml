@@ -8,9 +8,16 @@
 
     <ImageView
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/login_background_drawable"
+        android:visibility="@integer/show_splash_bg"
+        android:tag="mwar" />
+
+    <ImageView
+        android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:src="@drawable/bg_top_2"
-        android:visibility="@integer/show_splash_top_bg"
+        android:visibility="@integer/show_login_top_bg"
         android:tag="mwar" />
 
     <LinearLayout
@@ -167,7 +174,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/px_160"
         android:layout_alignParentBottom="true"
-        android:visibility="@integer/view_invisible"
+        android:visibility="@integer/show_login_bottom_bg"
         android:background="@drawable/splash_bottom_building_bg1"
         android:tag="mwar" />
 
