@@ -44,7 +44,7 @@
     <string name="support_number">+18559373733</string>
     <string name="police_number">911</string>
     <string name="facebook_page_id">1494351767251981</string>
-    <string name="facebook_page_name">TheNickelRide</string>
+    <string name="facebook_page_url">https://www.facebook.com/TheNickelRide</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
