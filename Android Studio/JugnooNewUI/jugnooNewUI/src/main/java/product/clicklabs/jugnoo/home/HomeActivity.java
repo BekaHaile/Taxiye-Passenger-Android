@@ -1023,6 +1023,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 try {
                     if (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                         getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                        if(Data.autoData!=null && Data.autoData.getRegions().size()==1){
+                            getSlidingBottomPanel().getViewPager().setCurrentItem(1);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
