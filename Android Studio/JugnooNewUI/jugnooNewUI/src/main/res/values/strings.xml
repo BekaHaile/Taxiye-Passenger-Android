@@ -1946,4 +1946,5 @@
     <string name="cannot_apply_offer_during_ride">Cannot apply offer during ride</string>
     <string name="set_your_pickup_location">Set your pickup location</string>
     <string name="tip">Tip</string>
+    <string name="label_show_fare_estimate">Fare Estimate</string>
 </resources>

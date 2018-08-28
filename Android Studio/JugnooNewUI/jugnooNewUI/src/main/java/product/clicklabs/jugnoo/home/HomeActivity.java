@@ -371,7 +371,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             imageViewPaymentModeConfirm, imageViewRideEndWithImage;
     private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
     private LinearLayout llPayOnline;
-    private TextView tvPayOnline, tvPayOnlineIn;
+    private TextView tvPayOnline, tvPayOnlineIn,textViewShowFareEstimate;
 
 
     // data variables declaration
@@ -1015,7 +1015,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         layoutParams.height = (int) (ASSL.Yscale() * 200);
         editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
-
+        textViewShowFareEstimate = (TextView)findViewById(R.id.tvShowFareEstimate);
+        textViewShowFareEstimate.setTypeface(Fonts.mavenRegular(this));
+        textViewShowFareEstimate.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                        getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         /*rlSelectedPickup.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -5514,8 +5527,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
                 textViewCentrePinETA.setText("-");
                 imageViewRideNow.setVisibility(View.GONE);
+                textViewShowFareEstimate.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
             } else {
+                // TODO: 28/08/18 Add Server check and make textViewShowFareEstimate visible
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);
