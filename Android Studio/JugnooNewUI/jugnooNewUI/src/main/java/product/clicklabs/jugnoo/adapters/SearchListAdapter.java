@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -341,12 +342,13 @@ public class SearchListAdapter extends BaseAdapter{
         try {
 			if (!refreshingAutoComplete) {
 				searchListActionsHandler.onSearchPre();
+				String specifiedCountry = Prefs.with(context).getString(Constants.KEY_SPECIFIED_COUNTRY_PLACES_SEARCH, "");
                 AutocompleteFilter autocompleteFilter = new AutocompleteFilter.Builder()
-						.setCountry(context.getString(R.string.specified_country_search_result))
+						.setCountry(specifiedCountry)
 						.build();
 				Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, searchText,
 						new LatLngBounds.Builder().include(latLng).build(),
-                       this.context.getResources().getBoolean(R.bool.specified_country_search_result_enabled)? autocompleteFilter:null).setResultCallback(new ResultCallback<AutocompletePredictionBuffer>() {
+						!TextUtils.isEmpty(specifiedCountry) ? autocompleteFilter : null).setResultCallback(new ResultCallback<AutocompletePredictionBuffer>() {
 					@Override
 					public void onResult(AutocompletePredictionBuffer autocompletePredictions) {
 						try {

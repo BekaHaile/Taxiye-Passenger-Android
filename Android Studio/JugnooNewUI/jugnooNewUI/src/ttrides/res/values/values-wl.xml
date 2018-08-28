@@ -7,6 +7,8 @@
     <integer name="view_gone">2</integer>
 
 
+    <integer name="visibility_fare_estimate_hover">@integer/view_visible</integer>
+
     <!--Other things to change
         1. google-services.json
         2. Doc entity in strings.xml

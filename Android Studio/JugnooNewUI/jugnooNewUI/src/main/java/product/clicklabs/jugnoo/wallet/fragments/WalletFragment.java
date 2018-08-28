@@ -18,6 +18,7 @@ import com.sabkuchfresh.analytics.GAUtils;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HelpParticularActivity;
 import product.clicklabs.jugnoo.MyApplication;
@@ -30,6 +31,7 @@ import product.clicklabs.jugnoo.stripe.StripeViewCardFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
@@ -405,7 +407,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 							setStripePaymentUI(paymentModeConfigData);
 
 						} else if(paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()){
-							if(getResources().getInteger(R.integer.visibility_jugnoo_cash_in_wallet) == getResources().getInteger(R.integer.view_visible)) {
+							if(Prefs.with(paymentActivity).getInt(Constants.KEY_SHOW_JUGNOO_CASH_IN_WALLET, 1) == 1) {
 								linearLayoutWalletContainer.addView(relativeLayoutJugnooCash);
 							}
 						}

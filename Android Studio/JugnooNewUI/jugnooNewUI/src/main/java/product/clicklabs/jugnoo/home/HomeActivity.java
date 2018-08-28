@@ -3118,6 +3118,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
                         //fabViewTest.setRelativeLayoutFABVisibility(mode);
 
+                        findViewById(R.id.llRideEndTotalFareTakeCash).setVisibility(Prefs.with(this)
+                                .getInt(Constants.KEY_SHOW_FARE_DETAILS_AT_RIDE_END, 1) == 1 ? View.VISIBLE : View.GONE);
+                        if(Prefs.with(this).getInt(Constants.KEY_SHOW_TAKE_CASH_AT_RIDE_END, 1) == 1) {
+                            findViewById(R.id.llRideEndTakeCash).setVisibility(View.VISIBLE);
+                            findViewById(R.id.ivDivRideEndTakeCash).setVisibility(View.VISIBLE);
+                        } else {
+                            findViewById(R.id.llRideEndTakeCash).setVisibility(View.GONE);
+                            findViewById(R.id.ivDivRideEndTakeCash).setVisibility(View.GONE);
+                        }
+
                         int onlinePaymentVisibility = updateRideEndPayment();
                         if (onlinePaymentVisibility == View.VISIBLE && Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()) {
                             llPayOnline.post(new Runnable() {
@@ -4358,7 +4368,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         .getPaymentOptionBalanceText(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
             }
             if(PaymentOption.CASH.getOrdinal() == Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()
-                    && getResources().getInteger(R.integer.visibility_ride_history_amount) == getResources().getInteger(R.integer.view_gone)){
+                    && Prefs.with(this).getInt(KEY_SHOW_IN_RIDE_PAYMENT_OPTION, 1) != 1){
                 imageViewIRPaymentOption.setVisibility(View.GONE);
                 textViewIRPaymentOptionValue.setVisibility(View.GONE);
                 findViewById(R.id.ivDivBeforePaymentOps).setVisibility(View.GONE);
@@ -5530,7 +5540,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewShowFareEstimate.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
             } else {
-                // TODO: 28/08/18 Add Server check and make textViewShowFareEstimate visible
+                textViewShowFareEstimate.setVisibility(Prefs.with(this).getInt(KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON, 0) == 1 ? View.VISIBLE : View.GONE);
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);

@@ -927,4 +927,14 @@ public interface Constants {
     String KEY_DEFAULT_SUB_COUNTRY_CODE = "default_sub_country_code";
     String KEY_DEFAULT_COUNTRY_ISO = "default_country_iso";
     String ACTION_UPDATE_STATE = "ACTION_UPDATE_STATE";
+
+    String KEY_SPECIFIED_COUNTRY_PLACES_SEARCH = "specified_country_places_search";
+    String KEY_SHOW_FAQ = "show_faq";
+    String KEY_SHOW_TAKE_CASH_AT_RIDE_END = "show_take_cash_at_ride_end";
+    String KEY_SHOW_FARE_DETAILS_AT_RIDE_END = "show_fare_details_at_ride_end";
+    String KEY_SHOW_FARE_IN_RIDE_HISTORY = "show_fare_in_ride_history";
+    String KEY_SHOW_BASE_FARE_IN_RIDE_SUMMARY = "show_base_fare_in_ride_summary";
+    String KEY_SHOW_IN_RIDE_PAYMENT_OPTION = "show_in_ride_payment_option";
+    String KEY_SHOW_JUGNOO_CASH_IN_WALLET = "show_jugnoo_cash_in_wallet";
+    String KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON = "show_fare_estimate_hover_button";
 }
