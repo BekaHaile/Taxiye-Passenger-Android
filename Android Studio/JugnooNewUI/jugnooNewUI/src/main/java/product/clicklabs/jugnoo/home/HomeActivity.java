@@ -5543,7 +5543,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewShowFareEstimate.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
             } else {
-                textViewShowFareEstimate.setVisibility(Prefs.with(this).getInt(KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON, 0) == 1 ? View.VISIBLE : View.GONE);
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);
@@ -9387,6 +9386,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         }
 
+        updateFareEstimateHoverButton();
+
         // This code checks if the current Coupon selected is valid for the new Vehicle Type and if not it then checks for a default coupon
         // if it exists for that vehicle type, if it cannot find anything it then sets the coupon to null
 
@@ -9407,6 +9408,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         showPoolInforBar(false);
         slidingBottomPanel.getRequestRideOptionsFragment().updateOffersCount();
+    }
+
+    public void updateFareEstimateHoverButton() {
+        if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.POOL.getOrdinal()){
+            textViewShowFareEstimate.setVisibility(Prefs.with(this).getInt(KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON, 0) == 1 ? View.VISIBLE : View.GONE);
+        } else {
+            textViewShowFareEstimate.setVisibility(View.GONE);
+        }
     }
 
     public int getVehicleTypeSelected() {
