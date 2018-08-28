@@ -35,7 +35,7 @@
 
     <string name="operator_token">d7f228ce89b10cb02ec9fccdb47355d5</string>
     <string name="facebook_page_id">252184564966458</string>
-    <string name="facebook_page_name">jugnoose</string>
+    <string name="facebook_page_url">https://www.facebook.com/jugnoose</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>

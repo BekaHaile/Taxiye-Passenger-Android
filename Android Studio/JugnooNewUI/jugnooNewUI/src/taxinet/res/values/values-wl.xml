@@ -37,7 +37,7 @@
     <string name="support_number">+2549023121121</string>
     <string name="police_number">911</string>
     <string name="facebook_page_id">204825336990225</string>
-    <string name="facebook_page_name">TaxiNet-Kenya</string>
+    <string name="facebook_page_url">https://www.facebook.com/TaxiNet-Kenya</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>

@@ -37,7 +37,7 @@
     <string name="support_number">+2549023121121</string>
     <string name="police_number">0202556780</string>
     <string name="facebook_page_id">jingoridestuktukmlangoni</string>
-    <string name="facebook_page_name">jingoridestuktukmlangoni</string>
+    <string name="facebook_page_url">https://www.facebook.com/jingoridestuktukmlangoni</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
