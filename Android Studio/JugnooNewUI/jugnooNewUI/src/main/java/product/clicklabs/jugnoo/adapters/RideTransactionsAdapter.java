@@ -17,6 +17,7 @@ import com.sabkuchfresh.pros.ui.adapters.ProsCatalogueAdapter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ProductType;
@@ -28,6 +29,7 @@ import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -99,8 +101,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewToValue.setText(orderHistory.getDropAddress());
                 holder.textViewDetails.setText(R.string.details_colon);
                 holder.textViewAmount.setText(Utils.formatCurrencyValue(orderHistory.getCurrency(), orderHistory.getAmount()));
-                holder.textViewAmount.setVisibility(activity.getResources().getInteger(R.integer.visibility_ride_history_amount)
-                        == activity.getResources().getInteger(R.integer.view_visible) ? View.VISIBLE : View.GONE);
+                holder.textViewAmount.setVisibility(Prefs.with(activity).getInt(Constants.KEY_SHOW_FARE_IN_RIDE_HISTORY, 1) == 1 ? View.VISIBLE : View.GONE);
 
                 holder.imageViewProductType.setImageResource(R.drawable.ic_rides);
                 holder.imageViewProductType.setBackgroundResource(R.drawable.circle_theme);

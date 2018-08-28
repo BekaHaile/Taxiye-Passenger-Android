@@ -389,12 +389,34 @@ public class JSONParser implements Constants {
                     autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject, context.getString(R.string.app_name))));
 
             Utils.setCurrencyPrecision(context, autoData.optInt(Constants.KEY_CURRENCY_PRECISION, 0));
+
+            parseConfigParams(context, autoData);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void parseAndSetLocale(Context context, JSONObject autoData) {
+	private void parseConfigParams(Context context, JSONObject autoData) {
+    	String specifiedCountry = context.getResources().getBoolean(R.bool.specified_country_search_result_enabled) ?
+				context.getString(R.string.specified_country_search_result) : "";
+		Prefs.with(context).save(KEY_SPECIFIED_COUNTRY_PLACES_SEARCH, autoData.optString(KEY_SPECIFIED_COUNTRY_PLACES_SEARCH, specifiedCountry));
+        int showFaq = context.getResources().getInteger(R.integer.visibility_faq) == context.getResources().getInteger(R.integer.view_visible) ? 1 : 0;
+        Prefs.with(context).save(KEY_SHOW_FAQ, autoData.optInt(KEY_SHOW_FAQ, showFaq));
+        int showTakeCash = context.getResources().getInteger(R.integer.visibility_take_cash) == context.getResources().getInteger(R.integer.view_visible) ? 1 : 0;
+        Prefs.with(context).save(KEY_SHOW_TAKE_CASH_AT_RIDE_END, autoData.optInt(KEY_SHOW_TAKE_CASH_AT_RIDE_END, showTakeCash));
+        int showAmount = context.getResources().getInteger(R.integer.show_amount_on_ride_summary) == context.getResources().getInteger(R.integer.view_visible) ? 1 : 0;
+        Prefs.with(context).save(KEY_SHOW_FARE_DETAILS_AT_RIDE_END, autoData.optInt(KEY_SHOW_FARE_DETAILS_AT_RIDE_END, showAmount));
+        int showFareInRideHistory = context.getResources().getInteger(R.integer.visibility_ride_history_amount) == context.getResources().getInteger(R.integer.view_visible) ? 1 : 0;
+        Prefs.with(context).save(KEY_SHOW_FARE_IN_RIDE_HISTORY, autoData.optInt(KEY_SHOW_FARE_IN_RIDE_HISTORY, showFareInRideHistory));
+        Prefs.with(context).save(KEY_SHOW_BASE_FARE_IN_RIDE_SUMMARY, autoData.optInt(KEY_SHOW_BASE_FARE_IN_RIDE_SUMMARY, showFareInRideHistory));
+        Prefs.with(context).save(KEY_SHOW_IN_RIDE_PAYMENT_OPTION, autoData.optInt(KEY_SHOW_IN_RIDE_PAYMENT_OPTION, showFareInRideHistory));
+        int showJugnooCash = context.getResources().getInteger(R.integer.visibility_jugnoo_cash_in_wallet) == context.getResources().getInteger(R.integer.view_visible) ? 1 : 0;
+        Prefs.with(context).save(KEY_SHOW_JUGNOO_CASH_IN_WALLET, autoData.optInt(KEY_SHOW_JUGNOO_CASH_IN_WALLET, showJugnooCash));
+        int fareEstimateHover = context.getResources().getInteger(R.integer.visibility_fare_estimate_hover) == context.getResources().getInteger(R.integer.view_visible) ? 1 : 0;
+        Prefs.with(context).save(KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON, autoData.optInt(KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON, fareEstimateHover));
+	}
+
+	public static void parseAndSetLocale(Context context, JSONObject autoData) {
         if(autoData.has(KEY_DEFAULT_LANG) && Prefs.with(context).getString(KEY_DEFAULT_LANG, "eee").equals("eee")) {
             Prefs.with(context).save(KEY_DEFAULT_LANG, autoData.optString(KEY_DEFAULT_LANG, context.getString(R.string.default_lang)));
             LocaleHelper.setLocale(context, Prefs.with(context).getString(KEY_DEFAULT_LANG, context.getString(R.string.default_lang)));

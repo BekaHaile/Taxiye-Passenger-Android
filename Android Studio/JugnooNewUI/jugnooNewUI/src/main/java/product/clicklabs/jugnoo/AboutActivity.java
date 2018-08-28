@@ -156,6 +156,8 @@ public class AboutActivity extends BaseActivity {
             }
         });
 
+        relativeLayoutFAQ.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_FAQ, 1) == 1 ? View.VISIBLE : View.GONE);
+
 
         imageViewBack.setOnClickListener(new OnClickListener() {
 
