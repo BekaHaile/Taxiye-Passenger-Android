@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -23,6 +22,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -211,6 +211,9 @@ public class DriverTipInteractor {
         final HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
         params.put(Constants.KEY_TIP_AMOUNT, String.valueOf(amount));
+        if(HomeActivity.passengerScreenMode== PassengerScreenMode.P_RIDE_END) {
+            params.put(Constants.KEY_PAY_VIA_STRIPE, String.valueOf(activity.getResources().getBoolean(R.bool.is_card_mandatory_for_driver_tip) ? 1 : 0));
+        }
 
         new ApiCommon<>(activity).showLoader(true).execute(params, ApiName.EDIT_TIP,
                 new APICommonCallback<FeedCommonResponse>() {

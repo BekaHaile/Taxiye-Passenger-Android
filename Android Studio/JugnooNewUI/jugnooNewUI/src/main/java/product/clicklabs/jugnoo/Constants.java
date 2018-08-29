@@ -940,4 +940,5 @@ public interface Constants {
     String KEY_CASH_ABOVE_ALL_WALLETS = "cash_above_all_wallets";
 
     String KEY_LUGGAGE_CHARGES = "luggage_charges";
+    String KEY_PAY_VIA_STRIPE = "pay_via_stripe";
 }
