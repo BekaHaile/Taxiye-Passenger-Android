@@ -23,8 +23,8 @@
 
     <string name="app_name">Instant Ryde</string>
 
-    <string name="google_maps_api_key">AIzaSyBrU2XQF8xCohlI_zA-ow-yG83HA8DI3FM</string>
-    <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
+    <string name="google_maps_api_key">AIzaSyDhfbfQRTH6VDb_d39vv6xp5Gia9fcgs5Y</string>
+    <string name="google_server_client_id">5826904983990-rhq4klsq9udf1r6c1g9gup9jl4j3r2ju.apps.googleusercontent.com</string>
     <string name="fb_app_id">1992033690820340</string>
     <string name="fb_login_protocol_scheme">fb1992033690820340</string>
     <string name="fb_client_token">9c455c35d48d2d228813cc2646c1a9e8</string>
