@@ -88,6 +88,9 @@ public class RideSummaryFragment extends Fragment implements Constants {
     Button buttonEndRideOk;
     EndRideDiscountsAdapter endRideDiscountsAdapter;
 
+    RelativeLayout rlLuggageChargesNew;
+    TextView tvLuggageChargesNewValue;
+
     EndRideData endRideData = null;
     ArrayList<ShowPanelResponse.Item> items;
     private int engagementId = 0;
@@ -266,6 +269,9 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
             buttonEndRideOk = (Button) rootView.findViewById(R.id.buttonEndRideOk);
             buttonEndRideOk.setTypeface(Fonts.mavenRegular(activity));
+
+            rlLuggageChargesNew = (RelativeLayout) rootView.findViewById(R.id.rlLuggageChargesNew);
+            tvLuggageChargesNewValue = (TextView) rootView.findViewById(R.id.tvLuggageChargesNewValue);
 
 
             ((TextView) rootView.findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.mavenRegular(activity));
@@ -483,6 +489,9 @@ public class RideSummaryFragment extends Fragment implements Constants {
 					}
 				}*/
 
+
+                rlLuggageChargesNew.setVisibility(endRideData.getLuggageChargesNew() > 0.0 ? View.VISIBLE : View.GONE);
+                tvLuggageChargesNewValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.getLuggageChargesNew()));
 
                 textViewEndRideFinalFareValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.finalFare));
                 if(Utils.compareDouble(endRideData.fare, endRideData.finalFare) == 0){

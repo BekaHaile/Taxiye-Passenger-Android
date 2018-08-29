@@ -927,6 +927,7 @@ public class JSONParser implements Constants {
         int paymentOption = jLastRideData.optInt(Constants.KEY_PREFERRED_PAYMENT_MODE, PaymentOption.CASH.getOrdinal());
         double tollCharge = jLastRideData.optDouble(Constants.KEY_TOLL_CHARGE, 0.0);
         double driverTipAmount = jLastRideData.optDouble(Constants.KEY_TIP_AMOUNT, 0.0);
+        double luggageChargesNew = jLastRideData.optDouble(Constants.KEY_LUGGAGE_CHARGES, 0.0);
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -944,7 +945,8 @@ public class JSONParser implements Constants {
                 sumAdditionalCharges, engagementDate, paidUsingMobikwik, paidUsingFreeCharge,paidUsingMpesa,paidUsingRazorpay,paidUsingStripeCard, last_4, totalRide, status, supportNumber
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
-                showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,driverTipAmount);
+                showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
+                driverTipAmount, luggageChargesNew);
 	}
 
 

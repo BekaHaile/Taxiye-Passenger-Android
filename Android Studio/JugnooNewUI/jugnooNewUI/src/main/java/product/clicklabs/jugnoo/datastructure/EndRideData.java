@@ -35,6 +35,7 @@ public class EndRideData {
 	private String last_4;
 	private String iconUrl;
 	private double driverTipAmount;
+	private double luggageChargesNew;
 
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
 					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
@@ -45,7 +46,8 @@ public class EndRideData {
 					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, double paidUsingFreeCharge,double paidUsingMpesa, double paidUsingRazorpay,
 					   double paidUsingStripe,String last_4,int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
 					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags, int showPaymentOptions,
-					   int paymentOption, int operatorId, String currency, String distanceUnit, String iconUrl, double tollCharge,double driverTipAmount){
+					   int paymentOption, int operatorId, String currency, String distanceUnit, String iconUrl, double tollCharge,double driverTipAmount,
+					   double luggageChargesNew){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -118,8 +120,9 @@ public class EndRideData {
 		this.paidUsingStripe = paidUsingStripe;
 		this.last_4 = last_4;
 		this.driverTipAmount = driverTipAmount;
+		this.luggageChargesNew = luggageChargesNew;
 
-		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge - this.discount + this.sumAdditionalCharges + this.tollCharge + this.driverTipAmount;
+		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge + this.luggageChargesNew - this.discount + this.sumAdditionalCharges + this.tollCharge + this.driverTipAmount;
 	}
 
 
@@ -290,5 +293,13 @@ public class EndRideData {
 
 	public void setDriverTipAmount(double driverTipAmount) {
 		this.driverTipAmount = driverTipAmount;
+	}
+
+	public double getLuggageChargesNew() {
+		return luggageChargesNew;
+	}
+
+	public void setLuggageChargesNew(double luggageChargesNew) {
+		this.luggageChargesNew = luggageChargesNew;
 	}
 }
