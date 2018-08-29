@@ -115,7 +115,6 @@
 
 
     <!--hardcode/default values-->
-    <string name="facebook_page_url">https://www.facebook.com/TheNickelRide</string>
     <!--Other things to change
         1. google-services.json
         2. Doc entity in strings.xml
