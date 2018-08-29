@@ -138,4 +138,5 @@
     <integer name="visibility_ride_history_amount">@integer/view_gone</integer>
     <integer name="visibility_jugnoo_cash_in_wallet">@integer/view_gone</integer>
     <bool name="show_choose_other_mode_to_pay">false</bool>
+    <integer name="cash_above_all">1</integer>
 </resources>

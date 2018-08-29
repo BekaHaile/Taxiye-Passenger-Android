@@ -414,6 +414,8 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(KEY_SHOW_JUGNOO_CASH_IN_WALLET, autoData.optInt(KEY_SHOW_JUGNOO_CASH_IN_WALLET, showJugnooCash));
         int fareEstimateHover = context.getResources().getInteger(R.integer.visibility_fare_estimate_hover) == context.getResources().getInteger(R.integer.view_visible) ? 1 : 0;
         Prefs.with(context).save(KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON, autoData.optInt(KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON, fareEstimateHover));
+        int cashAboveAll = context.getResources().getInteger(R.integer.cash_above_all);
+        Prefs.with(context).save(KEY_CASH_ABOVE_ALL_WALLETS, autoData.optInt(KEY_CASH_ABOVE_ALL_WALLETS, cashAboveAll));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
