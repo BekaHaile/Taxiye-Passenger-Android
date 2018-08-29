@@ -21,18 +21,18 @@
             notification_icon
     -->
 
-    <string name="app_name">Instant Ryde</string>
+    <string name="app_name">Instant Ryde App</string>
 
     <string name="google_maps_api_key">AIzaSyDhfbfQRTH6VDb_d39vv6xp5Gia9fcgs5Y</string>
     <string name="google_server_client_id">5826904983990-rhq4klsq9udf1r6c1g9gup9jl4j3r2ju.apps.googleusercontent.com</string>
-    <string name="fb_app_id">1992033690820340</string>
-    <string name="fb_login_protocol_scheme">fb1992033690820340</string>
+    <string name="fb_app_id">1543492105750451</string>
+    <string name="fb_login_protocol_scheme">fb1543492105750451</string>
     <string name="fb_client_token">9c455c35d48d2d228813cc2646c1a9e8</string>
     <string name="ak_login_protocol_scheme">ak782131025144439</string>
     <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
 
 
-    <string name="operator_token">ebf012a07d7faf1513e531422d907abe</string>
+    <string name="operator_token">ce38d322692b5662dd1b978eaf0680f0</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">999</string>
     <string name="facebook_page_id">205679188</string>
