@@ -7311,6 +7311,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     @Override
                     public void run() {
                         getRideSummaryAPI(HomeActivity.this, engagementId);
+                        if(driverTipInteractor != null) {
+							driverTipInteractor.dismissDialog();
+						}
                     }
                 });
             }

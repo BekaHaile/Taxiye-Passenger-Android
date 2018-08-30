@@ -565,7 +565,6 @@ public class RideSummaryFragment extends Fragment implements Constants {
                     rootView.findViewById(R.id.llBaseFare).setVisibility(View.GONE);
                     rootView.findViewById(R.id.ivSepBaseFare).setVisibility(View.GONE);
 					rlToBePaid.setVisibility(endRideData.toPay > 0D ? View.VISIBLE : View.GONE);
-                    rootView.findViewById(R.id.ivToBePaid).setVisibility(endRideData.toPay > 0D ? View.VISIBLE : View.GONE);
                 }
                 double totalDistanceInKm = endRideData.distance;
                 String kmsStr = Utils.getDistanceUnit(endRideData.getDistanceUnit());

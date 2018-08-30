@@ -154,6 +154,12 @@ public class DriverTipInteractor {
         }
     }
 
+    public void dismissDialog(){
+        if(driverTipDialog != null) {
+            driverTipDialog.dismiss();
+        }
+    }
+
 
     public interface Callback{
         void onConfirmed(Double amount,String engagementId);
