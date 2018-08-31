@@ -36,7 +36,7 @@
     <string name="support_number">+2549023121121</string>
     <string name="police_number">999</string>
     <string name="facebook_page_id">2056791887904505</string>
-        <string name="facebook_page_name">Comelyt</string>
+        <string name="facebook_page_url">https://www.facebook.com/Comelyt</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_gone</integer>

@@ -38,7 +38,7 @@
     <string name="support_number">+2549023121121</string>
     <string name="police_number">999</string>
     <string name="facebook_page_id">2056791887904505</string>
-    <string name="facebook_page_name">pamdrive</string>
+    <string name="facebook_page_url">https://www.facebook.com/pamdrive</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
@@ -86,6 +86,7 @@
     <string name="default_support_email">support@pamdrive.in</string>
     <integer name="send_invites_visibility">@integer/view_gone</integer>
     <bool name="specified_country_search_result_enabled">true</bool>
+    <string name="specified_country_search_result">NG</string>
     <bool name="show_call_me_option_in_otp">false</bool>
     <integer name="show_promo">@integer/view_gone</integer>
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>

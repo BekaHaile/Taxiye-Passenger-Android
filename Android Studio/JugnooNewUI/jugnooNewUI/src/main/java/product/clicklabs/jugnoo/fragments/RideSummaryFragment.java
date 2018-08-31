@@ -52,6 +52,7 @@ import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 
@@ -86,6 +87,9 @@ public class RideSummaryFragment extends Fragment implements Constants {
     TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
     Button buttonEndRideOk;
     EndRideDiscountsAdapter endRideDiscountsAdapter;
+
+    RelativeLayout rlLuggageChargesNew;
+    TextView tvLuggageChargesNewValue;
 
     EndRideData endRideData = null;
     ArrayList<ShowPanelResponse.Item> items;
@@ -265,6 +269,9 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
             buttonEndRideOk = (Button) rootView.findViewById(R.id.buttonEndRideOk);
             buttonEndRideOk.setTypeface(Fonts.mavenRegular(activity));
+
+            rlLuggageChargesNew = (RelativeLayout) rootView.findViewById(R.id.rlLuggageChargesNew);
+            tvLuggageChargesNewValue = (TextView) rootView.findViewById(R.id.tvLuggageChargesNewValue);
 
 
             ((TextView) rootView.findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.mavenRegular(activity));
@@ -483,6 +490,9 @@ public class RideSummaryFragment extends Fragment implements Constants {
 				}*/
 
 
+                rlLuggageChargesNew.setVisibility(endRideData.getLuggageChargesNew() > 0.0 ? View.VISIBLE : View.GONE);
+                tvLuggageChargesNewValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.getLuggageChargesNew()));
+
                 textViewEndRideFinalFareValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.finalFare));
                 if(Utils.compareDouble(endRideData.fare, endRideData.finalFare) == 0){
                     relativeLayoutFinalFare.setVisibility(View.GONE);
@@ -549,13 +559,12 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
                 textViewEndRideFareFactorValue.setText(String.format(getResources().getString(R.string.priority_tip_format), decimalFormat.format(endRideData.fareFactor)));
                 textViewEndRideBaseFareValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.baseFare));
-                if(getResources().getInteger(R.integer.visibility_ride_history_amount) != getResources().getInteger(R.integer.view_visible)){
+                if(Prefs.with(activity).getInt(KEY_SHOW_BASE_FARE_IN_RIDE_SUMMARY, 1) != 1){
 					linearLayoutRideDetail.setVisibility(View.VISIBLE);
 					rootView.findViewById(R.id.ivSepRideDetails).setVisibility(View.VISIBLE);
                     rootView.findViewById(R.id.llBaseFare).setVisibility(View.GONE);
                     rootView.findViewById(R.id.ivSepBaseFare).setVisibility(View.GONE);
 					rlToBePaid.setVisibility(endRideData.toPay > 0D ? View.VISIBLE : View.GONE);
-                    rootView.findViewById(R.id.ivToBePaid).setVisibility(endRideData.toPay > 0D ? View.VISIBLE : View.GONE);
                 }
                 double totalDistanceInKm = endRideData.distance;
                 String kmsStr = Utils.getDistanceUnit(endRideData.getDistanceUnit());

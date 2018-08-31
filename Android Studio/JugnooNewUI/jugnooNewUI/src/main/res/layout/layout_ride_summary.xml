@@ -177,6 +177,109 @@
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
                         </RelativeLayout>
+
+
+                        <!-- luggage charge -->
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutLuggageCharge"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6px">
+
+                            <TextView
+                                android:id="@+id/textViewEndRideLuggageCharge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="30px"
+                                android:gravity="center_vertical"
+                                android:text="@string/luggage_charge"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26" />
+
+
+                            <TextView
+                                android:id="@+id/textViewEndRideLuggageChargeValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
+                                android:text="@string/_0"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26" />
+                        </RelativeLayout>
+
+                        <!-- convenience charge -->
+                        <RelativeLayout
+                            android:id="@+id/relativeLayoutConvenienceCharge"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6px">
+
+                            <TextView
+                                android:id="@+id/textViewEndRideConvenienceCharge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="30px"
+                                android:gravity="center_vertical"
+                                android:text="@string/convenience_charge"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26" />
+
+
+                            <TextView
+                                android:id="@+id/textViewEndRideConvenienceChargeValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
+                                android:text="0"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26" />
+                        </RelativeLayout>
+                        <!-- luggage charges new -->
+                        <RelativeLayout
+                            android:id="@+id/rlLuggageChargesNew"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6px">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="30px"
+                                android:gravity="center_vertical"
+                                android:text="@string/luggage_charge"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26"
+                                app:typekitFont="@string/maven_l"/>
+
+
+                            <TextView
+                                android:id="@+id/tvLuggageChargesNewValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
+                                android:text="0"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26"
+                                app:typekitFont="@string/maven_r"/>
+                        </RelativeLayout>
+
+                        <!-- discount -->
+                        <product.clicklabs.jugnoo.utils.NonScrollListView
+                            android:id="@+id/listViewEndRideDiscounts"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:divider="@color/transparent"
+                            android:dividerHeight="2dp"
+                            android:layout_marginTop="4px"
+                            android:splitMotionEvents="false"></product.clicklabs.jugnoo.utils.NonScrollListView>
+
+
                         <!-- tip -->
                         <RelativeLayout
                             android:id="@+id/relativeLayoutDriverTip"
@@ -239,78 +342,6 @@
                                 android:textSize="@dimen/text_size_26"
                                 app:typekitFont="@string/maven_r"/>
                         </RelativeLayout>
-
-
-                        <!-- luggage charge -->
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutLuggageCharge"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6px">
-
-                            <TextView
-                                android:id="@+id/textViewEndRideLuggageCharge"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/luggage_charge"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_26" />
-
-
-                            <TextView
-                                android:id="@+id/textViewEndRideLuggageChargeValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginEnd="40px"
-                                android:gravity="center_vertical|end"
-                                android:text="@string/_0"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_26" />
-                        </RelativeLayout>
-
-                        <!-- convenience charge -->
-                        <RelativeLayout
-                            android:id="@+id/relativeLayoutConvenienceCharge"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6px">
-
-                            <TextView
-                                android:id="@+id/textViewEndRideConvenienceCharge"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/convenience_charge"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_26" />
-
-
-                            <TextView
-                                android:id="@+id/textViewEndRideConvenienceChargeValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginEnd="40px"
-                                android:gravity="center_vertical|end"
-                                android:text="0"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_26" />
-                        </RelativeLayout>
-
-                        <!-- discount -->
-                        <product.clicklabs.jugnoo.utils.NonScrollListView
-                            android:id="@+id/listViewEndRideDiscounts"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:divider="@color/transparent"
-                            android:dividerHeight="2dp"
-                            android:layout_marginTop="4px"
-                            android:splitMotionEvents="false"></product.clicklabs.jugnoo.utils.NonScrollListView>
-
 
                         <!-- discounted fare -->
                         <RelativeLayout

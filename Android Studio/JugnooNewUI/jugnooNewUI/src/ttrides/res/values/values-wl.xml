@@ -7,6 +7,8 @@
     <integer name="view_gone">2</integer>
 
 
+    <integer name="visibility_fare_estimate_hover">@integer/view_visible</integer>
+
     <!--Other things to change
         1. google-services.json
         2. Doc entity in strings.xml
@@ -38,7 +40,7 @@
     <string name="support_number">+2549023121121</string>
     <string name="police_number">999</string>
     <string name="facebook_page_id">2056791887904505</string>
-        <string name="facebook_page_name">ttrideshare</string>
+        <string name="facebook_page_url">https://www.facebook.com/ttrideshare</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>

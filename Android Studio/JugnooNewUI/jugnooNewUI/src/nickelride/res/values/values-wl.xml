@@ -44,7 +44,7 @@
     <string name="support_number">+18559373733</string>
     <string name="police_number">911</string>
     <string name="facebook_page_id">1494351767251981</string>
-    <string name="facebook_page_name">TheNickelRide</string>
+    <string name="facebook_page_url">https://www.facebook.com/TheNickelRide</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
@@ -115,7 +115,6 @@
 
 
     <!--hardcode/default values-->
-    <string name="facebook_page_url">https://www.facebook.com/TheNickelRide</string>
     <!--Other things to change
         1. google-services.json
         2. Doc entity in strings.xml
@@ -138,4 +137,6 @@
     <bool name="is_card_mandatory_for_driver_tip">true</bool>
     <integer name="visibility_ride_history_amount">@integer/view_gone</integer>
     <integer name="visibility_jugnoo_cash_in_wallet">@integer/view_gone</integer>
+    <bool name="show_choose_other_mode_to_pay">false</bool>
+    <integer name="cash_above_all">1</integer>
 </resources>

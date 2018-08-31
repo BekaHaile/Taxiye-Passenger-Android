@@ -40,7 +40,7 @@ public class UniqueIMEIID {
 		}
 
 
-		String suffix = BuildConfig.DEBUG ? "12aj":"";
+		String suffix = BuildConfig.DEBUG ? "14aj":"";
 
 		androidSecureId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 		if(!TextUtils.isEmpty(imei))return imei+suffix;
