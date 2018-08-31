@@ -56,7 +56,7 @@
     <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <drawable name="login_logo_icon_drawable">@drawable/ic_login_logo</drawable>
     <drawable name="splash_background_drawable">@color/black</drawable>
-    <drawable name="login_background_drawable">@color/black</drawable>
+    <drawable name="login_background_drawable">@color/white</drawable>
     <integer name="show_social_login">@integer/view_visible</integer>
     <integer name="show_facebook_login">@integer/view_visible</integer>
     <integer name="show_google_login">@integer/view_gone</integer>
@@ -89,4 +89,11 @@
     <integer name="show_promo">@integer/view_gone</integer>
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
     <string name="profile_saved_location_text">@string/address_book</string>
+
+
+    <color name="layout_login_signup_text_color">@color/black</color>
+
+    <color name="theme_color_start">#000000</color>
+    <color name="theme_color_end">#99000000</color>
+    <color name="theme_color_pressed">#99000000</color>
 </resources>
