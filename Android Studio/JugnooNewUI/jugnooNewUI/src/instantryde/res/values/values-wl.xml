@@ -21,7 +21,7 @@
             notification_icon
     -->
 
-    <string name="app_name">Instant Ryde App</string>
+    <string name="app_name">Instant Ryde</string>
 
     <string name="google_maps_api_key">AIzaSyDhfbfQRTH6VDb_d39vv6xp5Gia9fcgs5Y</string>
     <string name="google_server_client_id">826904983990-phdpcf1msfkrd1pnd1te8cmh92fvrdvt.apps.googleusercontent.com</string>
