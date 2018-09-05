@@ -1563,7 +1563,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void scoreChanged(float score) {
                 try {
                     if (Data.autoData.getFeedbackReasons().size() > 0) {
-                        if (rating > 0 && rating <= 3) {
+                        if (score > 0 && score <= 3) {
                             textViewRSWhatImprove.setVisibility(View.VISIBLE);
                             gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
 
