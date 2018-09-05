@@ -39,12 +39,14 @@ import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 import static com.stripe.android.model.Card.BRAND_RESOURCE_MAP;
 
@@ -70,6 +72,8 @@ public class StripeAddCardFragment extends Fragment {
     private StripeCardsStateListener stripeCardsStateListener;
     private Unbinder unbinder;
 
+    private static final String ARGS_PAYMENT_MODE = "args_payment_mode";
+    private PaymentOption paymentOption ;
 
 
     @Override
@@ -80,6 +84,24 @@ public class StripeAddCardFragment extends Fragment {
         }
 
 
+    }
+
+    public static StripeAddCardFragment newInstance(PaymentOption paymentOption){
+
+        StripeAddCardFragment stripeAddCardFragment = new StripeAddCardFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ARGS_PAYMENT_MODE,paymentOption);
+        stripeAddCardFragment.setArguments(bundle);
+        return stripeAddCardFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments()!=null && getArguments().containsKey(ARGS_PAYMENT_MODE)){
+
+            paymentOption = (PaymentOption) getArguments().getSerializable(ARGS_PAYMENT_MODE);
+        }
     }
 
     @Nullable
@@ -176,30 +198,36 @@ public class StripeAddCardFragment extends Fragment {
 
                 Utils.hideSoftKeyboard(getActivity(),edtCardNumber);
                 DialogPopup.showLoadingDialog(getActivity(),getString(R.string.loading));
-                stripe.createToken(
-                        card,
-                        new TokenCallback() {
-                            public void onSuccess(Token token) {
-                                // Send token to  server
+
+                if(paymentOption.getOrdinal()==PaymentOption.STRIPE_CARDS.getOrdinal()){
+                    stripe.createToken(
+                            card,
+                            new TokenCallback() {
+                                public void onSuccess(Token token) {
+                                    // Send token to  server
 
 
-                                DialogPopup.dismissLoadingDialog();
-                                addCardApi( token);
+                                    DialogPopup.dismissLoadingDialog();
+                                    addCardApi(token.getCard(),token.getId());
 
 
+                                }
+
+                                public void onError(Exception error) {
+                                    // Show localized error message
+                                    Log.e(TAG, error.getMessage());
+                                    DialogPopup.dismissLoadingDialog();
+                                    Toast.makeText(getContext(),
+                                            error.getLocalizedMessage(),
+                                            Toast.LENGTH_LONG
+                                    ).show();
+                                }
                             }
+                    );
+                }else{
+                    addCardApi(card,null);
+                }
 
-                            public void onError(Exception error) {
-                                // Show localized error message
-                                Log.e(TAG, error.getMessage());
-                                DialogPopup.dismissLoadingDialog();
-                                Toast.makeText(getContext(),
-                                        error.getLocalizedMessage(),
-                                        Toast.LENGTH_LONG
-                                ).show();
-                            }
-                        }
-                );
                 break;
             case R.id.imageViewBack:
                 getActivity().onBackPressed();
@@ -215,14 +243,18 @@ public class StripeAddCardFragment extends Fragment {
 
     }
 
-    private void addCardApi(Token token) {
+    private void addCardApi(Card token,@Nullable  String tokenId) {
         HashMap<String,String> params = new HashMap<>();
-        params.put("stripe_token",token.getId());
-        params.put("last_4",token.getCard().getLast4());
-        params.put("brand",token.getCard().getBrand());
-        params.put("exp_month",String.valueOf(token.getCard().getExpMonth()));
-        params.put("exp_year",String.valueOf(token.getCard().getExpYear()));
+        if(tokenId!=null){
+            params.put("stripe_token",tokenId);
+            }
+        params.put("last_4",token.getLast4());
+        params.put("card_number",token.getNumber());
+        params.put("brand",token.getBrand());
+        params.put("exp_month",String.valueOf(token.getExpMonth()));
+        params.put("exp_year",String.valueOf(token.getExpYear()));
         params.put("is_delete","0");
+        params.put("payment_option",String.valueOf(paymentOption.getOrdinal()));
 
 
 
@@ -232,7 +264,7 @@ public class StripeAddCardFragment extends Fragment {
             public void onSuccess(StripeCardResponse stripeCardResponse, String message, int flag) {
 
                 if(stripeCardsStateListener!=null){
-                    stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData(),message,true);
+                    stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData(),message,true,paymentOption);
                 }
 
              }

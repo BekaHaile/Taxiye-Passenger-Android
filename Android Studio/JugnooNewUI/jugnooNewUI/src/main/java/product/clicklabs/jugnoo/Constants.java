@@ -391,6 +391,7 @@ public interface Constants {
     String KEY_MOBIKWIK = "mobikwik";
     String KEY_MPESA = "mpesa";
     String KEY_STRIPE_CARDS = "stripe_cards";
+    String KEY_ACCEPT_CARD = "accept_a_card";
     String KEY_RAZORPAY = "razorpay";
     String KEY_UPI_RAZORPAY = "upi_razorpay";
     String KEY_BALANCE = "balance";

@@ -64,8 +64,14 @@ public class PaymentModeConfigData {
 			paymentOption = PaymentOption.ICICI_UPI.getOrdinal();
 		} else if(Constants.KEY_MPESA.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.MPESA.getOrdinal();
-		} else if(Constants.KEY_STRIPE_CARDS.equalsIgnoreCase(name)){
-			paymentOption = PaymentOption.STRIPE_CARDS.getOrdinal();
+		} else if(Constants.KEY_STRIPE_CARDS.equalsIgnoreCase(name)|| Constants.KEY_ACCEPT_CARD.equalsIgnoreCase(name)){
+
+			if(name.equalsIgnoreCase(Constants.KEY_STRIPE_CARDS)){
+				paymentOption = PaymentOption.STRIPE_CARDS.getOrdinal();
+			}else{
+				paymentOption = PaymentOption.ACCEPT_CARD.getOrdinal();
+
+			}
 			if(cardsData!=null){
 				 this.cardsData = new ArrayList<>();
 

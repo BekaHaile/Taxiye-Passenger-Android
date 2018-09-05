@@ -251,6 +251,7 @@
 
                 <RelativeLayout
                     android:id="@+id/relativeLayoutStripe"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="105px"
                     android:layout_marginTop="15px"
@@ -269,12 +270,48 @@
 
 
                     <TextView
-                        android:id="@+id/textViewCards"
+                        android:id="@+id/textViewCardsStripe"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="120px"
-                        android:text="@string/add_credit_card"
+                        android:text="@string/action_add_card_stripe"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_32" />
+
+                    <ImageView
+                        style="@style/forward_image"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10px" />
+
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutAcceptCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="105px"
+                    android:layout_marginTop="15px"
+                    android:layout_marginStart="30px"
+                    android:layout_marginEnd="30px"
+                    android:background="@drawable/white_background_rounded_corner_selector">
+
+
+                    <ImageView
+                        android:id="@+id/imageViewAcceptCard"
+                        style="@style/payment_option_icon_small"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="15px"
+                        android:src="@drawable/ic_card_default"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/textViewCardsAcceptCard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="120px"
+                        android:text="@string/action_add_card_accept_card"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_32" />
 

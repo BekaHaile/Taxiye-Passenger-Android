@@ -55,20 +55,27 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 	TextView textViewMobiKwik, textViewMobiKwikBalanceValue;
 
     RelativeLayout relativeLayoutFreeCharge;
-    TextView textViewFreeCharge, textViewFreeChargeBalanceValue,textViewStripeCard;
+    TextView textViewFreeCharge, textViewFreeChargeBalanceValue,textViewStripeCard,textViewAcceptCard;
 
     RelativeLayout relativeLayoutWalletTransactions, relativeLayoutPayTransactions;
-
+	private PaymentModeConfigData stripeConfigData;
+	private PaymentModeConfigData acceptCardConfigData;
 
 
     View rootView;
     private PaymentActivity paymentActivity;
-	private RelativeLayout relativeLayoutStripe;
+	private RelativeLayout relativeLayoutStripe,relativeLayoutAcceptCard;
 	private Handler handler = new Handler();
 	private Runnable enableStripeRunnable = new Runnable() {
 		@Override
 		public void run() {
 			relativeLayoutStripe.setEnabled(true);
+		}
+	};
+	private Runnable enableAcceptCardRunnable = new Runnable() {
+		@Override
+		public void run() {
+			relativeLayoutAcceptCard.setEnabled(true);
 		}
 	};
 	public static WalletFragment newInstance(){
@@ -108,7 +115,8 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		relative = (RelativeLayout) rootView.findViewById(R.id.relative);
 		new ASSL(paymentActivity, relative, 1134, 720, false);
 
-		textViewStripeCard= (TextView) rootView.findViewById(R.id.textViewCards);
+		textViewStripeCard= (TextView) rootView.findViewById(R.id.textViewCardsStripe);
+		textViewAcceptCard= (TextView) rootView.findViewById(R.id.textViewCardsAcceptCard);
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
 		
@@ -136,8 +144,10 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 
 		relativeLayoutPayTransactions = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPayTransactions);
 		relativeLayoutStripe = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutStripe);
+		relativeLayoutAcceptCard = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAcceptCard);
 		((TextView) rootView.findViewById(R.id.textViewPayTransactions)).setTypeface(Fonts.mavenRegular(paymentActivity));
 		textViewStripeCard.setTypeface(Fonts.mavenRegular(paymentActivity));
+		textViewAcceptCard.setTypeface(Fonts.mavenRegular(paymentActivity));
         relativeLayoutWalletTransactions = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWalletTransactions);
 		((TextView) rootView.findViewById(R.id.textViewWalletTransactions)).setTypeface(Fonts.mavenRegular(paymentActivity));
 		relativeLayoutPayTransactions.setVisibility(View.GONE);
@@ -244,13 +254,29 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 			}
 		});
 
-		relativeLayoutStripe.setOnClickListener(new View.OnClickListener() {
+		View.OnClickListener cardsClickListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				relativeLayoutStripe.setEnabled(false);
-				handler.postDelayed(enableStripeRunnable,300);
-				if(stripeConfigData==null)return;
-				boolean openViewCardScreen = stripeConfigData.getCardsData()!=null && stripeConfigData.getCardsData().size()>0;
+				view.setEnabled(false);
+				PaymentModeConfigData configData;
+				PaymentOption paymentOption;
+				Runnable runnable;
+				if(view.getId()==R.id.relativeLayoutStripeCard){
+					runnable= enableStripeRunnable;
+					configData= WalletFragment.this.stripeConfigData;
+					paymentOption = PaymentOption.STRIPE_CARDS;
+
+				}else{
+					runnable = enableAcceptCardRunnable;
+					configData= WalletFragment.this.acceptCardConfigData;
+					paymentOption = PaymentOption.ACCEPT_CARD;
+
+				}
+				handler.postDelayed(runnable,300);
+
+
+				if(configData==null)return;
+				boolean openViewCardScreen = configData.getCardsData()!=null && configData.getCardsData().size()>0;
 				if(!openViewCardScreen){
 
 					paymentActivity.getSupportFragmentManager().beginTransaction()
@@ -263,15 +289,17 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 				}else{
 					paymentActivity.getSupportFragmentManager().beginTransaction()
 							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-							.add(R.id.fragLayout,  StripeViewCardFragment.newInstance(stripeConfigData.getCardsData().get(0)), StripeViewCardFragment.class.getName())
-							.addToBackStack(StripeViewCardFragment.class.getName())
+							.add(R.id.fragLayout,  StripeViewCardFragment.newInstance(configData.getCardsData().get(0),paymentOption),
+									StripeViewCardFragment.class.getName()).addToBackStack(StripeViewCardFragment.class.getName())
 							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
 							.commit();
 				}
 
 			}
-		});
+		};
+		relativeLayoutStripe.setOnClickListener(cardsClickListener);
+		relativeLayoutAcceptCard.setOnClickListener(cardsClickListener);
 
 
 		setUserWalletInfo();
@@ -404,7 +432,11 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
                             linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
                         }else if(paymentModeConfigData.getPaymentOption()==PaymentOption.STRIPE_CARDS.getOrdinal()){
 							linearLayoutWalletContainer.addView(relativeLayoutStripe);
-							setStripePaymentUI(paymentModeConfigData);
+							setCardsPaymentUI(paymentModeConfigData);
+
+						}else if(paymentModeConfigData.getPaymentOption()==PaymentOption.ACCEPT_CARD.getOrdinal()){
+							linearLayoutWalletContainer.addView(relativeLayoutAcceptCard);
+							setCardsPaymentUI(paymentModeConfigData);
 
 						} else if(paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()){
 							if(Prefs.with(paymentActivity).getInt(Constants.KEY_SHOW_JUGNOO_CASH_IN_WALLET, 1) == 1) {
@@ -419,17 +451,27 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		}
 	}
 
-	private PaymentModeConfigData stripeConfigData;
-	public void setStripePaymentUI(PaymentModeConfigData paymentModeConfigData) {
 
-		this.stripeConfigData = paymentModeConfigData;
-		if (relativeLayoutStripe != null && paymentModeConfigData!=null) {
+	public void setCardsPaymentUI(PaymentModeConfigData paymentModeConfigData) {
+
+		if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
+			this.stripeConfigData = paymentModeConfigData;
+
 			if (paymentModeConfigData.getCardsData() != null && paymentModeConfigData.getCardsData().size() > 0) {
 				textViewStripeCard.setText(getString(R.string.view_card_wallet));
 			} else {
-				textViewStripeCard.setText(getString(R.string.add_credit_card));
+				textViewStripeCard.setText(getString(R.string.action_add_card_stripe));
 			}
+		} else {
+			this.acceptCardConfigData = paymentModeConfigData;
+			if (paymentModeConfigData.getCardsData() != null && paymentModeConfigData.getCardsData().size() > 0) {
+				textViewAcceptCard.setText(getString(R.string.view_card_wallet));
+			} else {
+				textViewAcceptCard.setText(getString(R.string.action_add_card_accept_card));
+			}
+
 		}
+
 	}
 
 

@@ -1049,6 +1049,22 @@ public class WalletCore {
 
     }
 
+    /**
+     * @param stripeCardData Card Data object to add
+     * @return Adds a card to stripe Config data and returns the stripe config data
+     */
+    public PaymentModeConfigData updateAcceptCards(ArrayList<StripeCardData> stripeCardData) {
+        if (paymentModeConfigDatas == null) return null;
+        PaymentModeConfigData configData = getAcceptCardConfigData();
+        if (configData == null) return null;
+
+        configData.setCardsData(stripeCardData);
+
+        return configData;
+
+
+    }
+
     @Nullable
     public PaymentModeConfigData getStripeConfigData() {
         PaymentModeConfigData stripeConfigData = null;
@@ -1059,6 +1075,19 @@ public class WalletCore {
             }
         }
         return stripeConfigData;
+    }
+
+
+    @Nullable
+    public PaymentModeConfigData getAcceptCardConfigData() {
+        PaymentModeConfigData configData = null;
+        for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
+            if (paymentModeConfigData.getPaymentOption() == PaymentOption.ACCEPT_CARD.getOrdinal()) {
+
+                configData = paymentModeConfigData;
+            }
+        }
+        return configData;
     }
 
 
