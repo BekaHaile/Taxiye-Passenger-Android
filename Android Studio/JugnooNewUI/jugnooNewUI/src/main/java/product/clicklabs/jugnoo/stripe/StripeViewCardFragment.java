@@ -192,6 +192,7 @@ public class StripeViewCardFragment extends Fragment {
         HashMap<String,String> params = new HashMap<>();
         params.put("card_id",stripeCardData.getCardId());
         params.put("is_delete","1");
+        params.put("payment_option",String.valueOf(paymentOption.getOrdinal()));
 
 
 

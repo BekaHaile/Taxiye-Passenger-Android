@@ -391,7 +391,7 @@ public interface Constants {
     String KEY_MOBIKWIK = "mobikwik";
     String KEY_MPESA = "mpesa";
     String KEY_STRIPE_CARDS = "stripe_cards";
-    String KEY_ACCEPT_CARD = "accept_a_card";
+    String KEY_ACCEPT_CARD = "accept_card";
     String KEY_RAZORPAY = "razorpay";
     String KEY_UPI_RAZORPAY = "upi_razorpay";
     String KEY_BALANCE = "balance";
@@ -847,7 +847,9 @@ public interface Constants {
     String KEY_RAZOR_PAY_DEDUCTED = "razor_pay_deducted";
     String KEY_PAID_USING_RAZORPAY = "paid_using_razorpay";
     String KEY_PAID_USING_STRIPE = "paid_using_stripe";
+    String KEY_PAID_USING_ACCEPT_CARD = "paid_using_accept_card";
     String KEY_LAST_4 = "last_4";
+    String KEY_LAST_4_ACCEPT_CARD = "last_4_accept_card";
     String KEY_DESCRIPTION = "description";
     String KEY_CURRENCY = "currency";
     String KEY_IS_RAZORPAY_ENABLED = "is_razorpay_enabled";

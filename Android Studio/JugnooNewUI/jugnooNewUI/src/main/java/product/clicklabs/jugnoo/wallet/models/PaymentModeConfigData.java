@@ -70,7 +70,6 @@ public class PaymentModeConfigData {
 				paymentOption = PaymentOption.STRIPE_CARDS.getOrdinal();
 			}else{
 				paymentOption = PaymentOption.ACCEPT_CARD.getOrdinal();
-
 			}
 			if(cardsData!=null){
 				 this.cardsData = new ArrayList<>();

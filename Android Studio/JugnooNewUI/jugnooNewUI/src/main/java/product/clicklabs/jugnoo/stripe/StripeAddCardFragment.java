@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.stripe;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -83,6 +85,11 @@ public class StripeAddCardFragment extends Fragment {
             stripeCardsStateListener = (StripeCardsStateListener) context;
         }
 
+
+    }
+
+    @SuppressLint("ValidFragment")
+    private StripeAddCardFragment(){
 
     }
 
@@ -255,6 +262,8 @@ public class StripeAddCardFragment extends Fragment {
         params.put("exp_year",String.valueOf(token.getExpYear()));
         params.put("is_delete","0");
         params.put("payment_option",String.valueOf(paymentOption.getOrdinal()));
+        params.put("name_on_card", Data.userData.userName);
+        params.put("cvv", token.getCVC());
 
 
 
