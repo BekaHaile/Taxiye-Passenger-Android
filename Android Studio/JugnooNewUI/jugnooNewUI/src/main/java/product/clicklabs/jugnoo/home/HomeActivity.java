@@ -1738,8 +1738,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onClick(View v) {
                 try {
                     if (Data.autoData.getEndRideData() != null) {
-                        if (Data.autoData.getEndRideData().toPay > 0
-                                && Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.MPESA.getOrdinal()
+                        if (Prefs.with(HomeActivity.this).getInt(KEY_FORCE_MPESA_PAYMENT, 0) == 1
+                                && Data.autoData.getEndRideData().toPay > 0
                                 && Data.autoData.getEndRideData().getShowPaymentOptions() == 1) {
                             initiateRideEndPaymentAPI(Data.autoData.getEndRideData().engagementId, PaymentOption.MPESA.getOrdinal());
                         } else {
@@ -3141,8 +3141,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
                             });
                         }
-                        if (Data.autoData != null && Data.autoData.getEndRideData() != null &&
-                                Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.MPESA.getOrdinal()) {
+                        if (Prefs.with(HomeActivity.this).getInt(KEY_FORCE_MPESA_PAYMENT, 0) == 1) {
                             tvPayOnlineIn.setText(getString(R.string.pay_via_format,
                                     MyApplication.getInstance().getWalletCore().getMPesaName(this)));
                         }
