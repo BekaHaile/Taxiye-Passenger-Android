@@ -2153,8 +2153,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 @Override
                 public void onMapUnsettled() {
                     // Map unsettled
-                    if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+                    if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL && !zoomedForSearch) {
                         Data.autoData.setPickupAddress("", null);
+                        textViewInitialSearch.setText("");
                     }
                 }
 
