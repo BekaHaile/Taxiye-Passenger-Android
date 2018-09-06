@@ -182,4 +182,8 @@ public class BaseAppCompatActivity extends AppCompatActivity implements Permissi
 			}, 1000);
 		}
 	}
+
+	public void attachBaseContextWithoutTypekit(Context newBase){
+		super.attachBaseContext(LocaleHelper.onAttach(newBase, LocaleHelper.getLanguage(newBase)));
+	}
 }

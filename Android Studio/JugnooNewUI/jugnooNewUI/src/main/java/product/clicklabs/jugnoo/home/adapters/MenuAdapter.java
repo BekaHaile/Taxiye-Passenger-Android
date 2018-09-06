@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.ChangeLanguageActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.FareDetailsActivity;
 import product.clicklabs.jugnoo.HomeSwitcherActivity;
 import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
@@ -263,6 +264,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
                 }else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_chat_selector);
+
+                }else if(MenuInfoTags.FARE_DETAILS.getTag().equalsIgnoreCase(menuInfo.getTag())) {
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_invoice_pool);
 
                 }
                 else{
@@ -626,6 +630,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             }
             else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, SupportMailActivity.class));
+            }
+            else if(MenuInfoTags.FARE_DETAILS.getTag().equalsIgnoreCase(tag)){
+                activity.startActivity(new Intent(activity, FareDetailsActivity.class));
             }
             else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
                 openOffering(Config.getFreshClientId(), activity,latLng);

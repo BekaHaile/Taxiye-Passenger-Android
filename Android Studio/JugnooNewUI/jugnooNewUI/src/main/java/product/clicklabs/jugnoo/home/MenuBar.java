@@ -214,6 +214,12 @@ public class MenuBar {
 				itemsToShow.add(menuInfo);
 			}
 		}
+		// TODO: 06/09/18 revert
+		MenuInfo menuInfoFare = new MenuInfo(MenuInfoTags.FARE_DETAILS.getTag());
+		menuInfoFare.setName(activity.getString(R.string.fare_details));
+		itemsToShow.add(menuInfoFare);
+		//-----
+
 		return itemsToShow;
 	}
 
