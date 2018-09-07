@@ -27,6 +27,7 @@
 
 
         <FrameLayout
+            android:id="@+id/flTipAmount"
             android:layout_width="match_parent"
             android:layout_marginTop="20dp"
             android:layout_marginStart="20dp"
@@ -38,8 +39,7 @@
                 android:id="@+id/etTipAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp"
+                android:padding="15dp"
                 android:textSize="15sp"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
@@ -47,10 +47,7 @@
                 android:hint="@string/enter_amount"
                 android:maxLines="1"
                 android:inputType="numberDecimal"
-                android:paddingStart="80dp"
-                android:paddingEnd="80dp"
-                android:textColor="@color/black"
-                android:textCursorDrawable="@null" />
+                android:textColor="@color/black" />
 
         </FrameLayout>
 

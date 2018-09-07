@@ -9,6 +9,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
@@ -119,7 +120,14 @@ public class DriverTipInteractor {
 
                     }
                 });
-
+                FrameLayout flTipAmount = (FrameLayout) driverTipDialog.findViewById(R.id.flTipAmount);
+                flTipAmount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        edtAmount.requestFocus();
+                        Utils.showSoftKeyboard(activity, edtAmount);
+                    }
+                });
                 edtAmountWatcher = new UpdateCurrencyDrawableWatcher(edtAmount, currency);
                 edtAmount.addTextChangedListener(edtAmountWatcher);
                 WindowManager.LayoutParams layoutParams = driverTipDialog.getWindow().getAttributes();
