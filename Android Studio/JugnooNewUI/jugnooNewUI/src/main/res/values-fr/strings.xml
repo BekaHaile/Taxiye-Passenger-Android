@@ -206,7 +206,7 @@
 
     <string name="review_must_be_in"> L\'avis doit être en lettre de 3000.</string>
 
-    <string name="order_expereince">"Comment s'est passée votre expérience? "</string>
+    <string name="order_expereince">"Comment s\'est passée votre expérience? "</string>
 
     <!-- Add Places -->
 
@@ -830,7 +830,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="paytm_low_cash">Votre paiement cash est faible</string>
 
-    <string name="paytm_no_cash">Vous n'avez pas assez d'argent sur votre portefeuille paiement</string>
+    <string name="paytm_no_cash">Vous n\'avez pas assez d\'argent sur votre portefeuille paiement</string>
 
     <string name="paytm_error_case_select_cash">On arrive pas à nous connecter à votre portefeuille</string>
 
@@ -866,7 +866,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="call_us">Appelez-nous</string>
 
-    <string name="no_driver_nearby_try_again">Malheureusement aucun pilote disponible à proximité \n S'il vous plaît essayer après un certain temps</string>
+    <string name="no_driver_nearby_try_again">Malheureusement aucun pilote disponible à proximité \n S\'il vous plaît essayer après un certain temps</string>
 
     <string name="couldnt_find_drivers_nearby">Impossible de trouver des chauffeurs à proximité</string>
 
@@ -876,7 +876,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="tnc_applied">Termes et conditions appliqués</string>
 
-    <string name="jugnoo_cash_tnc">1. %s Cash si présente serait la première source de déduction pour votre trajet. \ N 2. %s L'argent comptant ajouté jusqu'au 21 janvier 2016 expirera le 31 mars 2016. \ n 3. %s Cash ajouté après le 21 janvier 2016 expirera après un mois de crédit.</string>
+    <string name="jugnoo_cash_tnc">1. %s Cash si présente serait la première source de déduction pour votre trajet. \ N 2. %s L\'argent comptant ajouté jusqu\'au 21 janvier 2016 expirera le 31 mars 2016. \ n 3. %s Cash ajouté après le 21 janvier 2016 expirera après un mois de crédit.</string>
 
     <!-- Support Screen-->
 
@@ -903,7 +903,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="support_feedback_lengthy_error_format">Only %s characters allowed</string>
 
-    <string name="need_help">Besoin d'aide pour?</string>
+    <string name="need_help">Besoin d\'aide pour?</string>
 
     <string name="help">Aide</string>
 
@@ -933,27 +933,27 @@ En vous inscrivant, vous acceptez nos
     <!-- Emergency New -->
 
 
-    <string name="enable_emergency_mode">Activer le mode d'urgence</string>
+    <string name="enable_emergency_mode">Activer le mode d\'urgence</string>
 
     <string name="send_ride_status">Envoyer le statut du trajet</string>
 
-    <string name="in_app_customer_support">Dans le service client de l'application</string>
+    <string name="in_app_customer_support">Dans le service client de l\'application</string>
 
-    <string name="emergency_mode_enabled">Mode d'urgence activé</string>
+    <string name="emergency_mode_enabled">Mode d\'urgence activé</string>
 
     <string name="emergency_mode_enabled_title">Vous avez activé le mode urgence.</string>
 
-    <string name="emergency_mode_enabled_message">Nous avons envoyé votre position à vos contacts d'urgence.</string>
+    <string name="emergency_mode_enabled_message">Nous avons envoyé votre position à vos contacts d\'urgence.</string>
 
     <string name="call_police">Appeller la police</string>
 
-    <string name="call_emergency_contact">Appelez le contact d'urgence</string>
+    <string name="call_emergency_contact">Appelez le contact d\'urgence</string>
 
     <string name="call_your_contacts">Appelez vos contacts</string>
 
-    <string name="disable_emergency_mode">Désactiver le mode d'urgence</string>
+    <string name="disable_emergency_mode">Désactiver le mode d\'urgence</string>
 
-    <string name="emergency_contacts">Contacts d'urgence</string>
+    <string name="emergency_contacts">Contacts d\'urgence</string>
 
     <string name="add">Ajouter</string>
 
@@ -969,9 +969,9 @@ En vous inscrivant, vous acceptez nos
 
     <string name="send_invites">Envoyer des invitations</string>
 
-    <string name="send_invites_2">à des amis qui n'ont pas essayé %s</string>
+    <string name="send_invites_2">à des amis qui n\'ont pas essayé %s</string>
 
-    <string name="delete_emergency_contact_message">Êtes-vous sûr de vouloir supprimer ce contact de votre liste d'urgence?</string>
+    <string name="delete_emergency_contact_message">Êtes-vous sûr de vouloir supprimer ce contact de votre liste d\'urgence?</string>
 
     <string name="type_a_name_or_mobile_number">Entrez un nom ou un numéro de mobile</string>
 
@@ -979,7 +979,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="or_send_directly">ou Appelez directement</string>
 
-    <string name="send_ride_status_no_contacts_message">Veuillez d'abord sélectionner des contacts</string>
+    <string name="send_ride_status_no_contacts_message">Veuillez d\'abord sélectionner des contacts</string>
 
     <string name="send_ride_status_more_contacts_message_format">Vous avez sélectionné plus de 1$s contacts, nous enverrons le statut de trajet à seulement 2$s contacts  à la fois.</string>
 
@@ -989,9 +989,9 @@ En vous inscrivant, vous acceptez nos
 
     <string name="everything_is_alright_caps">TOUT VA BIEN</string>
 
-    <string name="you_have_disabled_jugnoo_emergency">Vous avez désactivé le %s. Mode d'urgence</string>
+    <string name="you_have_disabled_jugnoo_emergency">Vous avez désactivé le %s. Mode d\'urgence</string>
 
-    <string name="please_select_some_contacts_first">Veuillez d'abord sélectionner des contacts</string>
+    <string name="please_select_some_contacts_first">Veuillez d\'abord sélectionner des contacts</string>
 
     <string name="vs">vs</string>
 
@@ -1005,9 +1005,9 @@ En vous inscrivant, vous acceptez nos
 
     <string name="team_vs_team_format">%1$s Vs %2$s</string>
 
-    <string name="t20_terms">Devinez le gagnant du match T20 aujourd'hui après que votre tour commence et gagnez des offres excitantes de %s</string>
+    <string name="t20_terms">Devinez le gagnant du match T20 aujourd\'hui après que votre tour commence et gagnez des offres excitantes de %s</string>
 
-    <string name="who_do_you_think_will_win_today">Qui pensez-vous va gagner aujourd'hui?</string>
+    <string name="who_do_you_think_will_win_today">Qui pensez-vous va gagner aujourd\'hui?</string>
 
     <string name="team_not_selected_error">Choissisez une équipe</string>
 
@@ -1027,7 +1027,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="type_amount_to_confirm_the_transaction">Tapez le montant pour confirmer la transaction</string>
 
-    <string name="disable_mock_location">Désactiver l'emplacement simulé en premier</string>
+    <string name="disable_mock_location">Désactiver l\'emplacement simulé en premier</string>
 
     <string name="notifications">Notifications</string>
 
@@ -1065,13 +1065,13 @@ En vous inscrivant, vous acceptez nos
 
     <string name="address">Adresse</string>
 
-    <string name="add_address">Ajoutez l'adresse</string>
+    <string name="add_address">Ajoutez l\'adresse</string>
 
     <string name="other">Autre</string>
 
     <string name="please_select_a_delivery_slot">Veuillez sélectionner un emplacement de livraison</string>
 
-    <string name="please_select_a_delivery_address">Veuillez confirmer l'adresse de livraison</string>
+    <string name="please_select_a_delivery_address">Veuillez confirmer l\'adresse de livraison</string>
 
     <string name="place_order">Commander</string>
 
@@ -1079,11 +1079,11 @@ En vous inscrivant, vous acceptez nos
 
     <string name="balance_running_low">Votre balance est faible</string>
 
-    <string name="dont_have_enough_paytm_balance">Vous n'avez pas assez d'argent pour la transaction dans votre portefeuille Paiement.</string>
+    <string name="dont_have_enough_paytm_balance">Vous n\'avez pas assez d\'argent pour la transaction dans votre portefeuille Paiement.</string>
 
-    <string name="dont_have_enough_mobikwik_balance">Vous n'avez pas assez d'argent pour la transaction dans votre portefeuille Mobikwik</string>
+    <string name="dont_have_enough_mobikwik_balance">Vous n\'avez pas assez d\'argent pour la transaction dans votre portefeuille Mobikwik</string>
 
-    <string name="dont_have_enough_freecharge_balance">Vous n'avez pas assez d'argent pour \ ntransaction dans votre portefeuille FreeCharge.</string>
+    <string name="dont_have_enough_freecharge_balance">Vous n\'avez pas assez d\'argent pour \ ntransaction dans votre portefeuille FreeCharge.</string>
 
     <string name="continue_text">Continuer</string>
 
@@ -1101,7 +1101,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="thank_you_for_placing_order_grocery">Merci de nous avoir choisis</string>
 
-    <string name="thank_you_for_placing_order_menus_format">Votre commande avec %s.\nOn vous enverra la confirmation dans la commande d'ici peu</string>
+    <string name="thank_you_for_placing_order_menus_format">Votre commande avec %s.\nOn vous enverra la confirmation dans la commande d\'ici peu</string>
 
     <string name="your_order_id">Votre commande N°:</string>
 
@@ -1121,7 +1121,7 @@ En vous inscrivant, vous acceptez nos
 
     <string name="kindly_recommend_us_to_them">Veuillez nous recommander à eux.</string>
 
-    <string name="if_they_are_interested">S'il vous plaît aidez-nous à améliorer %s et augmenter le revenu des conducteurs. </string>
+    <string name="if_they_are_interested">S\'il vous plaît aidez-nous à améliorer %s et augmenter le revenu des conducteurs. </string>
 
     <string name="name_of_driver">Nom du chauffeur</string>
 
@@ -1176,7 +1176,7 @@ TARIF DE BASE :
 
     <string name="enter_promo_code">Saisir le code promotionnel</string>
 
-    <string name="valid_until_format">Valable jusqu'au %s</string>
+    <string name="valid_until_format">Valable jusqu\'au %s</string>
 
     <string name="email">Email</string>
 
@@ -1188,13 +1188,13 @@ TARIF DE BASE :
 
     <string name="retype_password">Retaper le mot de passe</string>
 
-    <string name="username_empty_error">Le nom d\utilisateur ne peut pas être vide</string>
+    <string name="username_empty_error">Le nom d\'utilisateur ne peut pas être vide</string>
 
-    <string name="email_empty_error">L'email ne peut pas être vide</string>
+    <string name="email_empty_error">L\'email ne peut pas être vide</string>
 
     <string name="phone_empty_error">Le numéro de téléphone ne peut pas être vide</string>
 
-    <string name="old_password_empty_error">Veuillez entrer l'ancien mot de passe</string>
+    <string name="old_password_empty_error">Veuillez entrer l\'ancien mot de passe</string>
 
     <string name="new_password_empty_error">Veuillez entrer le nouveau mot de passe</string>
 
@@ -1202,13 +1202,13 @@ TARIF DE BASE :
 
     <string name="retype_password_different_error">Les mots de passe ne correspondent pas</string>
 
-    <string name="new_password_same_error">Le nouveau mot de passe est le même que l'ancien</string>
+    <string name="new_password_same_error">Le nouveau mot de passe est le même que l\'ancien</string>
 
     <string name="new_password_length_error_format">Le nouveau mot de passe doit avoir au moins %s caractères</string>
 
-    <string name="add_emergency_contacts">Ajouter des contacts d\urgence</string>
+    <string name="add_emergency_contacts">Ajouter des contacts d\'urgence</string>
 
-    <string name="pool_rides_offer_guaranteed_fares">Les courses pool offrent des tarifs garantis. Vérifiez votre tarif sur l'écran suivant avant de confirmer le trajet</string>
+    <string name="pool_rides_offer_guaranteed_fares">Les courses pool offrent des tarifs garantis. Vérifiez votre tarif sur l\'écran suivant avant de confirmer le trajet</string>
 
     <string name="please_provide_pickup_and_dest">Veuilez fournir le lieu de départ et de destination pour générer votre estimation de tarif</string>
 
@@ -1254,7 +1254,7 @@ TARIF DE BASE :
 
     <string name="mobikwik_error_select_cash">Nous ne sommes pas en mesure de se connecter à MobiKwik</string>
 
-    <string name="mobikwik_no_cash">Vous n'avez pas d'argent sur Mobikwik Account</string>
+    <string name="mobikwik_no_cash">Vous n\'avez pas d\'argent sur Mobikwik Account</string>
 
     <string name="remove_wallet">Supprimer portefeuille</string>
 
@@ -1278,7 +1278,7 @@ TARIF DE BASE :
 
     <string name="none">Aucun</string>
 
-    <string name="add_money_to_wallet">Ajouter l'argent au portefeuille</string>
+    <string name="add_money_to_wallet">Ajouter l\'argent au portefeuille</string>
 
     <string name="choose_other_mode_to_pay">Choisissez un autre mode de paiement</string>
 
@@ -1299,7 +1299,7 @@ TARIF DE BASE :
     <!-- User Debt-->
 
 
-    <string name="paytm_error_cash_select_cash">Nous ne sommes pas en mesure de se connecter à Paytm, S'il vous plaît sélectionner la méthode de paiement en espèces</string>
+    <string name="paytm_error_cash_select_cash">Nous ne sommes pas en mesure de se connecter à Paytm, S\'il vous plaît sélectionner la méthode de paiement en espèces</string>
 
     <!-- For Fresh created by Gurmail from Here-->
 
@@ -1347,7 +1347,7 @@ TARIF DE BASE :
 
     <string name="freecharge_coupon_selected_but_freecharge_option_not_selected">Please select FreeCharge as preferred payment option to avail the selected coupon</string>
 
-    <string name="freecharge_coupon_selected_but_freecharge_not_added">S'il vous plaît ajouter FreeCharge Wallet pour bénéficier du coupon sélectionné</string>
+    <string name="freecharge_coupon_selected_but_freecharge_not_added">S\'il vous plaît ajouter FreeCharge Wallet pour bénéficier du coupon sélectionné</string>
 
     <string name="freecharge">FreeCharge</string>
 
@@ -1357,7 +1357,7 @@ TARIF DE BASE :
 
     <string name="freecharge_error_case_select_cash">Nous ne sommes pas en mesure de se connecter à FreeCharge</string>
 
-    <string name="freecharge_no_cash">Vous n'avez pas d'argent dans votre compte gratuit</string>
+    <string name="freecharge_no_cash">Vous n\'avez pas d\'argent dans votre compte gratuit</string>
 
     <string name="yes">Oui</string>
 
@@ -1371,13 +1371,13 @@ TARIF DE BASE :
 
     <string name="never_ask_again">Ne me redemandez plus</string>
 
-    <string name="getting_address">Obtenir l'adresse ...</string>
+    <string name="getting_address">Obtenir l\'adresse ...</string>
 
     <string name="tracking_log">Journal de suivi</string>
 
     <string name="engagement_id">Engagement ID</string>
 
-    <string name="empty_engagement_id">Identifiant de l'engagement vide</string>
+    <string name="empty_engagement_id">Identifiant de l\'engagement vide</string>
 
     <string name="invalid_engagement_id">Invalide engagement id</string>
 
@@ -1385,9 +1385,9 @@ TARIF DE BASE :
 
     <string name="add_new_address">"Ajouter une nouvelle adresse "</string>
 
-    <string name="could_not_find_address">Impossible de trouver l'adresse</string>
+    <string name="could_not_find_address">Impossible de trouver l\'adresse</string>
 
-    <string name="address_book">Carnet d'adresses</string>
+    <string name="address_book">Carnet d\'adresses</string>
 
     <string name="enter_topup_card_code">Entrez le code de la carte de recharge</string>
 
@@ -1403,7 +1403,7 @@ TARIF DE BASE :
 
     <string name="delivery_instructions_for_menus">Speciales Instructions</string>
 
-    <string name="address_label_matched_message_format">Adresse avec étiquette \"%s\" déjà présente. Voulez-vous l'écraser?</string>
+    <string name="address_label_matched_message_format">Adresse avec étiquette \"%s\" déjà présente. Voulez-vous l\'écraser?</string>
 
     <string name="next">Prochain</string>
 
@@ -1433,13 +1433,13 @@ TARIF DE BASE :
 
     <string name="order_time">Commande Temps:</string>
 
-    <string name="delivery_time">l'heure de livraison:</string>
+    <string name="delivery_time">l\'heure de livraison:</string>
 
     <string name="delivery_to">Livraison à :</string>
 
     <string name="no_delivery_slot">Pas de créneau de livraison</string>
 
-    <string name="slot_is_disabled">L'emplacement est désactivé</string>
+    <string name="slot_is_disabled">L\'emplacement est désactivé</string>
 
     <string name="free">Gratuit</string>
 
@@ -1463,9 +1463,9 @@ TARIF DE BASE :
 
     <string name="saved_location">Emplacement enregistré</string>
 
-    <string name="we_could_not_verify">Désolé, nous n'avons pas pu vérifier via l'appel manqué Veuillez réessayer.</string>
+    <string name="we_could_not_verify">Désolé, nous n\'avons pas pu vérifier via l\'appel manqué Veuillez réessayer.</string>
 
-    <string name="selecting_a_pickup_spot">La sélection d'un point de départ vous fera gagner du temps et facilitera la recherche de votre chauffeur.</string>
+    <string name="selecting_a_pickup_spot">La sélection d\'un point de départ vous fera gagner du temps et facilitera la recherche de votre chauffeur.</string>
 
     <string name="no_available_offers">Aucune offre disponible</string>
 
@@ -1511,7 +1511,7 @@ TARIF DE BASE :
 
     <string name="search_3dot">Chercher...</string>
 
-    <string name="more_info">Plus d'info</string>
+    <string name="more_info">Plus d\'info</string>
 
     <string name="previous_vendor_cart_message_format">Vous avez ajouté des articles dans le panier à partir de% s. \ nÊtes-vous sûr de vouloir effacer le panier?</string>
 
@@ -1571,9 +1571,9 @@ TARIF DE BASE :
 
     <string name="payment_id">Paiement ID</string>
 
-    <string name="send_money">Envoyer l'argent</string>
+    <string name="send_money">Envoyer l\'argent</string>
 
-    <string name="request_money">Demander l'argent</string>
+    <string name="request_money">Demander l\'argent</string>
 
     <string name="pending_payments">En attente du paiement</string>
 
@@ -1591,11 +1591,11 @@ TARIF DE BASE :
 
     <string name="cancel_request_message">Êtes-vous sûr de vouloir refuser la demande?</string>
 
-    <string name="add_payment_address">Ajouter l'adresse de facturations</string>
+    <string name="add_payment_address">Ajouter l\'adresse de facturations</string>
 
     <string name="add_bank_acc">Ajouter un compte bancaire</string>
 
-    <string name="add_payment_add_title">Vous pouvez envoyer ou demander de l'argent à l'adresse de paiement (VPA) de votre contact.</string>
+    <string name="add_payment_add_title">Vous pouvez envoyer ou demander de l\'argent à l\'adresse de paiement (VPA) de votre contact.</string>
 
     <string name="enter_name">Entrer votre nom</string>
 
@@ -1607,7 +1607,7 @@ TARIF DE BASE :
 
     <string name="confirm_acc_number">Confirmer le numéro de compte</string>
 
-    <string name="enter_payment_address">Entrer l'adresse de facturation</string>
+    <string name="enter_payment_address">Entrer l\'adresse de facturation</string>
 
     <string name="add_a_location">Ajouter une localisation(optional)</string>
 
@@ -1623,7 +1623,7 @@ TARIF DE BASE :
 
     <string name="npci_transaction_id">NPCI Transaction ID:</string>
 
-    <string name="no_payment_address_added">Aucun contact d'adresse de paiement ajouté.</string>
+    <string name="no_payment_address_added">Aucun contact d\'adresse de paiement ajouté.</string>
 
     <string name="failed">Echoué</string>
 
@@ -1671,17 +1671,17 @@ TARIF DE BASE :
 
     <string name="jugnoo_pay">%s paiement</string>
 
-    <string name="reset_account_alert_message">Après la réinitialisation du compte, votre adresse de paiement sera effacée et vous serez déconnecté de l'application. Êtes-vous sur de vouloir continuer ?</string>
+    <string name="reset_account_alert_message">Après la réinitialisation du compte, votre adresse de paiement sera effacée et vous serez déconnecté de l\'application. Êtes-vous sur de vouloir continuer ?</string>
 
     <string name="delivery_before_colon">Livraison avant:</string>
 
-    <string name="oh_no_what_went_wrong">Oh non, qu'est-ce qui a mal tourné?</string>
+    <string name="oh_no_what_went_wrong">Oh non, qu\'est-ce qui a mal tourné?</string>
 
     <string name="please_enter_name">Veuillez entrer le nom</string>
 
-    <string name="please_enter_vpa">Veuillez entrer l'adresse de paiement virtuelle</string>
+    <string name="please_enter_vpa">Veuillez entrer l\'adresse de paiement virtuelle</string>
 
-    <string name="please_enter_valid_vpa">Veuillez entrer l'adresse de paiement virtuelle</string>
+    <string name="please_enter_valid_vpa">Veuillez entrer l\'adresse de paiement virtuelle</string>
 
     <string name="please_enter_valid_address_or_phone">Veuillez entrer une adresse de paiement ou un numéro de téléphone valide</string>
 
@@ -1689,7 +1689,7 @@ TARIF DE BASE :
 
     <string name="pay_from_your_bank">Payer de votre banque </string>
 
-    <string name="no_loading_money"> Pas de chargement d'argent dans votre portefeuille</string>
+    <string name="no_loading_money"> Pas de chargement d\'argent dans votre portefeuille</string>
 
     <string name="bank_grade_security">Banque securité</string>
 
@@ -1699,13 +1699,13 @@ TARIF DE BASE :
 
     <string name="registered_number_should_be">Le numéro enregistré doit être la valeur par défaut préférée pour nos SMS et les appels pour les mises à jour régulières</string>
 
-    <string name="GotIt">Je l'ai</string>
+    <string name="GotIt">Je l\'ai</string>
 
-    <string name="close_to_saved_location">Nous avons remarqué que votre emplacement de demande est très proche d'un emplacement enregistré. Voulez-vous qu'il vous récupére là-bas?</string>
+    <string name="close_to_saved_location">Nous avons remarqué que votre emplacement de demande est très proche d\'un emplacement enregistré. Voulez-vous qu\'il vous récupére là-bas?</string>
 
-    <string name="close_to_point_of_interest">Nous avons remarqué que votre position de demande est très proche d'un point d'intérêt. Voulez-vous demander un taxi là-bas?</string>
+    <string name="close_to_point_of_interest">Nous avons remarqué que votre position de demande est très proche d\'un point d\'intérêt. Voulez-vous demander un taxi là-bas?</string>
 
-    <string name="yes_update_pickup_location">Oui, mettre à jour l'emplacement de collecte</string>
+    <string name="yes_update_pickup_location">Oui, mettre à jour l\'emplacement de collecte</string>
 
     <string name="no_continue_with_current_pickup">Non, continuez avec cet emplacement actuel</string>
 
@@ -1717,9 +1717,9 @@ TARIF DE BASE :
 
     <string name="no_menus_available_with_these_filters">Désolé, aucun résultat trouvé. Essayez à nouveau avec moins de filtres.</string>
 
-    <string name="no_menus_available_your_location">Désolé, la commande en ligne n'est pas encore disponible dans votre pays. Nous serons bientôt là-bas!</string>
+    <string name="no_menus_available_your_location">Désolé, la commande en ligne n\'est pas encore disponible dans votre pays. Nous serons bientôt là-bas!</string>
 
-    <string name="no_delivery_available_your_location">Désolé, le fichier fatafat n'est pas encore disponible dans votre pays. Nous serons bientôt là-bas!</string>
+    <string name="no_delivery_available_your_location">Désolé, le fichier fatafat n\'est pas encore disponible dans votre pays. Nous serons bientôt là-bas!</string>
 
     <string name="oops_no_results_found">Oops,Aucun résultats trouvé</string>
 
@@ -1751,13 +1751,13 @@ TARIF DE BASE :
 
     <string name="expires_on">Expire en</string>
 
-    <string name="savings_meter">Compteur d'économies</string>
+    <string name="savings_meter">Compteur d\'économies</string>
 
     <string name="star_savings">Star Savings</string>
 
     <string name="you_will_receive_cashback_on_order">You’ll receive \u20B9%s cashback on this order</string>
 
-    <string name="star_savings_no_priority_tip">Économies d'étoiles: aucun conseil prioritaire sur ce trajet</string>
+    <string name="star_savings_no_priority_tip">Économies d\'étoiles: aucun conseil prioritaire sur ce trajet</string>
 
     <string name="become_a_jugnoo_star">Devenir un %s star</string>
 
@@ -1795,7 +1795,7 @@ TARIF DE BASE :
 
     <string name="your_referral_code">Votre code de parrainage</string>
 
-    <string name="view_more_sharing_options">Afficher plus d'options de partage</string>
+    <string name="view_more_sharing_options">Afficher plus d\'options de partage</string>
 
     <string name="invite_via_whatsapp">Inviter via Whatsapp</string>
 
@@ -1841,7 +1841,7 @@ TARIF DE BASE :
 
     <string name="zoom_view">zoom sur mes transactions</string>
 
-    <string name="star_could_not_be_added">%s star couldn't be added. Please try next time.</string>
+    <string name="star_could_not_be_added">%s star couldn\'t be added. Please try next time.</string>
 
     <string name="claim_gift">Cadeau de réclamation</string>
 
@@ -1911,23 +1911,23 @@ TARIF DE BASE :
 
     <string name="autodetecting_otp_sent_to">Autodetecting OTP envoyé à</string>
 
-    <string name="permissions_get_accounts_message"> Accordez l'autorisation de lire votre adresse e-mail depuis votre appareil pour pré-remplir. </string>
+    <string name="permissions_get_accounts_message"> Accordez l\'autorisation de lire votre adresse e-mail depuis votre appareil pour pré-remplir. </string>
 
-    <string name="permissions_get_accounts_title">Lire l'adresse e-mail</string>
+    <string name="permissions_get_accounts_title">Lire l\'adresse e-mail</string>
 
-    <string name="permissions_read_phone_state_message"> Accordez l'autorisation de lire votre numéro de téléphone depuis votre appareil pour le pré-remplir. </string>
+    <string name="permissions_read_phone_state_message"> Accordez l\'autorisation de lire votre numéro de téléphone depuis votre appareil pour le pré-remplir. </string>
 
     <string name="permissions_read_phone_state_title">Lire le numéro du téléphone</string>
 
-    <string name="permissions_receive_sms_message"> Accordez l'autorisation de lire votre code SMS depuis votre appareil pour pré-remplir. </string>
+    <string name="permissions_receive_sms_message"> Accordez l\'autorisation de lire votre code SMS depuis votre appareil pour pré-remplir. </string>
 
     <string name="permissions_receive_sms_title">Lire SMS Code</string>
 
     <string name="login_signup_with">Connexion / Inscription avec</string>
 
-    <string name="please_check_tnc">Conditions d'offre non remplies Veuillez examiner les modalités et conditions détaillées pour plus d'informations</string>
+    <string name="please_check_tnc">Conditions d\'offre non remplies Veuillez examiner les modalités et conditions détaillées pour plus d\'informations</string>
 
-    <string name="checkout_our_different_services_from_here">Commander nos différents services d'ici</string>
+    <string name="checkout_our_different_services_from_here">Commander nos différents services d\'ici</string>
 
     <string name="get_free_discount_coupons">Obtenez des rabais gratuits / Coupons</string>
 
@@ -2009,7 +2009,7 @@ TARIF DE BASE :
 
     <string name="no_other_store_available">No other stores available</string>
 
-    <string name="type_address">Ecrire l'adresse</string>
+    <string name="type_address">Ecrire l\'adresse</string>
 
     <string name="other_modes_to_pay">Autres méthodes de paiement</string>
 
@@ -2043,31 +2043,31 @@ TARIF DE BASE :
 
     <string name="enter_your_name">"Entrez votre nom "</string>
 
-    <string name="enter_email_id">"Entrer l'identifiant d'email "</string>
+    <string name="enter_email_id">"Entrer l\'identifiant d\'email "</string>
 
     <string name="fatafat">Grocery</string>
 
     <string name="fatafat_offering_name">Chat</string>
 
-    <string name="unable_to_fetch_address">Impossible d'aller chercher l'adresse actuelle pour le moment</string>
+    <string name="unable_to_fetch_address">Impossible d\'aller chercher l\'adresse actuelle pour le moment</string>
 
     <string name="plus_add_new_address">+ Ajouter une nouvelle adresse</string>
 
-    <string name="address_details">Détails de l'adresse</string>
+    <string name="address_details">Détails de l\'adresse</string>
 
     <string name="label_sample">Étiquette, par exemple La maison de votre ami</string>
 
-    <string name="flat_number_hint">Numéro de l'appartement / N ° de la maison / Nom de l'appartement</string>
+    <string name="flat_number_hint">Numéro de l\'appartement / N ° de la maison / Nom de l\'appartement</string>
 
     <string name="landmark">Point de repère</string>
 
-    <string name="tracking_not_available_message">Le suivi en direct sera activé après l'envoi de la commande.</string>
+    <string name="tracking_not_available_message">Le suivi en direct sera activé après l\'envoi de la commande.</string>
 
-    <string name="some_error_occured_try_again">Une erreur s'est produite Essayez à nouveau</string>
+    <string name="some_error_occured_try_again">Une erreur s\'est produite Essayez à nouveau</string>
 
-    <string name="you_are_first_in_queue">Vous êtes le premier en file d'attente</string>
+    <string name="you_are_first_in_queue">Vous êtes le premier en file d\'attente</string>
 
-    <string name="enter_location">"Entrez l'emplacement "</string>
+    <string name="enter_location">"Entrez l\'emplacement "</string>
 
 
     -<string name="checkout_bracket_item">
@@ -2106,7 +2106,7 @@ TARIF DE BASE :
 
     <string name="use_this_coupon">Utilisez ce coupon</string>
 
-    <string name="terms_of_use">Conditions d'utilisation</string>
+    <string name="terms_of_use">Conditions d\'utilisation</string>
 
     <string name="offer_auto_applied_message_format">Coupon sélectionné. Il sera appliqué automatiquement sur %s.</string>
 
@@ -2183,7 +2183,7 @@ TARIF DE BASE :
 
     <string name="order_is_late">Order is late</string>
 
-    <string name="something_went_wrong">Quelque chose s'est mal passé</string>
+    <string name="something_went_wrong">Quelque chose s\'est mal passé</string>
 
     <string name="no_reviews_yet">No reviews yet!</string>
 
@@ -2196,7 +2196,7 @@ Please accept a collect request of
 from %s in your UPI app.
 </string>
 
-    <string name="label_cancel_payment"> Veuillez nous donner une raison avant d'annuler le paiement.</string>
+    <string name="label_cancel_payment"> Veuillez nous donner une raison avant d\'annuler le paiement.</string>
 
     <string name="label_below_icici_payment_edt">You will receive a collect request from %s in the UPI app you used to create your VPA.</string>
 
@@ -2212,7 +2212,7 @@ from %s in your UPI app.
 
     <string name="hint_add_upi">Please add UPI Address</string>
 
-    <string name="please_wait">"S'il vous plaît, attendez... "</string>
+    <string name="please_wait">"S\'il vous plaît, attendez... "</string>
 
     <string name="place_bulk_order">Place a Bulk Order</string>
 
@@ -2326,7 +2326,7 @@ from %s in your UPI app.
 
     <string name="no_coupons_available">No Coupons Available</string>
 
-    <string name="how_was_your_experience">"Comment s'est passée votre expérience? "</string>
+    <string name="how_was_your_experience">"Comment s\'est passée votre expérience? "</string>
 
     <string name="to_use_this_coupon">To use this coupon, select it at the time of checkout.</string>
 
@@ -2612,13 +2612,13 @@ from %s in your UPI app.
 
     <string name="code_not_matched">Le code est invalide</string>
 
-    <string name="no_transactions_currently">Aucune transacation pour l'instant</string>
+    <string name="no_transactions_currently">Aucune transacation pour l\'instant</string>
 
     <string name="some_error_occured">Erreurs survenue</string>
 
     <string name="error">Erreur</string>
 
-    <string name="dont_apply_coupon_on_this_ride">N'appliquer pas de coupon pour ce trajet</string>
+    <string name="dont_apply_coupon_on_this_ride">N\'appliquer pas de coupon pour ce trajet</string>
 
 
     -<string name="swipe_to_confirm">
@@ -2636,7 +2636,7 @@ from %s in your UPI app.
 
     <string name="android_data">Android Data</string>
 
-    <string name="no_data_available">Aucune donnée n'est disponible</string>
+    <string name="no_data_available">Aucune donnée n\'est disponible</string>
 
     <string name="are_you_sure_cancel_booking">Etes vous sûr de vouloir annuler cette réservation ?</string>
 
@@ -2662,15 +2662,15 @@ from %s in your UPI app.
 
     <string name="external_storage_permission_is_necessary">External storage permission is necessary</string>
 
-    <string name="turn_on_location_service">Activer votre localisation pour qu'on puisse vous localiser</string>
+    <string name="turn_on_location_service">Activer votre localisation pour qu\'on puisse vous localiser</string>
 
     <string name="card_number_invalid">Carte bancaire invalide</string>
 
-    <string name="please_enter_correct_expiry_date">Veuillez saisir une date d'expiration correct ?</string>
+    <string name="please_enter_correct_expiry_date">Veuillez saisir une date d\'expiration correct ?</string>
 
-    <string name="expiry_month_invalid">Mois d'expiration invalide</string>
+    <string name="expiry_month_invalid">Mois d\'expiration invalide</string>
 
-    <string name="expiry_year_invalid">Année d'expiration invalide</string>
+    <string name="expiry_year_invalid">Année d\'expiration invalide</string>
 
     <string name="please_enter_cvv">Veuillez entrer les CVV</string>
 
@@ -2696,9 +2696,9 @@ from %s in your UPI app.
 
     <string name="action">Action</string>
 
-    <string name="camera_is_not_accessible">La camera n'est pas accessible</string>
+    <string name="camera_is_not_accessible">La camera n\'est pas accessible</string>
 
-    <string name="unable_to_connect">Activez la pour l'utiliser</string>
+    <string name="unable_to_connect">Activez la pour l\'utiliser</string>
 
     <string name="network_error">Erreur réseau</string>
 
@@ -2722,7 +2722,7 @@ from %s in your UPI app.
 
     <string name="rate_card">Carte de débit</string>
 
-    <string name="terms_of_schedule">Termes pour réserver à l'avance</string>
+    <string name="terms_of_schedule">Termes pour réserver à l\'avance</string>
 
     <string name="wallet_promotions">Portefeuille et  Promotions</string>
 
@@ -2736,13 +2736,13 @@ from %s in your UPI app.
 
     <string name="enter_contact_number">Entrer un numéro de contact</string>
 
-    <string name="whatsapp_not_installed">WhatsApp n'est pas Installer</string>
+    <string name="whatsapp_not_installed">WhatsApp n\'est pas Installer</string>
 
     <string name="choose_email_client">Choisir un email client:</string>
 
     <string name="share_with">Partager avec...</string>
 
-    <string name="you_havent_tried_app_yet">Vous n'avez pas encore essayé %s.</string>
+    <string name="you_havent_tried_app_yet">Vous n\'avez pas encore essayé %s.</string>
 
     <string name="some_error_occured_tap_to_retry">Une erreur est survenue, appuyez pour réessayer</string>
 
@@ -2778,21 +2778,21 @@ from %s in your UPI app.
 
     <string name="location_settings">Les paramètres de localisation</string>
 
-    <string name="location_not_enabled_enable_from_settings">La localisation n'est pas activé. Voulez-vous l'activer depuis le menu des paramètres?</string>
+    <string name="location_not_enabled_enable_from_settings">La localisation n\'est pas activé. Voulez-vous l\'activer depuis le menu des paramètres?</string>
 
     <string name="settings">Paramètres</string>
 
-    <string name="gps_not_enabled_enable_from_settings">La localisation GPS n'est pas activé. Voulez-vous l'activer depuis le menu des paramètres?</string>
+    <string name="gps_not_enabled_enable_from_settings">La localisation GPS n\'est pas activé. Voulez-vous l\'activer depuis le menu des paramètres?</string>
 
     <string name="error_in_fetching_facebook_info">Erreur lors de la récupération des informations de Facebook</string>
 
     <string name="eta">ETA</string>
 
-    <string name="could_not_open_directions">Impossible d'ouvrir les directions</string>
+    <string name="could_not_open_directions">Impossible d\'ouvrir les directions</string>
 
     <string name="fare">Tarif</string>
 
-    <string name="fare_could_not_be_estimated_between_pickup_drop">Le taux n'a pu être estimé entre le lieu de départ choisi et le lieu d'arrivée</string>
+    <string name="fare_could_not_be_estimated_between_pickup_drop">Le taux n\'a pu être estimé entre le lieu de départ choisi et le lieu d\'arrivée</string>
 
     <string name="otp_cant_be_empty">OTP ne peut pas être vide</string>
 
@@ -2804,7 +2804,7 @@ from %s in your UPI app.
 
     <string name="hello_user_format">Coucou, %s!</string>
 
-    <string name="what_would_you_like_to_get_done_today">Que voulez-vous faire aujourd'hui?</string>
+    <string name="what_would_you_like_to_get_done_today">Que voulez-vous faire aujourd\'hui?</string>
 
     <string name="affordable_auto_rides_online">Des chauffeurs de taxi compétent et professionnel</string>
 
@@ -2832,7 +2832,7 @@ from %s in your UPI app.
 
     <string name="connection_lost_please_try_again">Connexion perdue. Veuillez réessayer plus tard.</string>
 
-    <string name="you_have_already_created_multiple_accounts_format">Vous avez déjà créé des comptes %s à partir de cet appareil. Veuillez expliquer la raison de la création d'un nouveau compte.</string>
+    <string name="you_have_already_created_multiple_accounts_format">Vous avez déjà créé des comptes %s à partir de cet appareil. Veuillez expliquer la raison de la création d\'un nouveau compte.</string>
 
     <string name="your_ride_has_started">Votre trajet a commencé</string>
 
@@ -2840,13 +2840,13 @@ from %s in your UPI app.
 
     <string name="your_account_has_been_verified">Votre compte a été vérifié</string>
 
-    <string name="enter_home_location">Entrez l'emplacement de votre domicile</string>
+    <string name="enter_home_location">Entrez l\'emplacement de votre domicile</string>
 
     <string name="enter_work_location">Entrez le lieu de travail</string>
 
     <string name="edit_format">Modifier %s</string>
 
-    <string name="enter_location_format">Entrez %s l'emplacement</string>
+    <string name="enter_location_format">Entrez %s l\'emplacement</string>
 
     <string name="facebook_not_installed">Facebook app not enabled</string>
 
@@ -2858,9 +2858,9 @@ from %s in your UPI app.
 
     <string name="schedule_time_format">Planifier une course %s</string>
 
-    <string name="anywhere">N'importe où</string>
+    <string name="anywhere">N\'importe où</string>
 
-    <string name="i_need_colon">J'ai besoin:</string>
+    <string name="i_need_colon">J\'ai besoin:</string>
 
     <string name="when_colon">Quand:</string>
 
@@ -2870,7 +2870,7 @@ from %s in your UPI app.
 
     <string name="discount_valid_for_next_format">Réduction valide pour %s</string>
 
-    <string name="discount_valid_for_less_than_1_min">Réduction valide moins d'1 minute</string>
+    <string name="discount_valid_for_less_than_1_min">Réduction valide moins d\'1 minute</string>
 
     <string name="here_my_experience_of">Voici mon éxpérience de</string>
 
@@ -3152,7 +3152,7 @@ from %s in your UPI app.
 
     <string name="_02_00pm_06_00pm">02:00PM-06:00PM</string>
 
-    <string name="today">Aujourd'hui</string>
+    <string name="today">Aujourd\'hui</string>
 
     <string name="gift_your_friends_nrs_50">Gift your friends \u20B9 50</string>
 
@@ -3252,7 +3252,7 @@ from %s in your UPI app.
 
     <string name="enter_amount">Enter Amount</string>
 
-    <string name="set_location_on_map">"Définir l'emplacement sur la carte "</string>
+    <string name="set_location_on_map">"Définir l\'emplacement sur la carte "</string>
 
     <string name="_1_free">1 Free</string>
 
@@ -3461,9 +3461,9 @@ from %s in your UPI app.
     <string name="set_preferences_caps">RÉGLER LES PRÉFÉRENCES</string>
 
     <string name="restarting_your_app">Redémarrer votre application ...</string>
-    <string name="we_could_not_detect_your_location">"Nous n'avons pas pu détecter votre emplacement. Êtes-vous sûr de vouloir demander un chauffeur pour vous chercher à cet endroit? "</string>
+    <string name="we_could_not_detect_your_location">"Nous n\'avons pas pu détecter votre emplacement. Êtes-vous sûr de vouloir demander un chauffeur pour vous chercher à cet endroit? "</string>
     <string name="location_accuracy_is_low">"La précision de localisation est faible. Êtes-vous sûr de vouloir demander un chauffeur pour vous chercher à cet endroit? "</string>
-    <string name="the_pickup_location_you_have_set_is_different">"L'emplacement de départ que vous avez défini est différent de votre emplacement actuel. Êtes-vous sûr que c'est le bon? "</string>
+    <string name="the_pickup_location_you_have_set_is_different">"L\'emplacement de départ que vous avez défini est différent de votre emplacement actuel. Êtes-vous sûr que c\'est le bon? "</string>
     <string name="number_should_not_start_with_zero">Le numéro de téléphone ne doit pas commencer par 0.</string>
     <string name="first_name">Prénom</string>
     <string name="last_name">Nom de famille</string>

@@ -73,10 +73,15 @@ public class PromoAdapter extends RecyclerView.Adapter<PromoAdapter.ViewHolder> 
 		holder.tvPromoTitle.setText(promo.getPromoCoupon().getTitle());
 
 		String expireDate = DateOperations.convertDateOnlyViaFormatMonthFull(DateOperations.utcToLocalWithTZFallback(promo.getPromoCoupon().getExpiryDate()));
-		SpannableStringBuilder validUntilDate = new SpannableStringBuilder(activity.getString(R.string.valid_until_format, expireDate));
-		final StyleSpan boldDateSpan = new StyleSpan(android.graphics.Typeface.BOLD);
-		validUntilDate.setSpan(boldDateSpan, validUntilDate.length()-expireDate.length(), validUntilDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		holder.tvPromoExpireTime.setText(validUntilDate);
+		try {
+			SpannableStringBuilder validUntilDate = new SpannableStringBuilder(activity.getString(R.string.valid_until_format, expireDate));
+			final StyleSpan boldDateSpan = new StyleSpan(Typeface.BOLD);
+			validUntilDate.setSpan(boldDateSpan, validUntilDate.length()-expireDate.length(), validUntilDate.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			holder.tvPromoExpireTime.setText(validUntilDate);
+		} catch (Exception e) {
+			e.printStackTrace();
+			holder.tvPromoExpireTime.setText(activity.getString(R.string.valid_until_format, expireDate));
+		}
 
 	}
 
