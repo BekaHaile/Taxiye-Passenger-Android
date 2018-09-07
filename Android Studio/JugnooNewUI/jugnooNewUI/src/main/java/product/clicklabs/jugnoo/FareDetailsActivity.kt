@@ -14,8 +14,8 @@ import product.clicklabs.jugnoo.adapters.FareExtra
 import product.clicklabs.jugnoo.adapters.FareItem
 import product.clicklabs.jugnoo.adapters.FareVehicle
 import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse
+import product.clicklabs.jugnoo.utils.DialogPopup
 import product.clicklabs.jugnoo.utils.Utils
-import retrofit.RetrofitError
 
 class FareDetailsActivity : BaseAppCompatActivity(){
 
@@ -60,11 +60,13 @@ class FareDetailsActivity : BaseAppCompatActivity(){
                 val details: ArrayList<Any> = ArrayList()
                 t?.regions?.forEach {
                     details.add(FareVehicle(it.regionName+"("+it.maxPeople+")"))
-                    details.add(FareItem(getString(R.string.base_fare)+":", it.fare.displayBaseFare.trim()))
-                    details.add(FareItem(getString(R.string.nl_per_min)+":", Utils.formatCurrencyValue(t.currency, it.fare.farePerMin)))
-                    details.add(FareItem(getString(R.string.per_format, Utils.getDistanceUnit(t.distanceUnit))+":",
+                    details.add(FareItem(getString(R.string.base_fare), Utils.formatCurrencyValue(t.currency, it.fare.fareFixed)))
+                    details.add(FareItem(getString(R.string.nl_per_min), Utils.formatCurrencyValue(t.currency, it.fare.farePerMin)))
+                    details.add(FareItem(getString(R.string.per_format, Utils.getDistanceUnit(t.distanceUnit)),
                             Utils.formatCurrencyValue(t.currency, it.fare.farePerKm)))
-                    details.add(FareExtra(it.fare.displayFareText))
+                }
+                if(t != null && t.rateCardInfo.isNotEmpty()){
+                    details.add(FareExtra(t.rateCardInfo))
                 }
 
                 val adapter = FareDetailsAdapter(details)
@@ -72,23 +74,8 @@ class FareDetailsActivity : BaseAppCompatActivity(){
             }
 
             override fun onError(t: FareDetailsResponse?, message: String?, flag: Int): Boolean {
-                return false
-            }
-
-            override fun onFailure(error: RetrofitError?): Boolean {
-                val details: ArrayList<Any> = ArrayList()
-                Data.autoData.regions.forEach {
-                    details.add(FareVehicle(it.regionName+"("+it.maxPeople+")"))
-                    details.add(FareItem(getString(R.string.base_fare)+":", it.fareStructure.getDisplayBaseFare(this@FareDetailsActivity).trim()))
-                    details.add(FareItem(getString(R.string.nl_per_min)+":", Utils.formatCurrencyValue(it.fareStructure.currency, it.fareStructure.farePerMin)))
-                    details.add(FareItem(getString(R.string.per_format, Utils.getDistanceUnit(it.fareStructure.distanceUnit))+":",
-                            Utils.formatCurrencyValue(it.fareStructure.currency, it.fareStructure.farePerKm)))
-                    details.add(FareExtra(it.fareStructure.getDisplayFareText(this@FareDetailsActivity)))
-                }
-                val adapter = FareDetailsAdapter(details)
-                rvFareDetails.adapter = adapter
-
-                return false
+                DialogPopup.alertPopupWithListener(this@FareDetailsActivity, "", message) { onBackPressed() }
+                return true
             }
 
         })

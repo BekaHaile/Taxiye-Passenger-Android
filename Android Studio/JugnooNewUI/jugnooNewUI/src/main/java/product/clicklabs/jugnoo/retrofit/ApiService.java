@@ -620,7 +620,7 @@ public interface ApiService {
 
 
     @FormUrlEncoded
-    @POST("/fare_details")
+    @POST("/customer/show_rate_card")
     void fareDetails(@FieldMap Map<String, String> params,
                          Callback<FareDetailsResponse> callback);
 
