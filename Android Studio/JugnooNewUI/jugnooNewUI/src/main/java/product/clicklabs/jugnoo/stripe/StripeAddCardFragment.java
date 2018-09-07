@@ -54,7 +54,9 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
+import static com.stripe.android.model.Card.AMERICAN_EXPRESS;
 import static com.stripe.android.model.Card.BRAND_RESOURCE_MAP;
+import static com.stripe.android.model.Card.MASTERCARD;
 
 /**
  * Created by Parminder Saini on 10/05/18.
@@ -83,6 +85,8 @@ public class StripeAddCardFragment extends Fragment {
 
     private static final String ARGS_PAYMENT_MODE = "args_payment_mode";
     private PaymentOption paymentOption ;
+    public static final String BRAND_ACCEPTACARD_MASTERCARD="Mastercard";
+    public static final String BRAND_ACCEPTACARD_AMERICAN_EXPRESS="Amex";
 
 
     @Override
@@ -273,8 +277,8 @@ public class StripeAddCardFragment extends Fragment {
          }
         params.put("last_4",token.getLast4());
         params.put("card_number",token.getNumber());
-        params.put("brand",token.getBrand());
-        params.put("exp_month",String.valueOf(token.getExpMonth()));
+        params.put("brand",formatBrand(token.getBrand()));
+        params.put("exp_month",formatExpMonth(token.getExpMonth()));
         params.put("exp_year",String.valueOf(token.getExpYear()));
         params.put("is_delete","0");
         params.put("payment_option",String.valueOf(paymentOption.getOrdinal()));
@@ -299,6 +303,37 @@ public class StripeAddCardFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    private String formatBrand(String brand) {
+        if(brand==null || paymentOption.getOrdinal()!=PaymentOption.ACCEPT_CARD.getOrdinal()){
+            return brand;
+
+        }
+
+        if(brand.equals(AMERICAN_EXPRESS)){
+            return BRAND_ACCEPTACARD_AMERICAN_EXPRESS;
+        }
+
+        if(brand.equals(MASTERCARD)){
+            return BRAND_ACCEPTACARD_MASTERCARD;
+        }
+
+        return brand;
+
+    }
+
+    private String formatExpMonth(Integer expMonth) {
+
+        if(expMonth==null){
+            return "";
+        }
+
+        if(expMonth<10){
+            return "0"+expMonth;
+        }else{
+            return String.valueOf(expMonth);
+        }
     }
 
 
