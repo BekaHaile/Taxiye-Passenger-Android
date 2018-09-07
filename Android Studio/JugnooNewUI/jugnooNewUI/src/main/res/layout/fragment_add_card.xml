@@ -33,10 +33,32 @@
          android:layout_below="@id/topBar"
          android:layout_width="match_parent"
          android:layout_height="wrap_content">
-         
 
 
 
+
+         <EditText
+             android:id="@+id/edtCardHolderName"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginBottom="10dp"
+             android:background="@drawable/bottom_border_grey"
+             android:drawablePadding="10dp"
+             android:focusable="true"
+             android:textAllCaps="true"
+             android:focusableInTouchMode="true"
+             android:hint="@string/hint_card_holder_name"
+             android:imeOptions="actionDone"
+             android:inputType="textPersonName|textCapCharacters"
+             android:nextFocusDown="@+id/edt_card_number"
+             android:nextFocusForward="@+id/edt_card_number"
+             android:nextFocusRight="@+id/edt_card_number"
+             android:padding="10dp"
+             android:textColor="@color/text_color"
+             android:textColorHint="@color/text_color_hint"
+             android:textCursorDrawable="@drawable/cursor_black"
+             android:visibility="visible"
+             app:typekitFont="@string/maven_r" />
 
              <com.stripe.android.view.CardNumberEditText
                  android:id="@+id/edt_card_number"

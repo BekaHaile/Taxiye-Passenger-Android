@@ -1851,7 +1851,7 @@
     <string name="stripe">Stripe</string>
     <string name="view_card_title">CREDIT CARD</string>
     <string name="action_add_card_stripe">Add Card (using Stripe)</string>
-    <string name="action_add_card_accept_card">Add Card (using Accept Card)</string>
+    <string name="action_add_card_accept_card">Add Card (using Acceptacard)</string>
     <string name="view_card_wallet">View Card</string>
     <string name="add_card_payments">Add Card</string>
     <string name="tap_a_bid">Tap a bid</string>
@@ -1895,12 +1895,14 @@
     <string name="issue_description">Issue description</string>
     <string name="support_mail_subject">%s Support</string>
     <string name="hint_card_number">CARD NUMBER</string>
+    <string name="hint_card_holder_name">NAME ON CARD</string>
     <string name="hint_date">MM/YY</string>
     <string name="hint_cvv">CVV</string>
     <string name="add_card_title">ADD CARD</string>
     <string name="edit_card_title">EDIT CARD</string>
     <string name="stripe_delete_card">Are you sure you want to delete your card ending with %s?</string>
     <string name="stripe_add_card_error">%s is not valid.</string>
+    <string name="card_name_not_valid">Please enter a valid card name.</string>
     <string name="card_number">Card Number</string>
     <string name="expiry_date">Expiry Date</string>
     <string name="cvc">CVC</string>

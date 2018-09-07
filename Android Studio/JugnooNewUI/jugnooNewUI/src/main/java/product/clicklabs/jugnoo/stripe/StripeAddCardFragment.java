@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.stripe;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,11 +11,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,9 +74,12 @@ public class StripeAddCardFragment extends Fragment {
     StripeEditText edtCvv;
     @BindView(R.id.textViewTitle)
     TextView textViewTitle;
+    @BindView(R.id.edtCardHolderName)
+    EditText edtCardHolderName;
 
     private StripeCardsStateListener stripeCardsStateListener;
     private Unbinder unbinder;
+    private boolean isCardNameMandatory;
 
     private static final String ARGS_PAYMENT_MODE = "args_payment_mode";
     private PaymentOption paymentOption ;
@@ -118,7 +125,9 @@ public class StripeAddCardFragment extends Fragment {
         stripe = new Stripe(getActivity(), Config.getServerUrl().equals(Config.getLiveServerUrl())?
                 Prefs.with(getActivity()).getString(Constants.KEY_STRIPE_KEY_LIVE, BuildConfig.STRIPE_KEY_LIVE)
                 :BuildConfig.STRIPE_KEY_DEV);
+        isCardNameMandatory = paymentOption==PaymentOption.ACCEPT_CARD;
         unbinder = ButterKnife.bind(this, rootView);
+        edtCardHolderName.setVisibility(isCardNameMandatory?View.VISIBLE:View.GONE);
         textViewTitle.setTypeface(Fonts.avenirNext(getActivity()));
         updateIcon(null);
         edtCardNumber.setErrorColor(ContextCompat.getColor(getActivity(), R.color.red_status));
@@ -147,7 +156,6 @@ public class StripeAddCardFragment extends Fragment {
         });
 
 
-
         return rootView;
     }
 
@@ -164,6 +172,14 @@ public class StripeAddCardFragment extends Fragment {
             case R.id.btn_add_card:
                 String cardNumber = edtCardNumber.getCardNumber();
                 int[] cardDate = edtDate.getValidDateFields();
+                final String nameOnCard = edtCardHolderName.getText().toString().trim();
+
+                if(isCardNameMandatory){
+                    if(TextUtils.isEmpty(nameOnCard)){
+                        Toast.makeText(getActivity(),getString(R.string.card_name_not_valid),Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+              }
 
                 if(cardNumber==null){
                     Toast.makeText(getActivity(),getString(R.string.stripe_add_card_error,getString(R.string.card_number)),Toast.LENGTH_SHORT).show();
@@ -215,7 +231,7 @@ public class StripeAddCardFragment extends Fragment {
 
 
                                     DialogPopup.dismissLoadingDialog();
-                                    addCardApi(token.getCard(),token.getId());
+                                    addCardApi(token.getCard(),token.getId(),nameOnCard);
 
 
                                 }
@@ -232,7 +248,7 @@ public class StripeAddCardFragment extends Fragment {
                             }
                     );
                 }else{
-                    addCardApi(card,null);
+                    addCardApi(card,null,nameOnCard);
                 }
 
                 break;
@@ -250,11 +266,11 @@ public class StripeAddCardFragment extends Fragment {
 
     }
 
-    private void addCardApi(Card token,@Nullable  String tokenId) {
+    private void addCardApi(Card token,@Nullable  String tokenId,String nameOnCard) {
         HashMap<String,String> params = new HashMap<>();
         if(tokenId!=null){
             params.put("stripe_token",tokenId);
-            }
+         }
         params.put("last_4",token.getLast4());
         params.put("card_number",token.getNumber());
         params.put("brand",token.getBrand());
@@ -262,7 +278,7 @@ public class StripeAddCardFragment extends Fragment {
         params.put("exp_year",String.valueOf(token.getExpYear()));
         params.put("is_delete","0");
         params.put("payment_option",String.valueOf(paymentOption.getOrdinal()));
-        params.put("name_on_card", Data.userData.userName);
+        params.put("name_on_card", nameOnCard);
         params.put("cvv", token.getCVC());
 
 

@@ -261,7 +261,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 				PaymentModeConfigData configData;
 				PaymentOption paymentOption;
 				Runnable runnable;
-				if(view.getId()==R.id.relativeLayoutStripeCard){
+				if(view.getId()==R.id.relativeLayoutStripe){
 					runnable= enableStripeRunnable;
 					configData= WalletFragment.this.stripeConfigData;
 					paymentOption = PaymentOption.STRIPE_CARDS;
