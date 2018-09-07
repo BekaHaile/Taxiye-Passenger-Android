@@ -129,6 +129,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 ViewHolder holder = (ViewHolder) viewholder;
                 holder.relative.setTag(position);
                 holder.textViewMenu.setText(menuInfo.getName());
+                holder.imageViewMenuIcon.setPadding(0, 0, 0, 0);
 
                 if(menuInfo.getIsNew() == 1){
                     holder.textViewNew.setVisibility(View.VISIBLE);
@@ -266,7 +267,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_chat_selector);
 
                 }else if(MenuInfoTags.FARE_DETAILS.getTag().equalsIgnoreCase(menuInfo.getTag())) {
-                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_invoice_pool);
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fare_details_grey_theme_selector);
+                    int padding = activity.getResources().getDimensionPixelSize(R.dimen.dp_4);
+                    holder.imageViewMenuIcon.setPadding(padding, padding, padding, padding);
 
                 }
                 else{
