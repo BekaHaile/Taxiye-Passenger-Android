@@ -108,7 +108,7 @@ public class StripeViewCardFragment extends Fragment {
             tvCard.setText(WalletCore.getStripeCardDisplayString(getActivity(),stripeCardData.getLast4()));
             tvCard.setVisibility(View.VISIBLE);
             ivMore.setVisibility(View.VISIBLE);
-            updateIcon(stripeCardData.getBrand());
+            tvCard.setCompoundDrawablesWithIntrinsicBounds(WalletCore.getBrandImage(stripeCardData.getBrand()), 0, 0, 0);
         }
 
         return rootView;
@@ -125,25 +125,6 @@ public class StripeViewCardFragment extends Fragment {
         }
     }
 
-    private @Card.CardBrand
-    String brand;
-
-    private void updateIcon(@Card.CardBrand String brand) {
-
-
-        if (this.brand != null && this.brand.equals(brand)) {
-            return;
-
-        }
-
-        this.brand = brand;
-        if (brand == null || Card.UNKNOWN.equals(brand)) {
-            Drawable icon = getResources().getDrawable(com.stripe.android.R.drawable.ic_unknown);
-            tvCard.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-        } else {
-            tvCard.setCompoundDrawablesWithIntrinsicBounds(BRAND_RESOURCE_MAP.get(brand), 0, 0, 0);
-        }
-    }
 
 
     @OnClick({R.id.imageViewBack, R.id.ivMore})

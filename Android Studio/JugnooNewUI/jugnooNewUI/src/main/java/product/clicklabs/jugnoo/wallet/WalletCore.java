@@ -33,6 +33,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.dialogs.WalletSelectionErrorDialog;
 import product.clicklabs.jugnoo.home.fragments.RequestRideOptionsFragment;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
+import product.clicklabs.jugnoo.stripe.StripeAddCardFragment;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
@@ -40,7 +41,9 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
+import static com.stripe.android.model.Card.AMERICAN_EXPRESS;
 import static com.stripe.android.model.Card.BRAND_RESOURCE_MAP;
+import static com.stripe.android.model.Card.MASTERCARD;
 import static product.clicklabs.jugnoo.Constants.KEY_DISPLAY_NAME;
 import static product.clicklabs.jugnoo.Constants.KEY_JUGNOO_VPA_HANDLE;
 import static product.clicklabs.jugnoo.Constants.KEY_OFFER_TEXT;
@@ -1125,12 +1128,25 @@ public class WalletCore {
         return formString.toString();
     }
 
-    private static int getBrandImage(String brand) {
+    public static int getBrandImage(String brand) {
 
 
         int brandImage = R.drawable.ic_card_default;
 
-        if (!TextUtils.isEmpty(brand) && BRAND_RESOURCE_MAP.get(brand) != com.stripe.android.R.drawable.ic_unknown) {
+        if(brand==null){
+            return brandImage;
+        }
+
+        if(brand.equals(StripeAddCardFragment.BRAND_ACCEPTACARD_AMERICAN_EXPRESS)){
+            brand = AMERICAN_EXPRESS;
+        }
+
+        if(brand.equals(StripeAddCardFragment.BRAND_ACCEPTACARD_MASTERCARD)){
+            brand = MASTERCARD;
+        }
+
+
+        if (BRAND_RESOURCE_MAP.get(brand) != com.stripe.android.R.drawable.ic_unknown) {
             brandImage = BRAND_RESOURCE_MAP.get(brand);
         }
 

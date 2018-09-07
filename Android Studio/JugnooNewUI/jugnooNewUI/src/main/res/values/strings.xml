@@ -1850,8 +1850,8 @@
     <string name="select_a_bid">Select a bid</string>
     <string name="stripe">Stripe</string>
     <string name="view_card_title">CREDIT CARD</string>
-    <string name="action_add_card_stripe">Add Card (using Stripe)</string>
-    <string name="action_add_card_accept_card">Add Card (using Acceptacard)</string>
+    <string name="action_add_card_stripe">Add Card</string>
+    <string name="action_add_card_accept_card">Add Card</string>
     <string name="view_card_wallet">View Card</string>
     <string name="add_card_payments">Add Card</string>
     <string name="tap_a_bid">Tap a bid</string>
