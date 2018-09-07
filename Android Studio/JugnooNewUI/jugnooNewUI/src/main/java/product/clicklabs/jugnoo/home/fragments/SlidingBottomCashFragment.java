@@ -69,7 +69,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         textViewPaytm = (TextView) rootView.findViewById(R.id.textViewPaytm);
         textViewPaytm.setTypeface(Fonts.mavenMedium(getActivity()));
         textViewStripeCard = (TextView) rootView.findViewById(R.id.textViewStripeCard);
-        textViewAcceptCard = (TextView) rootView.findViewById(R.id.textViewStripeCard);
+        textViewAcceptCard = (TextView) rootView.findViewById(R.id.textViewAcceptCard);
         ivStripeCardIcon = (ImageView) rootView.findViewById(R.id.ivStripeCardIcon);
         ivAcceptCardIcon = (ImageView) rootView.findViewById(R.id.ivAcceptCardIcon);
         textViewStripeCard.setTypeface(Fonts.mavenMedium(getActivity()));
