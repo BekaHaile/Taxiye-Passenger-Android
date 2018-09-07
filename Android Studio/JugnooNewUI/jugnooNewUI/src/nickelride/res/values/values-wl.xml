@@ -139,4 +139,8 @@
     <integer name="visibility_jugnoo_cash_in_wallet">@integer/view_gone</integer>
     <bool name="show_choose_other_mode_to_pay">false</bool>
     <integer name="cash_above_all">1</integer>
+
+    <!--String keys for nickel-->
+    <string name="ride_summary_view_invoice_text">@string/trip_overview</string>
+    <string name="default_currency">USD</string>
 </resources>

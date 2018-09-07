@@ -132,6 +132,7 @@
     <string name="total_fare_colon">TOTAL FARE: </string>
     <string name="Cash_to_be_paid">CASH TO BE PAID</string>
     <string name="view_invoice">View Invoice</string>
+    <string name="trip_overview">Trip Overview</string>
     <string name="submit_feedback_caps">SUBMIT FEEDBACK</string>
     <string name="skip">Skip</string>
     <string name="star_required">* Required</string>

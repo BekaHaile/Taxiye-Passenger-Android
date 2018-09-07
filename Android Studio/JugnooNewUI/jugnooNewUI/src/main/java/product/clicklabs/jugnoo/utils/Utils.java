@@ -96,13 +96,13 @@ import static product.clicklabs.jugnoo.home.HomeActivity.passengerScreenMode;
 
 
 public class Utils implements GAAction, GACategory{
-	
+
 	/**
 	 * Compares two double values with epsilon precision
 	 * @param d1 double value 1
 	 * @param d2 double value 2
-	 * @return 1 if d1 > d2, 
-	 * -1 if d1 < d2 & 
+	 * @return 1 if d1 > d2,
+	 * -1 if d1 < d2 &
 	 * 0 if d1 == d2
 	 */
 	public static int compareDouble(double d1, double d2){
@@ -149,7 +149,7 @@ public class Utils implements GAAction, GACategory{
 		}
 	}
 
-	
+
 	/**
 	 * Expands ListView for fixed height of item inside a ScrollView
 	 */
@@ -158,12 +158,12 @@ public class Utils implements GAAction, GACategory{
 			if (list.getCount() > 0) {
 				ListAdapter listAdap = list.getAdapter();
 				int totalHeight = 0;
-				
+
 				View listItem = listAdap.getView(0, null, list);
 				listItem.measure(0, 0);
 				int singleHeight = listItem.getMeasuredHeight();
 				totalHeight = singleHeight * list.getCount();
-				
+
 //				for (int i = 0; i < listAdap.getCount(); i++) {
 //					View listItem = listAdap.getView(i, null, list);
 //					listItem.measure(0, 0);
@@ -178,7 +178,7 @@ public class Utils implements GAAction, GACategory{
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Expands ListView for variable height of item inside a ScrollView
 	 */
@@ -187,7 +187,7 @@ public class Utils implements GAAction, GACategory{
 			if (list.getCount() > 0) {
 				ListAdapter listAdap = list.getAdapter();
 				int totalHeight = 0;
-				
+
 				for (int i = 0; i < listAdap.getCount(); i++) {
 					View listItem = listAdap.getView(i, null, list);
 					listItem.measure(0, 0);
@@ -204,7 +204,7 @@ public class Utils implements GAAction, GACategory{
 	}
 
 
-	
+
 	public static void hideSoftKeyboard(Activity activity, View searchET) {
 		try {
 			InputMethodManager mgr = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -218,7 +218,7 @@ public class Utils implements GAAction, GACategory{
 		InputMethodManager inputMethodManager = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
 		inputMethodManager.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
 	}
-	
+
 	public static void showSoftKeyboard(Activity activity, View searchET){
 	    try {
 	    	InputMethodManager keyboard = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -235,9 +235,9 @@ public class Utils implements GAAction, GACategory{
 			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 		}
 	}
-	
-	
-	
+
+
+
 	public static void openCallIntent(Activity activity, String phoneNumber){
 		Intent callIntent = new Intent(Intent.ACTION_VIEW);
         callIntent.setData(Uri.parse("tel:"+phoneNumber));
@@ -254,9 +254,9 @@ public class Utils implements GAAction, GACategory{
             e.printStackTrace();
         }
     }
-	
-	
-	
+
+
+
 	public static boolean appInstalledOrNot(Context context, String uri) {
         PackageManager pm = context.getPackageManager();
         boolean appInstalled = false;
@@ -294,7 +294,7 @@ public class Utils implements GAAction, GACategory{
 			e.printStackTrace();
 		}
 	}
-	
+
 
 
 
@@ -1080,8 +1080,8 @@ public class Utils implements GAAction, GACategory{
 
 	public static String getCurrencySymbol(String currencyCode) {
 		if (TextUtils.isEmpty(currencyCode)) {
-			currencyCode = "INR";
-		} else if(currencyCode.equalsIgnoreCase("BMD") || currencyCode.equalsIgnoreCase("TTD")){
+			currencyCode = MyApplication.getInstance().getString(R.string.default_currency);
+		} else if(currencyCode.equalsIgnoreCase("BMD") || currencyCode.equalsIgnoreCase("TTD") || currencyCode.equalsIgnoreCase("USD")){
 			return "$";
 		}
 		Currency currency = Currency.getInstance(currencyCode);
@@ -1105,7 +1105,7 @@ public class Utils implements GAAction, GACategory{
 		currencyNumberFormat.setMaximumFractionDigits(setPrecision ? precision : Math.max(2, precision));
 
 		if(TextUtils.isEmpty(currency)){
-			currency = "INR";
+			currency = MyApplication.getInstance().getString(R.string.default_currency);
 		}
 		currencyNumberFormat.setCurrency(Currency.getInstance(currency));
 		String result = currencyNumberFormat.format(value);
@@ -1113,6 +1113,7 @@ public class Utils implements GAAction, GACategory{
 		result = result.replaceFirst("\\s", "");
 		result = result.replace("BMD", "$");
 		result = result.replace("TTD", "$");
+		result = result.replace("USD", "$");
 		return result;
 
 	}
