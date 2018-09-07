@@ -10,7 +10,8 @@ public enum PaymentOption {
 	UPI_RAZOR_PAY(786),
 	ICICI_UPI(7),
 	MPESA(8),
-	STRIPE_CARDS(9);
+	STRIPE_CARDS(9),
+	ACCEPT_CARD(11);
 
 	private int ordinal;
 

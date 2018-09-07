@@ -53,7 +53,9 @@ public class StripeViewCardFragment extends Fragment {
     @BindView(R.id.ivMore)
     ImageView ivMore;
     private StripeCardData stripeCardData;
+    private PaymentOption paymentOption;
     private static final String ARGS_CARD_DATA = "edit_mode";
+    private static final String ARGS_PAYMENT_OPTION = "payment_option";
     private PopupMenu popupMenu;
 
     private StripeCardsStateListener stripeCardsStateListener;
@@ -72,10 +74,11 @@ public class StripeViewCardFragment extends Fragment {
     }
 
 
-    public static  <T extends StripeCardData>  StripeViewCardFragment newInstance(T stripeData) {
+    public static  <T extends StripeCardData>  StripeViewCardFragment newInstance(T stripeData,PaymentOption paymentOption) {
         StripeViewCardFragment stripeViewCardFragment = new StripeViewCardFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ARGS_CARD_DATA, stripeData);
+        bundle.putSerializable(ARGS_PAYMENT_OPTION, paymentOption);
         stripeViewCardFragment.setArguments(bundle);
         return stripeViewCardFragment;
 
@@ -88,6 +91,7 @@ public class StripeViewCardFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null && getArguments().containsKey(ARGS_CARD_DATA)) {
             stripeCardData = getArguments().getParcelable(ARGS_CARD_DATA);
+            paymentOption = (PaymentOption) getArguments().getSerializable(ARGS_PAYMENT_OPTION);
         }
 
 
@@ -188,6 +192,7 @@ public class StripeViewCardFragment extends Fragment {
         HashMap<String,String> params = new HashMap<>();
         params.put("card_id",stripeCardData.getCardId());
         params.put("is_delete","1");
+        params.put("payment_option",String.valueOf(paymentOption.getOrdinal()));
 
 
 
@@ -197,7 +202,7 @@ public class StripeViewCardFragment extends Fragment {
             public void onSuccess(StripeCardResponse stripeCardResponse, String message, int flag) {
 
                 if(stripeCardsStateListener!=null){
-                    stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData(),message,false);
+                    stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData(),message,false,paymentOption);
                 }
 
             }

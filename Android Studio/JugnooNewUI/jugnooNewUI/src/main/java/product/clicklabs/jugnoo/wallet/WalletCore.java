@@ -258,20 +258,26 @@ public class WalletCore {
                         }).show(activity.getResources().getString(R.string.freecharge_no_cash), false, null);
                     }
                 }
-            } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()) {
+            } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal() || paymentOption==PaymentOption.ACCEPT_CARD.getOrdinal()) {
 
 
-                PaymentModeConfigData stripeConfigData = getStripeConfigData();
-                if (stripeConfigData == null) {
+                PaymentModeConfigData configData;
+                if(paymentOption==PaymentOption.STRIPE_CARDS.getOrdinal()){
+                    configData = getStripeConfigData();
+                }else{
+                   configData = getAcceptCardConfigData();
+                }
+
+                if (configData == null) {
                     return false;
                 }
 
 
-                if (stripeConfigData.getCardsData() == null || stripeConfigData.getCardsData().size() == 0) {
+                if (configData.getCardsData() == null || configData.getCardsData().size() == 0) {
                     new WalletSelectionErrorDialog(activity, new WalletSelectionErrorDialog.Callback() {
                         @Override
                         public void onPositiveClick() {
-                            stripeAddCardIntent(activity);
+                            addCardIntent(activity,paymentOption);
                         }
 
                         @Override
@@ -291,10 +297,10 @@ public class WalletCore {
         return callRequestRide;
     }
 
-    public void stripeAddCardIntent(Activity activity) {
+    public void addCardIntent(Activity activity, int paymentOption) {
         Intent intent = new Intent(activity, PaymentActivity.class);
         intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
-        intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.STRIPE_CARDS.getOrdinal());
+        intent.putExtra(Constants.KEY_WALLET_TYPE,paymentOption);
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
@@ -391,7 +397,7 @@ public class WalletCore {
             return R.drawable.ic_cards_grey;
         } else if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
             return R.drawable.ic_mpesa_small;
-        } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()) {
+        } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption == PaymentOption.ACCEPT_CARD.getOrdinal()) {
             return R.drawable.ic_card_default;
         } else {
             return R.drawable.ic_cash_small;
@@ -423,8 +429,8 @@ public class WalletCore {
                         Data.userData.getFreeChargeBalanceStr());
             } else if (paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()) {
                 return getRazorpayName(context);
-            } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()) {
-                return getStripeCardName(context);
+            } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption==PaymentOption.ACCEPT_CARD.getOrdinal()) {
+                return getStripeCardName(context,paymentOption);
             } else if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
                 return getMPesaName(context);
             } else {
@@ -447,10 +453,10 @@ public class WalletCore {
         return name;
     }
 
-    public String getStripeCardName(Context context) {
+    public String getStripeCardName(Context context,int paymentOption) {
         String name = context.getString(R.string.card);
         for (PaymentModeConfigData configData : getPaymentModeConfigDatas()) {
-            if (configData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
+            if (configData.getPaymentOption() == paymentOption) {
                 if (!TextUtils.isEmpty(configData.getDisplayName())) {
                     name = configData.getDisplayName();
 
@@ -484,8 +490,8 @@ public class WalletCore {
                 return context.getResources().getString(R.string.freecharge);
             } else if (paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()) {
                 return getPaymentOptionBalanceText(paymentOption);
-            } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()) {
-                return getStripeCardName(context);
+            } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption==PaymentOption.ACCEPT_CARD.getOrdinal()) {
+                return getStripeCardName(context,paymentOption);
             } else if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
                 return context.getString(R.string.mpesa);
             } else {
@@ -637,6 +643,10 @@ public class WalletCore {
                 }
                 paymentModeConfigDatas.add(paymentModeConfigData);
             }
+       /*     paymentModeConfigDatas.add(new PaymentModeConfigData("accept_card",
+                    1, " ", "Accept Card",
+                    " ", null,
+                    "", null));*/
             if(cashPosition > -1 && Prefs.with(context).getInt(Constants.KEY_CASH_ABOVE_ALL_WALLETS, 0) == 1){
                 paymentModeConfigDatas.add(0, paymentModeConfigDatas.remove(cashPosition));
             }
@@ -747,7 +757,8 @@ public class WalletCore {
                             ) {
                         paymentModeConfigDataDefault = paymentModeConfigData;
                         break;
-                    } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
+                    } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()
+                            || paymentModeConfigData.getPaymentOption() == PaymentOption.ACCEPT_CARD.getOrdinal()) {
                         //&& paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0
                         paymentModeConfigDataDefault = paymentModeConfigData;
                         break;
@@ -834,6 +845,8 @@ public class WalletCore {
             return PaymentOption.MPESA;
         } else if (PaymentOption.STRIPE_CARDS.getOrdinal() == paymentOption) {
             return PaymentOption.STRIPE_CARDS;
+        }  if (PaymentOption.ACCEPT_CARD.getOrdinal() == paymentOption) {
+            return PaymentOption.ACCEPT_CARD;
         } else {
             return PaymentOption.CASH;
         }
@@ -1002,24 +1015,29 @@ public class WalletCore {
                             .openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.JUGNOO_PAY.getOrdinal());
                     callbackPaymentOptionSelector.onWalletAdd(PaymentOption.JUGNOO_PAY);
                 }
-            } else if (paymentOption == PaymentOption.STRIPE_CARDS) {
+            } else if (paymentOption == PaymentOption.STRIPE_CARDS || paymentOption == PaymentOption.ACCEPT_CARD) {
 
 
-                PaymentModeConfigData stripeConfigData = getStripeConfigData();
-                if (stripeConfigData == null) return;
+                PaymentModeConfigData configData ;
+                if(paymentOption==PaymentOption.STRIPE_CARDS){
+                    configData = getStripeConfigData();
+                }else{
+                    configData = getAcceptCardConfigData();
+                }
+                if (configData == null) return;
 
 
-                if (stripeConfigData.getCardsData() == null || stripeConfigData.getCardsData().size() == 0) {
+                if (configData.getCardsData() == null || configData.getCardsData().size() == 0) {
                     try {
-                        stripeAddCardIntent(activity);
-                        callbackPaymentOptionSelector.onWalletAdd(PaymentOption.STRIPE_CARDS);
+                        addCardIntent(activity,paymentOption.getOrdinal());
+                        callbackPaymentOptionSelector.onWalletAdd(paymentOption);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     return;
                 }
 
-                callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.STRIPE_CARDS);
+                callbackPaymentOptionSelector.onPaymentOptionSelected(paymentOption);
 
 
             } else {
@@ -1049,6 +1067,22 @@ public class WalletCore {
 
     }
 
+    /**
+     * @param stripeCardData Card Data object to add
+     * @return Adds a card to stripe Config data and returns the stripe config data
+     */
+    public PaymentModeConfigData updateAcceptCards(ArrayList<StripeCardData> stripeCardData) {
+        if (paymentModeConfigDatas == null) return null;
+        PaymentModeConfigData configData = getAcceptCardConfigData();
+        if (configData == null) return null;
+
+        configData.setCardsData(stripeCardData);
+
+        return configData;
+
+
+    }
+
     @Nullable
     public PaymentModeConfigData getStripeConfigData() {
         PaymentModeConfigData stripeConfigData = null;
@@ -1059,6 +1093,19 @@ public class WalletCore {
             }
         }
         return stripeConfigData;
+    }
+
+
+    @Nullable
+    public PaymentModeConfigData getAcceptCardConfigData() {
+        PaymentModeConfigData configData = null;
+        for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
+            if (paymentModeConfigData.getPaymentOption() == PaymentOption.ACCEPT_CARD.getOrdinal()) {
+
+                configData = paymentModeConfigData;
+            }
+        }
+        return configData;
     }
 
 
