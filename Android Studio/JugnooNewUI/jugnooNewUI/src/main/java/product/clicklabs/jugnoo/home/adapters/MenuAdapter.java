@@ -632,7 +632,9 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 activity.startActivity(new Intent(activity, SupportMailActivity.class));
             }
             else if(MenuInfoTags.FARE_DETAILS.getTag().equalsIgnoreCase(tag)){
-                activity.startActivity(new Intent(activity, FareDetailsActivity.class));
+                activity.startActivity(new Intent(activity, FareDetailsActivity.class)
+                        .putExtra(Constants.KEY_LATITUDE, latLng.latitude)
+                        .putExtra(Constants.KEY_LONGITUDE, latLng.longitude));
             }
             else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
                 openOffering(Config.getFreshClientId(), activity,latLng);

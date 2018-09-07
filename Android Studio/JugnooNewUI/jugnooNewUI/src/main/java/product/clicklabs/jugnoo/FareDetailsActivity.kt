@@ -4,14 +4,18 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
+import com.sabkuchfresh.feed.ui.api.APICommonCallback
+import com.sabkuchfresh.feed.ui.api.ApiCommon
+import com.sabkuchfresh.feed.ui.api.ApiName
 import kotlinx.android.synthetic.main.activity_fare_details.*
 import kotlinx.android.synthetic.main.layout_appbar.*
-import product.clicklabs.jugnoo.R.id.rvFareDetails
 import product.clicklabs.jugnoo.adapters.FareDetailsAdapter
 import product.clicklabs.jugnoo.adapters.FareExtra
 import product.clicklabs.jugnoo.adapters.FareItem
 import product.clicklabs.jugnoo.adapters.FareVehicle
+import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse
 import product.clicklabs.jugnoo.utils.Utils
+import retrofit.RetrofitError
 
 class FareDetailsActivity : BaseAppCompatActivity(){
 
@@ -29,19 +33,10 @@ class FareDetailsActivity : BaseAppCompatActivity(){
 
         rvFareDetails.layoutManager = LinearLayoutManager(this)
 
-        val details: ArrayList<Any> = ArrayList()
-        Data.autoData.regions.forEach {
-            details.add(FareVehicle(it.regionName+"("+it.maxPeople+")"))
-            details.add(FareItem(getString(R.string.base_fare)+":", it.fareStructure.getDisplayBaseFare(this).trim()))
-            details.add(FareItem(getString(R.string.nl_per_min)+":", Utils.formatCurrencyValue(Data.autoData.fareStructure.currency, it.fareStructure.farePerMin)))
-            details.add(FareItem(getString(R.string.per_format, Utils.getDistanceUnit(Data.autoData.fareStructure.distanceUnit))+":",
-                    Utils.formatCurrencyValue(Data.autoData.fareStructure.currency, it.fareStructure.farePerKm)))
-            details.add(FareExtra(Data.autoData.fareStructure.getDisplayFareText(this)))
-        }
 
-        val adapter = FareDetailsAdapter(details)
-        rvFareDetails.adapter = adapter
-
+        val latitude = intent.getDoubleExtra(Constants.KEY_LATITUDE, Data.latitude)
+        val longitude = intent.getDoubleExtra(Constants.KEY_LONGITUDE, Data.longitude)
+        apiFareDetails(latitude, longitude)
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -54,6 +49,49 @@ class FareDetailsActivity : BaseAppCompatActivity(){
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun apiFareDetails(latitude:Double, longitude:Double){
+        val params :HashMap<String, String> = HashMap()
+        params[Constants.KEY_LATITUDE] = latitude.toString()
+        params[Constants.KEY_LONGITUDE] = longitude.toString()
+        ApiCommon<FareDetailsResponse>(this).execute(params, ApiName.FARE_DETAILS, object : APICommonCallback<FareDetailsResponse>(){
+            override fun onSuccess(t: FareDetailsResponse?, message: String?, flag: Int) {
+                val details: ArrayList<Any> = ArrayList()
+                t?.regions?.forEach {
+                    details.add(FareVehicle(it.regionName+"("+it.maxPeople+")"))
+                    details.add(FareItem(getString(R.string.base_fare)+":", it.fare.displayBaseFare.trim()))
+                    details.add(FareItem(getString(R.string.nl_per_min)+":", Utils.formatCurrencyValue(t.currency, it.fare.farePerMin)))
+                    details.add(FareItem(getString(R.string.per_format, Utils.getDistanceUnit(t.distanceUnit))+":",
+                            Utils.formatCurrencyValue(t.currency, it.fare.farePerKm)))
+                    details.add(FareExtra(it.fare.displayFareText))
+                }
+
+                val adapter = FareDetailsAdapter(details)
+                rvFareDetails.adapter = adapter
+            }
+
+            override fun onError(t: FareDetailsResponse?, message: String?, flag: Int): Boolean {
+                return false
+            }
+
+            override fun onFailure(error: RetrofitError?): Boolean {
+                val details: ArrayList<Any> = ArrayList()
+                Data.autoData.regions.forEach {
+                    details.add(FareVehicle(it.regionName+"("+it.maxPeople+")"))
+                    details.add(FareItem(getString(R.string.base_fare)+":", it.fareStructure.getDisplayBaseFare(this@FareDetailsActivity).trim()))
+                    details.add(FareItem(getString(R.string.nl_per_min)+":", Utils.formatCurrencyValue(it.fareStructure.currency, it.fareStructure.farePerMin)))
+                    details.add(FareItem(getString(R.string.per_format, Utils.getDistanceUnit(it.fareStructure.distanceUnit))+":",
+                            Utils.formatCurrencyValue(it.fareStructure.currency, it.fareStructure.farePerKm)))
+                    details.add(FareExtra(it.fareStructure.getDisplayFareText(this@FareDetailsActivity)))
+                }
+                val adapter = FareDetailsAdapter(details)
+                rvFareDetails.adapter = adapter
+
+                return false
+            }
+
+        })
     }
 
 }
