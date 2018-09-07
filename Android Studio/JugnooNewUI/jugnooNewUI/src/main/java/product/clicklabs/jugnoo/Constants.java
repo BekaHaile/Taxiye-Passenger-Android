@@ -938,6 +938,7 @@ public interface Constants {
     String KEY_SHOW_JUGNOO_CASH_IN_WALLET = "show_jugnoo_cash_in_wallet";
     String KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON = "show_fare_estimate_hover_button";
     String KEY_CASH_ABOVE_ALL_WALLETS = "cash_above_all_wallets";
+    String KEY_FORCE_MPESA_PAYMENT= "force_mpesa_payment";
 
     String KEY_LUGGAGE_CHARGES = "luggage_charges";
     String KEY_PAY_VIA_STRIPE = "pay_via_stripe";

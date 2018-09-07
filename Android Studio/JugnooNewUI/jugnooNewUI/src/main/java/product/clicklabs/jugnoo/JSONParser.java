@@ -125,7 +125,8 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
                 userData.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
         Prefs.with(context).save(SP_OTP_VIA_CALL_ENABLED,
-                userData.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
+                userData.optInt(KEY_OTP_VIA_CALL_ENABLED,
+                        Prefs.with(context).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 0)));
 		int promoSuccess = userData.optInt(KEY_PROMO_SUCCESS, 1);
         String promoMessage = userData.optString(KEY_PROMO_MESSAGE,
                 context.getResources().getString(R.string.promocode_invalid_message_on_signup));
@@ -416,6 +417,7 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON, autoData.optInt(KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON, fareEstimateHover));
         int cashAboveAll = context.getResources().getInteger(R.integer.cash_above_all);
         Prefs.with(context).save(KEY_CASH_ABOVE_ALL_WALLETS, autoData.optInt(KEY_CASH_ABOVE_ALL_WALLETS, cashAboveAll));
+        Prefs.with(context).save(KEY_FORCE_MPESA_PAYMENT, autoData.optInt(KEY_FORCE_MPESA_PAYMENT, context.getResources().getBoolean(R.bool.force_mpesa_payment) ? 1 : 0));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

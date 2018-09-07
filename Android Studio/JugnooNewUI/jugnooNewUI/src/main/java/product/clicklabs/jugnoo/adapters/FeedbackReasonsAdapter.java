@@ -6,14 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 
@@ -75,8 +73,6 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
 
             holder.textViewFeedbackReason.setTag(holder);
 
-            holder.relative.setLayoutParams(new ListView.LayoutParams(300, 90));
-            ASSL.DoMagic(holder.relative);
 
             convertView.setTag(holder);
         } else {
@@ -90,13 +86,9 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
         holder.textViewFeedbackReason.setText(feedbackReason.name);
 
         if (feedbackReason.checked) {
-            //holder.relative.setBackgroundColor(Color.WHITE);
-            //holder.imageViewFeedbackReasonCheck.setImageResource(R.drawable.check_box_checked);
-            holder.textViewFeedbackReason.setBackgroundResource(R.drawable.capsule_cart_color);
+            holder.textViewFeedbackReason.setBackgroundResource(R.drawable.capsule_green_color_selector);
             holder.textViewFeedbackReason.setTextColor(context.getResources().getColor(R.color.white));
         } else {
-            //holder.relative.setBackgroundColor(Color.TRANSPARENT);
-            //holder.imageViewFeedbackReasonCheck.setImageResource(R.drawable.check_box_unchecked);
             holder.textViewFeedbackReason.setBackgroundResource(R.drawable.capsule_white_stroke);
             holder.textViewFeedbackReason.setTextColor(context.getResources().getColor(R.color.text_color));
         }

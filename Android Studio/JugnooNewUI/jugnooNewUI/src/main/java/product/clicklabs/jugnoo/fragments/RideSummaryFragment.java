@@ -71,7 +71,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
     ScrollView scrollViewEndRide;
 
     ImageView imageViewEndRideAutoIcon, imageViewEndRideDriverIcon;
-    TextView textViewEndRideDriverName, textViewEndRideDriverCarNumber;
+    TextView textViewEndRideSummary, textViewEndRideDriverName, textViewEndRideDriverCarNumber;
     RelativeLayout relativeLayoutTollCharge, relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
             relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm,
             relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay,rlPaidUsingStripeCard,relativeLayoutPaidUsingMpesa, rlToBePaid;
@@ -276,7 +276,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
             ((TextView) rootView.findViewById(R.id.textViewEndRideStartLocation)).setTypeface(Fonts.mavenRegular(activity));
             ((TextView) rootView.findViewById(R.id.textViewEndRideEndLocation)).setTypeface(Fonts.mavenRegular(activity));
-            ((TextView) rootView.findViewById(R.id.textViewEndRideSummary)).setTypeface(Fonts.mavenMedium(activity));
+            textViewEndRideSummary = rootView.findViewById(R.id.textViewEndRideSummary);
+            textViewEndRideSummary.setTypeface(Fonts.mavenMedium(activity));
 
             ((TextView) rootView.findViewById(R.id.textViewEndRideFare)).setTypeface(Fonts.mavenLight(activity));
             ((TextView)rootView.findViewById(R.id.textViewEndRideDriverTip)).setTypeface(Fonts.mavenLight(activity));
@@ -391,6 +392,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 int fallbackResourceId = endRideData.getVehicleIconSet().getIconInvoice();
                 HomeUtil.setVehicleIcon(activity, imageViewEndRideAutoIcon, endRideData.getIconUrl(), fallbackResourceId, true, null);
 
+                textViewEndRideSummary.setText(getString(R.string.ride_summary)+" #"+endRideData.engagementId);
                 textViewEndRideDriverName.setText(endRideData.driverName);
                 textViewEndRideDriverCarNumber.setText(endRideData.driverCarNumber);
 

@@ -1577,11 +1577,14 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		llContainer.setVisibility(View.GONE);
 		rlSplashLogo.setVisibility(View.GONE);
 		relativeLayoutLS.setVisibility(View.GONE);
+		linearLayoutLogin.setVisibility(View.GONE);
+		relativeLayoutSignup.setVisibility(View.GONE);
 		rlLoginSignupNew.clearAnimation();
 		rlLoginSignupNew.setVisibility(View.GONE);
 		llSignupOnboarding.setVisibility(View.GONE);
 		rlPhoneLogin.setVisibility(View.GONE);
 		rlSignupOnboarding.setVisibility(View.GONE);
+		rlClaimGift.setVisibility(View.GONE);
 
 		int duration = 500;
 		switch (state) {
@@ -2375,6 +2378,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_CODE));
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE));
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_COUNTRY_ISO, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_ISO));
+						Prefs.with(SplashNewActivity.this).save(SP_OTP_VIA_CALL_ENABLED, jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 
 
 						JSONParser.parseAndSetLocale(SplashNewActivity.this, jObj);
@@ -2962,8 +2966,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								accessToken = jObj.getString("access_token");
 								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
 										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.EMAIL;
 								sendToOtpScreen = true;
@@ -2971,8 +2973,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								loginDataFetched = true;
 								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
 										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									signUpBy = "email";
 									Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER, jObj.optString("knowlarity_missed_call_number", ""));
@@ -3106,8 +3106,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								accessToken = jObj.getString("access_token");
 								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
 										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.EMAIL;
 								sendToOtpScreen = true;
@@ -3245,8 +3243,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								SplashNewActivity.this.accessToken = jObj.optString("access_token");
 								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
 										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
 								//sendToOtpScreen = true;
@@ -3359,8 +3355,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								SplashNewActivity.this.accessToken = jObj.optString("access_token");
 								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
 										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-								Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-										jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 								otpErrorMsg = jObj.getString("error");
 								SplashNewActivity.registerationType = RegisterationType.GOOGLE;
 								//sendToOtpScreen = true;
@@ -4058,8 +4052,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
         SplashNewActivity.this.accessToken = jObj.getString("access_token");
         Prefs.with(this).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
                 jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-        Prefs.with(this).save(SP_OTP_VIA_CALL_ENABLED,
-                jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
         sendToOtpScreen = true;
         linkedWalletErrorMsg = jObj.optString(KEY_MESSAGE, "");
 		Prefs.with(this).save(SP_WALLET_AT_SIGNUP, String.valueOf(linkedWallet));
