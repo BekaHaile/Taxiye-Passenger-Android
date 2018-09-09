@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.list_item_fare_detail_extra.view.*
 import kotlinx.android.synthetic.main.list_item_fare_detail_item.view.*
 import kotlinx.android.synthetic.main.list_item_fare_detail_vehicle.view.*
 import product.clicklabs.jugnoo.R
+import product.clicklabs.jugnoo.utils.Utils
 
 class FareDetailsAdapter(val details: ArrayList<Any>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -59,7 +60,7 @@ class FareDetailsAdapter(val details: ArrayList<Any>) : RecyclerView.Adapter<Rec
     }
     inner class ViewHolderFareExtra(view : View) : RecyclerView.ViewHolder(view){
         fun bind(extraDetails : String){
-            itemView.tvExtra.text = extraDetails
+            itemView.tvExtra.text = Utils.trimHTML(Utils.fromHtml(extraDetails))
         }
     }
 
