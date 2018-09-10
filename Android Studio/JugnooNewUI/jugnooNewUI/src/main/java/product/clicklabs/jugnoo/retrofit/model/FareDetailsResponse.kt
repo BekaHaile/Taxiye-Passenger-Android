@@ -14,7 +14,8 @@ class FareDetailsResponse (
 class Fare(
         @SerializedName("fare_fixed") @Expose var fareFixed: Double,
         @SerializedName("fare_per_km") @Expose var farePerKm: Double,
-        @SerializedName("fare_per_min") @Expose var farePerMin: Double
+        @SerializedName("fare_per_min") @Expose var farePerMin: Double,
+        @SerializedName("fare_per_waiting_min") @Expose var farePerWaitingMin: Double
 )
 
 class Region(

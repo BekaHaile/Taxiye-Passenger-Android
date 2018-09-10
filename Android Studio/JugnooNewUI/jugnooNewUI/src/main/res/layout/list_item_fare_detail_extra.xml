@@ -24,5 +24,6 @@
         android:paddingTop="7dp"
         android:text="@string/hello"
         android:textSize="14sp"
+        android:lineSpacingExtra="1dp"
         />
 </LinearLayout>
