@@ -279,6 +279,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case FETCH_ACTIVE_LOCALES:
                 RestClient.getApiService().fetchActiveLocales(params, callback);
                 break;
+            case FARE_DETAILS:
+                RestClient.getApiService().fareDetails(params, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

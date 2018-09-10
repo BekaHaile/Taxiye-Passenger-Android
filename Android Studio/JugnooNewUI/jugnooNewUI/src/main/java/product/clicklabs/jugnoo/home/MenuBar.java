@@ -214,6 +214,7 @@ public class MenuBar {
 				itemsToShow.add(menuInfo);
 			}
 		}
+
 		return itemsToShow;
 	}
 

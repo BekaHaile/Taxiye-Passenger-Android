@@ -30,7 +30,8 @@ public enum MenuInfoTags {
     DELIVERY_CUSTOMER("delivery_customer"),
     EMAIL_SUPPORT("email_support"),
     CHANGE_LOCALE("change_locale"),
-    CALL_SUPPORT("call_support")
+    CALL_SUPPORT("call_support"),
+    FARE_DETAILS("fare_details"),
     ;
 
     private String tag;
