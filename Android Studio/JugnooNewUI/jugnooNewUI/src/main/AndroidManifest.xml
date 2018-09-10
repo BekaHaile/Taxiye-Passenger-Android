@@ -483,6 +483,11 @@
             android:name=".tutorials.NewUserFlow"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".FareDetailsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseAppCompatTheme"
+            />
         <!-- <activity -->
         <!-- android:name="com.sabkuchfresh.home.TrackOrderActivity" -->
         <!-- android:label="@string/app_name" -->

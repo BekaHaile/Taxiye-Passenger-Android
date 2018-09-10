@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.stripe;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 
 /**
@@ -9,6 +10,6 @@ import product.clicklabs.jugnoo.stripe.model.StripeCardData;
  */
 public interface StripeCardsStateListener {
 
-    void onCardsUpdated(ArrayList<StripeCardData> stripeCardData,String message,boolean cardAdded);
+    void onCardsUpdated(ArrayList<StripeCardData> stripeCardData, String message, boolean cardAdded, PaymentOption paymentOption);
 
 }

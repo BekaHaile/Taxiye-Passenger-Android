@@ -83,9 +83,10 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
 		}
 		else if(PaymentActivityPath.ADD_WALLET.getOrdinal() == paymentActivityPathInt){
 			int walletType = getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.PAYTM.getOrdinal());
-			if(walletType==PaymentOption.STRIPE_CARDS.getOrdinal()){
+			if(walletType==PaymentOption.STRIPE_CARDS.getOrdinal() || walletType ==PaymentOption.ACCEPT_CARD.getOrdinal()){
+				PaymentOption paymentOption = walletType==PaymentOption.STRIPE_CARDS.getOrdinal()?PaymentOption.STRIPE_CARDS:PaymentOption.ACCEPT_CARD;
 				getSupportFragmentManager().beginTransaction()
-						.add(R.id.fragLayout,new StripeAddCardFragment(), StripeAddCardFragment.class.getName())
+						.add(R.id.fragLayout,StripeAddCardFragment.newInstance(paymentOption), StripeAddCardFragment.class.getName())
 						.addToBackStack(StripeAddCardFragment.class.getName())
 						.commitAllowingStateLoss();
 			}else{
@@ -268,16 +269,23 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
 	}
 
 	@Override
-	public void onCardsUpdated(ArrayList<StripeCardData> stripeCardData, String message, final boolean cardAdded) {
-		PaymentModeConfigData stripeConfigData = MyApplication.getInstance().getWalletCore().updateStripeCards(stripeCardData);
+	public void onCardsUpdated(ArrayList<StripeCardData> stripeCardData, String message, final boolean cardAdded,PaymentOption paymentOption) {
+
+		PaymentModeConfigData configData;
+		if(paymentOption.getOrdinal()==PaymentOption.STRIPE_CARDS.getOrdinal()){
+			configData = MyApplication.getInstance().getWalletCore().updateStripeCards(stripeCardData);
+		}else{
+			configData = MyApplication.getInstance().getWalletCore().updateAcceptCards(stripeCardData);
+		}
+
 		if (getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName()) != null) {
 
 			WalletFragment walletFragment = ((WalletFragment) getSupportFragmentManager().findFragmentByTag(WalletFragment.class.getName()));
-			walletFragment.setStripePaymentUI(stripeConfigData);
+			walletFragment.setCardsPaymentUI(configData);
 
 		}
 		if (!cardAdded) {
-			if (Data.autoData != null && (Data.autoData.getPickupPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal())) {
+			if (Data.autoData != null && (Data.autoData.getPickupPaymentOption() == configData.getPaymentOption())) {
 				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
 			}
 		}
