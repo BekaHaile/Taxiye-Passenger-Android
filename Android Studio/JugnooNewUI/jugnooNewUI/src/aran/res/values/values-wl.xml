@@ -23,7 +23,7 @@
 
     <string name="app_name">Aran</string>
 
-    <string name="google_maps_api_key">AIzaSyDhfbfQRTH6VDb_d39vv6xp5Gia9fcgs5Y</string>
+    <string name="google_maps_api_key">AIzaSyA0Z8ieM6iRzL7eTcnIpCyKkIutVeC9oFY</string>
     <string name="google_server_client_id">826904983990-phdpcf1msfkrd1pnd1te8cmh92fvrdvt.apps.googleusercontent.com</string>
     <string name="fb_app_id">1046936098813937</string>
     <string name="fb_login_protocol_scheme">fb1046936098813937</string>
@@ -32,7 +32,7 @@
     <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
 
 
-    <string name="operator_token">ce38d322692b5662dd1b978eaf0680f0</string>
+    <string name="operator_token">cabbde6be8fbb222f05c9da9d5d26cce</string>
     <string name="support_number">+2549023121121</string>
     <string name="police_number">999</string>
     <string name="facebook_page_id">205679188</string>
