@@ -509,7 +509,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private GoogleApiClient mGoogleApiClient;
     private float previousZoomLevel = -1.0f;
     private TransactionUtils transactionUtils;
-    private RelativeLayout relativeLayoutContainer;
+    public RelativeLayout relativeLayoutContainer;
     private FrameLayout coordinatorLayout;
     private FuguNotificationConfig fuguNotificationConfig = new FuguNotificationConfig();
     ;

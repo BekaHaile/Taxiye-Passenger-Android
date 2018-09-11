@@ -34,9 +34,9 @@ public class TopBar implements  GACategory, GAAction {
     public ImageView imageViewMenu, imageViewSearchIcon;
     public TextView textViewTitle;
     public Button buttonCheckServer;
-    public ImageView imageViewHelp;
+    public ImageView imageViewHelp,imageViewScheduleRide;
     public ImageView imageViewBack, imageViewDelete;
-    public TextView textViewAdd;
+    public TextView textViewAdd,tvScheduleRidePopup;
 
     public TopBar(Activity activity, DrawerLayout drawerLayout) {
         this.activity = activity;
@@ -56,12 +56,15 @@ public class TopBar implements  GACategory, GAAction {
 //        textViewTitle.getPaint().setShader(FeedUtils.textColorGradient(activity, textViewTitle));
         buttonCheckServer = (Button) drawerLayout.findViewById(R.id.buttonCheckServer);
         imageViewHelp = (ImageView) drawerLayout.findViewById(R.id.imageViewHelp);
+        imageViewScheduleRide = (ImageView) drawerLayout.findViewById(R.id.imageViewScheduleRide);
 
         imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
         imageViewBack.setVisibility(View.GONE);
         imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
         textViewAdd = (TextView) drawerLayout.findViewById(R.id.textViewAdd);
         textViewAdd.setTypeface(Fonts.mavenRegular(activity));
+        tvScheduleRidePopup = (TextView) drawerLayout.findViewById(R.id.tvScheduleRidePopup);
+        tvScheduleRidePopup.setTypeface(Fonts.mavenRegular(activity));
 
 
         //Top bar events
@@ -69,6 +72,7 @@ public class TopBar implements  GACategory, GAAction {
         relativeLayoutNotification.setOnClickListener(topBarOnClickListener);
         imageViewMenu.setOnClickListener(topBarOnClickListener);
         buttonCheckServer.setOnClickListener(topBarOnClickListener);
+        imageViewScheduleRide.setOnClickListener(topBarOnClickListener);
 
         buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -79,6 +83,7 @@ public class TopBar implements  GACategory, GAAction {
         });
 
         imageViewSearchIcon.setOnClickListener(topBarOnClickListener);
+        imageViewHelp.setOnClickListener(topBarOnClickListener);
         imageViewHelp.setOnClickListener(topBarOnClickListener);
         imageViewBack.setOnClickListener(topBarOnClickListener);
         imageViewDelete.setOnClickListener(topBarOnClickListener);
@@ -109,6 +114,10 @@ public class TopBar implements  GACategory, GAAction {
                     break;
 
                 case R.id.buttonCheckServer:
+                    break;
+                case R.id.imageViewScheduleRide:
+                    ((HomeActivity)activity).relativeLayoutContainer.setVisibility(View.VISIBLE);
+                    ((HomeActivity)activity).getTransactionUtils().openScheduleRideFragment(((HomeActivity)activity), ((HomeActivity)activity).relativeLayoutContainer);
                     break;
 
                 case R.id.imageViewHelp:
@@ -161,14 +170,22 @@ public class TopBar implements  GACategory, GAAction {
                 || HomeActivity.passengerScreenMode == PassengerScreenMode.P_SEARCH
                 || HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
             imageViewHelp.setVisibility(View.GONE);
+            if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+                imageViewScheduleRide.setVisibility(View.VISIBLE);
+                tvScheduleRidePopup.setVisibility(View.VISIBLE);
+            }
         } else {
             imageViewHelp.setVisibility(View.VISIBLE);
+            imageViewScheduleRide.setVisibility(View.GONE);
+            tvScheduleRidePopup.setVisibility(View.GONE);
         }
         imageViewBack.setVisibility(View.GONE);
         textViewTitle.setText(activity.getResources().getString(R.string.rides));
         if (!defaultState) {
             imageViewMenu.setVisibility(View.GONE);
             imageViewHelp.setVisibility(View.GONE);
+            imageViewScheduleRide.setVisibility(View.VISIBLE);
+            tvScheduleRidePopup.setVisibility(View.VISIBLE);
             imageViewBack.setVisibility(View.VISIBLE);
             textViewTitle.setText(title);
         }

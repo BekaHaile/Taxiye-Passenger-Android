@@ -1952,4 +1952,9 @@
     <string name="tip">Tip</string>
     <string name="label_show_fare_estimate">Fare Estimate</string>
     <string name="per_wait_min">Per Wait Min</string>
+
+    <!-- Schedule Rides -->
+    <string name="select_a_pickup_date_and_time">Select a pickup date and time</string>
+    <string name="select">Select</string>
+    <string name="schedule">Schedule</string>
 </resources>

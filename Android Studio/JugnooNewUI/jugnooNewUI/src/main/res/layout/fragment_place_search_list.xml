@@ -128,7 +128,6 @@
                 android:hint="@string/set_pickup_location"
                 android:paddingEnd="20px"
                 android:singleLine="true"
-
                 android:textColor="@color/text_color"
                 android:textColorHint="@color/text_color_hint"
                 android:textCursorDrawable="@drawable/cursor_black"
