@@ -5644,7 +5644,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         for (int i = 0; i < Data.autoData.getDriverInfos().size(); i++) {
                             DriverInfo driver = Data.autoData.getDriverInfos().get(i);
                             if (driver.getOperatorId() == region.getOperatorId()
-                                    && region.getVehicleType().equals(driver.getVehicleType())
                                     && driver.getRegionIds().contains(region.getRegionId())
                                     && (driver.getPaymentMethod() == DriverInfo.PaymentMethod.BOTH.getOrdinal() || driver.getPaymentMethod() == 0
                                     || Data.autoData.getPickupPaymentOption() == PaymentOption.CASH.getOrdinal())
@@ -6941,7 +6940,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         int driversCount = 0;
         for (DriverInfo driverInfo : Data.autoData.getDriverInfos()) {
             if (driverInfo.getOperatorId() == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId()
-                    && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
                     && driverInfo.getRegionIds() != null
                     && driverInfo.getRegionIds().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
                     && (driverInfo.getPaymentMethod() == DriverInfo.PaymentMethod.BOTH.getOrdinal() || driverInfo.getPaymentMethod() == 0
