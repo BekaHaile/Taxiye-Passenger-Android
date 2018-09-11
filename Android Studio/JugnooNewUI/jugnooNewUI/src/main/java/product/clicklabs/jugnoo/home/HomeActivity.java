@@ -5734,7 +5734,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             DriverInfo firstDriverInfo = null;
             for (DriverInfo driverInfo : Data.autoData.getDriverInfos()) {
                 if (driverInfo.getOperatorId() == region.getOperatorId()
-                        && driverInfo.getVehicleType() == region.getVehicleType()
                         && driverInfo.getRegionIds().contains(region.getRegionId())
                         ) {
                     firstDriverInfo = driverInfo;
