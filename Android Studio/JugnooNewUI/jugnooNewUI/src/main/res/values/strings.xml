@@ -1957,4 +1957,5 @@
     <string name="select_a_pickup_date_and_time">Select a pickup date and time</string>
     <string name="select">Select</string>
     <string name="schedule">Schedule</string>
+    <string name="schedule_a_ride">SCHEDULE A RIDE</string>
 </resources>

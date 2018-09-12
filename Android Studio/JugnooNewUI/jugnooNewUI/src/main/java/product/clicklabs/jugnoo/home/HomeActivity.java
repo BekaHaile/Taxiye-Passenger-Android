@@ -509,7 +509,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private GoogleApiClient mGoogleApiClient;
     private float previousZoomLevel = -1.0f;
     private TransactionUtils transactionUtils;
-    public RelativeLayout relativeLayoutContainer;
+    public RelativeLayout relativeLayoutContainer,scheduleRideContainer;
     private FrameLayout coordinatorLayout;
     private FuguNotificationConfig fuguNotificationConfig = new FuguNotificationConfig();
     ;
@@ -848,6 +848,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         relativeLayoutFinalDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutFinalDropLocationParent);
         relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
+        scheduleRideContainer = (RelativeLayout) findViewById(R.id.scheduleRideContainer);
 
 
         textViewIRPaymentOptionValue = (TextView) findViewById(R.id.textViewIRPaymentOptionValue);
@@ -1275,10 +1276,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                         textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
                     } else {
-                        placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
-                        setServiceAvailablityUI("");
-                        passengerScreenMode = PassengerScreenMode.P_SEARCH;
-                        switchPassengerScreen(passengerScreenMode);
+                        onClickOfPickupElse();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1297,10 +1295,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
                         translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
                     } else {
-                        placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
-                        setServiceAvailablityUI("");
-                        passengerScreenMode = PassengerScreenMode.P_SEARCH;
-                        switchPassengerScreen(passengerScreenMode);
+                       onClickOfDestinationElse();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1982,6 +1977,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public RelativeLayout getRelativeLayoutContainer() {
         return relativeLayoutContainer;
+    }
+    public RelativeLayout getScheduleRideContainer() {
+        return scheduleRideContainer;
     }
 
     @Override
@@ -10492,4 +10490,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             return Data.autoData != null && Data.autoData.isRazorpayEnabled();
         }
     };
+    public void onClickOfPickupElse(){
+        placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
+        setServiceAvailablityUI("");
+        passengerScreenMode = PassengerScreenMode.P_SEARCH;
+        switchPassengerScreen(passengerScreenMode);
+    } public void onClickOfDestinationElse(){
+        placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
+        setServiceAvailablityUI("");
+        passengerScreenMode = PassengerScreenMode.P_SEARCH;
+        switchPassengerScreen(passengerScreenMode);
+    }
 }

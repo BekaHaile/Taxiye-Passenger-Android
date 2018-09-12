@@ -23,7 +23,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by shankar on 4/8/16.
  */
-public class TopBar implements  GACategory, GAAction {
+public class TopBar implements GACategory, GAAction {
 
 
     Activity activity;
@@ -34,9 +34,9 @@ public class TopBar implements  GACategory, GAAction {
     public ImageView imageViewMenu, imageViewSearchIcon;
     public TextView textViewTitle;
     public Button buttonCheckServer;
-    public ImageView imageViewHelp,imageViewScheduleRide;
+    public ImageView imageViewHelp, imageViewScheduleRide;
     public ImageView imageViewBack, imageViewDelete;
-    public TextView textViewAdd,tvScheduleRidePopup;
+    public TextView textViewAdd, tvScheduleRidePopup;
 
     public TopBar(Activity activity, DrawerLayout drawerLayout) {
         this.activity = activity;
@@ -109,28 +109,33 @@ public class TopBar implements  GACategory, GAAction {
                 case R.id.imageViewMenu:
                     //activity.startActivity(new Intent(activity, FreshActivity.class));
                     drawerLayout.openDrawer(GravityCompat.START);
-                    GAUtils.event(JUGNOO, RIDES+HOME, LEFT_MENU_ICON+CLICKED);
+                    GAUtils.event(JUGNOO, RIDES + HOME, LEFT_MENU_ICON + CLICKED);
 
                     break;
 
                 case R.id.buttonCheckServer:
                     break;
                 case R.id.imageViewScheduleRide:
-                    ((HomeActivity)activity).relativeLayoutContainer.setVisibility(View.VISIBLE);
-                    ((HomeActivity)activity).getTransactionUtils().openScheduleRideFragment(((HomeActivity)activity), ((HomeActivity)activity).relativeLayoutContainer);
+                    ((HomeActivity) activity).relativeLayoutSearch.setVisibility(View.VISIBLE);
+                    ((HomeActivity) activity).getTransactionUtils().openScheduleRideFragment(((HomeActivity) activity), ((HomeActivity) activity).relativeLayoutSearch);
+                    imageViewBack.setVisibility(View.VISIBLE);
+                    imageViewMenu.setVisibility(View.GONE);
+                    imageViewScheduleRide.setVisibility(View.GONE);
+                    tvScheduleRidePopup.setVisibility(View.GONE);
+                    textViewTitle.setText(activity.getString(R.string.schedule_a_ride));
                     break;
 
                 case R.id.imageViewHelp:
                     if (activity instanceof HomeActivity) {
                         ((HomeActivity) activity).sosDialog(activity);
                         try {
-                            if(PassengerScreenMode.P_REQUEST_FINAL == HomeActivity.passengerScreenMode){
-                                GAUtils.event(RIDES, DRIVER_ENROUTE, HELP+GAAction.BUTTON+CLICKED);
+                            if (PassengerScreenMode.P_REQUEST_FINAL == HomeActivity.passengerScreenMode) {
+                                GAUtils.event(RIDES, DRIVER_ENROUTE, HELP + GAAction.BUTTON + CLICKED);
                             } else if (PassengerScreenMode.P_DRIVER_ARRIVED == ((HomeActivity) activity).passengerScreenMode) {
                             } else if (PassengerScreenMode.P_IN_RIDE == ((HomeActivity) activity).passengerScreenMode) {
-                                GAUtils.event(RIDES, RIDE+IN_PROGRESS, HELP+GAAction.BUTTON+CLICKED);
-                            } else if (PassengerScreenMode.P_RIDE_END == HomeActivity.passengerScreenMode){
-                                GAUtils.event(RIDES, FEEDBACK, HELP+GAAction.BUTTON+CLICKED);
+                                GAUtils.event(RIDES, RIDE + IN_PROGRESS, HELP + GAAction.BUTTON + CLICKED);
+                            } else if (PassengerScreenMode.P_RIDE_END == HomeActivity.passengerScreenMode) {
+                                GAUtils.event(RIDES, FEEDBACK, HELP + GAAction.BUTTON + CLICKED);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -162,15 +167,13 @@ public class TopBar implements  GACategory, GAAction {
     };
 
 
-
-
     public void setTopBarState(boolean defaultState, String title) {
         imageViewMenu.setVisibility(View.VISIBLE);
         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_INITIAL
                 || HomeActivity.passengerScreenMode == PassengerScreenMode.P_SEARCH
                 || HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
             imageViewHelp.setVisibility(View.GONE);
-            if(HomeActivity.passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+            if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_INITIAL) {
                 imageViewScheduleRide.setVisibility(View.VISIBLE);
                 tvScheduleRidePopup.setVisibility(View.VISIBLE);
             }
