@@ -385,9 +385,10 @@ public class TransactionUtils {
         if (!checkIfFragmentAdded(activity, ScheduleRideFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(android.R.anim.fade_in, 0)
-                    .replace(container.getId(), ScheduleRideFragment.newInstance(),
+                    .add(container.getId(), ScheduleRideFragment.newInstance(),
                             ScheduleRideFragment.class.getName())
-                    .commitAllowingStateLoss();
+//                    .addToBackStack(ScheduleRideFragment.class.getName())
+                    .commit();
         }
     }
     public void openNewUserCompleteProfileFragment(FragmentActivity activity, View container) {

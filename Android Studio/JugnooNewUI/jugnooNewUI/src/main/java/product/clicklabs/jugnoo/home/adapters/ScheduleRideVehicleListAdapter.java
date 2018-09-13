@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.home.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -42,11 +43,27 @@ public class ScheduleRideVehicleListAdapter extends RecyclerView.Adapter<Schedul
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final int adapterPos = holder.getAdapterPosition();
-
+        for (int i = 0; i < vehicleList.size(); i++) {
+            if(activity.selectedIdForScheduleRide==vehicleList.get(adapterPos).getRegionId()) {
+                holder.ivSelected.setVisibility(View.VISIBLE);
+            }
+            else {
+                holder.ivSelected.setVisibility(View.GONE);
+            }
+        }
         holder.tvVehicleName.setText(vehicleList.get(adapterPos).getRegionName());
         Picasso.with(activity)
                 .load(vehicleList.get(adapterPos).getImages().getRideNowNormal())
                 .into(holder.ivVehicleImage);
+        holder.clRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.selectedIdForScheduleRide=vehicleList.get(adapterPos).getRegionId();
+                activity.selectedRideTypeForScheduleRide=vehicleList.get(adapterPos).getRideType();
+                activity.selectedRegionForScheduleRide=vehicleList.get(adapterPos);
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -59,6 +76,7 @@ public class ScheduleRideVehicleListAdapter extends RecyclerView.Adapter<Schedul
 
         TextView tvVehicleName, tvBaseFare, tvFarePerMinute, tvFarePerMile;
         ImageView ivVehicleImage, ivSelected;
+        ConstraintLayout clRoot;
 
         ViewHolder(View itemView) {
             super(itemView);
@@ -68,6 +86,7 @@ public class ScheduleRideVehicleListAdapter extends RecyclerView.Adapter<Schedul
             tvFarePerMile = (TextView) itemView.findViewById(R.id.tvFarePerMile);
             ivVehicleImage = (ImageView) itemView.findViewById(R.id.ivVehicleImage);
             ivSelected = (ImageView) itemView.findViewById(R.id.ivSelected);
+            clRoot = (ConstraintLayout) itemView.findViewById(R.id.clRoot);
         }
     }
 

@@ -945,4 +945,6 @@ public interface Constants {
 
     String KEY_LUGGAGE_CHARGES = "luggage_charges";
     String KEY_PAY_VIA_STRIPE = "pay_via_stripe";
+
+    String KEY_SCHEDULE_RIDE = "schedule_ride";
 }

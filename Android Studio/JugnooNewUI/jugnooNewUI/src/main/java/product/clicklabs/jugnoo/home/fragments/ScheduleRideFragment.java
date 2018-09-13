@@ -2,6 +2,8 @@ package product.clicklabs.jugnoo.home.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -25,8 +27,9 @@ import java.util.Calendar;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.ScheduleRideVehicleListAdapter;
@@ -51,6 +54,8 @@ public class ScheduleRideFragment extends Fragment implements Constants {
     private String selectedDate;
     private String selectedTime;
     ScheduleRideVehicleListAdapter scheduleRideVehicleListAdapter;
+    SearchResult searchResultPickup;
+    SearchResult searchResultDestination;
 
     private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
@@ -84,6 +89,24 @@ public class ScheduleRideFragment extends Fragment implements Constants {
         return fragment;
     }
 
+    private InteractionListener interactionListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof InteractionListener) {
+            interactionListener = (InteractionListener) context;
+            interactionListener.onAttachScheduleRide();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (interactionListener != null) {
+            interactionListener.onDestroyScheduleRide();
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -110,13 +133,13 @@ public class ScheduleRideFragment extends Fragment implements Constants {
             @Override
             public void onClick(View view) {
 
-                ((HomeActivity)getActivity()).onClickOfPickupElse();
+                ((HomeActivity) getActivity()).onClickOfPickupElse();
             }
         });
         tvDestination.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((HomeActivity)getActivity()).onClickOfDestinationElse();
+                ((HomeActivity) getActivity()).onClickOfDestinationElse();
             }
         });
         tvSelectDateTime.setOnClickListener(new View.OnClickListener() {
@@ -145,6 +168,9 @@ public class ScheduleRideFragment extends Fragment implements Constants {
                     } else if (TextUtils.isEmpty(selectedTime)) {
                         Utils.showToast(activity, activity.getString(R.string.please_select_time));
                         throw new Exception();
+                    }
+                    else {
+                        openFareEstimate();
                     }
                 } catch (Exception e) {
 
@@ -213,5 +239,47 @@ public class ScheduleRideFragment extends Fragment implements Constants {
             Utils.showToast(activity, activity.getString(R.string.please_select_appropriate_time));
             return false;
         }
+    }
+
+    public void searchResultReceived(SearchResult searchResult, PlaceSearchListFragment.PlaceSearchMode placeSearchMode) {
+        if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+            tvPickup.setText(searchResult.getAddress());
+            searchResultPickup = searchResult;
+        } else {
+            tvDestination.setText(searchResult.getAddress());
+            searchResultDestination = searchResult;
+        }
+        //Toast.makeText(activity,placeSearchMode+" yo" +tvSelectDateTime.getText().toString(),Toast.LENGTH_LONG).show();
+    }
+
+    public interface InteractionListener {
+        void onAttachScheduleRide();
+
+        void onDestroyScheduleRide();
+    }
+
+    public void openFareEstimate() {
+        if (searchResultPickup == null) {
+            product.clicklabs.jugnoo.utils.Utils.showToast(activity, getString(R.string.set_your_pickup_location));
+            return;
+        } else if (searchResultDestination == null) {
+            product.clicklabs.jugnoo.utils.Utils.showToast(activity, getString(R.string.set_your_destination_location));
+            return;
+        }
+        Intent intent = new Intent(activity, FareEstimateActivity.class);
+//        intent.putExtra(Constants.KEY_REGION, gson.toJson(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), Region.class));
+//        intent.putExtra(Constants.KEY_COUPON_SELECTED, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
+//        intent.putExtra(KEY_RIDE_TYPE, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
+        intent.putExtra(KEY_PICKUP_LATITUDE, searchResultPickup.getLatitude());
+        intent.putExtra(KEY_PICKUP_LATITUDE, searchResultPickup.getLatitude());
+        intent.putExtra(KEY_PICKUP_LONGITUDE, searchResultDestination.getLongitude());
+        intent.putExtra(KEY_PICKUP_LOCATION_ADDRESS, searchResultPickup.getAddress());
+        intent.putExtra(KEY_DROP_LATITUDE, searchResultDestination.getLatitude());
+        intent.putExtra(KEY_DROP_LONGITUDE, searchResultDestination.getLongitude());
+        intent.putExtra(KEY_DROP_LOCATION_ADDRESS, searchResultDestination.getAddress());
+        intent.putExtra(KEY_SCHEDULE_RIDE, true);
+
+        startActivityForResult(intent, ((HomeActivity) activity).FARE_ESTIMATE);
+        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 }

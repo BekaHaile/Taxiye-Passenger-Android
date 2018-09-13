@@ -116,11 +116,11 @@ public class TopBar implements GACategory, GAAction {
                 case R.id.buttonCheckServer:
                     break;
                 case R.id.imageViewScheduleRide:
-                    ((HomeActivity) activity).relativeLayoutSearch.setVisibility(View.VISIBLE);
-                    ((HomeActivity) activity).getTransactionUtils().openScheduleRideFragment(((HomeActivity) activity), ((HomeActivity) activity).relativeLayoutSearch);
+                    ((HomeActivity) activity).scheduleRideContainer.setVisibility(View.VISIBLE);
+                    ((HomeActivity) activity).getTransactionUtils().openScheduleRideFragment(((HomeActivity) activity), ((HomeActivity) activity).scheduleRideContainer);
                     imageViewBack.setVisibility(View.VISIBLE);
                     imageViewMenu.setVisibility(View.GONE);
-                    imageViewScheduleRide.setVisibility(View.GONE);
+                    //imageViewScheduleRide.setVisibility(View.GONE);
                     tvScheduleRidePopup.setVisibility(View.GONE);
                     textViewTitle.setText(activity.getString(R.string.schedule_a_ride));
                     break;

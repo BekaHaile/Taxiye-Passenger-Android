@@ -78,6 +78,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private LatLng pickupLatLng, dropLatLng;
     private String pickupAddress, dropAddress;
+    private boolean isScheduleRide;
 
     @Override
     protected void onResume() {
@@ -106,6 +107,10 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             }
             if (getIntent().hasExtra(Constants.KEY_COUPON_SELECTED)) {
                 promoCoupon = (PromoCoupon) getIntent().getSerializableExtra(Constants.KEY_COUPON_SELECTED);
+
+            }
+            if (getIntent().hasExtra(Constants.KEY_SCHEDULE_RIDE)) {
+                isScheduleRide = getIntent().getBooleanExtra(Constants.KEY_SCHEDULE_RIDE,false);
 
             }
 

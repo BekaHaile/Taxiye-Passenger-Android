@@ -302,5 +302,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/top_bar_height"
+        android:background="@color/black_alpha"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </FrameLayout>
