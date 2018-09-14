@@ -1960,4 +1960,5 @@
     <string name="schedule">Schedule</string>
     <string name="schedule_a_ride">SCHEDULE A RIDE</string>
     <string name="confirm_ride">Confirm Ride</string>
+    <string name="please_select_vehicle">Please select vehicle</string>
 </resources>
