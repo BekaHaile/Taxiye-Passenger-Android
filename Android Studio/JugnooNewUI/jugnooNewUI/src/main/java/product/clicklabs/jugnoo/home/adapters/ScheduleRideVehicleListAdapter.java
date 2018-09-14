@@ -17,9 +17,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by mohitkr.dhiman on 12/09/18.
@@ -52,6 +54,10 @@ public class ScheduleRideVehicleListAdapter extends RecyclerView.Adapter<Schedul
             }
         }
         holder.tvVehicleName.setText(vehicleList.get(adapterPos).getRegionName());
+        holder.tvBaseFare.setText(activity.getString(R.string.base_fare_format," "+Utils.formatCurrencyValue(vehicleList.get(adapterPos).getFareStructure().getCurrency(),vehicleList.get(adapterPos).getFareStructure().getDisplayBaseFare(activity))));
+        holder.tvFarePerMinute.setText("Per Min: "+Utils.formatCurrencyValue(vehicleList.get(adapterPos).getFareStructure().getCurrency(), vehicleList.get(adapterPos).getFareStructure().farePerMin, false));
+        holder.tvFarePerMile.setText(activity.getString(R.string.per_format, Utils.getDistanceUnit(vehicleList.get(adapterPos).getFareStructure().getDistanceUnit()))+": "+Utils.formatCurrencyValue(vehicleList.get(adapterPos).getFareStructure().getCurrency(), vehicleList.get(adapterPos).getFareStructure().farePerKm, false));
+
         Picasso.with(activity)
                 .load(vehicleList.get(adapterPos).getImages().getRideNowNormal())
                 .into(holder.ivVehicleImage);

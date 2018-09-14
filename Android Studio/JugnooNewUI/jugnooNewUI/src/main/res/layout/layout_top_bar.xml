@@ -140,8 +140,8 @@
             />
         <ImageView
             android:id="@+id/imageViewScheduleRide"
-            android:layout_width="67px"
-            android:layout_height="73px"
+            android:layout_width="77px"
+            android:layout_height="83px"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10px"
@@ -175,15 +175,16 @@
         />
     <TextView
         android:id="@+id/tvScheduleRidePopup"
-        android:layout_width="261px"
-        android:layout_height="58px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/topRl"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="-20px"
+        android:layout_marginTop="-10dp"
         android:background="@drawable/ic_schedule_ride_bg"
         android:textColor="@color/white"
-        android:textSize="16px"
-        android:padding="20px"
-        android:layout_marginEnd="@dimen/fugu_margin_10"
+        android:gravity="center"
+        android:tag="@string/dont_touch_me"
+        android:padding="5dp"
+        android:layout_marginEnd="@dimen/dp_8"
         android:text="Press here to Schedule a ride"/>
 </RelativeLayout>

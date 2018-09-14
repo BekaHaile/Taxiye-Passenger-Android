@@ -1949,7 +1949,7 @@
     <string name="action_add_tip">Add Tip</string>
     <string name="cannot_apply_offer_during_ride">Cannot apply offer during ride</string>
     <string name="set_your_pickup_location">Set your pickup location</string>
-    <string name="set_your_destination_location">Set your destination location</string>
+    <string name="set_your_destination_location">Set your pickup location</string>
     <string name="tip">Tip</string>
     <string name="label_show_fare_estimate">Fare Estimate</string>
     <string name="per_wait_min">Per Wait Min</string>
@@ -1959,4 +1959,5 @@
     <string name="select">Select</string>
     <string name="schedule">Schedule</string>
     <string name="schedule_a_ride">SCHEDULE A RIDE</string>
+    <string name="confirm_ride">Confirm Ride</string>
 </resources>

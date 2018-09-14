@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.sabkuchfresh.pros.utils.DatePickerFragment;
 import com.sabkuchfresh.pros.utils.TimePickerFragment;
@@ -32,7 +33,9 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.ScheduleRideVehicleListAdapter;
+import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.Fonts;
 
@@ -107,7 +110,6 @@ public class ScheduleRideFragment extends Fragment implements Constants {
             interactionListener.onDestroyScheduleRide();
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_schedule_ride, container, false);
@@ -169,6 +171,10 @@ public class ScheduleRideFragment extends Fragment implements Constants {
                         Utils.showToast(activity, activity.getString(R.string.please_select_time));
                         throw new Exception();
                     }
+                    else if (((HomeActivity)activity).selectedIdForScheduleRide==0) {
+                        Utils.showToast(activity, activity.getString(R.string.please_select_vehicle));
+                        throw new Exception();
+                    }
                     else {
                         openFareEstimate();
                     }
@@ -178,6 +184,32 @@ public class ScheduleRideFragment extends Fragment implements Constants {
             }
         });
         setScheduleRideVehicleListAdapter();
+
+        if(Data.autoData != null){
+            if(Data.autoData.getPickupLatLng() != null){
+                SearchResult searchResult = HomeUtil.getNearBySavedAddress(getActivity(), Data.autoData.getPickupLatLng(),
+                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+                if(searchResult != null){
+                    searchResultPickup = searchResult;
+                } else {
+                    searchResultPickup = new SearchResult("", Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()), "",
+                            Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude);
+                }
+                searchResultReceived(searchResultPickup, PlaceSearchListFragment.PlaceSearchMode.PICKUP);
+            }
+            if(Data.autoData.getDropLatLng() != null){
+                SearchResult searchResult = HomeUtil.getNearBySavedAddress(getActivity(), Data.autoData.getDropLatLng(),
+                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+                if(searchResult != null){
+                    searchResultDestination = searchResult;
+                } else {
+                    searchResultDestination = new SearchResult("", Data.autoData.getDropAddress(), "",
+                            Data.autoData.getDropLatLng().latitude, Data.autoData.getDropLatLng().longitude);
+                }
+                searchResultReceived(searchResultDestination, PlaceSearchListFragment.PlaceSearchMode.DROP);
+            }
+        }
+
         return rootView;
     }
 
@@ -267,9 +299,9 @@ public class ScheduleRideFragment extends Fragment implements Constants {
             return;
         }
         Intent intent = new Intent(activity, FareEstimateActivity.class);
-//        intent.putExtra(Constants.KEY_REGION, gson.toJson(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), Region.class));
+        intent.putExtra(Constants.KEY_REGION, ((HomeActivity)getActivity()).gson.toJson(((HomeActivity)getActivity()).selectedRegionForScheduleRide, Region.class));
 //        intent.putExtra(Constants.KEY_COUPON_SELECTED, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
-//        intent.putExtra(KEY_RIDE_TYPE, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
+        intent.putExtra(KEY_RIDE_TYPE, ((HomeActivity)getActivity()).selectedRideTypeForScheduleRide);
         intent.putExtra(KEY_PICKUP_LATITUDE, searchResultPickup.getLatitude());
         intent.putExtra(KEY_PICKUP_LATITUDE, searchResultPickup.getLatitude());
         intent.putExtra(KEY_PICKUP_LONGITUDE, searchResultDestination.getLongitude());

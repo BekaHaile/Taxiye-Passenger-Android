@@ -387,7 +387,7 @@ public class TransactionUtils {
                     .setCustomAnimations(android.R.anim.fade_in, 0)
                     .add(container.getId(), ScheduleRideFragment.newInstance(),
                             ScheduleRideFragment.class.getName())
-//                    .addToBackStack(ScheduleRideFragment.class.getName())
+                    .addToBackStack(ScheduleRideFragment.class.getName())
                     .commit();
         }
     }

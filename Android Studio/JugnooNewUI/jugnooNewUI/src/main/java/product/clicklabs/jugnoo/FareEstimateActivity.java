@@ -94,7 +94,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             pickupLatLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_PICKUP_LATITUDE, Data.latitude),
                     getIntent().getDoubleExtra(Constants.KEY_PICKUP_LONGITUDE, Data.longitude));
             pickupAddress = getIntent().getStringExtra(Constants.KEY_PICKUP_LOCATION_ADDRESS);
-            if(getIntent().hasExtra(Constants.KEY_DROP_LATITUDE)){
+            if (getIntent().hasExtra(Constants.KEY_DROP_LATITUDE)) {
                 dropLatLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_DROP_LATITUDE, Data.latitude),
                         getIntent().getDoubleExtra(Constants.KEY_DROP_LONGITUDE, Data.longitude));
                 dropAddress = getIntent().getStringExtra(Constants.KEY_DROP_LOCATION_ADDRESS);
@@ -110,7 +110,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
             }
             if (getIntent().hasExtra(Constants.KEY_SCHEDULE_RIDE)) {
-                isScheduleRide = getIntent().getBooleanExtra(Constants.KEY_SCHEDULE_RIDE,false);
+                isScheduleRide = getIntent().getBooleanExtra(Constants.KEY_SCHEDULE_RIDE, false);
 
             }
 
@@ -138,7 +138,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         if (promoCoupon != null && promoCoupon.getId() != -1) {
             tvCouponApplied.setVisibility(View.VISIBLE);
             tvCouponApplied.setText(getString(R.string.coupon_applied_format, promoCoupon.getTitle()));
-        }else{
+        } else {
             tvCouponApplied.setVisibility(View.GONE);
 
         }
@@ -213,20 +213,28 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 onBackPressed();
             }
         });
-
+        if (isScheduleRide) {
+            buttonOk.setText(getString(R.string.confirm_ride));
+        } else {
+            buttonOk.setText(getString(R.string.get_ride));
+        }
         buttonOk.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
+                    if (isScheduleRide) {
 
-                    Intent intent = new Intent();
-                    if (searchResultGlobal != null) {
-                        String str = (new Gson()).toJson(searchResultGlobal);
-                        intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
+                    } else {
+                        Intent intent = new Intent();
+                        if (searchResultGlobal != null) {
+                            String str = (new Gson()).toJson(searchResultGlobal);
+                            intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
+                        }
+                        setResult(RESULT_OK, intent);
+                        GAUtils.event(RIDES, GAAction.FARE_ESTIMATE, GET + RIDE + CLICKED);
+                        performBackPressed();
                     }
-                    setResult(RESULT_OK, intent);
-                    GAUtils.event(RIDES, GAAction.FARE_ESTIMATE, GET+RIDE+CLICKED);
-                    performBackPressed();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -235,18 +243,18 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
         try {
             if (rideType != RideTypeValue.POOL.getOrdinal() && dropLatLng != null) {
-				getDirectionsAndComputeFare(pickupLatLng, pickupAddress, dropLatLng, dropAddress);
-			} else {
+                getDirectionsAndComputeFare(pickupLatLng, pickupAddress, dropLatLng, dropAddress);
+            } else {
 
-				Bundle bundle = new Bundle();
-				bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
-				bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
-				bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
+                bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
+                bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
 
-				getSupportFragmentManager().beginTransaction()
-						.add(R.id.linearLayoutContainer, PlaceSearchListFragment.newInstance(bundle), PlaceSearchListFragment.class.getSimpleName())
-						.commitAllowingStateLoss();
-			}
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.linearLayoutContainer, PlaceSearchListFragment.newInstance(bundle), PlaceSearchListFragment.class.getSimpleName())
+                        .commitAllowingStateLoss();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -292,14 +300,14 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                             markerOptionsS.title(getString(R.string.start));
                             markerOptionsS.position(sourceLatLng);
                             markerOptionsS.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
-									R.drawable.pin_ball_start)));
+                                    R.drawable.pin_ball_start)));
                             mapLite.addMarker(markerOptionsS);
 
                             MarkerOptions markerOptionsE = new MarkerOptions();
                             markerOptionsE.title(getString(R.string.start));
                             markerOptionsE.position(destLatLng);
                             markerOptionsE.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
-									R.drawable.pin_ball_end)));
+                                    R.drawable.pin_ball_end)));
                             mapLite.addMarker(markerOptionsE);
 
 
@@ -318,10 +326,10 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                             }, 500);
                         }
 
-                        if(!TextUtils.isEmpty(sourceAddress)){
+                        if (!TextUtils.isEmpty(sourceAddress)) {
                             startAddress = sourceAddress;
                         }
-                        if(!TextUtils.isEmpty(destAddress)){
+                        if (!TextUtils.isEmpty(destAddress)) {
                             endAddress = destAddress;
                         }
                         textViewPickupLocation.setText(startAddress);
@@ -392,7 +400,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 public void onDirectionsFailure() {
 
                 }
-            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region,promoCoupon);
+            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region, promoCoupon);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -419,7 +427,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             Intent intent = new Intent();
             String str = (new Gson()).toJson(searchResultGlobal);
             intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
-            intent.putExtra(Constants.KEY_AVOID_RIDE_ACTION,true);
+            intent.putExtra(Constants.KEY_AVOID_RIDE_ACTION, true);
             setResult(RESULT_OK, intent);
         }
         performBackPressed();
@@ -473,7 +481,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     @Override
     public void onPlaceSearchPost(SearchResult searchResult) {
         try {
-            if(Data.autoData != null) {
+            if (Data.autoData != null) {
                 Data.autoData.setDropLatLng(searchResult.getLatLng());
                 Data.autoData.setDropAddress(searchResult.getAddress());
                 Data.autoData.setDropAddressId(searchResult.getId());
@@ -514,7 +522,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
     }
 
-    public GoogleApiClient getmGoogleApiClient(){
+    public GoogleApiClient getmGoogleApiClient() {
         return mGoogleApiClient;
     }
 }

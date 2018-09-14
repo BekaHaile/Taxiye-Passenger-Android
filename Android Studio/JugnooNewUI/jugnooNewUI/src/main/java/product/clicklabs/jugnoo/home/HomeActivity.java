@@ -514,7 +514,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private FrameLayout coordinatorLayout;
     private FuguNotificationConfig fuguNotificationConfig = new FuguNotificationConfig();
     ;
-    Gson gson = new Gson();
+    public Gson gson = new Gson();
     private boolean addressPopulatedFromDifferentOffering;
 
 
@@ -525,7 +525,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private LinearLayout llRatingFeedbackType;
     private TextView tvTipAmountLabel,tvEditTip,tvRemoveTip;
     public static final int REQ_CODE_ADD_CARD_DRIVER_TIP = 0x167;
-    private boolean scheduleRideOpen;
+    public boolean scheduleRideOpen;
     public int selectedIdForScheduleRide,selectedRideTypeForScheduleRide;
     public Region selectedRegionForScheduleRide = null;
 
@@ -3159,14 +3159,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
 
 
-                if (scheduleRideOpen) {
-                    topBar.imageViewBack.setVisibility(View.VISIBLE);
-                    topBar.imageViewMenu.setVisibility(View.GONE);
-                    topBar.textViewTitle.setText(getResources().getString(R.string.schedule_a_ride));
-                }
-                else {
-                    topBar.imageViewMenu.setVisibility(View.VISIBLE);
-                }
+                topBar.imageViewMenu.setVisibility(View.VISIBLE);
                 topBar.imageViewBack.setVisibility(View.GONE);
                 relativeLayoutConfirmRequest.setVisibility(View.GONE);
                 rlSpecialPickup.setVisibility(View.GONE);
@@ -3317,8 +3310,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                         if(scheduleRideOpen){
                            scheduleRideContainer.setVisibility(View.VISIBLE);
+                            topBar.imageViewMenu.setVisibility(View.GONE);
+                            topBar.imageViewBack.setVisibility(View.VISIBLE);
                         } else {
                             scheduleRideContainer.setVisibility(View.GONE);
+                            topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                            topBar.imageViewBack.setVisibility(View.GONE);
                         }
                         searchedALocation = false;
 
@@ -4043,7 +4040,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 getSupportFragmentManager().beginTransaction()
                         .remove(frag)
                         .commit();
-                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         }
     }
@@ -5188,7 +5185,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     topBar.imageViewMenu.setVisibility(View.VISIBLE);
                     topBar.imageViewScheduleRide.setVisibility(View.VISIBLE);
                     topBar.textViewTitle.setText(getResources().getString(R.string.rides));
-                    getSupportFragmentManager().beginTransaction().remove(getScheduleRideFragment());
+                    super.onBackPressed();
 //                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
 //                    switchPassengerScreen(passengerScreenMode);
 //                    initialMyLocationBtn.performClick();
@@ -8318,7 +8315,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } else if (getStarSubscriptionCheckoutFragment() != null) {
                     topBar.textViewTitle.setText(getResources().getString(R.string.pay_online));
                 } else {
-                    topBar.textViewTitle.setText(getResources().getString(R.string.rides));
+                    topBar.textViewTitle.setText(getResources().getString(scheduleRideOpen?R.string.schedule_a_ride:R.string.rides));
                 }
 
                 localModeEnabled = 0;
