@@ -35,7 +35,7 @@
 
     <string name="operator_token">839f5be8cced4d17ad3e6264762136fe</string>
     <string name="support_number">+2549023121121</string>
-    <string name="police_number">0202556780</string>
+    <string name="police_number">999</string>
     <string name="facebook_page_id">jingoridestuktukmlangoni</string>
     <string name="facebook_page_url">https://www.facebook.com/jingoridestuktukmlangoni</string>
 
@@ -72,4 +72,67 @@
     <bool name="show_change_languge">false</bool>
     <integer name="show_invite_friends">@integer/view_gone</integer>
     <integer name="send_invites_visibility">@integer/view_gone</integer>
+
+    <!--Referal icon scale type-->
+    <integer name="referral_icon_scale_type">@integer/center_inside</integer>
+
+    <string name="default_currency">KES</string>
+
+    <!--New-->
+    <!--hardcode/default values-->
+    <bool name="specified_country_search_result_enabled">false</bool>
+    <string name="specified_country_search_result">no</string>
+    <integer name="visibility_faq">@integer/view_gone</integer>
+    <integer name="otp_via_call_enabled">0</integer>
+    <integer name="visibility_take_cash">@integer/view_visible</integer>
+    <integer name="show_amount_on_ride_summary">@integer/view_visible</integer>
+    <integer name="visibility_ride_history_amount">@integer/view_visible</integer>
+    <integer name="visibility_jugnoo_cash_in_wallet">@integer/view_visible</integer>
+    <integer name="visibility_fare_estimate_hover">@integer/view_gone</integer>
+    <bool name="show_choose_other_mode_to_pay">true</bool>
+
+    <drawable name="login_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
+    <drawable name="splash_background_drawable">@color/transparent</drawable>
+    <integer name="show_splash_logo_text_login">@integer/view_visible</integer>
+    <drawable name="login_background_drawable">@color/transparent</drawable>
+    <dimen name="splash_top_bottom_bg_margin">0dp</dimen>
+    <integer name="splash_bg_strip_scaleType">@integer/fit_xy</integer>
+
+    <integer name="show_splash_bg">@integer/view_invisible</integer>
+    <color name="splash_logo_color">@color/text_color</color>
+    <drawable name="cursor">@drawable/cursor_black</drawable>
+
+
+    <string-array name="languages_to_show">
+        <item>en</item>
+        <item>ar</item>
+        <item>fr</item>
+        <item>de</item>
+        <item>es</item>
+    </string-array>
+
+
+
+
+
+
+    <bool name="wallet_amount_sidemenu">false</bool>
+    <string name="profile_saved_location_text">@string/address_book</string>
+    <bool name="show_jugnoo_promo_icon">false</bool>
+    <integer name="apply_default_country_code">0</integer>
+    <string name="default_country_code">+254</string>
+    <string name="default_country_iso">ZWE</string>
+
+    <color name="side_menu_color">#0000</color>
+    <color name="side_menu_text_color">@color/text_color_white_theme_selector</color>
+    <color name="side_menu_text_color_highlight">@color/theme_color</color>
+
+    <!--for bottom sliding panel-->
+    <bool name="show_sliding_bottom_fragment">true</bool>
+    <integer name="show_sliding_panel_fare_offer_tab">@integer/view_visible</integer>
+
+    <!--show cahs on ride summary-->
+    <bool name="is_card_mandatory_for_driver_tip">false</bool>
+    <integer name="cash_above_all">0</integer>
+
 </resources>

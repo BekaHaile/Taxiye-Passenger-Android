@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="330px"
             android:layout_centerHorizontal="true"
-            android:scaleType="centerCrop"
+            android:scaleType="@integer/referral_icon_scale_type"
             android:src="@drawable/ic_logo_white_bg"
             android:tag="mlar"
             android:visibility="visible" />
