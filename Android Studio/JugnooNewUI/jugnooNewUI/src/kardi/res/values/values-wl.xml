@@ -36,7 +36,7 @@
     <string name="support_number">+6587766554</string>
     <string name="police_number">999</string>
     <string name="facebook_page_id">443169969455713</string>
-        <string name="facebook_page_name">kardi.sg</string>
+        <string name="facebook_page_url">https://www.facebook.com/kardi.sg</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>

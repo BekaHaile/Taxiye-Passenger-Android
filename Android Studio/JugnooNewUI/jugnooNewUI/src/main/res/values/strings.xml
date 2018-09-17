@@ -132,6 +132,7 @@
     <string name="total_fare_colon">TOTAL FARE: </string>
     <string name="Cash_to_be_paid">CASH TO BE PAID</string>
     <string name="view_invoice">View Invoice</string>
+    <string name="trip_overview">Trip Overview</string>
     <string name="submit_feedback_caps">SUBMIT FEEDBACK</string>
     <string name="skip">Skip</string>
     <string name="star_required">* Required</string>
@@ -1850,7 +1851,8 @@
     <string name="select_a_bid">Select a bid</string>
     <string name="stripe">Stripe</string>
     <string name="view_card_title">CREDIT CARD</string>
-    <string name="add_credit_card">Add Credit Card</string>
+    <string name="action_add_card_stripe">Add Card</string>
+    <string name="action_add_card_accept_card">Add Card</string>
     <string name="view_card_wallet">View Card</string>
     <string name="add_card_payments">Add Card</string>
     <string name="tap_a_bid">Tap a bid</string>
@@ -1894,12 +1896,14 @@
     <string name="issue_description">Issue description</string>
     <string name="support_mail_subject">%s Support</string>
     <string name="hint_card_number">CARD NUMBER</string>
+    <string name="hint_card_holder_name">NAME ON CARD</string>
     <string name="hint_date">MM/YY</string>
     <string name="hint_cvv">CVV</string>
     <string name="add_card_title">ADD CARD</string>
     <string name="edit_card_title">EDIT CARD</string>
     <string name="stripe_delete_card">Are you sure you want to delete your card ending with %s?</string>
     <string name="stripe_add_card_error">%s is not valid.</string>
+    <string name="card_name_not_valid">Please enter a valid card name.</string>
     <string name="card_number">Card Number</string>
     <string name="expiry_date">Expiry Date</string>
     <string name="cvc">CVC</string>
@@ -1946,4 +1950,6 @@
     <string name="cannot_apply_offer_during_ride">Cannot apply offer during ride</string>
     <string name="set_your_pickup_location">Set your pickup location</string>
     <string name="tip">Tip</string>
+    <string name="label_show_fare_estimate">Fare Estimate</string>
+    <string name="per_wait_min">Per Wait Min</string>
 </resources>

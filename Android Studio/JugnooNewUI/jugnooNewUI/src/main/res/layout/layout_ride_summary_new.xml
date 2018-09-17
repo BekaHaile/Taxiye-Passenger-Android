@@ -67,6 +67,7 @@
 
 
             <LinearLayout
+                android:id="@+id/llRideEndTotalFareTakeCash"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40px"
@@ -105,6 +106,7 @@
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/ivDivRideEndTakeCash"
                     android:layout_width="2px"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="50px"
@@ -114,6 +116,7 @@
                     />
 
                 <LinearLayout
+                    android:id="@+id/llRideEndTakeCash"
                     android:layout_width="330px"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -163,7 +166,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:textAllCaps="true"
-                    android:text="@string/view_invoice"
+                    android:text="@string/ride_summary_view_invoice_text"
                     android:textColor="@color/text_color_theme_selector"
                     android:textSize="@dimen/text_size_30"
                     android:layout_marginTop="5px"
@@ -353,7 +356,8 @@
                 android:id="@+id/gridViewRSFeedbackReasons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10px"
+                android:layout_marginStart="40px"
+                android:layout_marginEnd="40px"
                 android:layout_marginTop="20px"
                 android:visibility="gone"
                 android:divider="@color/transparent"

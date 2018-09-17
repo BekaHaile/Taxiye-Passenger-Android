@@ -907,7 +907,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
             setUserNameToFields();
             if(!Data.userData.userEmail.contains("@facebook.com") && !Data.userData.userEmail.toLowerCase().startsWith("guest")
-                    && (!Data.userData.userEmail.contains("@app.jugnoo.in"))) {
+                    && (!Data.userData.userEmail.contains("@app.jugnoo.in"))
+                    && (!Data.userData.userEmail.endsWith("@email.com"))) {
                 editTextEmail.setText(Data.userData.userEmail);
             } else {
                 editTextEmail.setText("");

@@ -371,7 +371,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             imageViewPaymentModeConfirm, imageViewRideEndWithImage;
     private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
     private LinearLayout llPayOnline;
-    private TextView tvPayOnline, tvPayOnlineIn;
+    private TextView tvPayOnline, tvPayOnlineIn,textViewShowFareEstimate;
 
 
     // data variables declaration
@@ -1015,7 +1015,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         layoutParams.height = (int) (ASSL.Yscale() * 200);
         editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
-
+        textViewShowFareEstimate = (TextView)findViewById(R.id.tvShowFareEstimate);
+        textViewShowFareEstimate.setTypeface(Fonts.mavenRegular(this));
+        textViewShowFareEstimate.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                        getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                        if(Data.autoData!=null && Data.autoData.getRegions().size()==1){
+                            getSlidingBottomPanel().getViewPager().setCurrentItem(1);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         /*rlSelectedPickup.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1547,7 +1563,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void scoreChanged(float score) {
                 try {
                     if (Data.autoData.getFeedbackReasons().size() > 0) {
-                        if (rating > 0 && rating <= 3) {
+                        if (score > 0 && score <= 3) {
                             textViewRSWhatImprove.setVisibility(View.VISIBLE);
                             gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
 
@@ -1722,8 +1738,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onClick(View v) {
                 try {
                     if (Data.autoData.getEndRideData() != null) {
-                        if (Data.autoData.getEndRideData().toPay > 0
-                                && Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.MPESA.getOrdinal()
+                        if (Prefs.with(HomeActivity.this).getInt(KEY_FORCE_MPESA_PAYMENT, 0) == 1
+                                && Data.autoData.getEndRideData().toPay > 0
                                 && Data.autoData.getEndRideData().getShowPaymentOptions() == 1) {
                             initiateRideEndPaymentAPI(Data.autoData.getEndRideData().engagementId, PaymentOption.MPESA.getOrdinal());
                         } else {
@@ -2137,8 +2153,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 @Override
                 public void onMapUnsettled() {
                     // Map unsettled
-                    if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+                    if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL && !zoomedForSearch) {
                         Data.autoData.setPickupAddress("", null);
+                        textViewInitialSearch.setText("");
                     }
                 }
 
@@ -3105,6 +3122,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
                         //fabViewTest.setRelativeLayoutFABVisibility(mode);
 
+                        findViewById(R.id.llRideEndTotalFareTakeCash).setVisibility(Prefs.with(this)
+                                .getInt(Constants.KEY_SHOW_FARE_DETAILS_AT_RIDE_END, 1) == 1 ? View.VISIBLE : View.GONE);
+                        if(Prefs.with(this).getInt(Constants.KEY_SHOW_TAKE_CASH_AT_RIDE_END, 1) == 1) {
+                            findViewById(R.id.llRideEndTakeCash).setVisibility(View.VISIBLE);
+                            findViewById(R.id.ivDivRideEndTakeCash).setVisibility(View.VISIBLE);
+                        } else {
+                            findViewById(R.id.llRideEndTakeCash).setVisibility(View.GONE);
+                            findViewById(R.id.ivDivRideEndTakeCash).setVisibility(View.GONE);
+                        }
+
                         int onlinePaymentVisibility = updateRideEndPayment();
                         if (onlinePaymentVisibility == View.VISIBLE && Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()) {
                             llPayOnline.post(new Runnable() {
@@ -3114,8 +3141,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
                             });
                         }
-                        if (Data.autoData != null && Data.autoData.getEndRideData() != null &&
-                                Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.MPESA.getOrdinal()) {
+                        if (Prefs.with(HomeActivity.this).getInt(KEY_FORCE_MPESA_PAYMENT, 0) == 1) {
                             tvPayOnlineIn.setText(getString(R.string.pay_via_format,
                                     MyApplication.getInstance().getWalletCore().getMPesaName(this)));
                         }
@@ -4345,7 +4371,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         .getPaymentOptionBalanceText(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
             }
             if(PaymentOption.CASH.getOrdinal() == Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()
-                    && getResources().getInteger(R.integer.visibility_ride_history_amount) == getResources().getInteger(R.integer.view_gone)){
+                    && Prefs.with(this).getInt(KEY_SHOW_IN_RIDE_PAYMENT_OPTION, 1) != 1){
                 imageViewIRPaymentOption.setVisibility(View.GONE);
                 textViewIRPaymentOptionValue.setVisibility(View.GONE);
                 findViewById(R.id.ivDivBeforePaymentOps).setVisibility(View.GONE);
@@ -5514,6 +5540,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
                 textViewCentrePinETA.setText("-");
                 imageViewRideNow.setVisibility(View.GONE);
+                textViewShowFareEstimate.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
             } else {
                 imageViewRideNow.setVisibility(View.VISIBLE);
@@ -5617,7 +5644,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         for (int i = 0; i < Data.autoData.getDriverInfos().size(); i++) {
                             DriverInfo driver = Data.autoData.getDriverInfos().get(i);
                             if (driver.getOperatorId() == region.getOperatorId()
-                                    && region.getVehicleType().equals(driver.getVehicleType())
                                     && driver.getRegionIds().contains(region.getRegionId())
                                     && (driver.getPaymentMethod() == DriverInfo.PaymentMethod.BOTH.getOrdinal() || driver.getPaymentMethod() == 0
                                     || Data.autoData.getPickupPaymentOption() == PaymentOption.CASH.getOrdinal())
@@ -5708,7 +5734,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             DriverInfo firstDriverInfo = null;
             for (DriverInfo driverInfo : Data.autoData.getDriverInfos()) {
                 if (driverInfo.getOperatorId() == region.getOperatorId()
-                        && driverInfo.getVehicleType() == region.getVehicleType()
                         && driverInfo.getRegionIds().contains(region.getRegionId())
                         ) {
                     firstDriverInfo = driverInfo;
@@ -6914,7 +6939,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         int driversCount = 0;
         for (DriverInfo driverInfo : Data.autoData.getDriverInfos()) {
             if (driverInfo.getOperatorId() == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId()
-                    && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(driverInfo.getVehicleType())
                     && driverInfo.getRegionIds() != null
                     && driverInfo.getRegionIds().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId())
                     && (driverInfo.getPaymentMethod() == DriverInfo.PaymentMethod.BOTH.getOrdinal() || driverInfo.getPaymentMethod() == 0
@@ -7284,6 +7308,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     @Override
                     public void run() {
                         getRideSummaryAPI(HomeActivity.this, engagementId);
+                        if(driverTipInteractor != null) {
+							driverTipInteractor.dismissDialog();
+						}
                     }
                 });
             }
@@ -9359,6 +9386,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         }
 
+        updateFareEstimateHoverButton();
+
         // This code checks if the current Coupon selected is valid for the new Vehicle Type and if not it then checks for a default coupon
         // if it exists for that vehicle type, if it cannot find anything it then sets the coupon to null
 
@@ -9379,6 +9408,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         showPoolInforBar(false);
         slidingBottomPanel.getRequestRideOptionsFragment().updateOffersCount();
+    }
+
+    public void updateFareEstimateHoverButton() {
+        if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.POOL.getOrdinal()){
+            textViewShowFareEstimate.setVisibility(Prefs.with(this).getInt(KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON, 0) == 1 ? View.VISIBLE : View.GONE);
+        } else {
+            textViewShowFareEstimate.setVisibility(View.GONE);
+        }
     }
 
     public int getVehicleTypeSelected() {

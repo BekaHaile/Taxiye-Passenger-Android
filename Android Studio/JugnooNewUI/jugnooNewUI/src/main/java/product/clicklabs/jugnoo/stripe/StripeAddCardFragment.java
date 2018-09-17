@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo.stripe;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,11 +11,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,16 +42,21 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
+import static com.stripe.android.model.Card.AMERICAN_EXPRESS;
 import static com.stripe.android.model.Card.BRAND_RESOURCE_MAP;
+import static com.stripe.android.model.Card.MASTERCARD;
 
 /**
  * Created by Parminder Saini on 10/05/18.
@@ -66,10 +76,17 @@ public class StripeAddCardFragment extends Fragment {
     StripeEditText edtCvv;
     @BindView(R.id.textViewTitle)
     TextView textViewTitle;
+    @BindView(R.id.edtCardHolderName)
+    EditText edtCardHolderName;
 
     private StripeCardsStateListener stripeCardsStateListener;
     private Unbinder unbinder;
+    private boolean isCardNameMandatory;
 
+    private static final String ARGS_PAYMENT_MODE = "args_payment_mode";
+    private PaymentOption paymentOption ;
+    public static final String BRAND_ACCEPTACARD_MASTERCARD="Mastercard";
+    public static final String BRAND_ACCEPTACARD_AMERICAN_EXPRESS="Amex";
 
 
     @Override
@@ -82,6 +99,29 @@ public class StripeAddCardFragment extends Fragment {
 
     }
 
+    @SuppressLint("ValidFragment")
+    private StripeAddCardFragment(){
+
+    }
+
+    public static StripeAddCardFragment newInstance(PaymentOption paymentOption){
+
+        StripeAddCardFragment stripeAddCardFragment = new StripeAddCardFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ARGS_PAYMENT_MODE,paymentOption);
+        stripeAddCardFragment.setArguments(bundle);
+        return stripeAddCardFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if(getArguments()!=null && getArguments().containsKey(ARGS_PAYMENT_MODE)){
+
+            paymentOption = (PaymentOption) getArguments().getSerializable(ARGS_PAYMENT_MODE);
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -89,7 +129,9 @@ public class StripeAddCardFragment extends Fragment {
         stripe = new Stripe(getActivity(), Config.getServerUrl().equals(Config.getLiveServerUrl())?
                 Prefs.with(getActivity()).getString(Constants.KEY_STRIPE_KEY_LIVE, BuildConfig.STRIPE_KEY_LIVE)
                 :BuildConfig.STRIPE_KEY_DEV);
+        isCardNameMandatory = paymentOption==PaymentOption.ACCEPT_CARD;
         unbinder = ButterKnife.bind(this, rootView);
+        edtCardHolderName.setVisibility(isCardNameMandatory?View.VISIBLE:View.GONE);
         textViewTitle.setTypeface(Fonts.avenirNext(getActivity()));
         updateIcon(null);
         edtCardNumber.setErrorColor(ContextCompat.getColor(getActivity(), R.color.red_status));
@@ -118,7 +160,6 @@ public class StripeAddCardFragment extends Fragment {
         });
 
 
-
         return rootView;
     }
 
@@ -135,6 +176,14 @@ public class StripeAddCardFragment extends Fragment {
             case R.id.btn_add_card:
                 String cardNumber = edtCardNumber.getCardNumber();
                 int[] cardDate = edtDate.getValidDateFields();
+                final String nameOnCard = edtCardHolderName.getText().toString().trim();
+
+                if(isCardNameMandatory){
+                    if(TextUtils.isEmpty(nameOnCard)){
+                        Toast.makeText(getActivity(),getString(R.string.card_name_not_valid),Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+              }
 
                 if(cardNumber==null){
                     Toast.makeText(getActivity(),getString(R.string.stripe_add_card_error,getString(R.string.card_number)),Toast.LENGTH_SHORT).show();
@@ -176,30 +225,36 @@ public class StripeAddCardFragment extends Fragment {
 
                 Utils.hideSoftKeyboard(getActivity(),edtCardNumber);
                 DialogPopup.showLoadingDialog(getActivity(),getString(R.string.loading));
-                stripe.createToken(
-                        card,
-                        new TokenCallback() {
-                            public void onSuccess(Token token) {
-                                // Send token to  server
+
+                if(paymentOption.getOrdinal()==PaymentOption.STRIPE_CARDS.getOrdinal()){
+                    stripe.createToken(
+                            card,
+                            new TokenCallback() {
+                                public void onSuccess(Token token) {
+                                    // Send token to  server
 
 
-                                DialogPopup.dismissLoadingDialog();
-                                addCardApi( token);
+                                    DialogPopup.dismissLoadingDialog();
+                                    addCardApi(token.getCard(),token.getId(),nameOnCard);
 
 
+                                }
+
+                                public void onError(Exception error) {
+                                    // Show localized error message
+                                    Log.e(TAG, error.getMessage());
+                                    DialogPopup.dismissLoadingDialog();
+                                    Toast.makeText(getContext(),
+                                            error.getLocalizedMessage(),
+                                            Toast.LENGTH_LONG
+                                    ).show();
+                                }
                             }
+                    );
+                }else{
+                    addCardApi(card,null,nameOnCard);
+                }
 
-                            public void onError(Exception error) {
-                                // Show localized error message
-                                Log.e(TAG, error.getMessage());
-                                DialogPopup.dismissLoadingDialog();
-                                Toast.makeText(getContext(),
-                                        error.getLocalizedMessage(),
-                                        Toast.LENGTH_LONG
-                                ).show();
-                            }
-                        }
-                );
                 break;
             case R.id.imageViewBack:
                 getActivity().onBackPressed();
@@ -215,14 +270,20 @@ public class StripeAddCardFragment extends Fragment {
 
     }
 
-    private void addCardApi(Token token) {
+    private void addCardApi(Card token,@Nullable  String tokenId,String nameOnCard) {
         HashMap<String,String> params = new HashMap<>();
-        params.put("stripe_token",token.getId());
-        params.put("last_4",token.getCard().getLast4());
-        params.put("brand",token.getCard().getBrand());
-        params.put("exp_month",String.valueOf(token.getCard().getExpMonth()));
-        params.put("exp_year",String.valueOf(token.getCard().getExpYear()));
+        if(tokenId!=null){
+            params.put("stripe_token",tokenId);
+         }
+        params.put("last_4",token.getLast4());
+        params.put("card_number",token.getNumber());
+        params.put("brand",formatBrand(token.getBrand()));
+        params.put("exp_month",formatExpMonth(token.getExpMonth()));
+        params.put("exp_year",String.valueOf(token.getExpYear()));
         params.put("is_delete","0");
+        params.put("payment_option",String.valueOf(paymentOption.getOrdinal()));
+        params.put("name_on_card", nameOnCard);
+        params.put("cvv", token.getCVC());
 
 
 
@@ -232,7 +293,7 @@ public class StripeAddCardFragment extends Fragment {
             public void onSuccess(StripeCardResponse stripeCardResponse, String message, int flag) {
 
                 if(stripeCardsStateListener!=null){
-                    stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData(),message,true);
+                    stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData(),message,true,paymentOption);
                 }
 
              }
@@ -242,6 +303,37 @@ public class StripeAddCardFragment extends Fragment {
                 return false;
             }
         });
+    }
+
+    private String formatBrand(String brand) {
+        if(brand==null || paymentOption.getOrdinal()!=PaymentOption.ACCEPT_CARD.getOrdinal()){
+            return brand;
+
+        }
+
+        if(brand.equals(AMERICAN_EXPRESS)){
+            return BRAND_ACCEPTACARD_AMERICAN_EXPRESS;
+        }
+
+        if(brand.equals(MASTERCARD)){
+            return BRAND_ACCEPTACARD_MASTERCARD;
+        }
+
+        return brand;
+
+    }
+
+    private String formatExpMonth(Integer expMonth) {
+
+        if(expMonth==null){
+            return "";
+        }
+
+        if(expMonth<10){
+            return "0"+expMonth;
+        }else{
+            return String.valueOf(expMonth);
+        }
     }
 
 

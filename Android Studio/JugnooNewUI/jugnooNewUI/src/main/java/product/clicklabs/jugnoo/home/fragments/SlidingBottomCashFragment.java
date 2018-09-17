@@ -35,9 +35,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
     private View rootView;
     private ScrollView linearLayoutRoot;
     private LinearLayout linearLayoutWalletContainer, linearLayoutCash, llOtherModesToPay;
-    private ImageView imageViewRadioPaytm,imageViewRadioStripeCard, imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioCash, imageViewRadioFreeCharge,ivStripeCardIcon,ivOtherModesToPay;
-    private TextView textViewPaytm,textViewStripeCard, textViewPaytmValue, textViewMpesa, textViewMpesaValue, textViewMobikwik, textViewMobikwikValue, textViewFreeCharge, textViewFreeChargeValue, tvOtherModesToPay;
-    private RelativeLayout relativeLayoutPaytm,relativeLayoutStripeCard, relativeLayoutMpesa, relativeLayoutMobikwik, relativeLayoutFreeCharge;
+    private ImageView imageViewRadioPaytm,imageViewRadioStripeCard,imageViewRadioAcceptCard, imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioCash, imageViewRadioFreeCharge,ivStripeCardIcon,ivAcceptCardIcon,ivOtherModesToPay;
+    private TextView textViewPaytm,textViewStripeCard,textViewAcceptCard, textViewPaytmValue, textViewMpesa, textViewMpesaValue, textViewMobikwik, textViewMobikwikValue, textViewFreeCharge, textViewFreeChargeValue, tvOtherModesToPay;
+    private RelativeLayout relativeLayoutPaytm,relativeLayoutStripeCard,relativeLayoutAcceptCard, relativeLayoutMpesa, relativeLayoutMobikwik, relativeLayoutFreeCharge;
     private HomeActivity activity;
 
     @Override
@@ -57,6 +57,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 
         imageViewRadioPaytm = (ImageView) rootView.findViewById(R.id.imageViewRadioPaytm);
         imageViewRadioStripeCard = (ImageView) rootView.findViewById(R.id.imageViewRadioStripeCard);
+        imageViewRadioAcceptCard = (ImageView) rootView.findViewById(R.id.imageViewRadioAcceptCard);
         imageViewRadioMpesa = (ImageView) rootView.findViewById(R.id.imageViewRadioMpesa);
         imageViewRadioMobikwik = (ImageView) rootView.findViewById(R.id.imageViewRadioMobikwik);
         imageViewRadioCash = (ImageView) rootView.findViewById(R.id.imageViewRadioCash);
@@ -68,8 +69,11 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         textViewPaytm = (TextView) rootView.findViewById(R.id.textViewPaytm);
         textViewPaytm.setTypeface(Fonts.mavenMedium(getActivity()));
         textViewStripeCard = (TextView) rootView.findViewById(R.id.textViewStripeCard);
+        textViewAcceptCard = (TextView) rootView.findViewById(R.id.textViewAcceptCard);
         ivStripeCardIcon = (ImageView) rootView.findViewById(R.id.ivStripeCardIcon);
+        ivAcceptCardIcon = (ImageView) rootView.findViewById(R.id.ivAcceptCardIcon);
         textViewStripeCard.setTypeface(Fonts.mavenMedium(getActivity()));
+        textViewAcceptCard.setTypeface(Fonts.mavenMedium(getActivity()));
         textViewMpesaValue = (TextView) rootView.findViewById(R.id.textViewMpesaValue);
         textViewMpesaValue.setTypeface(Fonts.mavenMedium(getActivity()));
         textViewMpesa = (TextView) rootView.findViewById(R.id.textViewMpesa);
@@ -86,6 +90,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 
         relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
         relativeLayoutStripeCard = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutStripeCard);
+        relativeLayoutAcceptCard = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAcceptCard);
         relativeLayoutMpesa = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMpesa);
         relativeLayoutMobikwik = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMobikwik);
         linearLayoutCash = (LinearLayout) rootView.findViewById(R.id.linearLayoutCash);
@@ -95,6 +100,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 
         relativeLayoutPaytm.setOnClickListener(this);
         relativeLayoutStripeCard.setOnClickListener(this);
+        relativeLayoutAcceptCard.setOnClickListener(this);
         relativeLayoutMpesa.setOnClickListener(this);
         relativeLayoutMobikwik.setOnClickListener(this);
         linearLayoutCash.setOnClickListener(this);
@@ -143,6 +149,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                 case R.id.relativeLayoutStripeCard:
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.STRIPE_CARDS, activity.getCallbackPaymentOptionSelector());
                     break;
+                case R.id.relativeLayoutAcceptCard:
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.ACCEPT_CARD, activity.getCallbackPaymentOptionSelector());
+                    break;
             }
             activity.showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
             try {
@@ -161,19 +170,29 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             Data.autoData.setPickupPaymentOption(MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption()));
             if (PaymentOption.PAYTM.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
-                paymentSelection(imageViewRadioPaytm, imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioCash, imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard);
+                paymentSelection(imageViewRadioPaytm, imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioCash,
+                        imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard);
             } else if (PaymentOption.MOBIKWIK.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
-                paymentSelection(imageViewRadioMobikwik, imageViewRadioMpesa, imageViewRadioPaytm, imageViewRadioCash, imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard);
+                paymentSelection(imageViewRadioMobikwik, imageViewRadioMpesa, imageViewRadioPaytm, imageViewRadioCash,
+                        imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard);
             } else if (PaymentOption.MPESA.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
-                paymentSelection(imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash, imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard);
+                paymentSelection(imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,
+                        imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard);
             } else if (PaymentOption.FREECHARGE.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
-                paymentSelection(imageViewRadioFreeCharge, imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash, ivOtherModesToPay,imageViewRadioStripeCard);
+                paymentSelection(imageViewRadioFreeCharge, imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioPaytm,
+                        imageViewRadioCash, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard);
             } else if (PaymentOption.RAZOR_PAY.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
-                paymentSelection(ivOtherModesToPay, imageViewRadioMpesa, imageViewRadioFreeCharge, imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,imageViewRadioStripeCard);
+                paymentSelection(ivOtherModesToPay, imageViewRadioMpesa, imageViewRadioFreeCharge, imageViewRadioMobikwik,
+                        imageViewRadioPaytm, imageViewRadioCash,imageViewRadioStripeCard,imageViewRadioAcceptCard);
             }else if (PaymentOption.STRIPE_CARDS.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
-                paymentSelection(imageViewRadioStripeCard, imageViewRadioMpesa, imageViewRadioFreeCharge, imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay);
+                paymentSelection(imageViewRadioStripeCard,imageViewRadioAcceptCard, imageViewRadioMpesa, imageViewRadioFreeCharge,
+                        imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay);
+            } else if (PaymentOption.ACCEPT_CARD.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
+                paymentSelection(imageViewRadioAcceptCard,imageViewRadioStripeCard, imageViewRadioMpesa, imageViewRadioFreeCharge,
+                        imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay);
             } else {
-                paymentSelection(imageViewRadioCash, imageViewRadioMpesa, imageViewRadioPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard);
+                paymentSelection(imageViewRadioCash, imageViewRadioMpesa, imageViewRadioPaytm, imageViewRadioMobikwik,
+                        imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -283,6 +302,14 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                             }else{
                                 textViewStripeCard.setText(getString(R.string.add_card_payments));
                                 ivStripeCardIcon.setImageResource(R.drawable.ic_card_default);
+                            }
+                        }else if (paymentModeConfigData.getPaymentOption() == PaymentOption.ACCEPT_CARD.getOrdinal()) {
+                            linearLayoutWalletContainer.addView(relativeLayoutAcceptCard);
+                            if(paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0){
+                                WalletCore.getStripeCardDisplayString(getActivity(),paymentModeConfigData.getCardsData().get(0),textViewAcceptCard,ivAcceptCardIcon);
+                            }else{
+                                textViewAcceptCard.setText(getString(R.string.add_card_payments));
+                                ivAcceptCardIcon.setImageResource(R.drawable.ic_card_default);
                             }
                         }
                     }

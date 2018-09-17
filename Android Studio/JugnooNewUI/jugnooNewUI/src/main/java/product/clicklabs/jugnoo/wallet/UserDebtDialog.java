@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -62,9 +63,13 @@ public class UserDebtDialog {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						PaymentModeConfigData stripePaymentData = MyApplication.getInstance().getWalletCore().getStripeConfigData();
+						double stripeBalance = (stripePaymentData!=null &&  stripePaymentData.getCardsData()!=null
+								&& stripePaymentData.getCardsData().size()>0) ? UserDebtDialog.this.userDebt+5 : 0;
 						double availableBalance = (userData.getPaytmEnabled() == 1 ? userData.getPaytmBalance() : 0)
 								+ (userData.getMobikwikEnabled() == 1 ? userData.getMobikwikBalance() : 0)
-								+ (userData.getFreeChargeEnabled() == 1 ? userData.getFreeChargeBalance() : 0);
+								+ (userData.getFreeChargeEnabled() == 1 ? userData.getFreeChargeBalance() : 0)
+								+ stripeBalance;
 						if (availableBalance >= UserDebtDialog.this.userDebt) {
 							settleUserDebt(activity);
 						} else {

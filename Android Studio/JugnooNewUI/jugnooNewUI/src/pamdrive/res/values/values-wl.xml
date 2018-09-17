@@ -90,6 +90,7 @@
     <string name="default_support_email">support@pamdrive.in</string>
     <integer name="send_invites_visibility">@integer/view_gone</integer>
     <bool name="specified_country_search_result_enabled">false</bool>
+    <string name="specified_country_search_result">NG</string>
     <bool name="show_call_me_option_in_otp">false</bool>
     <integer name="show_promo">@integer/view_gone</integer>
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
@@ -98,4 +99,11 @@
     <bool name="wallet_amount_sidemenu">false</bool>
     <bool name="show_jugnoo_promo_icon">false</bool>
     <integer name="scale_type">@integer/fit_xy</integer>
+
+    <string name="default_currency">NG</string>
+    <string name="default_country_code">+234</string>
+    <string name="default_country_iso">NGA</string>
+
+    <!--Referal icon scale type-->
+    <integer name="referral_icon_scale_type">@integer/center_inside</integer>
 </resources>

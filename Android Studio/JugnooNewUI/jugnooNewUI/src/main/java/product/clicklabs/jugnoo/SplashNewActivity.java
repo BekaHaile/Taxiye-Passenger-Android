@@ -1563,16 +1563,19 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
         currentView.setVisibility(View.GONE);
     }
 
-    private void changeUIState(State state) {
-        imageViewJugnooLogo.requestFocus();
-        llContainer.setVisibility(View.GONE);
-        rlSplashLogo.setVisibility(View.GONE);
-        relativeLayoutLS.setVisibility(View.GONE);
-        rlLoginSignupNew.clearAnimation();
-        rlLoginSignupNew.setVisibility(View.GONE);
-        llSignupOnboarding.setVisibility(View.GONE);
-        rlPhoneLogin.setVisibility(View.GONE);
-        rlSignupOnboarding.setVisibility(View.GONE);
+	private void changeUIState(State state) {
+		imageViewJugnooLogo.requestFocus();
+		llContainer.setVisibility(View.GONE);
+		rlSplashLogo.setVisibility(View.GONE);
+		relativeLayoutLS.setVisibility(View.GONE);
+		linearLayoutLogin.setVisibility(View.GONE);
+		relativeLayoutSignup.setVisibility(View.GONE);
+		rlLoginSignupNew.clearAnimation();
+		rlLoginSignupNew.setVisibility(View.GONE);
+		llSignupOnboarding.setVisibility(View.GONE);
+		rlPhoneLogin.setVisibility(View.GONE);
+		rlSignupOnboarding.setVisibility(View.GONE);
+		rlClaimGift.setVisibility(View.GONE);
 
         int duration = 500;
         switch (state) {
@@ -2358,6 +2361,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_CODE));
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE));
 						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_COUNTRY_ISO, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_ISO));
+						Prefs.with(SplashNewActivity.this).save(SP_OTP_VIA_CALL_ENABLED, jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 
 
 						JSONParser.parseAndSetLocale(SplashNewActivity.this, jObj);
@@ -2919,45 +2923,41 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
                         JSONObject jObj = new JSONObject(responseStr);
                         int flag = jObj.getInt("flag");
 
-                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                            if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
-                                String error = jObj.getString("error");
-                                emailNeedRegister = phoneNumber;
-                                emailRegister = true;
-                                notRegisteredMsg = error;
-                            } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
-                                SplashNewActivity.this.name = name;
-                                SplashNewActivity.this.emailId = emailId;
-                                SplashNewActivity.this.phoneNo = phoneNo;
-                                SplashNewActivity.this.password = password;
-                                SplashNewActivity.this.referralCode = referralCode;
-                                SplashNewActivity.this.accessToken = "";
-                                Data.kitPhoneNumber = jObj.optString("kit_phone_no");
-                                SplashNewActivity.parseDataSendToMultipleAccountsScreen(activity, jObj, name, emailId, phoneNumber, password, referralCode, accessToken);
-                            } else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
-                                String error = jObj.getString("error");
-                                DialogPopup.alertPopup(activity, "", error);
-                            } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
-                                enteredEmail = jObj.getString("user_email");
-                                linkedWallet = jObj.optInt("reg_wallet_type");
-                                phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
-                                accessToken = jObj.getString("access_token");
-                                Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
-                                        jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-                                Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-                                        jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
-                                otpErrorMsg = jObj.getString("error");
-                                SplashNewActivity.registerationType = RegisterationType.EMAIL;
-                                sendToOtpScreen = true;
-                            } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                                loginDataFetched = true;
-                                Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
-                                        jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-                                Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-                                        jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
-                                if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-                                    signUpBy = "email";
-                                    Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER, jObj.optString("knowlarity_missed_call_number", ""));
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								emailNeedRegister = phoneNumber;
+								emailRegister = true;
+								notRegisteredMsg = error;
+							} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+								SplashNewActivity.this.name = name;
+								SplashNewActivity.this.emailId = emailId;
+								SplashNewActivity.this.phoneNo = phoneNo;
+								SplashNewActivity.this.password = password;
+								SplashNewActivity.this.referralCode = referralCode;
+								SplashNewActivity.this.accessToken = "";
+								Data.kitPhoneNumber = jObj.optString("kit_phone_no");
+								SplashNewActivity.parseDataSendToMultipleAccountsScreen(activity, jObj, name, emailId, phoneNumber, password, referralCode, accessToken);
+							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+								enteredEmail = jObj.getString("user_email");
+								linkedWallet = jObj.optInt("reg_wallet_type");
+								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+								accessToken = jObj.getString("access_token");
+								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
+										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+								otpErrorMsg = jObj.getString("error");
+								SplashNewActivity.registerationType = RegisterationType.EMAIL;
+								sendToOtpScreen = true;
+							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+								loginDataFetched = true;
+								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
+										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+									signUpBy = "email";
+									Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER, jObj.optString("knowlarity_missed_call_number", ""));
 
                                     otpScreenIntentAlongDataSet(1, LinkedWalletStatus.NO_WALLET.getOrdinal(), phoneNumber, countryCode);
                                 }
@@ -3063,37 +3063,35 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
 
                         int flag = jObj.getInt("flag");
 
-                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                            if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
-                                String error = jObj.getString("error");
-                                emailNeedRegister = emailId;
-                                emailRegister = true;
-                                notRegisteredMsg = error;
-                            } else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
-                                String error = jObj.getString("error");
-                                DialogPopup.alertPopup(activity, "", error);
-                            } else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
-                                SplashNewActivity.this.name = name;
-                                SplashNewActivity.this.emailId = emailId;
-                                SplashNewActivity.this.phoneNo = phoneNo;
-                                SplashNewActivity.this.password = password;
-                                SplashNewActivity.this.referralCode = referralCode;
-                                SplashNewActivity.this.accessToken = "";
-                                Data.kitPhoneNumber = jObj.optString("kit_phone_no");
-                                parseDataSendToMultipleAccountsScreen(activity, jObj, name, emailId, phoneNo, password, referralCode, accessToken);
-                            } else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
-                                enteredEmail = jObj.getString("user_email");
-                                linkedWallet = jObj.optInt("reg_wallet_type");
-                                phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
-                                accessToken = jObj.getString("access_token");
-                                Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
-                                        jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-                                Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-                                        jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
-                                otpErrorMsg = jObj.getString("error");
-                                SplashNewActivity.registerationType = RegisterationType.EMAIL;
-                                sendToOtpScreen = true;
-                            } else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								emailNeedRegister = emailId;
+								emailRegister = true;
+								notRegisteredMsg = error;
+							} else if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if (ApiResponseFlags.AUTH_DUPLICATE_REGISTRATION.getOrdinal() == flag) {
+								SplashNewActivity.this.name = name;
+								SplashNewActivity.this.emailId = emailId;
+								SplashNewActivity.this.phoneNo = phoneNo;
+								SplashNewActivity.this.password = password;
+								SplashNewActivity.this.referralCode = referralCode;
+								SplashNewActivity.this.accessToken = "";
+								Data.kitPhoneNumber = jObj.optString("kit_phone_no");
+								parseDataSendToMultipleAccountsScreen(activity, jObj, name, emailId, phoneNo, password, referralCode, accessToken);
+							}else if (ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+								enteredEmail = jObj.getString("user_email");
+								linkedWallet = jObj.optInt("reg_wallet_type");
+								phoneNoOfUnverifiedAccount = jObj.getString("phone_no");
+								accessToken = jObj.getString("access_token");
+								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
+										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+								otpErrorMsg = jObj.getString("error");
+								SplashNewActivity.registerationType = RegisterationType.EMAIL;
+								sendToOtpScreen = true;
+							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
 //								loginDataFetched = true;
                                 if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
                                     if (jObj.optJSONObject(KEY_USER_DATA).optInt(KEY_SIGNUP_ONBOARDING, 0) == 1) {
@@ -3212,30 +3210,28 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
 
                         int flag = jObj.getInt("flag");
 
-                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                            if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
-                                String error = jObj.getString("error");
-                                DialogPopup.alertPopup(activity, "", error);
-                            } else if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag
-                                    || ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
-                                linkedWallet = jObj.optInt("reg_wallet_type");
-                                phoneNoOfUnverifiedAccount = jObj.optString("phone_no");
-                                accessToken = jObj.optString("access_token");
-                                SplashNewActivity.this.phoneNo = jObj.optString("phone_no", "");
-                                SplashNewActivity.this.accessToken = jObj.optString("access_token");
-                                Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
-                                        jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-                                Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-                                        jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
-                                otpErrorMsg = jObj.getString("error");
-                                SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
-                                //sendToOtpScreen = true;
-                                goToLoginUsingPhone(phoneNo);
-                            } else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-                                loginDataFetched = true;
-                                if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-                                    new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-                                            loginResponse, LoginVia.FACEBOOK, new LatLng(Data.loginLatitude, Data.loginLongitude));
+						if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+							if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							} else if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag
+									|| ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
+								linkedWallet = jObj.optInt("reg_wallet_type");
+								phoneNoOfUnverifiedAccount = jObj.optString("phone_no");
+								accessToken = jObj.optString("access_token");
+								SplashNewActivity.this.phoneNo = jObj.optString("phone_no", "");
+								SplashNewActivity.this.accessToken = jObj.optString("access_token");
+								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
+										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+								otpErrorMsg = jObj.getString("error");
+								SplashNewActivity.registerationType = RegisterationType.FACEBOOK;
+								//sendToOtpScreen = true;
+								goToLoginUsingPhone(phoneNo);
+							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
+								loginDataFetched = true;
+								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
+											loginResponse, LoginVia.FACEBOOK, new LatLng(Data.loginLatitude, Data.loginLongitude));
 
 
                                 }
@@ -3324,31 +3320,31 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
 
                         int flag = jObj.getInt("flag");
 
-                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
-                            if (ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag) {
-                                String error = jObj.getString("error");
-                                DialogPopup.alertPopup(activity, "", error);
-                            } else if (ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag
-                                    || ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag) {
-                                linkedWallet = jObj.optInt("reg_wallet_type");
-                                phoneNoOfUnverifiedAccount = jObj.optString("phone_no", "");
-                                accessToken = jObj.optString("access_token");
-                                SplashNewActivity.this.phoneNo = jObj.optString("phone_no", "");
-                                SplashNewActivity.this.accessToken = jObj.optString("access_token");
-                                Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
-                                        jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-                                Prefs.with(activity).save(SP_OTP_VIA_CALL_ENABLED,
-                                        jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
-                                otpErrorMsg = jObj.getString("error");
-                                SplashNewActivity.registerationType = RegisterationType.GOOGLE;
-                                //sendToOtpScreen = true;
-                                googleRegister = true;
-                                goToLoginUsingPhone(phoneNo);
-                            } else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-                                if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-                                    new JSONParser().parseAccessTokenLoginData(activity, responseStr,
-                                            loginResponse, LoginVia.GOOGLE, new LatLng(Data.loginLatitude, Data.loginLongitude));
-                                    loginDataFetched = true;
+						if(!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)){
+							if(ApiResponseFlags.AUTH_LOGIN_FAILURE.getOrdinal() == flag){
+								String error = jObj.getString("error");
+								DialogPopup.alertPopup(activity, "", error);
+							}
+							else if(ApiResponseFlags.AUTH_NOT_REGISTERED.getOrdinal() == flag
+									|| ApiResponseFlags.AUTH_VERIFICATION_REQUIRED.getOrdinal() == flag){
+								linkedWallet = jObj.optInt("reg_wallet_type");
+								phoneNoOfUnverifiedAccount = jObj.optString("phone_no", "");
+								accessToken = jObj.optString("access_token");
+								SplashNewActivity.this.phoneNo = jObj.optString("phone_no", "");
+								SplashNewActivity.this.accessToken = jObj.optString("access_token");
+								Prefs.with(activity).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
+										jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
+								otpErrorMsg = jObj.getString("error");
+								SplashNewActivity.registerationType = RegisterationType.GOOGLE;
+								//sendToOtpScreen = true;
+								googleRegister = true;
+								goToLoginUsingPhone(phoneNo);
+							}
+							else if(ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag){
+								if(!SplashNewActivity.checkIfUpdate(jObj, activity)){
+									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
+											loginResponse, LoginVia.GOOGLE, new LatLng(Data.loginLatitude, Data.loginLongitude));
+									loginDataFetched = true;
 
                                 }
                                 DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
@@ -4029,8 +4025,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements Constant
         SplashNewActivity.this.accessToken = jObj.getString("access_token");
         Prefs.with(this).save(SP_KNOWLARITY_MISSED_CALL_NUMBER,
                 jObj.optString(KEY_KNOWLARITY_MISSED_CALL_NUMBER, ""));
-        Prefs.with(this).save(SP_OTP_VIA_CALL_ENABLED,
-                jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
         sendToOtpScreen = true;
         linkedWalletErrorMsg = jObj.optString(KEY_MESSAGE, "");
         Prefs.with(this).save(SP_WALLET_AT_SIGNUP, String.valueOf(linkedWallet));

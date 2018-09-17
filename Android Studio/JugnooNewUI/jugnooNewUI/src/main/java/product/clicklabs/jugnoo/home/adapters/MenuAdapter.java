@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.ChangeLanguageActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.FareDetailsActivity;
 import product.clicklabs.jugnoo.HomeSwitcherActivity;
 import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
@@ -128,6 +129,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 ViewHolder holder = (ViewHolder) viewholder;
                 holder.relative.setTag(position);
                 holder.textViewMenu.setText(menuInfo.getName());
+                holder.imageViewMenuIcon.setPadding(0, 0, 0, 0);
 
                 if(menuInfo.getIsNew() == 1){
                     holder.textViewNew.setVisibility(View.VISIBLE);
@@ -263,6 +265,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
                 }else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_chat_selector);
+
+                }else if(MenuInfoTags.FARE_DETAILS.getTag().equalsIgnoreCase(menuInfo.getTag())) {
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fare_details_grey_theme_selector);
+                    int padding = activity.getResources().getDimensionPixelSize(R.dimen.dp_4);
+                    holder.imageViewMenuIcon.setPadding(padding, padding, padding, padding);
 
                 }
                 else{
@@ -626,6 +633,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             }
             else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, SupportMailActivity.class));
+            }
+            else if(MenuInfoTags.FARE_DETAILS.getTag().equalsIgnoreCase(tag)){
+                activity.startActivity(new Intent(activity, FareDetailsActivity.class)
+                        .putExtra(Constants.KEY_LATITUDE, latLng.latitude)
+                        .putExtra(Constants.KEY_LONGITUDE, latLng.longitude));
             }
             else if(MenuInfoTags.FRESH.getTag().equalsIgnoreCase(tag)){
                 openOffering(Config.getFreshClientId(), activity,latLng);

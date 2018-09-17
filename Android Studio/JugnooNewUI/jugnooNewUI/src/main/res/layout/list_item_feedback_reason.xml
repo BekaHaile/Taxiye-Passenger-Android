@@ -2,21 +2,27 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/relative"
-    android:layout_width="@dimen/screen_width"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:splitMotionEvents="false">
+    android:splitMotionEvents="false"
+    android:tag="@string/dont_touch_me">
 
     <TextView
         android:id="@+id/textViewFeedbackReason"
-        android:layout_width="@dimen/px_200"
-        android:layout_height="@dimen/px_56"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="150dp"
         android:gravity="center"
-        android:padding="5px"
-        android:text="@string/reason"
+        android:layout_margin="7dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:text="dalksjd kdaslkd xasdasddasdasd"
         android:background="@drawable/capsule_green_color_selector"
         android:textColor="@color/white"
-        android:textSize="@dimen/text_size_28" />
+        android:textSize="14sp" />
 
 
 </LinearLayout>

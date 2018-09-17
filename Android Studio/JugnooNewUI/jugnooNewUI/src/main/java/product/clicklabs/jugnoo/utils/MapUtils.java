@@ -19,7 +19,6 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -264,11 +263,11 @@ public class MapUtils {
 
 						subLocality = subLocality1;
 						administrativeArea = administrativeArea2;
-						if(!administrativeArea.contains(administrativeArea1)) {
+						if(!administrativeArea.toLowerCase().contains(administrativeArea1.toLowerCase())) {
 							if ("".equalsIgnoreCase(administrativeArea)) {
 								administrativeArea = administrativeArea1;
 							} else {
-								administrativeArea = administrativeArea + " " + administrativeArea1;
+								administrativeArea = administrativeArea + ", " + administrativeArea1;
 							}
 						}
 

@@ -391,6 +391,7 @@ public interface Constants {
     String KEY_MOBIKWIK = "mobikwik";
     String KEY_MPESA = "mpesa";
     String KEY_STRIPE_CARDS = "stripe_cards";
+    String KEY_ACCEPT_CARDS = "accept_cards";
     String KEY_RAZORPAY = "razorpay";
     String KEY_UPI_RAZORPAY = "upi_razorpay";
     String KEY_BALANCE = "balance";
@@ -846,7 +847,9 @@ public interface Constants {
     String KEY_RAZOR_PAY_DEDUCTED = "razor_pay_deducted";
     String KEY_PAID_USING_RAZORPAY = "paid_using_razorpay";
     String KEY_PAID_USING_STRIPE = "paid_using_stripe";
+    String KEY_PAID_USING_ACCEPT_CARD = "paid_using_accept_card";
     String KEY_LAST_4 = "last_4";
+    String KEY_LAST_4_ACCEPT_CARD = "last_4_accept_card";
     String KEY_DESCRIPTION = "description";
     String KEY_CURRENCY = "currency";
     String KEY_IS_RAZORPAY_ENABLED = "is_razorpay_enabled";
@@ -927,4 +930,19 @@ public interface Constants {
     String KEY_DEFAULT_SUB_COUNTRY_CODE = "default_sub_country_code";
     String KEY_DEFAULT_COUNTRY_ISO = "default_country_iso";
     String ACTION_UPDATE_STATE = "ACTION_UPDATE_STATE";
+
+    String KEY_SPECIFIED_COUNTRY_PLACES_SEARCH = "specified_country_places_search";
+    String KEY_SHOW_FAQ = "show_faq";
+    String KEY_SHOW_TAKE_CASH_AT_RIDE_END = "show_take_cash_at_ride_end";
+    String KEY_SHOW_FARE_DETAILS_AT_RIDE_END = "show_fare_details_at_ride_end";
+    String KEY_SHOW_FARE_IN_RIDE_HISTORY = "show_fare_in_ride_history";
+    String KEY_SHOW_BASE_FARE_IN_RIDE_SUMMARY = "show_base_fare_in_ride_summary";
+    String KEY_SHOW_IN_RIDE_PAYMENT_OPTION = "show_in_ride_payment_option";
+    String KEY_SHOW_JUGNOO_CASH_IN_WALLET = "show_jugnoo_cash_in_wallet";
+    String KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON = "show_fare_estimate_hover_button";
+    String KEY_CASH_ABOVE_ALL_WALLETS = "cash_above_all_wallets";
+    String KEY_FORCE_MPESA_PAYMENT= "force_mpesa_payment";
+
+    String KEY_LUGGAGE_CHARGES = "luggage_charges";
+    String KEY_PAY_VIA_STRIPE = "pay_via_stripe";
 }
