@@ -82,7 +82,7 @@ public class DriverTipInteractor {
                             actionButton.setText(activity.getString(R.string.done));
                       }else{
 
-                            PaymentModeConfigData stripePaymentData =   MyApplication.getInstance().getWalletCore().getStripeConfigData();
+                            PaymentModeConfigData stripePaymentData =   MyApplication.getInstance().getWalletCore().getConfigData(PaymentOption.STRIPE_CARDS.getOrdinal());
                             if(!activity.getResources().getBoolean(R.bool.is_card_mandatory_for_driver_tip) ||
                                (stripePaymentData!=null &&  stripePaymentData.getCardsData()!=null && stripePaymentData.getCardsData().size()>0)){
                                 try {

@@ -2102,7 +2102,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             tvUPICashback.setText(!TextUtils.isEmpty(paymentModeConfigData.getUpiCashbackValue())?paymentModeConfigData.getUpiCashbackValue():"");
                         }else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutStripeCard);
-                            PaymentModeConfigData stripeConfigData = MyApplication.getInstance().getWalletCore().getStripeConfigData();
+                            PaymentModeConfigData stripeConfigData = MyApplication.getInstance().getWalletCore().getConfigData(PaymentOption.STRIPE_CARDS.getOrdinal());
                             if(stripeConfigData!=null && stripeConfigData.getCardsData()!=null && stripeConfigData.getCardsData().size()>0 ){
                                 WalletCore.getStripeCardDisplayString(activity,stripeConfigData.getCardsData().get(0),tvStripeCardNumber,ivStripeCardIcon);
                                 imageViewAddStripeCard.setVisibility(View.GONE);

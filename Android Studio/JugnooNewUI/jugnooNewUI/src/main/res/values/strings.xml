@@ -1853,6 +1853,7 @@
     <string name="view_card_title">CREDIT CARD</string>
     <string name="action_add_card_stripe">Add Card</string>
     <string name="action_add_card_accept_card">Add Card</string>
+    <string name="action_add_card_pay_stack">Add Card</string>
     <string name="view_card_wallet">View Card</string>
     <string name="add_card_payments">Add Card</string>
     <string name="tap_a_bid">Tap a bid</string>

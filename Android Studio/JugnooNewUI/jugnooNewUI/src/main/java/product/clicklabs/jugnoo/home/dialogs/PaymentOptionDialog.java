@@ -39,14 +39,14 @@ public class PaymentOptionDialog implements View.OnClickListener {
     private LinearLayout linearLayoutWalletContainer;
     private RelativeLayout relativeLayoutPaytm;
     private LinearLayout relativeLayoutStripeCard;
-    private LinearLayout relativeLayoutAcceptCard;
+    private LinearLayout relativeLayoutAcceptCard,relativeLayoutPayStack;
     private RelativeLayout relativeLayoutMobikwik;
     private RelativeLayout relativeLayoutFreeCharge;
     private RelativeLayout relativeLayoutMpesa;
     private LinearLayout linearLayoutCash, llOtherModesToPay ;
-    private ImageView radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard,ivStripeCardIcon,
-    imageViewRadioAcceptCard,ivAcceptCardIcon;
-    private TextView textViewPaytm,textViewStripeCard, textViewAcceptCard,textViewPaytmValue, textViewMobikwik, textViewMobikwikValue, textViewFreeCharge, textViewFreeChargeValue, tvOtherModesToPay, textViewMpesa,textViewMpesaValue;
+    private ImageView radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge, ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard,ivStripeCardIcon, imageViewRadioAcceptCard,ivAcceptCardIcon ,imageViewRadioPayStack,ivPayStackIcon;
+
+    private TextView textViewPaytm,textViewStripeCard, textViewAcceptCard,textViewPayStack,textViewPaytmValue, textViewMobikwik, textViewMobikwikValue, textViewFreeCharge, textViewFreeChargeValue, tvOtherModesToPay, textViewMpesa,textViewMpesaValue;
 
     public PaymentOptionDialog(Activity activity, CallbackPaymentOptionSelector callbackPaymentOptionSelector, Callback callback) {
         this.activity = activity;
@@ -87,8 +87,10 @@ public class PaymentOptionDialog implements View.OnClickListener {
             imageViewRadioMpesa = (ImageView) dialog.findViewById(R.id.imageViewRadioMpesa);
             imageViewRadioStripeCard = (ImageView) dialog.findViewById(R.id.imageViewRadioStripeCard);
             imageViewRadioAcceptCard = (ImageView) dialog.findViewById(R.id.imageViewRadioAcceptCard);
+            imageViewRadioPayStack = (ImageView) dialog.findViewById(R.id.imageViewRadioPayStack);
             ivStripeCardIcon = (ImageView) dialog.findViewById(R.id.ivStripeCardIcon);
             ivAcceptCardIcon = (ImageView) dialog.findViewById(R.id.ivAcceptCardIcon);
+            ivPayStackIcon = (ImageView) dialog.findViewById(R.id.ivPayStackIcon);
             ivOtherModesToPay = (ImageView) dialog.findViewById(R.id.ivOtherModesToPay);
 
 
@@ -98,8 +100,10 @@ public class PaymentOptionDialog implements View.OnClickListener {
             textViewPaytm.setTypeface(Fonts.mavenLight(activity));
             textViewStripeCard = (TextView) dialog.findViewById(R.id.textViewStripeCard);
             textViewAcceptCard = (TextView) dialog.findViewById(R.id.textViewAcceptCard);
+            textViewPayStack = (TextView) dialog.findViewById(R.id.textViewPayStack);
             textViewStripeCard.setTypeface(Fonts.mavenLight(activity));
             textViewAcceptCard.setTypeface(Fonts.mavenLight(activity));
+            textViewPayStack.setTypeface(Fonts.mavenLight(activity));
             textViewMobikwikValue = (TextView) dialog.findViewById(R.id.textViewMobikwikValue);
             textViewMobikwikValue.setTypeface(Fonts.mavenLight(activity));
             textViewMobikwik = (TextView) dialog.findViewById(R.id.textViewMobikwik);
@@ -118,6 +122,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
             relativeLayoutPaytm.setOnClickListener(this);
             relativeLayoutStripeCard.setOnClickListener(this);
             relativeLayoutAcceptCard.setOnClickListener(this);
+            relativeLayoutPayStack.setOnClickListener(this);
             relativeLayoutMobikwik.setOnClickListener(this);
             relativeLayoutFreeCharge.setOnClickListener(this);
             linearLayoutCash.setOnClickListener(this);
@@ -202,6 +207,10 @@ public class PaymentOptionDialog implements View.OnClickListener {
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.ACCEPT_CARD, callbackPaymentOptionSelector);
                     callback.onPaymentModeUpdated();
                     break;
+                case R.id.relativeLayoutPayStack:
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.PAY_STACK_CARD, callbackPaymentOptionSelector);
+                    callback.onPaymentModeUpdated();
+                    break;
             }
             callbackPaymentOptionSelector.onWalletOptionClick();
         } catch (Exception e) {
@@ -215,28 +224,31 @@ public class PaymentOptionDialog implements View.OnClickListener {
                     .getPaymentOptionAccAvailability(callbackPaymentOptionSelector.getSelectedPaymentOption()));
             if (PaymentOption.PAYTM.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge,
-                        ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard,imageViewRadioAcceptCard);
+                        ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack);
             } else if (PaymentOption.MOBIKWIK.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash, imageViewRadioFreeCharge,
-                        ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard,imageViewRadioAcceptCard);
+                        ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack);
             } else if (PaymentOption.FREECHARGE.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm, radioBtnCash,
-                        ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard,imageViewRadioAcceptCard);
+                        ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack);
             } else if (PaymentOption.MPESA.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(imageViewRadioMpesa, ivOtherModesToPay, imageViewRadioFreeCharge, imageViewRadioMobikwik,
-                        radioBtnPaytm, radioBtnCash,imageViewRadioStripeCard,imageViewRadioAcceptCard);
+                        radioBtnPaytm, radioBtnCash,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack);
             } else if (PaymentOption.RAZOR_PAY.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(ivOtherModesToPay, imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm,
-                        radioBtnCash, imageViewRadioMpesa,imageViewRadioStripeCard,imageViewRadioAcceptCard);
+                        radioBtnCash, imageViewRadioMpesa,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack);
             }else if (PaymentOption.STRIPE_CARDS.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(imageViewRadioStripeCard, imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm,
-                        radioBtnCash, imageViewRadioMpesa,ivOtherModesToPay,imageViewRadioAcceptCard);
+                        radioBtnCash, imageViewRadioMpesa,ivOtherModesToPay,imageViewRadioAcceptCard,imageViewRadioPayStack);
             } else if (PaymentOption.ACCEPT_CARD.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(imageViewRadioAcceptCard, imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm,
-                        radioBtnCash, imageViewRadioMpesa,ivOtherModesToPay,imageViewRadioStripeCard);
+                        radioBtnCash, imageViewRadioMpesa,ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioPayStack);
+            }else if (PaymentOption.PAY_STACK_CARD.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
+                paymentSelection(imageViewRadioPayStack, imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm,
+                        radioBtnCash, imageViewRadioMpesa,ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard);
             } else {
                 paymentSelection(radioBtnCash, radioBtnPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, ivOtherModesToPay,
-                        imageViewRadioMpesa,imageViewRadioStripeCard,imageViewRadioAcceptCard);
+                        imageViewRadioMpesa,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack);
             }
             dialog.dismiss();
         } catch (Exception e) {
@@ -343,6 +355,14 @@ public class PaymentOptionDialog implements View.OnClickListener {
                             }else{
                                 ivAcceptCardIcon.setImageResource(R.drawable.ic_card_default);
                                 textViewAcceptCard.setText(activity.getString(R.string.action_add_card_accept_card));
+                            }
+                        }else if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
+                            linearLayoutWalletContainer.addView(relativeLayoutPayStack);
+                            if(paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0){
+                               WalletCore.getStripeCardDisplayString(activity,paymentModeConfigData.getCardsData().get(0),textViewPayStack,ivPayStackIcon);
+                            }else{
+                                ivPayStackIcon.setImageResource(R.drawable.ic_card_default);
+                                textViewPayStack.setText(activity.getString(R.string.action_add_card_pay_stack));
                             }
                         }
                     }
