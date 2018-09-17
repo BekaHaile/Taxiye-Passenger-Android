@@ -271,8 +271,13 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
 	@Override
 	public void onCardsUpdated(ArrayList<StripeCardData> stripeCardData, String message, final boolean cardAdded,PaymentOption paymentOption) {
 
+
 		PaymentModeConfigData configData;
-		if(paymentOption.getOrdinal()==PaymentOption.STRIPE_CARDS.getOrdinal()){
+		if(paymentOption.getOrdinal()==PaymentOption.PAY_STACK_CARD.getOrdinal()){
+			onBackPressed();
+			//getBalance(WalletFragment.class.getName(), Data.autoData.getPickupPaymentOption());
+			return;
+		}else if(paymentOption.getOrdinal()==PaymentOption.STRIPE_CARDS.getOrdinal()){
 			configData = MyApplication.getInstance().getWalletCore().updateStripeCards(stripeCardData);
 		}else{
 			configData = MyApplication.getInstance().getWalletCore().updateAcceptCards(stripeCardData);

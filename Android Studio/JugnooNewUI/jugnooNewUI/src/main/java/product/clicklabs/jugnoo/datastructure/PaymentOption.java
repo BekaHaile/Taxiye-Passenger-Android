@@ -11,7 +11,8 @@ public enum PaymentOption {
 	ICICI_UPI(7),
 	MPESA(8),
 	STRIPE_CARDS(9),
-	ACCEPT_CARD(11);
+	ACCEPT_CARD(11),
+	PAY_STACK_CARD(12);
 
 	private int ordinal;
 
