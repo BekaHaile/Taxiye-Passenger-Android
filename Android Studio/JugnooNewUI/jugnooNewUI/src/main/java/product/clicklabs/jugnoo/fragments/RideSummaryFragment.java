@@ -547,7 +547,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
                         tvEndRideStripeCard.setText(WalletCore.getStripeCardDisplayString(activity,endRideData.getLast_4()));
 
                     }else{
-                        tvEndRideStripeCard.setText(MyApplication.getInstance().getWalletCore().getStripeCardName(activity, PaymentOption.STRIPE_CARDS.getOrdinal()));
+                        tvEndRideStripeCard.setText(MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(activity, PaymentOption.STRIPE_CARDS.getOrdinal()));
 
                     }
                     tvEndRideStripeCardValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.getPaidUsingStripe()));

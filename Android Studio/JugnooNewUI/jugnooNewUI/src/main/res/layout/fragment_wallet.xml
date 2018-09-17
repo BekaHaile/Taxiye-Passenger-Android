@@ -322,6 +322,42 @@
 
 
                 </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutPayStack"
+                    android:layout_width="match_parent"
+                    android:layout_height="105px"
+                    android:layout_marginTop="15px"
+                    android:layout_marginStart="30px"
+                    android:layout_marginEnd="30px"
+                    android:background="@drawable/white_background_rounded_corner_selector">
+
+
+                    <ImageView
+                        android:id="@+id/imageViewPayStack"
+                        style="@style/payment_option_icon_small"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="15px"
+                        android:src="@drawable/ic_card_default"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/textViewCardsPayStack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="120px"
+                        android:text="@string/action_add_card_pay_stack"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_32" />
+
+                    <ImageView
+                        style="@style/forward_image"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="10px" />
+
+
+                </RelativeLayout>
             </LinearLayout>
 
         </LinearLayout>
