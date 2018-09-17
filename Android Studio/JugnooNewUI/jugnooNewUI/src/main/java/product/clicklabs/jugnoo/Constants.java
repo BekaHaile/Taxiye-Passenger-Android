@@ -947,4 +947,6 @@ public interface Constants {
     String KEY_PAY_VIA_STRIPE = "pay_via_stripe";
 
     String KEY_SCHEDULE_RIDE = "schedule_ride";
+    String KEY_SCHEDULE_RIDE_FORMATED_DATE_TIME = "schedule_ride_formated_date_time";
+    String KEY_SCHEDULE_RIDE_SELECTED_REGION_ID = "schedule_ride_selected_region_id";
 }

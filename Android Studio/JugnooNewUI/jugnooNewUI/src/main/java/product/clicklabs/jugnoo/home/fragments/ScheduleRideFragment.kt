@@ -262,6 +262,8 @@ class ScheduleRideFragment : Fragment(), Constants {
         intent.putExtra(Constants.KEY_DROP_LONGITUDE, searchResultDestination!!.longitude)
         intent.putExtra(Constants.KEY_DROP_LOCATION_ADDRESS, searchResultDestination!!.address)
         intent.putExtra(Constants.KEY_SCHEDULE_RIDE, true)
+        intent.putExtra(Constants.KEY_SCHEDULE_RIDE_FORMATED_DATE_TIME, getFormattedDateTime(selectedDate, selectedTime, true))
+        intent.putExtra(Constants.KEY_SCHEDULE_RIDE_SELECTED_REGION_ID, (getActivity() as HomeActivity).selectedIdForScheduleRide)
 
         startActivityForResult(intent, (activity as HomeActivity).FARE_ESTIMATE)
         activity!!.overridePendingTransition(R.anim.right_in, R.anim.right_out)

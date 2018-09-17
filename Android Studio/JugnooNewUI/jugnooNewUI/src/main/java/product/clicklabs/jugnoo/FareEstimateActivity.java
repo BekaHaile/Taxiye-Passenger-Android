@@ -33,7 +33,12 @@ import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 
+import java.util.HashMap;
 import java.util.List;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
@@ -46,6 +51,7 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
@@ -79,6 +85,8 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     private LatLng pickupLatLng, dropLatLng;
     private String pickupAddress, dropAddress;
     private boolean isScheduleRide;
+    private String finalDateTime;
+    private int selectedRegionID;
 
     @Override
     protected void onResume() {
@@ -111,6 +119,14 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             }
             if (getIntent().hasExtra(Constants.KEY_SCHEDULE_RIDE)) {
                 isScheduleRide = getIntent().getBooleanExtra(Constants.KEY_SCHEDULE_RIDE, false);
+
+            }
+            if (getIntent().hasExtra(Constants.KEY_SCHEDULE_RIDE_FORMATED_DATE_TIME)) {
+                finalDateTime = getIntent().getStringExtra(Constants.KEY_SCHEDULE_RIDE_FORMATED_DATE_TIME);
+
+            }
+            if (getIntent().hasExtra(Constants.KEY_SCHEDULE_RIDE_SELECTED_REGION_ID)) {
+                selectedRegionID = getIntent().getIntExtra(Constants.KEY_SCHEDULE_RIDE_SELECTED_REGION_ID,0);
 
             }
 
@@ -223,13 +239,14 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             public void onClick(View v) {
                 try {
                     if (isScheduleRide) {
-
+                        scheduleRide(selectedRegionID, finalDateTime);
                     } else {
                         Intent intent = new Intent();
                         if (searchResultGlobal != null) {
                             String str = (new Gson()).toJson(searchResultGlobal);
                             intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
                         }
+                        intent.putExtra(Constants.KEY_SCHEDULE_RIDE, true);
                         setResult(RESULT_OK, intent);
                         GAUtils.event(RIDES, GAAction.FARE_ESTIMATE, GET + RIDE + CLICKED);
                         performBackPressed();
@@ -525,4 +542,37 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     public GoogleApiClient getmGoogleApiClient() {
         return mGoogleApiClient;
     }
+
+    private void scheduleRide(int regionId, String finalDateTime) {
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_REGION_ID, regionId + "");
+        params.put(Constants.KEY_DELIVERY_TIME, DateOperations.localToUTC(finalDateTime));
+
+        new ApiCommon<>(this).showLoader(true).execute(params, ApiName.SCHEDULE_RIDE,
+                new APICommonCallback<FeedCommonResponse>() {
+
+                    @Override
+                    public void onSuccess(final FeedCommonResponse response, String message, int flag) {
+                        Intent intent = new Intent();
+                        if (searchResultGlobal != null) {
+                            String str = (new Gson()).toJson(searchResultGlobal);
+                            intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
+                        }
+                        intent.putExtra(Constants.KEY_SCHEDULE_RIDE, true);
+                        setResult(RESULT_OK, intent);
+                        GAUtils.event(RIDES, GAAction.FARE_ESTIMATE, GET + RIDE + CLICKED);
+                        performBackPressed();
+
+                    }
+
+                    @Override
+                    public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        return false;
+                    }
+
+                });
+
+
+    }
+
 }

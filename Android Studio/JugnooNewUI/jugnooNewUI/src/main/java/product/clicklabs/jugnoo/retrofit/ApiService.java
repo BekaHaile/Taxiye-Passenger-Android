@@ -608,6 +608,10 @@ public interface ApiService {
     @POST("/edit_driver_tip")
     void editTip(@FieldMap Map<String, String> params,
                                 Callback<FeedCommonResponse> callback);
+    @FormUrlEncoded
+    @POST("/schedule_ride")
+    void scheduleRide(@FieldMap Map<String, String> params,
+                                Callback<FeedCommonResponse> callback);
 
     @FormUrlEncoded
     @POST("/add_card_to_customer_account")

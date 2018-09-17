@@ -29,7 +29,6 @@ import retrofit.mime.TypedString;
  */
 
 /**
- *
  * @param <T> Expected Response Type Class
  */
 public class ApiCommon<T extends FeedCommonResponse> {
@@ -56,13 +55,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
     private boolean isInProgress;
 
 
-
-
     /**
      * Generates a new constructor with type parameter and context
-     * @param activity  Context Of The Calling Activity
+     *
+     * @param activity Context Of The Calling Activity
      */
-    public ApiCommon (Activity activity) {
+    public ApiCommon(Activity activity) {
         this.activity = activity;
     }
 
@@ -87,19 +85,19 @@ public class ApiCommon<T extends FeedCommonResponse> {
         return this;
     }
 
-    public void  execute(HashMap<String, String> params, @NonNull ApiName apiName, APICommonCallback<T> apiCommonCallback) {
+    public void execute(HashMap<String, String> params, @NonNull ApiName apiName, APICommonCallback<T> apiCommonCallback) {
         this.apiCommonCallback = apiCommonCallback;
         this.params = params;
         this.apiName = apiName;
-        if(this.params==null){
+        if (this.params == null) {
             this.params = new HashMap<>();
         }
         hitAPI(false);
     }
 
-    public void  execute(MultipartTypedOutput params, @NonNull ApiName apiName, APICommonCallback<T> apiCommonCallback) {
+    public void execute(MultipartTypedOutput params, @NonNull ApiName apiName, APICommonCallback<T> apiCommonCallback) {
         this.apiCommonCallback = apiCommonCallback;
-        if(multipartTypedOutput==null){
+        if (multipartTypedOutput == null) {
             multipartTypedOutput = new MultipartTypedOutput();
         }
         this.multipartTypedOutput = params;
@@ -121,31 +119,30 @@ public class ApiCommon<T extends FeedCommonResponse> {
         }
 
 
-
         if (callback == null) {
             callback = new Callback<T>() {
                 @Override
                 public void success(T feedCommonResponse, Response response) {
-                  setInProgress(false);
+                    setInProgress(false);
 
-                    if(showLoader) {
+                    if (showLoader) {
                         DialogPopup.dismissLoadingDialog();
                     }
-                    if(isCancelled() || activity.isFinishing())
+                    if (isCancelled() || activity.isFinishing())
                         return;
 
                     try {
                         if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                             apiCommonCallback.onFinish();
-							apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
+                            apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
 
-						} else {
+                        } else {
                             apiCommonCallback.onFinish();
-							if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage()==null?feedCommonResponse.getError():feedCommonResponse.getMessage(),
+                            if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage() == null ? feedCommonResponse.getError() : feedCommonResponse.getMessage(),
                                     feedCommonResponse.getFlag())) {
-								DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage()==null?feedCommonResponse.getError():feedCommonResponse.getMessage());
-							}
-						}
+                                DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage() == null ? feedCommonResponse.getError() : feedCommonResponse.getMessage());
+                            }
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                         apiCommonCallback.onFinish();
@@ -159,11 +156,11 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
                 @Override
                 public void failure(RetrofitError error) {
-                   setInProgress(false);
-                    if(showLoader) {
+                    setInProgress(false);
+                    if (showLoader) {
                         DialogPopup.dismissLoadingDialog();
                     }
-                    if(isCancelled() || activity.isFinishing())
+                    if (isCancelled() || activity.isFinishing())
                         return;
                     error.printStackTrace();
                     apiCommonCallback.onFinish();
@@ -177,26 +174,23 @@ public class ApiCommon<T extends FeedCommonResponse> {
             };
         }
 
-        if(isMultiPartRequest){
+        if (isMultiPartRequest) {
             new HomeUtil().putDefaultParamsMultipart(multipartTypedOutput);
-        }
-        else {
+        } else {
             HomeUtil.addDefaultParams(params);
         }
 
 
-        if(putAccessToken){
-            if(isMultiPartRequest){
+        if (putAccessToken) {
+            if (isMultiPartRequest) {
                 multipartTypedOutput.addPart(Constants.KEY_ACCESS_TOKEN, new TypedString(Data.userData.accessToken));
-            }
-            else {
-              params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+            } else {
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             }
         }
 
 
-
-        if(showLoader) {
+        if (showLoader) {
             DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
         }
         setInProgress(true);
@@ -238,28 +232,31 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 RestClient.getApiService().initiateRideEndPayment(params, callback);
                 break;
             case FEED_FETCH_ORDER_STATUS:
-                RestClient.getFatafatApiService().fetchOrderStatus(params,callback);
+                RestClient.getFatafatApiService().fetchOrderStatus(params, callback);
                 break;
             case FEED_PAY_FOR_ORDER:
-                RestClient.getFatafatApiService().payForOrder(params,callback);
+                RestClient.getFatafatApiService().payForOrder(params, callback);
                 break;
             case OFFERING_VISBILITY_API:
-                RestClient.getApiService().fetchOfferingsVisibility(params,callback);
+                RestClient.getApiService().fetchOfferingsVisibility(params, callback);
                 break;
             case SUGGEST_A_STORE:
-                RestClient.getMenusApiService().suggestStore(multipartTypedOutput,callback);
+                RestClient.getMenusApiService().suggestStore(multipartTypedOutput, callback);
                 break;
             case CREATE_CHAT:
-                RestClient.getFatafatApiService().createChat(params,callback);
+                RestClient.getFatafatApiService().createChat(params, callback);
                 break;
             case FETCH_CONTACTS:
-                RestClient.getFatafatApiService().fetchContacts(params,callback);
+                RestClient.getFatafatApiService().fetchContacts(params, callback);
                 break;
             case SELECT_BID:
                 RestClient.getApiService().selectTheBid(params, callback);
                 break;
             case EDIT_TIP:
                 RestClient.getApiService().editTip(params, callback);
+                break;
+            case SCHEDULE_RIDE:
+                RestClient.getApiService().scheduleRide(params, callback);
                 break;
             case ADD_CARD_API:
                 RestClient.getApiService().addCardToCustomer(params, callback);
@@ -295,10 +292,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override
                     public void positiveClick(View view) {
-                        if(multipartTypedOutput!=null){
+                        if (multipartTypedOutput != null) {
                             hitAPI(true);
-                        }
-                        else {
+                        } else {
                             hitAPI(false);
                         }
                     }
@@ -312,7 +308,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
                     public void negativeClick(View view) {
                         apiCommonCallback.onNegativeClick();
                     }
-                },isErrorCancellable);
+                }, isErrorCancellable);
 
     }
 

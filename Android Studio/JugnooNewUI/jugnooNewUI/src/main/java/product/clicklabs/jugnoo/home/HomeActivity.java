@@ -5035,6 +5035,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             imageViewRideNow.performClick();
                         }
                         activityResumed = false;
+                        if(data.hasExtra(KEY_SCHEDULE_RIDE)){
+                            if(data.getBooleanExtra(KEY_SCHEDULE_RIDE,false)){
+                            super.onBackPressed();
+                            }
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
