@@ -4,11 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -18,14 +24,17 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
 import product.clicklabs.jugnoo.stripe.StripeAddCardFragment;
 import product.clicklabs.jugnoo.stripe.StripeCardsStateListener;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
+import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.fragments.AddWalletFragment;
+import product.clicklabs.jugnoo.wallet.fragments.PayStackAddCardFragment;
 import product.clicklabs.jugnoo.wallet.fragments.WalletFragment;
 import product.clicklabs.jugnoo.wallet.fragments.WalletRechargeFragment;
 import product.clicklabs.jugnoo.wallet.fragments.WalletTransactionsFragment;
@@ -37,7 +46,7 @@ import product.clicklabs.jugnoo.wallet.models.WalletAddMoneyState;
 /**
  * Created by socomo30 on 7/8/15.
  */
-public class PaymentActivity extends BaseFragmentActivity implements StripeCardsStateListener{
+public class PaymentActivity extends BaseFragmentActivity implements StripeCardsStateListener,WalletFragment.WalletFragmentListener{
 
 	private final String TAG = PaymentActivity.class.getSimpleName();
 
@@ -89,6 +98,10 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
 						.add(R.id.fragLayout,StripeAddCardFragment.newInstance(paymentOption), StripeAddCardFragment.class.getName())
 						.addToBackStack(StripeAddCardFragment.class.getName())
 						.commitAllowingStateLoss();
+			}else if(walletType==PaymentOption.PAY_STACK_CARD.getOrdinal()){
+
+				openPayStackAddCardFragment();
+
 			}else{
 				getSupportFragmentManager().beginTransaction()
 						.add(R.id.fragLayout, AddWalletFragment.newInstance(walletType), AddWalletFragment.class.getName())
@@ -246,8 +259,7 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
 					((WalletRechargeFragment) currFrag).onResume();
 					((WalletRechargeFragment) currFrag).performBackPressed();
 				}
-			}
-			else if(fragName.equalsIgnoreCase(AddWalletFragment.class.getName())){
+			} else if(fragName.equalsIgnoreCase(AddWalletFragment.class.getName())){
 				MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(paymentOption);
 				goBack();
 			}
@@ -275,7 +287,7 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
 		PaymentModeConfigData configData;
 		if(paymentOption.getOrdinal()==PaymentOption.PAY_STACK_CARD.getOrdinal()){
 			onBackPressed();
-			//getBalance(WalletFragment.class.getName(), Data.autoData.getPickupPaymentOption());
+			getBalance(WalletFragment.class.getName(), PaymentOption.PAY_STACK_CARD.getOrdinal());
 			return;
 		}else if(paymentOption.getOrdinal()==PaymentOption.STRIPE_CARDS.getOrdinal()){
 			configData = MyApplication.getInstance().getWalletCore().updateStripeCards(stripeCardData);
@@ -313,6 +325,49 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
 	}
 
 
+	@Override
+	public void openPayStackAddCardFragment() {
+
+		HashMap<String,String> params = new HashMap<>();
+
+		new ApiCommon<AddCardPayStackModel>(this).showLoader(true).execute(params, ApiName.ADD_CARD_PAYSTACK
+				, new APICommonCallback<AddCardPayStackModel>() {
+			@Override
+			public void onSuccess(AddCardPayStackModel addCardPayStackModel, String message, int flag) {
+				if(!isFinishing()){
+
+					FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
+							.add(R.id.fragLayout, PayStackAddCardFragment.newInstance(addCardPayStackModel.getUrl()), PayStackAddCardFragment.class.getName())
+							.addToBackStack(PayStackAddCardFragment.class.getName());
+						if(getSupportFragmentManager().getBackStackEntryCount()>0){
+							transaction.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+									.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
+						}
+						transaction.commitAllowingStateLoss();
+				}
+
+
+			}
+
+			@Override
+			public boolean onError(AddCardPayStackModel addCardPayStackModel, String message, int flag) {
+				if(!isFinishing()){
+					DialogPopup.alertPopupWithListener(PaymentActivity.this, "", message, new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							if(!isFinishing()){
+								PaymentActivity.this.onBackPressed();
+							}
+						}
+					});
+
+				}
+				return true;
+			}
+
+
+			});
+	}
 
 
 }

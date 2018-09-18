@@ -48,6 +48,15 @@ public class PayStackAddCardFragment extends Fragment {
     private StripeCardsStateListener stripeCardsStateListener;
 
 
+     public static PayStackAddCardFragment newInstance(String url) {
+
+         PayStackAddCardFragment fragment = new PayStackAddCardFragment();
+         Bundle args = new Bundle();
+         args.putString(ARGS_URL_TO_OPEN, url);
+         fragment.setArguments(args);
+         return fragment;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

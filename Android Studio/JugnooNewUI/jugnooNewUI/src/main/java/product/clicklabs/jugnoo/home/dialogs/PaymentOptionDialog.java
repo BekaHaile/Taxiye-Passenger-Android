@@ -75,6 +75,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
             relativeLayoutPaytm = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPaytm);
             relativeLayoutStripeCard = (LinearLayout) dialog.findViewById(R.id.relativeLayoutStripeCard);
             relativeLayoutAcceptCard = (LinearLayout) dialog.findViewById(R.id.relativeLayoutAcceptCard);
+            relativeLayoutPayStack = (LinearLayout) dialog.findViewById(R.id.relativeLayoutPayStack);
             relativeLayoutMobikwik = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutMobikwik);
             relativeLayoutFreeCharge = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutFreeCharge);
             linearLayoutCash = (LinearLayout) dialog.findViewById(R.id.linearLayoutCash);

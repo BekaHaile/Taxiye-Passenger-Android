@@ -68,7 +68,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
     private PaymentActivity paymentActivity;
 	private RelativeLayout relativeLayoutStripe,relativeLayoutAcceptCard,relativeLayoutPayStack;
 	private Handler handler = new Handler();
-
+	private WalletFragmentListener walletFragmentListener;
 
 	private Runnable enableStripeRunnable = new Runnable() {
 		@Override
@@ -94,7 +94,23 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		return fragment;
 	}
 
-    @Override
+	public interface WalletFragmentListener{
+
+		void openPayStackAddCardFragment();
+	}
+
+
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		if(context instanceof WalletFragmentListener){
+			walletFragmentListener = (WalletFragmentListener) context;
+		}else{
+			throw new IllegalArgumentException("Fragment Listener not implemented");
+		}
+	}
+
+	@Override
     public void onStart() {
         super.onStart();
 //        FlurryAgent.init(paymentActivity, Config.getFlurryKey());
@@ -296,6 +312,11 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 				boolean openViewCardScreen = configData.getCardsData()!=null && configData.getCardsData().size()>0;
 				if(!openViewCardScreen){
 
+					if(paymentOption==PaymentOption.PAY_STACK_CARD){
+						walletFragmentListener.openPayStackAddCardFragment();
+						return;
+					}
+
 					paymentActivity.getSupportFragmentManager().beginTransaction()
 							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
 							.add(R.id.fragLayout,  StripeAddCardFragment.newInstance(paymentOption), StripeAddCardFragment.class.getName())
@@ -317,6 +338,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		};
 		relativeLayoutStripe.setOnClickListener(cardsClickListener);
 		relativeLayoutAcceptCard.setOnClickListener(cardsClickListener);
+		relativeLayoutPayStack.setOnClickListener(cardsClickListener);
 
 
 		setUserWalletInfo();
@@ -455,6 +477,10 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 							linearLayoutWalletContainer.addView(relativeLayoutAcceptCard);
 							setCardsPaymentUI(paymentModeConfigData);
 
+						}else if(paymentModeConfigData.getPaymentOption()==PaymentOption.PAY_STACK_CARD.getOrdinal()){
+							linearLayoutWalletContainer.addView(relativeLayoutPayStack);
+							setCardsPaymentUI(paymentModeConfigData);
+
 						} else if(paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()){
 							if(Prefs.with(paymentActivity).getInt(Constants.KEY_SHOW_JUGNOO_CASH_IN_WALLET, 1) == 1) {
 								linearLayoutWalletContainer.addView(relativeLayoutJugnooCash);
@@ -499,6 +525,11 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 
 	}
 
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		walletFragmentListener = null;
+	}
 
 	@Override
 	public void onDestroy() {
