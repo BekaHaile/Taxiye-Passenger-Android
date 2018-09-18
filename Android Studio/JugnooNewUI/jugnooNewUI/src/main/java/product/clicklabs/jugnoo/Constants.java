@@ -392,7 +392,7 @@ public interface Constants {
     String KEY_MPESA = "mpesa";
     String KEY_STRIPE_CARDS = "stripe_cards";
     String KEY_ACCEPT_CARDS = "accept_cards";
-    String KEY_PAY_STACK_CARDS = "pay_stack_cards";
+    String KEY_PAY_STACK_CARDS = "paystack_cards";
     String KEY_RAZORPAY = "razorpay";
     String KEY_UPI_RAZORPAY = "upi_razorpay";
     String KEY_BALANCE = "balance";

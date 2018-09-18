@@ -1134,7 +1134,8 @@ public class WalletCore {
         }
 
 
-        if (BRAND_RESOURCE_MAP.get(brand) != com.stripe.android.R.drawable.ic_unknown) {
+
+        if (BRAND_RESOURCE_MAP.get(brand)!=null &&  BRAND_RESOURCE_MAP.get(brand)!= com.stripe.android.R.drawable.ic_unknown) {
             brandImage = BRAND_RESOURCE_MAP.get(brand);
         }
 
