@@ -32,9 +32,9 @@ public class EndRideData {
 	private String currency;
 	private String distanceUnit;
 	private double paidUsingStripe;
-	private double paidUsingAcceptCard;
+	private double netCustomerTax;
 	private String last_4;
-	private String last_4AcceptCard;
+	private double taxPercentage;
 	private String iconUrl;
 	private double driverTipAmount;
 	private double luggageChargesNew;
@@ -45,11 +45,11 @@ public class EndRideData {
 					   double toPay, double distance, double rideTime, double waitTime, double baseFare, double fareFactor,
 					   ArrayList<DiscountType> discountTypes, int waitingChargesApplicable, double paidUsingPaytm,
 					   String rideDate, String phoneNumber, String tripTotal, int vehicleType, String iconSet, int isPooled,
-					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, double paidUsingFreeCharge,double paidUsingMpesa, double paidUsingRazorpay,
-					   double paidUsingStripe,String last_4,int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
+					   double sumAdditionalCharges, String engagementDate, double paidUsingMobikwik, double paidUsingFreeCharge, double paidUsingMpesa, double paidUsingRazorpay,
+					   double paidUsingStripe, String last_4, int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
 					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags, int showPaymentOptions,
-					   int paymentOption, int operatorId, String currency, String distanceUnit, String iconUrl, double tollCharge,double driverTipAmount,
-					   double luggageChargesNew, double paidUsingAcceptCard,String last_4AcceptCard){
+					   int paymentOption, int operatorId, String currency, String distanceUnit, String iconUrl, double tollCharge, double driverTipAmount,
+					   double luggageChargesNew, double netCustomerTax, double taxPercentage){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -123,10 +123,11 @@ public class EndRideData {
 		this.last_4 = last_4;
 		this.driverTipAmount = driverTipAmount;
 		this.luggageChargesNew = luggageChargesNew;
-		this.paidUsingAcceptCard = paidUsingAcceptCard;
-		this.last_4AcceptCard = last_4AcceptCard;
+		this.netCustomerTax = netCustomerTax;
+		this.taxPercentage = taxPercentage;
 
-		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge + this.luggageChargesNew - this.discount + this.sumAdditionalCharges + this.tollCharge + this.driverTipAmount;
+		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge + this.luggageChargesNew - this.discount + this.sumAdditionalCharges
+				+ this.tollCharge + this.driverTipAmount + this.netCustomerTax;
 	}
 
 
@@ -279,8 +280,8 @@ public class EndRideData {
 		return paidUsingStripe;
 	}
 
-	public double getPaidUsingAcceptCard() {
-		return paidUsingAcceptCard;
+	public double getNetCustomerTax() {
+		return netCustomerTax;
 	}
 
 	public String getLast_4() {
@@ -311,7 +312,7 @@ public class EndRideData {
 		this.luggageChargesNew = luggageChargesNew;
 	}
 
-	public String getLast_4AcceptCard() {
-		return last_4AcceptCard;
+	public double getTaxPercentage() {
+		return taxPercentage;
 	}
 }

@@ -847,9 +847,9 @@ public interface Constants {
     String KEY_RAZOR_PAY_DEDUCTED = "razor_pay_deducted";
     String KEY_PAID_USING_RAZORPAY = "paid_using_razorpay";
     String KEY_PAID_USING_STRIPE = "paid_using_stripe";
-    String KEY_PAID_USING_ACCEPT_CARD = "paid_using_accept_card";
+    String KEY_NET_CUSTOMER_TAX = "net_customer_tax";
     String KEY_LAST_4 = "last_4";
-    String KEY_LAST_4_ACCEPT_CARD = "last_4_accept_card";
+    String KEY_TAX_PERCENTAGE = "customer_tax_percentage";
     String KEY_DESCRIPTION = "description";
     String KEY_CURRENCY = "currency";
     String KEY_IS_RAZORPAY_ENABLED = "is_razorpay_enabled";

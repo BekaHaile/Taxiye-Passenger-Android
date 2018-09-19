@@ -277,7 +277,38 @@
                             android:divider="@color/transparent"
                             android:dividerHeight="2dp"
                             android:layout_marginTop="4px"
-                            android:splitMotionEvents="false"></product.clicklabs.jugnoo.utils.NonScrollListView>
+                            android:splitMotionEvents="false"/>
+
+                        <RelativeLayout
+                            android:id="@+id/rlTaxNet"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6px">
+
+                            <TextView
+                                android:id="@+id/tvEndRideTaxNet"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="30px"
+                                android:gravity="center_vertical"
+                                android:text="@string/card"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26"
+                                />
+
+
+                            <TextView
+                                android:id="@+id/tvEndRideTaxNetValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="40px"
+                                android:gravity="center_vertical|end"
+                                android:text="0"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_26"
+                                />
+                        </RelativeLayout>
 
 
                         <!-- tip -->
@@ -569,36 +600,6 @@
 
                             <TextView
                                 android:id="@+id/tvEndRideStripeCardValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginEnd="40px"
-                                android:gravity="center_vertical|end"
-                                android:text="0"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_26"
-                                />
-                        </RelativeLayout>
-                        <RelativeLayout
-                            android:id="@+id/rlPaidUsingAcceptCard"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="6px">
-
-                            <TextView
-                                android:id="@+id/tvEndRideAcceptCard"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/card"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_26"
-                                />
-
-
-                            <TextView
-                                android:id="@+id/tvEndRideAcceptCardValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
