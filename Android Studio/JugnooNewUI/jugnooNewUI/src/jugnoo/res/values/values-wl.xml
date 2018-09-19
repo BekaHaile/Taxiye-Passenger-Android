@@ -40,7 +40,7 @@
 
     <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
     <integer name="show_referal_on_end_ride">@integer/view_visible</integer>
-    <bool name="force_open_autos">false</bool>
+
 
 
     <dimen name="splash_logo_width">207dp</dimen>
@@ -72,5 +72,6 @@
     <integer name="show_about">@integer/view_visible</integer>
     <bool name="wallet_amount_sidemenu">true</bool>
     <bool name="show_jugnoo_promo_icon">true</bool>
+    <bool name="force_open_autos">false</bool>
 
 </resources>

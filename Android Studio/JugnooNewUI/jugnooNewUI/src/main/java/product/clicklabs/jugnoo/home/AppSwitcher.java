@@ -92,6 +92,11 @@ public class AppSwitcher {
 					//intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 				}
 
+
+				if(activity.getResources().getBoolean(R.bool.force_open_autos)){
+					clientId = Config.getAutosClientId();
+				}
+
 				boolean noOfferingEnabledForHomeScreen = false, isOnlyFatafatNewEnabled = false;
 				// to check id Data.userData's key of <offering>_enabled is 1 for the client_id to open
 				if(Data.userData != null){
