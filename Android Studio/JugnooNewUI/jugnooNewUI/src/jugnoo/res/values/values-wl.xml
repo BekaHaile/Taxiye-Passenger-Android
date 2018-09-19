@@ -42,7 +42,6 @@
     <integer name="show_referal_on_end_ride">@integer/view_visible</integer>
 
 
-
     <dimen name="splash_logo_width">207dp</dimen>
     <dimen name="splash_logo_height">53dp</dimen>
     <dimen name="splash_logo_top_margin">125dp</dimen>

@@ -65,7 +65,6 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 
 public class PlaceSearchListFragment extends Fragment implements  Constants {
@@ -704,8 +703,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						if (geocodeResponse.results != null && geocodeResponse.results.size() > 0) {
 							lastLatFetched = latLng.latitude;
 							lastLngFetched = latLng.longitude;
-							String resp = new String(((TypedByteArray) response.getBody()).getBytes());
-							GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
+							GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(geocodeResponse);
 
 							setFetchedAddressToTextView(gapiAddress.getSearchableAddress());
 							mapSettledCanForward = true;
