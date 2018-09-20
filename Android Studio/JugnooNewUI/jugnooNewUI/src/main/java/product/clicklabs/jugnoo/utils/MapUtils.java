@@ -190,8 +190,11 @@ public class MapUtils {
 					String format[] = formatStr.split(",");
 					for (String formatI : format) {
 						for (GoogleGeocodeResponse.AddressComponent addressComponent : googleGeocodeResponse.results.get(0).addressComponents) {
-							if (addressComponent.types.contains(formatI) && !addressSB.toString().contains(addressComponent.longName)) {
-								addressSB.append(addressComponent.longName).append(", ");
+							for(String type : addressComponent.types){
+								if (type.contains(formatI) && !addressSB.toString().contains(addressComponent.longName)) {
+									addressSB.append(addressComponent.longName).append(", ");
+									break;
+								}
 							}
 						}
 					}

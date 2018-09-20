@@ -60,6 +60,8 @@ public class SearchListAdapter extends BaseAdapter{
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+			//You need to remove this to run only once
+			handler.removeCallbacks(input_finish_checker);
         }
 
         @Override
@@ -72,7 +74,8 @@ public class SearchListAdapter extends BaseAdapter{
             try {
                 SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString());
                 if (s.length() > 0) {
-                    getSearchResults(s.toString().trim(), SearchListAdapter.this.getPivotLatLng());
+					last_text_edit = System.currentTimeMillis();
+					handler.postDelayed(input_finish_checker.setTextToSearch(s.toString().trim()), delay);
                 } else {
                     searchResultsForSearch.clear();
                     setResults(searchResultsForSearch);
@@ -89,6 +92,12 @@ public class SearchListAdapter extends BaseAdapter{
         RelativeLayout relative;
         int id;
     }
+
+	long delay = 1000; // 1 seconds after user stops typing
+	long last_text_edit = 0;
+	Handler handler = new Handler();
+
+	private CustomRunnable input_finish_checker = new CustomRunnable("");
 
     Context context;
     LayoutInflater mInflater;
@@ -149,29 +158,6 @@ public class SearchListAdapter extends BaseAdapter{
     public void setResults(ArrayList<SearchResult> autoCompleteSearchResults) {
         this.searchResults.clear();
         this.searchResults.addAll(autoCompleteSearchResults);
-//        try {
-//            if(context instanceof HomeActivity && editTextForSearch.getText().length() == 0){
-//                String json;
-//                if(SearchListAdapter.this.searchMode == PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal()){
-//                    json = Prefs.with(context).getString(SPLabels.LAST_DESTINATION, "");
-//                } else{
-//                    json = Prefs.with(context).getString(SPLabels.LAST_PICK_UP, "");
-//                }
-//                Type type = new TypeToken<ArrayList<SearchResult>>() {}.getType();
-//                ArrayList<SearchResult> lastPickUp = new Gson().fromJson(json, type);
-//
-//				if(favLocationsCount < 5){
-//					int locationsToAdd = 5 - favLocationsCount;
-//					locationsToAdd = locationsToAdd > lastPickUp.size() ? lastPickUp.size() : locationsToAdd;
-//					for(int i=0; i<locationsToAdd; i++){
-//						lastPickUp.get(i).setType(SearchResult.Type.LAST_SAVED);
-//						searchResults.add(lastPickUp.get(i));
-//					}
-//				}
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         this.notifyDataSetChanged();
     }
 
@@ -340,6 +326,7 @@ public class SearchListAdapter extends BaseAdapter{
 
     private void getSearchResults(final String searchText, final LatLng latLng) {
         try {
+        	Log.e(SearchListAdapter.class.getSimpleName(), "getSearchResults running for: "+searchText);
 			if (!refreshingAutoComplete) {
 				searchListActionsHandler.onSearchPre();
 				String specifiedCountry = Prefs.with(context).getString(Constants.KEY_SPECIFIED_COUNTRY_PLACES_SEARCH, "");
@@ -478,6 +465,7 @@ public class SearchListAdapter extends BaseAdapter{
     private void getSearchResultFromPlaceId(final String placeName, final String placeAddress, final String placeId) {
 		try {
 			searchListActionsHandler.onPlaceSearchPre();
+			DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
 			Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
 			Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)
 					.setResultCallback(new ResultCallback<PlaceBuffer>() {
@@ -497,6 +485,7 @@ public class SearchListAdapter extends BaseAdapter{
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
+							DialogPopup.dismissLoadingDialog();
 						}
 					});
 			Log.v("after call back", "after call back");
@@ -532,6 +521,24 @@ public class SearchListAdapter extends BaseAdapter{
 		void onPlaceSearchError();
         void onPlaceSaved();
 		void onNotifyDataSetChanged(int count);
+	}
+
+	private class CustomRunnable implements Runnable {
+		private String textToSearch;
+		public CustomRunnable(String textToSearch){
+			this.textToSearch = textToSearch;
+		}
+    	public CustomRunnable setTextToSearch(String textToSearch){
+			this.textToSearch = textToSearch;
+			return this;
+		}
+
+		@Override
+		public void run() {
+			if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
+				getSearchResults(textToSearch, SearchListAdapter.this.getPivotLatLng());
+			}
+		}
 	}
 
 
