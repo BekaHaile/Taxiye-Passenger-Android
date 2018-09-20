@@ -96,4 +96,6 @@
     <color name="theme_color_start">#000000</color>
     <color name="theme_color_end">#99000000</color>
     <color name="theme_color_pressed">#99000000</color>
+
+    <string name="geocode_address_format">route,street_number,sublocality,locality,administrative_area</string>
 </resources>
