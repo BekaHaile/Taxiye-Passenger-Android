@@ -622,6 +622,10 @@ public interface ApiService {
     @POST("/paystack/card/add")
     void addCardPayStack(@FieldMap Map<String, String> params,
                            Callback<AddCardPayStackModel> callback);
+    @FormUrlEncoded
+    @POST("/paystack/card/delete")
+    void deleteCardPayStack(@FieldMap Map<String, String> params,
+                           Callback<StripeCardResponse> callback);
 
 
     @FormUrlEncoded

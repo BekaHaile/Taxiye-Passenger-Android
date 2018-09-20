@@ -178,7 +178,8 @@ public class StripeViewCardFragment extends Fragment {
 
 
 
-        new ApiCommon<StripeCardResponse>(getActivity()).showLoader(true).execute(params, ApiName.ADD_CARD_API, new APICommonCallback<StripeCardResponse>() {
+        new ApiCommon<StripeCardResponse>(getActivity()).showLoader(true).execute(params,
+                paymentOption==PaymentOption.PAY_STACK_CARD?ApiName.DELETE_CARD_PAYSTACK: ApiName.ADD_CARD_API, new APICommonCallback<StripeCardResponse>() {
             @Override
             public void onSuccess(StripeCardResponse stripeCardResponse, String message, int flag) {
 
