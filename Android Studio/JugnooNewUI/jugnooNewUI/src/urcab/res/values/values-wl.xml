@@ -106,12 +106,6 @@
     <bool name="show_jugnoo_promo_icon">false</bool>
     <integer name="show_invite_friends">@integer/view_gone</integer>
 
-    <!--for bottom sliding panel-->
-    <bool name="show_sliding_bottom_fragment">false</bool>
-    <integer name="show_sliding_panel_fare_offer_tab">@integer/view_gone</integer>
-
-    <!--show cahs on ride summary-->
-    <integer name="show_amount_on_ride_summary">@integer/view_gone</integer>
 
 
     <!--hardcode/default values-->
@@ -134,13 +128,7 @@
     <!--<color name="splash_text_OR_text_color">@color/white</color>-->
 
     <integer name="scale_type">@integer/fit_xy</integer>
-    <bool name="is_card_mandatory_for_driver_tip">true</bool>
-    <integer name="visibility_ride_history_amount">@integer/view_gone</integer>
-    <integer name="visibility_jugnoo_cash_in_wallet">@integer/view_gone</integer>
-    <bool name="show_choose_other_mode_to_pay">false</bool>
-    <integer name="cash_above_all">1</integer>
 
     <!--String keys for URCAB-->
-    <string name="ride_summary_view_invoice_text">@string/trip_overview</string>
-    <string name="default_currency">USD</string>
+    <string name="default_currency">AUD</string>
 </resources>
