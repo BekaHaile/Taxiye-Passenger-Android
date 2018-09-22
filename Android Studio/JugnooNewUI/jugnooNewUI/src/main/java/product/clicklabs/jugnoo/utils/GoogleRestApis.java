@@ -32,7 +32,10 @@ public class GoogleRestApis {
 	private static String MAPS_PRIVATE_KEY(){
 		return Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_MAPS_API_PRIVATE_KEY, BuildConfig.MAPS_PRIVATE_KEY);
 	}
-	
+
+	/**
+	 * for driver animation, and path animation
+	 */
 	public static Response getDirections(String originLatLng, String destLatLng, Boolean sensor,
 										 String mode, Boolean alternatives, String units){
 		if(MAPS_APIS_SIGN()) {
@@ -58,6 +61,9 @@ public class GoogleRestApis {
 		}
 	}
 
+	/**
+	 * for fare estimate
+	 */
 	public static void getDirections(String originLatLng, String destLatLng, Boolean sensor,
 										 String mode, Boolean alternatives, String units, Callback<SettleUserDebt> callback){
 		if(MAPS_APIS_SIGN()) {

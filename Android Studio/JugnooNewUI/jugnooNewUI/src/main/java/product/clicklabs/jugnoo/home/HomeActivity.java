@@ -6366,7 +6366,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             getDropLocationPathAndDisplay(Data.autoData.getPickupLatLng(), true, null);
 
-            timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 5000, 10000);
+            timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 5000,
+                    Prefs.with(this).getInt(KEY_CUSTOMER_FETCH_DRIVER_LOCATION_INTERVAL, 30000));
             Log.i("timerDriverLocationUpdater", "started");
 
         } catch (Exception e) {
@@ -6584,7 +6585,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             MarkerAnimation.clearAsyncList();
 
-            timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 10000);
+            timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100,
+                    Prefs.with(this).getInt(KEY_CUSTOMER_FETCH_INRIDE_PATH_INTERVAL, 30000));
             Log.i("timerMapAnimateAndUpdateRideData", "started");
         } catch (Exception e) {
             e.printStackTrace();

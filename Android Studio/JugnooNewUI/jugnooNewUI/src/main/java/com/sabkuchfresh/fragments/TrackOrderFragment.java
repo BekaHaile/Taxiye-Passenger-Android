@@ -733,7 +733,7 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 	private boolean timerStarted = false;
 	private void scheduleTimer(){
 		if(!timerStarted) {
-			getTimer().scheduleAtFixedRate(getTimerTask(), 0, 10 * Constants.SECOND_MILLIS);
+			getTimer().scheduleAtFixedRate(getTimerTask(), 0, 30 * Constants.SECOND_MILLIS);
 			timerStarted = true;
 		}
 	}
