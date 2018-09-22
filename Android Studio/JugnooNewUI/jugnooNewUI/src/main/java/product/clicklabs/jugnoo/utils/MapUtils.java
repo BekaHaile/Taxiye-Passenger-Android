@@ -185,11 +185,28 @@ public class MapUtils {
 			StringBuilder addressSB = new StringBuilder();
 			if(googleGeocodeResponse.getStatus().equalsIgnoreCase("OK")
 					&& googleGeocodeResponse.results != null && googleGeocodeResponse.results.size() > 0) {
+				String addressComparator = "";
+				for (int i = googleGeocodeResponse.results.get(0).addressComponents.size()-1; i >= 0; i--) {
+					GoogleGeocodeResponse.AddressComponent addressComponent = googleGeocodeResponse.results.get(0).addressComponents.get(i);
+					if(addressComparator.contains(addressComponent.longName)){
+						addressComponent.redundant = true;
+					} else {
+						addressComparator = addressComparator + addressComponent.longName + ",";
+					}
+				}
+
 				String address = "";
+				Log.e("MapUtils", "getPlaceById from poi response="+googleGeocodeResponse.results.get(0).getPlaceName());
+				if(!TextUtils.isEmpty(googleGeocodeResponse.results.get(0).getPlaceName())){
+					addressSB.append(googleGeocodeResponse.results.get(0).getPlaceName()).append(", ");
+				}
 				if(!TextUtils.isEmpty(formatStr) && formatStr.contains(",")) {
 					String format[] = formatStr.split(",");
 					for (String formatI : format) {
 						for (GoogleGeocodeResponse.AddressComponent addressComponent : googleGeocodeResponse.results.get(0).addressComponents) {
+							if(addressComponent.redundant){
+								continue;
+							}
 							for(String type : addressComponent.types){
 								if (type.contains(formatI) && !addressSB.toString().contains(addressComponent.longName)) {
 									addressSB.append(addressComponent.longName).append(", ");
@@ -198,7 +215,9 @@ public class MapUtils {
 							}
 						}
 					}
-					address = addressSB.toString().substring(0, addressSB.length()-2);
+					if(addressSB.length() >= 2) {
+						address = addressSB.toString().substring(0, addressSB.length() - 2);
+					}
 				}
 				if(TextUtils.isEmpty(address)){
 					address = googleGeocodeResponse.results.get(0).formatted_address;

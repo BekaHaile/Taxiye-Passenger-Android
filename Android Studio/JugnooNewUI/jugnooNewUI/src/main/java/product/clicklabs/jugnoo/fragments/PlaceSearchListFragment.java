@@ -25,7 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -44,6 +44,7 @@ import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
+import product.clicklabs.jugnoo.GeocodeCallback;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
@@ -62,7 +63,6 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
-import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
@@ -93,7 +93,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 	private View rootView;
     private Activity activity;
-	private GoogleApiClient mGoogleApiClient;
 	private SearchListAdapter.SearchListActionsHandler searchListActionsHandler;
 	private SearchListAdapter searchListAdapter;
 	private BottomSheetBehavior<NestedScrollView> bottomSheetBehaviour;
@@ -108,6 +107,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		fragment.setArguments(bundle);
 		return fragment;
 	}
+	private GeoDataClient geoDataClient;
 
 	@Override
 	public void onAttach(Context context) {
@@ -115,9 +115,9 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		try{
 			this.searchListActionsHandler = (SearchListAdapter.SearchListActionsHandler) context;
 			if(context instanceof FareEstimateActivity){
-				this.mGoogleApiClient = ((FareEstimateActivity)context).getmGoogleApiClient();
+				geoDataClient = ((FareEstimateActivity)context).getGeoDataClient();
 			} else {
-				this.mGoogleApiClient = ((HomeActivity)context).getmGoogleApiClient();
+				geoDataClient = ((HomeActivity)context).getmGeoDataClient();
 			}
 		} catch (Exception e){
 			e.printStackTrace();
@@ -186,7 +186,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		editTextSearch.setText(text);
 		editTextSearch.setHint(hint);
 
-		searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), mGoogleApiClient, searchMode,
+		searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), geoDataClient, searchMode,
 				new SearchListAdapter.SearchListActionsHandler() {
 
 					@Override
@@ -650,30 +650,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	}
 
 
-
-	@Override
-	public void onStart() {
-		super.onStart();
-		try {
-			if(mGoogleApiClient != null) {
-				mGoogleApiClient.connect();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-		try {
-			if(mGoogleApiClient != null) {
-				mGoogleApiClient.disconnect();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	private Double lastLatFetched ;
 	private Double lastLngFetched ;
 	private void fillAddressDetails(final LatLng latLng) {
@@ -696,9 +672,9 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			params.put("language", Locale.getDefault().getCountry());
 			params.put("sensor", "false");
 
-			GoogleRestApis.geocode(latLng.latitude + "," + latLng.longitude, Locale.getDefault().getCountry(), new Callback<GoogleGeocodeResponse>() {
+			GoogleRestApis.geocode(latLng.latitude + "," + latLng.longitude, Locale.getDefault().getCountry(), new GeocodeCallback(geoDataClient) {
 				@Override
-				public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
+				public void onSuccess(GoogleGeocodeResponse geocodeResponse, Response response) {
 					try {
 						if (geocodeResponse.results != null && geocodeResponse.results.size() > 0) {
 							lastLatFetched = latLng.latitude;

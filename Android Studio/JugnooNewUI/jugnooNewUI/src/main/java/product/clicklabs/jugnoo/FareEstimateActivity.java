@@ -16,8 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -53,7 +52,6 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 
 public class FareEstimateActivity extends BaseAppCompatActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants, GAAction, GACategory {
 
     RelativeLayout relative;
@@ -75,7 +73,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     private SearchResult searchResultGlobal;
     private Region region;
     private PromoCoupon promoCoupon;
-    private GoogleApiClient mGoogleApiClient;
+    private GeoDataClient geoDataClient;
     private LatLng pickupLatLng, dropLatLng;
     private String pickupAddress, dropAddress;
 
@@ -114,13 +112,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         }
 
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+        geoDataClient = Places.getGeoDataClient(this, null);
 
         relative = findViewById(R.id.relative);
         assl = new ASSL(this, relative, 1134, 720, false);
@@ -428,17 +420,6 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         super.onDestroy();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
 
     @Override
     public void onTextChange(String text) {
@@ -494,22 +475,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
     }
 
-    @Override
-    public void onConnected(Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    public GoogleApiClient getmGoogleApiClient(){
-        return mGoogleApiClient;
+    public GeoDataClient getGeoDataClient(){
+        return geoDataClient;
     }
 }

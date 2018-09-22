@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -61,6 +62,8 @@ import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -178,6 +181,7 @@ import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.DeleteCacheIntentService;
+import product.clicklabs.jugnoo.GeocodeCallback;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.OrderStatusFragment;
@@ -220,10 +224,8 @@ import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
-import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 
 /**
@@ -313,6 +315,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return feedHomeAddPostView;
     }
 
+    private GeoDataClient mGeoDataClient;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -335,6 +339,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
             new ASSL(this, drawerLayout, 1134, 720, false);
             scale = getResources().getDisplayMetrics().density;
+
+            mGeoDataClient = Places.getGeoDataClient(this, null);
 
             relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
@@ -3926,9 +3932,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             DialogPopup.showLoadingDialog(this, "Loading...");
             GoogleRestApis.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                    "en", new Callback<GoogleGeocodeResponse>() {
+                    "en", new GeocodeCallback(mGeoDataClient) {
                         @Override
-                        public void success(GoogleGeocodeResponse settleUserDebt, Response response) {
+                        public void onSuccess(GoogleGeocodeResponse settleUserDebt, Response response) {
                             try {
                                 DialogPopup.dismissLoadingDialog();
                                 GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
