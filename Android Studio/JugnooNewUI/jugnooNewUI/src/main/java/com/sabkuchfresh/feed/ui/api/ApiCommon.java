@@ -279,6 +279,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case FETCH_ACTIVE_LOCALES:
                 RestClient.getApiService().fetchActiveLocales(params, callback);
                 break;
+            case ADD_CARD_PAYSTACK:
+                RestClient.getApiService().addCardPayStack(params, callback);
+                break;
+            case DELETE_CARD_PAYSTACK:
+                RestClient.getApiService().deleteCardPayStack(params, callback);
+                break;
             case FARE_DETAILS:
                 RestClient.getApiService().fareDetails(params, callback);
                 break;

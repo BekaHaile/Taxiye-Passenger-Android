@@ -21,9 +21,19 @@ public class GoogleGeocodeResponse {
     public List<Results> results;
     @SerializedName("error_message")
     private String errorMessage;
+    @SerializedName("status")
+    private String status;
 
     public String getErrorMessage() {
         return errorMessage;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public class Results {

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
@@ -175,132 +178,38 @@ public class MapUtils {
 	}
 	
 	
-	public static GAPIAddress parseGAPIIAddress(String responseStr){
-		GAPIAddress fullAddress = new GAPIAddress(new ArrayList<String>(), "Unnamed", "", "", "", "", "", "not_found");
+	public static GAPIAddress parseGAPIIAddress(GoogleGeocodeResponse googleGeocodeResponse){
+		GAPIAddress fullAddress = new GAPIAddress("Unnamed");
 		try {
-			JSONObject jsonObj = new JSONObject(responseStr);
-			//http://maps.googleapis.com/maps/api/geocode/json?latlng=30.75,76.75
-
-			String status = jsonObj.getString("status");
-			if (status.equalsIgnoreCase("OK")) {
-				JSONArray Results = jsonObj.getJSONArray("results");
-				JSONObject zero = Results.getJSONObject(0);
-
-				String streetNumber = "", route = "", subLocality2 = "", subLocality1 = "", locality = "", administrativeArea2 = "", administrativeArea1 = "", country = "", postalCode = "";
-				String subLocality = "", administrativeArea = "";
-
-				if (zero.has("address_components")) {
-					try {
-						ArrayList<String> selectedAddressComponentsArr = new ArrayList<String>();
-						
-						JSONArray addressComponents = zero.getJSONArray("address_components");
-
-						for (int i = 0; i < addressComponents.length(); i++) {
-
-							JSONObject iObj = addressComponents.getJSONObject(i);
-							JSONArray jArr = iObj.getJSONArray("types");
-
-							ArrayList<String> addressTypes = new ArrayList<String>();
-							for (int j = 0; j < jArr.length(); j++) {
-								addressTypes.add(jArr.getString(j));
-							}
-
-							if ("".equalsIgnoreCase(streetNumber) && addressTypes.contains("street_number")) {
-								streetNumber = iObj.getString("long_name");
-								if (!"".equalsIgnoreCase(streetNumber) && !selectedAddressComponentsArr.toString().contains(streetNumber)) {
-									selectedAddressComponentsArr.add(streetNumber);
-								}
-							}
-							if ("".equalsIgnoreCase(route) && addressTypes.contains("route")) {
-								route = iObj.getString("long_name");
-								if (!"".equalsIgnoreCase(route) && !selectedAddressComponentsArr.toString().contains(route)) {
-									selectedAddressComponentsArr.add(route);
-								}
-							}
-							if ("".equalsIgnoreCase(subLocality2) && addressTypes.contains("sublocality_level_2")) {
-								subLocality2 = iObj.getString("long_name");
-								if (!"".equalsIgnoreCase(subLocality2) && !selectedAddressComponentsArr.toString().contains(subLocality2)) {
-									selectedAddressComponentsArr.add(subLocality2);
-								}
-							}
-							if ("".equalsIgnoreCase(subLocality1) && addressTypes.contains("sublocality_level_1")) {
-								subLocality1 = iObj.getString("long_name");
-								if (!"".equalsIgnoreCase(subLocality1) && !selectedAddressComponentsArr.toString().contains(subLocality1)) {
-									selectedAddressComponentsArr.add(subLocality1);
-								}
-							}
-							if ("".equalsIgnoreCase(locality) && addressTypes.contains("locality")) {
-								locality = iObj.getString("long_name");
-								if (!"".equalsIgnoreCase(locality) && !selectedAddressComponentsArr.toString().contains(locality)) {
-									selectedAddressComponentsArr.add(locality);
-								}
-							}
-							if ("".equalsIgnoreCase(administrativeArea2) && addressTypes.contains("administrative_area_level_2")) {
-								administrativeArea2 = iObj.getString("long_name");
-								if (!"".equalsIgnoreCase(administrativeArea2) && !selectedAddressComponentsArr.toString().contains(administrativeArea2)) {
-									selectedAddressComponentsArr.add(administrativeArea2);
-								}
-							}
-							if ("".equalsIgnoreCase(administrativeArea1) && addressTypes.contains("administrative_area_level_1")) {
-								administrativeArea1 = iObj.getString("long_name");
-								if (!"".equalsIgnoreCase(administrativeArea1) && !selectedAddressComponentsArr.toString().contains(administrativeArea1)) {
-									selectedAddressComponentsArr.add(administrativeArea1);
-								}
-							}
-							if ("".equalsIgnoreCase(country) && addressTypes.contains("country")) {
-								country = iObj.getString("long_name");
-								if (!"".equalsIgnoreCase(country) && !selectedAddressComponentsArr.toString().contains(country)) {
-									selectedAddressComponentsArr.add(country);
-								}
-							}
-							if ("".equalsIgnoreCase(postalCode) && addressTypes.contains("postal_code")) {
-								postalCode = iObj.getString("long_name");
-								if (!"".equalsIgnoreCase(postalCode) && !selectedAddressComponentsArr.toString().contains(postalCode)) {
-									selectedAddressComponentsArr.add(postalCode);
+			String formatStr = MyApplication.getInstance().getString(R.string.geocode_address_format);
+			StringBuilder addressSB = new StringBuilder();
+			if(googleGeocodeResponse.getStatus().equalsIgnoreCase("OK")
+					&& googleGeocodeResponse.results != null && googleGeocodeResponse.results.size() > 0) {
+				String address = "";
+				if(!TextUtils.isEmpty(formatStr) && formatStr.contains(",")) {
+					String format[] = formatStr.split(",");
+					for (String formatI : format) {
+						for (GoogleGeocodeResponse.AddressComponent addressComponent : googleGeocodeResponse.results.get(0).addressComponents) {
+							for(String type : addressComponent.types){
+								if (type.contains(formatI) && !addressSB.toString().contains(addressComponent.longName)) {
+									addressSB.append(addressComponent.longName).append(", ");
+									break;
 								}
 							}
 						}
-
-						subLocality = subLocality1;
-						administrativeArea = administrativeArea2;
-						if(!administrativeArea.toLowerCase().contains(administrativeArea1.toLowerCase())) {
-							if ("".equalsIgnoreCase(administrativeArea)) {
-								administrativeArea = administrativeArea1;
-							} else {
-								administrativeArea = administrativeArea + ", " + administrativeArea1;
-							}
-						}
-
-
-
-						fullAddress = new GAPIAddress(selectedAddressComponentsArr, zero.getString("formatted_address"),
-								streetNumber, subLocality, locality, administrativeArea, country, postalCode);
-						if (fullAddress.addressComponents.size() > 0) {
-							String lessRedundantformattedAddress = "";
-							for (int i = 0; i < fullAddress.addressComponents.size(); i++) {
-								if (i < fullAddress.addressComponents.size() - 1) {
-									lessRedundantformattedAddress = lessRedundantformattedAddress + fullAddress.addressComponents.get(i) + ", ";
-								} else {
-									lessRedundantformattedAddress = lessRedundantformattedAddress + fullAddress.addressComponents.get(i);
-								}
-							}
-							fullAddress.formattedAddress = lessRedundantformattedAddress;
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-						fullAddress.formattedAddress = zero.getString("formatted_address");
 					}
+					address = addressSB.toString().substring(0, addressSB.length()-2);
 				}
-				else{
-					fullAddress.formattedAddress = zero.getString("formatted_address");
+				if(TextUtils.isEmpty(address)){
+					address = googleGeocodeResponse.results.get(0).formatted_address;
 				}
+				Log.e("addressSB", "===="+address);
+
+				fullAddress = new GAPIAddress(address);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if("Unnamed".equalsIgnoreCase(fullAddress.formattedAddress)){
-		}
-
 		return fullAddress;
 	}
 

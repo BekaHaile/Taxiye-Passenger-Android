@@ -43,7 +43,6 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.util.TypedValue;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -3932,8 +3931,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                         public void success(GoogleGeocodeResponse settleUserDebt, Response response) {
                             try {
                                 DialogPopup.dismissLoadingDialog();
-                                String resp = new String(((TypedByteArray) response.getBody()).getBytes());
-                                GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
+                                GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
                                 String address = gapiAddress.getSearchableAddress();
                                 setSelectedAddress(address);
                                 setSelectedLatLng(currentLatLng);

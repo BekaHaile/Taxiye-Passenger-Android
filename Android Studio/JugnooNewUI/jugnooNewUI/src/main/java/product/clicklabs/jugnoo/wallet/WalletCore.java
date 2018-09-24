@@ -261,15 +261,11 @@ public class WalletCore {
                         }).show(activity.getResources().getString(R.string.freecharge_no_cash), false, null);
                     }
                 }
-            } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal() || paymentOption==PaymentOption.ACCEPT_CARD.getOrdinal()) {
+            } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal() || paymentOption==PaymentOption.ACCEPT_CARD.getOrdinal()
+                     || paymentOption==PaymentOption.PAY_STACK_CARD.getOrdinal()) {
 
 
-                PaymentModeConfigData configData;
-                if(paymentOption==PaymentOption.STRIPE_CARDS.getOrdinal()){
-                    configData = getStripeConfigData();
-                }else{
-                   configData = getAcceptCardConfigData();
-                }
+                PaymentModeConfigData configData = getConfigData(paymentOption);
 
                 if (configData == null) {
                     return false;
@@ -400,7 +396,8 @@ public class WalletCore {
             return R.drawable.ic_cards_grey;
         } else if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
             return R.drawable.ic_mpesa_small;
-        } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption == PaymentOption.ACCEPT_CARD.getOrdinal()) {
+        } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption == PaymentOption.ACCEPT_CARD.getOrdinal()
+                ||paymentOption == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
             return R.drawable.ic_card_default;
         } else {
             return R.drawable.ic_cash_small;
@@ -432,8 +429,9 @@ public class WalletCore {
                         Data.userData.getFreeChargeBalanceStr());
             } else if (paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()) {
                 return getRazorpayName(context);
-            } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption==PaymentOption.ACCEPT_CARD.getOrdinal()) {
-                return getStripeCardName(context,paymentOption);
+            } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption==PaymentOption.ACCEPT_CARD.getOrdinal()
+                    ||paymentOption == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
+                return getConfigDisplayNameCards(context,paymentOption);
             } else if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
                 return getMPesaName(context);
             } else {
@@ -456,7 +454,7 @@ public class WalletCore {
         return name;
     }
 
-    public String getStripeCardName(Context context,int paymentOption) {
+    public String getConfigDisplayNameCards(Context context, int paymentOption) {
         String name = context.getString(R.string.card);
         for (PaymentModeConfigData configData : getPaymentModeConfigDatas()) {
             if (configData.getPaymentOption() == paymentOption) {
@@ -493,8 +491,9 @@ public class WalletCore {
                 return context.getResources().getString(R.string.freecharge);
             } else if (paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()) {
                 return getPaymentOptionBalanceText(paymentOption);
-            } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption==PaymentOption.ACCEPT_CARD.getOrdinal()) {
-                return getStripeCardName(context,paymentOption);
+            } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption==PaymentOption.ACCEPT_CARD.getOrdinal()
+                        ||paymentOption==PaymentOption.PAY_STACK_CARD.getOrdinal() ) {
+                return getConfigDisplayNameCards(context,paymentOption);
             } else if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
                 return context.getString(R.string.mpesa);
             } else {
@@ -761,7 +760,9 @@ public class WalletCore {
                         paymentModeConfigDataDefault = paymentModeConfigData;
                         break;
                     } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()
-                            || paymentModeConfigData.getPaymentOption() == PaymentOption.ACCEPT_CARD.getOrdinal()) {
+                            || paymentModeConfigData.getPaymentOption() == PaymentOption.ACCEPT_CARD.getOrdinal()
+                            || paymentModeConfigData.getPaymentOption() == PaymentOption.PAY_STACK_CARD.getOrdinal())
+                    {
                         //&& paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0
                         paymentModeConfigDataDefault = paymentModeConfigData;
                         break;
@@ -850,6 +851,8 @@ public class WalletCore {
             return PaymentOption.STRIPE_CARDS;
         }  if (PaymentOption.ACCEPT_CARD.getOrdinal() == paymentOption) {
             return PaymentOption.ACCEPT_CARD;
+        } if (PaymentOption.PAY_STACK_CARD.getOrdinal() == paymentOption) {
+            return PaymentOption.PAY_STACK_CARD;
         } else {
             return PaymentOption.CASH;
         }
@@ -1018,15 +1021,12 @@ public class WalletCore {
                             .openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.JUGNOO_PAY.getOrdinal());
                     callbackPaymentOptionSelector.onWalletAdd(PaymentOption.JUGNOO_PAY);
                 }
-            } else if (paymentOption == PaymentOption.STRIPE_CARDS || paymentOption == PaymentOption.ACCEPT_CARD) {
+            } else if (paymentOption == PaymentOption.STRIPE_CARDS || paymentOption == PaymentOption.ACCEPT_CARD
+                     || paymentOption == PaymentOption.PAY_STACK_CARD){
 
 
-                PaymentModeConfigData configData ;
-                if(paymentOption==PaymentOption.STRIPE_CARDS){
-                    configData = getStripeConfigData();
-                }else{
-                    configData = getAcceptCardConfigData();
-                }
+                PaymentModeConfigData configData  = getConfigData(paymentOption.getOrdinal());
+
                 if (configData == null) return;
 
 
@@ -1060,7 +1060,7 @@ public class WalletCore {
      */
     public PaymentModeConfigData updateStripeCards(ArrayList<StripeCardData> stripeCardData) {
         if (paymentModeConfigDatas == null) return null;
-        PaymentModeConfigData stripeConfigData = getStripeConfigData();
+        PaymentModeConfigData stripeConfigData = getConfigData(PaymentOption.STRIPE_CARDS.getOrdinal());
         if (stripeConfigData == null) return null;
 
         stripeConfigData.setCardsData(stripeCardData);
@@ -1076,7 +1076,7 @@ public class WalletCore {
      */
     public PaymentModeConfigData updateAcceptCards(ArrayList<StripeCardData> stripeCardData) {
         if (paymentModeConfigDatas == null) return null;
-        PaymentModeConfigData configData = getAcceptCardConfigData();
+        PaymentModeConfigData configData = getConfigData(PaymentOption.ACCEPT_CARD.getOrdinal());
         if (configData == null) return null;
 
         configData.setCardsData(stripeCardData);
@@ -1086,24 +1086,12 @@ public class WalletCore {
 
     }
 
-    @Nullable
-    public PaymentModeConfigData getStripeConfigData() {
-        PaymentModeConfigData stripeConfigData = null;
-        for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
-            if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
-
-                stripeConfigData = paymentModeConfigData;
-            }
-        }
-        return stripeConfigData;
-    }
-
 
     @Nullable
-    public PaymentModeConfigData getAcceptCardConfigData() {
+    public PaymentModeConfigData getConfigData(int paymentOption) {
         PaymentModeConfigData configData = null;
         for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
-            if (paymentModeConfigData.getPaymentOption() == PaymentOption.ACCEPT_CARD.getOrdinal()) {
+            if (paymentModeConfigData.getPaymentOption() == paymentOption) {
 
                 configData = paymentModeConfigData;
             }
@@ -1146,7 +1134,8 @@ public class WalletCore {
         }
 
 
-        if (BRAND_RESOURCE_MAP.get(brand) != com.stripe.android.R.drawable.ic_unknown) {
+
+        if (BRAND_RESOURCE_MAP.get(brand)!=null &&  BRAND_RESOURCE_MAP.get(brand)!= com.stripe.android.R.drawable.ic_unknown) {
             brandImage = BRAND_RESOURCE_MAP.get(brand);
         }
 

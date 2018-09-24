@@ -5859,14 +5859,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             @Override
                             public void success(GoogleGeocodeResponse settleUserDebt, Response response) {
                                 try {
-                                    String resp = new String(((TypedByteArray) response.getBody()).getBytes());
-                                    GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(resp);
+                                    GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
                                     String address = gapiAddress.getSearchableAddress();
                                     if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                                         textView.setHint(getResources().getString(R.string.getting_address));
                                         textView.setText(address);
                                         Data.autoData.setPickupAddress(address, currentLatLng);
-                                        SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
+                                        SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
                                                 Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
                                         if (searchResult != null) {
                                             textView.setText(searchResult.getName());
