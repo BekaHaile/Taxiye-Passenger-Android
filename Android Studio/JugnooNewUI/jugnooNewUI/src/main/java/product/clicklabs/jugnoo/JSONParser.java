@@ -424,6 +424,8 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(KEY_CUSTOMER_FETCH_DRIVER_LOCATION_INTERVAL,
                 autoData.optInt(KEY_CUSTOMER_FETCH_DRIVER_LOCATION_INTERVAL,
                         context.getResources().getInteger(R.integer.customer_fetch_driver_location_interval)));
+        Prefs.with(context).save(KEY_HIT_PLACE_DETAILS_AFTER_GEOCODE, autoData.optBoolean(KEY_HIT_PLACE_DETAILS_AFTER_GEOCODE,
+				context.getResources().getBoolean(R.bool.hit_place_details_after_geocode)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
