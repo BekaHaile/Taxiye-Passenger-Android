@@ -21,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AccountActivity;
+import product.clicklabs.jugnoo.AppMenuTagNames;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -212,6 +213,10 @@ public class MenuBar {
 		for(MenuInfo menuInfo: Data.userData.getMenuInfoList()) {
 			if(!menuInfo.getShowInAccount()){
 				itemsToShow.add(menuInfo);
+			}
+			if(AppMenuTagNames.APP_TAG_NAMES.containsKey(menuInfo.getTag())){
+
+				menuInfo.setName(AppMenuTagNames.APP_TAG_NAMES.get(menuInfo.getTag()));
 			}
 		}
 

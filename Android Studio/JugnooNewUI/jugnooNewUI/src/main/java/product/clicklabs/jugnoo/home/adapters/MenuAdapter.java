@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
+import product.clicklabs.jugnoo.AppMenuTagNames;
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.ChangeLanguageActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -126,6 +127,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 
                 MenuInfo menuInfo = menuList.get(position);
+
                 ViewHolder holder = (ViewHolder) viewholder;
                 holder.relative.setTag(position);
                 holder.textViewMenu.setText(menuInfo.getName());

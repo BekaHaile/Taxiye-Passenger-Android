@@ -1,5 +1,6 @@
 package com.country.picker;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Utils;
 
 public class CountryPickerDialog extends DialogFragment implements OnItemClickListener {
 
@@ -67,7 +68,30 @@ public class CountryPickerDialog extends DialogFragment implements OnItemClickLi
                 search(searchQuery.toString());
             }
         });
+        searchEditText.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(getActivity() != null) {
+                    searchEditText.requestFocus();
+                    Utils.showKeyboard(getActivity(), searchEditText);
+                }
+            }
+        }, 500);
         return view;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        searchEditText.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(getActivity() != null) {
+                    Utils.hideKeyboard(getActivity());
+                }
+            }
+        }, 200);
+
+        super.onDismiss(dialog);
     }
 
     @Override
