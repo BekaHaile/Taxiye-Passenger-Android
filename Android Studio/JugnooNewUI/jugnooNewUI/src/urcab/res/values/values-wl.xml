@@ -132,4 +132,6 @@
     <!--String keys for URCAB-->
     <string name="default_currency">AUD</string>
     <string name="geocode_address_format">premise,street_number,route,locality,administrative_area</string>
+    <bool name="rename_sidemenu_items">true</bool>
+    <color name="side_menu_color">#292a3c</color>
 </resources>
