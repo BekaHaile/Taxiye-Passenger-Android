@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -17,16 +18,17 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.AutocompletePredictionBuffer;
+import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
+import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.PlaceBufferResponse;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -93,7 +95,7 @@ public class SearchListAdapter extends BaseAdapter{
         int id;
     }
 
-	long delay = 1000; // 1 seconds after user stops typing
+	long delay = 700; // 1 seconds after user stops typing
 	long last_text_edit = 0;
 	Handler handler = new Handler();
 
@@ -109,7 +111,7 @@ public class SearchListAdapter extends BaseAdapter{
     ArrayList<SearchResult> searchResultsForSearch;
     ArrayList<SearchResult> searchResults;
 
-	private GoogleApiClient mGoogleApiClient;
+	private GeoDataClient geoDataClient;
     private boolean showSavedPlaces;
     private int searchMode;
 	private int favLocationsCount = 0;
@@ -124,7 +126,7 @@ public class SearchListAdapter extends BaseAdapter{
      * @throws IllegalStateException
      */
     public SearchListAdapter(final Context context, EditText editTextForSearch, LatLng searchPivotLatLng,
-							 GoogleApiClient mGoogleApiClient, int searchMode, SearchListActionsHandler searchListActionsHandler,
+							 GeoDataClient geoDataClient, int searchMode, SearchListActionsHandler searchListActionsHandler,
                              boolean showSavedPlaces)
             throws IllegalStateException{
         if(context instanceof Activity) {
@@ -135,7 +137,7 @@ public class SearchListAdapter extends BaseAdapter{
             this.editTextForSearch = editTextForSearch;
             this.defaultSearchPivotLatLng = searchPivotLatLng;
             this.searchListActionsHandler = searchListActionsHandler;
-			this.mGoogleApiClient = mGoogleApiClient;
+			this.geoDataClient = geoDataClient;
             this.searchMode = searchMode;
             this.editTextForSearch.addTextChangedListener(textWatcherEditText);
 
@@ -328,30 +330,31 @@ public class SearchListAdapter extends BaseAdapter{
         try {
         	Log.e(SearchListAdapter.class.getSimpleName(), "getSearchResults running for: "+searchText);
 			if (!refreshingAutoComplete) {
+				refreshingAutoComplete = true;
 				searchListActionsHandler.onSearchPre();
 				String specifiedCountry = Prefs.with(context).getString(Constants.KEY_SPECIFIED_COUNTRY_PLACES_SEARCH, "");
                 AutocompleteFilter autocompleteFilter = new AutocompleteFilter.Builder()
 						.setCountry(specifiedCountry)
 						.build();
-				Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, searchText,
+                geoDataClient.getAutocompletePredictions(searchText,
 						new LatLngBounds.Builder().include(latLng).build(),
-						!TextUtils.isEmpty(specifiedCountry) ? autocompleteFilter : null).setResultCallback(new ResultCallback<AutocompletePredictionBuffer>() {
+						!TextUtils.isEmpty(specifiedCountry) ? autocompleteFilter : null)
+						.addOnCompleteListener(new OnCompleteListener<AutocompletePredictionBufferResponse>() {
 					@Override
-					public void onResult(AutocompletePredictionBuffer autocompletePredictions) {
+					public void onComplete(@NonNull Task<AutocompletePredictionBufferResponse> task) {
 						try {
-							refreshingAutoComplete = true;
 							searchResultsForSearch.clear();
-							for (AutocompletePrediction autocompletePrediction : autocompletePredictions) {
-                                String name = autocompletePrediction.getFullText(null).toString().split(",")[0];
+							for (AutocompletePrediction autocompletePrediction : task.getResult()) {
+								String name = autocompletePrediction.getFullText(null).toString().split(",")[0];
 								searchResultsForSearch.add(new SearchResult(name,
-                                        autocompletePrediction.getFullText(null).toString(),
+										autocompletePrediction.getFullText(null).toString(),
 										autocompletePrediction.getPlaceId(), 0, 0));
 							}
-							autocompletePredictions.release();
+							task.getResult().release();
 
-                            addFavoriteLocations(searchText);
+							addFavoriteLocations(searchText);
 
-                            setSearchResultsToList();
+							setSearchResultsToList();
 							refreshingAutoComplete = false;
 
 							if (!editTextForSearch.getText().toString().trim().equalsIgnoreCase(searchText)) {
@@ -359,6 +362,15 @@ public class SearchListAdapter extends BaseAdapter{
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
+						}
+					}
+				}).addOnFailureListener(new OnFailureListener() {
+					@Override
+					public void onFailure(@NonNull Exception e) {
+						refreshingAutoComplete = false;
+
+						if (!editTextForSearch.getText().toString().trim().equalsIgnoreCase(searchText)) {
+							recallSearch(editTextForSearch.getText().toString().trim());
 						}
 					}
 				});
@@ -467,27 +479,31 @@ public class SearchListAdapter extends BaseAdapter{
 			searchListActionsHandler.onPlaceSearchPre();
 			DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
 			Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
-			Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)
-					.setResultCallback(new ResultCallback<PlaceBuffer>() {
-						@Override
-						public void onResult(PlaceBuffer places) {
-							try {
-								Log.e("SearchListAdapter", "getPlaceById response=" + places);
-								if (places.getStatus().isSuccess()) {
-									final Place myPlace = places.get(0);
-									final CharSequence thirdPartyAttributions = places.getAttributions();
-									SearchResult searchResult = new SearchResult(placeName, placeAddress, placeId,
-											myPlace.getLatLng().latitude, myPlace.getLatLng().longitude);
-									searchResult.setThirdPartyAttributions(thirdPartyAttributions);
-									sendSearchResult(searchResult);
-								}
-								places.release();
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-							DialogPopup.dismissLoadingDialog();
+			geoDataClient.getPlaceById(placeId).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+				@Override
+				public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+					try {
+						Log.e("SearchListAdapter", "getPlaceById response=" + task.getResult());
+						if (task.isSuccessful()) {
+							final Place myPlace = task.getResult().get(0);
+							final CharSequence thirdPartyAttributions = task.getResult().getAttributions();
+							SearchResult searchResult = new SearchResult(placeName, placeAddress, placeId,
+									myPlace.getLatLng().latitude, myPlace.getLatLng().longitude);
+							searchResult.setThirdPartyAttributions(thirdPartyAttributions);
+							sendSearchResult(searchResult);
 						}
-					});
+						task.getResult().release();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					DialogPopup.dismissLoadingDialog();
+				}
+			}).addOnFailureListener(new OnFailureListener() {
+				@Override
+				public void onFailure(@NonNull Exception e) {
+					DialogPopup.dismissLoadingDialog();
+				}
+			});
 			Log.v("after call back", "after call back");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -535,7 +551,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 		@Override
 		public void run() {
-			if (System.currentTimeMillis() > (last_text_edit + delay - 500)) {
+			if (System.currentTimeMillis() > (last_text_edit + delay - 200)) {
 				getSearchResults(textToSearch, SearchListAdapter.this.getPivotLatLng());
 			}
 		}

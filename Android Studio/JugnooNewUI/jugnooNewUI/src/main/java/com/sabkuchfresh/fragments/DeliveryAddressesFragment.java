@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
@@ -24,11 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -93,7 +88,7 @@ import retrofit.client.Response;
  * Created by ankit on 14/09/16.
  */
 public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GACategory{
+         GACategory{
 
     private View rootView;
     private Activity activity;
@@ -101,7 +96,6 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
     private NonScrollListView listViewRecentAddresses, listViewSavedLocations;
     private TextView textViewSavedPlaces, textViewRecentAddresses;
     private CoordinatorLayout linearLayoutMain;
-    private GoogleApiClient mGoogleApiClient;
     private SearchListAdapter searchListAdapter;
     private ScrollView scrollViewSearch;
     private NonScrollListView listViewSearch;
@@ -142,7 +136,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
     private boolean autoCompleteResultClicked = false;
     private boolean canProceedWithUnsavedAddressMode;
     public static final String KEY_ARGS_PROCEED_WITHOUT_UNSAVED_ADDRESS = "key_args_proceed_without_unsaved_address";
-
+    private GeoDataClient geoDataClient;
 
     @OnClick(R.id.bMyLocation)
     void zoomToCurrentLocation(){
@@ -202,6 +196,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 
         activity = getActivity();
         mBus = MyApplication.getInstance().getBus();
+        geoDataClient = Places.getGeoDataClient(getActivity(), null);
 
         if(activity instanceof FreshActivity) {
             ((FreshActivity)activity).fragmentUISetup(this);
@@ -336,17 +331,10 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 
 
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(activity)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
 
 
         boolean showSavedPlaces = !(activity instanceof AddPlaceActivity);
-        searchListAdapter = new SearchListAdapter(activity, editTextDeliveryAddress, new LatLng(30.75, 76.78), mGoogleApiClient,
+        searchListAdapter = new SearchListAdapter(activity, editTextDeliveryAddress, new LatLng(30.75, 76.78), geoDataClient,
                 PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
                 new SearchListAdapter.SearchListActionsHandler() {
 
@@ -689,14 +677,12 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
     public void onStart() {
         super.onStart();
         mBus.register(this);
-        mGoogleApiClient.connect();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mBus.unregister(this);
-        mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -727,36 +713,6 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
             tvDeliveryAddressSetVisibility(View.GONE);
         }
         scrollViewSuggestions.scrollTo(0, 0);
-    }
-
-    private interface GetLatLngFromPlaceId{
-        void onLatLngReceived(LatLng latLng);
-    }
-
-    private interface GetAddressFromLatLng{
-        void onAddressReceived(String address);
-    }
-
-    private void getLatLngFromPlaceId(String placeId, final GetLatLngFromPlaceId getLatLngFromPlaceId){
-        Places.GeoDataApi.getPlaceById(mGoogleApiClient, placeId)
-                .setResultCallback(new ResultCallback<PlaceBuffer>() {
-                    @Override
-                    public void onResult(PlaceBuffer places) {
-                        try {
-                            Log.e("SearchListAdapter", "getPlaceById response=" + places);
-                            if (places.getStatus().isSuccess()) {
-                                final Place myPlace = places.get(0);
-                                getLatLngFromPlaceId.onLatLngReceived(myPlace.getLatLng());
-                            }else{
-                                getLatLngFromPlaceId.onLatLngReceived(null);
-                            }
-                            places.release();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            getLatLngFromPlaceId.onLatLngReceived(null);
-                        }
-                    }
-                });
     }
 
 
@@ -983,21 +939,6 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
             ((FreshActivity)activity).performBackPressed(false);
 
         }
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
     private Bundle createAddressBundle(String placeId){
