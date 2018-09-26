@@ -215,7 +215,7 @@ public class MapUtils {
 							}
 						}
 					}
-					if(addressSB.length() >= 2) {
+					if(addressSB.length() > 2 && googleGeocodeResponse.results.get(0).addressComponents.size() > 4) {
 						address = addressSB.toString().substring(0, addressSB.length() - 2);
 					}
 				}
