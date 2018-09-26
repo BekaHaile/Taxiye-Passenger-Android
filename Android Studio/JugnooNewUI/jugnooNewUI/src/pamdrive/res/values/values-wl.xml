@@ -100,7 +100,7 @@
     <bool name="show_jugnoo_promo_icon">false</bool>
     <integer name="scale_type">@integer/fit_xy</integer>
 
-    <string name="default_currency">NG</string>
+    <string name="default_currency">NGN</string>
     <string name="default_country_code">+234</string>
     <string name="default_country_iso">NGA</string>
 

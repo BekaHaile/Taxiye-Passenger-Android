@@ -198,7 +198,9 @@ public class MapUtils {
 							}
 						}
 					}
+					if (addressSB.length() > 2) {
 					address = addressSB.toString().substring(0, addressSB.length()-2);
+					}
 				}
 				if(TextUtils.isEmpty(address)){
 					address = googleGeocodeResponse.results.get(0).formatted_address;
