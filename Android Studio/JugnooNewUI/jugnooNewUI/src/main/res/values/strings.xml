@@ -1955,4 +1955,5 @@
     <string name="paystack_add_card_success">Card added successfully</string>
     <string name="paystack_add_card_failure">Unable to add card.</string>
     <string name="net_tax">Net Tax</string>
+    <string name="pay_via_format">Pay via %s</string>
 </resources>
