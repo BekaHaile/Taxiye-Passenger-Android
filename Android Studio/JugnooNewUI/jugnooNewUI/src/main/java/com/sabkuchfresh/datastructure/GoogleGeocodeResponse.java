@@ -43,6 +43,12 @@ public class GoogleGeocodeResponse {
 
         @SerializedName("address_components")
         public List<AddressComponent> addressComponents = new ArrayList<AddressComponent>();
+        @SerializedName("place_id")
+        private String placeId;
+        @SerializedName("types")
+        @Expose
+        private List<String> types = new ArrayList<String>();
+        private String placeName;
 
         /**
          * Index
@@ -350,6 +356,21 @@ public class GoogleGeocodeResponse {
             return country;
         }
 
+        public String getPlaceId() {
+            return placeId;
+        }
+
+        public List<String> getTypes() {
+            return types;
+        }
+
+        public String getPlaceName() {
+            return placeName;
+        }
+
+        public void setPlaceName(String placeName) {
+            this.placeName = placeName;
+        }
     }
 
     public class AddressComponent {
@@ -360,6 +381,7 @@ public class GoogleGeocodeResponse {
         @SerializedName("types")
         @Expose
         public List<String> types = new ArrayList<String>();
+        public boolean redundant;
 
 
     }

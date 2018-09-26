@@ -71,13 +71,12 @@ import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
 import com.fugu.FuguConfig;
 import com.fugu.FuguNotificationConfig;
-//import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
-//import com.google.ads.conversiontracking.AdWordsConversionReporter;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.PlacesOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -136,6 +135,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.DeleteCacheIntentService;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.GCMIntentService;
+import product.clicklabs.jugnoo.GeocodeCallback;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.LocationUpdate;
@@ -246,9 +246,11 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
+//import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
+//import com.google.ads.conversiontracking.AdWordsConversionReporter;
+
 
 public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
         GACategory, GAAction, BidsPlacedAdapter.Callback {
 
@@ -506,7 +508,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private ArrayList<MarkerOptions> markerOptionsSpecialPickup = new ArrayList<>();
     private float mapPaddingSpecialPickup = 268f, mapPaddingConfirm = 238f;
     private boolean setPickupAddressZoomedOnce = false;
-    private GoogleApiClient mGoogleApiClient;
     private float previousZoomLevel = -1.0f;
     private TransactionUtils transactionUtils;
     private RelativeLayout relativeLayoutContainer;
@@ -524,6 +525,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private LinearLayout llRatingFeedbackType;
     private TextView tvTipAmountLabel,tvEditTip,tvRemoveTip;
     public static final int REQ_CODE_ADD_CARD_DRIVER_TIP = 0x167;
+
+    private GeoDataClient mGeoDataClient;
 
     @SuppressLint("NewApi")
     @Override
@@ -570,13 +573,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Data.latitude = Data.loginLatitude;
         Data.longitude = Data.loginLongitude;
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+        mGeoDataClient = Places.getGeoDataClient(this, null);
 
 
         callbackManager = CallbackManager.Factory.create();
@@ -5855,9 +5852,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 textView.setHint(R.string.getting_address);
                 GoogleRestApis.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                        "en", new Callback<GoogleGeocodeResponse>() {
+                        "en", new GeocodeCallback(mGeoDataClient) {
                             @Override
-                            public void success(GoogleGeocodeResponse settleUserDebt, Response response) {
+                            public void onSuccess(GoogleGeocodeResponse settleUserDebt, Response response) {
                                 try {
                                     GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
                                     String address = gapiAddress.getSearchableAddress();
@@ -6366,7 +6363,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             getDropLocationPathAndDisplay(Data.autoData.getPickupLatLng(), true, null);
 
-            timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 5000, 10000);
+            timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 5000,
+                    Prefs.with(this).getInt(KEY_CUSTOMER_FETCH_DRIVER_LOCATION_INTERVAL, 30000));
             Log.i("timerDriverLocationUpdater", "started");
 
         } catch (Exception e) {
@@ -6584,7 +6582,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             MarkerAnimation.clearAsyncList();
 
-            timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100, 10000);
+            timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100,
+                    Prefs.with(this).getInt(KEY_CUSTOMER_FETCH_INRIDE_PATH_INTERVAL, 30000));
             Log.i("timerMapAnimateAndUpdateRideData", "started");
         } catch (Exception e) {
             e.printStackTrace();
@@ -7402,33 +7401,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     }
 
-
-    // *****************************Used for flurry work***************//
-    @Override
-    protected void onStart() {
-        try {
-            super.onStart();
-            mGoogleApiClient.connect();
-//            FlurryAgent.init(this, Config.getFlurryKey());
-//            FlurryAgent.onStartSession(this, Config.getFlurryKey());
-//            FlurryAgent.onEvent("HomeActivity started");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        try {
-            if (mGoogleApiClient != null) {
-                mGoogleApiClient.disconnect();
-            }
-            super.onStop();
-//            FlurryAgent.onEndSession(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void checkForMyLocationButtonVisibility() {
         if (relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE) {
@@ -10302,23 +10274,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private HomeUtil homeUtil = new HomeUtil();
 
-    @Override
-    public void onConnected(Bundle bundle) {
 
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-    }
-
-    public GoogleApiClient getmGoogleApiClient() {
-        return mGoogleApiClient;
+    public GeoDataClient getmGeoDataClient() {
+        return mGeoDataClient;
     }
 
     private HomeUtil.SavedAddressState savedAddressState = HomeUtil.SavedAddressState.BLANK;

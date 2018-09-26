@@ -106,4 +106,5 @@
 
     <!--Referal icon scale type-->
     <integer name="referral_icon_scale_type">@integer/center_inside</integer>
+    <bool name="hit_place_details_after_geocode">true</bool>
 </resources>
