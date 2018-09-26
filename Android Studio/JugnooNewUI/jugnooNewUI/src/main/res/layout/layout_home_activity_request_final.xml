@@ -533,6 +533,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_alignParentEnd="true"
+            android:gravity="center"
             android:layout_marginEnd="40px">
             
             <RelativeLayout
@@ -566,15 +567,17 @@
 
             <Button
                 android:id="@+id/buttonTipDriver"
-                android:layout_width="132px"
-                android:layout_height="136px"
-                android:layout_marginStart="20px"
-                android:layout_marginEnd="10px"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:contentDescription="@string/call_driver"
-                android:layout_marginTop="0px"
                 android:visibility="visible"
-                android:background="@drawable/ic_ride_tip_selector"
-                android:tag="mwar" />
+                android:text="@string/tip"
+                android:textSize="17sp"
+                android:textColor="@color/white"
+                android:background="@drawable/circle_theme_selector"
+                android:tag="@string/dont_touch_me" />
 
 
 
@@ -584,7 +587,6 @@
             android:layout_height="136px"
             android:layout_alignParentEnd="true"
             android:contentDescription="@string/call_driver"
-            android:layout_marginTop="0px"
             android:visibility="visible"
             android:background="@drawable/ic_ride_call_selector"
             android:tag="mwar" />
