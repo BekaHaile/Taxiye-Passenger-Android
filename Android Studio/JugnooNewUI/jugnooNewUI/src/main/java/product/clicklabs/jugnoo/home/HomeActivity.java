@@ -7649,8 +7649,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 nameValuePairs.put(Constants.KEY_PREFERRED_PAYMENT_MODE, "" + Data.autoData.getPickupPaymentOption());
                                 nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(slidingBottomPanel
                                         .getRequestRideOptionsFragment().getRegionSelected().getVehicleType()));
-                                nameValuePairs.put(KEY_OPERATOR_ID, String.valueOf(slidingBottomPanel
-                                        .getRequestRideOptionsFragment().getRegionSelected().getOperatorId()));
                                 nameValuePairs.put(KEY_REVERSE_BID, String.valueOf(slidingBottomPanel
                                         .getRequestRideOptionsFragment().getRegionSelected().getReverseBid()));
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel

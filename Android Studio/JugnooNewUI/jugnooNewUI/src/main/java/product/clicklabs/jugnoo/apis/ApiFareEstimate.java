@@ -154,7 +154,6 @@ public class ApiFareEstimate {
                 params.put("ride_time", "" + timeValue);
                 params.put(Constants.KEY_IS_POOLED, "" + isPooled);
                 params.put(Constants.KEY_VEHICLE_TYPE, String.valueOf(region.getVehicleType()));
-                params.put(Constants.KEY_OPERATOR_ID, String.valueOf(region.getOperatorId()));
                 params.put(Constants.KEY_RIDE_TYPE, String.valueOf(region.getRideType()));
                 params.put(Constants.KEY_REGION_ID, String.valueOf(region.getRegionId()));
                 if(promoCoupon!=null && promoCoupon.getId()!=-1){
