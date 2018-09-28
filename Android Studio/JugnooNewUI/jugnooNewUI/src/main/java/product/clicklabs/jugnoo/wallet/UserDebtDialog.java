@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.UserData;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -63,7 +64,8 @@ public class UserDebtDialog {
 				new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						PaymentModeConfigData stripePaymentData = MyApplication.getInstance().getWalletCore().getStripeConfigData();
+						PaymentModeConfigData stripePaymentData = MyApplication.getInstance().getWalletCore().
+                                getConfigData(PaymentOption.STRIPE_CARDS.getOrdinal());
 						double stripeBalance = (stripePaymentData!=null &&  stripePaymentData.getCardsData()!=null
 								&& stripePaymentData.getCardsData().size()>0) ? UserDebtDialog.this.userDebt+5 : 0;
 						double availableBalance = (userData.getPaytmEnabled() == 1 ? userData.getPaytmBalance() : 0)
