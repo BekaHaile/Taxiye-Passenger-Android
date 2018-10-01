@@ -949,4 +949,6 @@ public interface Constants {
     String KEY_CUSTOMER_FETCH_INRIDE_PATH_INTERVAL = "customer_fetch_inride_path_interval";
     String KEY_CUSTOMER_FETCH_DRIVER_LOCATION_INTERVAL = "customer_fetch_driver_location_interval";
     String KEY_HIT_PLACE_DETAILS_AFTER_GEOCODE = "hit_place_details_after_geocode";
+    String SP_LAST_PHONE_NUMBER_SAVED = "last_phone_number_saved";
+    String SP_LAST_COUNTRY_CODE_SAVED = "last_country_code_saved";
 }

@@ -1709,7 +1709,13 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				editTextPhoneNumber.setText(Utils.retrievePhoneNumberTenChars(phoneNoToFillInInHouseLogin, Utils.getCountryCode(this)));
 				tvCountryCode.setText(Utils.getCountryCode(this));
 				if(editTextPhoneNumber.getText().length() == 0) {
-					editTextPhoneNumber.setText(Prefs.with(SplashNewActivity.this).getString(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE, ""));
+					String phoneNumberSaved = Prefs.with(SplashNewActivity.this).getString(Constants.SP_LAST_PHONE_NUMBER_SAVED, "");
+					String countryCodeSaved = Prefs.with(SplashNewActivity.this).getString(Constants.SP_LAST_COUNTRY_CODE_SAVED, "");
+					editTextPhoneNumber.setText(phoneNumberSaved.length() > 0 ? Utils.retrievePhoneNumberTenChars(phoneNumberSaved, countryCodeSaved) : Prefs.with(SplashNewActivity.this).getString(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE, ""));
+					editTextPhoneNumber.setSelection(editTextPhoneNumber.getText().length());
+					if(countryCodeSaved.length() > 0){
+						tvCountryCode.setText(countryCodeSaved);
+					}
 				}
 				animRightToLeft(rlLoginSignupNew, rlPhoneLogin, duration);
 

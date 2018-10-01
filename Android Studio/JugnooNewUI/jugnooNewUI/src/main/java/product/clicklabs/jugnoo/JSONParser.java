@@ -253,6 +253,9 @@ public class JSONParser implements Constants {
                 topupCardEnabled, showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled, showJeanieHelpText,
                 showOfferDialog, showTutorial, signupOnboarding,autosEnabled, countryCode);
 
+        Prefs.with(context).save(Constants.SP_LAST_PHONE_NUMBER_SAVED, phoneNo);
+        Prefs.with(context).save(Constants.SP_LAST_COUNTRY_CODE_SAVED, countryCode);
+
         Data.userData.setSubscriptionData(loginUserData.getSubscriptionData());
         Data.userData.setShowJugnooStarInAcccount(loginUserData.getShowJugnooStarInAccount());
 
