@@ -27,7 +27,7 @@
     <string name="fb_app_id">251198292011565</string>
     <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
     <string name="ak_login_protocol_scheme">ak782131025144439</string>
-    <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
+    <string name="branch_key">key_live_iiz94XR2JrUHTbqxO32sDkljqBecQFRl</string>
 
 
 
@@ -63,7 +63,7 @@
     <string name="app_domain">jugnoo.in</string>
     <string name="app_host_name">www.jugnoo.in</string>
     <string name="branch_domain">share.jugnoo.in</string>
-    <string name="app_scheme">jingo</string>
+    <string name="app_scheme">jingos</string>
 
     <string name="pictures_path">Jingo/Jingo Pictures</string>
     <bool name="force_inhouse_login">true</bool>
@@ -93,7 +93,7 @@
 
     <drawable name="login_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
     <drawable name="splash_background_drawable">@color/transparent</drawable>
-    <integer name="show_splash_logo_text_login">@integer/view_visible</integer>
+    <integer name="show_splash_logo_text_login">@integer/view_gone</integer>
     <drawable name="login_background_drawable">@color/transparent</drawable>
     <dimen name="splash_top_bottom_bg_margin">0dp</dimen>
     <integer name="splash_bg_strip_scaleType">@integer/fit_xy</integer>

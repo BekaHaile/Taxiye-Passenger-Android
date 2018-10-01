@@ -88,26 +88,16 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <intent-filter>
-                <data android:scheme="jungooautos"/>
-
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-
-            <!-- jugnooautos://app?deepindex=0 -->
             <intent-filter android:label="@string/app_name">
+                <data android:scheme="@string/app_scheme"/>
+
+
                 <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data
-                    android:host="app"
-                    android:scheme="@string/app_scheme"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+
         </activity>
         <activity
             android:name=".home.HomeActivity"
