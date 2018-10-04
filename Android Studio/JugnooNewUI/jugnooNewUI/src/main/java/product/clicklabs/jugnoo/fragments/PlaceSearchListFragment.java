@@ -102,12 +102,18 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private RelativeLayout rlMarkerPin;
 	private Button bNext;
 	private View mapFragment;
+	private ImageView imageViewSearchCrossDest;
+	private EditText editTextSearchDest;
+	private ProgressWheel progressBarSearchDest;
+	private SearchResult searchResultPickup,searchResultDestination;
+
 	public static PlaceSearchListFragment newInstance(Bundle bundle){
 		PlaceSearchListFragment fragment = new PlaceSearchListFragment();
 		fragment.setArguments(bundle);
 		return fragment;
 	}
 	private GeoDataClient geoDataClient;
+	private int searchMode;
 
 	@Override
 	public void onAttach(Context context) {
@@ -139,10 +145,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		rlMarkerPin = (RelativeLayout) rootView.findViewById(R.id.rlMarkerPin);
 		bNext = (Button) rootView.findViewById(R.id.bNext);
-		editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
-		editTextSearch.setTypeface(Fonts.mavenMedium(activity));
 		progressBarSearch = (ProgressWheel) rootView.findViewById(R.id.progressBarSearch); progressBarSearch.setVisibility(View.GONE);
 		imageViewSearchCross = (ImageView) rootView.findViewById(R.id.ivDeliveryAddressCross); imageViewSearchCross.setVisibility(View.GONE);
+
+		progressBarSearchDest = (ProgressWheel) rootView.findViewById(R.id.progressBarSearchDest); progressBarSearchDest.setVisibility(View.GONE);
+		imageViewSearchCrossDest = (ImageView) rootView.findViewById(R.id.ivDeliveryAddressCrossDest); imageViewSearchCrossDest.setVisibility(View.GONE);
 		listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
 		scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
 		scrollViewSearch.setVisibility(View.GONE);
@@ -159,38 +166,45 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		imageViewSearchGPSIcon = (ImageView) rootView.findViewById(R.id.imageViewSearchGPSIcon);
 
-		editTextSearch.setOnClickListener(new View.OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				editTextSearch.requestFocus();
-				Utils.showSoftKeyboard(activity, editTextSearch);
-			}
-		});
-
-		imageViewSearchCross.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				try {
-					editTextSearch.setText("");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-
+		editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
 		Bundle bundle = getArguments();
 		String text = bundle.getString(KEY_SEARCH_FIELD_TEXT, "");
 		String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, "");
-		int searchMode = bundle.getInt(KEY_SEARCH_MODE, PlaceSearchMode.PICKUP.getOrdinal());
-		editTextSearch.setText(text);
-		editTextSearch.setHint(hint);
+//		searchMode = bundle.getInt(KEY_SEARCH_MODE, PlaceSearchMode.PICKUP.getOrdinal());
+		searchMode = PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
 
-		searchListAdapter = new SearchListAdapter(activity, editTextSearch, new LatLng(30.75, 76.78), geoDataClient, searchMode,
+
+		EditText[] editTextsForAdapter ;
+		if(searchMode==PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()){
+			rootView.findViewById(R.id.rlAddressDest).setVisibility(View.VISIBLE);
+			initaliseAddressEditText(editTextSearch,imageViewSearchCross,imageViewSearchGPSIcon, text, hint, PlaceSearchMode.PICKUP.getOrdinal());//For Pickup
+
+			editTextSearchDest = rootView.findViewById(R.id.editTextSearchDest);
+			ImageView imageViewSearchGPSIconDest = rootView.findViewById(R.id.imageViewSearchGPSIconDest);
+			initaliseAddressEditText(editTextSearchDest, imageViewSearchCrossDest,imageViewSearchGPSIconDest,text, hint, PlaceSearchMode.DROP.getOrdinal());//For Drop
+			editTextsForAdapter = new EditText[]{editTextSearch,editTextSearchDest};
+		}else{
+			editTextsForAdapter = new EditText[]{editTextSearch};
+			rootView.findViewById(R.id.rlAddressDest).setVisibility(View.GONE);
+			initaliseAddressEditText(editTextSearch,imageViewSearchCross,imageViewSearchGPSIcon, text, hint, searchMode);
+
+		}
+		searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78), geoDataClient, searchMode,
 				new SearchListAdapter.SearchListActionsHandler() {
 
 					@Override
 					public void onTextChange(String text) {
+						setFocusedSearchResult(null);
+						ImageView imageViewSearchCross;
+
+						if(searchMode == PlaceSearchMode.PICKUP_AND_DROP.getOrdinal() && editTextSearch.hasFocus()){
+
+							imageViewSearchCross = PlaceSearchListFragment.this.imageViewSearchCross;
+						}else {
+							imageViewSearchCross = PlaceSearchListFragment.this.imageViewSearchCrossDest;
+						}
+
 						try {
 							if(text.length() > 0){
 								scrollViewSearch.setVisibility(View.VISIBLE);
@@ -210,37 +224,52 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 					@Override
 					public void onSearchPre() {
-						progressBarSearch.setVisibility(View.VISIBLE);
+						setFocusedSearchResult(null);
+						getFocussedProgressBar().setVisibility(View.VISIBLE);
 						if(searchListActionsHandler != null){searchListActionsHandler.onSearchPre();}
 					}
 
 					@Override
 					public void onSearchPost() {
-						progressBarSearch.setVisibility(View.GONE);
+						setFocusedSearchResult(null);
+						getFocussedProgressBar().setVisibility(View.GONE);
 						if(searchListActionsHandler != null){searchListActionsHandler.onSearchPost();}
 					}
 
 					@Override
 					public void onPlaceClick(SearchResult autoCompleteSearchResult) {
+						setFocusedSearchResult(null);
 						if(searchListActionsHandler != null){searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);}
 					}
 
 					@Override
 					public void onPlaceSearchPre() {
-						progressBarSearch.setVisibility(View.VISIBLE);
+						setFocusedSearchResult(null);
+						getFocussedProgressBar().setVisibility(View.VISIBLE);
 						if(searchListActionsHandler != null){searchListActionsHandler.onPlaceSearchPre();}
 					}
 
 					@Override
 					public void onPlaceSearchPost(SearchResult searchResult) {
+
+						getFocussedProgressBar().setVisibility(View.GONE);
+						if(searchMode==PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()){
+							setFocusedSearchResult(searchResult);
+						}
+
 						scrollViewSearch.setVisibility(View.GONE);
-						progressBarSearch.setVisibility(View.GONE);
-						if(searchListActionsHandler != null){searchListActionsHandler.onPlaceSearchPost(searchResult);}
+
+
+						if(searchResultPickup!=null && searchResultDestination!=null){
+							if(searchListActionsHandler != null){searchListActionsHandler.onPlaceSearchPost(searchResult);}
+
+						}
 					}
 
 					@Override
 					public void onPlaceSearchError() {
-						progressBarSearch.setVisibility(View.GONE);
+						setFocusedSearchResult(null);
+						getFocussedProgressBar().setVisibility(View.GONE);
 						if(searchListActionsHandler != null){searchListActionsHandler.onPlaceSearchError();}
 					}
 
@@ -257,7 +286,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						}
 						if(searchListActionsHandler != null){searchListActionsHandler.onNotifyDataSetChanged(count);}
 					}
-				}, true);
+				}, true,editTextsForAdapter);
+
 
 		ViewGroup header = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.header_place_search_list, listViewSearch, false);
 		header.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
@@ -301,19 +331,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 
 
-		if(searchMode == PlaceSearchMode.DROP.getOrdinal()){
-			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_red);
-		} else{
-			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_green);
-		}
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				editTextSearch.requestFocus();
-				editTextSearch.setSelection(editTextSearch.getText().length());
-				Utils.showSoftKeyboard(activity, editTextSearch);
-			}
-		}, 200);
 
 		ImageView imageViewShadow = (ImageView) rootView.findViewById(R.id.imageViewShadow);
 		if(activity instanceof HomeActivity){
@@ -371,6 +388,61 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		});
 		setMap();
         return rootView;
+	}
+
+	private ProgressWheel getFocussedProgressBar() {
+		return searchMode== PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()
+                                    && editTextSearchDest.hasFocus()?progressBarSearchDest:PlaceSearchListFragment.this.progressBarSearch;
+	}
+
+	private void initaliseAddressEditText(final EditText editTextSearch, final ImageView imageViewSearchCross,ImageView imageViewSearchGPSIcon,String text, String hint, int searchMode) {
+		editTextSearch.setTypeface(Fonts.mavenMedium(activity));
+		editTextSearch.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				editTextSearch.requestFocus();
+				Utils.showSoftKeyboard(activity, editTextSearch);
+			}
+		});
+
+		imageViewSearchCross.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					editTextSearch.setText("");
+					if(editTextSearch.getId()==PlaceSearchListFragment.this.editTextSearch.getId()){
+						searchResultPickup = null;
+					}else{
+						searchResultDestination=null;
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+
+		editTextSearch.setText(text);
+		editTextSearch.setHint(hint);
+
+
+
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				editTextSearch.requestFocus();
+				editTextSearch.setSelection(editTextSearch.getText().length());
+				Utils.showSoftKeyboard(activity, editTextSearch);
+			}
+		}, 200);
+
+		if(searchMode == PlaceSearchMode.DROP.getOrdinal()){
+			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_red);
+		} else{
+			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_green);
+		}
+
 	}
 
 
@@ -467,13 +539,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	}
 
 	public ProgressWheel getProgressBarSearch(){
-		return progressBarSearch;
+		return getFocussedProgressBar();
 	}
 
 	public enum PlaceSearchMode {
 		PICKUP(1),
-		DROP(2)
-		;
+		DROP(2),
+		PICKUP_AND_DROP(3);
 
 		private int ordinal;
 		PlaceSearchMode(int ordinal){
@@ -665,7 +737,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			/*if(isVisible() && !isRemoving()) {
 				progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
 			}*/
-			progressBarSearch.setVisibility(View.VISIBLE);
+			getFocussedProgressBar().setVisibility(View.VISIBLE);
 			final Map<String, String> params = new HashMap<String, String>(6);
 
 			params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
@@ -693,14 +765,14 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
 						setFetchedAddressToTextView("");
 					}
-					progressBarSearch.setVisibility(View.GONE);
+					getFocussedProgressBar().setVisibility(View.GONE);
 				}
 
 				@Override
 				public void failure(RetrofitError error) {
 					product.clicklabs.jugnoo.utils.Log.e("DeliveryAddressFragment", "error=" + error.toString());
 					Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-					progressBarSearch.setVisibility(View.GONE);
+					getFocussedProgressBar().setVisibility(View.GONE);
 					setFetchedAddressToTextView("");
 				}
 			});
@@ -709,12 +781,46 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 	}
 	private void setFetchedAddressToTextView(String address){
+		EditText editText = getFocusedEditText();
 		if(searchListAdapter!=null){
-			editTextSearch.removeTextChangedListener(searchListAdapter.getTextWatcherEditText());
-			editTextSearch.setText(address);
-			editTextSearch.addTextChangedListener(searchListAdapter.getTextWatcherEditText());
+			editText.removeTextChangedListener(searchListAdapter.getTextWatcherEditText(editText.getId()));
+			editText.setText(address);
+			editText.addTextChangedListener(searchListAdapter.getTextWatcherEditText(editText.getId()));
 		}else{
-			editTextSearch.setText(address);
+			editText.setText(address);
+		}
+
+
+	}
+
+	private EditText getFocusedEditText() {
+		return searchMode== PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()
+				&& editTextSearchDest.hasFocus()?editTextSearchDest:editTextSearch;
+	}
+
+
+	private SearchResult getFocusedSearchResult(){
+		return getFocusedEditText().getId() ==editTextSearch.getId()?searchResultPickup:searchResultDestination;
+	}
+
+	private void setFocusedSearchResult(SearchResult searchResult){
+		if (getFocusedEditText().getId() == editTextSearch.getId()) {
+			searchResultPickup = searchResult;
+		} else {
+			searchResultDestination = searchResult;
+
+		}
+		if(searchResult!=null){
+			setFetchedAddressToTextView(searchResult.getAddress());
+
+			if(searchMode==PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()){
+				if(getFocusedEditText().getId()==editTextSearch.getId()){
+					editTextSearchDest.requestFocus();
+				}else{
+					editTextSearch.requestFocus();
+				}
+			}
+
 		}
 
 

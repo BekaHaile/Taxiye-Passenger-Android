@@ -334,7 +334,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 
 
         boolean showSavedPlaces = !(activity instanceof AddPlaceActivity);
-        searchListAdapter = new SearchListAdapter(activity, editTextDeliveryAddress, new LatLng(30.75, 76.78), geoDataClient,
+        searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78), geoDataClient,
                 PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
                 new SearchListAdapter.SearchListActionsHandler() {
 
@@ -438,7 +438,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
                             cardViewSearch.setVisibility(View.GONE);
                         }
                     }
-                }, showSavedPlaces);
+                }, showSavedPlaces,editTextDeliveryAddress);
 
         listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
         listViewSearch.setAdapter(searchListAdapter);
