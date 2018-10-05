@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.util.ArrayMap;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -22,13 +21,10 @@ import android.widget.TextView;
 
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.AutocompletePredictionBuffer;
 import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.PlaceBufferResponse;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,6 +40,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -303,7 +300,7 @@ public class SearchListAdapter extends BaseAdapter{
                                     } else{
                                         searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
                                         searchListActionsHandler.onPlaceSearchPre();
-                                        searchListActionsHandler.onPlaceSearchPost(autoCompleteSearchResult);
+                                        searchListActionsHandler.onPlaceSearchPost(autoCompleteSearchResult, null);
                                     }
                                 }
                             }, 200);
@@ -533,7 +530,7 @@ public class SearchListAdapter extends BaseAdapter{
             @Override
             public void run() {
                 if(searchResult != null) {
-                    searchListActionsHandler.onPlaceSearchPost(searchResult);
+                    searchListActionsHandler.onPlaceSearchPost(searchResult, null);
                 }
                 else{
                     DialogPopup.alertPopup((Activity) context, "", context.getString(R.string.connection_lost_desc));
@@ -551,7 +548,7 @@ public class SearchListAdapter extends BaseAdapter{
 		void onSearchPost();
 		void onPlaceClick(SearchResult autoCompleteSearchResult);
 		void onPlaceSearchPre();
-		void onPlaceSearchPost(SearchResult searchResult);
+		void onPlaceSearchPost(SearchResult searchResult, PlaceSearchListFragment.PlaceSearchMode placeSearchMode);
 		void onPlaceSearchError();
         void onPlaceSaved();
 		void onNotifyDataSetChanged(int count);

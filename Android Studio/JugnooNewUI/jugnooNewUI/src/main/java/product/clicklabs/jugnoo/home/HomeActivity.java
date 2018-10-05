@@ -9119,12 +9119,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     @Override
-    public void onPlaceSearchPost(SearchResult searchResult) {
+    public void onPlaceSearchPost(SearchResult searchResult, PlaceSearchListFragment.PlaceSearchMode placeSearchMode) {
 
         try {
+
+            PlaceSearchListFragment.PlaceSearchMode searchMode = placeSearchMode==null?this.placeSearchMode:placeSearchMode;
             if (PassengerScreenMode.P_INITIAL == passengerScreenMode
                     || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
-                if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                if (searchMode== PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     progressBarInitialSearch.stopSpinning();
                     progressBarInitialSearch.setVisibility(View.GONE);
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -9138,7 +9140,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         setSearchResultToPickupCase(searchResult);
                         GAUtils.event(RIDES, HOME, PICKUP + LOCATION + ENTERED);
                     }
-                } else if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
+                } else if (searchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
 
                     if (Data.autoData.getDropLatLng() == null) {
                         translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);

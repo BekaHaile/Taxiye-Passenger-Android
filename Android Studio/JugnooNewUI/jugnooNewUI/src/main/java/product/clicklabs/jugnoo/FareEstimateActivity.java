@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -447,7 +446,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     }
 
     @Override
-    public void onPlaceSearchPost(SearchResult searchResult) {
+    public void onPlaceSearchPost(SearchResult searchResult, PlaceSearchListFragment.PlaceSearchMode placeSearchMode) {
         try {
             if(Data.autoData != null) {
                 Data.autoData.setDropLatLng(searchResult.getLatLng());

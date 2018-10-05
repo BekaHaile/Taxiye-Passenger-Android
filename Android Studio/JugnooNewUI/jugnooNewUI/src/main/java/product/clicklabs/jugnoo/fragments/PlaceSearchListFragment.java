@@ -174,7 +174,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 
 		@Override
-		public void onPlaceSearchPost(SearchResult searchResult) {
+		public void onPlaceSearchPost(SearchResult searchResult, PlaceSearchMode placeSearchMode) {
 
 			getFocussedProgressBar().setVisibility(View.GONE);
 			scrollViewSearch.setVisibility(View.GONE);
@@ -184,14 +184,15 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 				if (searchResultPickup != null && searchResultDestination != null) {
 					if (searchListActionsHandler != null) {
-						searchListActionsHandler.onPlaceSearchPost(searchResultPickup);
+						searchListActionsHandler.onPlaceSearchPost(searchResultPickup, PlaceSearchMode.PICKUP);
+						searchListActionsHandler.onPlaceSearchPost(searchResultDestination, PlaceSearchMode.DROP);
 					}
 
 				}
 			} else {
 
 				if (searchListActionsHandler != null) {
-					searchListActionsHandler.onPlaceSearchPost(searchResult);
+					searchListActionsHandler.onPlaceSearchPost(searchResult, null);
 				}
 
 			}
@@ -286,8 +287,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
 		Bundle bundle = getArguments();
 
-		searchMode = bundle.getInt(KEY_SEARCH_MODE, PlaceSearchMode.PICKUP.getOrdinal());
-//		searchMode = PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
+//		searchMode = bundle.getInt(KEY_SEARCH_MODE, PlaceSearchMode.PICKUP.getOrdinal());
+		searchMode = PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
 
 
 		EditText[] editTextsForAdapter ;
@@ -406,7 +407,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 					SearchResult autoCompleteSearchResult = new SearchResult("",getFocusedEditText().getText().toString(),"", lastLatFetched, lastLngFetched,0,1,0 );
 					searchAdapterListener.onPlaceClick(autoCompleteSearchResult);
 					searchAdapterListener.onPlaceSearchPre();
-					searchAdapterListener.onPlaceSearchPost(autoCompleteSearchResult);
+					searchAdapterListener.onPlaceSearchPost(autoCompleteSearchResult, null);
 				}else{
 					Utils.showToast(activity,activity.getString(R.string.please_wait));
 				}
@@ -618,7 +619,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		if(searchAdapterListener != null) {
 			searchAdapterListener.onPlaceClick(searchResult);
 			searchAdapterListener.onPlaceSearchPre();
-			searchAdapterListener.onPlaceSearchPost(searchResult);
+			searchAdapterListener.onPlaceSearchPost(searchResult, null);
 		}
 		Utils.hideSoftKeyboard(activity, editTextSearch);
 	}

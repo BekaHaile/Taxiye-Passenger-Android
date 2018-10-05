@@ -382,7 +382,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
                     }
 
                     @Override
-                    public void onPlaceSearchPost(SearchResult searchResult) {
+                    public void onPlaceSearchPost(SearchResult searchResult, PlaceSearchListFragment.PlaceSearchMode placeSearchMode) {
                         try {
                             progressWheelDeliveryAddressPin.setVisibility(View.GONE);
                             editTextDeliveryAddress.setText("");
