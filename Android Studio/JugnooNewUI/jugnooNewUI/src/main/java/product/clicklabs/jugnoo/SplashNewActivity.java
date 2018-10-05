@@ -968,7 +968,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 					} else if (State.SIGNUP == state) {
 						performSignupBackPressed();
 					} else if (State.SPLASH_LOGIN_PHONE_NO == state){
-						splashLSState();
+						splashLSState(false);
 					}
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 				}
@@ -1205,7 +1205,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
                             Data.deepLinkIndex = -1;
                             SplashNewActivity.registerationType = RegisterationType.EMAIL;
                             setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, Data.deepLinkReferralCode));
-							splashLSState();
+							splashLSState(true);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1744,6 +1744,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 					tvReferralTitle.setVisibility(View.VISIBLE);
 					etReferralCode.setVisibility(View.VISIBLE);
 					findViewById(R.id.ivEtPromoDiv).setVisibility(View.VISIBLE);
+					etReferralCode.setText(Data.deepLinkReferralCode);
 				} else {
 					tvReferralTitle.setVisibility(View.GONE);
 					etReferralCode.setVisibility(View.GONE);
@@ -1988,7 +1989,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
     //			}
             } else if(openLS){
 				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this) && state != State.SPLASH_LS_NEW) {
-					splashLSState();
+					splashLSState(false);
 				}
 			}
 		} catch (Exception e) {
@@ -2248,7 +2249,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				if(getIntent().getData() != null && getIntent().getData().toString().equalsIgnoreCase("jungooautos://open")){
 					sendToRegisterThroughSms(false);
 				} else{
-					splashLSState();
+					splashLSState(false);
 				}
 			} else {
 				changeUIState(State.SPLASH_NO_NET);
@@ -2398,7 +2399,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						activity.onConfigurationChanged(config);
 
 						allowedAuthChannelsHitOnce = true;
-						splashLSState();
+						splashLSState(false);
 
 					}catch (Exception e){
 						e.printStackTrace();
@@ -2642,7 +2643,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		} else if (State.SIGNUP == state) {
 			performSignupBackPressed();
 		} else if (State.SPLASH_LOGIN_PHONE_NO == state){
-			splashLSState();
+			splashLSState(false);
 		} else{
 			super.onBackPressed();
 		}
@@ -2892,7 +2893,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		} else {
 			FacebookLoginHelper.logoutFacebook();
-			splashLSState();
+			splashLSState(false);
 		}
 	}
 
@@ -3452,18 +3453,20 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				@Override
 				public void onClick(View v) {
 					SplashNewActivity.registerationType = registerationType;
-					splashLSState();
+					splashLSState(false);
 				}
 			});
 		} else{
 			SplashNewActivity.registerationType = registerationType;
-			splashLSState();
+			splashLSState(false);
 		}
 	}
 
-	private void splashLSState() {
+	private void splashLSState(boolean claimGIftClicked) {
 		if(allowedAuthChannelsHitOnce) {
-			changeUIState(State.SPLASH_LS_NEW);
+			if(claimGIftClicked || state != State.CLAIM_GIFT) {
+				changeUIState(State.SPLASH_LS_NEW);
+			}
 		} else {
 			getAllowedAuthChannels(this);
 		}
@@ -3472,7 +3475,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	public void performSignupBackPressed() {
 		FacebookLoginHelper.logoutFacebook();
-		splashLSState();
+		splashLSState(false);
 	}
 
 	public enum RegisterationType {
@@ -4102,7 +4105,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
     private View.OnClickListener onClickListenerAlreadyRegistered = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-			splashLSState();
+			splashLSState(false);
 		}
     };
 
@@ -4233,7 +4236,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
                                             @Override
                                             public void onClick(View v) {
                                                 setIntent(new Intent().putExtra(KEY_ALREADY_VERIFIED_EMAIL, email));
-												splashLSState();
+												splashLSState(false);
 											}
                                         });
                             } else {
