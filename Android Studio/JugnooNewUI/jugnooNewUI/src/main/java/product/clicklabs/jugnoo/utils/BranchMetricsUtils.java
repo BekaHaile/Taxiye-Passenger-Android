@@ -113,6 +113,7 @@ public class BranchMetricsUtils {
             if(!"".equalsIgnoreCase(branchFallbackUrl)){
                 linkProperties.addControlParameter("$fallback_url", branchFallbackUrl);
             }
+            linkProperties.addControlParameter("$uri_redirect_mode", "2");
             Log.e(TAG, "linkProperties.getControlParams=>"+linkProperties.getControlParams());
 //                    .addControlParameter("$desktop_url", Constants.BRANCH_END_LINK)
 //                    .addControlParameter("$android_url", Constants.BRANCH_END_LINK)
@@ -176,6 +177,7 @@ public class BranchMetricsUtils {
                 .setChannel(channel)
                 .setFeature(Branch.FEATURE_TAG_SHARE)
                 ;
+        linkProperties.addControlParameter("$uri_redirect_mode", "2");
 
 
         branchUniversalObject.generateShortUrl(context, linkProperties, new Branch.BranchLinkCreateListener() {

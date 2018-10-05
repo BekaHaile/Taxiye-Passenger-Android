@@ -737,12 +737,12 @@ public class JSONParser implements Constants {
     }
 
     public ReferralMessages parseReferralMessages(Context context, LoginResponse.UserData userData) {
-        String referralSharingMessage = "Hey, \nUse "+context.getString(R.string.app_name)+" app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
-                " Use this referral code: " + Data.userData.referralCode + " to get FREE ride" +
-                "\nDownload it from here: https://play.google.com/store/apps/details?id="+BuildConfig.APPLICATION_ID;
-        String fbShareCaption = "Use " + Data.userData.referralCode + " as code & get a FREE ride";
-        String fbShareDescription = "Try "+context.getString(R.string.app_name)+" app to call an auto at your doorsteps with just a tap.";
-        String referralCaption = "<center><font face=\"verdana\" size=\"2\">Invite <b>friends</b> and<br/>get <b>FREE rides</b></font></center>";
+        String referralSharingMessage = "Hey, \nUse "+context.getString(R.string.app_name)+" app to request ride at your doorsteps. It is cheap, convenient and zero haggling." +
+                " Use this referral code: " + Data.userData.referralCode + " to earn benefits" +
+                "\nDownload it from here: ";
+        String fbShareCaption = "Use " + Data.userData.referralCode + " as referral code & earn benefits";
+        String fbShareDescription = "Try "+context.getString(R.string.app_name)+" app to request ride at your doorsteps with just a tap.";
+        String referralCaption = "<center><font face=\"verdana\" size=\"2\">Invite friends and<br/>get earn benefits</font></center>";
         String referralEmailSubject = "Hey! Have you used "+context.getString(R.string.app_name)+" yet?";
         String referralShortMessage = "", referralMoreInfoMessage = "";
         String title = context.getString(R.string.app_name);
