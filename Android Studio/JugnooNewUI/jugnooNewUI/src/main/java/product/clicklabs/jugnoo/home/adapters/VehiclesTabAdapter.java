@@ -22,26 +22,30 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 
 public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.ViewHolder> implements GAAction, GACategory{
 
     private HomeActivity activity;
     private ArrayList<Region> regions = new ArrayList<>();
+    private boolean showingConfirmLayout;
 
-    public VehiclesTabAdapter(HomeActivity activity, ArrayList<Region> regions) {
+    public VehiclesTabAdapter(HomeActivity activity, ArrayList<Region> regions,boolean showFares) {
         this.regions = regions;
         this.activity = activity;
+        this.showingConfirmLayout = showFares;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vehicle, parent, false);
 
-        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, 125);
+        RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT,
+                showingConfirmLayout?RecyclerView.LayoutParams.WRAP_CONTENT:125);
         v.setLayoutParams(layoutParams);
 
         ASSL.DoMagic(v);
-        return new ViewHolder(v, activity);
+        return new ViewHolder(v, activity,showingConfirmLayout);
     }
 
     @Override
@@ -50,6 +54,8 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
 
         holder.textViewVehicleName.setText(region.getRegionName());
         holder.relative.setTag(position);
+        holder.tvVehicleFare.setVisibility(showingConfirmLayout ?View.VISIBLE:View.GONE);
+        holder.tvVehicleFare.setText(Utils.formatCurrencyValue(null,region.getVehicleFare()));
 
         boolean selected = region.getOperatorId() == activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getOperatorId()
                 && region.getVehicleType().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getVehicleType())
@@ -65,6 +71,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         try {
             if(selected){
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
+                holder.tvVehicleFare.setTextColor(activity.getResources().getColor(R.color.theme_color));
                 holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
                 Picasso.with(activity)
                         .load(region.getImages().getTabHighlighted())
@@ -72,6 +79,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                         .into(holder.imageViewTab);
             } else{
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColorStateList(R.color.text_color_theme_color_selector));
+                holder.tvVehicleFare.setTextColor(activity.getResources().getColorStateList(R.color.text_color_theme_color_selector));
                 holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.white));
                 Picasso.with(activity)
                         .load(region.getImages().getTabNormal())
@@ -100,6 +108,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         params.width = getItemWidth();
         holder.relative.setLayoutParams(params);
 
+
 	}
 
     @Override
@@ -118,8 +127,9 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         public RelativeLayout relative;
         public ImageView imageViewSep, imageViewTab, imageViewMultipleSurge;
         public ImageView imageViewSelected;
-        public TextView textViewVehicleName;
-        public ViewHolder(View itemView, Activity activity) {
+        public TextView textViewVehicleName,tvVehicleFare;
+
+        public ViewHolder(View itemView, Activity activity,boolean showingConfirmLayout) {
             super(itemView);
             relative = (RelativeLayout) itemView.findViewById(R.id.relative);
             imageViewSep = (ImageView) itemView.findViewById(R.id.imageViewSep);
@@ -128,6 +138,16 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             imageViewSelected = (ImageView) itemView.findViewById(R.id.imageViewSelected);
             textViewVehicleName = (TextView)itemView.findViewById(R.id.textViewVehicleName);
             textViewVehicleName.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+            tvVehicleFare = (TextView)itemView.findViewById(R.id.tvVehicleFare);
+            tvVehicleFare.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+            View linearLayoutContainer= itemView.findViewById(R.id.linearLayoutContainer);
+            if(showingConfirmLayout){
+               RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewSelected.getLayoutParams();
+               layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+               layoutParams.addRule(RelativeLayout.BELOW,linearLayoutContainer.getId());
+               imageViewSelected.setLayoutParams(layoutParams);
+
+            }
         }
     }
 }

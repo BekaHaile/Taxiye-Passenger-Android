@@ -74,6 +74,10 @@ public class Region {
 	@Expose
 	private int reverseBid;
 
+	@SerializedName("vehicle_fare")
+	@Expose
+	private double vehicleFare;
+
 	private boolean isDefault = false;
 
 	public Region(){
@@ -421,5 +425,9 @@ public class Region {
 
 	public void setDeepindex(Integer deepindex) {
 		this.deepindex = deepindex;
+	}
+
+	public double getVehicleFare() {
+		return 96.0D;
 	}
 }

@@ -33,6 +33,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -182,6 +183,7 @@ import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
+import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.DriverTipInteractor;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
@@ -225,6 +227,7 @@ import product.clicklabs.jugnoo.utils.FrameAnimDrawable;
 import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
+import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
@@ -525,6 +528,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public static final int REQ_CODE_ADD_CARD_DRIVER_TIP = 0x167;
 
     private GeoDataClient mGeoDataClient;
+    private RecyclerView recyclerViewVehiclesConfirmRide;
+    private VehiclesTabAdapter vehiclesTabAdapterConfirmRide;
 
     @SuppressLint("NewApi")
     @Override
@@ -1050,6 +1055,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        recyclerViewVehiclesConfirmRide = (RecyclerView) findViewById(R.id.recyclerViewVehiclesConfirmRide);
+        recyclerViewVehiclesConfirmRide.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(HomeActivity.this,
+                LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewVehiclesConfirmRide.setItemAnimator(new DefaultItemAnimator());
+        recyclerViewVehiclesConfirmRide.setHasFixedSize(false);
+
 
 
         imageViewPokemonOnOffInitial = (ImageView) findViewById(R.id.imageViewPokemonOnOffInitial);
@@ -3285,9 +3298,28 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             imageViewDropCross.setVisibility(View.GONE);
                             updateConfirmedStatePaymentUI();
                             updateConfirmedStateCoupon();
-                            updateConfirmedStateFare();
                             //fabView.setRelativeLayoutFABVisibility(mode);
                             setGoogleMapPadding(mapPaddingConfirm);
+                            if(true){
+                                recyclerViewVehiclesConfirmRide.setVisibility(View.VISIBLE);
+                                relativeLayoutTotalFare.setVisibility(View.GONE);
+
+                                try {
+                                    if(recyclerViewVehiclesConfirmRide.getAdapter()==null){
+                                        vehiclesTabAdapterConfirmRide = new VehiclesTabAdapter(HomeActivity.this, Data.autoData.getRegions(),true);
+                                        recyclerViewVehiclesConfirmRide.setAdapter(vehiclesTabAdapterConfirmRide);
+                                    }else{
+                                        recyclerViewVehiclesConfirmRide.getAdapter().notifyDataSetChanged();
+                                    }
+
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }else{
+                                recyclerViewVehiclesConfirmRide.setVisibility(View.GONE);
+                                updateConfirmedStateFare();
+                            }
                         } else {
                             if (!zoomedForSearch && !specialPickupScreenOpened && map != null) {
                                 getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);

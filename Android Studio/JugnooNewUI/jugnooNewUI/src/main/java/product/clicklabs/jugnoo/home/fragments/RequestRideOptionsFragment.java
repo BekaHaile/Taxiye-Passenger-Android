@@ -164,7 +164,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         recyclerViewVehicles.setHasFixedSize(false);
 
         try {
-            vehiclesTabAdapter = new VehiclesTabAdapter(activity, Data.autoData.getRegions());
+            vehiclesTabAdapter = new VehiclesTabAdapter(activity, Data.autoData.getRegions(),false);
             recyclerViewVehicles.setAdapter(vehiclesTabAdapter);
         } catch (Exception e) {
             e.printStackTrace();
