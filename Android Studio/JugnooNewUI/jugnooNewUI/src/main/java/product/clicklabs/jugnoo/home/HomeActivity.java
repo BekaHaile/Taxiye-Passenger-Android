@@ -73,10 +73,8 @@ import com.fugu.FuguConfig;
 import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.PlacesOptions;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -7651,8 +7649,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 nameValuePairs.put(Constants.KEY_PREFERRED_PAYMENT_MODE, "" + Data.autoData.getPickupPaymentOption());
                                 nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(slidingBottomPanel
                                         .getRequestRideOptionsFragment().getRegionSelected().getVehicleType()));
-                                nameValuePairs.put(KEY_OPERATOR_ID, String.valueOf(slidingBottomPanel
-                                        .getRequestRideOptionsFragment().getRegionSelected().getOperatorId()));
                                 nameValuePairs.put(KEY_REVERSE_BID, String.valueOf(slidingBottomPanel
                                         .getRequestRideOptionsFragment().getRegionSelected().getReverseBid()));
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel

@@ -198,6 +198,10 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 	}
 
 	private void loadMap() {
+		// if fragment not added completely and activity somehow finishes
+		if(!isAdded()){
+			return;
+		}
 		((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.googleMap)).getMapAsync(new OnMapReadyCallback() {
 			@Override
 			public void onMapReady(GoogleMap googleMap) {

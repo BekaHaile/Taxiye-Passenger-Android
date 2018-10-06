@@ -28,7 +28,6 @@ import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
 import product.clicklabs.jugnoo.stripe.StripeAddCardFragment;
 import product.clicklabs.jugnoo.stripe.StripeCardsStateListener;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
-import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
