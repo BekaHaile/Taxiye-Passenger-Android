@@ -28,12 +28,12 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
 
     private HomeActivity activity;
     private ArrayList<Region> regions = new ArrayList<>();
-    private boolean showingConfirmLayout;
+    private boolean showRegionFares;
 
     public VehiclesTabAdapter(HomeActivity activity, ArrayList<Region> regions,boolean showFares) {
         this.regions = regions;
         this.activity = activity;
-        this.showingConfirmLayout = showFares;
+        this.showRegionFares = showFares;
     }
 
     @Override
@@ -41,11 +41,11 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vehicle, parent, false);
 
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT,
-                showingConfirmLayout?RecyclerView.LayoutParams.WRAP_CONTENT:125);
+                showRegionFares ?RecyclerView.LayoutParams.WRAP_CONTENT:125);
         v.setLayoutParams(layoutParams);
 
         ASSL.DoMagic(v);
-        return new ViewHolder(v, activity,showingConfirmLayout);
+        return new ViewHolder(v, activity, showRegionFares);
     }
 
     @Override
@@ -54,8 +54,10 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
 
         holder.textViewVehicleName.setText(region.getRegionName());
         holder.relative.setTag(position);
-        holder.tvVehicleFare.setVisibility(showingConfirmLayout ?View.VISIBLE:View.GONE);
-        holder.tvVehicleFare.setText(Utils.formatCurrencyValue(null,region.getVehicleFare()));
+        holder.tvVehicleFare.setVisibility(showRegionFares && region.getVehicleFare()!=null ?View.VISIBLE:View.GONE);
+        if(region.getVehicleFare()!=null){
+            holder.tvVehicleFare.setText(Utils.formatCurrencyValue(null,region.getVehicleFare()));
+        }
 
         boolean selected = region.getOperatorId() == activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getOperatorId()
                 && region.getVehicleType().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getVehicleType())

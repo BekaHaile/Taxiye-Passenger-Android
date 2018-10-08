@@ -55,14 +55,16 @@ public class ApiFindADriver {
 
 	public void hit(String accessToken, final LatLng latLng, final int showAllDrivers, int showDriverInfo,
 					Region regionSelected, final boolean beforeRequestRide, final boolean confirmedScreenOpened,
-					final boolean savedAddressUsed){
+					final boolean savedAddressUsed, HashMap<String, String> params){
 		this.regionSelected = regionSelected;
 		try {
 			if(callback != null) {
 				callback.onPre();
 			}
 
-			HashMap<String, String> params = new HashMap<>();
+			if(params == null) {
+				params = new HashMap<>();
+			}
 			params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 			params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
 			params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));

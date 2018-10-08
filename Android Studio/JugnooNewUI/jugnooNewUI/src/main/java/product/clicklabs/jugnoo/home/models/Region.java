@@ -74,9 +74,9 @@ public class Region {
 	@Expose
 	private int reverseBid;
 
-	@SerializedName("vehicle_fare")
+	@SerializedName("region_fare")
 	@Expose
-	private double vehicleFare;
+	private RegionFare regionFare;
 
 	private boolean isDefault = false;
 
@@ -176,6 +176,16 @@ public class Region {
 			this.text2 = text2;
 		}
 
+	}
+
+	public class RegionFare{
+		@SerializedName("fare")
+		@Expose
+		private Double fare;
+
+		public Double getFare() {
+			return fare;
+		}
 	}
 
 	public class Images {
@@ -427,7 +437,7 @@ public class Region {
 		this.deepindex = deepindex;
 	}
 
-	public double getVehicleFare() {
-		return 96.0D;
+	public Double getVehicleFare() {
+		return regionFare==null?null:regionFare.getFare();
 	}
 }

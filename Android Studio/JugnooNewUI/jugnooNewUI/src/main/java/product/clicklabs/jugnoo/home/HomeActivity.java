@@ -530,6 +530,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private GeoDataClient mGeoDataClient;
     private RecyclerView recyclerViewVehiclesConfirmRide;
     private VehiclesTabAdapter vehiclesTabAdapterConfirmRide;
+    private boolean showVehicleFaresbeforeConfirm = true;
 
     @SuppressLint("NewApi")
     @Override
@@ -1183,7 +1184,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if (!rideNowClicked) {
                             Data.autoData.setPickupLatLng(map.getCameraPosition().target);
                             if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-                                findDriversETACall(true, false, false);
+                                findDriversETACall(true, false, false, null);
                             } else {
                                 imageViewRideNowPoolCheck();
                             }
@@ -1211,7 +1212,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         Data.autoData.setPickupLatLng(map.getCameraPosition().target);
                     }
                     if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-                        findDriversETACall(true, true, false);
+                        findDriversETACall(true, true, false, null);
                     } else {
                         requestRideClick();
                     }
@@ -2698,7 +2699,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
                     Data.autoData.setPickupLatLng(map.getCameraPosition().target);
                     if (!dontCallRefreshDriver && Data.autoData.getPickupLatLng() != null) {
-                        findDriversETACall(false, false, false);
+                        findDriversETACall(false, false, false, null);
                     }
                 }
             }
@@ -2810,7 +2811,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
             map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()));
             if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-                findDriversETACall(true, false, true);
+                findDriversETACall(true, false, true, null);
             } else {
                 requestRideDriverCheck();
             }
@@ -3300,10 +3301,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             updateConfirmedStateCoupon();
                             //fabView.setRelativeLayoutFABVisibility(mode);
                             setGoogleMapPadding(mapPaddingConfirm);
-                            if(true){
+                            if(showVehicleFaresbeforeConfirm){
                                 recyclerViewVehiclesConfirmRide.setVisibility(View.VISIBLE);
                                 relativeLayoutTotalFare.setVisibility(View.GONE);
-
+                                textVieGetFareEstimateConfirm.setVisibility(View.GONE);
                                 try {
                                     if(recyclerViewVehiclesConfirmRide.getAdapter()==null){
                                         vehiclesTabAdapterConfirmRide = new VehiclesTabAdapter(HomeActivity.this, Data.autoData.getRegions(),true);
@@ -5385,10 +5386,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private ApiFindADriver apiFindADriver = null;
 
-    private void findDriversETACall(boolean beforeRequestRide, boolean confirmedScreenOpened, boolean savedAddressUsed) {
+    private void findDriversETACall(boolean beforeRequestRide, boolean confirmedScreenOpened, boolean savedAddressUsed, HashMap<String, String> params) {
         getApiFindADriver().hit(Data.userData.accessToken, Data.autoData.getPickupLatLng(), showAllDrivers, showDriverInfo,
                 slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected(), beforeRequestRide,
-                confirmedScreenOpened, savedAddressUsed);
+                confirmedScreenOpened, savedAddressUsed, params);
     }
 
     private void findADriverFinishing(boolean showPoolIntro, boolean useServerDefaultCoupon) {
@@ -5397,6 +5398,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             try {
                 if (slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0 || promoSelectionLastOperation) {
                     defaultCouponSelection();
+                }
+                if(vehiclesTabAdapterConfirmRide!=null){
+                    vehiclesTabAdapterConfirmRide.notifyDataSetChanged();
                 }
                 slidingBottomPanel.update();
             } catch (Exception e) {
@@ -8669,6 +8673,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    if(showVehicleFaresbeforeConfirm){
+                        HashMap<String, String> params = new HashMap<>();
+                        params.put("ride_distance", "" + (distanceValue/1000D));
+                        params.put("ride_time", "" + (timeValue/60D));
+                        findDriversETACall(false, false, false, params);
+                    }
                 }
 
                 @Override
@@ -8756,7 +8767,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         e.printStackTrace();
                     }
                 }
-            }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, callFareEstimate,
+            }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, showVehicleFaresbeforeConfirm ?false: callFareEstimate,
                     getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), promoCouponSelected);
         } else {
             textViewDestSearch.setText(getResources().getString(R.string.destination_required));
@@ -9363,7 +9374,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         int oldRideType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType();
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
         int newVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
-        if(confirmedScreenOpened) && vehiclesTabAdapterConfirmRide!=null){
+        if(confirmedScreenOpened && vehiclesTabAdapterConfirmRide!=null){
             vehiclesTabAdapterConfirmRide.notifyDataSetChanged();
         }
         if (Data.autoData.getRegions().size() == 1) {
