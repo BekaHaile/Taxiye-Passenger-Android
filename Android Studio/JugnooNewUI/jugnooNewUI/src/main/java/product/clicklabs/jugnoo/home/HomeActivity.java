@@ -9363,6 +9363,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         int oldRideType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType();
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
         int newVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
+        if(confirmedScreenOpened) && vehiclesTabAdapterConfirmRide!=null){
+            vehiclesTabAdapterConfirmRide.notifyDataSetChanged();
+        }
         if (Data.autoData.getRegions().size() == 1) {
             imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
@@ -9379,10 +9382,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 setRegionUI(false);
             } else {
-                if (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                    getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                } else {
-                    getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                if(!confirmedScreenOpened){
+                    if (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                        getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                    } else {
+                        getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                    }
                 }
             }
         }
