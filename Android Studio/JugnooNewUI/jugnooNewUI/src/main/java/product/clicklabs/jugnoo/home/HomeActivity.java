@@ -3480,7 +3480,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         setDropLocationEngagedUI();
                         zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
 
-                        buttonCancelRide.setVisibility(View.VISIBLE);
+                        buttonCancelRide.setVisibility(Prefs.with(this).getInt(KEY_CUSTOMER_CANCEL_RIDE_ENABLED, 1) == 1 ? View.VISIBLE : View.GONE);
                         buttonAddMoneyToWallet.setVisibility(View.GONE);
                         linearLayoutSendInvites.setVisibility(View.GONE);
                         linearLayoutSendInvites.clearAnimation();
@@ -3556,7 +3556,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
 
 
-                        buttonCancelRide.setVisibility(View.VISIBLE);
+                        buttonCancelRide.setVisibility(Prefs.with(this).getInt(KEY_CUSTOMER_CANCEL_RIDE_ENABLED, 1) == 1 ? View.VISIBLE : View.GONE);
                         buttonAddMoneyToWallet.setVisibility(View.GONE);
                         linearLayoutSendInvites.setVisibility(View.GONE);
                         linearLayoutSendInvites.clearAnimation();
@@ -3809,8 +3809,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void setFabViewAtRide(PassengerScreenMode mode) {
         //fabViewTest.setFABMenuDrawable();
-        float containerHeight = 160f;
+        float containerHeight = 110f;
         //fabViewTest.setRelativeLayoutFABVisibility(mode);
+        if (buttonCancelRide.getVisibility() == View.VISIBLE) {
+            containerHeight = containerHeight + 40f;
+        }
         if (relativeLayoutPoolSharing.getVisibility() == View.VISIBLE) {
             containerHeight = containerHeight + 50f;
         }
@@ -4276,6 +4279,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void checkForGoogleLogoVisibilityInRide() {
         try {
             float padding = getResources().getDimension(R.dimen.map_padding_request_final);
+            if (buttonCancelRide.getVisibility() == View.VISIBLE) {
+                padding = padding + getResources().getDimension(R.dimen.map_padding_request_final_extra);
+            }
             if (relativeLayoutInRideInfo.getVisibility() == View.VISIBLE) {
                 padding = padding + getResources().getDimension(R.dimen.map_padding_request_final_extra);
             }

@@ -951,4 +951,5 @@ public interface Constants {
     String KEY_HIT_PLACE_DETAILS_AFTER_GEOCODE = "hit_place_details_after_geocode";
     String SP_LAST_PHONE_NUMBER_SAVED = "last_phone_number_saved";
     String SP_LAST_COUNTRY_CODE_SAVED = "last_country_code_saved";
+    String KEY_CUSTOMER_CANCEL_RIDE_ENABLED = "customer_cancel_ride_enabled";
 }
