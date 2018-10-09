@@ -531,6 +531,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private RecyclerView recyclerViewVehiclesConfirmRide;
     private VehiclesTabAdapter vehiclesTabAdapterConfirmRide;
     private boolean showVehicleFaresbeforeConfirm = true;
+    private Polyline polyline;
 
     @SuppressLint("NewApi")
     @Override
@@ -8640,7 +8641,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         latLngBoundsBuilderPool.include(list.get(z));
                     }
 
-                    map.addPolyline(poolPolylineOption);
+                    if(polyline!=null){
+                        polyline.remove();
+                    }
+                    polyline = map.addPolyline(poolPolylineOption);
 
                     try {
                         pickupLocationMarker.remove();
