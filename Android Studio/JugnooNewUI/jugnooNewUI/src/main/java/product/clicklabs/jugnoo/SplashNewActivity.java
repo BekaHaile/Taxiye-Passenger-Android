@@ -1744,7 +1744,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 					tvReferralTitle.setVisibility(View.VISIBLE);
 					etReferralCode.setVisibility(View.VISIBLE);
 					findViewById(R.id.ivEtPromoDiv).setVisibility(View.VISIBLE);
-					etReferralCode.setText(Data.deepLinkReferralCode);
 				} else {
 					tvReferralTitle.setVisibility(View.GONE);
 					etReferralCode.setVisibility(View.GONE);

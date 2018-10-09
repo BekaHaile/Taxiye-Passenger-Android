@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.wallet.fragments;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
@@ -46,25 +47,25 @@ public class PayStackAddCardFragment extends Fragment {
     public static final String ADD_CARD_SUCCESS_URL = "/static/success";
     public static final String ADD_CARD_FAILURE_URL = "/static/failure";
     private StripeCardsStateListener stripeCardsStateListener;
+    private Context mContext;
 
 
-     public static PayStackAddCardFragment newInstance(String url) {
+    public static PayStackAddCardFragment newInstance(String url) {
 
-         PayStackAddCardFragment fragment = new PayStackAddCardFragment();
-         Bundle args = new Bundle();
-         args.putString(ARGS_URL_TO_OPEN, url);
-         fragment.setArguments(args);
-         return fragment;
+        PayStackAddCardFragment fragment = new PayStackAddCardFragment();
+        Bundle args = new Bundle();
+        args.putString(ARGS_URL_TO_OPEN, url);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if(context instanceof StripeCardsStateListener){
+        if (context instanceof StripeCardsStateListener) {
             stripeCardsStateListener = (StripeCardsStateListener) context;
         }
-
-
+        mContext = context;
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -72,7 +73,7 @@ public class PayStackAddCardFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments()==null || !getArguments().containsKey(ARGS_URL_TO_OPEN)) {
+        if (getArguments() == null || !getArguments().containsKey(ARGS_URL_TO_OPEN)) {
             throw new IllegalArgumentException("No url passed for add card");
         }
 
@@ -86,7 +87,7 @@ public class PayStackAddCardFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View rootView =  inflater.inflate(R.layout.fragment_add_card_pay_stack,container,false);
+        View rootView = inflater.inflate(R.layout.fragment_add_card_pay_stack, container, false);
         webView = rootView.findViewById(R.id.webView);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setUseWideViewPort(true);
@@ -96,14 +97,14 @@ public class PayStackAddCardFragment extends Fragment {
         payStackWebViewClient = new PayStackWebViewClient();
         webView.setWebViewClient(payStackWebViewClient);
         webView.loadUrl(urlToLoad);
-        TextView tvTitle =  ((TextView) rootView.findViewById(R.id.textViewTitle));
-        tvTitle.setTypeface(Fonts.avenirNext(getActivity()));
+        TextView tvTitle = ((TextView) rootView.findViewById(R.id.textViewTitle));
+        tvTitle.setTypeface(Fonts.avenirNext(mContext));
         rootView.findViewById(R.id.imageViewBack).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (getActivity() != null) {
-                    getActivity().onBackPressed();
+                if (mContext != null) {
+                    ((Activity)mContext).onBackPressed();
                 }
             }
         });
@@ -120,24 +121,24 @@ public class PayStackAddCardFragment extends Fragment {
 
         private void handleUrlLoading(WebView view, String url) {
 
-            if (view == null || getActivity() == null) {
+            if (view == null || mContext == null) {
                 return;
             }
 
 
             if (url.contains(ADD_CARD_SUCCESS_URL)) {
 
-                final String message = getActivity().getString(R.string.paystack_add_card_success);
-                if(stripeCardsStateListener!=null){
-                    stripeCardsStateListener.onCardsUpdated(null,message,true, PaymentOption.PAY_STACK_CARD);
+                final String message = mContext.getString(R.string.paystack_add_card_success);
+                if (stripeCardsStateListener != null) {
+                    stripeCardsStateListener.onCardsUpdated(null, message, true, PaymentOption.PAY_STACK_CARD);
                 }
 
             } else if (url.contains(ADD_CARD_FAILURE_URL)) {
 
                 String message = getString(R.string.paystack_add_card_failure);
 
-                if(stripeCardsStateListener!=null){
-                    stripeCardsStateListener.onCardsUpdated(null,message,false, PaymentOption.PAY_STACK_CARD);
+                if (stripeCardsStateListener != null) {
+                    stripeCardsStateListener.onCardsUpdated(null, message, false, PaymentOption.PAY_STACK_CARD);
                 }
 
             }
@@ -148,12 +149,12 @@ public class PayStackAddCardFragment extends Fragment {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            if (view == null || getActivity().isFinishing()) {
+            if (view == null || ((Activity)mContext).isFinishing()) {
                 return;
             }
 
             if (url.contains(urlToLoad)) {
-                DialogPopup.showLoadingDialog(getActivity(), getActivity().getString(R.string.loading));
+                DialogPopup.showLoadingDialog(mContext, mContext.getString(R.string.loading));
             } else {
                 handleUrlLoading(view, url);
             }
@@ -224,7 +225,6 @@ public class PayStackAddCardFragment extends Fragment {
     }
 
 
-
     private static void removeAllCookies(final Context context) {
         //On Lollipop and beyond, the CookieManager singleton works fine by itself.
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -233,9 +233,6 @@ public class PayStackAddCardFragment extends Fragment {
         final CookieManager cookieManager = CookieManager.getInstance();
         cookieManager.removeAllCookie();
     }
-
-
-
 
 
 }

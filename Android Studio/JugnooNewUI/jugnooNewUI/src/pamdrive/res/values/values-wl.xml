@@ -21,29 +21,33 @@
             notification_icon
     -->
 
-    <string name="app_name">Pam Drive</string>
 
-    <string name="google_maps_api_key">AIzaSyBCcnNzpyLi5ND2KKi9MShjWkyRh6c-on4</string>
-    <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
-    <string name="fb_app_id">227615331160869</string>
-    <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
-    <string name="ak_login_protocol_scheme">ak782131025144439</string>
-    <string name="branch_key">key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J</string>
+    <string name="facebook_page_url">https://www.facebook.com/PamDrive</string>
+    <string name="default_lang">en</string>
 
+    <string name="app_name">Pamdrive</string>
 
-
-
-
-    <string name="operator_token">83ebe9d9d65fdac16460da388822bc38</string>
-    <string name="support_number">+2549023121121</string>
-    <string name="police_number">999</string>
-    <string name="facebook_page_id">2056791887904505</string>
-    <string name="facebook_page_url">https://www.facebook.com/pamdrive</string>
+    <string name="google_maps_api_key">AIzaSyCT07NoO3oS97dU5Ke_S4EjeGIqQPkl_-g</string>
+    <string name="google_maps_api_server_key">AIzaSyCUEplvRmXQSo69R81Hc3aAysWr2aQWFZU</string>
+    <string name="google_server_client_id">196730039656-0453s6v4p049c3c947tupnhnhql6dkj4.apps.googleusercontent.com</string>
+    <string name="fb_app_id">405568536597172</string>
+    <string name="fb_client_token">9e4229d793d7dff3aa64205b710cd2a1</string>
+    <string name="ak_login_protocol_scheme">ak405568536597172</string>
+    <string name="branch_key">key_live_heToojhA1w40NjN63QYvCkmiyybRHRlP</string>
 
 
-    <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
+    <string name="operator_token">0af5e0e5e6ab898cc714f9a5b5545451</string>
+    <string name="support_number">+2348099904442</string>
+    <string name="police_number">199</string>
+    <string name="facebook_page_id">1110113865716816</string>
+    <string name="facebook_page_name">PamDrive</string>
+
+
+    <integer name="is_autos_offers_enabled">@integer/view_visible</integer>
     <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
     <bool name="force_open_autos">true</bool>
+
+    <color name="splash_logo_color">@color/text_color</color>
 
 
     <dimen name="splash_logo_width">150dp</dimen>
@@ -63,20 +67,20 @@
     <integer name="show_google_login">@integer/view_gone</integer>
     <integer name="show_splash_logo_text">@integer/view_invisible</integer>
     <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
-    <drawable name="cursor">@drawable/cursor_white</drawable>
+    <drawable name="cursor">@drawable/cursor_black</drawable>
 
     <string name="file_provider_name">com.pamdrive.fileprovider</string>
     <string name="web_landing_page">https://pamdrive.in</string>
     <string name="smart_url">http://smarturl.it/pamdrive</string>
     <string name="db_name">pamdrive_database</string>
-    <string name="terms_of_use_url">https://www.pamdrive.in/#/terms</string>
+    <string name="terms_of_use_url">https://pamdrive.com/terms.php</string>
     <string name="app_domain">pamdrive.in</string>
     <string name="app_host_name">www.pamdrive.in</string>
     <string name="branch_domain">share.pamdrive.in</string>
     <string name="app_scheme">pamdrive</string>
 
-    <string name="pictures_path">PamDrive/PamDrive Pictures</string>
-    <bool name="force_inhouse_login">true</bool>
+    <string name="pictures_path">Pamdrive/Pamdrive Pictures</string>
+    <bool name="force_inhouse_login">false</bool>
     <bool name="force_mpesa_payment">false</bool>
     <integer name="show_about">@integer/view_visible</integer>
     <bool name="show_change_languge">false</bool>
@@ -85,10 +89,23 @@
     <!--default support email for SupportMailActivity if not coming from server-->
     <string name="default_support_email">support@pamdrive.in</string>
     <integer name="send_invites_visibility">@integer/view_gone</integer>
-    <bool name="specified_country_search_result_enabled">true</bool>
+    <bool name="specified_country_search_result_enabled">false</bool>
     <string name="specified_country_search_result">NG</string>
     <bool name="show_call_me_option_in_otp">false</bool>
     <integer name="show_promo">@integer/view_gone</integer>
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
     <string name="profile_saved_location_text">@string/address_book</string>
+    <integer name="show_invite_friends">@integer/view_gone</integer>
+    <bool name="wallet_amount_sidemenu">false</bool>
+    <bool name="show_jugnoo_promo_icon">false</bool>
+    <integer name="scale_type">@integer/fit_xy</integer>
+
+    <string name="default_currency">NGN</string>
+    <string name="default_country_code">+234</string>
+    <string name="default_country_iso">NGA</string>
+
+    <!--Referal icon scale type-->
+    <integer name="referral_icon_scale_type">@integer/center_inside</integer>
+    <bool name="hit_place_details_after_geocode">false</bool>
+    <string name="geocode_address_format">street_number,route,neighborhood,sublocality,locality,administrative_area_2,administrative_area_1,country</string>
 </resources>
