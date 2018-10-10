@@ -259,7 +259,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         });
 
         try {
-            if (rideType != RideTypeValue.POOL.getOrdinal() && dropLatLng != null) {
+            if (dropLatLng != null) {
                 getDirectionsAndComputeFare(pickupLatLng, pickupAddress, dropLatLng, dropAddress);
             } else {
 
@@ -546,7 +546,15 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     private void scheduleRide(int regionId, String finalDateTime) {
         final HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_REGION_ID, regionId + "");
-        params.put(Constants.KEY_DELIVERY_TIME, DateOperations.localToUTC(finalDateTime));
+        params.put(Constants.KEY_PICKUP_TIME, DateOperations.localToUTC(finalDateTime));
+        params.put(Constants.KEY_LATITUDE, String.valueOf(pickupLatLng.latitude));
+        params.put(Constants.KEY_LONGITUDE, String.valueOf(pickupLatLng.longitude));
+        params.put(Constants.KEY_PICKUP_LOCATION_ADDRESS,pickupAddress);
+        params.put(Constants.KEY_DROP_LOCATION_ADDRESS, dropAddress);
+        params.put("op_drop_latitude", String.valueOf(dropLatLng.latitude));
+        params.put("op_drop_longitude", String.valueOf(dropLatLng.longitude));
+        params.put("vehicle_type", String.valueOf(region.getVehicleType()));
+
 
         new ApiCommon<>(this).showLoader(true).execute(params, ApiName.SCHEDULE_RIDE,
                 new APICommonCallback<FeedCommonResponse>() {

@@ -1177,6 +1177,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 //fabView.menuLabelsRight.close(true);
                 //imageViewFabFake.setVisibility(View.GONE);
                 try {
+                    topBar.tvScheduleRidePopup.setVisibility(View.GONE);
                     if (map != null) {
                         if (!rideNowClicked) {
                             Data.autoData.setPickupLatLng(map.getCameraPosition().target);
@@ -10544,11 +10545,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     };
     public void onClickOfPickupElse(){
+        topBar.tvScheduleRidePopup.setVisibility(View.GONE);
         placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
         setServiceAvailablityUI("");
         passengerScreenMode = PassengerScreenMode.P_SEARCH;
         switchPassengerScreen(passengerScreenMode);
     } public void onClickOfDestinationElse(){
+        topBar.tvScheduleRidePopup.setVisibility(View.GONE);
         placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
         setServiceAvailablityUI("");
         passengerScreenMode = PassengerScreenMode.P_SEARCH;

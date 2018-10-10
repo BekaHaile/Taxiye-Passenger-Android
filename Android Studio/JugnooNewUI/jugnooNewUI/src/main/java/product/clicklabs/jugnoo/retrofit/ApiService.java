@@ -609,7 +609,7 @@ public interface ApiService {
     void editTip(@FieldMap Map<String, String> params,
                                 Callback<FeedCommonResponse> callback);
     @FormUrlEncoded
-    @POST("/schedule_ride")
+    @POST("/insert_pickup_schedule")
     void scheduleRide(@FieldMap Map<String, String> params,
                                 Callback<FeedCommonResponse> callback);
 

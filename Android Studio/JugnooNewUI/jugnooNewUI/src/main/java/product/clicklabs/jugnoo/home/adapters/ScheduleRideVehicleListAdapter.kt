@@ -1,15 +1,18 @@
 package product.clicklabs.jugnoo.home.adapters
 
+import android.graphics.Typeface.BOLD
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item_fare_detail_vehicle.view.*
 import kotlinx.android.synthetic.main.list_item_schedule_ride_vehicles.view.*
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.home.HomeActivity
 import product.clicklabs.jugnoo.home.models.Region
+import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Utils
 
 class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList: ArrayList<Region>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -36,6 +39,13 @@ class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList
     }
 
     inner class ViewHolderVehicle(view: View) : RecyclerView.ViewHolder(view) {
+
+        init {
+            (view.findViewById(R.id.tvVehicleName) as TextView).setTypeface(Fonts.mavenRegular(activity),BOLD)
+            (view.findViewById(R.id.tvBaseFare) as TextView).typeface = Fonts.mavenRegular(activity)
+            (view.findViewById(R.id.tvFarePerMinute) as TextView).typeface = Fonts.mavenRegular(activity)
+            (view.findViewById(R.id.tvFarePerMile) as TextView).typeface = Fonts.mavenRegular(activity)
+        }
         fun bind(position: Int) {
             //   itemView.tvHeader.text = vehicleName
 

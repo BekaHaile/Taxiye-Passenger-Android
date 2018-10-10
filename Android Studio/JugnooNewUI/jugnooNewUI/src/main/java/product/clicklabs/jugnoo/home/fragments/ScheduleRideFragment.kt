@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface.BOLD
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
@@ -39,6 +40,7 @@ import product.clicklabs.jugnoo.home.HomeUtil
 import product.clicklabs.jugnoo.home.models.Region
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.Fonts
+import java.time.format.TextStyle
 
 
 class ScheduleRideFragment : Fragment(), Constants {
@@ -103,8 +105,8 @@ class ScheduleRideFragment : Fragment(), Constants {
 
             tvPickup.typeface = Fonts.mavenRegular(activity)
             tvDestination.typeface = Fonts.mavenRegular(activity)
-            tvSelectDateTime.typeface = Fonts.mavenRegular(activity)
-            tvPickupDateTime.typeface = Fonts.mavenMedium(activity)
+            tvPickupDateTime.setTypeface(Fonts.mavenRegular(activity),BOLD)
+            tvSelectDateTime.typeface = Fonts.mavenMedium(activity)
 
 
             tvPickup.setOnClickListener { (getActivity() as HomeActivity).onClickOfPickupElse() }
@@ -218,7 +220,7 @@ class ScheduleRideFragment : Fragment(), Constants {
         if (validateDateTime(selectedDate, time)) {
             selectedTime = time
             val display = DateOperations.convertDayTimeAPViaFormat(time, true)
-            tvSelectDateTime.text = getString(R.string.schedule_time_format, DateOperations.getDateFormatted(selectedDate) + " " + display)
+            tvSelectDateTime.text = DateOperations.getDateFormatted(selectedDate) + " " + display
             return true
         } else {
             Utils.showToast(activity, activity!!.getString(R.string.please_select_appropriate_time))

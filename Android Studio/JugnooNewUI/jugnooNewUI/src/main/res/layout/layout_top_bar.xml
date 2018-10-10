@@ -186,5 +186,5 @@
         android:tag="@string/dont_touch_me"
         android:padding="5dp"
         android:layout_marginEnd="@dimen/dp_8"
-        android:text="Press here to Schedule a ride"/>
+        android:text="@string/cd_schedule_ride"/>
 </RelativeLayout>
