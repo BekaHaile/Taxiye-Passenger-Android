@@ -653,6 +653,15 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                     if(((isCouponInfo && pc instanceof CouponInfo) || (!isCouponInfo && pc instanceof PromotionInfo))
                             && pc.getId() == promoCouponId) {
                         if (pc.getIsValid() == 1 && setSelectedCoupon(i)) {
+                            if(pc.getAllowedVehicles() != null && pc.getAllowedVehicles().size() > 0
+                                    && !pc.isVehicleTypeExists(getRegionSelected().getVehicleType(), getRegionSelected().getOperatorId())){
+                                for(int j=0; j<Data.autoData.getRegions().size(); j++){
+                                    if(Data.autoData.getRegions().get(j).getVehicleType().equals(pc.getAllowedVehicles().get(0))){
+                                        activity.setVehicleTypeSelected(j, false);
+                                        break;
+                                    }
+                                }
+                            }
                             Utils.showToast(activity, activity.getString(R.string.offer_auto_applied_message_format, getString(R.string.ride)), Toast.LENGTH_LONG);
                         }
                         couponSelected = true;

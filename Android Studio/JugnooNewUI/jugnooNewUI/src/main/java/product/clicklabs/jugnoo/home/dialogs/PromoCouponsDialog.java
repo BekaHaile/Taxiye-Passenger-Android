@@ -92,7 +92,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 			LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
 			listViewPromoCoupons = (ListView) dialog.findViewById(R.id.listViewPromoCoupons);
 
-			promoCouponsAdapter = new PromoCouponsAdapter(activity, R.layout.list_item_promo_coupon, promoCoupons, new PromoCouponsAdapter.Callback() {
+			promoCouponsAdapter = new PromoCouponsAdapter(activity, R.layout.list_item_fresh_promo_coupon, promoCoupons, new PromoCouponsAdapter.Callback() {
 				@Override
 				public void onCouponSelected() {
 
