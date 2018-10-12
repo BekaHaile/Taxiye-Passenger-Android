@@ -10550,7 +10550,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         setServiceAvailablityUI("");
         passengerScreenMode = PassengerScreenMode.P_SEARCH;
         switchPassengerScreen(passengerScreenMode);
-    } public void onClickOfDestinationElse(){
+    } public void onClickOfDestinationElse() {
         topBar.tvScheduleRidePopup.setVisibility(View.GONE);
         placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
         setServiceAvailablityUI("");

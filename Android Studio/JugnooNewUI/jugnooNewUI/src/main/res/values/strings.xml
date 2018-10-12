@@ -1962,4 +1962,5 @@
     <string name="confirm_ride">Confirm Ride</string>
     <string name="please_select_vehicle">Please select vehicle</string>
     <string name="cd_schedule_ride">Press here to Schedule a ride</string>
+    <string name="cd_data_status">Current data status</string>
 </resources>
