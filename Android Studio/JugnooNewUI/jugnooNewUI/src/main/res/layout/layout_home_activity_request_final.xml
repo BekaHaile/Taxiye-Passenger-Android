@@ -305,6 +305,7 @@
                         android:id="@+id/imageViewIRPaymentOption"
                         style="@style/payment_option_icon_small"
                         android:src="@drawable/ic_paytm_small"
+                        android:layout_marginTop="10px"
                         />
 
 
@@ -312,7 +313,7 @@
                         android:id="@+id/textViewIRPaymentOptionValue"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10px"
+                        android:layout_marginTop="5px"
                         android:textAllCaps="true"
                         android:gravity="center"
                         android:text="@string/rs_0100"
@@ -324,7 +325,7 @@
                         android:id="@+id/linearLayoutSurgeContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10px"
+                        android:layout_marginTop="5px"
                         android:gravity="center"
                         android:orientation="horizontal"
                         android:visibility="visible">
@@ -348,6 +349,17 @@
                             android:visibility="visible" />
 
                     </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/ivMoreOptions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_three_dots_selector"
+                        android:tag="@string/dont_touch_me"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:visibility="visible"
+                        />
                 </LinearLayout>
 
 
@@ -480,7 +492,7 @@
                     android:text="@string/cancel_ride"
                     android:textAllCaps="true"
                     android:textSize="@dimen/text_size_32"
-                    android:visibility="gone"
+                    android:visibility="visible"
 
                     />
 

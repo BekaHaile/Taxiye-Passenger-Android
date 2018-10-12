@@ -34,6 +34,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Html;
@@ -45,6 +46,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -330,9 +332,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating;
     RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm,layoutAddedTip;
     Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver,buttonTipDriver,buttonAddTipEndRide;
+    ImageView ivMoreOptions;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat, relativeLayoutTotalFare;
     TextView textViewIRPaymentOptionValue;
     ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm;
+    PopupMenu popupInRide;
 
 
     //Search Layout
@@ -808,6 +812,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         buttonCancelRide = (Button) findViewById(R.id.buttonCancelRide);
         buttonCancelRide.setTypeface(Fonts.mavenRegular(this));
+        ivMoreOptions = (ImageView) findViewById(R.id.ivMoreOptions);
         layoutAddedTip = findViewById(R.id.layout_added_tip);
         tvTipAmountLabel = findViewById(R.id.tvTipAmount);
         tvTipAmountLabel.setTypeface(Fonts.mavenRegular(this));
@@ -1464,6 +1469,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     startActivity(new Intent(HomeActivity.this, RideCancellationActivity.class));
                     overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 }
+            }
+        });
+
+        popupInRide = new PopupMenu(HomeActivity.this, ivMoreOptions);
+        popupInRide.getMenuInflater().inflate(R.menu.menu_in_ride, popupInRide.getMenu());
+        popupInRide.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                if(item.getItemId() == R.id.cancel){
+                    buttonCancelRide.performClick();
+                }
+                return true;
+            }
+        });
+
+        ivMoreOptions.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupInRide.show();
             }
         });
 
@@ -3480,7 +3503,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         setDropLocationEngagedUI();
                         zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
 
-                        buttonCancelRide.setVisibility(Prefs.with(this).getInt(KEY_CUSTOMER_CANCEL_RIDE_ENABLED, 1) == 1 ? View.VISIBLE : View.GONE);
+                        buttonCancelRide.setVisibility(View.GONE);
+                        ivMoreOptions.setVisibility(Prefs.with(this).getInt(KEY_CUSTOMER_CANCEL_RIDE_ENABLED, 1) == 1 ? View.VISIBLE : View.GONE);
                         buttonAddMoneyToWallet.setVisibility(View.GONE);
                         linearLayoutSendInvites.setVisibility(View.GONE);
                         linearLayoutSendInvites.clearAnimation();
@@ -3556,7 +3580,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
 
 
-                        buttonCancelRide.setVisibility(Prefs.with(this).getInt(KEY_CUSTOMER_CANCEL_RIDE_ENABLED, 1) == 1 ? View.VISIBLE : View.GONE);
+						buttonCancelRide.setVisibility(View.GONE);
+						ivMoreOptions.setVisibility(Prefs.with(this).getInt(KEY_CUSTOMER_CANCEL_RIDE_ENABLED, 1) == 1 ? View.VISIBLE : View.GONE);
                         buttonAddMoneyToWallet.setVisibility(View.GONE);
                         linearLayoutSendInvites.setVisibility(View.GONE);
                         linearLayoutSendInvites.clearAnimation();

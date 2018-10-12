@@ -11,6 +11,9 @@
         <item name="android:textColorHint">#595968</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:alertDialogTheme">@style/Theme.AppCompat.Light.Dialog.Alert</item>
+        <item name="popupMenuStyle">@style/PopupMenu1</item>
+        <item name="textAppearanceLargePopupMenu">@style/popupText</item>
+        <item name="textAppearanceSmallPopupMenu">@style/popupTextSmall</item>
     </style>
 
     <style name="back_image">
@@ -46,4 +49,14 @@
 
     </style>
 
+
+    <style name="popupText" parent="TextAppearance.AppCompat.Light.Widget.PopupMenu.Large">
+        <item name="android:textColor">@color/text_color</item>
+    </style>
+    <style name="PopupMenu1" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:popupBackground">@drawable/button_white_grey_border_round_selector</item>
+    </style>
+    <style name="popupTextSmall" parent="TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
+        <item name="android:textColor">@color/text_color_light</item>
+    </style>
 </resources>
