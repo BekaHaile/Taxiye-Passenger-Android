@@ -50,6 +50,7 @@ import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -287,8 +288,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		editTextSearch = (EditText) rootView.findViewById(R.id.editTextSearch);
 		Bundle bundle = getArguments();
 
-//		searchMode = bundle.getInt(KEY_SEARCH_MODE, PlaceSearchMode.PICKUP.getOrdinal());
-		searchMode = PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
+		searchMode = bundle.getInt(KEY_SEARCH_MODE, PlaceSearchMode.PICKUP.getOrdinal());
+//		searchMode = PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
 
 
 		EditText[] editTextsForAdapter ;
@@ -440,17 +441,19 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			public void onFocusChange(View v, boolean hasFocus) {
 				if(hasFocus){
 
-					if(searchResultPickup==null){
-						clearExistingAddress(PlaceSearchListFragment.this.editTextSearch);
-					}
-					if(searchResultDestination==null){
-						clearExistingAddress(editTextSearchDest);
-					}
+					if (PlaceSearchListFragment.this.searchMode == PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()) {
+						if(searchResultPickup==null){
+                            clearExistingAddress(PlaceSearchListFragment.this.editTextSearch);
+                        }
+						if(searchResultDestination==null){
+                            clearExistingAddress(editTextSearchDest);
+                        }
 
-					if((v.getId()==PlaceSearchListFragment.this.editTextSearch.getId() && searchResultPickup==null)
-						|| (v.getId()==PlaceSearchListFragment.this.editTextSearchDest.getId() && searchResultDestination==null)){
-						openBottomSheetMode();
+						if((v.getId()==PlaceSearchListFragment.this.editTextSearch.getId() && searchResultPickup==null)
+                            || (v.getId()==PlaceSearchListFragment.this.editTextSearchDest.getId() && searchResultDestination==null)){
+                            openBottomSheetMode();
 
+                        }
 					}
 
 				}

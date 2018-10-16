@@ -530,7 +530,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private GeoDataClient mGeoDataClient;
     private RecyclerView recyclerViewVehiclesConfirmRide;
     private VehiclesTabAdapter vehiclesTabAdapterConfirmRide;
-    private boolean showVehicleFaresbeforeConfirm = true;
+    private boolean showVehicleFaresBeforeConfirm = true;
+    private boolean selectPickUpdropAtOnce = true;
     private Polyline polyline;
 
     @SuppressLint("NewApi")
@@ -3302,7 +3303,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             updateConfirmedStateCoupon();
                             //fabView.setRelativeLayoutFABVisibility(mode);
                             setGoogleMapPadding(mapPaddingConfirm);
-                            if(showVehicleFaresbeforeConfirm){
+                            if(showVehicleFaresBeforeConfirm){
                                 recyclerViewVehiclesConfirmRide.setVisibility(View.VISIBLE);
                                 relativeLayoutTotalFare.setVisibility(View.GONE);
                                 textVieGetFareEstimateConfirm.setVisibility(View.GONE);
@@ -4042,7 +4043,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } else {
                     bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.enter_pickup));
                 }
-                bundle.putInt(KEY_SEARCH_MODE, placeSearchMode.getOrdinal());
+                int mode = placeSearchMode.getOrdinal();
+                if(selectPickUpdropAtOnce && (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)
+                        && !confirmedScreenOpened){
+                    mode = PlaceSearchListFragment.PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
+                }
+                bundle.putInt(KEY_SEARCH_MODE, mode);
                 getSupportFragmentManager().beginTransaction()
                         .add(relativeLayoutSearch.getId(), PlaceSearchListFragment.newInstance(bundle),
                                 PlaceSearchListFragment.class.getSimpleName() + PassengerScreenMode.P_SEARCH)
@@ -8678,7 +8684,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         e.printStackTrace();
                     }
 
-                    if(showVehicleFaresbeforeConfirm){
+                    if(showVehicleFaresBeforeConfirm){
                         HashMap<String, String> params = new HashMap<>();
                         params.put("ride_distance", "" + (distanceValue/1000D));
                         params.put("ride_time", "" + (timeValue/60D));
@@ -8771,7 +8777,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         e.printStackTrace();
                     }
                 }
-            }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, showVehicleFaresbeforeConfirm ?false: callFareEstimate,
+            }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, showVehicleFaresBeforeConfirm ?false: callFareEstimate,
                     getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), promoCouponSelected);
         } else {
             textViewDestSearch.setText(getResources().getString(R.string.destination_required));
