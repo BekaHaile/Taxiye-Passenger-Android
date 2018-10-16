@@ -55,6 +55,7 @@
     </style>
     <style name="PopupMenu1" parent="ThemeOverlay.AppCompat.Dark">
         <item name="android:popupBackground">@drawable/button_white_grey_border_round_selector</item>
+        <item name="android:popupElevation">4dp</item>
     </style>
     <style name="popupTextSmall" parent="TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
         <item name="android:textColor">@color/text_color_light</item>

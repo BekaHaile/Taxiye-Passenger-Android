@@ -431,6 +431,18 @@ public class JSONParser implements Constants {
 				context.getResources().getBoolean(R.bool.hit_place_details_after_geocode)));
         Prefs.with(context).save(KEY_CUSTOMER_CANCEL_RIDE_ENABLED, autoData.optInt(KEY_CUSTOMER_CANCEL_RIDE_ENABLED,
 				context.getResources().getInteger(R.integer.customer_cancel_ride_enabled)));
+
+        Prefs.with(context).save(KEY_CUSTOMER_PLAY_SOUND_RIDE_ACCEPT, autoData.optInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_ACCEPT,
+				context.getResources().getInteger(R.integer.customer_play_sound_ride_accept)));
+
+        Prefs.with(context).save(KEY_CUSTOMER_PLAY_SOUND_RIDE_ARRIVED, autoData.optInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_ARRIVED,
+				context.getResources().getInteger(R.integer.customer_play_sound_ride_arrived)));
+
+        Prefs.with(context).save(KEY_CUSTOMER_PLAY_SOUND_RIDE_START, autoData.optInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_START,
+				context.getResources().getInteger(R.integer.customer_play_sound_ride_start)));
+
+        Prefs.with(context).save(KEY_CUSTOMER_PLAY_SOUND_RIDE_END, autoData.optInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_END,
+				context.getResources().getInteger(R.integer.customer_play_sound_ride_end)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

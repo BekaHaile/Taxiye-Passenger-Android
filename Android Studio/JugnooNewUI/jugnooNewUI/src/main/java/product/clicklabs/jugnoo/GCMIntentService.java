@@ -59,6 +59,7 @@ import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.SoundMediaPlayer;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
 
@@ -468,6 +469,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID));
 						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_REQUEST_FINAL.getOrdinal());
+
+						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_ACCEPT, 0) == 1){
+							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+						}
+
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.rideRequestAcceptedInterrupt(jObj);
 						} else{
@@ -489,6 +495,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						String driverArrivedMessage = jObj.getString(KEY_MESSAGE);
 						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID, Prefs.with(this).getString(Constants.SP_CURRENT_ENGAGEMENT_ID, "")));
 						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_DRIVER_ARRIVED.getOrdinal());
+
+						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_ARRIVED, 0) == 1){
+							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+						}
+
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onDriverArrived(driverArrivedMessage);
 						} else{
@@ -510,6 +521,10 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						message1 = jObj.optString(KEY_MESSAGE, getString(R.string.your_ride_has_started));
 						Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, jObj.optString(KEY_ENGAGEMENT_ID, Prefs.with(this).getString(Constants.SP_CURRENT_ENGAGEMENT_ID, "")));
 						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_IN_RIDE.getOrdinal());
+
+						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_START, 0) == 1){
+							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+						}
 
 						Prefs.with(this).save(SP_CHAT_CLOSE, true);
 						Intent intent1 = new Intent(Constants.INTENT_ACTION_CHAT_CLOSE);
@@ -549,7 +564,10 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							}
 						}
 						notificationManager(this, title, message1, playSound);
-						stopLocationUpdateService();
+						stopLocationUpdateService(PassengerScreenMode.P_RIDE_END.getOrdinal());
+						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_END, 0) == 1){
+							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+						}
 
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
@@ -559,7 +577,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							HomeActivity.appInterruptHandler.startRideForCustomer(1, message1, null);
 						}
 						notificationManager(this, title, message1, playSound);
-						stopLocationUpdateService();
+						stopLocationUpdateService(PassengerScreenMode.P_INITIAL.getOrdinal());
 						Intent intentBr = new Intent(Constants.ACTION_FINISH_ACTIVITY);
 						intentBr.putExtra(Constants.KEY_FINISH_ACTIVITY, 1);
 						sendBroadcast(intentBr);
@@ -926,8 +944,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 		}
 	}
 
-	private void stopLocationUpdateService(){
-		Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_INITIAL.getOrdinal());
+	private void stopLocationUpdateService(int mode){
+		Prefs.with(this).save(SP_CURRENT_STATE, mode);
 		Prefs.with(this).save(SP_CURRENT_ENGAGEMENT_ID, "");
 		Intent intent = new Intent(this, LocationUpdateService.class);
 		intent.putExtra(STOP_FOREGROUND, 1);

@@ -236,6 +236,7 @@ import product.clicklabs.jugnoo.utils.NonScrollGridView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.SelectorBitmapLoader;
+import product.clicklabs.jugnoo.utils.SoundMediaPlayer;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
@@ -3748,6 +3749,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 callT20AndReferAllDialog(mode);
 
+                int savedMode = Prefs.with(this).getInt(SP_CURRENT_STATE, PassengerScreenMode.P_INITIAL.getOrdinal());
+                if(savedMode != mode.getOrdinal()){
+                	if((mode.getOrdinal() == PassengerScreenMode.P_REQUEST_FINAL.getOrdinal()
+								&& Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_ACCEPT, 0) == 1)
+							|| (mode.getOrdinal() == PassengerScreenMode.P_DRIVER_ARRIVED.getOrdinal()
+								&& Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_ARRIVED, 0) == 1)
+							|| (mode.getOrdinal() == PassengerScreenMode.P_IN_RIDE.getOrdinal()
+								&& Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_START, 0) == 1)
+							|| (mode.getOrdinal() == PassengerScreenMode.P_RIDE_END.getOrdinal()
+								&& Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_END, 0) == 1)){
+						SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+					}
+				}
                 Prefs.with(this).save(SP_CURRENT_STATE, mode.getOrdinal());
 
                 startStopLocationUpdateService(mode);

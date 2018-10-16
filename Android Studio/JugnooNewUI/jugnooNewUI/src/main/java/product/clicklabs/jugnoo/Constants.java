@@ -952,4 +952,9 @@ public interface Constants {
     String SP_LAST_PHONE_NUMBER_SAVED = "last_phone_number_saved";
     String SP_LAST_COUNTRY_CODE_SAVED = "last_country_code_saved";
     String KEY_CUSTOMER_CANCEL_RIDE_ENABLED = "customer_cancel_ride_enabled";
+
+    String KEY_CUSTOMER_PLAY_SOUND_RIDE_ACCEPT = "customer_play_sound_ride_accept";
+    String KEY_CUSTOMER_PLAY_SOUND_RIDE_ARRIVED = "customer_play_sound_ride_arrived";
+    String KEY_CUSTOMER_PLAY_SOUND_RIDE_START = "customer_play_sound_ride_start";
+    String KEY_CUSTOMER_PLAY_SOUND_RIDE_END = "customer_play_sound_ride_end";
 }
