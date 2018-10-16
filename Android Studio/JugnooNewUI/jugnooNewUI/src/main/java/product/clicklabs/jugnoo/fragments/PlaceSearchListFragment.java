@@ -439,10 +439,18 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				if(hasFocus){
+
+					if(searchResultPickup==null){
+						clearExistingAddress(PlaceSearchListFragment.this.editTextSearch);
+					}
+					if(searchResultDestination==null){
+						clearExistingAddress(editTextSearchDest);
+					}
+
 					if((v.getId()==PlaceSearchListFragment.this.editTextSearch.getId() && searchResultPickup==null)
 						|| (v.getId()==PlaceSearchListFragment.this.editTextSearchDest.getId() && searchResultDestination==null)){
-						clearExistingAddress(editTextSearch);
 						openBottomSheetMode();
+
 					}
 
 				}
@@ -818,19 +826,19 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 								setFocusedSearchResult(searchResult);
 
 							}else{
-								setFetchedAddressToTextView(gapiAddress.getSearchableAddress());
+								setFetchedAddressToTextView(gapiAddress.getSearchableAddress(), false);
 
 							}
 							mapSettledCanForward = true;
 						} else {
 							Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-							setFetchedAddressToTextView("");
+							setFetchedAddressToTextView("", false);
 						}
 
 					} catch (Exception e) {
 						e.printStackTrace();
 						Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-						setFetchedAddressToTextView("");
+						setFetchedAddressToTextView("", false);
 					}
 					getFocussedProgressBar().setVisibility(View.GONE);
 				}
@@ -840,14 +848,14 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 					product.clicklabs.jugnoo.utils.Log.e("DeliveryAddressFragment", "error=" + error.toString());
 					Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
 					getFocussedProgressBar().setVisibility(View.GONE);
-					setFetchedAddressToTextView("");
+					setFetchedAddressToTextView("", false);
 				}
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	private void setFetchedAddressToTextView(String address){
+	private void setFetchedAddressToTextView(String address, boolean isAddressConfirmed){
 		EditText editText = getFocusedEditText();
 		if(searchListAdapter!=null){
 			editText.removeTextChangedListener(searchListAdapter.getTextWatcherEditText(editText.getId()));
@@ -856,8 +864,14 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}else{
 			editText.setText(address);
 		}
+		if(!isAddressConfirmed){
+			if (getFocusedEditText().getId() == editTextSearch.getId()) {
+				searchResultPickup = null;
+			} else {
+				searchResultDestination = null;
 
-
+			}
+		}
 	}
 
 	private EditText getFocusedEditText() {
@@ -878,7 +892,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		}
 		if(searchResult!=null){
-			setFetchedAddressToTextView(searchResult.getAddress());
+			setFetchedAddressToTextView(searchResult.getAddress(), true);
 
 			if(searchMode==PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()){
 				if(getFocusedEditText().getId()==editTextSearch.getId()){
