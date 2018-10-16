@@ -9134,16 +9134,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                    .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
             if (searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())) {
                 textViewInitialSearch.setText(searchResult.getNameForText());
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), getMapAnimateDuration(), new GoogleMap.CancelableCallback() {
-                    @Override
-                    public void onFinish() {
-                        setPickupAddressZoomedOnce = true;
-                    }
-
-                    @Override
-                    public void onCancel() {
-                    }
-                });
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM));
+                setPickupAddressZoomedOnce = true;
                 lastSearchLatLng = searchResult.getLatLng();
                 mapTouched = true;
                 Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
