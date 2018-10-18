@@ -17,7 +17,7 @@ interface UpcomingRidesContract {
 
     interface View : BaseView<Presenter> {
 
-        fun showAllUpcomingRides()
+        fun showAllUpcomingRides(list:List<UpcomingRide>)
 
 
     }

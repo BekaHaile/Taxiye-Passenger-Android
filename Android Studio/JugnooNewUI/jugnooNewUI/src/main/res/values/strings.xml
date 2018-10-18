@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE resources [
-    <!ENTITY currency "\u20B9">
-    ]>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE resources [<!ENTITY currency "\u20B9">]>
 <resources>
 
     <string name="hello_world">Hello world!</string>
@@ -9,7 +6,6 @@
 
     <string name="no_more_than">Can\'t order more than %d units</string>
     <string name="no_more_than_star">Can\'t add more than %d unit</string>
-
 
 
     <string name="rupee">&currency;</string>
@@ -242,7 +238,6 @@
 
 
     <string name="debug">Debug</string>
-
 
 
     <string name="no_results_found">No results found</string>
@@ -908,7 +903,6 @@
     <string name="mobile_string">Mobile Number</string>
 
 
-
     <string name="mobile_contact">Type a name or mobile number</string>
     <string name="amount_string">Enter amount</string>
     <string name="message_string">Add a message (optional)</string>
@@ -1003,7 +997,7 @@
 
     <string name="delivers_in">Delivers in</string>
     <string name="minimum_order_rupee_format">Min Order &currency;%s</string>
-    <string name="minimum_order_rupee_short_format"> \u2022 Min  &currency;%s</string>
+    <string name="minimum_order_rupee_short_format"> \u2022 Min &currency;%s</string>
     <string name="jugnoo_star">Star</string>
     <string name="jugnoo_Star_title">Free Delivery, cashback and offers. All for %s STARS.</string>
     <string name="no">No</string>
@@ -1708,7 +1702,7 @@
     <string name="new_zealand">NEW ZEALAND</string>
     <string name="_02_00pm_06_00pm">02:00PM-06:00PM</string>
     <string name="today">TODAY</string>
-    <string name="gift_your_friends_nrs_50">Gift your friends  &currency; 50</string>
+    <string name="gift_your_friends_nrs_50">Gift your friends &currency; 50</string>
     <string name="_10_00_am_12_00_pm">10:00 AM - 12:00 PM</string>
     <string name="no_current_notifications">No Current Notifications</string>
     <string name="driver_is_late">Driver is late</string>
@@ -1804,7 +1798,8 @@
     <string name="others">Others</string>
     <string name="please_specify_the_reason">Please specify the reason</string>
     <string name="required">* Required</string>
-    <string name="cancellation_of_a_ride_more_than_5_minutes_nafter_the_driver_is_allocated_will_lead_to_ncancellation_charges_of_rs_20">Cancellation of a ride more than 5 minutes after the driver is allocated will lead to cancellation charges of &currency; 20</string>
+    <string name="cancellation_of_a_ride_more_than_5_minutes_nafter_the_driver_is_allocated_will_lead_to_ncancellation_charges_of_rs_20">Cancellation of a ride more than 5 minutes after the driver is allocated will lead to cancellation charges of &currency;
+        20</string>
     <string name="fare_estimate">FARE ESTIMATE</string>
     <string name="convenience_charges_rs_10">Convenience charges &currency;10</string>
     <string name="type_city_name">Type City Name</string>
@@ -1942,7 +1937,7 @@
     <string name="please_enter_first_name">Please enter first name</string>
     <string name="please_enter_last_name">Please enter last name</string>
     <string name="title_add_tip_for_driver">ADD TIP FOR DRIVER</string>
-    <string name ="label_tip_added">Tip Added: %s</string>
+    <string name="label_tip_added">Tip Added: %s</string>
     <string name="action_edit"><u>Edit</u></string>
     <string name="action_remove"><u>Remove</u></string>
     <string name="driver_tip">Driver Tip</string>

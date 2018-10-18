@@ -14,12 +14,6 @@ import product.clicklabs.jugnoo.R
 
 object BindingAdapters{
 
-    enum class DataState {
-        LOADING,
-        NO_INTERNET,
-        EMPTY_DATA
-
-    }
 
     @BindingAdapter("app:noDataIcon")
     @JvmStatic  fun noDataIcon(view: ImageView,state: DataState) {
