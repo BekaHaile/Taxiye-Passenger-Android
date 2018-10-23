@@ -50,7 +50,6 @@ import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
-import product.clicklabs.jugnoo.datastructure.SearchMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -111,7 +110,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		@Override
 		public void onTextChange(String text) {
-			setFocusedSearchResult(null);
+			setFocusedSearchResult(null, false);
 			ImageView imageViewSearchCross;
 
 			if (searchMode == PlaceSearchMode.PICKUP_AND_DROP.getOrdinal() && editTextSearch.hasFocus()) {
@@ -141,7 +140,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		@Override
 		public void onSearchPre() {
-			setFocusedSearchResult(null);
+			setFocusedSearchResult(null, false);
 			getFocussedProgressBar().setVisibility(View.VISIBLE);
 			if (searchListActionsHandler != null) {
 				searchListActionsHandler.onSearchPre();
@@ -150,7 +149,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		@Override
 		public void onSearchPost() {
-			setFocusedSearchResult(null);
+			setFocusedSearchResult(null, false);
 			getFocussedProgressBar().setVisibility(View.GONE);
 			if (searchListActionsHandler != null) {
 				searchListActionsHandler.onSearchPost();
@@ -159,7 +158,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		@Override
 		public void onPlaceClick(SearchResult autoCompleteSearchResult) {
-			setFocusedSearchResult(null);
+			setFocusedSearchResult(null, false);
 			if (searchListActionsHandler != null) {
 				searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
 			}
@@ -167,7 +166,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		@Override
 		public void onPlaceSearchPre() {
-			setFocusedSearchResult(null);
+			setFocusedSearchResult(null, false);
 			getFocussedProgressBar().setVisibility(View.VISIBLE);
 			if (searchListActionsHandler != null) {
 				searchListActionsHandler.onPlaceSearchPre();
@@ -181,7 +180,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			scrollViewSearch.setVisibility(View.GONE);
 
 			if (searchMode == PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()) {
-				setFocusedSearchResult(searchResult);
+				setFocusedSearchResult(searchResult, false);
 
 				if (searchResultPickup != null && searchResultDestination != null) {
 					if (searchListActionsHandler != null) {
@@ -202,7 +201,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		@Override
 		public void onPlaceSearchError() {
-			setFocusedSearchResult(null);
+			setFocusedSearchResult(null, false);
 			getFocussedProgressBar().setVisibility(View.GONE);
 			if (searchListActionsHandler != null) {
 				searchListActionsHandler.onPlaceSearchError();
@@ -232,7 +231,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		return fragment;
 	}
 	private GeoDataClient geoDataClient;
-	private int searchMode;
+	private int searchMode,searchModeClicked;
 
 	@Override
 	public void onAttach(Context context) {
@@ -289,6 +288,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		Bundle bundle = getArguments();
 
 		searchMode = bundle.getInt(KEY_SEARCH_MODE, PlaceSearchMode.PICKUP.getOrdinal());
+		searchModeClicked = bundle.getInt(KEY_SEARCH_MODE_CLICKED, PlaceSearchMode.DROP.getOrdinal());
 //		searchMode = PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
 
 
@@ -830,7 +830,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 								getFocussedProgressBar().setVisibility(View.GONE);
 								SearchResult searchResult  = new SearchResult("",gapiAddress.getSearchableAddress(),
 										"", lastLatFetched, lastLngFetched,0,1,0 );
-								setFocusedSearchResult(searchResult);
+								setFocusedSearchResult(searchResult, true);
 
 							}else{
 								setFetchedAddressToTextView(gapiAddress.getSearchableAddress(), false);
@@ -867,9 +867,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		if(searchListAdapter!=null){
 			editText.removeTextChangedListener(searchListAdapter.getTextWatcherEditText(editText.getId()));
 			editText.setText(address);
+			editText.setSelection(address.length());
+			getFocusedCross().setVisibility(View.VISIBLE);
 			editText.addTextChangedListener(searchListAdapter.getTextWatcherEditText(editText.getId()));
 		}else{
 			editText.setText(address);
+			editText.setSelection(address.length());
+			getFocusedCross().setVisibility(View.VISIBLE);
 		}
 		if(!isAddressConfirmed){
 			if (getFocusedEditText().getId() == editTextSearch.getId()) {
@@ -886,12 +890,17 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				&& editTextSearchDest.hasFocus()?editTextSearchDest:editTextSearch;
 	}
 
+	private View getFocusedCross() {
+		return searchMode== PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()
+				&& editTextSearchDest.hasFocus()?imageViewSearchCrossDest:imageViewSearchCross;
+	}
+
 
 	private SearchResult getFocusedSearchResult(){
 		return getFocusedEditText().getId() ==editTextSearch.getId()?searchResultPickup:searchResultDestination;
 	}
 
-	private void setFocusedSearchResult(SearchResult searchResult){
+	private void setFocusedSearchResult(SearchResult searchResult, boolean isFirstTime){
 		if (getFocusedEditText().getId() == editTextSearch.getId()) {
 			searchResultPickup = searchResult;
 		} else {
@@ -903,7 +912,10 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 			if(searchMode==PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()){
 				if(getFocusedEditText().getId()==editTextSearch.getId()){
-					editTextSearchDest.requestFocus();
+					if(!(isFirstTime && searchModeClicked == PlaceSearchMode.PICKUP.getOrdinal())){
+						editTextSearchDest.requestFocus();
+
+					}
 				}else{
 					editTextSearch.requestFocus();
 				}

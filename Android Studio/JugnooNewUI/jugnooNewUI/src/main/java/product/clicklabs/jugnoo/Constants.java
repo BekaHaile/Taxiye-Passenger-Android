@@ -95,6 +95,7 @@ public interface Constants {
     String KEY_SEARCH_FIELD_TEXT = "search_field_text";
     String KEY_SEARCH_FIELD_HINT = "search_field_hint";
     String KEY_SEARCH_MODE = "search_mode";
+    String KEY_SEARCH_MODE_CLICKED = "search_mode_clicked";
 
     String KEY_OTP_VIA_CALL_ENABLED = "otp_via_call_enabled";
 

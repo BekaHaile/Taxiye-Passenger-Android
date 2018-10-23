@@ -4041,16 +4041,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (frag == null || frag.isRemoving()) {
                 Bundle bundle = new Bundle();
                 bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
+
+                int modeClicked ;
                 if (placeSearchMode.getOrdinal() == PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal()) {
                     bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.enter_destination));
+                    modeClicked = PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal();
                 } else {
                     bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.enter_pickup));
+                    modeClicked = PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal();
                 }
                 int mode = placeSearchMode.getOrdinal();
                 if(selectPickUpdropAtOnce && (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
                     mode = PlaceSearchListFragment.PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
                 }
                 bundle.putInt(KEY_SEARCH_MODE, mode);
+                bundle.putInt(KEY_SEARCH_MODE_CLICKED, modeClicked);
                 getSupportFragmentManager().beginTransaction()
                         .add(relativeLayoutSearch.getId(), PlaceSearchListFragment.newInstance(bundle),
                                 PlaceSearchListFragment.class.getSimpleName() + PassengerScreenMode.P_SEARCH)
@@ -5050,7 +5055,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             SearchResult searchResult = new Gson().fromJson(data.getStringExtra(KEY_SEARCH_RESULT), SearchResult.class);
                             searchResult.setTime(System.currentTimeMillis());
                             setDropAddressAndExpandFields(searchResult);
-                            saveLastDestinations(searchResult);
+//                            saveLastDestinations(searchResult);
                         }
                         slidingBottomPanel.getImageViewExtraForSliding().performClick();
                         // check if we need to avoid the action click
