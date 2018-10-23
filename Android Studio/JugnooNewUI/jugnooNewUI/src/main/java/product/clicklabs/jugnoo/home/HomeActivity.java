@@ -2164,7 +2164,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 @Override
                 public void onMapUnsettled() {
                     // Map unsettled
-                    if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL && !zoomedForSearch) {
+                    if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL && !zoomedForSearch
+                            && !confirmedScreenOpened) {
                         Data.autoData.setPickupAddress("", null);
                         textViewInitialSearch.setText("");
                     }
@@ -3297,7 +3298,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             linearLayoutRequestMain.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.GONE);
                             topBar.imageViewBack.setVisibility(View.VISIBLE);
-                            relativeLayoutInitialSearchBar.setEnabled(false);
+                            if(!selectPickUpdropAtOnce){
+                                relativeLayoutInitialSearchBar.setEnabled(false);
+                            }
                             imageViewDropCross.setVisibility(View.GONE);
                             updateConfirmedStatePaymentUI();
                             updateConfirmedStateCoupon();
@@ -4044,8 +4047,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.enter_pickup));
                 }
                 int mode = placeSearchMode.getOrdinal();
-                if(selectPickUpdropAtOnce && (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)
-                        && !confirmedScreenOpened){
+                if(selectPickUpdropAtOnce && (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
                     mode = PlaceSearchListFragment.PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
                 }
                 bundle.putInt(KEY_SEARCH_MODE, mode);
@@ -9144,6 +9146,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 setPickupAddressZoomedOnce = true;
                 lastSearchLatLng = searchResult.getLatLng();
                 mapTouched = true;
+                Data.autoData.setPickupLatLng(searchResult.getLatLng());
                 Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
 
                 try {

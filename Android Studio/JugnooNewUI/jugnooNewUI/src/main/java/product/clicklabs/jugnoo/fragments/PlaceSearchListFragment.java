@@ -787,7 +787,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 	}
 	private LatLng getCurrentLatLng(){
-		return new LatLng(Data.latitude, Data.longitude);
+		if(Data.autoData != null && Data.autoData.getPickupLatLng()!=null){
+			return Data.autoData.getPickupLatLng();
+		} else {
+			return new LatLng(Data.latitude, Data.longitude);
+		}
 	}
 
 
