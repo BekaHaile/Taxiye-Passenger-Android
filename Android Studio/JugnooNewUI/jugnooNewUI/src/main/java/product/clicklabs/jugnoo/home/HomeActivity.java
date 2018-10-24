@@ -9245,6 +9245,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 });
                 lastSearchLatLng = searchResult.getLatLng();
                 mapTouched = true;
+                getAddressAsync(searchResult.getLatLng(), textViewInitialSearch, progressBarInitialSearch);
                 Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
 
                 try {
