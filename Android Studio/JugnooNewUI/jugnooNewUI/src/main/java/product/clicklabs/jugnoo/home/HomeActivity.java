@@ -129,6 +129,7 @@ import java.util.TimerTask;
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
+import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -531,6 +532,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private GeoDataClient mGeoDataClient;
 
+    private ImageView ivLikePickup, ivLikeDrop;
+
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -673,6 +676,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewInitialSearch.setTypeface(Fonts.mavenRegular(this));
         textViewDestSearch = (TextView) findViewById(R.id.textViewDestSearch);
         textViewDestSearch.setTypeface(Fonts.mavenRegular(this));
+
+        ivLikePickup = findViewById(R.id.ivLikePickup);
+        ivLikeDrop = findViewById(R.id.ivLikeDrop);
+        ivLikePickup.setVisibility(getLikePickupDropVisibility());
+        ivLikeDrop.setVisibility(View.GONE);
+
         progressBarInitialSearch = (ProgressWheel) findViewById(R.id.progressBarInitialSearch);
         progressBarInitialSearch.setVisibility(View.GONE);
         imageViewDropCross = (ImageView) findViewById(R.id.imageViewDropCross);
@@ -1259,6 +1268,55 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
 
+        ivLikePickup.setTag("");
+        ivLikePickup.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!TextUtils.isEmpty(ivLikePickup.getTag().toString())){
+                    return;
+                }
+                String address = Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng());
+                String title = address.equalsIgnoreCase(textViewInitialSearch.getText().toString()) ? "" : textViewInitialSearch.getText().toString();
+                SearchResult searchResult = new SearchResult(title, address, "",
+                        Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude);
+                if(TextUtils.isEmpty(searchResult.getAddress())) {
+                    Utils.showToast(HomeActivity.this, getString(R.string.please_wait));
+                    return;
+                }
+                Intent intent = new Intent(HomeActivity.this, AddPlaceActivity.class);
+                intent.putExtra(Constants.KEY_REQUEST_CODE, searchResult.getPlaceRequestCode());
+                intent.putExtra(Constants.KEY_ADDRESS, new Gson().toJson(searchResult, SearchResult.class));
+                intent.putExtra(Constants.KEY_DIRECT_CONFIRM, true);
+                startActivityForResult(intent, searchResult.getPlaceRequestCode());
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                likeClicked = 1;
+            }
+        });
+        ivLikeDrop.setTag("");
+        ivLikeDrop.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!TextUtils.isEmpty(ivLikeDrop.getTag().toString())){
+                    return;
+                }
+                String address = Data.autoData.getDropAddress();
+                String title = address.equalsIgnoreCase(textViewDestSearch.getText().toString()) ? "" : textViewDestSearch.getText().toString();
+                SearchResult searchResult = new SearchResult(title, address, "",
+                        Data.autoData.getDropLatLng().latitude, Data.autoData.getDropLatLng().longitude);
+                if(TextUtils.isEmpty(searchResult.getAddress())) {
+                    Utils.showToast(HomeActivity.this, getString(R.string.please_wait));
+                    return;
+                }
+                Intent intent = new Intent(HomeActivity.this, AddPlaceActivity.class);
+                intent.putExtra(Constants.KEY_REQUEST_CODE, searchResult.getPlaceRequestCode());
+                intent.putExtra(Constants.KEY_ADDRESS, new Gson().toJson(searchResult, SearchResult.class));
+                intent.putExtra(Constants.KEY_DIRECT_CONFIRM, true);
+                startActivityForResult(intent, searchResult.getPlaceRequestCode());
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                likeClicked = 2;
+            }
+        });
+
 
         relativeLayoutInitialSearchBar.setOnClickListener(new OnClickListener() {
             @Override
@@ -1324,6 +1382,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         textViewDestSearch.setText(R.string.enter_destination);
                     }
                     imageViewDropCross.setVisibility(View.GONE);
+                    ivLikeDrop.setVisibility(View.GONE);
                     ((ViewGroup) relativeLayoutInitialSearchBar.getParent()).bringChildToFront(relativeLayoutInitialSearchBar);
                     translateViewBottomTop(relativeLayoutDestSearchBar, false);
                     translateViewTopBottom(relativeLayoutInitialSearchBar, true);
@@ -2172,7 +2231,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 @Override
                 public void onMapUnsettled() {
                     // Map unsettled
-                    if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL && !zoomedForSearch) {
+                    if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL && !zoomedForSearch
+                            && !confirmedScreenOpened) {
                         Data.autoData.setPickupAddress("", null);
                         textViewInitialSearch.setText("");
                     }
@@ -2487,6 +2547,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             dropLocationSet = true;
             relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
             imageViewDropCross.setVisibility(View.VISIBLE);
+            setLikeDropVisibilityAndBG();
         }
     }
 
@@ -2635,6 +2696,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             textViewDestSearch.setText("");
             imageViewDropCross.setVisibility(View.GONE);
+            ivLikeDrop.setVisibility(View.GONE);
 
             relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.bg_menu_item_selector_color_rb);
             relativeLayoutDestSearchBar.clearAnimation();
@@ -3300,7 +3362,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if (isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()) {
                                 centreLocationRl.setVisibility(View.GONE);
                                 imageViewConfirmDropLocationEdit.setVisibility(View.VISIBLE);
+                                setLikeDropVisibilityAndBG();
                                 fareEstimateForPool();
+                            } else {
+                                ivLikeDrop.setVisibility(View.GONE);
                             }
                             linearLayoutRequestMain.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.GONE);
@@ -3784,6 +3849,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void setLikeDropVisibilityAndBG() {
+        ivLikeDrop.setVisibility(getLikePickupDropVisibility());
+        if(ivLikeDrop.getVisibility() == View.VISIBLE && Data.autoData != null && Data.autoData.getDropLatLng() != null){
+            SearchResult searchResult = HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+            if(searchResult != null){
+                ivLikeDrop.setImageResource(R.drawable.ic_heart_filled);
+                ivLikeDrop.setTag("liked");
+            } else {
+                ivLikeDrop.setImageResource(R.drawable.ic_heart);
+                ivLikeDrop.setTag("");
+            }
         }
     }
 
@@ -5032,20 +5111,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         driverTipInteractor.actionButton.performClick();
                     }
 
-                }else if (requestCode == Constants.REQUEST_CODE_ADD_HOME) {
+                }else if (requestCode == Constants.REQUEST_CODE_ADD_HOME
+                        || requestCode == Constants.REQUEST_CODE_ADD_WORK
+                        || requestCode == REQUEST_CODE_ADD_NEW_LOCATION) {
                     String strResult = data.getStringExtra("PLACE");
                     SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
                     if (searchResult != null) {
                         placeAdded = true;
-                    } else {
-                    }
-
-                } else if (requestCode == Constants.REQUEST_CODE_ADD_WORK) {
-                    String strResult = data.getStringExtra("PLACE");
-                    SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
-                    if (searchResult != null) {
-                        placeAdded = true;
-                    } else {
+                        if(passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+                            if (likeClicked == 1) {
+                                textViewInitialSearch.setText(searchResult.getName());
+                                ivLikePickup.setImageResource(R.drawable.ic_heart_filled);
+                                ivLikePickup.setTag("liked");
+                            } else if (likeClicked == 2) {
+                                textViewDestSearch.setText(searchResult.getName());
+                                ivLikeDrop.setImageResource(R.drawable.ic_heart_filled);
+                                ivLikeDrop.setTag("liked");
+                            }
+                        }
                     }
                 } else if (requestCode == FARE_ESTIMATE) {
                     try {
@@ -5073,6 +5156,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+        likeClicked = 0;
     }
 
 
@@ -5195,6 +5279,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     confirmedScreenOpened = false;
                     if (Data.autoData.getDropLatLng() != null) {
                         imageViewDropCross.setVisibility(View.VISIBLE);
+                        setLikeDropVisibilityAndBG();
                     }
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
@@ -5869,12 +5954,34 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         try {
             boolean addressNeeded = true;
+
+            SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
+                    Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
             if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
-                Data.autoData.setPickupAddress("", null);
+                if (searchResult != null) {
+                    addressNeeded = false;
+                    textView.setText(searchResult.getName());
+                    Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
+                    if(textView == textViewInitialSearch){
+                        ivLikePickup.setImageResource(R.drawable.ic_heart_filled);
+                        ivLikePickup.setTag("liked");
+                    }
+                } else {
+                    if(textView == textViewInitialSearch){
+                        ivLikePickup.setImageResource(R.drawable.ic_heart);
+                        ivLikePickup.setTag("");
+                    }
+                    Data.autoData.setPickupAddress("", null);
+                }
             } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
                     || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                     || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+                if(searchResult != null && (Data.autoData.getDropLatLng() == null || TextUtils.isEmpty(Data.autoData.getDropAddress()))){
+                    Data.autoData.setDropLatLng(searchResult.getLatLng());
+                    Data.autoData.setDropAddressId(searchResult.getId());
+                    Data.autoData.setDropAddress(searchResult.getAddress());
+                }
                 if (Data.autoData.getDropLatLng() != null && !TextUtils.isEmpty(Data.autoData.getDropAddress())) {
                     if (dropAddressName.length() == 0) {
                         textView.setText(Data.autoData.getDropAddress());
@@ -5905,12 +6012,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                         textView.setHint(getResources().getString(R.string.getting_address));
                                         textView.setText(address);
                                         Data.autoData.setPickupAddress(address, currentLatLng);
-                                        SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
-                                                Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
-                                        if (searchResult != null) {
-                                            textView.setText(searchResult.getName());
-                                            Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
-                                        }
                                     } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
                                             || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                                             || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
@@ -9195,6 +9296,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     dropLocationSet = true;
                     relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                     imageViewDropCross.setVisibility(View.VISIBLE);
+                    setLikeDropVisibilityAndBG();
 
                     // Save Last 3 Destination...
                     saveLastDestinations(searchResult);
@@ -10487,4 +10589,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             return Data.autoData != null && Data.autoData.isRazorpayEnabled();
         }
     };
+
+    private Integer likePickupDropVisibility = null;
+    private Integer getLikePickupDropVisibility(){
+        if(likePickupDropVisibility == null){
+            likePickupDropVisibility = Prefs.with(this).getInt(KEY_PICKUP_DROP_LIKE_ENABLED, 0) == 1 ? View.VISIBLE : View.GONE;
+        }
+        return likePickupDropVisibility;
+    }
+
+    private int likeClicked = 0;
 }

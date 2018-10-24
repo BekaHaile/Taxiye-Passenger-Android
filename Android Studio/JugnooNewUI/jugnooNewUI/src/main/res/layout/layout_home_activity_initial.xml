@@ -63,7 +63,16 @@
                     android:layout_alignParentEnd="true"
                     android:orientation="horizontal"
                     android:layout_width="wrap_content"
+                    android:gravity="center_vertical"
                     android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/ivLikeDrop"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_heart"
+                        android:tag="@string/dont_touch_me"
+                        />
                     <ImageView
                         android:id="@+id/imageViewDropCross"
                         android:layout_width="70px"
@@ -78,14 +87,11 @@
                         android:id="@+id/imageViewConfirmDropLocationEdit"
                         android:layout_width="60px"
                         android:layout_height="60px"
-                        android:layout_toEndOf="@id/imageViewDropCross"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
                         android:layout_marginEnd="5px"
                         android:padding="15px"
                         android:src="@drawable/edit_icon_selector"
                         android:tag="mwar"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
                 </LinearLayout>
 
 
@@ -126,7 +132,20 @@
                     android:paddingEnd="20px"
                     android:singleLine="true"
                     android:textColor="@color/text_color"
+                    android:layout_toStartOf="@+id/ivLikePickup"
                     android:textSize="30px" />
+                
+                <ImageView
+                    android:id="@+id/ivLikePickup"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_heart"
+                    android:tag="@string/dont_touch_me"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="5dp"
+                    />
 
             </RelativeLayout>
 

@@ -551,9 +551,9 @@ public interface Constants {
     String KEY_GOOGLE_PLACE_ID = "google_place_id";
 
 
-    int REQUEST_CODE_ADD_HOME = 2;
-    int REQUEST_CODE_ADD_WORK = 3;
-    int REQUEST_CODE_ADD_NEW_LOCATION = 4;
+    int REQUEST_CODE_ADD_HOME = 200;
+    int REQUEST_CODE_ADD_WORK = 300;
+    int REQUEST_CODE_ADD_NEW_LOCATION = 400;
     String KEY_REQUEST_CODE = "request_code";
     String KEY_ADDRESS_ID = "address_id";
     String KEY_KEEP_DUPLICATE = "keep_duplicate";
@@ -617,7 +617,7 @@ public interface Constants {
     String KEY_PAYMENT_PREFERENCE = "payment_preference";
     String KEY_AUTOS_BENEFIT_ID = "autos_benefit_id";
 
-    double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 200d;
+    double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 100d;
     String KEY_OPTIONS = "options";
     String KEY_CUSTOMISATIONS = "customisations";
     String KEY_SUPER_CATEGORY_ID = "super_category_id";
@@ -957,4 +957,6 @@ public interface Constants {
     String KEY_CUSTOMER_PLAY_SOUND_RIDE_ARRIVED = "customer_play_sound_ride_arrived";
     String KEY_CUSTOMER_PLAY_SOUND_RIDE_START = "customer_play_sound_ride_start";
     String KEY_CUSTOMER_PLAY_SOUND_RIDE_END = "customer_play_sound_ride_end";
+    String KEY_DIRECT_CONFIRM = "direct_confirm";
+    String KEY_PICKUP_DROP_LIKE_ENABLED = "customer_pickup_drop_like_enabled";
 }

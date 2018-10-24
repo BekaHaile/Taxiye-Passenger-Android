@@ -443,6 +443,9 @@ public class JSONParser implements Constants {
 
         Prefs.with(context).save(KEY_CUSTOMER_PLAY_SOUND_RIDE_END, autoData.optInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_END,
 				context.getResources().getInteger(R.integer.customer_play_sound_ride_end)));
+
+        Prefs.with(context).save(KEY_PICKUP_DROP_LIKE_ENABLED, autoData.optInt(KEY_PICKUP_DROP_LIKE_ENABLED,
+				context.getResources().getInteger(R.integer.pickup_drop_like_enabled)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
