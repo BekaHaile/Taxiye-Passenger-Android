@@ -4891,13 +4891,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
                 // to check if selected destination saved address is deleted or not
-                if (passengerScreenMode == PassengerScreenMode.P_INITIAL && Data.autoData.getDropLatLng() != null) {
-                    SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(),
-                            Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
-                    if (searchResult == null && Data.autoData.getDropAddressId() > 0) {
-                        imageViewDropCross.performClick();
-                    }
-
+                if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+                	if(Data.autoData != null && Data.autoData.getDropLatLng() != null) {
+						SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(),
+								Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+						if (searchResult == null && Data.autoData.getDropAddressId() > 0) {
+							imageViewDropCross.performClick();
+						}
+					}
+					if(Data.autoData != null && Data.autoData.getPickupLatLng() != null){
+						getAddressAsync(Data.autoData.getPickupLatLng(), textViewInitialSearch, progressBarInitialSearch);
+					}
                 }
             }
 
@@ -5283,7 +5287,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
-                    navigateToCurrLoc(false);
+//                    navigateToCurrLoc(false);
                 } else if (specialPickupScreenOpened) {
                     specialPickupScreenOpened = false;
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
