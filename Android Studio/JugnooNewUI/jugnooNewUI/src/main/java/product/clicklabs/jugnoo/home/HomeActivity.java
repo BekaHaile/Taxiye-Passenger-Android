@@ -5287,6 +5287,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
+                    if(Data.autoData.getPickupLatLng()!=null){
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM), getMapAnimateDuration(),
+                                new GoogleMap.CancelableCallback() {
+                            @Override
+                            public void onFinish() {
+                                setPickupAddressZoomedOnce = true;
+                            }
+
+                            @Override
+                            public void onCancel() {
+                            }
+                        });
+
+                    }
 //                    navigateToCurrLoc(false);
                 } else if (specialPickupScreenOpened) {
                     specialPickupScreenOpened = false;
