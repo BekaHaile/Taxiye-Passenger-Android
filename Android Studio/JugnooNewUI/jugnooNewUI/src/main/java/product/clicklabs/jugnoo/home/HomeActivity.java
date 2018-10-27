@@ -2731,7 +2731,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             float mapTopPadding = 0.0f;
             if (map != null) {
                 if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-                    mapTopPadding = 200.0f;
+                    mapTopPadding = confirmedScreenOpened ? 300.0f : 200.0f;
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) centreLocationRl.getLayoutParams();
                     params.setMargins(0, (int) (ASSL.Yscale() * mapTopPadding), 0, 0);
                     params.setMarginStart(0);
@@ -5287,19 +5287,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
-                    if(Data.autoData.getPickupLatLng()!=null){
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM), getMapAnimateDuration(),
-                                new GoogleMap.CancelableCallback() {
-                            @Override
-                            public void onFinish() {
-                                setPickupAddressZoomedOnce = true;
-                            }
-
-                            @Override
-                            public void onCancel() {
-                            }
-                        });
-
+                    if(Data.autoData != null) {
+                        map.animateCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()), MAP_ANIMATE_DURATION, null);
                     }
 //                    navigateToCurrLoc(false);
                 } else if (specialPickupScreenOpened) {
@@ -8770,21 +8759,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     map.addPolyline(poolPolylineOption);
 
-                    try {
-                        pickupLocationMarker.remove();
-                    } catch (Exception e) {
-                    }
-                    MarkerOptions poolMarkerOptionStart = new MarkerOptions();
-                    poolMarkerOptionStart.title("Start");
-                    poolMarkerOptionStart.position(Data.autoData.getPickupLatLng());
-                    poolMarkerOptionStart.zIndex(HOME_MARKER_ZINDEX);
-//                poolMarkerOptionStart.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(HomeActivity.this,
-//                        assl, R.drawable.pin_ball_start)));
-                    poolMarkerOptionStart.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                            .getTextAssignBitmap(HomeActivity.this,
-                                    slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
-                                    getResources().getDimensionPixelSize(R.dimen.text_size_24))));
-                    pickupLocationMarker = map.addMarker(poolMarkerOptionStart);
+                    pickupLocationEtaMarker();
 
                     MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
                     poolMarkerOptionEnd.title("End");
@@ -8910,6 +8885,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 e.printStackTrace();
             }
         }
+    }
+
+    public void pickupLocationEtaMarker() {
+        try {
+            pickupLocationMarker.remove();
+        } catch (Exception e) {
+        }
+        MarkerOptions poolMarkerOptionStart = new MarkerOptions();
+        poolMarkerOptionStart.title("Start");
+        poolMarkerOptionStart.position(Data.autoData.getPickupLatLng());
+        poolMarkerOptionStart.zIndex(HOME_MARKER_ZINDEX);
+//                poolMarkerOptionStart.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(HomeActivity.this,
+//                        assl, R.drawable.pin_ball_start)));
+        poolMarkerOptionStart.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                .getTextAssignBitmap(HomeActivity.this,
+                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
+                        getResources().getDimensionPixelSize(R.dimen.text_size_24))));
+        pickupLocationMarker = map.addMarker(poolMarkerOptionStart);
     }
 
     private void poolPathZoomAtConfirm() {
@@ -9495,6 +9488,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         int oldRideType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType();
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
         int newVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
+        if(confirmedScreenOpened) {
+            pickupLocationEtaMarker();
+        }
         if (Data.autoData.getRegions().size() == 1) {
             imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
