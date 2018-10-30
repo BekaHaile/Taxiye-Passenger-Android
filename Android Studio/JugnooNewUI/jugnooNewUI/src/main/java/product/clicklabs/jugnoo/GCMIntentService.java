@@ -472,6 +472,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_ACCEPT, 0) == 1){
 							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+							playSound = 0;
 						}
 
 						if (HomeActivity.appInterruptHandler != null) {
@@ -498,6 +499,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_ARRIVED, 0) == 1){
 							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+							playSound = 0;
 						}
 
 						if (HomeActivity.appInterruptHandler != null) {
@@ -524,6 +526,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_START, 0) == 1){
 							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+							playSound = 0;
 						}
 
 						Prefs.with(this).save(SP_CHAT_CLOSE, true);
@@ -563,11 +566,12 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 								HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId);
 							}
 						}
-						notificationManager(this, title, message1, playSound);
-						stopLocationUpdateService(PassengerScreenMode.P_RIDE_END.getOrdinal());
 						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_END, 0) == 1){
 							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+							playSound = 0;
 						}
+						notificationManager(this, title, message1, playSound);
+						stopLocationUpdateService(PassengerScreenMode.P_RIDE_END.getOrdinal());
 
 					} else if (PushFlags.RIDE_REJECTED_BY_DRIVER.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
