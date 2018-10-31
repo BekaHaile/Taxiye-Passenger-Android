@@ -3695,6 +3695,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
                         initialLayout.setVisibility(View.GONE);
+                        ivMoreOptions.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
                         requestFinalLayout.setVisibility(View.VISIBLE);
