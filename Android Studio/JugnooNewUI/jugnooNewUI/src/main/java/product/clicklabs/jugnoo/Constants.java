@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by socomo20 on 12/11/15.
  */
@@ -959,4 +961,7 @@ public interface Constants {
     String KEY_CUSTOMER_PLAY_SOUND_RIDE_END = "customer_play_sound_ride_end";
     String KEY_DIRECT_CONFIRM = "direct_confirm";
     String KEY_PICKUP_DROP_LIKE_ENABLED = "customer_pickup_drop_like_enabled";
+	@NotNull
+	String KEY_API_NAME = "api_name";
+	String KEY_CUSTOMER_GOOGLE_APIS_LOGGING = "customer_google_apis_logging";
 }

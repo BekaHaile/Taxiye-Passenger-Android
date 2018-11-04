@@ -92,4 +92,5 @@
     <string name="profile_saved_location_text">@string/my_saved_locations</string>
     <integer name="customer_fetch_inride_path_interval">120000</integer>
     <integer name="customer_fetch_driver_location_interval">120000</integer>
+    <integer name="google_apis_logging">1</integer>
 </resources>

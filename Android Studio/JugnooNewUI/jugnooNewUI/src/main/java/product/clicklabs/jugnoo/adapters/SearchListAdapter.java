@@ -20,13 +20,10 @@ import android.widget.TextView;
 
 import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.AutocompletePredictionBuffer;
 import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
 import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.PlaceBufferResponse;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,6 +42,7 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -363,6 +361,7 @@ public class SearchListAdapter extends BaseAdapter{
 							if (!editTextForSearch.getText().toString().trim().equalsIgnoreCase(searchText)) {
 								recallSearch(editTextForSearch.getText().toString().trim());
 							}
+							GoogleRestApis.INSTANCE.logGoogleRestAPIC("0", "0", GoogleRestApis.API_NAME_AUTOCOMPLETE);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -494,6 +493,9 @@ public class SearchListAdapter extends BaseAdapter{
 									myPlace.getLatLng().latitude, myPlace.getLatLng().longitude);
 							searchResult.setThirdPartyAttributions(thirdPartyAttributions);
 							sendSearchResult(searchResult);
+							if(myPlace != null && myPlace.getLatLng() != null) {
+								GoogleRestApis.INSTANCE.logGoogleRestAPIC(String.valueOf(myPlace.getLatLng().latitude), String.valueOf(myPlace.getLatLng().longitude), GoogleRestApis.API_NAME_PLACES);
+							}
 						}
 						task.getResult().release();
 					} catch (Exception e) {

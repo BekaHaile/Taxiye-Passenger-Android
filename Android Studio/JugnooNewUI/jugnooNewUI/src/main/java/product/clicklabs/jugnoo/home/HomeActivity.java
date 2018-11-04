@@ -6009,7 +6009,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Data.autoData.setPickupAddress("", null);
                 }
                 textView.setHint(R.string.getting_address);
-                GoogleRestApis.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
+                GoogleRestApis.INSTANCE.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
                         "en", new GeocodeCallback(mGeoDataClient) {
                             @Override
                             public void onSuccess(GoogleGeocodeResponse settleUserDebt, Response response) {
@@ -6837,7 +6837,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 RidePath ridePath = MyApplication.getInstance().getDatabase2().getLastRidePath();
                                 source = ridePath != null ? ridePath.getDestinationLatLng() : pickupLatLng;
                             }
-                            Response response = GoogleRestApis.getDirections(source.latitude + "," + source.longitude,
+                            Response response = GoogleRestApis.INSTANCE.getDirections(source.latitude + "," + source.longitude,
                                     Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false, "metric");
                             String result = new String(((TypedByteArray) response.getBody()).getBytes());
                             if (result != null) {

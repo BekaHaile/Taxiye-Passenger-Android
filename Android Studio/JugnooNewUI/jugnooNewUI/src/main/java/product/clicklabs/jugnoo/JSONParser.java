@@ -446,6 +446,8 @@ public class JSONParser implements Constants {
 
         Prefs.with(context).save(KEY_PICKUP_DROP_LIKE_ENABLED, autoData.optInt(KEY_PICKUP_DROP_LIKE_ENABLED,
 				context.getResources().getInteger(R.integer.pickup_drop_like_enabled)));
+        Prefs.with(context).save(KEY_CUSTOMER_GOOGLE_APIS_LOGGING, autoData.optInt(KEY_CUSTOMER_GOOGLE_APIS_LOGGING,
+				context.getResources().getInteger(R.integer.google_apis_logging)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

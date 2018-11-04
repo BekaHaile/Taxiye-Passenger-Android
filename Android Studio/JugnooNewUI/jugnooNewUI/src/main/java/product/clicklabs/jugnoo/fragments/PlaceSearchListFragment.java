@@ -672,7 +672,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			params.put("language", Locale.getDefault().getCountry());
 			params.put("sensor", "false");
 
-			GoogleRestApis.geocode(latLng.latitude + "," + latLng.longitude, Locale.getDefault().getCountry(), new GeocodeCallback(geoDataClient) {
+			GoogleRestApis.INSTANCE.geocode(latLng.latitude + "," + latLng.longitude, Locale.getDefault().getCountry(), new GeocodeCallback(geoDataClient) {
 				@Override
 				public void onSuccess(GoogleGeocodeResponse geocodeResponse, Response response) {
 					try {

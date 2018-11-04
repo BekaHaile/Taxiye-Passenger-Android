@@ -92,4 +92,5 @@
     <integer name="visibility_take_cash">@integer/view_gone</integer>
     <bool name="hit_place_details_after_geocode">true</bool>
     <string name="geocode_address_format">premise,street_number,route,sublocality,locality,administrative_area</string>
+    <integer name="google_apis_logging">1</integer>
 </resources>

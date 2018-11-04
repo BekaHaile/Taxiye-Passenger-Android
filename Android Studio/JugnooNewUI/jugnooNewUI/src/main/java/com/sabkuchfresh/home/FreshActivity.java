@@ -3931,7 +3931,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void getAddressAndFetchOfferingData(final LatLng currentLatLng, final int appType) {
         try {
             DialogPopup.showLoadingDialog(this, "Loading...");
-            GoogleRestApis.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
+            GoogleRestApis.INSTANCE.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
                     "en", new GeocodeCallback(mGeoDataClient) {
                         @Override
                         public void onSuccess(GoogleGeocodeResponse settleUserDebt, Response response) {

@@ -633,4 +633,11 @@ public interface ApiService {
     void fareDetails(@FieldMap Map<String, String> params,
                          Callback<FareDetailsResponse> callback);
 
+    @FormUrlEncoded
+    @POST("/log_google_api_hits")
+    Response logGoogleApiHits(@FieldMap Map<String, String> params);
+    @FormUrlEncoded
+    @POST("/log_google_api_hits")
+    void logGoogleApiHitsC(@FieldMap Map<String, String> params, Callback<SettleUserDebt> callback);
+
 }

@@ -624,7 +624,7 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 								if (TextUtils.isEmpty(eta)) {
 									String origin = latLngDriver.latitude + "," + latLngDriver.longitude;
 									String destination = deliveryLatLng.latitude + "," + deliveryLatLng.longitude;
-									Response responseDM = GoogleRestApis.getDistanceMatrix(origin,
+									Response responseDM = GoogleRestApis.INSTANCE.getDistanceMatrix(origin,
 											destination, "EN", false, false
 									);
 									JSONObject jObjDM = new JSONObject(new String(((TypedByteArray)responseDM.getBody()).getBytes()));

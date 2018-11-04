@@ -748,7 +748,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
             params.put("sensor", "false");
 
 
-            GoogleRestApis.geocode(latLng.latitude + "," + latLng.longitude, Locale.getDefault().getCountry(), new Callback<GoogleGeocodeResponse>() {
+            GoogleRestApis.INSTANCE.geocode(latLng.latitude + "," + latLng.longitude, Locale.getDefault().getCountry(), new Callback<GoogleGeocodeResponse>() {
                 @Override
                 public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
                     try {
