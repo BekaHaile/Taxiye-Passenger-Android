@@ -6,6 +6,7 @@ import product.clicklabs.jugnoo.AccessTokenGenerator
 import product.clicklabs.jugnoo.BuildConfig
 import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.MyApplication
+import product.clicklabs.jugnoo.home.HomeUtil
 import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt
 import retrofit.Callback
@@ -240,6 +241,7 @@ object GoogleRestApis {
             map[Constants.KEY_LATITUDE] = latitude
             map[Constants.KEY_LONGITUDE] = longitude
             map[Constants.KEY_API_NAME] = apiName
+            HomeUtil.addDefaultParams(map)
             RestClient.getApiService().logGoogleApiHits(map)
         }
     }
@@ -250,6 +252,7 @@ object GoogleRestApis {
             map[Constants.KEY_LATITUDE] = latitude
             map[Constants.KEY_LONGITUDE] = longitude
             map[Constants.KEY_API_NAME] = apiName
+            HomeUtil.addDefaultParams(map)
             RestClient.getApiService().logGoogleApiHitsC(map, object : Callback<SettleUserDebt> {
                 override fun success(t: SettleUserDebt?, response: Response?) {
                 }
