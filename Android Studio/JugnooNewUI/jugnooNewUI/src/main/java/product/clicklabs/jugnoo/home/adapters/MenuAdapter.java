@@ -48,6 +48,7 @@ import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
+import product.clicklabs.jugnoo.home.schedulerides.UpcomingRidesActivity;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -590,7 +591,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
 
             } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(tag)) {
-                Intent intent = new Intent(activity, RideTransactionsActivity.class);
+                Intent intent = new Intent(activity, UpcomingRidesActivity.class);
                 intent.putExtra(Constants.KEY_ORDER_ID, orderId);
                 intent.putExtra(Constants.KEY_PRODUCT_TYPE, productType);
                 activity.startActivity(intent);

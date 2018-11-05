@@ -19,6 +19,7 @@ interface UpcomingRidesContract {
 
         fun showAllUpcomingRides(list:List<UpcomingRide>)
 
+        fun deleteScheduleRide(upcomingRide: UpcomingRide)
 
     }
 

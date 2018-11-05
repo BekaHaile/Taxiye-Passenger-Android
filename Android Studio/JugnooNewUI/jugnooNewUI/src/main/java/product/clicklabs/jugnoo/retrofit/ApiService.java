@@ -7,6 +7,7 @@ import java.util.Map;
 
 import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
+import product.clicklabs.jugnoo.home.schedulerides.UpcomingRideResponse;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
 import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchActiveLocaleResponse;
@@ -627,5 +628,14 @@ public interface ApiService {
     @POST("/customer/show_rate_card")
     void fareDetails(@FieldMap Map<String, String> params,
                          Callback<FareDetailsResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/show_pickup_schedules")
+    void upcomingRides(@FieldMap Map<String, String> params,
+                         Callback<UpcomingRideResponse> callback);
+    @FormUrlEncoded
+    @POST("/remove_pickup_schedule")
+    void deleteScheduleRide(@FieldMap Map<String, String> params,
+                         Callback<UpcomingRideResponse> callback);
 
 }

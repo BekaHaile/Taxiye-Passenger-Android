@@ -110,10 +110,11 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
 
         if (!MyApplication.getInstance().isOnline()) {
-            apiCommonCallback.onFinish();
             if (!apiCommonCallback.onNotConnected()) {
                 retryDialog(DialogErrorType.NO_NET);
             }
+            apiCommonCallback.onFinish();
+
             return;
 
         }
@@ -133,22 +134,25 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
                     try {
                         if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                            apiCommonCallback.onFinish();
                             apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
+                            apiCommonCallback.onFinish();
+
 
                         } else {
-                            apiCommonCallback.onFinish();
                             if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage() == null ? feedCommonResponse.getError() : feedCommonResponse.getMessage(),
                                     feedCommonResponse.getFlag())) {
                                 DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage() == null ? feedCommonResponse.getError() : feedCommonResponse.getMessage());
                             }
+                            apiCommonCallback.onFinish();
+
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        apiCommonCallback.onFinish();
                         if (!apiCommonCallback.onException(e)) {
                             retryDialog(DialogErrorType.CONNECTION_LOST);
                         }
+                        apiCommonCallback.onFinish();
+
                     }
 
 
@@ -163,11 +167,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
                     if (isCancelled() || activity.isFinishing())
                         return;
                     error.printStackTrace();
-                    apiCommonCallback.onFinish();
                     if (!apiCommonCallback.onFailure(error)) {
 
                         retryDialog(DialogErrorType.CONNECTION_LOST);
                     }
+                    apiCommonCallback.onFinish();
+
 
 
                 }
@@ -278,6 +283,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 break;
             case FARE_DETAILS:
                 RestClient.getApiService().fareDetails(params, callback);
+                break;
+            case GET_UPCOMING_RIDES:
+                RestClient.getApiService().upcomingRides(params, callback);
+                break;
+            case DELETE_SCHEDULE_RIDE:
+                RestClient.getApiService().deleteScheduleRide(params, callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");

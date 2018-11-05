@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -9,57 +9,125 @@
             name="upcomingRide"
             type="product.clicklabs.jugnoo.home.schedulerides.UpcomingRide" />
 
+        <variable
+            name="presenter"
+            type="product.clicklabs.jugnoo.home.schedulerides.UpcomingRidesPresenter" />
+
     </data>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.CardView
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true"
+        app:cardCornerRadius="5dp">
 
-        <TextView
-            android:id="@+id/tv_date"
-            style="@style/TextNormal"
-            android:layout_width="0dp"
+
+        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/edit_icon_selector"
-            android:text="@{upcomingRide.pickUpTime}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="17 Oct 2018" />
-
-        <View
-            android:id="@+id/divider_date"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_date" />
+            android:padding="10dp">
 
 
-        <TextView
-            android:id="@+id/tv_pickup_address"
-            style="@style/TextNormal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@{upcomingRide.pickUpAddress}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_date"
-            tools:text="17 Oct 2018" />
+            <TextView
+                android:id="@+id/tv_date"
+                style="@style/TextNormal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iv_delete"
+                app:layout_constraintBottom_toBottomOf="@id/iv_delete"
+                android:text="@{upcomingRide.getDisplayTime()}"
+                tools:text="17 Oct 2018" />
 
-        <TextView
-            android:id="@+id/tv_drop_address"
-            style="@style/TextNormal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@{upcomingRide.destinationAddress}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_date"
-            tools:text="17 Oct 2018" />
+            <ImageView
+                android:id="@+id/iv_delete"
+                style="@style/TextNormal"
+                android:layout_width="0dp"
+                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> presenter.deleteScheduleRide(upcomingRide)}"
+                android:src="@drawable/ic_delete_feed"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="17 Oct 2018" />
 
 
-    </android.support.constraint.ConstraintLayout>
 
+            <View
+                android:id="@+id/divider_date"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/divider_color"
+                app:layout_constraintTop_toBottomOf="@id/iv_delete" />
+
+
+            <TextView
+                android:id="@+id/tv_pickup_address"
+                style="@style/TextNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:drawableStart="@drawable/icv_circle_pickup"
+                android:drawablePadding="5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="@{upcomingRide.pickUpAddress}"
+                app:layout_constraintTop_toBottomOf="@id/divider_date"
+                tools:text="Chandigarh" />
+
+            <TextView
+                android:id="@+id/tv_drop_address"
+                style="@style/TextNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:drawableStart="@drawable/icv_circle_destination"
+                android:layout_marginTop="10dp"
+                android:text="@{upcomingRide.destinationAddress}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_pickup_address"
+                tools:text="Patiala" />
+
+            <View
+                android:id="@+id/divider_address"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/divider_color"
+                app:layout_constraintTop_toBottomOf="@id/tv_drop_address" />
+
+
+            <TextView
+                android:id="@+id/tv_vehicle_type"
+                style="@style/TextNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@{@string/value_vehicle_type(upcomingRide.vehicleName)}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider_address"
+                tools:text="Vehicle Type: Regular" />
+
+
+            <TextView
+                android:id="@+id/tv_ride_status"
+                style="@style/TextNormal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@{@string/value_ride_status(upcomingRide.getRideStatus())}"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_vehicle_type"
+                tools:text="Ride Status: Cancelled" />
+
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v7.widget.CardView>
 </layout>

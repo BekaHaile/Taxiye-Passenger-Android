@@ -17,7 +17,47 @@
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:background="@color/menu_item_selector_color_F7">
+
+        <RelativeLayout
+            android:id="@+id/topBar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/white"
+            >
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                android:text="@string/scheduled_rides"
+                style="@style/title"
+                android:fontFamily="@font/maven_pro_medium"
+                android:textStyle="bold"
+                android:textSize="17sp"
+                />
+
+            <ImageView
+                android:id="@+id/imageViewBack"
+                style="@style/back_image"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/white_selector"
+                android:padding="10dp"
+                android:rotationY="@integer/locale_mirror_flip"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_back_selector"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider_color"
+                android:layout_alignParentBottom="true"
+                />
+
+        </RelativeLayout>
+
 
         <ImageView
             android:layout_width="wrap_content"
@@ -28,7 +68,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/topBar" />
 
 
         <android.support.v7.widget.RecyclerView
@@ -41,11 +81,12 @@
             android:paddingStart="15dp"
             android:paddingTop="20dp"
             tools:listItem="@layout/list_item_upcoming_ride"
+            android:theme="@style/BaseAppCompatTheme"
             android:visibility="@{presenter.upcomingRidesExist? View.VISIBLE : View.GONE }"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/topBar" />
 
     </android.support.constraint.ConstraintLayout>
 

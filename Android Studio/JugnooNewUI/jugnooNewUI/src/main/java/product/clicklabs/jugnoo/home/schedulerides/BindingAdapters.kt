@@ -32,4 +32,6 @@ object BindingAdapters{
         return ContextCompat.getDrawable(context,image)
     }
 
+
+
 }

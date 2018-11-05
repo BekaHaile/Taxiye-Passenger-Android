@@ -1016,7 +1016,7 @@
     <style name="TextNormal">
         <item name="android:textColor">@color/text_color</item>
         <item name="android:textColorHint">@color/text_color_hint</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/maven_pro_regular</item>
     </style>
 

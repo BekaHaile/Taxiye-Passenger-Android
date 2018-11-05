@@ -12,15 +12,16 @@ import product.clicklabs.jugnoo.databinding.ListItemUpcomingRideBinding
 /**
  * Created by Parminder Saini on 17/10/18.
  */
-class UpcomingRidesAdapter(val context: Context) :
+class UpcomingRidesAdapter(val context: Context,val presenter: UpcomingRidesPresenter) :
         ListAdapter<UpcomingRide, UpcomingRidesAdapter.ViewHolder>(UpcomingRideDiffCallback) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-                DataBindingUtil.inflate(LayoutInflater.from(parent.context),
-                        R.layout.list_item_upcoming_ride, parent, false)
-        )
+        val binding:ListItemUpcomingRideBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context),
+                R.layout.list_item_upcoming_ride, parent, false)
+        binding.presenter = presenter
+        return ViewHolder(binding)
+
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
