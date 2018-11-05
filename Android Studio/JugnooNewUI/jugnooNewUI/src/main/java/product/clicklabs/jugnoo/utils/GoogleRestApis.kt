@@ -129,6 +129,7 @@ object GoogleRestApis {
     }
 
     fun geocode(latLng: String, language: String): Response {
+        Log.i("GoogleRestApi", "geocode")
         val response:Response
         if (MAPS_APIS_SIGN()) {
             val urlToSign = ("/maps/api/geocode/json?" +
@@ -153,6 +154,7 @@ object GoogleRestApis {
     }
 
     fun geocode(latLng: String, language: String, callback: Callback<GoogleGeocodeResponse>) {
+        Log.i("GoogleRestApi", "geocode")
         if (MAPS_APIS_SIGN()) {
             val urlToSign = ("/maps/api/geocode/json?" +
                     "latlng=" + latLng

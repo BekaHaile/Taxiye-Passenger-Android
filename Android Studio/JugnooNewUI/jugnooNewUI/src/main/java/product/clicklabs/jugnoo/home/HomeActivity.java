@@ -438,7 +438,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public static final double MAP_PAN_DISTANCE_CHECK = 50; // in meters
     public static final double MIN_DISTANCE_FOR_REFRESH = 50; // in meters
-    public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 5; // in meters
+    public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 50; // in meters
 
     public static final float MAX_ZOOM = 16;
     private static final int MAP_ANIMATE_DURATION = 500;
@@ -2233,7 +2233,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     // Map unsettled
                     if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL && !zoomedForSearch
                             && !confirmedScreenOpened) {
-                        Data.autoData.setPickupAddress("", null);
+                        Data.autoData.setPickupAddress("", map.getCameraPosition().target);
                         textViewInitialSearch.setText("");
                     }
                 }
@@ -5975,11 +5975,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         ivLikePickup.setTag("liked");
                     }
                 } else {
-                    if(textView == textViewInitialSearch){
-                        ivLikePickup.setImageResource(R.drawable.ic_heart);
-                        ivLikePickup.setTag("");
+                    if(TextUtils.isEmpty(Data.autoData.getPickupAddress(currentLatLng))) {
+                        if (textView == textViewInitialSearch) {
+                            ivLikePickup.setImageResource(R.drawable.ic_heart);
+                            ivLikePickup.setTag("");
+                        }
+                        Data.autoData.setPickupAddress("", null);
+                    } else {
+                        addressNeeded = false;
+                        textView.setText(Data.autoData.getPickupAddress(currentLatLng));
                     }
-                    Data.autoData.setPickupAddress("", null);
                 }
             } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
                     || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
@@ -7620,7 +7625,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private boolean checkForInitialMyLocationButtonClick() {
-        return PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened && !specialPickupScreenOpened
+        int myLocationTracking = Prefs.with(this).getInt(KEY_CUSTOMER_MYLOCATION_TRACKING, 0);
+        return myLocationTracking == 1 && PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened && !specialPickupScreenOpened
                 && myLocationButtonClicked;
     }
 

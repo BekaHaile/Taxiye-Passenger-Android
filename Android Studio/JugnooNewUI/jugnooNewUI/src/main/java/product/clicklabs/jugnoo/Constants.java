@@ -964,4 +964,5 @@ public interface Constants {
 	@NotNull
 	String KEY_API_NAME = "api_name";
 	String KEY_CUSTOMER_GOOGLE_APIS_LOGGING = "customer_google_apis_logging";
+	String KEY_CUSTOMER_MYLOCATION_TRACKING = "customer_mylocation_tracking";
 }
