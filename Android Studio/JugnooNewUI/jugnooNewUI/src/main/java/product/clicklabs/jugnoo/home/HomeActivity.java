@@ -10512,11 +10512,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
             getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
             getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
+            if(getScheduleRideFragment()!=null){
+                getScheduleRideFragment().updatePaymentOption();
+                getScheduleRideFragment().dismissPaymentDialog();
+            }
+
         }
 
         @Override
         public void onWalletAdd(PaymentOption paymentOption) {
             getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
+            if(getScheduleRideFragment()!=null){
+                getScheduleRideFragment().dismissPaymentDialog();
+            }
         }
 
         @Override
@@ -10574,4 +10582,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         scheduleRideOpen = false;
         topBar.imageViewScheduleRide.setVisibility(View.VISIBLE);
     }
+
+
 }

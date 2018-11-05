@@ -461,7 +461,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			}
 
 
-			Fabric.with(this, new Crashlytics());
+
 			if(!Prefs.with(this).getBoolean(FUGU_CACHE_CLEARED,false)){
 				try {
 					FuguConfig.clearFuguData(SplashNewActivity.this);

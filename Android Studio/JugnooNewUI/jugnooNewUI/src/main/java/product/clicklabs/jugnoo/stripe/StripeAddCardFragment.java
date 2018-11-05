@@ -130,6 +130,7 @@ public class StripeAddCardFragment extends Fragment {
                 Prefs.with(getActivity()).getString(Constants.KEY_STRIPE_KEY_LIVE, BuildConfig.STRIPE_KEY_LIVE)
                 :BuildConfig.STRIPE_KEY_DEV);
         isCardNameMandatory = paymentOption==PaymentOption.ACCEPT_CARD;
+        ButterKnife.setDebug(true);
         unbinder = ButterKnife.bind(this, rootView);
         edtCardHolderName.setVisibility(isCardNameMandatory?View.VISIBLE:View.GONE);
         textViewTitle.setTypeface(Fonts.avenirNext(getActivity()));

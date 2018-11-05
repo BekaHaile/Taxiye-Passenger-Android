@@ -656,7 +656,7 @@
     <string name="play">Play</string>
     <string name="no_campaign_currently">No campaign currently</string>
     <string name="fare_ln_estimate">Fare\nEstimate</string>
-    <string name="base_fare_format">BASE FARE : <b>%s</b></string>
+    <string name="base_fare_format">BASE FARE: <b>%s</b></string>
 
 
     <string name="format_x">%s x</string>
@@ -1958,4 +1958,5 @@
     <string name="please_select_vehicle">Please select vehicle</string>
     <string name="cd_schedule_ride">Press here to Schedule a ride</string>
     <string name="cd_data_status">Current data status</string>
+    <string name="select_payment_option">Select a payment option</string>
 </resources>

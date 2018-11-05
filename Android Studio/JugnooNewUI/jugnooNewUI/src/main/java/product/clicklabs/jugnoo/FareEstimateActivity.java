@@ -554,6 +554,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         params.put("op_drop_latitude", String.valueOf(dropLatLng.latitude));
         params.put("op_drop_longitude", String.valueOf(dropLatLng.longitude));
         params.put("vehicle_type", String.valueOf(region.getVehicleType()));
+        params.put(Constants.KEY_PREFERRED_PAYMENT_MODE, "" + Data.autoData.getPickupPaymentOption());
 
 
         new ApiCommon<>(this).showLoader(true).execute(params, ApiName.SCHEDULE_RIDE,

@@ -20,23 +20,26 @@ import android.widget.DatePicker
 import android.widget.TextView
 import android.widget.TimePicker
 import android.widget.Toast
+import com.sabkuchfresh.analytics.GAAction
+import com.sabkuchfresh.analytics.GACategory
+import com.sabkuchfresh.analytics.GAUtils
+import com.sabkuchfresh.home.CallbackPaymentOptionSelector
 
 import com.sabkuchfresh.pros.utils.DatePickerFragment
 import com.sabkuchfresh.pros.utils.TimePickerFragment
 import com.sabkuchfresh.utils.Utils
 import kotlinx.android.synthetic.main.fragment_schedule_ride.*
+import product.clicklabs.jugnoo.*
+import product.clicklabs.jugnoo.datastructure.PaymentOption
 
 import java.util.Calendar
 
-import product.clicklabs.jugnoo.Constants
-import product.clicklabs.jugnoo.Data
-import product.clicklabs.jugnoo.FareEstimateActivity
-import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.home.adapters.ScheduleRideVehicleListAdapter
 import product.clicklabs.jugnoo.datastructure.SearchResult
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment
 import product.clicklabs.jugnoo.home.HomeActivity
 import product.clicklabs.jugnoo.home.HomeUtil
+import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog
 import product.clicklabs.jugnoo.home.models.Region
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.Fonts
@@ -99,15 +102,15 @@ class ScheduleRideFragment : Fragment(), Constants {
         super.onViewCreated(view, savedInstanceState)
 
         with(rootView) {
-            rvVehiclesList.layoutManager = LinearLayoutManager(activity)
-            //rvVehiclesList.itemAnimator = DefaultItemAnimator()
-            //rvVehiclesList.setHasFixedSize(false)
 
+            rvVehiclesList.layoutManager = LinearLayoutManager(activity)
             tvPickup.typeface = Fonts.mavenRegular(activity)
             tvDestination.typeface = Fonts.mavenRegular(activity)
             tvPickupDateTime.setTypeface(Fonts.mavenRegular(activity),BOLD)
             tvSelectDateTime.typeface = Fonts.mavenMedium(activity)
-
+            btSchedule.typeface = Fonts.mavenRegular(activity)
+            tvSelectPayment.setTypeface(Fonts.mavenRegular(activity),BOLD)
+            textViewPaymentModeValueConfirm.typeface = Fonts.mavenRegular(activity)
 
             tvPickup.setOnClickListener { (getActivity() as HomeActivity).onClickOfPickupElse() }
             tvDestination.setOnClickListener { (getActivity() as HomeActivity).onClickOfDestinationElse() }
@@ -118,8 +121,12 @@ class ScheduleRideFragment : Fragment(), Constants {
                     e.printStackTrace()
                 }
             }
+            llPaymentOption.setOnClickListener {
+                getPaymentOptionDialog()?.show()
+            }
             btSchedule.setOnClickListener {
                 try {
+
                     if (TextUtils.isEmpty(tvPickup.text.toString())) {
                         Utils.showToast(activity, activity!!.getString(R.string.enter_pickup))
                         throw Exception()
@@ -136,7 +143,18 @@ class ScheduleRideFragment : Fragment(), Constants {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_vehicle))
                         throw Exception()
                     } else {
-                        openFareEstimate()
+                        val proceed = (activity as HomeActivity).slidingBottomPanel.getRequestRideOptionsFragment()
+                                .displayAlertAndCheckForSelectedWalletCoupon()
+                        if (proceed) {
+                            val callRequestRide = MyApplication.getInstance().walletCore
+                                    .requestWalletBalanceCheck((activity as HomeActivity), Data.autoData.pickupPaymentOption)
+                            MyApplication.getInstance().walletCore.
+                                    requestRideWalletSelectedFlurryEvent(Data.autoData.pickupPaymentOption, TAG)
+
+                            if(callRequestRide){
+                                openFareEstimate()
+                            }
+                        }
                     }
                 } catch (e: Exception) {
 
@@ -168,6 +186,8 @@ class ScheduleRideFragment : Fragment(), Constants {
                 }
             }
         }
+
+        updatePaymentOption()
     }
     private fun setScheduleRideVehicleListAdapter() {
         rvVehiclesList.adapter = scheduleRideVehicleListAdapter
@@ -257,8 +277,7 @@ class ScheduleRideFragment : Fragment(), Constants {
         //        intent.putExtra(Constants.KEY_COUPON_SELECTED, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
         intent.putExtra(Constants.KEY_RIDE_TYPE, (getActivity() as HomeActivity).selectedRideTypeForScheduleRide)
         intent.putExtra(Constants.KEY_PICKUP_LATITUDE, searchResultPickup!!.latitude)
-        intent.putExtra(Constants.KEY_PICKUP_LATITUDE, searchResultPickup!!.latitude)
-        intent.putExtra(Constants.KEY_PICKUP_LONGITUDE, searchResultDestination!!.longitude)
+        intent.putExtra(Constants.KEY_PICKUP_LONGITUDE, searchResultPickup!!.longitude)
         intent.putExtra(Constants.KEY_PICKUP_LOCATION_ADDRESS, searchResultPickup!!.address)
         intent.putExtra(Constants.KEY_DROP_LATITUDE, searchResultDestination!!.latitude)
         intent.putExtra(Constants.KEY_DROP_LONGITUDE, searchResultDestination!!.longitude)
@@ -282,4 +301,49 @@ class ScheduleRideFragment : Fragment(), Constants {
             return fragment
         }
     }
+
+
+    private var paymentOptionDialog: PaymentOptionDialog? = null
+    fun getPaymentOptionDialog(): PaymentOptionDialog? {
+        if (paymentOptionDialog == null) {
+            paymentOptionDialog = PaymentOptionDialog(activity, (requireActivity() as HomeActivity).getCallbackPaymentOptionSelector(),                 object : PaymentOptionDialog.Callback {
+                override fun onDialogDismiss() {
+
+                }
+
+                override fun onPaymentModeUpdated() {
+                    (requireActivity() as HomeActivity).updateConfirmedStatePaymentUI()
+                    try {
+                        GAUtils.event(GACategory.RIDES, GAAction.HOME + GAAction.WALLET + GAAction.SELECTED, MyApplication.getInstance().walletCore
+                                .getPaymentOptionName(Data.autoData.pickupPaymentOption))
+                    } catch (e: Exception) {
+                    }
+
+                }
+            })
+        }
+        return paymentOptionDialog
+    }
+
+    fun dismissPaymentDialog() {
+        if (paymentOptionDialog != null) {
+            paymentOptionDialog!!.dismiss()
+        }
+
+    }
+
+    fun updatePaymentOption(){
+        if (view!=null) {
+            imageViewPaymentModeConfirm.setImageResource(MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()))
+            textViewPaymentModeValueConfirm.text = MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption())
+
+        }
+
+    }
+
+
+
+
 }
