@@ -229,6 +229,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     }
                 } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_history_selector);
+                }  else if(MenuInfoTags.SCHEDULED_RIDES.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_history_selector);
                 } else if(MenuInfoTags.SIGNUP_TUTORIAL.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     if(!TextUtils.isEmpty(Data.userData.userName)
                             //&& (!TextUtils.isEmpty(Data.userData.userEmail))
@@ -591,9 +593,14 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
 
             } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(tag)) {
-                Intent intent = new Intent(activity, UpcomingRidesActivity.class);
+                Intent intent = new Intent(activity, RideTransactionsActivity.class);
                 intent.putExtra(Constants.KEY_ORDER_ID, orderId);
                 intent.putExtra(Constants.KEY_PRODUCT_TYPE, productType);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+            }else if(MenuInfoTags.SCHEDULED_RIDES.getTag().equalsIgnoreCase(tag)) {
+                Intent intent = new Intent(activity, UpcomingRidesActivity.class);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 

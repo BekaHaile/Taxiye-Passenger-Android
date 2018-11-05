@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.home.schedulerides
 
 import android.databinding.DataBindingUtil
+import android.graphics.Typeface
 import android.os.Bundle
 import com.sabkuchfresh.feed.models.FeedCommonResponse
 import com.sabkuchfresh.feed.ui.api.APICommonCallback
@@ -10,6 +11,7 @@ import product.clicklabs.jugnoo.BaseAppCompatActivity
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.databinding.ActivityUpcomingRidesBinding
 import product.clicklabs.jugnoo.utils.DialogPopup
+import product.clicklabs.jugnoo.utils.Fonts
 
 /**
  * Created by Parminder Saini on 10/10/18.
@@ -58,7 +60,7 @@ class UpcomingRidesActivity:BaseAppCompatActivity(),UpcomingRidesContract.View{
         val upcomingRidesBinding:ActivityUpcomingRidesBinding = DataBindingUtil.setContentView(this,
                 R.layout.activity_upcoming_rides)
        upcomingRidesBinding.presenter = upcompingRidePresenter
-
+        upcomingRidesBinding.textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD)
         adapter = UpcomingRidesAdapter(this,upcompingRidePresenter)
         upcomingRidesBinding.rvUpcomingRides.adapter = adapter
 

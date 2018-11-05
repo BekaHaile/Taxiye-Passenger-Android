@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.databinding.ListItemUpcomingRideBinding
+import product.clicklabs.jugnoo.utils.Fonts
 
 /**
  * Created by Parminder Saini on 17/10/18.
@@ -20,6 +21,11 @@ class UpcomingRidesAdapter(val context: Context,val presenter: UpcomingRidesPres
         val binding:ListItemUpcomingRideBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context),
                 R.layout.list_item_upcoming_ride, parent, false)
         binding.presenter = presenter
+        binding.tvVehicleType.typeface = Fonts.mavenRegular(context)
+        binding.tvDate.typeface = Fonts.mavenRegular(context)
+        binding.tvDropAddress.typeface = Fonts.mavenRegular(context)
+        binding.tvPickupAddress.typeface = Fonts.mavenRegular(context)
+        binding.tvRideStatus.typeface = Fonts.mavenRegular(context)
         return ViewHolder(binding)
 
     }
@@ -33,6 +39,8 @@ class UpcomingRidesAdapter(val context: Context,val presenter: UpcomingRidesPres
 
         }
     }
+
+
 
     class ViewHolder(var binding: ListItemUpcomingRideBinding) : RecyclerView.ViewHolder(binding.root) {
 

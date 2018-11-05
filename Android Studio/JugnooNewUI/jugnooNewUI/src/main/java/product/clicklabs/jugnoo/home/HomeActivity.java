@@ -5024,6 +5024,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                 } else if (requestCode == FARE_ESTIMATE) {
                     try {
+
+
+                        if(data.hasExtra(KEY_SCHEDULE_RIDE)){
+                            if(data.getBooleanExtra(KEY_SCHEDULE_RIDE,false)){
+                                super.onBackPressed();
+                            }
+
+                            return;
+                        }
                         if (data.hasExtra(KEY_SEARCH_RESULT)) {
                             SearchResult searchResult = new Gson().fromJson(data.getStringExtra(KEY_SEARCH_RESULT), SearchResult.class);
                             searchResult.setTime(System.currentTimeMillis());
@@ -5036,11 +5045,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             imageViewRideNow.performClick();
                         }
                         activityResumed = false;
-                        if(data.hasExtra(KEY_SCHEDULE_RIDE)){
-                            if(data.getBooleanExtra(KEY_SCHEDULE_RIDE,false)){
-                            super.onBackPressed();
-                            }
-                        }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

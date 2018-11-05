@@ -562,15 +562,27 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
                     @Override
                     public void onSuccess(final FeedCommonResponse response, String message, int flag) {
-                        Intent intent = new Intent();
-                        if (searchResultGlobal != null) {
-                            String str = (new Gson()).toJson(searchResultGlobal);
-                            intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
-                        }
-                        intent.putExtra(Constants.KEY_SCHEDULE_RIDE, true);
-                        setResult(RESULT_OK, intent);
-                        GAUtils.event(RIDES, GAAction.FARE_ESTIMATE, GET + RIDE + CLICKED);
-                        performBackPressed();
+
+                        DialogPopup.alertPopupWithListener(FareEstimateActivity.this,"",
+                                getString(R.string.booking_scheduled_successfully), new OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        Intent intent = new Intent();
+                                        if (searchResultGlobal != null) {
+                                            String str = (new Gson()).toJson(searchResultGlobal);
+                                            intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
+                                        }
+                                        intent.putExtra(Constants.KEY_SCHEDULE_RIDE, true);
+                                        setResult(RESULT_OK, intent);
+                                        GAUtils.event(RIDES, GAAction.FARE_ESTIMATE, GET + RIDE + CLICKED);
+                                        performBackPressed();
+                                    }
+                                });
+
+
+
+
 
                     }
 

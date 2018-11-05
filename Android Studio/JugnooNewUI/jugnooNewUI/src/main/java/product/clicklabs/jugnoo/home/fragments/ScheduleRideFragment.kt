@@ -286,7 +286,7 @@ class ScheduleRideFragment : Fragment(), Constants {
         intent.putExtra(Constants.KEY_SCHEDULE_RIDE_FORMATED_DATE_TIME, getFormattedDateTime(selectedDate, selectedTime, true))
         intent.putExtra(Constants.KEY_SCHEDULE_RIDE_SELECTED_REGION_ID, (getActivity() as HomeActivity).selectedIdForScheduleRide)
 
-        startActivityForResult(intent, (activity as HomeActivity).FARE_ESTIMATE)
+        (activity as HomeActivity).startActivityForResult(intent, (activity as HomeActivity).FARE_ESTIMATE)
         activity!!.overridePendingTransition(R.anim.right_in, R.anim.right_out)
     }
 

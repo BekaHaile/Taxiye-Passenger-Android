@@ -12,6 +12,7 @@ public enum MenuInfoTags {
     JUGNOO_FRESH("jugnoo_fresh"),
 //    PROMOTIONS("promotions"),
     HISTORY("history"),
+    SCHEDULED_RIDES("scheduled_rides"),
     REFER_A_DRIVER("refer_a_driver"),
     SUPPORT("support"),
     ABOUT("about"),
