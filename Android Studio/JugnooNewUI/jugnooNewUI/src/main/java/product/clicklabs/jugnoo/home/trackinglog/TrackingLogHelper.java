@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.home.trackinglog;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Environment;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -90,7 +89,7 @@ public class TrackingLogHelper {
 
 	private File getTrackingLogFolder(){
 		try {
-			String strFolder = Environment.getExternalStorageDirectory() + "/Android/data/." + BuildConfig.APP_DB_ID + "_auth/tracking_log";
+			String strFolder = context.getFilesDir() + BuildConfig.APP_DB_ID + "_auth/tracking_log";
 			File folder = new File(strFolder);
 			if(!folder.exists()){
 				folder.mkdirs();

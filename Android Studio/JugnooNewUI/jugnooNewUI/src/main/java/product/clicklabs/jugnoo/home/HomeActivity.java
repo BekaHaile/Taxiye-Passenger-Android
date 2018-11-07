@@ -139,7 +139,6 @@ import product.clicklabs.jugnoo.GCMIntentService;
 import product.clicklabs.jugnoo.GeocodeCallback;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
-import product.clicklabs.jugnoo.LocationUpdate;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RazorpayBaseActivity;
@@ -385,7 +384,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
     DecimalFormat decimalFormat1DigitAD = new DecimalFormat("#.#");
 
-    LatLng lastSearchLatLng;
 
 
     static long previousWaitTime = 0, previousRideTime = 0;
@@ -414,7 +412,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             zoomedToMyLocation = false,
             mapTouchedOnce = false;
     boolean dontCallRefreshDriver = false, zoomedForSearch = false, firstTimeZoom = false, zoomingForDeepLink = false;
-    boolean dropLocationSet = false, myLocationButtonClicked = false;
+    boolean dropLocationSet = false;
     boolean searchedALocation = false;
 
     Dialog noDriversDialog, dialogUploadContacts, freshIntroDialog;
@@ -603,7 +601,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         zoomingForDeepLink = false;
         freshIntroDialog = null;
         dropLocationSet = false;
-        myLocationButtonClicked = false;
         rideNowClicked = false;
 
 
@@ -1420,6 +1417,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 try {
                     locationGotNow();
                     setServiceAvailablityUI(Data.autoData.getFarAwayCity());
+
                     callMapTouchedRefreshDrivers();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2195,47 +2193,31 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
             mapStateListener = new MapStateListener(map, mapFragment, this) {
+
+                public void touchMap(){
+                    onMapTouched();
+                    onMapReleased();
+                }
+
+                boolean touchCalled, releaseCalled;
                 @Override
                 public void onMapTouched() {
                     // Map touched
+                    touchCalled = true;
                     mapTouched = true;
                     zoomAfterFindADriver = false;
-                    myLocationButtonClicked = false;
                 }
 
                 @Override
                 public void onMapReleased() {
                     // Map released
-                    try {
-                        myLocationButtonClicked = false;
-                        customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
-                        if (PassengerScreenMode.P_INITIAL == passengerScreenMode && zoomedForSearch
-                                && !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
-                            if (lastSearchLatLng != null) {
-                                double distance = MapUtils.distance(lastSearchLatLng, map.getCameraPosition().target);
-                                if (distance > MAP_PAN_DISTANCE_CHECK) {
-                                    textViewInitialSearch.setText("");
-                                    zoomedForSearch = false;
-                                    lastSearchLatLng = null;
-                                }
-                            } else {
-                                textViewInitialSearch.setText("");
-                                zoomedForSearch = false;
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    releaseCalled = true;
+                    customerInRideMyLocationBtn.setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onMapUnsettled() {
                     // Map unsettled
-                    if (userMode == UserMode.PASSENGER && passengerScreenMode == PassengerScreenMode.P_INITIAL && !zoomedForSearch
-                            && !confirmedScreenOpened) {
-                        Data.autoData.setPickupAddress("", map.getCameraPosition().target);
-                        textViewInitialSearch.setText("");
-                    }
                 }
 
                 @Override
@@ -2245,32 +2227,30 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     boolean refresh = false;
                     try {
                         checkForMyLocationButtonVisibility();
-                        refresh = false;
                         if (Data.autoData.getLastRefreshLatLng() == null
                                 || (MapUtils.distance(Data.autoData.getLastRefreshLatLng(), map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH)) {
                             Data.autoData.setLastRefreshLatLng(map.getCameraPosition().target);
                             refresh = true;
                         }
-                        if (!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation() && !specialPickupSelected) {
+                        if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened && !specialPickupSelected) {
+                            if (refresh && touchCalled && releaseCalled) {
+                                getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
+                            }
                             if ((refresh && mapTouched) || addressPopulatedFromDifferentOffering) {
                                 addressPopulatedFromDifferentOffering = false;
                                 callMapTouchedRefreshDrivers();
-                            }
-                            if (!zoomedForSearch && map != null && !(isSpecialPickupScreenOpened() && !refresh)) {
-                                getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
                             }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                     specialPickupSelected = false;
+                    touchCalled = false;
+                    releaseCalled = false;
 
-                    try {
-                        if (PassengerScreenMode.P_INITIAL != passengerScreenMode || !refresh) {
-                            pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (Data.userData != null && pokestopHelper != null
+                            && (PassengerScreenMode.P_INITIAL != passengerScreenMode || !refresh)) {
+                        pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
                     }
                 }
 
@@ -2765,11 +2745,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void callMapTouchedRefreshDrivers() {
         try {
             if (Data.userData != null) {
-                if (UserMode.PASSENGER == userMode &&
-                        (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode) &&
-                        map != null &&
-                        !isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
-                    Data.autoData.setPickupLatLng(map.getCameraPosition().target);
+                if ((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode) &&
+                        map != null && !confirmedScreenOpened) {
                     if (!dontCallRefreshDriver && Data.autoData.getPickupLatLng() != null) {
                         findDriversETACall(false, false, false);
                     }
@@ -3062,11 +3039,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 && Data.autoData.getAssignedDriverInfo().latLng != null) {
             zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
         } else {
-            myLocationButtonClicked = true;
             if (fromButton) {
                 textViewInitialSearch.setText("");
                 zoomedForSearch = false;
-                lastSearchLatLng = null;
             }
             if (myLocation != null) {
                 try {
@@ -3079,28 +3054,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
             } else {
                 Utils.showToast(HomeActivity.this, getString(R.string.waiting_for_location));
-                reconnectLocationFetchers();
+                handler.postDelayed(runnableInitLocationFetcher, 1000);
             }
         }
     }
 
-
-    Handler reconnectionHandler = null;
-
-    public void reconnectLocationFetchers() {
-        if (reconnectionHandler == null) {
-            destroyFusedLocationFetchers();
-            reconnectionHandler = new Handler();
-            reconnectionHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    initializeFusedLocationFetchers();
-                    reconnectionHandler.removeCallbacks(this);
-                    reconnectionHandler = null;
-                }
-            }, 2000);
+    Runnable runnableInitLocationFetcher = new Runnable() {
+        @Override
+        public void run() {
+            initializeFusedLocationFetchers();
         }
-    }
+    };
 
 
     public void setUserData() {
@@ -3306,15 +3270,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 zoomToCurrentLocationWithOneDriver(Data.autoData.getPickupLatLng());
                             } else if (myLocation != null) {
                                 zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-                            }
-                            try {
-                                if (!zoomedForSearch && Data.autoData.getPickupLatLng() != null && myLocation != null
-                                        && MapUtils.distance(Data.autoData.getPickupLatLng(),
-                                        new LatLng(myLocation.getLatitude(), myLocation.getLongitude())) <= MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
-                                    myLocationButtonClicked = true;
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
                             }
                         }
                         firstTimeZoom = true;
@@ -3801,7 +3756,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 initiateTimersForStates(mode);
                 dismissReferAllDialog(mode);
 
-                initializeHighSpeedAccuracyFusedLocationFetcher();
 
                 updateTopBar();
 
@@ -3810,9 +3764,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 openPaytmRechargeDialog();
 
                 showReferAllDialog();
-                if (mode == PassengerScreenMode.P_INITIAL) {
-//                    showPoolIntroDialog();
-                }
                 callT20AndReferAllDialog(mode);
 
                 int savedMode = Prefs.with(this).getInt(SP_CURRENT_STATE, PassengerScreenMode.P_INITIAL.getOrdinal());
@@ -3840,13 +3791,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     e.printStackTrace();
                 }
 
-                try {
-//                    fabViewTest.closeMenu();
-//                    getViewSlidingExtra().setVisibility(View.GONE);
-//                    getSlidingBottomPanel().getSlidingUpPanelLayout().setEnabled(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -5176,9 +5120,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
             }
         } else {
-            if (Data.userData == null) {
-
-            } else {
+            if (Data.userData != null) {
                 splashIntent(activity);
             }
         }
@@ -5201,7 +5143,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     protected void onPause() {
         stopNotifsUpdater();
-        destroyFusedLocationFetchers();
 
         try {
             if (userMode == UserMode.PASSENGER) {
@@ -6012,6 +5953,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textView.setText("");
                 if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
                     Data.autoData.setPickupAddress("", null);
+                    Data.autoData.setPickupLatLng(currentLatLng);
                 }
                 textView.setHint(R.string.getting_address);
                 GoogleRestApis.INSTANCE.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
@@ -6035,26 +5977,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                try {
-                                    if (progressBar != null) {
-                                        progressBar.setVisibility(View.GONE);
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                if (progressBar != null) {
+                                    progressBar.setVisibility(View.GONE);
                                 }
                             }
 
                             @Override
                             public void failure(RetrofitError error) {
-                                try {
-                                    if (progressBar != null) {
-                                        progressBar.setVisibility(View.GONE);
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                if (progressBar != null) {
+                                    progressBar.setVisibility(View.GONE);
                                 }
                             }
                         });
+            } else {
+                if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+                    Data.autoData.setPickupLatLng(currentLatLng);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -7560,25 +7498,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private void checkForMyLocationButtonVisibility() {
+        if(PassengerScreenMode.P_INITIAL != passengerScreenMode){
+            return;
+        }
         if (relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE) {
             try {
                 if ("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) || changeLocalityLayout.getVisibility() == View.GONE) {
                     if (MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
                             map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK) {
                         initialMyLocationBtn.setVisibility(View.VISIBLE);
-                        destroyHighSpeedAccuracyFusedLocationFetcher();
                     } else {
                         initialMyLocationBtn.setVisibility(View.GONE);
-                        initializeHighSpeedAccuracyFusedLocationFetcher();
                     }
                 } else {
                     initialMyLocationBtn.setVisibility(View.VISIBLE);
-                    destroyHighSpeedAccuracyFusedLocationFetcher();
                 }
             } catch (Exception e) {
                 if ("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) || changeLocalityLayout.getVisibility() == View.GONE) {
                     initialMyLocationBtn.setVisibility(View.VISIBLE);
-                    destroyHighSpeedAccuracyFusedLocationFetcher();
                 }
             }
         } else {
@@ -7589,62 +7526,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void initializeFusedLocationFetchers() {
         getLocationFetcher().connect(this, 10000);
-        initializeHighSpeedAccuracyFusedLocationFetcher();
-    }
-
-    private void initializeHighSpeedAccuracyFusedLocationFetcher() {
-        if (PermissionCommon.isGranted(android.Manifest.permission.ACCESS_FINE_LOCATION, this)) {
-            destroyHighSpeedAccuracyFusedLocationFetcher();
-            if (checkForInitialMyLocationButtonClick()) {
-                if (highSpeedAccuracyLF == null) {
-                    highSpeedAccuracyLF = new LocationFetcher(this);
-                }
-                highSpeedAccuracyLF.connect(highSpeedLU, 5000);
-            }
-        }
-    }
-
-    private LocationUpdate highSpeedLU = new LocationUpdate() {
-        @Override
-        public void onLocationChanged(Location location) {
-            try {
-                if (checkForInitialMyLocationButtonClick()) {
-                    LatLng lastMapCentre = map.getCameraPosition().target;
-                    LatLng currentLoc = new LatLng(location.getLatitude(), location.getLongitude());
-                    if (MapUtils.distance(lastMapCentre, currentLoc) > MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
-                        map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), getMapAnimateDuration(), null);
-                    }
-                } else {
-                    destroyHighSpeedAccuracyFusedLocationFetcher();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    };
-
-
-    private boolean checkForInitialMyLocationButtonClick() {
-        int myLocationTracking = Prefs.with(this).getInt(KEY_CUSTOMER_MYLOCATION_TRACKING, 0);
-        return myLocationTracking == 1 && PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened && !specialPickupScreenOpened
-                && myLocationButtonClicked;
     }
 
 
-    public void destroyFusedLocationFetchers() {
-        destroyHighSpeedAccuracyFusedLocationFetcher();
-    }
 
-
-    public void destroyHighSpeedAccuracyFusedLocationFetcher() {
-        try {
-            if (highSpeedAccuracyLF != null) {
-                highSpeedAccuracyLF.destroy();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public void locationChanged(Location location) {
@@ -9206,13 +9091,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         if (PassengerScreenMode.P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
-            myLocationButtonClicked = false;
             zoomAfterFindADriver = false;
             if (!isPoolRideAtConfirmation()) {
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     textViewInitialSearch.setText(autoCompleteSearchResult.getNameForText());
                     zoomedForSearch = true;
-                    lastSearchLatLng = null;
                 } else if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
                     textViewDestSearch.setText(autoCompleteSearchResult.getNameForText());
                     dropAddressName = autoCompleteSearchResult.getNameForText();
@@ -9246,9 +9129,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void setSearchResultToPickupCase(SearchResult searchResult) {
         try {
-            Gson gson = new Gson();
-//            SearchResult searchResult = gson.fromJson(Prefs.with(this)
-//                    .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
             if (searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())) {
                 textViewInitialSearch.setText(searchResult.getNameForText());
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), getMapAnimateDuration(), new GoogleMap.CancelableCallback() {
@@ -9261,7 +9141,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     public void onCancel() {
                     }
                 });
-                lastSearchLatLng = searchResult.getLatLng();
                 mapTouched = true;
                 getAddressAsync(searchResult.getLatLng(), textViewInitialSearch, progressBarInitialSearch);
                 Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
@@ -9295,11 +9174,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                     if (map != null && searchResult != null) {
-                        try {
-                            //                        Prefs.with(this).save(SP_FRESH_LAST_ADDRESS_OBJ, new Gson().toJson(searchResult, SearchResult.class));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                         setSearchResultToPickupCase(searchResult);
                         GAUtils.event(RIDES, HOME, PICKUP + LOCATION + ENTERED);
                     }

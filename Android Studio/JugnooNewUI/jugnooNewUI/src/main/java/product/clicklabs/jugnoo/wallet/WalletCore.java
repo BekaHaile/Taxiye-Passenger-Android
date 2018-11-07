@@ -671,6 +671,9 @@ public class WalletCore {
 
     public void updatePaymentModeConfigDatas(JSONObject jObj) {
         try {
+            if(!jObj.has(Constants.KEY_PAYMENT_MODE_CONFIG_DATA)){
+                return;
+            }
             JSONArray jsonArray = jObj.getJSONArray(Constants.KEY_PAYMENT_MODE_CONFIG_DATA);
             if (jsonArray.length() == 0) {
                 return;

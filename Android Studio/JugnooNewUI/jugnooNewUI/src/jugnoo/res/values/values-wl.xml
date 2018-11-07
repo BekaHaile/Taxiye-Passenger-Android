@@ -72,6 +72,5 @@
     <bool name="wallet_amount_sidemenu">true</bool>
     <bool name="show_jugnoo_promo_icon">true</bool>
     <bool name="force_open_autos">false</bool>
-    <integer name="customer_mylocation_tracking">1</integer>
 
 </resources>
