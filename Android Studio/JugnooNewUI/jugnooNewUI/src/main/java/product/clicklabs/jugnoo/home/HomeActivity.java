@@ -408,7 +408,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     boolean loggedOut = false,
             zoomedToMyLocation = false,
             mapTouchedOnce = false;
-    boolean dontCallRefreshDriver = false, zoomedForSearch = false, firstTimeZoom = false, zoomingForDeepLink = false;
+    boolean dontCallRefreshDriver = false, firstTimeZoom = false, zoomingForDeepLink = false;
     boolean dropLocationSet = false;
     boolean searchedALocation = false;
 
@@ -592,7 +592,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         zoomedToMyLocation = false;
         dontCallRefreshDriver = false;
         mapTouchedOnce = false;
-        zoomedForSearch = false;
         firstTimeZoom = false;
         searchedALocation = false;
         zoomingForDeepLink = false;
@@ -2090,18 +2089,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         addressPopulatedFromDifferentOffering = true;
                     }
                 }
-
+                LatLng latLng;
                 if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
                         || (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.getIndiaCentre(), 5));
+                    latLng = Data.getIndiaCentre();
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5));
                     forceFarAwayCity();
-                    Data.autoData.setLastRefreshLatLng(Data.getIndiaCentre());
+                    Data.autoData.setLastRefreshLatLng(latLng);
                 } else {
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Data.latitude, Data.longitude), MAX_ZOOM));
+                    latLng = new LatLng(Data.latitude, Data.longitude);
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, MAX_ZOOM));
                     if (Data.autoData.getLastRefreshLatLng() == null) {
-                        Data.autoData.setLastRefreshLatLng(new LatLng(Data.latitude, Data.longitude));
+                        Data.autoData.setLastRefreshLatLng(latLng);
                     }
                 }
+                getAddressAsync(latLng, textViewInitialSearch, null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -3025,7 +3027,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 && Data.autoData.getAssignedDriverInfo().latLng != null) {
             zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
         } else {
-            zoomedForSearch = false;
             if (myLocation != null) {
                 try {
                     setCentrePinAccToGoogleMapPadding();
@@ -3316,8 +3317,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             //fabView.setRelativeLayoutFABVisibility(mode);
                             setGoogleMapPadding(mapPaddingConfirm);
                         } else {
-                            if (!zoomedForSearch && !specialPickupScreenOpened && map != null) {
-                                getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
+                            if (!specialPickupScreenOpened && map != null) {
                                 if (!searchedALocation) {
                                     dropAddressName = "";
                                 }
@@ -4750,15 +4750,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)) {
                                 if (map != null && myLocation != null && !isSpecialPickupScreenOpened()) {
                                     if (PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)) {
+                                        try {
+                                            LatLng currLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                                            Data.setLatLngOfJeanieLastShown(currLatLng);
+                                            Data.autoData.setLastRefreshLatLng(currLatLng);
+                                            getAddressAsync(currLatLng, textViewInitialSearch, null);
+                                        } catch (Exception ignored) {}
                                         initialMyLocationBtn.performClick();
                                         mapTouched = true;
-                                    }
-
-                                    try {
-                                        LatLng currLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-                                        Data.setLatLngOfJeanieLastShown(currLatLng);
-                                        Data.autoData.setLastRefreshLatLng(currLatLng);
-                                    } catch (Exception e) {
                                     }
                                 }
                             }
@@ -4821,15 +4820,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 // to check if selected destination saved address is deleted or not
                 if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
                 	if(Data.autoData != null && Data.autoData.getDropLatLng() != null) {
-						SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(),
+						SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(),
 								Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
 						if (searchResult == null && Data.autoData.getDropAddressId() > 0) {
 							imageViewDropCross.performClick();
 						}
 					}
-					if(Data.autoData != null && Data.autoData.getPickupLatLng() != null){
-						getAddressAsync(Data.autoData.getPickupLatLng(), textViewInitialSearch, progressBarInitialSearch);
-					}
+					if(intentFired){
+                        SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
+                                Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+                        if (searchResult != null) {
+                            textViewInitialSearch.setText(searchResult.getName());
+                        } else {
+                            textViewInitialSearch.setText(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
+                        }
+                    }
                 }
             }
 
@@ -7906,6 +7911,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(null);
 
 
+            Data.autoData.setLastRefreshLatLng(null);
             Data.autoData.setPickupLatLng(null);
             Data.autoData.setPickupAddress("", null);
             Data.autoData.setDropLatLng(null);
@@ -7913,7 +7919,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setDropAddressId(0);
             Data.setRecentAddressesFetched(false);
             dropLocationSet = false;
-            zoomedForSearch = false;
             confirmedScreenOpened = false;
             specialPickupScreenOpened = false;
 
@@ -7924,18 +7929,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             passengerScreenMode = PassengerScreenMode.P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
-            try {
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), getMapAnimateDuration(), null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     dontCallRefreshDriver = false;
-                    callMapTouchedRefreshDrivers();
+                    if(myLocation != null && mapStateListener != null && map != null) {
+                        mapStateListener.touchMapExplicit();
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), getMapAnimateDuration(), null);
+                    }
                 }
-            }, 900);
+            }, 500);
 
             Utils.hideSoftKeyboard(HomeActivity.this, editTextRSFeedback);
 
@@ -8987,7 +8990,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (!isPoolRideAtConfirmation()) {
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     textViewInitialSearch.setText(autoCompleteSearchResult.getNameForText());
-                    zoomedForSearch = true;
                 } else if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
                     textViewDestSearch.setText(autoCompleteSearchResult.getNameForText());
                     dropAddressName = autoCompleteSearchResult.getNameForText();
@@ -9035,6 +9037,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 });
                 mapTouched = true;
                 updateSavedAddressLikeButton(searchResult.getLatLng(), true);
+                Data.autoData.setPickupLatLng(searchResult.getLatLng());
                 Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
 
                 try {
