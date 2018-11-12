@@ -69,7 +69,7 @@ class ScheduleRideFragment : Fragment(), Constants {
             getTimePickerFragment().show(childFragmentManager, "timePicker", onTimeSetListener)
 
         } else {
-            Utils.showToast(activity, activity!!.getString(R.string.please_select_appropriate_time))
+            Utils.showToast(activity, activity!!.getString(R.string.incorrect_schedule_time,MIN_BUFFER_TIME_MINS))
         }
     }
 
@@ -104,6 +104,7 @@ class ScheduleRideFragment : Fragment(), Constants {
         with(rootView) {
 
             rvVehiclesList.layoutManager = LinearLayoutManager(activity)
+            rvVehiclesList.isNestedScrollingEnabled = false
             tvPickup.typeface = Fonts.mavenRegular(activity)
             tvDestination.typeface = Fonts.mavenRegular(activity)
             tvPickupDateTime.setTypeface(Fonts.mavenRegular(activity),BOLD)
@@ -243,7 +244,7 @@ class ScheduleRideFragment : Fragment(), Constants {
             tvSelectDateTime.text = DateOperations.getDateFormatted(selectedDate) + " " + display
             return true
         } else {
-            Utils.showToast(activity, activity!!.getString(R.string.please_select_appropriate_time))
+            Utils.showToast(activity, activity!!.getString(R.string.incorrect_schedule_time,MIN_BUFFER_TIME_MINS))
             return false
         }
     }
@@ -343,6 +344,11 @@ class ScheduleRideFragment : Fragment(), Constants {
 
     }
 
+    fun updateVehicleAdapter(){
+        if (view!=null) {
+            scheduleRideVehicleListAdapter.notifyDataSetChanged()
+        }
+    }
 
 
 

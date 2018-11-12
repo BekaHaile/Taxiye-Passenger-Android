@@ -14,6 +14,7 @@ data class UpcomingRide(@Expose @SerializedName("pickup_id") var engagementId:St
                         @Expose @SerializedName("drop_location_address")  var destinationAddress:String,
                         @Expose @SerializedName("vehicle_name")  var vehicleName: String,
                         @Expose @SerializedName("pickup_time")  val pickUpTime:String?,
+                        @Expose @SerializedName("modifiable")  val isModifiable:Int,
                         @Expose @SerializedName("status")  val status:Int=3){
 
        fun getRideStatus(): String {
@@ -27,8 +28,12 @@ data class UpcomingRide(@Expose @SerializedName("pickup_id") var engagementId:St
 
        fun getDisplayTime():String{
             return  pickUpTime?.run {
-                     DateOperations.convertDateViaFormatTZ(this)
+                DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(this))
               }?:""
+       }
+
+       fun isEditable():Boolean{
+           return  isModifiable==1
        }
 }
 

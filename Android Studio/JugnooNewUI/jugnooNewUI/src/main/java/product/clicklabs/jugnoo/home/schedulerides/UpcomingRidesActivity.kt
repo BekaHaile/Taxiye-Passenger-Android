@@ -59,6 +59,9 @@ class UpcomingRidesActivity:BaseAppCompatActivity(),UpcomingRidesContract.View{
 
         val upcomingRidesBinding:ActivityUpcomingRidesBinding = DataBindingUtil.setContentView(this,
                 R.layout.activity_upcoming_rides)
+        upcomingRidesBinding.imageViewBack.setOnClickListener{
+            onBackPressed()
+        }
        upcomingRidesBinding.presenter = upcompingRidePresenter
         upcomingRidesBinding.textViewTitle.setTypeface(Fonts.mavenRegular(this), Typeface.BOLD)
         adapter = UpcomingRidesAdapter(this,upcompingRidePresenter)

@@ -176,6 +176,9 @@ public class TopBar implements GACategory, GAAction {
             if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_INITIAL) {
                 imageViewScheduleRide.setVisibility(View.VISIBLE);
                 tvScheduleRidePopup.setVisibility(View.VISIBLE);
+            }else{
+                imageViewScheduleRide.setVisibility(View.GONE);
+                tvScheduleRidePopup.setVisibility(View.GONE);
             }
         } else {
             imageViewHelp.setVisibility(View.VISIBLE);

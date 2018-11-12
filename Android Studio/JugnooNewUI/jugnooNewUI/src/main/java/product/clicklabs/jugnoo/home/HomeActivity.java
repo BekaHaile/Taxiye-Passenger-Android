@@ -5306,6 +5306,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         public void onCompleteFindADriver() {
                             findADriverFinishing(true, false);
                             try {
+
+                                if(getScheduleRideFragment()!=null){
+                                    getScheduleRideFragment().updateVehicleAdapter();
+                                }
+
                                 if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
                                     pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
                                 }
@@ -7524,7 +7529,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     LatLng lastMapCentre = map.getCameraPosition().target;
                     LatLng currentLoc = new LatLng(location.getLatitude(), location.getLongitude());
                     if (MapUtils.distance(lastMapCentre, currentLoc) > MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE) {
-                        map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), getMapAnimateDuration(), null);
+                        //this functionality isn't required anymore
+//                        map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(), location.getLongitude())), getMapAnimateDuration(), null);
                     }
                 } else {
                     destroyHighSpeedAccuracyFusedLocationFetcher();
@@ -9205,9 +9211,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     if(getScheduleRideFragment() != null){
                         getScheduleRideFragment().searchResultReceived(searchResult, placeSearchMode);
                     }
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                    switchPassengerScreen(passengerScreenMode);
-                    return;
                 }
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     progressBarInitialSearch.stopSpinning();
@@ -9215,11 +9218,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                     if (map != null && searchResult != null) {
-                        try {
-                            //                        Prefs.with(this).save(SP_FRESH_LAST_ADDRESS_OBJ, new Gson().toJson(searchResult, SearchResult.class));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+
                         setSearchResultToPickupCase(searchResult);
                         GAUtils.event(RIDES, HOME, PICKUP + LOCATION + ENTERED);
                     }
@@ -9243,12 +9242,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
                     switchPassengerScreen(passengerScreenMode);
 
-                    if ((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
-                            shakeAnim > 0 && !updateSpecialPickupScreen())
-                            ||
-                            (!specialPickupScreenOpened && !confirmedScreenOpened && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)) {
-                        textViewTotalFareValue.setText("");
-                        imageViewRideNow.performClick();
+                    if (!scheduleRideOpen) {
+                        if ((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
+                                shakeAnim > 0 && !updateSpecialPickupScreen())
+                                || (!specialPickupScreenOpened && !confirmedScreenOpened &&
+                                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)) {
+                            textViewTotalFareValue.setText("");
+                            imageViewRideNow.performClick();
+                        }
                     }
                     GAUtils.event(RIDES, HOME, DESTINATION + LOCATION + ENTERED);
                 }

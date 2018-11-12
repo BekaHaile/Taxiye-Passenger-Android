@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="upcomingRide"
             type="product.clicklabs.jugnoo.home.schedulerides.UpcomingRide" />
@@ -52,6 +54,7 @@
                 android:layout_width="0dp"
                 android:padding="10dp"
                 android:layout_height="wrap_content"
+                android:visibility="@{upcomingRide.isEditable()? View.VISIBLE : View.INVISIBLE }"
                 android:onClick="@{() -> presenter.deleteScheduleRide(upcomingRide)}"
                 android:src="@drawable/ic_delete_feed"
                 app:layout_constraintEnd_toEndOf="parent"
