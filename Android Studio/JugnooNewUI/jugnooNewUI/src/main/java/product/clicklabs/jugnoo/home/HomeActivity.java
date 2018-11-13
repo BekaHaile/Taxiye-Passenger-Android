@@ -3831,7 +3831,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 showScheduleRideTut = false;
                 Prefs.with(this).save(Constants.SHOW_TUT_SCHEDULE_RIDE, false);
                 topBar.tvScheduleRidePopup.setVisibility(View.VISIBLE);
-                handler.postDelayed(scheduleRideRunnable,5 * 1000);
+                getHandler().postDelayed(scheduleRideRunnable,5 * 1000);
             }else{
                 topBar.tvScheduleRidePopup.setVisibility(View.GONE);
             }
@@ -5253,7 +5253,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void onDestroy() {
         try {
-            handler.removeCallbacks(scheduleRideRunnable);
+            getHandler().removeCallbacks(scheduleRideRunnable);
             startService(new Intent(this, DeleteCacheIntentService.class));
 
             GCMIntentService.clearNotifications(HomeActivity.this);

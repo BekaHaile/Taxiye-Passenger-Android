@@ -7,43 +7,29 @@ import android.content.Intent
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.DatePicker
-import android.widget.TextView
-import android.widget.TimePicker
-import android.widget.Toast
 import com.sabkuchfresh.analytics.GAAction
 import com.sabkuchfresh.analytics.GACategory
 import com.sabkuchfresh.analytics.GAUtils
-import com.sabkuchfresh.home.CallbackPaymentOptionSelector
-
 import com.sabkuchfresh.pros.utils.DatePickerFragment
 import com.sabkuchfresh.pros.utils.TimePickerFragment
 import com.sabkuchfresh.utils.Utils
 import kotlinx.android.synthetic.main.fragment_schedule_ride.*
 import product.clicklabs.jugnoo.*
-import product.clicklabs.jugnoo.datastructure.PaymentOption
-
-import java.util.Calendar
-
-import product.clicklabs.jugnoo.home.adapters.ScheduleRideVehicleListAdapter
 import product.clicklabs.jugnoo.datastructure.SearchResult
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment
 import product.clicklabs.jugnoo.home.HomeActivity
 import product.clicklabs.jugnoo.home.HomeUtil
+import product.clicklabs.jugnoo.home.adapters.ScheduleRideVehicleListAdapter
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog
 import product.clicklabs.jugnoo.home.models.Region
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.Fonts
-import java.time.format.TextStyle
+import java.util.*
 
 
 class ScheduleRideFragment : Fragment(), Constants {
@@ -113,8 +99,8 @@ class ScheduleRideFragment : Fragment(), Constants {
             tvSelectPayment.setTypeface(Fonts.mavenRegular(activity),BOLD)
             textViewPaymentModeValueConfirm.typeface = Fonts.mavenRegular(activity)
 
-            tvPickup.setOnClickListener { (getActivity() as HomeActivity).onClickOfPickupElse() }
-            tvDestination.setOnClickListener { (getActivity() as HomeActivity).onClickOfDestinationElse() }
+            tvPickup.setOnClickListener { (getActivity() as HomeActivity).openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.PICKUP) }
+            tvDestination.setOnClickListener { (getActivity() as HomeActivity).openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.DROP) }
             tvSelectDateTime.setOnClickListener {
                 try {
                     getDatePickerFragment().show(childFragmentManager, "datePicker", onDateSetListener)
