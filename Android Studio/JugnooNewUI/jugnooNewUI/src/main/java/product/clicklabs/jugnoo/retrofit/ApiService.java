@@ -7,6 +7,7 @@ import java.util.Map;
 
 import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
+import product.clicklabs.jugnoo.home.schedulerides.UpcomingRideResponse;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
 import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
 import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse;
@@ -609,6 +610,10 @@ public interface ApiService {
     @POST("/edit_driver_tip")
     void editTip(@FieldMap Map<String, String> params,
                                 Callback<FeedCommonResponse> callback);
+    @FormUrlEncoded
+    @POST("/insert_pickup_schedule")
+    void scheduleRide(@FieldMap Map<String, String> params,
+                                Callback<FeedCommonResponse> callback);
 
     @FormUrlEncoded
     @POST("/add_card_to_customer_account")
@@ -632,6 +637,15 @@ public interface ApiService {
     @POST("/customer/show_rate_card")
     void fareDetails(@FieldMap Map<String, String> params,
                          Callback<FareDetailsResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/show_pickup_schedules")
+    void upcomingRides(@FieldMap Map<String, String> params,
+                         Callback<UpcomingRideResponse> callback);
+    @FormUrlEncoded
+    @POST("/remove_pickup_schedule")
+    void deleteScheduleRide(@FieldMap Map<String, String> params,
+                         Callback<UpcomingRideResponse> callback);
 
     @FormUrlEncoded
     @POST("/log_google_api_hits")

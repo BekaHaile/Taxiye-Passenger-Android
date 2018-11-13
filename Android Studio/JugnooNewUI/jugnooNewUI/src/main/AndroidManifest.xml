@@ -477,6 +477,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/BaseAppCompatTheme"
             />
+
+        <activity
+            android:name=".home.schedulerides.UpcomingRidesActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseAppCompatTheme"
+            />
         <!-- <activity -->
         <!-- android:name="com.sabkuchfresh.home.TrackOrderActivity" -->
         <!-- android:label="@string/app_name" -->

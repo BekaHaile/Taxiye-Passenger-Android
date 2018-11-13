@@ -450,6 +450,8 @@ public class JSONParser implements Constants {
 				context.getResources().getInteger(R.integer.google_apis_logging)));
         Prefs.with(context).save(KEY_CUSTOMER_MYLOCATION_TRACKING, autoData.optInt(KEY_CUSTOMER_MYLOCATION_TRACKING,
 				context.getResources().getInteger(R.integer.customer_mylocation_tracking)));
+        boolean scheduleRideFallback = context.getResources().getBoolean(R.bool.schedule_ride_enabled);
+        Prefs.with(context).save(SCHEDULE_RIDE_ENABLED, autoData.optBoolean(SCHEDULE_RIDE_ENABLED,scheduleRideFallback));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

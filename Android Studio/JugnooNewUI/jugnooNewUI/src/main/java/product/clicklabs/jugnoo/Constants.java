@@ -945,6 +945,8 @@ public interface Constants {
     String KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON = "show_fare_estimate_hover_button";
     String KEY_CASH_ABOVE_ALL_WALLETS = "cash_above_all_wallets";
     String KEY_FORCE_MPESA_PAYMENT= "force_mpesa_payment";
+    String SCHEDULE_RIDE_ENABLED= "schedule_ride_enabled";
+    String SHOW_TUT_SCHEDULE_RIDE= "show_tut_schedule_ride";
 
     String KEY_LUGGAGE_CHARGES = "luggage_charges";
     String KEY_PAY_VIA_STRIPE = "pay_via_stripe";
@@ -965,4 +967,9 @@ public interface Constants {
 	String KEY_API_NAME = "api_name";
 	String KEY_CUSTOMER_GOOGLE_APIS_LOGGING = "customer_google_apis_logging";
 	String KEY_CUSTOMER_MYLOCATION_TRACKING = "customer_mylocation_tracking";
+
+    String KEY_SCHEDULE_RIDE = "schedule_ride";
+    String KEY_SCHEDULE_RIDE_FORMATED_DATE_TIME = "schedule_ride_formated_date_time";
+    String KEY_SCHEDULE_RIDE_SELECTED_REGION_ID = "schedule_ride_selected_region_id";
+    String KEY_PICKUP_TIME = "pickup_time";
 }

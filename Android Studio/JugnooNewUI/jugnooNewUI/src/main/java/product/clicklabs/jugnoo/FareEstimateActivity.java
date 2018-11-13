@@ -32,7 +32,12 @@ import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 
+import java.util.HashMap;
 import java.util.List;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
@@ -45,6 +50,7 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
@@ -76,6 +82,9 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     private GeoDataClient geoDataClient;
     private LatLng pickupLatLng, dropLatLng;
     private String pickupAddress, dropAddress;
+    private boolean isScheduleRide;
+    private String finalDateTime;
+    private int selectedRegionID;
 
     @Override
     protected void onResume() {
@@ -91,7 +100,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             pickupLatLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_PICKUP_LATITUDE, Data.latitude),
                     getIntent().getDoubleExtra(Constants.KEY_PICKUP_LONGITUDE, Data.longitude));
             pickupAddress = getIntent().getStringExtra(Constants.KEY_PICKUP_LOCATION_ADDRESS);
-            if(getIntent().hasExtra(Constants.KEY_DROP_LATITUDE)){
+            if (getIntent().hasExtra(Constants.KEY_DROP_LATITUDE)) {
                 dropLatLng = new LatLng(getIntent().getDoubleExtra(Constants.KEY_DROP_LATITUDE, Data.latitude),
                         getIntent().getDoubleExtra(Constants.KEY_DROP_LONGITUDE, Data.longitude));
                 dropAddress = getIntent().getStringExtra(Constants.KEY_DROP_LOCATION_ADDRESS);
@@ -104,6 +113,18 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             }
             if (getIntent().hasExtra(Constants.KEY_COUPON_SELECTED)) {
                 promoCoupon = (PromoCoupon) getIntent().getSerializableExtra(Constants.KEY_COUPON_SELECTED);
+
+            }
+            if (getIntent().hasExtra(Constants.KEY_SCHEDULE_RIDE)) {
+                isScheduleRide = getIntent().getBooleanExtra(Constants.KEY_SCHEDULE_RIDE, false);
+
+            }
+            if (getIntent().hasExtra(Constants.KEY_SCHEDULE_RIDE_FORMATED_DATE_TIME)) {
+                finalDateTime = getIntent().getStringExtra(Constants.KEY_SCHEDULE_RIDE_FORMATED_DATE_TIME);
+
+            }
+            if (getIntent().hasExtra(Constants.KEY_SCHEDULE_RIDE_SELECTED_REGION_ID)) {
+                selectedRegionID = getIntent().getIntExtra(Constants.KEY_SCHEDULE_RIDE_SELECTED_REGION_ID,0);
 
             }
 
@@ -125,7 +146,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         if (promoCoupon != null && promoCoupon.getId() != -1) {
             tvCouponApplied.setVisibility(View.VISIBLE);
             tvCouponApplied.setText(getString(R.string.coupon_applied_format, promoCoupon.getTitle()));
-        }else{
+        } else {
             tvCouponApplied.setVisibility(View.GONE);
 
         }
@@ -200,20 +221,29 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 onBackPressed();
             }
         });
-
+        if (isScheduleRide) {
+            buttonOk.setText(getString(R.string.confirm_ride));
+        } else {
+            buttonOk.setText(getString(R.string.get_ride));
+        }
         buttonOk.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-
-                    Intent intent = new Intent();
-                    if (searchResultGlobal != null) {
-                        String str = (new Gson()).toJson(searchResultGlobal);
-                        intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
+                    if (isScheduleRide) {
+                        scheduleRide(selectedRegionID, finalDateTime);
+                    } else {
+                        Intent intent = new Intent();
+                        if (searchResultGlobal != null) {
+                            String str = (new Gson()).toJson(searchResultGlobal);
+                            intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
+                        }
+                        intent.putExtra(Constants.KEY_SCHEDULE_RIDE, true);
+                        setResult(RESULT_OK, intent);
+                        GAUtils.event(RIDES, GAAction.FARE_ESTIMATE, GET + RIDE + CLICKED);
+                        performBackPressed();
                     }
-                    setResult(RESULT_OK, intent);
-                    GAUtils.event(RIDES, GAAction.FARE_ESTIMATE, GET+RIDE+CLICKED);
-                    performBackPressed();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -221,19 +251,19 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         });
 
         try {
-            if (rideType != RideTypeValue.POOL.getOrdinal() && dropLatLng != null) {
-				getDirectionsAndComputeFare(pickupLatLng, pickupAddress, dropLatLng, dropAddress);
-			} else {
+            if (dropLatLng != null) {
+                getDirectionsAndComputeFare(pickupLatLng, pickupAddress, dropLatLng, dropAddress);
+            } else {
 
-				Bundle bundle = new Bundle();
-				bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
-				bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
-				bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
+                Bundle bundle = new Bundle();
+                bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
+                bundle.putString(KEY_SEARCH_FIELD_HINT, getString(R.string.assigning_state_edit_text_hint));
+                bundle.putInt(KEY_SEARCH_MODE, PlaceSearchListFragment.PlaceSearchMode.DROP.getOrdinal());
 
-				getSupportFragmentManager().beginTransaction()
-						.add(R.id.linearLayoutContainer, PlaceSearchListFragment.newInstance(bundle), PlaceSearchListFragment.class.getSimpleName())
-						.commitAllowingStateLoss();
-			}
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.linearLayoutContainer, PlaceSearchListFragment.newInstance(bundle), PlaceSearchListFragment.class.getSimpleName())
+                        .commitAllowingStateLoss();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -279,14 +309,14 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                             markerOptionsS.title(getString(R.string.start));
                             markerOptionsS.position(sourceLatLng);
                             markerOptionsS.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
-									R.drawable.pin_ball_start)));
+                                    R.drawable.pin_ball_start)));
                             mapLite.addMarker(markerOptionsS);
 
                             MarkerOptions markerOptionsE = new MarkerOptions();
                             markerOptionsE.title(getString(R.string.start));
                             markerOptionsE.position(destLatLng);
                             markerOptionsE.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createSmallPinMarkerBitmap(FareEstimateActivity.this,
-									R.drawable.pin_ball_end)));
+                                    R.drawable.pin_ball_end)));
                             mapLite.addMarker(markerOptionsE);
 
 
@@ -305,10 +335,10 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                             }, 500);
                         }
 
-                        if(!TextUtils.isEmpty(sourceAddress)){
+                        if (!TextUtils.isEmpty(sourceAddress)) {
                             startAddress = sourceAddress;
                         }
-                        if(!TextUtils.isEmpty(destAddress)){
+                        if (!TextUtils.isEmpty(destAddress)) {
                             endAddress = destAddress;
                         }
                         textViewPickupLocation.setText(startAddress);
@@ -379,7 +409,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 public void onDirectionsFailure() {
 
                 }
-            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region,promoCoupon);
+            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region, promoCoupon);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -406,7 +436,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             Intent intent = new Intent();
             String str = (new Gson()).toJson(searchResultGlobal);
             intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
-            intent.putExtra(Constants.KEY_AVOID_RIDE_ACTION,true);
+            intent.putExtra(Constants.KEY_AVOID_RIDE_ACTION, true);
             setResult(RESULT_OK, intent);
         }
         performBackPressed();
@@ -449,7 +479,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     @Override
     public void onPlaceSearchPost(SearchResult searchResult) {
         try {
-            if(Data.autoData != null) {
+            if (Data.autoData != null) {
                 Data.autoData.setDropLatLng(searchResult.getLatLng());
                 Data.autoData.setDropAddress(searchResult.getAddress());
                 Data.autoData.setDropAddressId(searchResult.getId());
@@ -478,4 +508,58 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     public GeoDataClient getGeoDataClient(){
         return geoDataClient;
     }
+
+    private void scheduleRide(int regionId, String finalDateTime) {
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_REGION_ID, regionId + "");
+        params.put(Constants.KEY_PICKUP_TIME, DateOperations.localToUTC(finalDateTime));
+        params.put(Constants.KEY_LATITUDE, String.valueOf(pickupLatLng.latitude));
+        params.put(Constants.KEY_LONGITUDE, String.valueOf(pickupLatLng.longitude));
+        params.put(Constants.KEY_PICKUP_LOCATION_ADDRESS,pickupAddress);
+        params.put(Constants.KEY_DROP_LOCATION_ADDRESS, dropAddress);
+        params.put("op_drop_latitude", String.valueOf(dropLatLng.latitude));
+        params.put("op_drop_longitude", String.valueOf(dropLatLng.longitude));
+        params.put("vehicle_type", String.valueOf(region.getVehicleType()));
+        params.put(Constants.KEY_PREFERRED_PAYMENT_MODE, "" + Data.autoData.getPickupPaymentOption());
+
+
+        new ApiCommon<>(this).showLoader(true).execute(params, ApiName.SCHEDULE_RIDE,
+                new APICommonCallback<FeedCommonResponse>() {
+
+                    @Override
+                    public void onSuccess(final FeedCommonResponse response, String message, int flag) {
+
+                        DialogPopup.alertPopupWithListener(FareEstimateActivity.this,"",
+                                getString(R.string.booking_scheduled_successfully), new OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        Intent intent = new Intent();
+                                        if (searchResultGlobal != null) {
+                                            String str = (new Gson()).toJson(searchResultGlobal);
+                                            intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
+                                        }
+                                        intent.putExtra(Constants.KEY_SCHEDULE_RIDE, true);
+                                        setResult(RESULT_OK, intent);
+                                        GAUtils.event(RIDES, GAAction.FARE_ESTIMATE, GET + RIDE + CLICKED);
+                                        performBackPressed();
+                                    }
+                                });
+
+
+
+
+
+                    }
+
+                    @Override
+                    public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        return false;
+                    }
+
+                });
+
+
+    }
+
 }
