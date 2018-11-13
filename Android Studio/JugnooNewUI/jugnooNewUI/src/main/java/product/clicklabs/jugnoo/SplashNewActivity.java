@@ -4301,24 +4301,24 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								String message = jObj.optString("message", "");
 								Utils.showToast(activity, message);
+								loginDataFetched = true;
+								new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
+										loginResponseData, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
+								if((jObj.has("email_correct")) && (jObj.optInt("email_correct", 0) == 1)){
+									if(!TextUtils.isEmpty(updatedEmail)) {
+										Data.userData.userEmail = updatedEmail;
+									}
+								}
+
+								if((jObj.has("username_correct")) && (jObj.optInt("username_correct", 0) == 1)){
+									if(!TextUtils.isEmpty(updatedName)) {
+										Data.userData.userName = updatedName;
+									}
+								}
+								onWindowFocusChanged(true);
 							} else {
 								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
-							loginDataFetched = true;
-							new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
-									loginResponseData, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
-							if((jObj.has("email_correct")) && (jObj.optInt("email_correct", 0) == 1)){
-								if(!TextUtils.isEmpty(updatedEmail)) {
-									Data.userData.userEmail = updatedEmail;
-								}
-							}
-
-							if((jObj.has("username_correct")) && (jObj.optInt("username_correct", 0) == 1)){
-								if(!TextUtils.isEmpty(updatedName)) {
-									Data.userData.userName = updatedName;
-								}
-							}
-							onWindowFocusChanged(true);
 						}
 					} catch (Exception exception) {
 						exception.printStackTrace();
