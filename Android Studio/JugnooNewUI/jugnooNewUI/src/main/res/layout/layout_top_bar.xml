@@ -146,6 +146,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10px"
+            android:visibility="gone"
             android:src="@drawable/ic_schedule_button"
             android:padding="20px"
             android:tag="mwar"
@@ -186,6 +187,7 @@
         android:gravity="center"
         android:tag="@string/dont_touch_me"
         android:padding="5dp"
+        android:visibility="gone"
         android:layout_marginEnd="@dimen/dp_8"
         android:text="@string/cd_schedule_ride"/>
 </RelativeLayout>

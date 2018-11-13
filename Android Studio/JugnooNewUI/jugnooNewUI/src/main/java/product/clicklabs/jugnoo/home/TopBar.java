@@ -173,25 +173,16 @@ public class TopBar implements GACategory, GAAction {
                 || HomeActivity.passengerScreenMode == PassengerScreenMode.P_SEARCH
                 || HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
             imageViewHelp.setVisibility(View.GONE);
-            if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_INITIAL) {
-                imageViewScheduleRide.setVisibility(View.VISIBLE);
-                tvScheduleRidePopup.setVisibility(View.VISIBLE);
-            }else{
-                imageViewScheduleRide.setVisibility(View.GONE);
-                tvScheduleRidePopup.setVisibility(View.GONE);
-            }
+
         } else {
             imageViewHelp.setVisibility(View.VISIBLE);
-            imageViewScheduleRide.setVisibility(View.GONE);
-            tvScheduleRidePopup.setVisibility(View.GONE);
+
         }
         imageViewBack.setVisibility(View.GONE);
         textViewTitle.setText(activity.getResources().getString(R.string.rides));
         if (!defaultState) {
             imageViewMenu.setVisibility(View.GONE);
             imageViewHelp.setVisibility(View.GONE);
-            imageViewScheduleRide.setVisibility(View.VISIBLE);
-            tvScheduleRidePopup.setVisibility(View.VISIBLE);
             imageViewBack.setVisibility(View.VISIBLE);
             textViewTitle.setText(title);
         }

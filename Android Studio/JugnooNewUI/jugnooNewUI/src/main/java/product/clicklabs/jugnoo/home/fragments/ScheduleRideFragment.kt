@@ -162,34 +162,39 @@ class ScheduleRideFragment : Fragment(), Constants {
                 }
             }
             setScheduleRideVehicleListAdapter()
-            if (Data.autoData != null) {
-                if (Data.autoData.pickupLatLng != null) {
-                    val searchResult = HomeUtil.getNearBySavedAddress(getActivity(), Data.autoData.pickupLatLng,
-                            Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false)
-                    if (searchResult != null) {
-                        searchResultPickup = searchResult
-                    } else {
-                        searchResultPickup = SearchResult("", Data.autoData.getPickupAddress(Data.autoData.pickupLatLng), "",
-                                Data.autoData.pickupLatLng.latitude, Data.autoData.pickupLatLng.longitude)
-                    }
-                    searchResultReceived(searchResultPickup!!, PlaceSearchListFragment.PlaceSearchMode.PICKUP)
-                }
-                if (Data.autoData.dropLatLng != null) {
-                    val searchResult = HomeUtil.getNearBySavedAddress(getActivity(), Data.autoData.dropLatLng,
-                            Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false)
-                    if (searchResult != null) {
-                        searchResultDestination = searchResult
-                    } else {
-                        searchResultDestination = SearchResult("", Data.autoData.dropAddress, "",
-                                Data.autoData.dropLatLng.latitude, Data.autoData.dropLatLng.longitude)
-                    }
-                    searchResultReceived(searchResultDestination!!, PlaceSearchListFragment.PlaceSearchMode.DROP)
-                }
-            }
+            setPickupAndDropAddress()
         }
 
         updatePaymentOption()
     }
+
+    private fun setPickupAndDropAddress() {
+        if (Data.autoData != null) {
+            if (Data.autoData.pickupLatLng != null) {
+                val searchResult = HomeUtil.getNearBySavedAddress(getActivity(), Data.autoData.pickupLatLng,
+                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false)
+                if (searchResult != null) {
+                    searchResultPickup = searchResult
+                } else {
+                    searchResultPickup = SearchResult("", Data.autoData.getPickupAddress(Data.autoData.pickupLatLng), "",
+                            Data.autoData.pickupLatLng.latitude, Data.autoData.pickupLatLng.longitude)
+                }
+                searchResultReceived(searchResultPickup!!, PlaceSearchListFragment.PlaceSearchMode.PICKUP)
+            }
+            if (Data.autoData.dropLatLng != null) {
+                val searchResult = HomeUtil.getNearBySavedAddress(getActivity(), Data.autoData.dropLatLng,
+                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false)
+                if (searchResult != null) {
+                    searchResultDestination = searchResult
+                } else {
+                    searchResultDestination = SearchResult("", Data.autoData.dropAddress, "",
+                            Data.autoData.dropLatLng.latitude, Data.autoData.dropLatLng.longitude)
+                }
+                searchResultReceived(searchResultDestination!!, PlaceSearchListFragment.PlaceSearchMode.DROP)
+            }
+        }
+    }
+
     private fun setScheduleRideVehicleListAdapter() {
         rvVehiclesList.adapter = scheduleRideVehicleListAdapter
     }
@@ -251,10 +256,10 @@ class ScheduleRideFragment : Fragment(), Constants {
 
     fun searchResultReceived(searchResult: SearchResult, placeSearchMode: PlaceSearchListFragment.PlaceSearchMode) {
         if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-            tvPickup.text = searchResult.address
+            tvPickup.text = searchResult.nameForText
             searchResultPickup = searchResult
         } else {
-            tvDestination.text = searchResult.address
+            tvDestination.text = searchResult.nameForText
             searchResultDestination = searchResult
         }
     }

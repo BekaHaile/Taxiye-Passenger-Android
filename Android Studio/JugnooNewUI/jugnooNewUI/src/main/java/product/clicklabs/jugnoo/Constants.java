@@ -942,6 +942,8 @@ public interface Constants {
     String KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON = "show_fare_estimate_hover_button";
     String KEY_CASH_ABOVE_ALL_WALLETS = "cash_above_all_wallets";
     String KEY_FORCE_MPESA_PAYMENT= "force_mpesa_payment";
+    String SCHEDULE_RIDE_ENABLED= "schedule_ride_enabled";
+    String SHOW_TUT_SCHEDULE_RIDE= "show_tut_schedule_ride";
 
     String KEY_LUGGAGE_CHARGES = "luggage_charges";
     String KEY_PAY_VIA_STRIPE = "pay_via_stripe";

@@ -72,5 +72,6 @@
     <integer name="show_about">@integer/view_visible</integer>
     <bool name="wallet_amount_sidemenu">true</bool>
     <bool name="show_jugnoo_promo_icon">true</bool>
+    <bool name="schedule_ride_enabled">false</bool>
 
 </resources>

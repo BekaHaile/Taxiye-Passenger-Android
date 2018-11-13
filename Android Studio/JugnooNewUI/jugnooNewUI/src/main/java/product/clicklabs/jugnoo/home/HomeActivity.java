@@ -528,7 +528,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public boolean scheduleRideOpen;
     public int selectedIdForScheduleRide,selectedRideTypeForScheduleRide;
     public Region selectedRegionForScheduleRide = null;
-
+    public boolean isScheduleRideEnabled,showScheduleRideTut ;
+    private Runnable scheduleRideRunnable =  new Runnable() {
+        @Override
+        public void run() {
+            topBar.tvScheduleRidePopup.setVisibility(View.GONE);
+        }
+    };
 
     @SuppressLint("NewApi")
     @Override
@@ -591,7 +597,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         showAllDrivers = Prefs.with(this).getInt(SPLabels.SHOW_ALL_DRIVERS, 0);
         showDriverInfo = Prefs.with(this).getInt(SPLabels.SHOW_DRIVER_INFO, 0);
-
+        isScheduleRideEnabled = Prefs.with(this).getBoolean(Constants.SCHEDULE_RIDE_ENABLED, false);
+        showScheduleRideTut = Prefs.with(this).getBoolean(Constants.SHOW_TUT_SCHEDULE_RIDE, true);
         activityResumed = false;
         dropLocationSearched = false;
 
@@ -3749,6 +3756,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 showPokestopOnOffButton(mode);
 
+                setScheduleRideUI(mode);
+
                 try {
                     getTrackingLogHelper().startSyncService(mode, Data.userData.accessToken);
                 } catch (Exception e) {
@@ -3765,6 +3774,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setScheduleRideUI(PassengerScreenMode mode) {
+        if (mode == PassengerScreenMode.P_INITIAL && isScheduleRideEnabled && !scheduleRideOpen) {
+            topBar.imageViewScheduleRide.setVisibility(View.VISIBLE);
+            if(showScheduleRideTut){
+                showScheduleRideTut = false;
+                Prefs.with(this).save(Constants.SHOW_TUT_SCHEDULE_RIDE, false);
+                topBar.tvScheduleRidePopup.setVisibility(View.VISIBLE);
+                handler.postDelayed(scheduleRideRunnable,5 * 1000);
+            }else{
+                topBar.tvScheduleRidePopup.setVisibility(View.GONE);
+            }
+
+        }else{
+            topBar.tvScheduleRidePopup.setVisibility(View.GONE);
+            topBar.imageViewScheduleRide.setVisibility(View.GONE);
         }
     }
 
@@ -5238,6 +5265,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void onDestroy() {
         try {
+            handler.removeCallbacks(scheduleRideRunnable);
             startService(new Intent(this, DeleteCacheIntentService.class));
 
             GCMIntentService.clearNotifications(HomeActivity.this);
@@ -5309,6 +5337,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                 if(getScheduleRideFragment()!=null){
                                     getScheduleRideFragment().updateVehicleAdapter();
+                                    if(isScheduleRideEnabled && !TextUtils.isEmpty(Data.autoData.getFarAwayCity())){
+                                        DialogPopup.alertPopup(HomeActivity.this,"",Data.autoData.getFarAwayCity());
+                                    }
                                 }
 
                                 if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
@@ -7108,7 +7139,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void run() {
                 try {
-                    if (!isSpecialPickupScreenOpened()) {
+                    if (!isSpecialPickupScreenOpened() && !scheduleRideOpen) {
                         callMapTouchedRefreshDrivers();
                     }
                 } catch (Exception e) {
