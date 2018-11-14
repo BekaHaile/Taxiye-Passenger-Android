@@ -384,7 +384,6 @@ public class TransactionUtils {
     public void openScheduleRideFragment(FragmentActivity activity, View container) {
         if (!checkIfFragmentAdded(activity, ScheduleRideFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in, 0)
                     .add(container.getId(), ScheduleRideFragment.Companion.newInstance(),
                             ScheduleRideFragment.class.getName())
                     .addToBackStack(ScheduleRideFragment.class.getName())
