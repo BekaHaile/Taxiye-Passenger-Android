@@ -347,7 +347,7 @@ class ScheduleRideFragment : Fragment(), Constants {
     }
 
     private fun setSelectedRegionData() {
-        val regionSelected = (activity as HomeActivity).selectedRegionForScheduleRide
+        var regionSelected = (activity as HomeActivity).selectedRegionForScheduleRide
 
         if (Data.autoData.regions.size > 0) {
 
@@ -357,7 +357,7 @@ class ScheduleRideFragment : Fragment(), Constants {
                     if (Data.autoData.regions[i].operatorId == regionSelected.getOperatorId()
                             && Data.autoData.regions[i].regionId == regionSelected.getRegionId()
                             && Data.autoData.regions[i].vehicleType == regionSelected.getVehicleType()) {
-                        (activity as HomeActivity).selectedRegionForScheduleRide = Data.autoData.regions[i]
+                        regionSelected = Data.autoData.regions[i]
                         matched = true
                         break
                     }
@@ -365,10 +365,11 @@ class ScheduleRideFragment : Fragment(), Constants {
             }
 
             if (!matched) {
-                (activity as HomeActivity).selectedRegionForScheduleRide = Data.autoData.regions[0]
+                regionSelected = Data.autoData.regions[0]
             }
 
             with(regionSelected) {
+                (activity as HomeActivity).selectedRegionForScheduleRide = this
                 (activity as HomeActivity).selectedIdForScheduleRide = regionId!!
                 (activity as HomeActivity).selectedRideTypeForScheduleRide = rideType!!
             }
