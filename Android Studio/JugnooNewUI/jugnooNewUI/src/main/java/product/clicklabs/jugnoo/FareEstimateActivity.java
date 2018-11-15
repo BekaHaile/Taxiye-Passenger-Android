@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -238,7 +237,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                             String str = (new Gson()).toJson(searchResultGlobal);
                             intent.putExtra(Constants.KEY_SEARCH_RESULT, str);
                         }
-                        intent.putExtra(Constants.KEY_SCHEDULE_RIDE, true);
+                        intent.putExtra(Constants.KEY_SCHEDULE_RIDE, false);
                         setResult(RESULT_OK, intent);
                         GAUtils.event(RIDES, GAAction.FARE_ESTIMATE, GET + RIDE + CLICKED);
                         performBackPressed();

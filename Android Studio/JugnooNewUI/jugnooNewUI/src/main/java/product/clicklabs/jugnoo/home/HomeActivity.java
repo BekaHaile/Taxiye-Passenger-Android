@@ -5053,11 +5053,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     try {
 
 
-                        if(data.hasExtra(KEY_SCHEDULE_RIDE)){
-                            if(data.getBooleanExtra(KEY_SCHEDULE_RIDE,false)){
-                                super.onBackPressed();
-                            }
-
+                        if(data.getBooleanExtra(KEY_SCHEDULE_RIDE,false)){
+                            super.onBackPressed();
                             return;
                         }
                         if (data.hasExtra(KEY_SEARCH_RESULT)) {
