@@ -126,6 +126,9 @@ class ScheduleRideFragment : Fragment(), Constants {
                     } else if (TextUtils.isEmpty(selectedTime)) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_time))
                         throw Exception()
+                    } else if (!TextUtils.isEmpty(Data.autoData.getFarAwayCity())) {
+                        Utils.showToast(activity, Data.autoData.getFarAwayCity())
+                        throw Exception()
                     } else if ((activity as HomeActivity).selectedIdForScheduleRide <= 0) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_vehicle))
                         throw Exception()
