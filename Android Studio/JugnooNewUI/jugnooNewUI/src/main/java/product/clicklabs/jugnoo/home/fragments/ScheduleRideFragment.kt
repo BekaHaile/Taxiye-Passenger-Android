@@ -126,7 +126,7 @@ class ScheduleRideFragment : Fragment(), Constants {
                     } else if (TextUtils.isEmpty(selectedTime)) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_time))
                         throw Exception()
-                    } else if ((activity as HomeActivity).selectedIdForScheduleRide == 0) {
+                    } else if ((activity as HomeActivity).selectedIdForScheduleRide <= 0) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_vehicle))
                         throw Exception()
                     } else {
@@ -147,6 +147,7 @@ class ScheduleRideFragment : Fragment(), Constants {
 
                 }
             }
+            setSelectedRegionData()
             setScheduleRideVehicleListAdapter()
             setPickupAndDropAddress()
         }
@@ -335,12 +336,47 @@ class ScheduleRideFragment : Fragment(), Constants {
 
     }
 
-    fun updateVehicleAdapter(){
-        if (view!=null) {
+    fun updateVehicleAdapter() {
+        if (view != null) {
+            setSelectedRegionData()
             scheduleRideVehicleListAdapter.notifyDataSetChanged()
         }
     }
 
+    private fun setSelectedRegionData() {
+        val regionSelected = (activity as HomeActivity).selectedRegionForScheduleRide
+
+        if (Data.autoData.regions.size > 0) {
+
+            var matched = false
+            if (regionSelected != null) {
+                for (i in 0 until Data.autoData.regions.size) {
+                    if (Data.autoData.regions[i].operatorId == regionSelected.getOperatorId()
+                            && Data.autoData.regions[i].regionId == regionSelected.getRegionId()
+                            && Data.autoData.regions[i].vehicleType == regionSelected.getVehicleType()) {
+                        (activity as HomeActivity).selectedRegionForScheduleRide = Data.autoData.regions[i]
+                        matched = true
+                        break
+                    }
+                }
+            }
+
+            if (!matched) {
+                (activity as HomeActivity).selectedRegionForScheduleRide = Data.autoData.regions[0]
+            }
+
+            with(regionSelected) {
+                (activity as HomeActivity).selectedIdForScheduleRide = regionId!!
+                (activity as HomeActivity).selectedRideTypeForScheduleRide = rideType!!
+            }
+
+
+        } else {
+            (activity as HomeActivity).selectedIdForScheduleRide = -1
+            (activity as HomeActivity).selectedRideTypeForScheduleRide = -1
+            (activity as HomeActivity).selectedRegionForScheduleRide = null
+        }
+    }
 
 
 }
