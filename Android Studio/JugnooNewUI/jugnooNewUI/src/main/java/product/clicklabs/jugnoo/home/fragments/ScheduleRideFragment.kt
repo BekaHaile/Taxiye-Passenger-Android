@@ -7,43 +7,29 @@ import android.content.Intent
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.DatePicker
-import android.widget.TextView
-import android.widget.TimePicker
-import android.widget.Toast
 import com.sabkuchfresh.analytics.GAAction
 import com.sabkuchfresh.analytics.GACategory
 import com.sabkuchfresh.analytics.GAUtils
-import com.sabkuchfresh.home.CallbackPaymentOptionSelector
-
 import com.sabkuchfresh.pros.utils.DatePickerFragment
 import com.sabkuchfresh.pros.utils.TimePickerFragment
 import com.sabkuchfresh.utils.Utils
 import kotlinx.android.synthetic.main.fragment_schedule_ride.*
 import product.clicklabs.jugnoo.*
-import product.clicklabs.jugnoo.datastructure.PaymentOption
-
-import java.util.Calendar
-
-import product.clicklabs.jugnoo.home.adapters.ScheduleRideVehicleListAdapter
 import product.clicklabs.jugnoo.datastructure.SearchResult
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment
 import product.clicklabs.jugnoo.home.HomeActivity
 import product.clicklabs.jugnoo.home.HomeUtil
+import product.clicklabs.jugnoo.home.adapters.ScheduleRideVehicleListAdapter
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog
 import product.clicklabs.jugnoo.home.models.Region
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.Fonts
-import java.time.format.TextStyle
+import java.util.*
 
 
 class ScheduleRideFragment : Fragment(), Constants {
@@ -140,7 +126,7 @@ class ScheduleRideFragment : Fragment(), Constants {
                     } else if (TextUtils.isEmpty(selectedTime)) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_time))
                         throw Exception()
-                    } else if ((activity as HomeActivity).selectedIdForScheduleRide == 0) {
+                    } else if ((activity as HomeActivity).selectedIdForScheduleRide <= 0) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_vehicle))
                         throw Exception()
                     } else {
@@ -161,6 +147,7 @@ class ScheduleRideFragment : Fragment(), Constants {
 
                 }
             }
+            setSelectedRegionData()
             setScheduleRideVehicleListAdapter()
             setPickupAndDropAddress()
         }
@@ -349,12 +336,47 @@ class ScheduleRideFragment : Fragment(), Constants {
 
     }
 
-    fun updateVehicleAdapter(){
-        if (view!=null) {
+    fun updateVehicleAdapter() {
+        if (view != null) {
+            setSelectedRegionData()
             scheduleRideVehicleListAdapter.notifyDataSetChanged()
         }
     }
 
+    private fun setSelectedRegionData() {
+        val regionSelected = (activity as HomeActivity).selectedRegionForScheduleRide
+
+        if (Data.autoData.regions.size > 0) {
+
+            var matched = false
+            if (regionSelected != null) {
+                for (i in 0 until Data.autoData.regions.size) {
+                    if (Data.autoData.regions[i].operatorId == regionSelected.getOperatorId()
+                            && Data.autoData.regions[i].regionId == regionSelected.getRegionId()
+                            && Data.autoData.regions[i].vehicleType == regionSelected.getVehicleType()) {
+                        (activity as HomeActivity).selectedRegionForScheduleRide = Data.autoData.regions[i]
+                        matched = true
+                        break
+                    }
+                }
+            }
+
+            if (!matched) {
+                (activity as HomeActivity).selectedRegionForScheduleRide = Data.autoData.regions[0]
+            }
+
+            with(regionSelected) {
+                (activity as HomeActivity).selectedIdForScheduleRide = regionId!!
+                (activity as HomeActivity).selectedRideTypeForScheduleRide = rideType!!
+            }
+
+
+        } else {
+            (activity as HomeActivity).selectedIdForScheduleRide = -1
+            (activity as HomeActivity).selectedRideTypeForScheduleRide = -1
+            (activity as HomeActivity).selectedRegionForScheduleRide = null
+        }
+    }
 
 
 }

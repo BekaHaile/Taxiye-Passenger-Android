@@ -18,19 +18,6 @@ import product.clicklabs.jugnoo.utils.Utils
 class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList: ArrayList<Region>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
-    init {
-        if(vehicleList.size>0){
-            vehicleList[0].run {
-                activity.selectedIdForScheduleRide = regionId!!
-                activity.selectedRideTypeForScheduleRide = rideType!!
-                activity.selectedRegionForScheduleRide = this
-            }
-        }else{
-            activity.selectedIdForScheduleRide = -1
-            activity.selectedRideTypeForScheduleRide = -1
-            activity.selectedRegionForScheduleRide = null
-        }
-    }
     override fun getItemCount(): Int {
         return vehicleList.size
     }
