@@ -154,6 +154,8 @@ object GoogleRestApis {
     }
 
     fun geocode(latLng: String, language: String, callback: Callback<GoogleGeocodeResponse>) {
+        if (checkApiLimit(callback)) return
+
         Log.i("GoogleRestApi", "geocode")
         if (MAPS_APIS_SIGN()) {
             val urlToSign = ("/maps/api/geocode/json?" +
@@ -174,6 +176,34 @@ object GoogleRestApis {
         if(latLng.contains(",")) {
             logGoogleRestAPIC(latLng.split(",")[0], latLng.split(",")[1], API_NAME_GEOCODE)
         }
+    }
+
+    private fun checkApiLimit(callback: Callback<GoogleGeocodeResponse>): Boolean {
+        if(Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CUSTOMER_GEOCODE_LIMIT_ENABLED, 0) == 0){
+            return false
+        }
+        val firstTime = Prefs.with(MyApplication.getInstance()).getLong(Constants.SP_FIRST_GEOCODE_TIMESTAMP, 0L)
+        var apiCount = Prefs.with(MyApplication.getInstance()).getInt(Constants.SP_GEOCODE_HITS_COUNT, 0)
+        val timeLimitMillis = Prefs.with(MyApplication.getInstance()).getLong(Constants.KEY_CUSTOMER_GEOCODE_TIME_LIMIT, Constants.DAY_MILLIS)
+        val apiCountLimit = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CUSTOMER_GEOCODE_HIT_LIMIT, 30)
+
+        val currentTime = System.currentTimeMillis()
+        val timeDIff = currentTime - firstTime
+
+        if (firstTime > 0 && timeDIff < timeLimitMillis && apiCount >= apiCountLimit) {
+            val t = GoogleGeocodeResponse()
+            t.status = "DENIED"
+            t.results = arrayListOf()
+            callback.success(t, null)
+            return true
+        } else if (firstTime == 0L || timeDIff >= timeLimitMillis) {
+            Prefs.with(MyApplication.getInstance()).save(Constants.SP_FIRST_GEOCODE_TIMESTAMP, currentTime)
+            apiCount = 1
+        } else if (apiCount < apiCountLimit) {
+            apiCount++
+        }
+        Prefs.with(MyApplication.getInstance()).save(Constants.SP_GEOCODE_HITS_COUNT, apiCount)
+        return false
     }
 
 

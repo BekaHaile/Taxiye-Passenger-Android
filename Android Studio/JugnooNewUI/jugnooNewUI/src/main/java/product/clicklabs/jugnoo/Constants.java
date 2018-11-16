@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Created by socomo20 on 12/11/15.
@@ -972,4 +973,11 @@ public interface Constants {
     String KEY_SCHEDULE_RIDE_FORMATED_DATE_TIME = "schedule_ride_formated_date_time";
     String KEY_SCHEDULE_RIDE_SELECTED_REGION_ID = "schedule_ride_selected_region_id";
     String KEY_PICKUP_TIME = "pickup_time";
+	@Nullable
+	String SP_FIRST_GEOCODE_TIMESTAMP = "first_geocode_timestamp";
+	String SP_GEOCODE_HITS_COUNT = "geocode_hits_count";
+
+    String KEY_CUSTOMER_GEOCODE_TIME_LIMIT = "customer_geocode_time_limit";
+    String KEY_CUSTOMER_GEOCODE_HIT_LIMIT = "customer_geocode_hit_limit";
+    String KEY_CUSTOMER_GEOCODE_LIMIT_ENABLED = "customer_geocode_limit_enabled";
 }
