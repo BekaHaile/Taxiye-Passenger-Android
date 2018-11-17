@@ -390,6 +390,10 @@ public class JSONParser implements Constants {
                     autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject, context.getString(R.string.app_name))));
 
             Utils.setCurrencyPrecision(context, autoData.optInt(Constants.KEY_CURRENCY_PRECISION, 0));
+            Prefs.with(context).save(Constants.SCHEDULE_CURRENT_TIME_DIFF,
+                    autoData.optInt(Constants.SCHEDULE_CURRENT_TIME_DIFF,30));
+             Prefs.with(context).save(Constants.SCHEDULE_DAYS_LIMIT,
+                    autoData.optInt(Constants.SCHEDULE_DAYS_LIMIT,2));
 
             parseConfigParams(context, autoData);
         } catch (Exception e) {

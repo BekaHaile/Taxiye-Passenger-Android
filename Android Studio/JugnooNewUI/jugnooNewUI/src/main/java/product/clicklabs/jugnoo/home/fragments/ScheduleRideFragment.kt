@@ -20,6 +20,8 @@ import com.sabkuchfresh.pros.utils.TimePickerFragment
 import com.sabkuchfresh.utils.Utils
 import kotlinx.android.synthetic.main.fragment_schedule_ride.*
 import product.clicklabs.jugnoo.*
+import product.clicklabs.jugnoo.Constants.SCHEDULE_CURRENT_TIME_DIFF
+import product.clicklabs.jugnoo.Constants.SCHEDULE_DAYS_LIMIT
 import product.clicklabs.jugnoo.datastructure.SearchResult
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment
 import product.clicklabs.jugnoo.home.HomeActivity
@@ -29,6 +31,7 @@ import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog
 import product.clicklabs.jugnoo.home.models.Region
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.Fonts
+import product.clicklabs.jugnoo.utils.Prefs
 import java.util.*
 
 
@@ -45,7 +48,8 @@ class ScheduleRideFragment : Fragment(), Constants {
     private val scheduleRideVehicleListAdapter by lazy{ ScheduleRideVehicleListAdapter(getActivity() as HomeActivity, Data.autoData.regions) }
     internal var searchResultPickup: SearchResult? = null
     internal var searchResultDestination: SearchResult? = null
-
+    var minBufferTimeCurrent = 30
+    var scheduleDaysLimit = 2
     private val onTimeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute -> setTimeToVars(hourOfDay.toString() + ":" + minute + ":00") }
     private val onDateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
         val date = year.toString() + "-" + (month + 1) + "-" + dayOfMonth
@@ -55,7 +59,7 @@ class ScheduleRideFragment : Fragment(), Constants {
             getTimePickerFragment().show(childFragmentManager, "timePicker", onTimeSetListener)
 
         } else {
-            Utils.showToast(activity, activity!!.getString(R.string.incorrect_schedule_time,MIN_BUFFER_TIME_MINS))
+            Utils.showToast(activity, activity!!.getString(R.string.incorrect_schedule_time,minBufferTimeCurrent,scheduleDaysLimit))
         }
     }
 
@@ -150,6 +154,9 @@ class ScheduleRideFragment : Fragment(), Constants {
 
                 }
             }
+            minBufferTimeCurrent = Prefs.with(requireContext()).getInt(SCHEDULE_CURRENT_TIME_DIFF,30);
+            scheduleDaysLimit = Prefs.with(requireContext()).getInt(SCHEDULE_DAYS_LIMIT,2);
+
             setSelectedRegionData()
             setScheduleRideVehicleListAdapter()
             setPickupAndDropAddress()
@@ -193,6 +200,7 @@ class ScheduleRideFragment : Fragment(), Constants {
         if (datePickerFragment == null) {
             val bundle = Bundle()
             bundle.putSerializable(DatePickerFragment.ADD_DAYS, false)
+            bundle.putSerializable(DatePickerFragment.MAX_LIMIT_DAYS, scheduleDaysLimit)
             datePickerFragment = DatePickerFragment()
             datePickerFragment!!.arguments = bundle
         }
@@ -203,16 +211,17 @@ class ScheduleRideFragment : Fragment(), Constants {
         if (timePickerFragment == null) {
             timePickerFragment = TimePickerFragment()
             val bundle = Bundle()
-            bundle.putInt(TimePickerFragment.ADDITIONAL_TIME_MINUTES, MIN_BUFFER_TIME_MINS + BUFFER_TIME_TO_SELECT_MINS)
+            bundle.putInt(TimePickerFragment.ADDITIONAL_TIME_MINUTES, minBufferTimeCurrent + BUFFER_TIME_TO_SELECT_MINS)
             timePickerFragment!!.arguments = bundle
         }
         return timePickerFragment!!
     }
 
     private fun validateDateTime(date: String?, time: String?): Boolean {
-        val currentTimePlus24Hrs = DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), MIN_BUFFER_TIME_MINS, Calendar.MINUTE)
-        return DateOperations.getTimeDifference(getFormattedDateTime(date, time, true), currentTimePlus24Hrs) > 0 && DateOperations.getTimeDifference(getFormattedDateTime(date, time, false),
-                DateOperations.addCalendarFieldValueToDateTime(currentTimePlus24Hrs, 31, Calendar.DAY_OF_MONTH)) < 0
+        val currentTimePlus24Hrs = DateOperations.addCalendarFieldValueToDateTime(DateOperations.getCurrentTime(), minBufferTimeCurrent, Calendar.MINUTE)
+        return  DateOperations.getTimeDifference(getFormattedDateTime(date, time, true), currentTimePlus24Hrs) > 0 &&
+                DateOperations.getTimeDifference(getFormattedDateTime(date, time, false),
+                DateOperations.addCalendarFieldValueToDateTime(currentTimePlus24Hrs, scheduleDaysLimit, Calendar.DAY_OF_MONTH)) < 0
     }
 
 
@@ -222,7 +231,7 @@ class ScheduleRideFragment : Fragment(), Constants {
         if (TextUtils.isEmpty(selectedDate) || TextUtils.isEmpty(selectedTime)) {
             val calendar = Calendar.getInstance()
             if (TextUtils.isEmpty(selectedTime)) {
-                calendar.add(Calendar.MINUTE, if (addHours) MIN_BUFFER_TIME_MINS + BUFFER_TIME_TO_SELECT_MINS else 0)
+                calendar.add(Calendar.MINUTE, if (addHours) minBufferTimeCurrent + BUFFER_TIME_TO_SELECT_MINS else 0)
                 selectedTime = calendar.get(Calendar.HOUR_OF_DAY).toString() + ":" + calendar.get(Calendar.MINUTE) + ":00"
             }
             if (TextUtils.isEmpty(selectedDate)) {
@@ -239,7 +248,7 @@ class ScheduleRideFragment : Fragment(), Constants {
             tvSelectDateTime.text = DateOperations.getDateFormatted(selectedDate) + " " + display
             return true
         } else {
-            Utils.showToast(activity, activity!!.getString(R.string.incorrect_schedule_time,MIN_BUFFER_TIME_MINS))
+            Utils.showToast(activity, activity!!.getString(R.string.incorrect_schedule_time,minBufferTimeCurrent,scheduleDaysLimit))
             return false
         }
     }
@@ -287,7 +296,7 @@ class ScheduleRideFragment : Fragment(), Constants {
     }
 
     companion object {
-        val MIN_BUFFER_TIME_MINS = 30
+
         val BUFFER_TIME_TO_SELECT_MINS = 5
 
         fun newInstance(): ScheduleRideFragment {

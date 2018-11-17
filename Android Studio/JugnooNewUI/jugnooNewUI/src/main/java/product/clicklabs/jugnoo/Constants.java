@@ -952,4 +952,6 @@ public interface Constants {
     String KEY_SCHEDULE_RIDE_FORMATED_DATE_TIME = "schedule_ride_formated_date_time";
     String KEY_SCHEDULE_RIDE_SELECTED_REGION_ID = "schedule_ride_selected_region_id";
     String KEY_PICKUP_TIME = "pickup_time";
+    String SCHEDULE_CURRENT_TIME_DIFF = "schedule_current_time_diff";
+    String SCHEDULE_DAYS_LIMIT = "schedule_days_limit";
 }
