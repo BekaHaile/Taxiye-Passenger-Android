@@ -23,6 +23,7 @@ public class DatePickerFragment extends DialogFragment
 
 	private DatePickerDialog.OnDateSetListener onDateSetListener;
 
+	public static final String MAX_LIMIT_DAYS = "max_limit_days";
 
 	public static final String ADD_DAYS = "add_days";
 	private DatePickerDialog datePickerDialog;
@@ -56,7 +57,8 @@ public class DatePickerFragment extends DialogFragment
 		dialog.getDatePicker().setMinDate(c.getTimeInMillis());
 		dialog.getDatePicker().updateDate(year, month, day);
 
-		c.add(Calendar.DAY_OF_MONTH, 30);
+
+		c.add(Calendar.DAY_OF_MONTH, getArguments().getInt(MAX_LIMIT_DAYS,30));
 		dialog.getDatePicker().setMaxDate(c.getTimeInMillis());
 
 		datePickerDialog = dialog;
@@ -77,7 +79,7 @@ public class DatePickerFragment extends DialogFragment
 			if(!getArguments().containsKey(ADD_DAYS) || getArguments().getBoolean(ADD_DAYS))
                 c.add(Calendar.DAY_OF_MONTH, 2);
             else
-                c.add(Calendar.MINUTE, AnywhereHomeFragment.MIN_BUFFER_TIME_MINS+AnywhereHomeFragment.BUFFER_TIME_TO_SELECT_MINS);
+              c.add(Calendar.MINUTE, AnywhereHomeFragment.minBufferTimeCurrent+AnywhereHomeFragment.BUFFER_TIME_TO_SELECT_MINS);
 			int year = c.get(Calendar.YEAR);
 			int month = c.get(Calendar.MONTH);
 			int day = c.get(Calendar.DAY_OF_MONTH);
