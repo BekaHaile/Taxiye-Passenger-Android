@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -121,6 +122,7 @@ import java.util.ArrayList;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -225,6 +227,7 @@ import product.clicklabs.jugnoo.utils.FrameAnimDrawable;
 import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
 import product.clicklabs.jugnoo.utils.MapStateListener;
@@ -5931,7 +5934,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 textView.setHint(R.string.getting_address);
                 GoogleRestApis.INSTANCE.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                        "en", new GeocodeCallback(mGeoDataClient) {
+                        LocaleHelper.getLanguage(this), new GeocodeCallback(mGeoDataClient) {
                             @Override
                             public void onSuccess(GoogleGeocodeResponse settleUserDebt, Response response) {
                                 try {

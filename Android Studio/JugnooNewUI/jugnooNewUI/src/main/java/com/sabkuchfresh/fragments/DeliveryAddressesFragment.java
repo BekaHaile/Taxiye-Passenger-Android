@@ -72,6 +72,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleRestApis;
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
@@ -748,7 +749,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
             params.put("sensor", "false");
 
 
-            GoogleRestApis.INSTANCE.geocode(latLng.latitude + "," + latLng.longitude, Locale.getDefault().getCountry(), new Callback<GoogleGeocodeResponse>() {
+            GoogleRestApis.INSTANCE.geocode(latLng.latitude + "," + latLng.longitude, LocaleHelper.getLanguage(activity), new Callback<GoogleGeocodeResponse>() {
                 @Override
                 public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
                     try {

@@ -19,7 +19,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -221,6 +220,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -3932,7 +3932,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             DialogPopup.showLoadingDialog(this, "Loading...");
             GoogleRestApis.INSTANCE.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                    "en", new GeocodeCallback(mGeoDataClient) {
+                    LocaleHelper.getLanguage(this), new GeocodeCallback(mGeoDataClient) {
                         @Override
                         public void onSuccess(GoogleGeocodeResponse settleUserDebt, Response response) {
                             try {

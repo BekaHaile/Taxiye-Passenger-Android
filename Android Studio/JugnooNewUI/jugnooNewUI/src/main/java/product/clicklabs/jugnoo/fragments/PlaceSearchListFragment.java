@@ -56,6 +56,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleRestApis;
+import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -672,7 +673,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			params.put("language", Locale.getDefault().getCountry());
 			params.put("sensor", "false");
 
-			GoogleRestApis.INSTANCE.geocode(latLng.latitude + "," + latLng.longitude, Locale.getDefault().getCountry(), new GeocodeCallback(geoDataClient) {
+			GoogleRestApis.INSTANCE.geocode(latLng.latitude + "," + latLng.longitude, LocaleHelper.getLanguage(activity), new GeocodeCallback(geoDataClient) {
 				@Override
 				public void onSuccess(GoogleGeocodeResponse geocodeResponse, Response response) {
 					try {
