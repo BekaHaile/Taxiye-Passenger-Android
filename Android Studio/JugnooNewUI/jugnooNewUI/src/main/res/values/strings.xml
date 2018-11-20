@@ -1264,7 +1264,7 @@
     <string name="service_date_colon_format">Service Date: %s</string>
     <string name="upon_inspection">Upon Inspection</string>
     <string name="please_select_appropriate_time">Please select an appropriate future date and time.</string>
-    <string name="incorrect_schedule_time">Rides can only be schedule from %d minutes after current time.</string>
+    <string name="incorrect_schedule_time">Rides can only be scheduled from %1d minutes after current time up to next %2d day(s).</string>
     <string name="booking_cancelled_successfully">Your booking is cancelled successfully.</string>
     <string name="cancel_booking">Cancel Booking</string>
     <string name="service_hash_format">Service #%s</string>
@@ -1972,4 +1972,5 @@
     <string name="are_you_sure_delete_schedule_ride">Are you sure you want to cancel the scheduled ride?</string>
     <string name="booking_scheduled_successfully">Booking scheduled successfully.</string>
     <string name="no_scheduled_rides">No Rides Scheduled currently</string>
+    <string name="pay_via_format">Pay via %s</string>
 </resources>

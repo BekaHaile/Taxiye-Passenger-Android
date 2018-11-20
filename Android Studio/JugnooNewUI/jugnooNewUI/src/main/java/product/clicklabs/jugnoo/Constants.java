@@ -964,7 +964,6 @@ public interface Constants {
     String KEY_CUSTOMER_PLAY_SOUND_RIDE_END = "customer_play_sound_ride_end";
     String KEY_DIRECT_CONFIRM = "direct_confirm";
     String KEY_PICKUP_DROP_LIKE_ENABLED = "customer_pickup_drop_like_enabled";
-	@NotNull
 	String KEY_API_NAME = "api_name";
 	String KEY_CUSTOMER_GOOGLE_APIS_LOGGING = "customer_google_apis_logging";
 	String KEY_CUSTOMER_MYLOCATION_TRACKING = "customer_mylocation_tracking";
@@ -973,11 +972,13 @@ public interface Constants {
     String KEY_SCHEDULE_RIDE_FORMATED_DATE_TIME = "schedule_ride_formated_date_time";
     String KEY_SCHEDULE_RIDE_SELECTED_REGION_ID = "schedule_ride_selected_region_id";
     String KEY_PICKUP_TIME = "pickup_time";
-	@Nullable
+
 	String SP_FIRST_GEOCODE_TIMESTAMP = "first_geocode_timestamp";
 	String SP_GEOCODE_HITS_COUNT = "geocode_hits_count";
 
     String KEY_CUSTOMER_GEOCODE_TIME_LIMIT = "customer_geocode_time_limit";
     String KEY_CUSTOMER_GEOCODE_HIT_LIMIT = "customer_geocode_hit_limit";
     String KEY_CUSTOMER_GEOCODE_LIMIT_ENABLED = "customer_geocode_limit_enabled";
+    String SCHEDULE_CURRENT_TIME_DIFF = "schedule_current_time_diff";
+    String SCHEDULE_DAYS_LIMIT = "schedule_days_limit";
 }
