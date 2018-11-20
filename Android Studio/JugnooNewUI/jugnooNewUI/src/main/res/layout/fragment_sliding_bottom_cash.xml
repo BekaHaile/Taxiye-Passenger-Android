@@ -18,7 +18,9 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:layout_marginBottom="15px">
+        android:layout_marginBottom="15px"
+        android:animateLayoutChanges="true"
+        >
 
 
 
@@ -434,6 +436,47 @@
                 />
 
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llCorporate"
+            android:layout_width="match_parent"
+            android:tag="@string/dont_touch_me"
+            android:layout_height="@dimen/dp_43"
+            android:layout_marginStart="@dimen/dp_15"
+            android:layout_marginEnd="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_7"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            android:background="@drawable/bg_white_r_bthin"
+            >
+
+            <ImageView
+                android:id="@+id/ivCorporate"
+                android:layout_width="@dimen/dp_17"
+                android:layout_height="@dimen/dp_17"
+                android:layout_marginStart="@dimen/dp_11"
+                android:src="@drawable/ic_radio_button_normal"
+                />
+
+            <TextView
+                android:id="@+id/tvCorporate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_15"
+                android:text="@string/corporate"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_15"
+                app:typekitFont="@string/maven"
+                />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvCorporates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            />
 
     </LinearLayout>
     </LinearLayout>

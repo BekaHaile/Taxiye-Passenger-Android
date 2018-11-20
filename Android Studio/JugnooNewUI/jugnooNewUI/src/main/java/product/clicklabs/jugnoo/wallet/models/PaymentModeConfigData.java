@@ -61,6 +61,8 @@ public class PaymentModeConfigData {
 			paymentOption = PaymentOption.UPI_RAZOR_PAY.getOrdinal();
 		}else if(Constants.KEY_ICICI_UPI.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.ICICI_UPI.getOrdinal();
+		} else if(Constants.KEY_CORPORATE.equalsIgnoreCase(name)){
+			paymentOption = PaymentOption.CORPORATE.getOrdinal();
 		} else if(Constants.KEY_MPESA.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.MPESA.getOrdinal();
 		} else if(Constants.KEY_STRIPE_CARDS.equalsIgnoreCase(name)|| Constants.KEY_ACCEPT_CARDS.equalsIgnoreCase(name)

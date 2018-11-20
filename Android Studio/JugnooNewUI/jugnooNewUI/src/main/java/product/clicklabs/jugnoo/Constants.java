@@ -396,6 +396,7 @@ public interface Constants {
     String KEY_PAY_STACK_CARDS = "paystack_cards";
     String KEY_RAZORPAY = "razorpay";
     String KEY_UPI_RAZORPAY = "upi_razorpay";
+    String KEY_CORPORATE = "corporate";
     String KEY_BALANCE = "balance";
     String KEY_WALLET_TYPE = "wallet_type";
     String KEY_ADD_CARD_DRIVER_TIP = "add_card_driver_tip";
@@ -1000,6 +1001,7 @@ public interface Constants {
     String KEY_CUSTOMER_SHOW_ADD_SAVED_PLACE = "customer_show_add_saved_place";
 
     String HIPPO_SUPPORT_FAQ_NAME = "customer_hippo_support_faq_name";
+    String KEY_MANUAL_RIDE_REQUEST = "manual_ride_request";
     String KEY_CUSTOMER_TIP_VALUES = "customer_tip_values";
     String KEY_CUSTOMER_SHOW_SURGE_ICON = "customer_show_surge_icon";
     String KEY_CUSTOMER_PRIORITY_TIP_TITLE = "customer_priority_tip_title";

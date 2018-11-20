@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
+import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.utils.MapUtils;
 
@@ -59,6 +60,8 @@ public class AutoData {
     private String distanceUnit;
     private int isTipEnabled;
     private int showRegionSpecificFare;
+
+    private ArrayList<Corporate> corporatesFetched;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -567,5 +570,25 @@ public class AutoData {
 
     public void setShowRegionSpecificFare(int showRegionSpecificFare) {
         this.showRegionSpecificFare = showRegionSpecificFare;
+    }
+
+    public ArrayList<Corporate> getCorporatesFetched() {
+        if(corporatesFetched == null){
+            corporatesFetched = new ArrayList<>();
+        }
+        return corporatesFetched;
+    }
+
+    public Corporate getSelectedCorporate(){
+        for(Corporate corp : getCorporatesFetched()){
+            if(corp.getSelected()) {
+                return corp;
+            }
+        }
+        return null;
+    }
+
+    public void setCorporatesFetched(ArrayList<Corporate> corporatesFetched) {
+        this.corporatesFetched = corporatesFetched;
     }
 }

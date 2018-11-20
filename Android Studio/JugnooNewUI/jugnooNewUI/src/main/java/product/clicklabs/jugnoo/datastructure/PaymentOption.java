@@ -12,7 +12,8 @@ public enum PaymentOption {
 	MPESA(8),
 	STRIPE_CARDS(9),
 	ACCEPT_CARD(11),
-	PAY_STACK_CARD(12);
+	PAY_STACK_CARD(12),
+	CORPORATE(18);
 
 	private int ordinal;
 

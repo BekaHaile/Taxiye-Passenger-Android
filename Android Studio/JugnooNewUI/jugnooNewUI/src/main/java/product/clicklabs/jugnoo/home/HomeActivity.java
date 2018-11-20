@@ -210,6 +210,8 @@ import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.Corporate;
+import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -7880,6 +7882,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
 
                                 nameValuePairs.put(Constants.KEY_PREFERRED_PAYMENT_MODE, "" + Data.autoData.getPickupPaymentOption());
+								if(Data.autoData.getPickupPaymentOption() == PaymentOption.CORPORATE.getOrdinal()){
+									nameValuePairs.put(Constants.KEY_MANUAL_RIDE_REQUEST, "" + Data.autoData.getSelectedCorporate().getBusinessId());
+								}
                                 nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(regionSelected.getVehicleType()));
                                 nameValuePairs.put(KEY_REVERSE_BID, String.valueOf(regionSelected.getReverseBid()));
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(regionSelected.getRegionId()));
@@ -10720,6 +10725,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private CallbackPaymentOptionSelector callbackPaymentOptionSelector = new CallbackPaymentOptionSelector() {
         @Override
         public void onPaymentOptionSelected(PaymentOption paymentOption) {
+            if(paymentOption == PaymentOption.CORPORATE){
+                fetchCorporates(paymentOption);
+                return;
+            }
             Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
             getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
             getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
@@ -10795,4 +10804,38 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public boolean showSurgeIcon(){
         return Prefs.with(this).getInt(KEY_CUSTOMER_SHOW_SURGE_ICON, 1) == 1;
     }
+    private void fetchCorporates(final PaymentOption paymentOption){
+        if(Data.autoData.getCorporatesFetched().size() > 0){
+            Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
+            getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+            if(getScheduleRideFragment()!=null){
+                getScheduleRideFragment().updatePaymentOption();
+            }
+            return;
+        }
+        final HashMap<String, String> params = new HashMap<>();
+        new ApiCommon<FetchCorporatesResponse>(this).showLoader(true).execute(params, ApiName.FETCH_CORPORATES,
+                new APICommonCallback<FetchCorporatesResponse>() {
+
+                    @Override
+                    public void onSuccess(final FetchCorporatesResponse response, String message, int flag) {
+                        Data.autoData.setCorporatesFetched((ArrayList<Corporate>) response.getCorporates());
+                        if(Data.autoData.getCorporatesFetched().size() > 0){
+                            Data.autoData.getCorporatesFetched().get(0).setSelected(true);
+                        }
+                        Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
+                        getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
+                        if(getScheduleRideFragment()!=null){
+                            getScheduleRideFragment().updatePaymentOption();
+                        }
+                    }
+
+                    @Override
+                    public boolean onError(FetchCorporatesResponse feedCommonResponse, String message, int flag) {
+                        return false;
+                    }
+
+                });
+    }
+
 }

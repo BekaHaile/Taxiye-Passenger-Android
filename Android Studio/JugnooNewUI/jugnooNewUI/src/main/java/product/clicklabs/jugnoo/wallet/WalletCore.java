@@ -434,6 +434,8 @@ public class WalletCore {
                 return getConfigDisplayNameCards(context,paymentOption);
             } else if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
                 return getMPesaName(context);
+            } else if (paymentOption == PaymentOption.CORPORATE.getOrdinal()) {
+                return context.getString(R.string.corporate);
             } else {
                 return context.getResources().getString(R.string.cash);
             }
@@ -645,10 +647,10 @@ public class WalletCore {
                 }
                 paymentModeConfigDatas.add(paymentModeConfigData);
             }
-       /*     paymentModeConfigDatas.add(new PaymentModeConfigData("accept_card",
-                    1, " ", "Accept Card",
+            paymentModeConfigDatas.add(new PaymentModeConfigData("corporate",
+                    1, " ", "Corporate",
                     " ", null,
-                    "", null));*/
+                    "", null));
             if(cashPosition > -1 && Prefs.with(context).getInt(Constants.KEY_CASH_ABOVE_ALL_WALLETS, 0) == 1){
                 paymentModeConfigDatas.add(0, paymentModeConfigDatas.remove(cashPosition));
             }
@@ -852,10 +854,12 @@ public class WalletCore {
             return PaymentOption.MPESA;
         } else if (PaymentOption.STRIPE_CARDS.getOrdinal() == paymentOption) {
             return PaymentOption.STRIPE_CARDS;
-        }  if (PaymentOption.ACCEPT_CARD.getOrdinal() == paymentOption) {
+        } else if (PaymentOption.ACCEPT_CARD.getOrdinal() == paymentOption) {
             return PaymentOption.ACCEPT_CARD;
-        } if (PaymentOption.PAY_STACK_CARD.getOrdinal() == paymentOption) {
+        } else if (PaymentOption.PAY_STACK_CARD.getOrdinal() == paymentOption) {
             return PaymentOption.PAY_STACK_CARD;
+        } else if (PaymentOption.CORPORATE.getOrdinal() == paymentOption) {
+            return PaymentOption.CORPORATE;
         } else {
             return PaymentOption.CASH;
         }

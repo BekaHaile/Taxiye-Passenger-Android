@@ -36,6 +36,10 @@
             android:background="@color/text_color_light"
             />
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
         <LinearLayout
             android:id="@+id/linearLayoutWalletContainer"
             android:layout_width="match_parent"
@@ -43,6 +47,7 @@
             android:orientation="vertical"
             android:layout_marginTop="26px"
             android:layout_marginBottom="36px"
+            android:animateLayoutChanges="true"
             >
 
             <RelativeLayout
@@ -435,9 +440,50 @@
                     />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llCorporate"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/nl_button_size"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginStart="36px"
+                android:layout_marginEnd="36px"
+                android:layout_marginTop="10px"
+                android:visibility="visible"
+
+                >
+
+                <ImageView
+                    android:id="@+id/ivCorporate"
+                    android:layout_width="33px"
+                    android:layout_height="33px"
+                    android:src="@drawable/ic_radio_button_normal"
+                    android:tag="mwar"/>
+
+                <TextView
+                    android:id="@+id/tvCorporate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10px"
+                    android:text="@string/corporate"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_34"
+                    app:typekitFont="@string/maven_l"/>
+
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvCorporates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginBottom="40px"
+                />
         </LinearLayout>
 
-
+        </ScrollView>
 
     </LinearLayout>
 

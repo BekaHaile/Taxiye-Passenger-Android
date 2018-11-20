@@ -296,6 +296,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case DELETE_SCHEDULE_RIDE:
                 RestClient.getApiService().deleteScheduleRide(params, callback);
                 break;
+            case FETCH_CORPORATES:
+                RestClient.getApiService().fetchUserCorporates(params, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

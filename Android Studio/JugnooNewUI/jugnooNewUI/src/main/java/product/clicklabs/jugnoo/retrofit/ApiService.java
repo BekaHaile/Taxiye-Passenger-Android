@@ -12,6 +12,7 @@ import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
 import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
 import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchActiveLocaleResponse;
+import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
@@ -653,5 +654,9 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/log_google_api_hits")
     void logGoogleApiHitsC(@FieldMap Map<String, String> params, Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/fetch_user_corporates")
+    void fetchUserCorporates(@FieldMap Map<String, String> params, Callback<FetchCorporatesResponse> callback);
 
 }
