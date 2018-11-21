@@ -641,16 +641,14 @@ public class WalletCore {
                 PaymentModeConfigData paymentModeConfigData = new PaymentModeConfigData(ji.getString(Constants.KEY_NAME),
                         ji.getInt(Constants.KEY_ENABLED), ji.optString(KEY_OFFER_TEXT, null), ji.optString(KEY_DISPLAY_NAME, null),
                         ji.optString(KEY_UPI_HANDLE, null), ji.optString(KEY_JUGNOO_VPA_HANDLE, null),
-                        ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""), ji.optJSONArray(Constants.KEY_CARDS_DATA));
+                        ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""), ji.optJSONArray(Constants.KEY_CARDS_DATA),
+                        ji.optJSONArray(Constants.CORPORATE_DATA));
                 if(paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()){
                     cashPosition = i;
                 }
                 paymentModeConfigDatas.add(paymentModeConfigData);
             }
-            paymentModeConfigDatas.add(new PaymentModeConfigData("corporate",
-                    1, " ", "Corporate",
-                    " ", null,
-                    "", null));
+
             if(cashPosition > -1 && Prefs.with(context).getInt(Constants.KEY_CASH_ABOVE_ALL_WALLETS, 0) == 1){
                 paymentModeConfigDatas.add(0, paymentModeConfigDatas.remove(cashPosition));
             }
@@ -685,7 +683,8 @@ public class WalletCore {
                 PaymentModeConfigData paymentModeConfigData = new PaymentModeConfigData(ji.getString(Constants.KEY_NAME),
                         ji.getInt(Constants.KEY_ENABLED), ji.optString(KEY_OFFER_TEXT, null), ji.optString(KEY_DISPLAY_NAME, null),
                         ji.optString(KEY_UPI_HANDLE, null), ji.optString(KEY_JUGNOO_VPA_HANDLE, null),
-                        ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""), ji.optJSONArray(Constants.KEY_CARDS_DATA));
+                        ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""), ji.optJSONArray(Constants.KEY_CARDS_DATA),
+                        ji.optJSONArray(Constants.CORPORATE_DATA));
                 if (paymentModeConfigDatas.indexOf(paymentModeConfigData) > -1) {
                     paymentModeConfigDatas.set(paymentModeConfigDatas.indexOf(paymentModeConfigData), paymentModeConfigData);
                 }

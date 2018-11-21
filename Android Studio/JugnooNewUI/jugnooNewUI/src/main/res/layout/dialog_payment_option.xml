@@ -444,7 +444,7 @@
             <LinearLayout
                 android:id="@+id/llCorporate"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/nl_button_size"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:layout_marginStart="36px"
@@ -479,7 +479,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
-                android:layout_marginBottom="40px"
+                android:layout_marginBottom="5px"
                 />
         </LinearLayout>
 

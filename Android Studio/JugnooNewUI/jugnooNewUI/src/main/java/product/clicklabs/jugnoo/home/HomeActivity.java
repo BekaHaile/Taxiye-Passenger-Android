@@ -148,6 +148,7 @@ import product.clicklabs.jugnoo.RazorpayBaseActivity;
 import product.clicklabs.jugnoo.RideCancellationActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.BidsPlacedAdapter;
+import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiCampaignAvailRequest;
@@ -210,8 +211,6 @@ import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.Corporate;
-import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -7883,7 +7882,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                 nameValuePairs.put(Constants.KEY_PREFERRED_PAYMENT_MODE, "" + Data.autoData.getPickupPaymentOption());
 								if(Data.autoData.getPickupPaymentOption() == PaymentOption.CORPORATE.getOrdinal()){
-									nameValuePairs.put(Constants.KEY_MANUAL_RIDE_REQUEST, "" + Data.autoData.getSelectedCorporate().getBusinessId());
+									nameValuePairs.put(Constants.KEY_MANUAL_RIDE_REQUEST, "" +	CorporatesAdapter.Companion
+											.getSelectedCorporateBusinessId());
 								}
                                 nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(regionSelected.getVehicleType()));
                                 nameValuePairs.put(KEY_REVERSE_BID, String.valueOf(regionSelected.getReverseBid()));
@@ -10725,10 +10725,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private CallbackPaymentOptionSelector callbackPaymentOptionSelector = new CallbackPaymentOptionSelector() {
         @Override
         public void onPaymentOptionSelected(PaymentOption paymentOption) {
-            if(paymentOption == PaymentOption.CORPORATE){
-                fetchCorporates(paymentOption);
-                return;
-            }
             Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
             getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
             getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();

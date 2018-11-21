@@ -17,6 +17,8 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
@@ -25,6 +27,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.wallet.WalletCore;
@@ -78,9 +81,6 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         rvCorporates = rootView.findViewById(R.id.rvCorporates);
         rvCorporates.setLayoutManager(new LinearLayoutManager(activity));
         rvCorporates.setHasFixedSize(false);
-        corporatesAdapter = new CorporatesAdapter(Data.autoData.getCorporatesFetched(), rvCorporates);
-        rvCorporates.setAdapter(corporatesAdapter);
-
         textViewPaytmValue = (TextView) rootView.findViewById(R.id.textViewPaytmValue);
         textViewPaytmValue.setTypeface(Fonts.mavenMedium(getActivity()));
         textViewPaytm = (TextView) rootView.findViewById(R.id.textViewPaytm);
@@ -199,7 +199,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         try {
             Data.autoData.setPickupPaymentOption(MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption()));
-            rvCorporates.setVisibility(View.GONE);
+            if(corporatesAdapter!=null){
+                corporatesAdapter.unSelectAll();
+            }
             if (PaymentOption.PAYTM.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(imageViewRadioPaytm, imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioCash,
                         imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate);
@@ -227,7 +229,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             } else if (PaymentOption.CORPORATE.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(ivCorporate, imageViewRadioPayStack,imageViewRadioStripeCard, imageViewRadioMpesa, imageViewRadioFreeCharge,
                         imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay,imageViewRadioAcceptCard);
-                rvCorporates.setVisibility(View.VISIBLE);
+                if(corporatesAdapter!=null){
+                    corporatesAdapter.selectDefault();
+                }
             } else {
                 paymentSelection(imageViewRadioCash, imageViewRadioMpesa, imageViewRadioPaytm, imageViewRadioMobikwik,
                         imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate);
@@ -303,7 +307,6 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 
             setSelectedPaymentOptionUI();
 
-            corporatesAdapter.setList(Data.autoData.getCorporatesFetched());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -338,6 +341,19 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CORPORATE.getOrdinal()) {
                             linearLayoutWalletContainer.addView(llCorporate);
                             linearLayoutWalletContainer.addView(rvCorporates);
+                            if (corporatesAdapter==null) {
+                                corporatesAdapter = new CorporatesAdapter(paymentModeConfigData.getCorporates(),
+                                        rvCorporates, new CorporatesAdapter.OnSelectedCallback() {
+                                    @Override
+                                    public void onItemSelected(@NotNull Corporate corporate) {
+                                        if(Data.autoData.getPickupPaymentOption()!=PaymentOption.CORPORATE.getOrdinal()){
+                                            onClick(llCorporate);
+                                        }
+                                    }
+                                });
+                            }
+                            rvCorporates.setAdapter(corporatesAdapter);
+
                         }else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutStripeCard);
                             if(paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0){

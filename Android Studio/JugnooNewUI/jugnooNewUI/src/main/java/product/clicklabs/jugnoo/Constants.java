@@ -1002,6 +1002,7 @@ public interface Constants {
 
     String HIPPO_SUPPORT_FAQ_NAME = "customer_hippo_support_faq_name";
     String KEY_MANUAL_RIDE_REQUEST = "manual_ride_request";
+    String CORPORATE_DATA = "corporates";
     String KEY_CUSTOMER_TIP_VALUES = "customer_tip_values";
     String KEY_CUSTOMER_SHOW_SURGE_ICON = "customer_show_surge_icon";
     String KEY_CUSTOMER_PRIORITY_TIP_TITLE = "customer_priority_tip_title";

@@ -10,7 +10,10 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 
 /**
@@ -26,13 +29,16 @@ public class PaymentModeConfigData {
 	private String jugnooVpaHandle;
 	private String upiCashbackValue;
 	private ArrayList<StripeCardData> cardsData;
+	private ArrayList<Corporate> corporates;
 	private static JsonParser jsonParser = new JsonParser();
 	private static Gson gson = new Gson();
 
 
 
+
 	public PaymentModeConfigData(String name, int enabled, String offerText, String displayName, String upiHandle,
-								 String jugnooVpaHanlde, String upiCashbackValue, JSONArray cardsData){
+								 String jugnooVpaHanlde, String upiCashbackValue, JSONArray cardsData,
+								 JSONArray corporatesData){
 		this.name = name;
 		this.enabled = enabled;
 		this.offerText = offerText;
@@ -61,10 +67,32 @@ public class PaymentModeConfigData {
 			paymentOption = PaymentOption.UPI_RAZOR_PAY.getOrdinal();
 		}else if(Constants.KEY_ICICI_UPI.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.ICICI_UPI.getOrdinal();
-		} else if(Constants.KEY_CORPORATE.equalsIgnoreCase(name)){
-			paymentOption = PaymentOption.CORPORATE.getOrdinal();
-		} else if(Constants.KEY_MPESA.equalsIgnoreCase(name)){
+		}else if(Constants.KEY_MPESA.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.MPESA.getOrdinal();
+		}else if(Constants.KEY_CORPORATE.equalsIgnoreCase(name)){
+			paymentOption = PaymentOption.CORPORATE.getOrdinal();
+			if (corporatesData!=null) {
+				this.corporates = new ArrayList<>();
+
+				for (int i=0;i<corporatesData.length();i++){
+
+					try {
+						JsonElement mJson = jsonParser.parse(corporatesData.getJSONObject(i).toString());
+						Corporate corp = gson.fromJson(mJson, Corporate.class);
+						corp.setSelected(i==0);//first index selected by default
+						if(i==0)
+						{
+							CorporatesAdapter.Companion.setSelectedCorporateBusinessId(corp.getBusinessId());
+						}
+						this.corporates.add(corp);
+					} catch (JSONException e) {
+						e.printStackTrace();
+
+					}
+
+				}
+			}
+
 		} else if(Constants.KEY_STRIPE_CARDS.equalsIgnoreCase(name)|| Constants.KEY_ACCEPT_CARDS.equalsIgnoreCase(name)
 				||Constants.KEY_PAY_STACK_CARDS.equalsIgnoreCase(name) ){
 
@@ -183,5 +211,9 @@ public class PaymentModeConfigData {
 
 	public void setCardsData(ArrayList<StripeCardData> cardsData) {
 		this.cardsData = cardsData;
+	}
+
+	public ArrayList<Corporate> getCorporates() {
+		return corporates;
 	}
 }

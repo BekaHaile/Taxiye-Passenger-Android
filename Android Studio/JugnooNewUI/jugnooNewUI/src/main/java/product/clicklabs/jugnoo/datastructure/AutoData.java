@@ -579,16 +579,4 @@ public class AutoData {
         return corporatesFetched;
     }
 
-    public Corporate getSelectedCorporate(){
-        for(Corporate corp : getCorporatesFetched()){
-            if(corp.getSelected()) {
-                return corp;
-            }
-        }
-        return null;
-    }
-
-    public void setCorporatesFetched(ArrayList<Corporate> corporatesFetched) {
-        this.corporatesFetched = corporatesFetched;
-    }
 }

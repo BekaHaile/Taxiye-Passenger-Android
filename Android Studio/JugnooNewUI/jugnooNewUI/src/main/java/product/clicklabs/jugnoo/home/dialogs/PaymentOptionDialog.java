@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Data;
@@ -23,6 +25,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.wallet.WalletCore;
@@ -107,8 +110,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
             rvCorporates = dialog.findViewById(R.id.rvCorporates);
             rvCorporates.setLayoutManager(new LinearLayoutManager(activity));
             rvCorporates.setHasFixedSize(false);
-            corporatesAdapter = new CorporatesAdapter(Data.autoData.getCorporatesFetched(), rvCorporates);
-            rvCorporates.setAdapter(corporatesAdapter);
+
 
 
             textViewPaytmValue = (TextView) dialog.findViewById(R.id.textViewPaytmValue);
@@ -244,7 +246,11 @@ public class PaymentOptionDialog implements View.OnClickListener {
         try {
             callbackPaymentOptionSelector.setSelectedPaymentOption(MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionAccAvailability(callbackPaymentOptionSelector.getSelectedPaymentOption()));
-            rvCorporates.setVisibility(View.GONE);
+
+            if(corporatesAdapter!=null){
+                corporatesAdapter.unSelectAll();
+            }
+
             if (PaymentOption.PAYTM.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(radioBtnPaytm, imageViewRadioMobikwik, radioBtnCash, imageViewRadioFreeCharge,
                         ivOtherModesToPay, imageViewRadioMpesa,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate);
@@ -272,8 +278,10 @@ public class PaymentOptionDialog implements View.OnClickListener {
             } else if (PaymentOption.CORPORATE.getOrdinal() == callbackPaymentOptionSelector.getSelectedPaymentOption()) {
                 paymentSelection(ivCorporate, imageViewRadioPayStack, imageViewRadioFreeCharge, imageViewRadioMobikwik, radioBtnPaytm,
                         radioBtnCash, imageViewRadioMpesa,ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard);
-                rvCorporates.setVisibility(View.VISIBLE);
-            } else {
+                if(corporatesAdapter!=null){
+                    corporatesAdapter.selectDefault();
+                }
+           } else {
                 paymentSelection(radioBtnCash, radioBtnPaytm, imageViewRadioMobikwik, imageViewRadioFreeCharge, ivOtherModesToPay,
                         imageViewRadioMpesa,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate);
             }
@@ -338,7 +346,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
             setSelectedPaymentOptionUI();
 
-            corporatesAdapter.setList(Data.autoData.getCorporatesFetched());
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -369,6 +377,22 @@ public class PaymentOptionDialog implements View.OnClickListener {
                         else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CORPORATE.getOrdinal()) {
                             linearLayoutWalletContainer.addView(llCorporate);
                             linearLayoutWalletContainer.addView(rvCorporates);
+
+                            if(corporatesAdapter==null && paymentModeConfigData.getCorporates()!=null){
+                                corporatesAdapter = new CorporatesAdapter(paymentModeConfigData.getCorporates(),
+                                        rvCorporates, new CorporatesAdapter.OnSelectedCallback() {
+                                    @Override
+                                    public void onItemSelected(@NotNull Corporate corporate) {
+                                        if(Data.autoData.getPickupPaymentOption()!=PaymentOption.CORPORATE.getOrdinal()){
+                                            onClick(llCorporate);
+                                        }else{
+                                            dismiss();
+                                        }
+                                    }
+                                });
+                            }
+                            rvCorporates.setAdapter(corporatesAdapter);
+
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()
                                 && callbackPaymentOptionSelector.isRazorpayEnabled()) {
                             linearLayoutWalletContainer.addView(llOtherModesToPay);
