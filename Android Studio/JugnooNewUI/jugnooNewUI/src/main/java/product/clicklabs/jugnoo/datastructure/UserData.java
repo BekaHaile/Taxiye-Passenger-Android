@@ -798,7 +798,7 @@ public class UserData {
 	}
 
 
-	public ArrayList<PromoCoupon> getCoupons(ProductType productType, Activity activity) {
+	public ArrayList<PromoCoupon> getCoupons(ProductType productType, Activity activity, boolean ignoreVehiclesCheck) {
 		ArrayList<PromoCoupon> coupons = new ArrayList<>();
 
 		if (productType == ProductType.AUTO) {
@@ -833,7 +833,7 @@ public class UserData {
 
 		ArrayList<PromoCoupon> validPC = new ArrayList<>();
 		ArrayList<PromoCoupon> invalidPC = new ArrayList<>();
-		if(activity instanceof HomeActivity){
+		if(!ignoreVehiclesCheck && activity instanceof HomeActivity){
 			int currentVehicleTypeSelected = ((HomeActivity) activity).getVehicleTypeSelected();
 			int currentOperatorId = ((HomeActivity) activity).getOperatorIdSelected();
 			for(PromoCoupon pc : coupons){
@@ -880,7 +880,7 @@ public class UserData {
 		return coupons;
 	}
 	public PromoCoupon getDefaultCoupon(int vehicleType, int operatorId, HomeActivity homeActivity){
-		ArrayList<PromoCoupon> promoCoupons = getCoupons(ProductType.AUTO,homeActivity) ;
+		ArrayList<PromoCoupon> promoCoupons = getCoupons(ProductType.AUTO,homeActivity, false) ;
 		if(promoCoupons!=null){
 
 			for(PromoCoupon promoCoupon: promoCoupons){

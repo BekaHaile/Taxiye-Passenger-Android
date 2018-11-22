@@ -22,6 +22,8 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -240,9 +242,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
                 GAUtils.event(RIDES, HOME, FARE_ESTIMATE+CLICKED);
             } else if(v.getId() == R.id.textViewOffers || v.getId() == R.id.textViewOffersMode){
-                if(Data.userData.getCoupons(ProductType.AUTO, activity).size() > 0
+                if(Data.userData.getCoupons(ProductType.AUTO, activity, false).size() > 0
                         || Data.userData.getShowOfferDialog() == 1) {
-                    getPromoCouponsDialog().show(ProductType.AUTO, Data.userData.getCoupons(ProductType.AUTO, activity));
+                    getPromoCouponsDialog().show(ProductType.AUTO, Data.userData.getCoupons(ProductType.AUTO, activity, false));
                 }
                 GAUtils.event(RIDES, HOME, OFFER+CLICKED);
             }
@@ -251,9 +253,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     public void updateOffersCount(){
         try {
-            if(Data.userData.getCoupons(ProductType.AUTO, activity).size() > 0) {
-                textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getCoupons(ProductType.AUTO, activity).size());
-                textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getCoupons(ProductType.AUTO, activity).size());
+            if(Data.userData.getCoupons(ProductType.AUTO, activity, false).size() > 0) {
+                textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getCoupons(ProductType.AUTO, activity, false).size());
+                textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + Data.userData.getCoupons(ProductType.AUTO, activity, false).size());
             } else{
                 textViewOffers.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + "-");
                 textViewOffersMode.setText(activity.getResources().getString(R.string.nl_offers) + "\n" + "-");
@@ -454,7 +456,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     public void initSelectedCoupon(){
         try {
             if(selectedCoupon == null) {
-                if (Data.userData.getCoupons(ProductType.AUTO, activity).size() > 0) {
+                if (Data.userData.getCoupons(ProductType.AUTO, activity, false).size() > 0) {
                     selectedCoupon = noSelectionCoupon;
                 } else {
                     selectedCoupon = new CouponInfo(0, "");
@@ -474,12 +476,12 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         return recyclerViewVehicles;
     }
 
-    public boolean setSelectedCoupon(int position) {
+    public boolean setSelectedCoupon(int position, boolean ignoreVehiclesCheck) {
+        ArrayList<PromoCoupon> promoCoupons = Data.userData.getCoupons(ProductType.AUTO, activity, ignoreVehiclesCheck);
         PromoCoupon promoCoupon;
-        if (position > -1 && position < Data.userData.getCoupons(ProductType.AUTO, activity).size()
-                && Data.userData.getCoupons(ProductType.AUTO, activity).get(position)
-                .isVehicleTypeExists(activity.getVehicleTypeSelected(), activity.getOperatorIdSelected())) {
-            promoCoupon = Data.userData.getCoupons(ProductType.AUTO, activity).get(position);
+        if (position > -1 && position < promoCoupons.size()
+                && (ignoreVehiclesCheck || promoCoupons.get(position).isVehicleTypeExists(activity.getVehicleTypeSelected(), activity.getOperatorIdSelected()))) {
+            promoCoupon = promoCoupons.get(position);
             GAUtils.event(RIDES, HOME+OFFER+SELECTED, promoCoupon.getTitle());
         } else {
             promoCoupon = noSelectionCoupon;
@@ -649,11 +651,12 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
             int promoCouponId = Prefs.with(activity).getInt(Constants.SP_USE_COUPON_+clientId, -1);
             boolean isCouponInfo = Prefs.with(activity).getBoolean(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
             if(promoCouponId > 0){
-                for(int i = 0; i<Data.userData.getCoupons(ProductType.AUTO, activity).size(); i++){
-                    PromoCoupon pc = Data.userData.getCoupons(ProductType.AUTO, activity).get(i);
+                ArrayList<PromoCoupon> promoCoupons = Data.userData.getCoupons(ProductType.AUTO, activity, true);
+                for(int i = 0; i<promoCoupons.size(); i++){
+                    PromoCoupon pc = promoCoupons.get(i);
                     if(((isCouponInfo && pc instanceof CouponInfo) || (!isCouponInfo && pc instanceof PromotionInfo))
                             && pc.getId() == promoCouponId) {
-                        if (pc.getIsValid() == 1 && setSelectedCoupon(i)) {
+                        if (pc.getIsValid() == 1 && setSelectedCoupon(i, true)) {
                             if(pc.getAllowedVehicles() != null && pc.getAllowedVehicles().size() > 0
                                     && !pc.isVehicleTypeExists(getRegionSelected().getVehicleType(), getRegionSelected().getOperatorId())){
                                 for(int j=0; j<Data.autoData.getRegions().size(); j++){

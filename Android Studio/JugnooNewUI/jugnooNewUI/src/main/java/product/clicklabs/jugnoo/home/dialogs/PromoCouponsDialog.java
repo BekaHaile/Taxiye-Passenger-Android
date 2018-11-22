@@ -70,7 +70,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 				public void onDismiss(DialogInterface dialog) {
 					if(activity instanceof HomeActivity) {
 						if(couponSelectedWhenDialogShown==null){
-							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1, false);
 
 						}else{
 							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(couponSelectedWhenDialogShown);
@@ -118,7 +118,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 							onDialogOpenPromoSelectOperation = false;
 						}
 
-						return ((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position);
+						return ((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position, false);
 					} else if(activity instanceof FreshActivity) {
 						PromoCoupon promoCoupon;
 						if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
@@ -213,7 +213,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 				public void onClick(View v) {
 					if(activity instanceof HomeActivity) {
 						if(couponSelectedWhenDialogShown==null){
-							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1, false);
 
 						}else{
 							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(couponSelectedWhenDialogShown);
@@ -229,7 +229,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 				public void onClick(View v) {
 					if(activity instanceof HomeActivity) {
 						if(couponSelectedWhenDialogShown==null){
-							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1);
+							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(-1, false);
 
 						}else{
 							((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(couponSelectedWhenDialogShown);

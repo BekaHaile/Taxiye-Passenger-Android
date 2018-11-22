@@ -1136,7 +1136,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             slidingBottomPanel.slideOnClick(findViewById(R.id.linearLayoutOffers));
                         } else if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
                             slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
-                                    Data.userData.getCoupons(ProductType.AUTO, HomeActivity.this));
+                                    Data.userData.getCoupons(ProductType.AUTO, HomeActivity.this, false));
                         }
                         GAUtils.event(RIDES, HOME, OFFERS + BAR + CLICKED);
                     } else if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.NORMAL.getOrdinal()) {
@@ -1168,7 +1168,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(promoCouponSelectedForRide);
                     }
                     slidingBottomPanel.getRequestRideOptionsFragment().getPromoCouponsDialog().show(ProductType.AUTO,
-                            Data.userData.getCoupons(ProductType.AUTO, HomeActivity.this));
+                            Data.userData.getCoupons(ProductType.AUTO, HomeActivity.this, false));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -9412,7 +9412,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(defaultCoupon);
 
                 } else {
-                    slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(-1);
+                    slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(-1, false);
                 }
             }
         }
