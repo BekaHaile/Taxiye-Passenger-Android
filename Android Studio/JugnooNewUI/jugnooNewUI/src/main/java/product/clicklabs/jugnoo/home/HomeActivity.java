@@ -548,6 +548,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        String languageToLoad = LocaleHelper.getLanguage(this);
+        Locale locale = new Locale(languageToLoad);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config,
+                getBaseContext().getResources().getDisplayMetrics());
+
         GAUtils.trackScreenView(RIDES + HOME);
         Data.currentActivity = HomeActivity.class.getName();
 
