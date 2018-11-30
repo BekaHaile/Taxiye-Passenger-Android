@@ -1,0 +1,65 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hippo_white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/selected_team"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/fugu_margin_10"
+            android:padding="@dimen/fugu_padding_10"
+            android:textColor="@color/fugu_theme_color_primary"
+            android:textSize="@dimen/fugu_text_size_normal"
+            android:visibility="gone" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/apply_btn"
+            android:layout_below="@+id/selected_team">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fadeScrollbars="true"
+                android:paddingBottom="10dp"
+                android:scrollbars="vertical"
+                android:splitMotionEvents="false"
+                app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+
+        <include
+            android:id="@+id/llNoConversation"
+            layout="@layout/hippo_layout_no_conversation_found"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="130dp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/apply_btn"
+            android:layout_width="250dp"
+            android:layout_height="@dimen/fugu_dp_40"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/fugu_margin_10"
+            android:background="@drawable/hippo_button_theme_selector"
+            android:text="APPLY"
+            android:textColor="@color/hippo_white"
+            android:textSize="@dimen/fugu_text_size_normal"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 
@@ -78,11 +79,9 @@ public class DisplayFeedHomeImagesAdapter extends PagerAdapter {
 		});
 
 		FetchFeedbackResponse.ReviewImage reviewImage = reviewImages.get(position);
-
+		RequestOptions options = new RequestOptions().placeholder(R.drawable.ic_fresh_item_placeholder);
 		Glide.with(activity).load(reviewImage.getThumbnail())
-//				.override((int) (ASSL.minRatio() * 720f), (int) (ASSL.minRatio() * 234f))
-//				.centerCrop()
-				.placeholder(R.drawable.ic_fresh_item_placeholder)
+				.apply(options)
 				.into(ivImage);
 
 		container.addView(itemView);

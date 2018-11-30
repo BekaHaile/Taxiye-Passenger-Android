@@ -452,7 +452,7 @@
                 android:id="@+id/textViewRSScroll"
                 android:layout_width="20px"
                 android:layout_height="20px"
-                android:text="@string/space" />
+                android:text=" " />
 
         </LinearLayout>
     </ScrollView>

@@ -30,9 +30,9 @@
 
 
     <!--> unread message counter text and background colors<!-->
-    <color name="white">#FFFFFF</color>
-    <color name="red">#dd171e</color>
-    <color name="orange">#FFFF00</color>
+    <color name="hippo_white">#FFFFFF</color>
+    <color name="hippo_red">#dd171e</color>
+    <color name="hippo_orange">#FFFF00</color>
     <color name="fugu_jugnoo_orange">#FD7945</color>
     <!-->End Here<!-->
 
@@ -42,5 +42,37 @@
     <color name="fugu_connecting">#FFA500</color>
     <color name="fugu_not_connected">#FF0000</color>
     <color name="fugu_connected">#00FF00</color>
+
+    <color name="fugu_closed_chat_text_color">#564f5c</color>
+    <color name="fugu_overlay_green_95">#F256bb33</color>
+    <color name="fugu_read_chat_text_color">#88838c</color>
+    <color name="fugu_unassigned_color">#ed7d00</color>
+    <color name="fugu_tag_color">#e4e4ed</color>
+    <color name="fugu_tagged_color">#839bf1</color>
+    <color name="fugu_typing_color">#dce0e6</color>
+    <color name="fuguChatBackground">#f8f9ff</color>
+    <color name="fugu_overlay_black_95">#F251445c</color>
+    <color name="fugu_overlay_yellow_95">#F2e07905</color>
+    <color name="hippo_tag_color">#e4e4ed</color>
+    <color name="hippo_transparent">#0000</color>
+    <color name="fugu_divider_ea">#eaeaea</color>
+    <color name="hippo_black">#000000</color>
+    <color name="fugu_black_50">#80000000</color>
+    <color name="fugu_green">#6CC64D</color>
+    <color name="fugu_assign_color">#f0a653</color>
+
+    <color name="fugu_list_even">#AAAAAA</color>
+    <color name="fugu_list_odd">#E1E2E2</color>
+    <color name="fugu_list_selected">#455FB6</color>
+    <color name="fugu_list_header">#99979C</color>
+
+    <color name="fugu_disable_color">#882c2333</color>
+    <color name="fugu_support_text">#596161</color>
+    <color name="fugu_support_description">#858585</color>
+
+    <color name="hippo_feedback_boarder">#979797</color>
+    <color name="hippo_rated_background">#f5f5f5</color>
+    <color name="fugu_white">#ffffff</color>
+
     <color name="fugu_new_chat_color">#353542</color>
 </resources>

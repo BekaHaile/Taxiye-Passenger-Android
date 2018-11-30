@@ -2,6 +2,7 @@ package com.fugu.retrofit;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.fugu.constant.FuguAppConstant;
@@ -83,19 +84,27 @@ public abstract class ResponseResolver<T> implements Callback<T> {
     public void onResponse(Call<T> t, Response<T> tResponse) {
         JSONObject jObjError = null;
         int type = 0;
+        String message = "";
         try {
             if (tResponse.errorBody() != null) {
                 jObjError = new JSONObject(tResponse.errorBody().string());
+                message = jObjError.getString("message");
                 type = Integer.parseInt(jObjError.getString("type"));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+
         }
         LoadingBox.hide();
         if (tResponse.isSuccessful())
             success(tResponse.body());
-        else
-            fireError(ErrorUtils.parseError(tResponse, type));
+        else {
+            if(TextUtils.isEmpty(message)) {
+                fireError(ErrorUtils.parseError(tResponse, type));
+            } else {
+                fireError(new APIError(900, message, 0));
+            }
+        }
     }
 
     @Override
@@ -142,7 +151,7 @@ public abstract class ResponseResolver<T> implements Callback<T> {
             if (showError) {
 
                 Toast.makeText(weakActivity.get(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                weakActivity.get().finish();
+                //weakActivity.get().finish();
             }
         }
 

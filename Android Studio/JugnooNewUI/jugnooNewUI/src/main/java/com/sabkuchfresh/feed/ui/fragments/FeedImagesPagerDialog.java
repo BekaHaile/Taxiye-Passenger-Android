@@ -16,14 +16,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.DirectionsGestureListener;
 
@@ -134,7 +133,8 @@ public class FeedImagesPagerDialog extends DialogFragment {
 
 
             if(!TextUtils.isEmpty(reviewImages.get(position).getUrl())){
-                Glide.with(context).load(reviewImages.get(position).getUrl()).error(R.drawable.ic_fresh_new_placeholder).listener(new MyRequestListener<String, GlideDrawable>(pbar)).into(ivReviewImage);
+                RequestOptions options = new RequestOptions().placeholder(R.drawable.ic_fresh_new_placeholder);
+                Glide.with(context).load(reviewImages.get(position).getUrl()).apply(options).listener(new MyRequestListener<Drawable>(pbar)).into(ivReviewImage);
 
             }
             else{
@@ -192,7 +192,7 @@ public class FeedImagesPagerDialog extends DialogFragment {
     /*
         To hide progress bar when loading is done
      */
-    private class MyRequestListener<T,R> implements RequestListener<T,R>{
+    private class MyRequestListener<R> implements RequestListener<R>{
         private ImageView progressView;
 
         public MyRequestListener(ImageView imageView) {
@@ -200,7 +200,7 @@ public class FeedImagesPagerDialog extends DialogFragment {
         }
 
         @Override
-        public boolean onException(Exception e, T model, Target<R> target, boolean isFirstResource) {
+        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<R> target, boolean isFirstResource) {
             if(progressView!=null) {
                 progressView.setVisibility(View.GONE);
             }
@@ -208,7 +208,7 @@ public class FeedImagesPagerDialog extends DialogFragment {
         }
 
         @Override
-        public boolean onResourceReady(R resource, T model, Target<R> target, boolean isFromMemoryCache, boolean isFirstResource) {
+        public boolean onResourceReady(R resource, Object model, Target<R> target, DataSource dataSource, boolean isFirstResource) {
             if(progressView!=null) {
                 ((AnimationDrawable)   progressView.getDrawable()).stop();
                 progressView.setVisibility(View.GONE);

@@ -224,7 +224,7 @@ public class CustomAlertDialog {
          */
         public AlertDialog create() {
             mBuilder = new AlertDialog.Builder(mContext);
-            final View dialogView = mInflater.inflate(R.layout.dialog_custom, null);
+            final View dialogView = mInflater.inflate(R.layout.hippo_dialog_custom, null);
             mBuilder.setView(dialogView);
             mAlertDialog = mBuilder.create();
             TextView tvTitle = (TextView) dialogView.findViewById(R.id.tvTitle);

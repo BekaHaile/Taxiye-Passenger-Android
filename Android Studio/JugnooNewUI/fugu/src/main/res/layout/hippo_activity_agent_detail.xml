@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/hippo_white"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/my_toolbar"
+        layout="@layout/fugu_layout_toolbar_left" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+
+            <TextView
+                android:id="@+id/tvUserInfo"
+                style="@style/agent_options_title"
+                android:text="@string/fugu_agent_user_info" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/fugu_margin_20"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:id="@+id/llName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="@dimen/fugu_margin_20"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvCustomerName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:textColor="@color/hippo_black"
+                        android:textSize="@dimen/fugu_text_size_very_large" />
+
+                    <TextView
+                        android:id="@+id/tvCustomerActivationTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:textColor="@color/fugu_read_chat_text_color"
+                        android:textSize="@dimen/fugu_text_size_normal"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/ivCustomerImage"
+                    android:layout_width="@dimen/fugu_margin_60"
+                    android:layout_height="@dimen/fugu_margin_60"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="45dp"
+                    android:layout_marginTop="19dp"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/viewCustomerDetails"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/fugu_margin_20"
+                android:layout_marginRight="@dimen/fugu_margin_20"
+                android:background="@color/hippo_tag_color"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/etCustomerEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/fugu_margin_10"
+                android:layout_marginTop="@dimen/fugu_margin_15"
+                android:background="@color/hippo_white"
+                android:drawableLeft="@drawable/hippo_ic_email_grey"
+                android:drawablePadding="@dimen/fugu_margin_20"
+                android:lineSpacingExtra="3.2sp"
+                android:padding="@dimen/fugu_padding_5"
+                android:textColor="@color/hippo_black"
+                android:textSize="@dimen/fugu_text_size_normal"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/etCustomerPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/fugu_margin_10"
+                android:layout_marginTop="@dimen/fugu_padding_5"
+                android:background="@color/hippo_white"
+                android:drawableLeft="@drawable/hippo_ic_call_grey"
+                android:drawablePadding="@dimen/fugu_margin_20"
+                android:lineSpacingExtra="3.2sp"
+                android:padding="@dimen/fugu_padding_5"
+                android:textColor="@color/hippo_black"
+                android:textSize="@dimen/fugu_text_size_large"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/etCustomerLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/fugu_margin_10"
+                android:layout_marginTop="@dimen/fugu_padding_5"
+                android:background="@color/hippo_white"
+                android:drawableLeft="@drawable/hippo_ic_location"
+                android:drawablePadding="@dimen/fugu_margin_20"
+                android:lineSpacingExtra="3.2sp"
+                android:padding="@dimen/fugu_padding_5"
+                android:textColor="@color/hippo_black"
+                android:textSize="@dimen/fugu_text_size_large"
+                android:visibility="gone" />
+
+
+            <TextView
+                android:id="@+id/tvChannelInfo"
+                style="@style/agent_options_title"
+                android:text="@string/fugu_agent_channel_info"
+                android:visibility="visible" />
+
+            <RelativeLayout
+                android:id="@+id/rlAgentName"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/fugu_size_57"
+                android:background="@color/hippo_white"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvAgentName"
+                    style="@style/tvCustomerProfile"
+                    android:layout_width="wrap_content"
+                    android:clickable="false"
+                    android:drawableLeft="@drawable/hippo_ic_agent_assigned_agent" />
+
+                <!--<de.hdodenhof.circleimageview.CircleImageView-->
+                <!--android:id="@+id/ivAgentImage"-->
+                <!--android:layout_width="@dimen/fugu_margin_35"-->
+                <!--android:layout_height="@dimen/fugu_margin_35"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:layout_marginRight="@dimen/fugu_margin_24"-->
+                <!--android:src="@drawable/ic_profile_img_placeholder" />-->
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/fugu_divider_ea" />
+
+            <RelativeLayout
+                android:id="@+id/rlTag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/tagIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/fugu_margin_10"
+                    android:src="@drawable/hippo_ic_agent_tag" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_toLeftOf="@+id/addTags"
+                    android:layout_toRightOf="@+id/tagIcon">
+
+                    <com.fugu.agent.Util.TagContainerLayout
+                        android:id="@+id/tagLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:padding="10dp"
+                        android:visibility="gone"
+                        app:container_border_color="@color/hippo_white"
+                        app:container_border_width="0dp"
+                        app:container_enable_drag="false"
+                        app:horizontal_interval="10dp"
+                        app:tag_border_width="2dp"
+                        app:tag_clickable="true"
+                        app:tag_corner_radius="6dp"
+                        app:tag_text_color="@color/hippo_white"
+                        app:vertical_interval="10dp" />
+
+                    <TextView
+                        android:id="@+id/tvAddLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="Add Label"
+                        android:textColor="@color/hippo_black"
+                        android:textSize="@dimen/fugu_text_size_large"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+                <ImageButton
+                    android:id="@+id/addTags"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="@dimen/fugu_margin_10"
+                    android:layout_marginRight="@dimen/fugu_text_size_small"
+                    android:layout_marginTop="@dimen/fugu_margin_10"
+                    android:background="@color/hippo_transparent"
+                    android:src="@drawable/hippo_ic_add_more_label"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvActions"
+                style="@style/agent_options_title"
+                android:text="@string/fugu_agent_actions" />
+
+            <!--<TextView-->
+            <!--android:id="@+id/tvActions"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/fugu_margin_35"-->
+            <!--android:background="@color/tag_color"-->
+            <!--android:paddingLeft="@dimen/fugu_margin_15"-->
+            <!--android:paddingTop="@dimen/fugu_margin_15"-->
+            <!--android:text="@string/fugu_agent_actions"-->
+            <!--android:textAllCaps="true"-->
+            <!--android:textColor="@color/fugu_theme_color_primary"-->
+            <!--android:textSize="@dimen/fugu_text_size_small"-->
+            <!--/>-->
+
+            <TextView
+                android:id="@+id/tvCloseConversation"
+                style="@style/tvCustomerProfile"
+                android:drawableLeft="@drawable/hippo_ic_close_chat_black_icon"
+                android:text="@string/fugu_close_conversation" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/fugu_divider_ea" />
+
+            <TextView
+                android:id="@+id/tvAssignConversation"
+                style="@style/tvCustomerProfile"
+                android:drawableLeft="@drawable/hippo_ic_assign_chat_black_icon"
+                android:text="@string/fugu_assign_conversation"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvCustomAttributes"
+                style="@style/agent_options_title"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/custom_view_attributes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone" />
+
+            <View
+                android:id="@+id/viewSiteVisit"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="@dimen/fugu_margin_20"
+                android:layout_marginRight="@dimen/fugu_margin_20"
+                android:layout_marginTop="@dimen/fugu_margin_15"
+                android:background="@color/hippo_tag_color"
+                android:visibility="gone" />
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fugu_margin_17"
+                android:background="@color/hippo_transparent"
+                android:elevation="2dp"
+                android:minHeight="?attr/actionBarSize"
+                android:visibility="gone" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/vpContainer"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/visitor_info_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvVisitorInfo"
+                    style="@style/agent_options_title" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="LinearLayoutManager" />
+
+                <TextView
+                    android:id="@+id/show_more_view"
+                    style="@style/tvProfileRight"
+                    android:layout_width="match_parent"
+                    android:gravity="center|right"
+                    android:minHeight="40dp"
+                    android:paddingRight="@dimen/fugu_margin_14"
+                    android:text="@string/fugu_show_more"
+                    android:textColor="@color/fugu_text_color_primary"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</LinearLayout>

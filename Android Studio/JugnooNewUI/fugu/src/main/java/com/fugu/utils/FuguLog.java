@@ -1,5 +1,7 @@
 package com.fugu.utils;
 
+import com.fugu.FuguConfig;
+
 /**
  * Custom log class overrides Android FuguLog (android.util.FuguLog)
  *
@@ -7,7 +9,7 @@ package com.fugu.utils;
  */
 public class FuguLog {
 
-    private static final boolean PRINT = false; // true for printing and false
+    private static final boolean PRINT = FuguConfig.DEBUG; // true for printing and false
     // for not
 
     public FuguLog() {

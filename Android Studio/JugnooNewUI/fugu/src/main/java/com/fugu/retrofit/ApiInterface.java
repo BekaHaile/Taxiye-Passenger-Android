@@ -9,6 +9,9 @@ import com.fugu.model.FuguGetMessageParams;
 import com.fugu.model.FuguGetMessageResponse;
 import com.fugu.model.FuguPutUserDetailsResponse;
 import com.fugu.model.FuguUploadImageResponse;
+import com.fugu.support.model.HippoSendQueryParams;
+import com.fugu.support.model.SupportModelResponse;
+import com.fugu.support.model.SupportResponse;
 
 import org.json.JSONObject;
 
@@ -65,5 +68,20 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("/api/server/logException")
     Call<CommonResponse> sendError(@FieldMap Map<String, Object> map);
+
+    @FormUrlEncoded
+    @POST("/api/server/logException")
+    Call<CommonResponse> sendAckToServer(@FieldMap Map<String, Object> map);
+
+    @FormUrlEncoded
+    @POST("/api/business/getBusinessSupportPanel")
+    Call<SupportResponse> fetchSupportData(@FieldMap Map<String, Object> map);
+
+    @FormUrlEncoded
+    @POST("/api/business/getBusinessSupportPanel")
+    Call<SupportResponse> sendSupportQuery(@FieldMap Map<String, Object> map);
+
+    @POST("/api/support/createConversation")
+    Call<SupportModelResponse> createTicket(@Body HippoSendQueryParams obj);
 
 }

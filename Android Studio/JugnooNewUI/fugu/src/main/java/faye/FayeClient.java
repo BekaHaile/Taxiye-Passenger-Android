@@ -1,15 +1,23 @@
 package faye;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 
+import com.fugu.FuguConfig;
 import com.fugu.adapter.ListItem;
+import com.fugu.agent.database.AgentCommonData;
+import com.fugu.constant.FuguAppConstant;
 import com.fugu.database.CommonData;
 import com.fugu.model.FuguFileDetails;
 import com.fugu.utils.DateUtils;
 import com.fugu.utils.FuguLog;
+import com.google.gson.Gson;
 
+import org.java_websocket.WebSocketImpl;
+import org.java_websocket.exceptions.WebsocketNotConnectedException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,6 +28,7 @@ import java.nio.channels.NotYetConnectedException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.TreeMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -56,7 +65,11 @@ public class FayeClient {
     private static final String LOG_TAG = FayeClient.class.getSimpleName();
 
     private WebSocket mWebSocket = null;
+    private CopyOnWriteArrayList<FayeClientListener> fayeClientListenerList;
     private FayeClientListener mListener = null;
+    private FayeClientListener mNetworkListener = null;
+    private FayeAgentListener mAgentListener = null;
+
     private HashSet<String> mChannels;
     private String mServerUrl = "";
     private boolean mFayeConnected = false;
@@ -89,6 +102,13 @@ public class FayeClient {
                         mFayeConnected = false;
                         if (mListener != null && mListener instanceof FayeClientListener) {
                             mListener.onDisconnectedServer(FayeClient.this);
+                        } else {
+                            sendLocalBroadcast(2);
+                        }
+                        if(mNetworkListener != null)
+                            mNetworkListener.onDisconnectedServer(FayeClient.this);
+                        if(mAgentListener != null) {
+                            mAgentListener.onDisconnectedServer(FayeClient.this);
                         }
                         break;
                     case WebSocket.ON_MESSAGE:
@@ -101,9 +121,28 @@ public class FayeClient {
                         }
                         break;
 
+                    case WebSocket.ON_PONG:
+                        if (getListener() != null) {
+                            getListener().onPongReceived();
+                        } else {
+                            sendLocalBroadcast(1);
+                        }
+                        if(mNetworkListener != null)
+                            mNetworkListener.onPongReceived();
+                        if(mAgentListener != null)
+                            mAgentListener.onPongReceived();
+
+                        break;
+
                 }
             }
         };
+    }
+
+    private void sendLocalBroadcast(int status) {
+        Intent mIntent = new Intent(FuguAppConstant.FUGU_LISTENER_NULL);
+        mIntent.putExtra("status", status);
+        LocalBroadcastManager.getInstance(FuguConfig.getInstance().getContext()).sendBroadcast(mIntent);
     }
 
     /* Public Methods */
@@ -113,6 +152,24 @@ public class FayeClient {
 
     public void setListener(FayeClientListener listener) {
         mListener = listener;
+    }
+
+
+    public FayeClientListener getmNetworkListener() {
+        return mNetworkListener;
+    }
+
+    public void setNetworkListener(FayeClientListener networkListener) {
+        mNetworkListener = networkListener;
+    }
+
+
+    public FayeAgentListener getAgentListener() {
+        return mAgentListener;
+    }
+
+    public void setAgentListener(FayeAgentListener listener) {
+        this.mAgentListener = listener;
     }
 
     public void addChannel(String channel) {
@@ -142,6 +199,7 @@ public class FayeClient {
     public void subscribeChannel(String channel) {
         mChannels.add(channel);
         subscribe(channel);
+        FuguLog.v("channel------>>>>>>>>>>--------------", channel);
     }
 
     public void subscribeToChannels(String... channels) {
@@ -225,7 +283,9 @@ public class FayeClient {
 
     public void publish(String channel, JSONObject data, String ext, String id) {
         try {
+            //FuguLog.e("@@@@@@@@", "%%%%%%%%%%%%%%%%%%%%%%% "+data);
             String publish = mMetaMessage.publish(channel, data, ext, id);
+            FuguLog.e("@@@@@@@@", "*********************** "+publish);
             mWebSocket.send(publish);
         } catch (Exception e) {
             FuguLog.e(LOG_TAG, "Build publish message to JSON error" + e);
@@ -249,13 +309,14 @@ public class FayeClient {
 
     private void openWebSocketConnection() {
         // Clean up any existing socket
+        WebSocketImpl.DEBUG = false;
         if (mWebSocket != null) {
             mWebSocket.close();
         }
         try {
             URI uri = new URI(mServerUrl);
             mWebSocket = new WebSocket(uri, mMessageHandler);
-
+            mWebSocket.setConnectionLostTimeout(60);
             FuguLog.e("uri.getScheme()", "==" + uri.getScheme());
 
             if (uri.getScheme().equals("https") || uri.getScheme().equals("wss")) {
@@ -271,7 +332,8 @@ public class FayeClient {
         if (mWebSocket != null) {
             mWebSocket.close();
         }
-        mListener = null;
+        //mListener = null;
+        mNetworkListener = null;
     }
 
     private void handShake() {
@@ -280,6 +342,9 @@ public class FayeClient {
             mWebSocket.send(handshake);
         } catch (Exception e) {
             FuguLog.e(LOG_TAG, "HandShake message error" + e);
+            if (mListener != null) {
+                mListener.onWebSocketError();
+            }
         }
     }
 
@@ -287,7 +352,17 @@ public class FayeClient {
         try {
             String subscribe = mMetaMessage.subscribe(channel);
             mWebSocket.send(subscribe);
-        } catch (Exception e) {
+        }  catch(WebsocketNotConnectedException e) {
+            if (mListener != null) {
+                mListener.onWebSocketError();
+            }
+            if(mAgentListener != null)
+                mAgentListener.onWebSocketError();
+
+            mFayeConnected = false;
+            e.printStackTrace();
+            FuguLog.e(LOG_TAG, "Subscribe message error" + e);
+        }catch (Exception e) {
             FuguLog.e(LOG_TAG, "Subscribe message error" + e);
         }
     }
@@ -307,6 +382,7 @@ public class FayeClient {
         try {
             String connect = mMetaMessage.connect();
             mWebSocket.send(connect);
+            mWebSocket.setConnectionLostTimeout(10);
         } catch (Exception e) {
             FuguLog.e(LOG_TAG, "Connect message error" + e);
         }
@@ -342,6 +418,11 @@ public class FayeClient {
                     if (mListener != null && mListener instanceof FayeClientListener) {
                         mListener.onConnectedServer(this);
                     }
+                    if(mNetworkListener != null)
+                        mNetworkListener.onConnectedServer(this);
+                    if(mAgentListener != null) {
+                        mAgentListener.onConnectedServer(this);
+                    }
                     connect();
                 } else {
                     FuguLog.e(LOG_TAG, "Handshake Error: " + obj.toString());
@@ -364,6 +445,12 @@ public class FayeClient {
                     if (mListener != null && mListener instanceof FayeClientListener) {
                         mListener.onDisconnectedServer(this);
                     }
+                    if(mNetworkListener != null)
+                        mNetworkListener.onDisconnectedServer(this);
+                    if(mAgentListener != null) {
+                        mAgentListener.onDisconnectedServer(this);
+                    }
+
                     mFayeConnected = false;
                     closeWebSocketConnection();
                 } else {
@@ -399,23 +486,28 @@ public class FayeClient {
                 String data = obj.optString(MetaMessage.KEY_DATA, null);
                 if (data != null) {
                     if (mListener != null && mListener instanceof FayeClientListener) {
-                        TreeMap<String, ListItem> unsentMessageMap = new TreeMap<>();
-                        try {
-                            final JSONObject messageJson = new JSONObject(data);
-                            String channelId = channel.substring(1, channel.length());
-                            unsentMessageMap = CommonData.getUnsentMessageMapByChannel(Long.parseLong(channelId));
-                            try {
-                                unsentMessageMap.remove(messageJson.getString("UUID"));
-                                CommonData.setUnsentMessageMapByChannel(Long.parseLong(channelId), unsentMessageMap);
-                            } catch (Exception e) {
-
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+//                        TreeMap<String, ListItem> unsentMessageMap = new TreeMap<>();
+//                        try {
+//                            final JSONObject messageJson = new JSONObject(data);
+//                            String channelId = channel.substring(1, channel.length());
+//                            unsentMessageMap = CommonData.getUnsentMessageMapByChannel(Long.parseLong(channelId));
+//                            try {
+//                                unsentMessageMap.remove(messageJson.getString("UUID"));
+//                                CommonData.setUnsentMessageMapByChannel(Long.parseLong(channelId), unsentMessageMap);
+//                            } catch (Exception e) {
+//
+//                            }
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
                         mListener.onReceivedMessage(this, data, channel);
-
+                    } else if(mAgentListener != null) {
+                        mAgentListener.onReceivedMessage(this, data, channel);
                     }
+                    if(mNetworkListener != null)
+                        mNetworkListener.onReceivedMessage(this, data, channel);
                 }
             } else {
                 FuguLog.e(LOG_TAG, "Cannot handle this message: " + obj.toString());
@@ -423,7 +515,11 @@ public class FayeClient {
                 if (data != null) {
                     if (mListener != null && mListener instanceof FayeClientListener) {
                         mListener.onReceivedMessage(this, data, channel);
+                    } else if(mAgentListener != null) {
+                        mAgentListener.onReceivedMessage(this, data, channel);
                     }
+                    if(mNetworkListener != null)
+                        mNetworkListener.onReceivedMessage(this, data, channel);
                 }
             }
             return;

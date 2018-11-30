@@ -103,6 +103,18 @@ public class FuguGetMessageResponse {
         @Expose
         private String businessName;
 
+        public boolean isDisableReply() {
+            return disableReply != null && disableReply == 1;
+        }
+
+        public void setDisableReply(Integer disableReply) {
+            this.disableReply = disableReply;
+        }
+
+        @SerializedName("disable_reply")
+        @Expose
+        private Integer disableReply;
+
         public ArrayList<Message> getMessages() {
             return messages;
         }

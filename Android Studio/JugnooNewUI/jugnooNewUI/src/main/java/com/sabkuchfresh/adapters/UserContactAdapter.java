@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.sabkuchfresh.datastructure.UserContactObject;
 import com.sabkuchfresh.fatafatchatpay.NewConversationActivity;
@@ -76,13 +77,14 @@ public class UserContactAdapter extends RecyclerView.Adapter<UserContactAdapter.
             } else {
                 holder.tvPersonInitial.setText("");
             }
-            Glide.clear(holder.ivPersonImage);
+            Glide.with(mContext).clear(holder.ivPersonImage);
         } else {
             holder.tvPersonInitial.setVisibility(View.GONE);
             holder.ivPersonImage.setVisibility(View.VISIBLE);
-            Glide.with(mContext).load(contactObject.getUserImage()).asBitmap()
-                    .centerCrop()
+            RequestOptions options = new RequestOptions()
                     .placeholder(ContextCompat.getDrawable(mContext, R.drawable.placeholder_img))
+                    .centerCrop();
+            Glide.with(mContext).asBitmap().apply(options).load(contactObject.getUserImage())
                     .into(new BitmapImageViewTarget(holder.ivPersonImage) {
                         @Override
                         protected void setResource(Bitmap resource) {

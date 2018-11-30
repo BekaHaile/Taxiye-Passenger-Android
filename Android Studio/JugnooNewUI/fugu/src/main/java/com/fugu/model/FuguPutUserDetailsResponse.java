@@ -76,6 +76,15 @@ public class FuguPutUserDetailsResponse {
         @SerializedName("conversations")
         @Expose
         private List<FuguConversation> fuguConversations = null;
+        @SerializedName("grouping_tags")
+        @Expose
+        private List<GroupingTag> groupingTags = null;
+        @SerializedName("in_app_support_panel_version")
+        @Expose
+        private Integer inAppSupportVersion;
+        @SerializedName("is_faq_enabled")
+        @Expose
+        private Integer isFAQEnabled;
 
         public Long getUserId() {
             return userId;
@@ -117,6 +126,29 @@ public class FuguPutUserDetailsResponse {
 
         public void setWhiteLabel(Boolean whiteLabel) {
             isWhiteLabel = whiteLabel;
+        }
+
+        public List<GroupingTag> getGroupingTags() {
+            return groupingTags;
+        }
+
+        public void setGroupingTags(List<GroupingTag> groupingTags) {
+            this.groupingTags = groupingTags;
+        }
+        public Integer getInAppSupportVersion() {
+            return inAppSupportVersion;
+        }
+
+        public void setInAppSupportVersion(Integer inAppSupportVersion) {
+            this.inAppSupportVersion = inAppSupportVersion;
+        }
+
+        public boolean isFAQEnabled() {
+            try {
+                return isFAQEnabled == 1;
+            } catch (Exception e) {
+                return false;
+            }
         }
     }
 }

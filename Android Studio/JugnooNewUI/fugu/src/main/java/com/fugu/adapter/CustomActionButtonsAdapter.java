@@ -38,7 +38,7 @@ public class CustomActionButtonsAdapter extends RecyclerView.Adapter<CustomActio
 
     @Override
     public ActionButtonViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        View main = mLayoutInflater.inflate(R.layout.list_item_action_button, parent, false);
+        View main = mLayoutInflater.inflate(R.layout.hippo_list_item_action_button, parent, false);
         return new ActionButtonViewHolder(main);
     }
 

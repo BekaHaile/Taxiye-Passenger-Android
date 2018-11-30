@@ -14,15 +14,15 @@ import com.google.gson.annotations.SerializedName;
 
 public class FuguDeviceDetails {
     private Context context;
-    @SerializedName("android_operating_system")
+    @SerializedName("os")
     private String operating_system = "Android";
-    @SerializedName("android_model")
+    @SerializedName("model")
     private String model = android.os.Build.MODEL;
-    @SerializedName("android_manufacturer")
+    @SerializedName("manufacturer")
     private String manufacturer = android.os.Build.MANUFACTURER;
-    @SerializedName("android_app_version")
+    @SerializedName("app_version")
     private int app_version = 0;
-    @SerializedName("android_os_version")
+    @SerializedName("os_version")
     private String os_version = android.os.Build.VERSION.RELEASE;
 
     public FuguDeviceDetails(int appVersion) {

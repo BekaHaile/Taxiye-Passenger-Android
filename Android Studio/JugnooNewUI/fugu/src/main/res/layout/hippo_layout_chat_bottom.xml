@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:wheel="http://schemas.android.com/tools"
+    android:id="@+id/llBottom"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <LinearLayout
+        android:id="@+id/llMessageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cvTypeMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/fugu_margin_4"
+            android:layout_marginEnd="@dimen/fugu_dp_6"
+            android:layout_marginLeft="@dimen/fugu_dp_6"
+            android:layout_marginRight="@dimen/fugu_dp_6"
+            android:layout_marginStart="@dimen/fugu_dp_6"
+            android:layout_marginTop="@dimen/fugu_margin_4"
+            android:layout_weight="0.85"
+            android:background="@drawable/fugu_card_layout"
+            app:cardCornerRadius="25dp">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/fugu_padding_10">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingLeft="-4dp"
+                    android:paddingStart="-4dp">
+
+                    <ImageView
+                        android:id="@+id/ivAttachment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="bottom"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:onClick="onClick"
+                        android:padding="@dimen/fugu_padding_4"
+                        android:rotation="-45"
+                        android:src="@drawable/fugu_ic_attachment"
+                        android:visibility="visible" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/etMsg"
+                    style="@style/text_rtl"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="@dimen/fugu_margin_10"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:cursorVisible="true"
+                    android:hint="@string/fugu_send_message"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxHeight="100dp"
+                    android:paddingBottom="@dimen/fugu_padding_5"
+                    android:paddingRight="@dimen/fugu_padding_5"
+                    android:paddingTop="@dimen/fugu_padding_5"
+                    android:scrollbars="vertical"
+                    android:textColor="@android:color/black"
+                    android:textCursorDrawable="@null" />
+
+                <ProgressBar
+                    android:id="@+id/pbSendingImage"
+                    style="@android:style/Widget.ProgressBar"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/fugu_margin_10"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <ImageView
+            android:id="@+id/ivSend"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.15"
+            android:alpha="0.5"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:onClick="onClick"
+            android:src="@drawable/fugu_send_normal"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <!--<android.support.v7.widget.CardView-->
+        <!--android:id="@+id/cvTypeMessage"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:elevation="@dimen/fugu_elevation_4"-->
+        <!--android:paddingTop="@dimen/fugu_margin_4"-->
+        <!--app:cardCornerRadius="0dp">-->
+
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:background="@color/fugu_divider_ea" />-->
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/llChatBottom"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="visible"-->
+            <!--android:orientation="vertical">-->
+
+            <!--<LinearLayout-->
+                <!--android:id="@+id/llMsgInput"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/ivAttachment"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="bottom"-->
+                    <!--android:background="?attr/selectableItemBackgroundBorderless"-->
+                    <!--android:onClick="onClick"-->
+                    <!--android:paddingBottom="@dimen/fugu_padding_10"-->
+                    <!--android:paddingLeft="@dimen/fugu_padding_15"-->
+                    <!--android:paddingRight="@dimen/fugu_padding_5"-->
+                    <!--android:paddingTop="@dimen/fugu_padding_15"-->
+                    <!--android:rotation="-45"-->
+                    <!--android:src="@drawable/fugu_ic_attachment"-->
+                    <!--android:visibility="gone" />-->
+
+                <!--<com.fugu.agent.Util.EditTextSelectable-->
+                    <!--android:id="@+id/etMsg"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginLeft="@dimen/fugu_margin_15"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@android:color/transparent"-->
+                    <!--android:hint="@string/fugu_type_a_message"-->
+                    <!--android:inputType="textCapSentences|textMultiLine"-->
+                    <!--android:maxHeight="100dp"-->
+                    <!--android:paddingBottom="@dimen/fugu_padding_5"-->
+                    <!--android:paddingRight="@dimen/fugu_padding_5"-->
+                    <!--android:paddingTop="@dimen/fugu_padding_5"-->
+                    <!--android:scrollbars="vertical"-->
+                    <!--android:textColor="@android:color/black"-->
+                    <!--android:textCursorDrawable="@null" />-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/ivSend"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="bottom"-->
+                    <!--android:background="?attr/selectableItemBackgroundBorderless"-->
+                    <!--android:onClick="onClick"-->
+                    <!--android:padding="@dimen/fugu_padding_10"-->
+                    <!--android:src="@drawable/fugu_ic_send"-->
+                    <!--android:visibility="invisible" />-->
+
+                <!--<ProgressBar-->
+                    <!--android:id="@+id/pbSendingImage"-->
+                    <!--style="@android:style/Widget.ProgressBar"-->
+                    <!--android:layout_width="24dp"-->
+                    <!--android:layout_height="24dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_margin="@dimen/fugu_margin_10"-->
+                    <!--android:visibility="gone" />-->
+
+            <!--</LinearLayout>-->
+
+            <!--<View-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="1dp"-->
+                <!--android:background="@color/fugu_divider_ea" />-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="50dp">-->
+
+                <!--&lt;!&ndash;<RelativeLayout&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/rlText"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginLeft="@dimen/fugu_margin_20"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:onClick="onClick">&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/ivText"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_centerInParent="true"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:src="@drawable/ic_text" />&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<View&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/vText"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="24dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="2dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:background="@color/fugu_theme_color_primary" />&ndash;&gt;-->
+                <!--&lt;!&ndash;</RelativeLayout>&ndash;&gt;-->
+
+
+                <!--&lt;!&ndash;<RelativeLayout&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/rlPrivate"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginLeft="@dimen/fugu_margin_10"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_toRightOf="@+id/rlText"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:onClick="onClick">&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/ivPrivate"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_centerInParent="true"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:src="@drawable/ic_private_note" />&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<View&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/vPrivate"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="24dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="2dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:background="@color/colorPrimary"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:visibility="invisible" />&ndash;&gt;-->
+                <!--&lt;!&ndash;</RelativeLayout>&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<RelativeLayout&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/rlGiff"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_marginLeft="@dimen/fugu_margin_10"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_toRightOf="@+id/rlPrivate"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:onClick="onClick"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:visibility="gone">&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/ivGiff"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_centerInParent="true"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:src="@drawable/ic_private_note" />&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<View&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/vGiff"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="24dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="2dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:background="@color/colorPrimary"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:visibility="invisible" />&ndash;&gt;-->
+                <!--&lt;!&ndash;</RelativeLayout>&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<Button&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/feedback_btn"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_toRightOf="@+id/rlGiff"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:background="@color/transparent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:text="@string/hippo_feedback_text"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:visibility="gone" />&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<RelativeLayout&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/feedback_layout"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_toRightOf="@+id/rlGiff"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:padding="@dimen/fugu_padding_10"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:visibility="gone">&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="25dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="30dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_centerInParent="true"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_marginLeft="@dimen/fugu_margin_1"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:background="@drawable/ic_star_new" />&ndash;&gt;-->
+
+                <!--&lt;!&ndash;</RelativeLayout>&ndash;&gt;-->
+
+                <!--&lt;!&ndash;<RelativeLayout&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:id="@+id/bot_layout"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:layout_toRightOf="@+id/rlGiff"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:padding="@dimen/fugu_padding_5"&ndash;&gt;-->
+                    <!--&lt;!&ndash;android:visibility="visible">&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;<com.fuguagent.utils.loadingBox.FuguAgentProgressWheel&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/progress_wheel"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="@dimen/fugu_size_30"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="@dimen/fugu_size_30"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_centerHorizontal="true"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_centerInParent="true"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:visibility="gone"&ndash;&gt;-->
+                        <!--&lt;!&ndash;wheel:matProg_barColor="@color/colorPrimary"&ndash;&gt;-->
+                        <!--&lt;!&ndash;wheel:matProg_barWidth="0.5dp"&ndash;&gt;-->
+                        <!--&lt;!&ndash;wheel:matProg_fillRadius="true"&ndash;&gt;-->
+                        <!--&lt;!&ndash;wheel:matProg_progressIndeterminate="false" />&ndash;&gt;-->
+
+
+                    <!--&lt;!&ndash;<RelativeLayout&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:id="@+id/ivManualBot"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:layout_height="match_parent"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:padding="@dimen/fugu_padding_5"&ndash;&gt;-->
+                        <!--&lt;!&ndash;android:visibility="visible">&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_width="22dp"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_height="25dp"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_centerInParent="true"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:layout_marginLeft="@dimen/fugu_margin_7"&ndash;&gt;-->
+                            <!--&lt;!&ndash;android:background="@drawable/ic_automated_message" />&ndash;&gt;-->
+
+                    <!--&lt;!&ndash;</RelativeLayout>&ndash;&gt;-->
+
+                <!--&lt;!&ndash;</RelativeLayout>&ndash;&gt;-->
+
+                <!--<LinearLayout-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_marginRight="@dimen/fugu_margin_20"-->
+                    <!--android:orientation="horizontal">-->
+
+                    <!--<RelativeLayout-->
+                        <!--android:id="@+id/rlCanned"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_marginRight="@dimen/fugu_padding_10"-->
+                        <!--android:onClick="onClick"-->
+                        <!--android:visibility="visible">-->
+
+                        <!--<ImageView-->
+                            <!--android:id="@+id/ivCanned"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="@dimen/fugu_margin_13"-->
+                            <!--android:src="@drawable/ic_canned" />-->
+
+                        <!--<View-->
+                            <!--android:layout_width="24dp"-->
+                            <!--android:layout_height="2dp"-->
+                            <!--android:background="@color/fugu_theme_color_primary"-->
+                            <!--android:visibility="gone" />-->
+                    <!--</RelativeLayout>-->
+
+                    <!--<RelativeLayout-->
+                        <!--android:id="@+id/rlImage"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:onClick="onClick"-->
+                        <!--android:visibility="visible">-->
+
+                        <!--<ImageView-->
+                            <!--android:id="@+id/ivImageAttachment"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginTop="@dimen/fugu_margin_10"-->
+                            <!--android:src="@drawable/ic_image_attachment" />-->
+
+                        <!--<View-->
+                            <!--android:layout_width="24dp"-->
+                            <!--android:layout_height="2dp"-->
+                            <!--android:background="@color/fugu_theme_color_primary"-->
+                            <!--android:visibility="gone" />-->
+                    <!--</RelativeLayout>-->
+
+
+                <!--</LinearLayout>-->
+            <!--</RelativeLayout>-->
+
+        <!--</LinearLayout>-->
+    <!--</android.support.v7.widget.CardView>-->
+
+</LinearLayout>

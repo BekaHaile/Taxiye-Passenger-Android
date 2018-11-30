@@ -3,6 +3,7 @@ package com.fugu.utils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -17,7 +18,11 @@ public class DateUtils {
 
 
     private static DateUtils dateUtils;
+    private static final DateFormat FORMAT_UTC = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
 
+    static {
+        FORMAT_UTC.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
     /**
      * Method to get instance of this class
      *
@@ -40,6 +45,10 @@ public class DateUtils {
         return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH).format(date);
     }
 
+    public static String getFormattedDate(Date date, String format) {
+        return new SimpleDateFormat(format, Locale.ENGLISH).format(date);
+    }
+
     /**
      * Method to convert the UTC date time to Local
      *
@@ -51,6 +60,10 @@ public class DateUtils {
     }
 
     public String convertToLocal(String dateTime, String format) {
+        return convertToLocal(dateTime, STANDARD_DATE_FORMAT_TZ, format);
+    }
+
+    public String convertToLocal(String dateTime, String format, String outputFormat) {
 
         //FuguLog.e("UTC Date", dateTime + "");
 
@@ -61,11 +74,15 @@ public class DateUtils {
         try {
             date = utcFormat.parse(dateTime);
         } catch (ParseException e) {
-            date = new Date();
-            e.printStackTrace();
+            try {
+                date = utcToLocalTZ(dateTime);
+            } catch (Exception e1) {
+                date = new Date();
+                e1.printStackTrace();
+            }
         }
 
-        DateFormat pstFormat = new SimpleDateFormat(STANDARD_DATE_FORMAT_TZ);
+        DateFormat pstFormat = new SimpleDateFormat(outputFormat);
         pstFormat.setTimeZone(TimeZone.getDefault());
 
         String result = pstFormat.format(date);
@@ -76,8 +93,24 @@ public class DateUtils {
         return result;
     }
 
+    public static Date utcToLocalTZ(String utcTime) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//2018-06-26T10:21:23.000Z
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//2018-07-24T09:41:27.875+0000
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        try {
+            utcTime = utcTime.replace("T", " ");
+            utcTime = utcTime.split("\\.")[0];
+            Date myDate = simpleDateFormat.parse(utcTime);
+//            String localDate = sdf.format(myDate);
+            return myDate;
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            return new Date();
+        }
+    }
 
     static String STANDARD_DATE_FORMAT_TZ = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    public static String STANDARD_DATE_ONLY_FORMAT = "yyyy-MM-dd";
 
     /**
      * Method to convert Local date time to UTC
@@ -149,7 +182,7 @@ public class DateUtils {
                 String month = date.split("-")[1];
                 String day = date.split("-")[2];
 
-                SimpleDateFormat sdf = new SimpleDateFormat(STANDARD_DATE_FORMAT_TZ);
+                SimpleDateFormat sdf = new SimpleDateFormat(STANDARD_DATE_ONLY_FORMAT);
                 Date tempDate = sdf.parse(dateTime);
 
                 if (android.text.format.DateUtils.isToday(tempDate.getTime())) {
@@ -253,5 +286,169 @@ public class DateUtils {
             e.printStackTrace();
             return 0;
         }
+    }
+
+    public static Date getUtcDateWithTimeZone(String utcDate) {
+
+        try {
+            FuguLog.v("ttttttttttt", FORMAT_UTC.parse(utcDate).toString());
+            return FORMAT_UTC.parse(utcDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Calendar feedPostedCal = Calendar.getInstance();
+    private static Calendar currentDateCal = Calendar.getInstance();
+
+    public static String getTimeToDisplay(String createdAtTime) {
+        feedPostedCal.setTime(getUtcDateWithTimeZone(createdAtTime));
+        currentDateCal.setTimeInMillis(System.currentTimeMillis());
+        int yearPosted, yearCurrent, currentMonth, postedMonth, currentDate, postedDate, postedHour, currentHour, postedMin, currentMin;
+        yearPosted = feedPostedCal.get(Calendar.YEAR);
+        yearCurrent = currentDateCal.get(Calendar.YEAR);
+        currentMonth = currentDateCal.get(Calendar.MONTH);
+        postedMonth = feedPostedCal.get(Calendar.MONTH);
+        currentDate = currentDateCal.get(Calendar.DATE);
+        postedDate = feedPostedCal.get(Calendar.DATE);
+
+        int diff = yearCurrent - yearPosted;
+        if (postedMonth > currentMonth || (postedMonth == currentMonth && postedDate > currentDate)) {
+            diff--;
+        }
+
+        if (diff > 0) {
+            if (diff == 1)
+                return diff + " year ago";
+            else
+                return diff + " years ago";
+        }
+
+        if (yearPosted != yearCurrent) {
+            diff = currentMonth + (11 - postedMonth);
+            if (postedDate > currentDate) diff--;
+        } else {
+
+            diff = currentMonth - postedMonth;
+            if (currentMonth != postedMonth && postedDate > currentDate)
+                diff--;
+
+        }
+
+        if (diff > 0) {
+            if (diff == 1)
+                return diff + " month ago";
+            else
+                return diff + " months ago";
+        }
+
+
+        long diffT = currentDateCal.getTimeInMillis() - feedPostedCal.getTimeInMillis();
+        long diffC = diffT / (24 * 60 * 60 * 1000 * 7);
+        if (diffC >= 1) return diffC + (diffC == 1 ? " week ago" : " weeks ago");
+        diffC = diffT / (24 * 60 * 60 * 1000);
+        if (diffC >= 1) return diffC + (diffC == 1 ? " day ago" : " days ago");
+        diffC = diffT / (60 * 60 * 1000) % 24;
+        if (diffC >= 1) return diffC + (diffC == 1 ? " hour ago" : " hours ago");
+        diffC = diffT / (60 * 1000) % 60;
+        if (diffC >= 1) return diffC + (diffC == 1 ? " minute ago" : " minutes ago");
+        diffC = diffT / 1000 % 60;
+
+        return " Just now";
+           /* if (diffC >= 0)
+                return diffC + "s";
+            else
+                return 0 + "s";*/
+
+
+    }
+
+
+    public static String getDateTimeToShow(String createdAtTime) {
+        feedPostedCal.setTime(getUtcDateWithTimeZone(createdAtTime));
+        currentDateCal.setTimeInMillis(System.currentTimeMillis());
+        int yearPosted, yearCurrent, currentMonth, postedMonth, currentDate, postedDate, postedHour, currentHour, postedMin, currentMin;
+        yearPosted = feedPostedCal.get(Calendar.YEAR);
+        yearCurrent = currentDateCal.get(Calendar.YEAR);
+        currentMonth = currentDateCal.get(Calendar.MONTH);
+        postedMonth = feedPostedCal.get(Calendar.MONTH);
+        currentDate = currentDateCal.get(Calendar.DATE);
+        postedDate = feedPostedCal.get(Calendar.DATE);
+        SimpleDateFormat month_date = new SimpleDateFormat("MMM");
+        String month_name = month_date.format(feedPostedCal.getTime());
+        String year_name= String.valueOf(yearPosted).substring(2);
+
+        int diff = yearCurrent - yearPosted;
+        if (postedMonth > currentMonth || (postedMonth == currentMonth && postedDate > currentDate)) {
+            diff--;
+        }
+
+        if (diff > 0) {
+            if (diff == 1)
+                return  " " +postedDate + " " + month_name + " " + year_name;
+            else
+                return  " " +postedDate + " " + month_name + " " + year_name;
+        }
+
+        if (yearPosted != yearCurrent) {
+            diff = currentMonth + (11 - postedMonth);
+            if (postedDate > currentDate) diff--;
+        } else {
+
+            diff = currentMonth - postedMonth;
+            if (currentMonth != postedMonth && postedDate > currentDate)
+                diff--;
+
+        }
+
+        if (diff > 0) {
+            if (diff == 1)
+                return " " + postedDate + " " + month_name + " " + year_name;
+            else
+                return " " + postedDate + " " + month_name + " " + year_name;
+        }
+
+
+        long diffT = currentDateCal.getTimeInMillis() - feedPostedCal.getTimeInMillis();
+        long diffC = diffT / (24 * 60 * 60 * 1000 * 7);
+        if (diffC >= 1)
+            return (diffC == 1 ? " " + postedDate + " " + month_name + " " + year_name : " " + postedDate + " " + month_name + " " + year_name);
+        diffC = diffT / (24 * 60 * 60 * 1000);
+        if (diffC >= 1)
+            return (diffC == 1 ? " " + postedDate + " " + month_name + " " + year_name : " " + postedDate + " " + month_name + " " + year_name);
+        diffC = diffT / (60 * 60 * 1000) % 24;
+        if (diffC >= 1) return diffC + (diffC == 1 ? " hr ago" : " hrs ago");
+        diffC = diffT / (60 * 1000) % 60;
+        if (diffC >= 1) return diffC + (diffC == 1 ? " min ago" : " mins ago");
+        diffC = diffT / 1000 % 60;
+
+        return " Just now";
+           /* if (diffC >= 0)
+                return diffC + "s";
+            else
+                return 0 + "s";*/
+    }
+
+    public static long getTimeInLong(String dateString) {
+        SimpleDateFormat sdf = new SimpleDateFormat(STANDARD_DATE_FORMAT_TZ);
+        try {
+            Date lastMessage = sdf.parse(dateString);
+            return lastMessage.getTime();
+        } catch (Exception e) {
+            return -100;
+        }
+    }
+
+    private final static long MESSAGE_EXPIRED_TIME = 10 * 60 * 1000; //3 sec is 3 * 1000
+    public static boolean getTimeDiff(String dateTime) {
+        feedPostedCal.setTime(getUtcDateWithTimeZone(dateTime));
+        currentDateCal.setTimeInMillis(System.currentTimeMillis());
+
+        long diffT = currentDateCal.getTimeInMillis() - feedPostedCal.getTimeInMillis();
+        if(diffT >= MESSAGE_EXPIRED_TIME) {
+            return true;
+        }
+        return false;
     }
 }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/hippo_white"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -15,57 +16,68 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:focusable="true"
-            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingBottom="@dimen/fugu_padding_15"
             android:paddingLeft="@dimen/fugu_padding_12"
             android:paddingRight="@dimen/fugu_padding_12"
             android:paddingTop="@dimen/fugu_padding_15">
 
-            <RelativeLayout
-                android:id="@+id/rlChannelIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/fugu_padding_12">
+            <LinearLayout
+                android:id="@+id/icon_layout"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:layout_marginEnd="@dimen/fugu_padding_12"
+                android:layout_marginRight="@dimen/fugu_padding_12"
+                >
 
-                <ImageView
-                    android:id="@+id/ivChannelIcon"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_centerInParent="true"
-                    android:src="@drawable/ring_grey" />
+            <ImageView
+                android:id="@+id/ivChannelIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/hippo_ring_grey"
+                android:layout_gravity="center"
+                android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/tvChannelIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="A"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/fugu_text_size_intermediate"
-                    android:visibility="gone" />
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/tvChannelIcon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/hippo_ring_grey"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:text="G"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/fugu_text_size_intermediate"
+                android:visibility="visible" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tvChannelName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/icon_layout"
                 android:layout_toLeftOf="@+id/tvDate"
-                android:layout_toRightOf="@+id/rlChannelIcon"
+                android:layout_toRightOf="@+id/icon_layout"
+                android:layout_toStartOf="@+id/tvDate"
                 android:singleLine="true"
-                android:text="Channel Name"
+                android:text="asdfghj asdfgh sdfgh"
                 android:textColor="@color/fugu_text_color_primary"
+                android:textDirection="locale"
                 android:textSize="@dimen/fugu_text_size_medium"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="UnusedAttribute" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvChannelName"
                 android:layout_marginTop="@dimen/fugu_margin_2"
+                android:layout_toEndOf="@+id/icon_layout"
                 android:layout_toLeftOf="@+id/circularTvMessageCount"
-                android:layout_toRightOf="@+id/rlChannelIcon"
+                android:layout_toRightOf="@+id/icon_layout"
+                android:layout_toStartOf="@+id/circularTvMessageCount"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -73,10 +85,10 @@
                     android:layout_width="13dp"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/fugu_padding_3"
-                    android:paddingTop="@dimen/fugu_padding_7"
                     android:paddingRight="@dimen/fugu_padding_3"
+                    android:paddingTop="@dimen/fugu_padding_7"
                     android:src="@drawable/fugu_tick_single"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/tvMessage"
@@ -84,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="Message dhfcd oig rwrw "
+                    android:text="asdfgh ertyu vbnm vbnm bn"
                     android:textColor="@color/fugu_text_color_primary"
                     android:textSize="@dimen/fugu_text_size_intermediate" />
             </LinearLayout>
@@ -93,9 +105,11 @@
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+                android:text="12/21/18"
                 android:layout_marginLeft="@dimen/fugu_margin_15"
-                android:text="84667967657657"
+                android:layout_marginStart="@dimen/fugu_margin_15"
                 android:textColor="@color/fugu_channel_date_text"
                 android:textSize="@dimen/fugu_text_size_small" />
 
@@ -103,18 +117,22 @@
                 android:id="@+id/circularTvMessageCount"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/tvDate"
                 android:layout_marginLeft="@dimen/fugu_margin_15"
+                android:layout_marginStart="@dimen/fugu_margin_15"
                 android:layout_marginTop="@dimen/fugu_padding_3"
-                android:background="@drawable/bg_unread_count"
+                android:background="@drawable/hippo_bg_unread_count"
                 android:gravity="center"
                 android:minWidth="30dp"
-                android:text="69"
+                android:paddingLeft="@dimen/fugu_padding_5"
+                android:paddingRight="@dimen/fugu_padding_5"
+                android:text="9"
                 android:maxLines="1"
-                android:textColor="@color/white"
+                android:textColor="@color/hippo_white"
                 android:textSize="@dimen/fugu_text_size_tiny"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
 
         </RelativeLayout>

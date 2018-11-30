@@ -26,11 +26,15 @@ import com.fugu.model.FuguConversation;
 import com.fugu.model.FuguPutUserDetailsResponse;
 import com.fugu.utils.FuguLog;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by cl-macmini-01 on 1/31/18.
@@ -57,9 +61,12 @@ public class FuguChannelsFragment extends Fragment implements Animation.Animatio
      * @return fugu channel fragment
      */
     public static FuguChannelsFragment newInstance(ArrayList<FuguConversation> fuguConversationList) {
+        Gson gson = new Gson();
+        JsonElement element = gson.toJsonTree(fuguConversationList, new TypeToken<List<FuguConversation>>() {}.getType());
+        JsonArray jsonArray = element.getAsJsonArray();
 
         Bundle args = new Bundle();
-        args.putParcelableArrayList(FuguAppConstant.CONVERSATION, fuguConversationList);
+        args.putString(FuguAppConstant.CONVERSATION, jsonArray.toString());
         FuguChannelsFragment fragment = new FuguChannelsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -72,8 +79,9 @@ public class FuguChannelsFragment extends Fragment implements Animation.Animatio
 
         View main = inflater.inflate(R.layout.fugu_fragment_channels, container, false);
         initViews(main);
+        Gson gson = new Gson();
         fuguConversationList = new ArrayList<>();
-        fuguConversationList = getArguments().getParcelableArrayList(FuguAppConstant.CONVERSATION);
+        fuguConversationList = gson.fromJson(getArguments().getString(FuguAppConstant.CONVERSATION), new TypeToken<List<FuguConversation>>(){}.getType());
         setRecyclerViewData();
         return main;
     }
@@ -246,11 +254,7 @@ public class FuguChannelsFragment extends Fragment implements Animation.Animatio
     public void setConversationList(final ArrayList<FuguConversation> conversationList) {
         fuguConversationList = new ArrayList<>();
         for (FuguConversation conversation : conversationList) {
-            try {
-                fuguConversationList.add((FuguConversation) conversation.clone());
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
+            fuguConversationList.add(new FuguConversation(conversation));
         }
         if (fuguChannelsAdapter != null) {
             fuguChannelsAdapter.updateList(fuguConversationList);

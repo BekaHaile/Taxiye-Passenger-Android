@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/hippo_white"
+            android:orientation="vertical"
+            android:padding="@dimen/fugu_padding_10">
+
+            <TextView
+                android:id="@+id/title_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This will send message to your active* Fleet"
+                android:textColor="@color/fugu_text_color_primary"
+                android:textSize="@dimen/fugu_text_size_medium" />
+
+            <TextView
+                android:id="@+id/title_view_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fugu_margin_5"
+                android:text="*Based upon last 30 days login activity"
+                android:textColor="@color/fugu_secondary_text_msg_from"
+                android:textSize="@dimen/fugu_text_size_small" />
+
+            <LinearLayout
+                android:id="@+id/selected_teams_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fugu_margin_20"
+                android:background="@drawable/hippo_background_filter_bg_selector"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/select_teams_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:drawableRight="@drawable/hippo_ic_next_selected_arrow"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/fugu_padding_12"
+                    android:paddingRight="@dimen/fugu_margin_12"
+                    android:text="Select Team"
+                    android:textColor="@color/fugu_text_color_primary" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/selected_fleets_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fugu_margin_10"
+                android:background="@drawable/hippo_background_filter_bg_selector"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/select_fleets_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:drawableRight="@drawable/hippo_ic_next_selected_arrow"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/fugu_padding_12"
+                    android:paddingRight="@dimen/fugu_margin_12"
+                    android:text="Select Fleets"
+                    android:textColor="@color/fugu_text_color_primary" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/show_fleets_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fugu_margin_10"
+                android:background="@drawable/hippo_background_filter_bg_selector"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/show_fleets_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:drawableRight="@drawable/hippo_ic_next_selected_arrow"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/fugu_padding_12"
+                    android:paddingRight="@dimen/fugu_margin_12"
+                    android:text="Select Teams"
+                    android:textColor="@color/fugu_text_color_primary" />
+
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fugu_margin_5"
+                app:counterEnabled="true"
+                app:counterMaxLength="100">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/ed_title_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapSentences"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:maxLength="100"
+                    android:textColor="@color/fugu_text_color_primary"
+                    android:textSize="@dimen/fugu_text_size_normal" />
+
+            </android.support.design.widget.TextInputLayout>
+
+
+            <EditText
+                android:id="@+id/ed_message_view"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/fugu_broadcast_message_background"
+                android:gravity="left"
+                android:inputType="textMultiLine|textCapSentences"
+                android:singleLine="false"
+                android:overScrollMode="always"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
+                android:padding="@dimen/fugu_padding_5"
+                android:textColor="@color/fugu_text_color_primary"
+                android:textSize="@dimen/fugu_text_size_normal"
+                />
+
+
+            <!--<android.support.design.widget.TextInputEditText
+                android:id="@+id/ed_messagwe_view"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="@dimen/fugu_margin_10"
+                android:background="@drawable/fugu_broadcast_message_background"
+                android:hint="MESSAGE*"
+                android:inputType="textCapSentences"
+                android:padding="@dimen/fugu_padding_5"
+                android:textColor="@color/fugu_text_color_primary"
+                android:textSize="@dimen/fugu_text_size_normal" />-->
+
+
+            <LinearLayout
+                android:id="@+id/bottom_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/fugu_margin_20"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/sendBtn"
+                        android:layout_width="250dp"
+                        android:layout_height="@dimen/fugu_dp_40"
+                        android:layout_centerHorizontal="true"
+                        android:background="@drawable/hippo_button_theme_selector"
+                        android:text="Send"
+                        android:textColor="@color/hippo_white" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/broadcastStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/fugu_margin_10"
+                    android:layout_marginTop="@dimen/fugu_margin_10"
+                    android:padding="@dimen/fugu_padding_10"
+                    android:text="See previous messages"
+                    android:textColor="@color/fugu_theme_color_primary" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>
