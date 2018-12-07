@@ -3277,7 +3277,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
                         topBar.imageViewHelp.setVisibility(View.GONE);
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
 
                         if (!specialPickupScreenOpened && !firstTimeZoom && !confirmedScreenOpened) {
                             if (Data.autoData.getPickupLatLng() != null) {
@@ -3554,7 +3553,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         setPaymentOptionInRide();
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
 
                         try {
                             if (Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1) {
@@ -3631,7 +3629,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         setPaymentOptionInRide();
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
 
                         try {
                             if (Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1) {
@@ -3702,7 +3699,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         setPaymentOptionInRide();
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
 
                         try {
                             if (Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1) {
@@ -3758,7 +3754,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         centreLocationRl.setVisibility(View.GONE);
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
-                        topBar.relativeLayoutNotification.setVisibility(View.GONE);
                         setGoogleMapPadding(0);
 
                         linearLayoutRideSummaryContainerSetVisiblity(View.GONE, RideEndFragmentMode.INVOICE);
@@ -8255,7 +8250,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 //                    topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)getResources().getDimensionPixelSize(R.dimen.text_size_30)*minRatio);
                     topBar.textViewTitle.setTextColor(getResources().getColor(R.color.red));
-                    topBar.relativeLayoutNotification.setVisibility(View.GONE);
                     topBar.imageViewMenu.setImageResource(R.drawable.menu_icon_selector_emergency);
                     localModeEnabled = modeEnabled;
                     return;

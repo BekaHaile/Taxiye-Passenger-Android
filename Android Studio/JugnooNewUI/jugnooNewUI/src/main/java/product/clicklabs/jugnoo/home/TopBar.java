@@ -16,7 +16,6 @@ import com.sabkuchfresh.analytics.GAUtils;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -30,13 +29,13 @@ public class TopBar implements GACategory, GAAction {
     DrawerLayout drawerLayout;
 
     //Top RL
-    public RelativeLayout topRl, relativeLayoutNotification;
-    public ImageView imageViewMenu, imageViewSearchIcon;
+    public RelativeLayout topRl;
+    public ImageView imageViewMenu;
     public TextView textViewTitle;
     public Button buttonCheckServer;
     public ImageView imageViewHelp, imageViewScheduleRide;
-    public ImageView imageViewBack, imageViewDelete;
-    public TextView textViewAdd, tvScheduleRidePopup;
+    public ImageView imageViewBack;
+    public TextView tvScheduleRidePopup;
 
     public TopBar(Activity activity, DrawerLayout drawerLayout) {
         this.activity = activity;
@@ -46,9 +45,7 @@ public class TopBar implements GACategory, GAAction {
 
     private void setupTopBar() {
         topRl = (RelativeLayout) drawerLayout.findViewById(R.id.topRl);
-        relativeLayoutNotification = (RelativeLayout) drawerLayout.findViewById(R.id.relativeLayoutNotification);
         imageViewMenu = (ImageView) drawerLayout.findViewById(R.id.imageViewMenu);
-        imageViewSearchIcon = (ImageView) drawerLayout.findViewById(R.id.imageViewSearchIcon);
         textViewTitle = (TextView) drawerLayout.findViewById(R.id.textViewTitle);
 
         textViewTitle.setTypeface(Fonts.avenirNext(activity));
@@ -60,16 +57,12 @@ public class TopBar implements GACategory, GAAction {
 
         imageViewBack = (ImageView) drawerLayout.findViewById(R.id.imageViewBack);
         imageViewBack.setVisibility(View.GONE);
-        imageViewDelete = (ImageView) drawerLayout.findViewById(R.id.imageViewDelete);
-        textViewAdd = (TextView) drawerLayout.findViewById(R.id.textViewAdd);
-        textViewAdd.setTypeface(Fonts.mavenRegular(activity));
         tvScheduleRidePopup = (TextView) drawerLayout.findViewById(R.id.tvScheduleRidePopup);
         tvScheduleRidePopup.setTypeface(Fonts.mavenRegular(activity));
 
 
         //Top bar events
         topRl.setOnClickListener(topBarOnClickListener);
-        relativeLayoutNotification.setOnClickListener(topBarOnClickListener);
         imageViewMenu.setOnClickListener(topBarOnClickListener);
         buttonCheckServer.setOnClickListener(topBarOnClickListener);
         imageViewScheduleRide.setOnClickListener(topBarOnClickListener);
@@ -82,19 +75,10 @@ public class TopBar implements GACategory, GAAction {
             }
         });
 
-        imageViewSearchIcon.setOnClickListener(topBarOnClickListener);
-        imageViewHelp.setOnClickListener(topBarOnClickListener);
         imageViewHelp.setOnClickListener(topBarOnClickListener);
         imageViewBack.setOnClickListener(topBarOnClickListener);
-        imageViewDelete.setOnClickListener(topBarOnClickListener);
-        textViewAdd.setOnClickListener(topBarOnClickListener);
 
-        float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
-
-        if (activity instanceof HomeActivity) {
-            imageViewSearchIcon.setVisibility(View.GONE);
-            textViewTitle.setText(activity.getResources().getString(R.string.rides));
-        }
+        textViewTitle.setText(activity.getResources().getString(R.string.rides));
 
 
     }
@@ -150,18 +134,6 @@ public class TopBar implements GACategory, GAAction {
                     }
                     break;
 
-                case R.id.imageViewDelete:
-                    break;
-
-                case R.id.textViewAdd:
-                    break;
-
-                case R.id.imageViewSearchIcon:
-
-                    break;
-                case R.id.relativeLayoutNotification:
-                    ((HomeActivity) activity).openNotification();
-                    break;
             }
         }
     };
