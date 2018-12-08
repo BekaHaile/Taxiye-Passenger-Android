@@ -2343,9 +2343,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewCancellation.setVisibility(View.GONE);
             }
 
-            if (PermissionCommon.isGranted(Manifest.permission.READ_SMS, this) && Data.userData.getGetGogu() == 1) {
-                new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();
-            }
+//            if (PermissionCommon.isGranted(Manifest.permission.READ_SMS, this) && Data.userData.getGetGogu() == 1) {
+//                new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();
+//            }
 
             openPushDialog();
 
