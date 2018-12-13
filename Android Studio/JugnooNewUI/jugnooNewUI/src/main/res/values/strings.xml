@@ -1977,4 +1977,5 @@
     <string name="schedule_ride_alert">*We cannot always guarantee that a driver will be available</string>
     <string name="choose_a_place">Choose a place</string>
     <string name="add_saved_place">Add Saved Place</string>
+    <string name="ticket_support">Ticket Support</string>
 </resources>
