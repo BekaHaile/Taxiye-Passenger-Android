@@ -982,5 +982,7 @@ public interface Constants {
     String SCHEDULE_CURRENT_TIME_DIFF = "schedule_current_time_diff";
     String SCHEDULE_DAYS_LIMIT = "schedule_days_limit";
 
+    String KEY_PATH_LAT_LONGS = "path_lat_longs";
+
     String KEY_CUSTOMER_SHOW_INCLUDE_TOLL_IN_SUMMARY = "customer_show_include_toll_in_summary";
 }

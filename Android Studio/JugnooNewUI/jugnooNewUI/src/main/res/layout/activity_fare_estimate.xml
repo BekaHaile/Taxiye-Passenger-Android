@@ -297,7 +297,7 @@
             android:layout_marginBottom="20px"
             android:gravity="center"
             android:text="@string/convenience_charges_rs_10"
-            android:textColor="@color/text_color_light"
+            android:textColor="@color/text_color"
             android:textSize="@dimen/text_size_26"
 
             />
