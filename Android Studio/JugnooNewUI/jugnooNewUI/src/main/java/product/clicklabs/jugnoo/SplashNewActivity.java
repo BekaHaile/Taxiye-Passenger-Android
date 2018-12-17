@@ -56,7 +56,6 @@ import android.widget.Toast;
 import com.country.picker.Country;
 import com.country.picker.CountryPicker;
 import com.country.picker.OnCountryPickerListener;
-import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
@@ -83,7 +82,6 @@ import java.util.Locale;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
-import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
@@ -102,6 +100,7 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppSignatureHelper;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FBAccountKit;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
@@ -490,6 +489,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 			Data.getDeepLinkIndexFromIntent(this, getIntent());
+			// TODO: 08/12/18 remove this
+			AppSignatureHelper.Companion.getAppSignatures(this);
 
 			MyApplication.getInstance().initializeServerURL(this);
 
@@ -519,7 +520,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 
-			Utils.disableSMSReceiver(this);
 
 			Data.locationSettingsNoPressed = false;
 
@@ -1015,7 +1015,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			rlMobileNumber.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					getPermissionCommon().getPermission(REQUEST_CODE_RECIEVE_SMS,PermissionCommon.SKIP_RATIONAL_MESSAGE,true,Manifest.permission.RECEIVE_SMS);
+					goToLoginUsingPhone("");
 					GAUtils.event(JUGNOO, LOGIN_SIGNUP, MOBILE+CLICKED);
 				}
 			});

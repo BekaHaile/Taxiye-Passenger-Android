@@ -84,7 +84,6 @@ import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.GCMIntentService;
-import product.clicklabs.jugnoo.IncomingSmsReceiver;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -507,31 +506,6 @@ public class Utils implements GAAction, GACategory{
         return false;
     }
 
-
-
-	public static void enableSMSReceiver(Context context){
-		try {
-			ComponentName receiver = new ComponentName(context, IncomingSmsReceiver.class);
-			PackageManager pm = context.getPackageManager();
-			pm.setComponentEnabledSetting(receiver,
-					PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-					PackageManager.DONT_KILL_APP);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static void disableSMSReceiver(Context context){
-		try {
-			ComponentName receiver = new ComponentName(context, IncomingSmsReceiver.class);
-			PackageManager pm = context.getPackageManager();
-			pm.setComponentEnabledSetting(receiver,
-					PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-					PackageManager.DONT_KILL_APP);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public static void enableReceiver(Context context, Class classT, boolean enable){
 		try {
