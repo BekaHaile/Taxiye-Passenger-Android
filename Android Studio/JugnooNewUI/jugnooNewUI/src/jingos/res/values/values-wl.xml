@@ -63,7 +63,7 @@
     <string name="app_domain">jugnoo.in</string>
     <string name="app_host_name">www.jugnoo.in</string>
     <string name="branch_domain">share.jugnoo.in</string>
-    <string name="app_scheme">jingos</string>
+    <string name="app_scheme">jingorides</string>
 
     <string name="pictures_path">Jingo/Jingo Pictures</string>
     <bool name="force_inhouse_login">true</bool>

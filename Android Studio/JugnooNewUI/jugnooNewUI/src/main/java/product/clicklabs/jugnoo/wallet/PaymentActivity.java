@@ -153,7 +153,6 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
 			setWalletAddMoneyState(WalletAddMoneyState.INIT);
 		}
 		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, PaymentActivity.class.getName());
-		Utils.enableSMSReceiver(this);
 		newIntentReceived = false;
 	}
 
@@ -161,7 +160,6 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
 	protected void onPause() {
 		super.onPause();
 		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, "");
-		Utils.disableSMSReceiver(this);
 	}
 
 	boolean newIntentReceived = false;

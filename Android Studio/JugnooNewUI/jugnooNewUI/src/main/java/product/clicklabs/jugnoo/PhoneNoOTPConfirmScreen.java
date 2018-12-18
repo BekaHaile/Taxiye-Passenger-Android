@@ -1,10 +1,14 @@
 package product.clicklabs.jugnoo;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -14,6 +18,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.phone.SmsRetriever;
+import com.google.android.gms.auth.api.phone.SmsRetrieverClient;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -22,7 +34,6 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -72,20 +83,21 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 				otp = intent.getStringExtra("otp");
 			}
 
-			if(Utils.checkIfOnlyDigits(otp)){
-				if(!"".equalsIgnoreCase(otp)) {
-//					editTextOTP.setText(otp);
-//					editTextOTP.setSelection(editTextOTP.getText().length());
-//					buttonVerify.performClick();
-					pinEditTextLayout.setOTPDirectly(otp);
-				}
-			}
+			setOTPToEditText(otp);
 
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 
 		super.onNewIntent(intent);
+	}
+
+	private void setOTPToEditText(String otp) {
+		if(Utils.checkIfOnlyDigits(otp)){
+			if(!"".equalsIgnoreCase(otp)) {
+				pinEditTextLayout.setOTPDirectly(otp);
+			}
+		}
 	}
 
 
@@ -151,7 +163,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 			@Override
 			public void onClick(View v) {
 				try{
-					Utils.disableSMSReceiver(PhoneNoOTPConfirmScreen.this);
 					apiGenerateLoginOtp(PhoneNoOTPConfirmScreen.this, Utils.retrievePhoneNumberTenChars(phoneNoToVerify, countryCode));
 					startTimerForRetry();
 				} catch(Exception e){
@@ -161,7 +172,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		});
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
+		startSMSListener();
 		try {
 			if(getIntent().hasExtra("phone_no_verify")){
 				phoneNoToVerify = getIntent().getStringExtra("phone_no_verify");
@@ -208,9 +219,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		super.onResume();
 
 		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, PhoneNoOTPConfirmScreen.class.getName());
-		if(PermissionCommon.isGranted( android.Manifest.permission.RECEIVE_SMS,this)) {
-			Utils.enableSMSReceiver(this);
-		}
 
 		HomeActivity.checkForAccessTokenChange(this);
 	}
@@ -218,7 +226,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 	@Override
 	protected void onPause() {
 		Prefs.with(this).save(Constants.SP_OTP_SCREEN_OPEN, "");
-		Utils.disableSMSReceiver(this);
 		super.onPause();
 	}
 
@@ -366,6 +373,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 	@Override
 	protected void onDestroy() {
+		unregisterReceiver(smsReceiver);
 		ASSL.closeActivity(relative);
         System.gc();
 		super.onDestroy();
@@ -409,9 +417,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 							if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								DialogPopup.dismissLoadingDialog();
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
-									if(PermissionCommon.isGranted(android.Manifest.permission.RECEIVE_SMS,activity)) {
-										Utils.enableSMSReceiver(PhoneNoOTPConfirmScreen.this);
-									}
 									DialogPopup.alertPopup(activity, "", JSONParser.getServerMessage(jObj));
 								}
 							} else {
@@ -467,4 +472,46 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		secondsLeftForRetry = 15;
 		handler.post(runnableRetryBlock);
 	}
+
+	private void startSMSListener(){
+		SmsRetrieverClient client = SmsRetriever.getClient(this);
+		Task<Void> task = client.startSmsRetriever();
+		task.addOnSuccessListener(new OnSuccessListener<Void>() {
+			@Override
+			public void onSuccess(Void aVoid) {
+				registerReceiver(smsReceiver, new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION));
+			}
+		});
+		task.addOnFailureListener(new OnFailureListener() {
+			@Override
+			public void onFailure(@NonNull Exception e) {
+
+			}
+		});
+
+	}
+
+	private BroadcastReceiver smsReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent != null && intent.getExtras() != null
+					&& SmsRetriever.SMS_RETRIEVED_ACTION.equals(intent.getAction())) {
+				Bundle extras = intent.getExtras();
+				Status status = (Status) extras.get(SmsRetriever.EXTRA_STATUS);
+				if (status != null)
+					switch (status.getStatusCode()) {
+						case CommonStatusCodes.SUCCESS:
+							String message = (String) extras.get(SmsRetriever.EXTRA_SMS_MESSAGE);
+							if (message != null) {
+								setOTPToEditText(Utils.retrieveOTPFromSMS(message));
+							}
+							break;
+
+						case CommonStatusCodes.TIMEOUT:
+							break;
+					}
+			}
+		}
+	};
+
 }

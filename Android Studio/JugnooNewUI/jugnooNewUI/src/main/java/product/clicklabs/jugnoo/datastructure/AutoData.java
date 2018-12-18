@@ -417,8 +417,11 @@ public class AutoData {
     }
 
     public void setPickupAddress(String pickupAddress, LatLng latLng) {
-        this.pickupAddress = pickupAddress;
-        this.pickupAddressMappedLatLng = latLng;
+        if(latLng == null || pickupAddressMappedLatLng == null
+                || MapUtils.distance(pickupAddressMappedLatLng, latLng) > 50){
+            this.pickupAddress = pickupAddress;
+            this.pickupAddressMappedLatLng = latLng;
+        }
     }
 
     public String getDropAddress() {

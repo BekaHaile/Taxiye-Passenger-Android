@@ -72,5 +72,6 @@
     <bool name="wallet_amount_sidemenu">true</bool>
     <bool name="show_jugnoo_promo_icon">true</bool>
     <bool name="force_open_autos">false</bool>
+    <bool name="schedule_ride_enabled">false</bool>
 
 </resources>

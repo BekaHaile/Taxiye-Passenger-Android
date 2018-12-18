@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="15dp"
+    android:background="@color/white">
+    <ImageView
+        android:id="@+id/imageViewShadow"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_below="@+id/topRl"
+        android:background="@drawable/shadow_down"
+        />
+    <TextView
+        android:id="@+id/tvPickup"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="14dp"
+        android:paddingStart="@dimen/fugu_margin_20"
+        android:paddingEnd="20dp"
+        android:drawableStart="@drawable/icv_circle_pickup"
+        app:layout_constraintEnd_toStartOf="@id/glEnd"
+        app:layout_constraintStart_toEndOf="@id/glsStart"
+        android:hint="@string/enter_pickup"
+        android:gravity="center_vertical"
+        android:drawablePadding="@dimen/fugu_margin_15"
+        android:background="@drawable/background_white_rounded_bordered"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewShadow"
+        android:textColor="@color/text_color"
+        android:textColorHint="@color/text_color_hint"
+        android:textSize="@dimen/sp_13"/>
+    <TextView
+        android:id="@+id/tvDestination"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="14dp"
+        android:paddingStart="@dimen/fugu_margin_20"
+        android:paddingEnd="20dp"
+        android:drawableStart="@drawable/icv_circle_destination"
+        android:hint="@string/enter_destination"
+        android:drawablePadding="@dimen/fugu_margin_15"
+        android:background="@drawable/background_white_rounded_bordered"
+        app:layout_constraintEnd_toStartOf="@id/glEnd"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toEndOf="@id/glsStart"
+        app:layout_constraintTop_toBottomOf="@id/tvPickup"
+        android:textColor="@color/text_color"
+        android:textColorHint="@color/text_color_hint"
+        android:textSize="@dimen/sp_13"/>
+
+    <TextView
+        android:id="@+id/tvPickupDateTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/select_a_pickup_date_and_time"
+        app:layout_constraintEnd_toStartOf="@id/glEnd"
+        app:layout_constraintStart_toEndOf="@id/glsStart"
+        app:layout_constraintTop_toBottomOf="@+id/tvDestination"
+        android:textSize="@dimen/sp_13"
+        android:textColor="@color/text_color"
+        android:layout_marginTop="@dimen/dp_20"/>
+
+    <TextView
+        android:id="@+id/tvSelectDateTime"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:hint="@string/select"
+        android:background="@drawable/background_white_rounded_bordered"
+        app:layout_constraintEnd_toStartOf="@id/glEnd"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/dp_10"
+        android:paddingEnd="@dimen/dp_10"
+        app:layout_constraintStart_toEndOf="@id/glsStart"
+        android:drawableEnd="@drawable/ic_calendar"
+        app:layout_constraintTop_toBottomOf="@+id/tvPickupDateTime"
+        android:textSize="@dimen/sp_13"
+        android:textColor="@color/text_color"
+        android:layout_marginTop="@dimen/dp_9"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvVehiclesList"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/glEnd"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toEndOf="@id/glsStart"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectDateTime"
+        android:layout_marginTop="@dimen/dp_9"/>
+
+
+    <TextView
+        android:id="@+id/tvSelectPayment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/select_payment_option"
+        app:layout_constraintEnd_toStartOf="@id/glEnd"
+        app:layout_constraintStart_toEndOf="@id/glsStart"
+        app:layout_constraintTop_toBottomOf="@+id/rvVehiclesList"
+        android:textSize="@dimen/sp_13"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/text_color" />
+
+
+        <LinearLayout
+            android:id="@+id/llPaymentOption"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_marginTop="9dp"
+            android:minHeight="50dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_white_rounded_bordered"
+            android:text="@string/select_a_pickup_date_and_time"
+            app:layout_constraintEnd_toStartOf="@id/glEnd"
+            app:layout_constraintStart_toEndOf="@id/glsStart"
+            app:layout_constraintTop_toBottomOf="@+id/tvSelectPayment"
+            android:textSize="@dimen/sp_13"
+            android:textColor="@color/text_color">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/imageViewPaymentModeConfirm"
+                android:layout_width="50dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_cash_small" />
+
+            <TextView
+                android:id="@+id/textViewPaymentModeValueConfirm"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
+                android:text="@string/_200"
+                android:textAllCaps="true"
+                android:textColor="@color/text_color"
+                android:textSize="13sp" />
+
+
+        </LinearLayout>
+
+
+
+
+    <Button
+        android:id="@+id/btSchedule"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/glEnd"
+        android:gravity="center"
+        android:layout_marginStart="@dimen/dp_40"
+        android:layout_marginEnd="@dimen/dp_40"
+        android:layout_marginBottom="@dimen/dp_30"
+        app:layout_constraintStart_toEndOf="@id/glsStart"
+        app:layout_constraintTop_toBottomOf="@+id/llPaymentOption"
+        android:layout_marginTop="15dp"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
+        android:background="@drawable/capsule_theme_login_selector"
+        android:text="@string/schedule"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/glsStart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="16dp" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/glEnd"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="16dp" />
+
+</android.support.constraint.ConstraintLayout>
+</ScrollView>

@@ -55,7 +55,7 @@ public class ApiFareEstimate {
             if (MyApplication.getInstance().isOnline()) {
                 if (sourceLatLng != null && destLatLng != null) {
                     DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
-                    GoogleRestApis.getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
+                    GoogleRestApis.INSTANCE.getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
                             destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false, getDistanceUnit(), new retrofit.Callback<SettleUserDebt>() {
                                 @Override
                                 public void success(SettleUserDebt settleUserDebt, Response response) {

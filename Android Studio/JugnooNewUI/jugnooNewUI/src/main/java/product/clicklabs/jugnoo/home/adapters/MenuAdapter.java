@@ -48,6 +48,7 @@ import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
+import product.clicklabs.jugnoo.home.schedulerides.UpcomingRidesActivity;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -227,6 +228,8 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                         e.printStackTrace();
                     }
                 } else if(MenuInfoTags.HISTORY.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_history_selector);
+                }  else if(MenuInfoTags.SCHEDULED_RIDES.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_history_selector);
                 } else if(MenuInfoTags.SIGNUP_TUTORIAL.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     if(!TextUtils.isEmpty(Data.userData.userName)
@@ -593,6 +596,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 Intent intent = new Intent(activity, RideTransactionsActivity.class);
                 intent.putExtra(Constants.KEY_ORDER_ID, orderId);
                 intent.putExtra(Constants.KEY_PRODUCT_TYPE, productType);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+
+            }else if(MenuInfoTags.SCHEDULED_RIDES.getTag().equalsIgnoreCase(tag)) {
+                Intent intent = new Intent(activity, UpcomingRidesActivity.class);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 

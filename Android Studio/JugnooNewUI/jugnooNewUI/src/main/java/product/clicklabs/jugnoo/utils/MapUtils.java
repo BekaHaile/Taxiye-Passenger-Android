@@ -215,7 +215,7 @@ public class MapUtils {
 							}
 						}
 					}
-					if(addressSB.length() >= 2) {
+					if(addressSB.length() > 2 && googleGeocodeResponse.results.get(0).addressComponents.size() > 4) {
 						address = addressSB.toString().substring(0, addressSB.length() - 2);
 					}
 				}
@@ -252,7 +252,7 @@ public class MapUtils {
 
 	public static void drawPathFromGoogle(Activity activity, final GoogleMap map, final LatLng sourceLatLng, final LatLng destinationLatLng){
 		if (MyApplication.getInstance().isOnline()) {
-			Response response = GoogleRestApis.getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
+			Response response = GoogleRestApis.INSTANCE.getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
 					destinationLatLng.latitude + "," + destinationLatLng.longitude, false, "driving", false, "metric");
 			String result = new String(((TypedByteArray)response.getBody()).getBytes());
 			Log.i("result", "=" + result);

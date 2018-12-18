@@ -90,7 +90,7 @@
     <integer name="show_promo">@integer/view_gone</integer>
     <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
     <string name="profile_saved_location_text">@string/my_saved_locations</string>
-    <integer name="otp_via_call_enabled">0</integer>
     <integer name="customer_fetch_inride_path_interval">120000</integer>
     <integer name="customer_fetch_driver_location_interval">120000</integer>
+    <integer name="google_apis_logging">1</integer>
 </resources>

@@ -56,7 +56,6 @@ import android.widget.Toast;
 import com.country.picker.Country;
 import com.country.picker.CountryPicker;
 import com.country.picker.OnCountryPickerListener;
-import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
@@ -83,7 +82,6 @@ import java.util.Locale;
 
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
-import io.fabric.sdk.android.Fabric;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
@@ -102,6 +100,7 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppSignatureHelper;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FBAccountKit;
 import product.clicklabs.jugnoo.utils.FacebookLoginCallback;
@@ -461,7 +460,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			}
 
 
-			Fabric.with(this, new Crashlytics());
+
 			if(!Prefs.with(this).getBoolean(FUGU_CACHE_CLEARED,false)){
 				try {
 					FuguConfig.clearFuguData(SplashNewActivity.this);
@@ -490,6 +489,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 			Data.getDeepLinkIndexFromIntent(this, getIntent());
+			// TODO: 08/12/18 remove this
+			AppSignatureHelper.Companion.getAppSignatures(this);
 
 			MyApplication.getInstance().initializeServerURL(this);
 
@@ -519,7 +520,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 
-			Utils.disableSMSReceiver(this);
 
 			Data.locationSettingsNoPressed = false;
 
@@ -968,7 +968,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 					} else if (State.SIGNUP == state) {
 						performSignupBackPressed();
 					} else if (State.SPLASH_LOGIN_PHONE_NO == state){
-						splashLSState();
+						splashLSState(false);
 					}
 					Utils.hideSoftKeyboard(SplashNewActivity.this, editTextEmail);
 				}
@@ -1015,7 +1015,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			rlMobileNumber.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					getPermissionCommon().getPermission(REQUEST_CODE_RECIEVE_SMS,PermissionCommon.SKIP_RATIONAL_MESSAGE,true,Manifest.permission.RECEIVE_SMS);
+					goToLoginUsingPhone("");
 					GAUtils.event(JUGNOO, LOGIN_SIGNUP, MOBILE+CLICKED);
 				}
 			});
@@ -1205,7 +1205,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
                             Data.deepLinkIndex = -1;
                             SplashNewActivity.registerationType = RegisterationType.EMAIL;
                             setIntent(new Intent().putExtra(KEY_REFERRAL_CODE, Data.deepLinkReferralCode));
-							splashLSState();
+							splashLSState(true);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1988,7 +1988,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
     //			}
             } else if(openLS){
 				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this) && state != State.SPLASH_LS_NEW) {
-					splashLSState();
+					splashLSState(false);
 				}
 			}
 		} catch (Exception e) {
@@ -2248,7 +2248,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				if(getIntent().getData() != null && getIntent().getData().toString().equalsIgnoreCase("jungooautos://open")){
 					sendToRegisterThroughSms(false);
 				} else{
-					splashLSState();
+					splashLSState(false);
 				}
 			} else {
 				changeUIState(State.SPLASH_NO_NET);
@@ -2398,7 +2398,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						activity.onConfigurationChanged(config);
 
 						allowedAuthChannelsHitOnce = true;
-						splashLSState();
+						splashLSState(false);
 
 					}catch (Exception e){
 						e.printStackTrace();
@@ -2642,7 +2642,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		} else if (State.SIGNUP == state) {
 			performSignupBackPressed();
 		} else if (State.SPLASH_LOGIN_PHONE_NO == state){
-			splashLSState();
+			splashLSState(false);
 		} else{
 			super.onBackPressed();
 		}
@@ -2892,7 +2892,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			overridePendingTransition(R.anim.left_in, R.anim.left_out);
 		} else {
 			FacebookLoginHelper.logoutFacebook();
-			splashLSState();
+			splashLSState(false);
 		}
 	}
 
@@ -3452,18 +3452,20 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				@Override
 				public void onClick(View v) {
 					SplashNewActivity.registerationType = registerationType;
-					splashLSState();
+					splashLSState(false);
 				}
 			});
 		} else{
 			SplashNewActivity.registerationType = registerationType;
-			splashLSState();
+			splashLSState(false);
 		}
 	}
 
-	private void splashLSState() {
+	private void splashLSState(boolean claimGIftClicked) {
 		if(allowedAuthChannelsHitOnce) {
-			changeUIState(State.SPLASH_LS_NEW);
+			if(claimGIftClicked || state != State.CLAIM_GIFT) {
+				changeUIState(State.SPLASH_LS_NEW);
+			}
 		} else {
 			getAllowedAuthChannels(this);
 		}
@@ -3472,7 +3474,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	public void performSignupBackPressed() {
 		FacebookLoginHelper.logoutFacebook();
-		splashLSState();
+		splashLSState(false);
 	}
 
 	public enum RegisterationType {
@@ -4102,7 +4104,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
     private View.OnClickListener onClickListenerAlreadyRegistered = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-			splashLSState();
+			splashLSState(false);
 		}
     };
 
@@ -4233,7 +4235,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
                                             @Override
                                             public void onClick(View v) {
                                                 setIntent(new Intent().putExtra(KEY_ALREADY_VERIFIED_EMAIL, email));
-												splashLSState();
+												splashLSState(false);
 											}
                                         });
                             } else {
@@ -4299,24 +4301,24 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 							} else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 								String message = jObj.optString("message", "");
 								Utils.showToast(activity, message);
+								loginDataFetched = true;
+								new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
+										loginResponseData, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
+								if((jObj.has("email_correct")) && (jObj.optInt("email_correct", 0) == 1)){
+									if(!TextUtils.isEmpty(updatedEmail)) {
+										Data.userData.userEmail = updatedEmail;
+									}
+								}
+
+								if((jObj.has("username_correct")) && (jObj.optInt("username_correct", 0) == 1)){
+									if(!TextUtils.isEmpty(updatedName)) {
+										Data.userData.userName = updatedName;
+									}
+								}
+								onWindowFocusChanged(true);
 							} else {
 								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
 							}
-							loginDataFetched = true;
-							new JSONParser().parseAccessTokenLoginData(SplashNewActivity.this, loginResponseStr,
-									loginResponseData, LoginVia.EMAIL, new LatLng(Data.loginLatitude, Data.loginLongitude));
-							if((jObj.has("email_correct")) && (jObj.optInt("email_correct", 0) == 1)){
-								if(!TextUtils.isEmpty(updatedEmail)) {
-									Data.userData.userEmail = updatedEmail;
-								}
-							}
-
-							if((jObj.has("username_correct")) && (jObj.optInt("username_correct", 0) == 1)){
-								if(!TextUtils.isEmpty(updatedName)) {
-									Data.userData.userName = updatedName;
-								}
-							}
-							onWindowFocusChanged(true);
 						}
 					} catch (Exception exception) {
 						exception.printStackTrace();

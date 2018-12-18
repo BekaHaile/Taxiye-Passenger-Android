@@ -44,6 +44,7 @@ import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -375,6 +376,7 @@ public class SearchListAdapter extends BaseAdapter{
 							if (!editText.getText().toString().trim().equalsIgnoreCase(searchText)) {
 								recallSearch(editText.getText().toString().trim(),editText);
 							}
+							GoogleRestApis.INSTANCE.logGoogleRestAPIC("0", "0", GoogleRestApis.API_NAME_AUTOCOMPLETE);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -506,6 +508,9 @@ public class SearchListAdapter extends BaseAdapter{
 									myPlace.getLatLng().latitude, myPlace.getLatLng().longitude);
 							searchResult.setThirdPartyAttributions(thirdPartyAttributions);
 							sendSearchResult(searchResult);
+							if(myPlace != null && myPlace.getLatLng() != null) {
+								GoogleRestApis.INSTANCE.logGoogleRestAPIC(String.valueOf(myPlace.getLatLng().latitude), String.valueOf(myPlace.getLatLng().longitude), GoogleRestApis.API_NAME_PLACES);
+							}
 						}
 						task.getResult().release();
 					} catch (Exception e) {

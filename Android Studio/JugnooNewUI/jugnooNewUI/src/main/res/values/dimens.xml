@@ -219,7 +219,7 @@
         136px
     </dimen>
     <dimen name="map_padding_request_final">
-        170px
+        100px
     </dimen>
     <dimen name="map_padding_request_final_extra">
         70px

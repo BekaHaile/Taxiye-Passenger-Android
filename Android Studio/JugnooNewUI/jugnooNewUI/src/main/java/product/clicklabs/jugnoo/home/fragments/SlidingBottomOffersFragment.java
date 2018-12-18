@@ -82,7 +82,7 @@ public class SlidingBottomOffersFragment extends Fragment implements GACategory,
 
     public void setOfferAdapter(){
         try {
-            offersAdapter = new OffersAdapter(Data.userData.getCoupons(ProductType.AUTO, activity));
+            offersAdapter = new OffersAdapter(Data.userData.getCoupons(ProductType.AUTO, activity, false));
             recyclerViewOffers.setAdapter(offersAdapter);
             activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setScrollableView(recyclerViewOffers);
         } catch (Exception e) {
@@ -92,9 +92,9 @@ public class SlidingBottomOffersFragment extends Fragment implements GACategory,
 
     public void update(){
         try {
-            if(Data.userData.getCoupons(ProductType.AUTO, activity) != null && Data.userData.getCoupons(ProductType.AUTO, activity).size() >= 2){
+            if(Data.userData.getCoupons(ProductType.AUTO, activity, false) != null && Data.userData.getCoupons(ProductType.AUTO, activity, false).size() >= 2){
                 linearLayoutNoOffers.setVisibility(View.GONE);
-            } else if(Data.userData.getCoupons(ProductType.AUTO, activity) != null && Data.userData.getCoupons(ProductType.AUTO, activity).size() == 1){
+            } else if(Data.userData.getCoupons(ProductType.AUTO, activity, false) != null && Data.userData.getCoupons(ProductType.AUTO, activity, false).size() == 1){
                 linearLayoutNoOffers.setVisibility(View.GONE);
             }
             offersAdapter.notifyDataSetChanged();
@@ -177,10 +177,10 @@ public class SlidingBottomOffersFragment extends Fragment implements GACategory,
                         PromoCoupon promoCoupon = offerList.get(position);
                         RequestRideOptionsFragment requestRideOptionsFragment=  activity.getSlidingBottomPanel().getRequestRideOptionsFragment();
                         if (requestRideOptionsFragment.getSelectedCoupon().getId() == promoCoupon.getId()) {
-                            requestRideOptionsFragment.setSelectedCoupon(-1);
+                            requestRideOptionsFragment.setSelectedCoupon(-1, false);
                             activity.promoSelectionLastOperation = false;
 						} else {
-                            requestRideOptionsFragment.setSelectedCoupon(position);
+                            requestRideOptionsFragment.setSelectedCoupon(position, false);
                             activity.promoSelectionLastOperation = true;
 						}
 

@@ -122,7 +122,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsRecyclerAdapter;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -2189,7 +2188,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             promoCoupons = new ArrayList<>();
         }
         promoCoupons.clear();
-        ArrayList<PromoCoupon> promoCouponsList = Data.userData.getCoupons(productType, activity);
+        ArrayList<PromoCoupon> promoCouponsList = Data.userData.getCoupons(productType, activity, false);
         if(promoCouponsList!=null){
             for(PromoCoupon promo:promoCouponsList){
                 if(promo.showPromoBox()){
@@ -2214,9 +2213,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private void updateCouponsDataView() {
         try {
             if (type == AppConstant.ApplicationType.MEALS) {
-                promoCoupons = Data.userData.getCoupons(ProductType.MEALS, activity);
+                promoCoupons = Data.userData.getCoupons(ProductType.MEALS, activity, false);
             } else if (type == AppConstant.ApplicationType.GROCERY) {
-                promoCoupons = Data.userData.getCoupons(ProductType.GROCERY, activity);
+                promoCoupons = Data.userData.getCoupons(ProductType.GROCERY, activity, false);
             } else if (type == AppConstant.ApplicationType.MENUS) {
                 filterCouponsByApplicationPaymentMode(activity.getVendorOpened().getApplicablePaymentMode(), ProductType.MENUS);
             } else if (type == AppConstant.ApplicationType.DELIVERY_CUSTOMER) {

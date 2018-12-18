@@ -225,7 +225,7 @@ public class MarkerAnimation {
             try {
                 stopCurrentAsync = false;
                 if(list == null || list.size() == 0) {
-                    Response response = GoogleRestApis.getDirections(source.latitude + "," + source.longitude,
+                    Response response = GoogleRestApis.INSTANCE.getDirections(source.latitude + "," + source.longitude,
                             destination.latitude + "," + destination.longitude, false, "driving", false, "metric");
                     return new String(((TypedByteArray) response.getBody()).getBytes());
                 } else {

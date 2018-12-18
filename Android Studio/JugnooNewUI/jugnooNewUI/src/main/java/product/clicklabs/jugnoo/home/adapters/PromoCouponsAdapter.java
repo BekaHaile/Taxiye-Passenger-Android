@@ -19,7 +19,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -93,22 +92,14 @@ public class PromoCouponsAdapter extends BaseAdapter {
 		holder.textViewTNC.setTag(position);
 
 		holder.textViewOfferName.setTypeface(Fonts.mavenRegular(activity), Typeface.NORMAL);
-		if(layoutRID == R.layout.list_item_promo_coupon) {
-			if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)) {
-				holder.rlContainer.setBackgroundResource(R.drawable.background_white_theme_color_rounded_bordered);
-				holder.textViewOfferName.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
-			} else {
-				holder.rlContainer.setBackgroundColor(activity.getResources().getColor(R.color.offer_popup_item_color));
-				holder.textViewOfferName.setTypeface(Fonts.mavenRegular(activity), Typeface.NORMAL);
-			}
-		} else {
 			if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)) {
 				holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_selected);
+				holder.textViewOfferName.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 			} else {
 				holder.imageViewRadio.setImageResource(R.drawable.ic_radio_button_normal);
+				holder.textViewOfferName.setTypeface(Fonts.mavenRegular(activity), Typeface.NORMAL);
 			}
 			holder.textViewOfferName.setTextColor(ContextCompat.getColor(activity, promoCoupon.getIsValid() == 1 ? R.color.text_color : R.color.text_color_hint));
-		}
 
 		holder.textViewTNC.setOnClickListener(new View.OnClickListener() {
 			@Override

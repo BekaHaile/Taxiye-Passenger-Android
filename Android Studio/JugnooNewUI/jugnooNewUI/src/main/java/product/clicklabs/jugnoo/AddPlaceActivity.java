@@ -145,12 +145,16 @@ public class AddPlaceActivity extends BaseFragmentActivity {
             }
         }
 
+        if(getIntent().getBooleanExtra(Constants.KEY_DIRECT_CONFIRM, false)){
+            openAddToAddressBook(getAddressBundle(searchResult));
+        } else {
+            getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer, false);
+        }
 //        if(editThisAddress){
 //            openAddToAddressBook(getAddressBundle(searchResult));
 //        } else {
 //            getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer);
 //        }
-        getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer, false);
 
     }
 

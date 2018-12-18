@@ -393,6 +393,10 @@ public class JSONParser implements Constants {
                     autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject, context.getString(R.string.app_name))));
 
             Utils.setCurrencyPrecision(context, autoData.optInt(Constants.KEY_CURRENCY_PRECISION, 0));
+            Prefs.with(context).save(Constants.SCHEDULE_CURRENT_TIME_DIFF,
+                    autoData.optInt(Constants.SCHEDULE_CURRENT_TIME_DIFF,30));
+             Prefs.with(context).save(Constants.SCHEDULE_DAYS_LIMIT,
+                    autoData.optInt(Constants.SCHEDULE_DAYS_LIMIT,2));
 
             parseConfigParams(context, autoData);
         } catch (Exception e) {
@@ -429,6 +433,34 @@ public class JSONParser implements Constants {
                         context.getResources().getInteger(R.integer.customer_fetch_driver_location_interval)));
         Prefs.with(context).save(KEY_HIT_PLACE_DETAILS_AFTER_GEOCODE, autoData.optBoolean(KEY_HIT_PLACE_DETAILS_AFTER_GEOCODE,
 				context.getResources().getBoolean(R.bool.hit_place_details_after_geocode)));
+        Prefs.with(context).save(KEY_CUSTOMER_CANCEL_RIDE_ENABLED, autoData.optInt(KEY_CUSTOMER_CANCEL_RIDE_ENABLED,
+				context.getResources().getInteger(R.integer.customer_cancel_ride_enabled)));
+
+        Prefs.with(context).save(KEY_CUSTOMER_PLAY_SOUND_RIDE_ACCEPT, autoData.optInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_ACCEPT,
+				context.getResources().getInteger(R.integer.customer_play_sound_ride_accept)));
+
+        Prefs.with(context).save(KEY_CUSTOMER_PLAY_SOUND_RIDE_ARRIVED, autoData.optInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_ARRIVED,
+				context.getResources().getInteger(R.integer.customer_play_sound_ride_arrived)));
+
+        Prefs.with(context).save(KEY_CUSTOMER_PLAY_SOUND_RIDE_START, autoData.optInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_START,
+				context.getResources().getInteger(R.integer.customer_play_sound_ride_start)));
+
+        Prefs.with(context).save(KEY_CUSTOMER_PLAY_SOUND_RIDE_END, autoData.optInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_END,
+				context.getResources().getInteger(R.integer.customer_play_sound_ride_end)));
+
+        Prefs.with(context).save(KEY_PICKUP_DROP_LIKE_ENABLED, autoData.optInt(KEY_PICKUP_DROP_LIKE_ENABLED,
+				context.getResources().getInteger(R.integer.pickup_drop_like_enabled)));
+        Prefs.with(context).save(KEY_CUSTOMER_GOOGLE_APIS_LOGGING, autoData.optInt(KEY_CUSTOMER_GOOGLE_APIS_LOGGING,
+				context.getResources().getInteger(R.integer.google_apis_logging)));
+        boolean scheduleRideFallback = context.getResources().getBoolean(R.bool.schedule_ride_enabled);
+        Prefs.with(context).save(SCHEDULE_RIDE_ENABLED, autoData.optBoolean(SCHEDULE_RIDE_ENABLED,scheduleRideFallback));
+
+        Prefs.with(context).save(KEY_CUSTOMER_GEOCODE_TIME_LIMIT, autoData.optLong(KEY_CUSTOMER_GEOCODE_TIME_LIMIT,
+                (long)context.getResources().getInteger(R.integer.customer_geocode_time_limit)));
+        Prefs.with(context).save(KEY_CUSTOMER_GEOCODE_HIT_LIMIT, autoData.optInt(KEY_CUSTOMER_GEOCODE_HIT_LIMIT,
+                context.getResources().getInteger(R.integer.customer_geocode_hit_limit)));
+        Prefs.with(context).save(KEY_CUSTOMER_GEOCODE_LIMIT_ENABLED, autoData.optInt(KEY_CUSTOMER_GEOCODE_LIMIT_ENABLED,
+                context.getResources().getInteger(R.integer.customer_geocode_limit_enabled)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
@@ -737,12 +769,12 @@ public class JSONParser implements Constants {
     }
 
     public ReferralMessages parseReferralMessages(Context context, LoginResponse.UserData userData) {
-        String referralSharingMessage = "Hey, \nUse "+context.getString(R.string.app_name)+" app to call an auto at your doorsteps. It is cheap, convenient and zero haggling." +
-                " Use this referral code: " + Data.userData.referralCode + " to get FREE ride" +
-                "\nDownload it from here: https://play.google.com/store/apps/details?id="+BuildConfig.APPLICATION_ID;
-        String fbShareCaption = "Use " + Data.userData.referralCode + " as code & get a FREE ride";
-        String fbShareDescription = "Try "+context.getString(R.string.app_name)+" app to call an auto at your doorsteps with just a tap.";
-        String referralCaption = "<center><font face=\"verdana\" size=\"2\">Invite <b>friends</b> and<br/>get <b>FREE rides</b></font></center>";
+        String referralSharingMessage = "Hey, \nUse "+context.getString(R.string.app_name)+" app to request ride at your doorsteps. It is cheap, convenient and zero haggling." +
+                " Use this referral code: " + Data.userData.referralCode + " to earn benefits" +
+                "\nDownload it from here: ";
+        String fbShareCaption = "Use " + Data.userData.referralCode + " as referral code & earn benefits";
+        String fbShareDescription = "Try "+context.getString(R.string.app_name)+" app to request ride at your doorsteps with just a tap.";
+        String referralCaption = "<center><font face=\"verdana\" size=\"2\">Invite friends and<br/>get earn benefits</font></center>";
         String referralEmailSubject = "Hey! Have you used "+context.getString(R.string.app_name)+" yet?";
         String referralShortMessage = "", referralMoreInfoMessage = "";
         String title = context.getString(R.string.app_name);

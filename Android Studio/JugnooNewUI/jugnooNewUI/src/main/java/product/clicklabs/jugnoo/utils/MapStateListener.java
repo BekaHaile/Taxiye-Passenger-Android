@@ -116,6 +116,11 @@ public abstract class MapStateListener {
         }
     }
 
+    public void touchMapExplicit(){
+        onMapTouched();
+        onMapReleased();
+    }
+
     private void touchMap() {
         if(!mMapTouched) {
             if(mTimer != null) {

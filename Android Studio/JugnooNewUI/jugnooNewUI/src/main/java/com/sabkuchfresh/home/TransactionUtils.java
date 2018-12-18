@@ -40,6 +40,7 @@ import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.fragments.ScheduleRideFragment;
 import product.clicklabs.jugnoo.tutorials.NewUserCompleteProfileFragment;
 import product.clicklabs.jugnoo.tutorials.NewUserReferralFragment;
 import product.clicklabs.jugnoo.tutorials.NewUserWalletFragment;
@@ -380,7 +381,15 @@ public class TransactionUtils {
                     .commitAllowingStateLoss();
         }
     }
-
+    public void openScheduleRideFragment(FragmentActivity activity, View container) {
+        if (!checkIfFragmentAdded(activity, ScheduleRideFragment.class.getName())) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .add(container.getId(), ScheduleRideFragment.Companion.newInstance(),
+                            ScheduleRideFragment.class.getName())
+                    .addToBackStack(ScheduleRideFragment.class.getName())
+                    .commit();
+        }
+    }
     public void openNewUserCompleteProfileFragment(FragmentActivity activity, View container) {
         if (!checkIfFragmentAdded(activity, NewUserCompleteProfileFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()

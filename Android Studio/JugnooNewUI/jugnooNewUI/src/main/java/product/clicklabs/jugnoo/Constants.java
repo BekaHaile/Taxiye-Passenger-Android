@@ -1,5 +1,8 @@
 package product.clicklabs.jugnoo;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created by socomo20 on 12/11/15.
  */
@@ -552,9 +555,9 @@ public interface Constants {
     String KEY_GOOGLE_PLACE_ID = "google_place_id";
 
 
-    int REQUEST_CODE_ADD_HOME = 2;
-    int REQUEST_CODE_ADD_WORK = 3;
-    int REQUEST_CODE_ADD_NEW_LOCATION = 4;
+    int REQUEST_CODE_ADD_HOME = 200;
+    int REQUEST_CODE_ADD_WORK = 300;
+    int REQUEST_CODE_ADD_NEW_LOCATION = 400;
     String KEY_REQUEST_CODE = "request_code";
     String KEY_ADDRESS_ID = "address_id";
     String KEY_KEEP_DUPLICATE = "keep_duplicate";
@@ -618,7 +621,7 @@ public interface Constants {
     String KEY_PAYMENT_PREFERENCE = "payment_preference";
     String KEY_AUTOS_BENEFIT_ID = "autos_benefit_id";
 
-    double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 200d;
+    double MAX_DISTANCE_TO_USE_SAVED_LOCATION = 100d;
     String KEY_OPTIONS = "options";
     String KEY_CUSTOMISATIONS = "customisations";
     String KEY_SUPER_CATEGORY_ID = "super_category_id";
@@ -944,6 +947,8 @@ public interface Constants {
     String KEY_SHOW_FARE_ESTIMATE_HOVER_BUTTON = "show_fare_estimate_hover_button";
     String KEY_CASH_ABOVE_ALL_WALLETS = "cash_above_all_wallets";
     String KEY_FORCE_MPESA_PAYMENT= "force_mpesa_payment";
+    String SCHEDULE_RIDE_ENABLED= "schedule_ride_enabled";
+    String SHOW_TUT_SCHEDULE_RIDE= "show_tut_schedule_ride";
 
     String KEY_LUGGAGE_CHARGES = "luggage_charges";
     String KEY_PAY_VIA_STRIPE = "pay_via_stripe";
@@ -952,4 +957,29 @@ public interface Constants {
     String KEY_HIT_PLACE_DETAILS_AFTER_GEOCODE = "hit_place_details_after_geocode";
     String SP_LAST_PHONE_NUMBER_SAVED = "last_phone_number_saved";
     String SP_LAST_COUNTRY_CODE_SAVED = "last_country_code_saved";
+    String KEY_CUSTOMER_CANCEL_RIDE_ENABLED = "customer_cancel_ride_enabled";
+
+    String KEY_CUSTOMER_PLAY_SOUND_RIDE_ACCEPT = "customer_play_sound_ride_accept";
+    String KEY_CUSTOMER_PLAY_SOUND_RIDE_ARRIVED = "customer_play_sound_ride_arrived";
+    String KEY_CUSTOMER_PLAY_SOUND_RIDE_START = "customer_play_sound_ride_start";
+    String KEY_CUSTOMER_PLAY_SOUND_RIDE_END = "customer_play_sound_ride_end";
+    String KEY_DIRECT_CONFIRM = "direct_confirm";
+    String KEY_PICKUP_DROP_LIKE_ENABLED = "customer_pickup_drop_like_enabled";
+	String KEY_API_NAME = "api_name";
+	String KEY_CUSTOMER_GOOGLE_APIS_LOGGING = "customer_google_apis_logging";
+	String KEY_CUSTOMER_MYLOCATION_TRACKING = "customer_mylocation_tracking";
+
+    String KEY_SCHEDULE_RIDE = "schedule_ride";
+    String KEY_SCHEDULE_RIDE_FORMATED_DATE_TIME = "schedule_ride_formated_date_time";
+    String KEY_SCHEDULE_RIDE_SELECTED_REGION_ID = "schedule_ride_selected_region_id";
+    String KEY_PICKUP_TIME = "pickup_time";
+
+	String SP_FIRST_GEOCODE_TIMESTAMP = "first_geocode_timestamp";
+	String SP_GEOCODE_HITS_COUNT = "geocode_hits_count";
+
+    String KEY_CUSTOMER_GEOCODE_TIME_LIMIT = "customer_geocode_time_limit";
+    String KEY_CUSTOMER_GEOCODE_HIT_LIMIT = "customer_geocode_hit_limit";
+    String KEY_CUSTOMER_GEOCODE_LIMIT_ENABLED = "customer_geocode_limit_enabled";
+    String SCHEDULE_CURRENT_TIME_DIFF = "schedule_current_time_diff";
+    String SCHEDULE_DAYS_LIMIT = "schedule_days_limit";
 }
