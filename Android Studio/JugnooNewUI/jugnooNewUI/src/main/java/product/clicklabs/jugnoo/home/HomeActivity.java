@@ -545,8 +545,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private GeoDataClient mGeoDataClient;
     private RecyclerView recyclerViewVehiclesConfirmRide;
     private VehiclesTabAdapter vehiclesTabAdapterConfirmRide;
-    private boolean showVehicleFaresBeforeConfirm = true;
-    private boolean selectPickUpdropAtOnce = true;
+    private boolean showVehicleFaresBeforeConfirm;
+    private boolean selectPickUpdropAtOnce = false;
     private Polyline polyline;
 
     private ImageView ivLikePickup, ivLikeDrop;
@@ -618,6 +618,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         showScheduleRideTut = Prefs.with(this).getBoolean(Constants.SHOW_TUT_SCHEDULE_RIDE, true);
         activityResumed = false;
         dropLocationSearched = false;
+        showVehicleFaresBeforeConfirm = (Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_SHOW_VEHICLE_SELECTION_FARE_ESTIMATE, 0) == 1);
 
         loggedOut = false;
         zoomedToMyLocation = false;
@@ -7685,19 +7686,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                 if (promoCouponSelectedForRide != null) {
                                     if (promoCouponSelectedForRide instanceof CouponInfo) {
-                                        nameValuePairs.put("coupon_to_apply", String.valueOf(promoCouponSelectedForRide.getId()));
+                                        nameValuePairs.put(KEY_COUPON_TO_APPLY, String.valueOf(promoCouponSelectedForRide.getId()));
                                         if (promoCouponSelectedForRide.getId() == 0) {
-                                            nameValuePairs.put("promo_to_apply", String.valueOf(promoCouponSelectedForRide.getId()));
+                                            nameValuePairs.put(KEY_PROMO_TO_APPLY, String.valueOf(promoCouponSelectedForRide.getId()));
                                         }
                                     } else if (promoCouponSelectedForRide instanceof PromotionInfo) {
-                                        nameValuePairs.put("promo_to_apply", String.valueOf(promoCouponSelectedForRide.getId()));
+                                        nameValuePairs.put(KEY_PROMO_TO_APPLY, String.valueOf(promoCouponSelectedForRide.getId()));
                                     }
                                     nameValuePairs.put(KEY_MASTER_COUPON, String.valueOf(promoCouponSelectedForRide.getMasterCoupon()));
                                 }
-
+                                Region regionSelected = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
                                 if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
-                                    double fareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor();
-                                    double driverFareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDriverFareFactor();
+                                    double fareFactor = regionSelected.getCustomerFareFactor();
+                                    double driverFareFactor = regionSelected.getDriverFareFactor();
 
                                     nameValuePairs.put("duplicate_flag", "0");
                                     nameValuePairs.put(KEY_CUSTOMER_FARE_FACTOR, String.valueOf(fareFactor));
@@ -7720,15 +7721,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
 
                                 nameValuePairs.put(Constants.KEY_PREFERRED_PAYMENT_MODE, "" + Data.autoData.getPickupPaymentOption());
-                                nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(slidingBottomPanel
-                                        .getRequestRideOptionsFragment().getRegionSelected().getVehicleType()));
-                                nameValuePairs.put(KEY_REVERSE_BID, String.valueOf(slidingBottomPanel
-                                        .getRequestRideOptionsFragment().getRegionSelected().getReverseBid()));
-                                nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
-                                        .getRequestRideOptionsFragment().getRegionSelected().getRegionId()));
+                                nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(regionSelected.getVehicleType()));
+                                nameValuePairs.put(KEY_REVERSE_BID, String.valueOf(regionSelected.getReverseBid()));
+                                nameValuePairs.put(KEY_REGION_ID, String.valueOf(regionSelected.getRegionId()));
 
-                                if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
+                                if (regionSelected.getRideType() == RideTypeValue.POOL.getOrdinal()) {
                                     nameValuePairs.put("pool_fare_id", "" + jugnooPoolFareId);
+                                }
+                                if(regionSelected.getRegionFare() != null && regionSelected.getRegionFare().getFareMandatory() == 1){
+                                    nameValuePairs.put(Constants.KEY_FARE, "" + regionSelected.getRegionFare().getFare());
+
+                                    if(getApiFindADriver() != null && getApiFindADriver().getParams() != null){
+                                        nameValuePairs.put(KEY_RIDE_DISTANCE, getApiFindADriver().getParams().get(KEY_RIDE_DISTANCE));
+                                        nameValuePairs.put(KEY_RIDE_TIME, getApiFindADriver().getParams().get(KEY_RIDE_TIME));
+                                    }
                                 }
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
@@ -8658,12 +8664,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             PromoCoupon promoCouponSelected = null;
             try {
                 promoCouponSelected = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            } catch (Exception ignored) {}
             new ApiFareEstimate(HomeActivity.this, new ApiFareEstimate.Callback() {
                 @Override
-                public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText, double distanceValue, double timeValue) {
+                public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText,
+                                      String timeText, double distanceValue, double timeValue, PromoCoupon promoCoupon) {
                     mapTouched = false;
                     latLngBoundsBuilderPool = new LatLngBounds.Builder();
 
@@ -8699,8 +8704,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     if(showVehicleFaresBeforeConfirm){
                         HashMap<String, String> params = new HashMap<>();
-                        params.put("ride_distance", "" + (distanceValue/1000D));
-                        params.put("ride_time", "" + (timeValue/60D));
+                        params.put(Constants.KEY_RIDE_DISTANCE, "" + (distanceValue/1000D));
+                        params.put(Constants.KEY_RIDE_TIME, "" + (timeValue/60D));
+                        if(promoCoupon!=null && promoCoupon.getId()!=-1){
+                            params.put(promoCoupon instanceof CouponInfo?Constants.KEY_COUPON_TO_APPLY:Constants.KEY_PROMO_TO_APPLY, String.valueOf(promoCoupon.getId()));
+                        }
                         findDriversETACall(false, false, false, params);
                     }
                 }
@@ -9171,7 +9179,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewInitialSearch.setText(searchResult.getNameForText());
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM));
                 setPickupAddressZoomedOnce = true;
-                lastSearchLatLng = searchResult.getLatLng();
                 mapTouched = true;
                 updateSavedAddressLikeButton(searchResult.getLatLng(), true);
                 Data.autoData.setPickupLatLng(searchResult.getLatLng());

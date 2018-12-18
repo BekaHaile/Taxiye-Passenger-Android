@@ -2,6 +2,9 @@ package product.clicklabs.jugnoo.home.models;
 
 import android.content.Context;
 import android.graphics.drawable.StateListDrawable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StrikethroughSpan;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -128,6 +131,10 @@ public class Region {
 		this.reverseBid = reverseBid;
 	}
 
+	public RegionFare getRegionFare() {
+		return regionFare;
+	}
+
 	public class OfferTexts {
 
 		@SerializedName("text1")
@@ -181,10 +188,48 @@ public class Region {
 	public class RegionFare{
 		@SerializedName("fare")
 		@Expose
-		private Double fare;
+		private double fare;
+		@SerializedName("fare_without_discount")
+		@Expose
+		private double fareWithoutDiscount;
+		@SerializedName("max_fare")
+		@Expose
+		private double maxFare;
+		@SerializedName("min_fare")
+		@Expose
+		private double minFare;
+		@SerializedName("currency")
+		@Expose
+		private String currency;
+		@SerializedName("fare_mandatory")
+		@Expose
+		private int fareMandatory;
 
-		public Double getFare() {
+		public double getFare() {
 			return fare;
+		}
+
+		public int getFareMandatory() {
+			return fareMandatory;
+		}
+
+		public CharSequence getFareString(){
+			if(fareMandatory == 1){
+				SpannableStringBuilder builder = new SpannableStringBuilder();
+				if(fareWithoutDiscount > 0 && fareWithoutDiscount != fare){
+					String oldFare = Utils.formatCurrencyValue(currency, fareWithoutDiscount);
+					builder.append(oldFare);
+					builder.setSpan(new StrikethroughSpan(), 0, oldFare.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+					builder.append(" ");
+				}
+				builder.append(Utils.formatCurrencyValue(currency, fare));
+				return builder;
+
+			} else {
+				return Utils.formatCurrencyValue(currency, minFare) + " - " +
+						Utils.formatCurrencyValue(currency, maxFare);
+			}
+
 		}
 	}
 
@@ -437,7 +482,4 @@ public class Region {
 		this.deepindex = deepindex;
 	}
 
-	public Double getVehicleFare() {
-		return regionFare==null?null:regionFare.getFare();
-	}
 }

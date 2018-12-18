@@ -46,6 +46,7 @@ public class ApiFindADriver {
 	private Region regionSelected;
 	private LatLng refreshLatLng;
 	private long refreshTime;
+	private HashMap<String, String> params;
 
 	public ApiFindADriver(HomeActivity activity, Region regionSelected, Callback callback){
 		this.activity = activity;
@@ -61,7 +62,7 @@ public class ApiFindADriver {
 			if(callback != null) {
 				callback.onPre();
 			}
-
+			this.params = params;
 			if(params == null) {
 				params = new HashMap<>();
 			}
@@ -480,6 +481,10 @@ public class ApiFindADriver {
 
 	public void setRefreshLatLng(LatLng refreshLatLng){
 		this.refreshLatLng = refreshLatLng;
+	}
+
+	public HashMap<String, String> getParams() {
+		return params;
 	}
 
 

@@ -273,7 +273,8 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         try {
             new ApiFareEstimate(this, new ApiFareEstimate.Callback() {
                 @Override
-                public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText, double distanceValue, double timeValue) {
+                public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText,
+                                      String timeText, double distanceValue, double timeValue, PromoCoupon promoCoupon) {
                     try {
 
                         Fragment frag = getSupportFragmentManager()

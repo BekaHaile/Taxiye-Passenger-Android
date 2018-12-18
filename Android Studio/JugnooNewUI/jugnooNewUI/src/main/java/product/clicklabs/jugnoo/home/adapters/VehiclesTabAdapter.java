@@ -22,7 +22,6 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Utils;
 
 public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.ViewHolder> implements GAAction, GACategory{
 
@@ -54,9 +53,9 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
 
         holder.textViewVehicleName.setText(region.getRegionName());
         holder.relative.setTag(position);
-        holder.tvVehicleFare.setVisibility(showRegionFares && region.getVehicleFare()!=null ?View.VISIBLE:View.GONE);
-        if(region.getVehicleFare()!=null){
-            holder.tvVehicleFare.setText(Utils.formatCurrencyValue(null,region.getVehicleFare()));
+        holder.tvVehicleFare.setVisibility(showRegionFares && region.getRegionFare()!=null ?View.VISIBLE:View.GONE);
+        if(region.getRegionFare()!=null){
+            holder.tvVehicleFare.setText(region.getRegionFare().getFareString());
         }
 
         boolean selected = region.getOperatorId() == activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getOperatorId()

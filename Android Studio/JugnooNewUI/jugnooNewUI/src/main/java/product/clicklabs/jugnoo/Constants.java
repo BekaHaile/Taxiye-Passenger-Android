@@ -1,8 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 /**
  * Created by socomo20 on 12/11/15.
  */
@@ -982,4 +979,13 @@ public interface Constants {
     String KEY_CUSTOMER_GEOCODE_LIMIT_ENABLED = "customer_geocode_limit_enabled";
     String SCHEDULE_CURRENT_TIME_DIFF = "schedule_current_time_diff";
     String SCHEDULE_DAYS_LIMIT = "schedule_days_limit";
+
+    String KEY_CUSTOMER_SHOW_VEHICLE_SELECTION_FARE_ESTIMATE = "customer_show_vehicle_selection_fare_estimate";
+    String KEY_RIDE_DISTANCE = "ride_distance";
+    String KEY_RIDE_TIME = "ride_time";
+    String KEY_COUPON_ID = "coupon_id";
+    String KEY_PROMO_ID = "promo_id";
+    String KEY_COUPON_TO_APPLY = "coupon_to_apply";
+    String KEY_PROMO_TO_APPLY = "promo_to_apply";
+    String KEY_FARE = "fare";
 }
