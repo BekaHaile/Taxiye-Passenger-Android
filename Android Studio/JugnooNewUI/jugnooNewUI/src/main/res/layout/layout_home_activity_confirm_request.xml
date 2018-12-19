@@ -164,12 +164,14 @@
                 android:visibility="gone" />
 
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/relativeLayoutTotalFare"
                 android:layout_width="match_parent"
                 android:layout_height="110px"
                 android:layout_marginTop="-1dp"
-                android:gravity="center">
+                android:orientation="vertical"
+                android:gravity="center"
+                >
 
                 <LinearLayout
                     android:id="@+id/linearLayoutTotalFare"
@@ -207,7 +209,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/linearLayoutTotalFare"
-                    android:layout_marginTop="7px"
+                    android:layout_marginTop="5px"
                     android:gravity="center"
                     android:text=""
                     android:textColor="@color/text_color"
@@ -215,7 +217,7 @@
                     android:visibility="visible" />
 
 
-            </RelativeLayout>
+            </LinearLayout>
 
 
         </LinearLayout>

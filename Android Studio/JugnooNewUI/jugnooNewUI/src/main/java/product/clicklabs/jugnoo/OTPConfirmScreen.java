@@ -314,40 +314,44 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
         task.addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                smsReceiver = createSmsReceiver();
                 registerReceiver(smsReceiver, new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION));
             }
         });
         task.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                e.printStackTrace();
             }
         });
 
     }
 
-    private BroadcastReceiver smsReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent != null && intent.getExtras() != null
-                    && SmsRetriever.SMS_RETRIEVED_ACTION.equals(intent.getAction())) {
-                Bundle extras = intent.getExtras();
-                Status status = (Status) extras.get(SmsRetriever.EXTRA_STATUS);
-                if (status != null)
-                    switch (status.getStatusCode()) {
-                        case CommonStatusCodes.SUCCESS:
-                            String message = (String) extras.get(SmsRetriever.EXTRA_SMS_MESSAGE);
-                            if (message != null) {
-                                setOTPToEditText(Utils.retrieveOTPFromSMS(message));
-                            }
-                            break;
+    private BroadcastReceiver createSmsReceiver() {
+        return new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent != null && intent.getExtras() != null
+                        && SmsRetriever.SMS_RETRIEVED_ACTION.equals(intent.getAction())) {
+                    Bundle extras = intent.getExtras();
+                    Status status = (Status) extras.get(SmsRetriever.EXTRA_STATUS);
+                    if (status != null)
+                        switch (status.getStatusCode()) {
+                            case CommonStatusCodes.SUCCESS:
+                                String message = (String) extras.get(SmsRetriever.EXTRA_SMS_MESSAGE);
+                                if (message != null) {
+                                    setOTPToEditText(Utils.retrieveOTPFromSMS(message));
+                                }
+                                break;
 
-                        case CommonStatusCodes.TIMEOUT:
-                            break;
-                    }
+                            case CommonStatusCodes.TIMEOUT:
+                                break;
+                        }
+                }
             }
-        }
-    };
+        };
+    }
+    private BroadcastReceiver smsReceiver = null;
 
     private void startOTPTimer() {
         try {
@@ -973,7 +977,13 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(smsReceiver);
+        if (smsReceiver != null) {
+            try {
+                unregisterReceiver(smsReceiver);
+            } catch (IllegalArgumentException exception) {
+                exception.printStackTrace();
+            }
+        }
         ASSL.closeActivity(relative);
         System.gc();
     }

@@ -338,7 +338,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm,layoutAddedTip;
     Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver,buttonTipDriver,buttonAddTipEndRide;
     ImageView ivMoreOptions;
-    RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat, relativeLayoutTotalFare;
+    RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat;
+    LinearLayout relativeLayoutTotalFare;
     TextView textViewIRPaymentOptionValue;
     ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm;
     PopupMenu popupInRide;
@@ -734,7 +735,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         relativeLayoutConfirmBottom = (RelativeLayout) findViewById(R.id.relativeLayoutConfirmBottom);
         relativeLayoutConfirmRequest = (RelativeLayout) findViewById(R.id.relativeLayoutConfirmRequest);
         relativeLayoutConfirmRequest.setVisibility(View.GONE);
-        relativeLayoutTotalFare = (RelativeLayout) findViewById(R.id.relativeLayoutTotalFare);
+        relativeLayoutTotalFare = findViewById(R.id.relativeLayoutTotalFare);
         buttonConfirmRequest = (Button) findViewById(R.id.buttonConfirmRequest);
         buttonConfirmRequest.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         linearLayoutPaymentModeConfirm = (LinearLayout) findViewById(R.id.linearLayoutPaymentModeConfirm);
@@ -8732,7 +8733,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
 
                 @Override
-                public void onFareEstimateSuccess(String currency, String minFare, String maxFare, double convenienceCharge) {
+                public void onFareEstimateSuccess(String currency, String minFare, String maxFare, double convenienceCharge,
+                                                  double tollCharge) {
                     try {
                         fabViewTest.closeMenu();
                     } catch (Exception e) {
@@ -8748,12 +8750,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         textViewIncludes.setVisibility(View.GONE);
                         textViewIncludes.setText("");
                     }
+                    setTextTollCharges(currency, tollCharge);
+                }
+
+                private void setTextTollCharges(String currency, double tollCharge) {
+                    if(tollCharge > 0){
+                        textViewIncludes.setVisibility(View.VISIBLE);
+                        if(textViewIncludes.getText().length() > 0) textViewIncludes.append("\n");
+                        textViewIncludes.append(getString(R.string.expected_toll_charge)+" "+Utils.formatCurrencyValue(currency, tollCharge));
+                    }
                 }
 
                 @Override
                 public void onPoolSuccess(String currency, double fare, double rideDistance, String rideDistanceUnit,
                                           double rideTime, String rideTimeUnit, final int poolFareId,
-                                          double convenienceCharge, String text) {
+                                          double convenienceCharge, String text, double tollCharge) {
                     Log.v("Pool Fare value is ", "--> " + fare);
                     jugnooPoolFareId = poolFareId;
 
@@ -8762,6 +8773,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     textViewIncludes.setVisibility(View.VISIBLE);
                     textViewIncludes.setText(text);
+                    setTextTollCharges(currency, tollCharge);
                     try {
                         fabViewTest.closeMenu();
                     } catch (Exception e) {

@@ -1972,4 +1972,6 @@
     <string name="are_you_sure_delete_schedule_ride">Are you sure you want to cancel the scheduled ride?</string>
     <string name="booking_scheduled_successfully">Booking scheduled successfully.</string>
     <string name="no_scheduled_rides">No Rides Scheduled currently</string>
+    <string name="bid_fare">Bid Fare</string>
+    <string name="expected_toll_charge">Expected Toll Charges</string>
 </resources>
