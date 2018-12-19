@@ -74,4 +74,6 @@
     <bool name="force_open_autos">false</bool>
     <bool name="schedule_ride_enabled">false</bool>
 
+    <integer name="customer_show_include_toll_in_summary">1</integer>
+
 </resources>

@@ -461,6 +461,9 @@ public class JSONParser implements Constants {
                 context.getResources().getInteger(R.integer.customer_geocode_hit_limit)));
         Prefs.with(context).save(KEY_CUSTOMER_GEOCODE_LIMIT_ENABLED, autoData.optInt(KEY_CUSTOMER_GEOCODE_LIMIT_ENABLED,
                 context.getResources().getInteger(R.integer.customer_geocode_limit_enabled)));
+
+		Prefs.with(context).save(KEY_CUSTOMER_SHOW_INCLUDE_TOLL_IN_SUMMARY, autoData.optInt(KEY_CUSTOMER_SHOW_INCLUDE_TOLL_IN_SUMMARY,
+				context.getResources().getInteger(R.integer.customer_show_include_toll_in_summary)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
@@ -977,6 +980,7 @@ public class JSONParser implements Constants {
         double tollCharge = jLastRideData.optDouble(Constants.KEY_TOLL_CHARGE, 0.0);
         double driverTipAmount = jLastRideData.optDouble(Constants.KEY_TIP_AMOUNT, 0.0);
         double luggageChargesNew = jLastRideData.optDouble(Constants.KEY_LUGGAGE_CHARGES, 0.0);
+        int reverseBid = jLastRideData.optInt(Constants.KEY_REVERSE_BID, 0);
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -996,7 +1000,7 @@ public class JSONParser implements Constants {
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
-                driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage);
+                driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid);
 	}
 
 

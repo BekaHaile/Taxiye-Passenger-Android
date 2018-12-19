@@ -981,4 +981,6 @@ public interface Constants {
     String KEY_CUSTOMER_GEOCODE_LIMIT_ENABLED = "customer_geocode_limit_enabled";
     String SCHEDULE_CURRENT_TIME_DIFF = "schedule_current_time_diff";
     String SCHEDULE_DAYS_LIMIT = "schedule_days_limit";
+
+    String KEY_CUSTOMER_SHOW_INCLUDE_TOLL_IN_SUMMARY = "customer_show_include_toll_in_summary";
 }

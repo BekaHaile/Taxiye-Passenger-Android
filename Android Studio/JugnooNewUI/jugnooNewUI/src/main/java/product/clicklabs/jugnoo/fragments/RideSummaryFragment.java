@@ -82,7 +82,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
     TextView textViewEndRideFareValue,textViewDriverTipValue, textViewEndTollChargeValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
             textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue,
             textViewEndRideMobikwikValue, textViewEndRideFreeChargeValue,
-            textViewEndRideToBePaidValue, textViewEndRideBaseFareValue,
+            textViewEndRideToBePaidValue, textViewEndRideBaseFare, textViewEndRideBaseFareValue,
             textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue,
             tvIncludeToll, tvEndRideRazorpay,tvEndRideStripeCard, tvEndRideTaxNet, tvEndRideRazorpayValue,tvEndRideStripeCardValue, tvEndRideTaxNetValue,textViewEndRideMpesaValue;
     TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue;
@@ -231,6 +231,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             tvEndRideTaxNetValue = (TextView) rootView.findViewById(R.id.tvEndRideTaxNetValue); tvEndRideTaxNetValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideToBePaidValue = (TextView) rootView.findViewById(R.id.textViewEndRideToBePaidValue);
             textViewEndRideToBePaidValue.setTypeface(Fonts.mavenRegular(activity));
+            textViewEndRideBaseFare = (TextView) rootView.findViewById(R.id.textViewEndRideBaseFare);
             textViewEndRideBaseFareValue = (TextView) rootView.findViewById(R.id.textViewEndRideBaseFareValue);
             textViewEndRideBaseFareValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideDistanceValue = (TextView) rootView.findViewById(R.id.textViewEndRideDistanceValue);
@@ -451,10 +452,15 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 if (endRideData.getIsPooled() == 1) {
                     if(endRideData.getVehicleType() == VehicleTypeValue.TAXI.getOrdinal()){
                         imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_history_carpool);
-                        tvIncludeToll.setVisibility(View.VISIBLE);
                     } else {
                         imageViewEndRideAutoIcon.setImageResource(R.drawable.ic_history_pool);
                     }
+                }
+                if(Prefs.with(activity).getInt(Constants.KEY_CUSTOMER_SHOW_INCLUDE_TOLL_IN_SUMMARY, 0) == 1
+                        && endRideData.getVehicleType() == VehicleTypeValue.TAXI.getOrdinal()){
+                    tvIncludeToll.setVisibility(View.VISIBLE);
+                } else {
+                    tvIncludeToll.setVisibility(View.GONE);
                 }
 
                 if(endRideData.getInvoiceAdditionalTextCabs() != null
@@ -586,6 +592,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
                     rootView.findViewById(R.id.ivSepBaseFare).setVisibility(View.GONE);
 					rlToBePaid.setVisibility(endRideData.toPay > 0D ? View.VISIBLE : View.GONE);
                 }
+                textViewEndRideBaseFare.setText(endRideData.getReverseBid() == 1 ? R.string.bid_fare : R.string.base_fare);
+
                 double totalDistanceInKm = endRideData.distance;
                 String kmsStr = Utils.getDistanceUnit(endRideData.getDistanceUnit());
                 textViewEndRideDistanceValue.setText("" + decimalFormat.format(totalDistanceInKm) + " " + kmsStr);
