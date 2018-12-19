@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -642,6 +643,9 @@ public class WalletCore {
                         ji.optString(Constants.KEY_UPI_CASHBACK_VALUE, ""), ji.optJSONArray(Constants.KEY_CARDS_DATA));
                 if(paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()){
                     cashPosition = i;
+                    if(BuildConfig.DEBUG){ //todo
+                        paymentModeConfigData.setEnabled(1);
+                    }
                 }
                 paymentModeConfigDatas.add(paymentModeConfigData);
             }

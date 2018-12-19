@@ -273,7 +273,8 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         try {
             new ApiFareEstimate(this, new ApiFareEstimate.Callback() {
                 @Override
-                public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText, double distanceValue, double timeValue) {
+                public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText,
+                                      String timeText, double distanceValue, double timeValue) {
                     try {
 
                         Fragment frag = getSupportFragmentManager()
@@ -365,7 +366,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 }
 
                 @Override
-                public void onFareEstimateSuccess(String currency, String minFare, String maxFare, double convenienceCharge) {
+                public void onFareEstimateSuccess(String currency, String minFare, String maxFare, double convenienceCharge, double tollCharge) {
 
                     textViewEstimateFare.setText(Utils.formatCurrencyValue(currency, minFare) + " - " +
                             Utils.formatCurrencyValue(currency, maxFare));
@@ -375,12 +376,13 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                     } else {
                         textViewConvenienceCharge.setText("");
                     }
+                    setTextTollCharges(currency, tollCharge);
                 }
 
                 @Override
                 public void onPoolSuccess(String currency, double fare, double rideDistance, String rideDistanceUnit,
                                           double rideTime, String rideTimeUnit, int poolFareId, double convenienceCharge,
-                                          String text) {
+                                          String text, double tollCharge) {
                     textViewEstimateFare.setText(Utils.formatCurrencyValue(currency, fare));
 
                     if (convenienceCharge > 0) {
@@ -388,6 +390,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                     } else {
                         textViewConvenienceCharge.setText("");
                     }
+                    setTextTollCharges(currency, tollCharge);
                 }
 
                 @Override
@@ -419,6 +422,13 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                     DialogPopup.dismissLoadingDialog();
                 }
             });
+        }
+    }
+
+    public void setTextTollCharges(String currency, double tollCharge) {
+        if(tollCharge > 0){
+            if(textViewConvenienceCharge.getText().length() > 0) textViewConvenienceCharge.append("\n");
+            textViewConvenienceCharge.append(getString(R.string.expected_toll_charge)+" "+Utils.formatCurrencyValue(currency, tollCharge));
         }
     }
 
