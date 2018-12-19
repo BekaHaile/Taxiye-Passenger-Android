@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -149,7 +150,8 @@ public class MyApplication extends MultiDexApplication {
         fuguChatCustomActionReceiver = new ChatCustomActionBroadCastReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction(FuguAppConstant.FUGU_CUSTOM_ACTION_SELECTED);
-        this.registerReceiver(fuguChatCustomActionReceiver, filter);
+        LocalBroadcastManager.getInstance(getApplicationContext()).
+                registerReceiver(fuguChatCustomActionReceiver, filter);
 
     }
 
