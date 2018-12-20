@@ -2,11 +2,11 @@ package product.clicklabs.jugnoo.utils
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Base64
 import android.util.Log
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.util.*
 
 /**
@@ -56,7 +56,9 @@ class AppSignatureHelper {
             val appInfo = "$packageName $signature"
             try {
                 val messageDigest = MessageDigest.getInstance(HASH_TYPE)
-                messageDigest.update(appInfo.toByteArray(StandardCharsets.UTF_8))
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    messageDigest.update(appInfo.toByteArray(StandardCharsets.UTF_8))
+                }
                 var hashSignature = messageDigest.digest()
 
                 // truncated into NUM_HASHED_BYTES
@@ -67,7 +69,7 @@ class AppSignatureHelper {
 
                 Log.i(TAG, String.format("p: %s -- h: %s", packageName, base64Hash))
                 return base64Hash
-            } catch (e: NoSuchAlgorithmException) {
+            } catch (e: Exception) {
                 Log.e(TAG, "hash:NoSuchAlgorithm", e)
             }
 
