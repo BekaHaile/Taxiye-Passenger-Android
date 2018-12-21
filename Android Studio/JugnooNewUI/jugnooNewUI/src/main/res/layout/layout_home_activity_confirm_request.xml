@@ -33,8 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/confirmMyLocationBtn"
-        android:paddingTop="30px"
-        android:background="@drawable/white_alpha_gradient_up">
+        android:background="@color/white">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewVehiclesConfirmRide"
@@ -51,11 +50,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30px"
-            android:layout_marginStart="30px"
-            android:layout_marginEnd="30px"
-
             android:layout_below="@id/recyclerViewVehiclesConfirmRide"
-            android:background="@drawable/background_white_rounded_bordered"
+            android:background="@color/menu_item_selector_color_F7"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -68,7 +64,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_transparent_menu_item_selector_color_tlrb_selector"
+                    android:theme="@style/GreyHighlight"
+                    android:background="?attr/selectableItemBackground"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:visibility="visible">
@@ -95,6 +92,8 @@
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="-1dp"
+                    android:layout_marginTop="15px"
+                    android:layout_marginBottom="15px"
                     android:src="@color/stroke_light_grey_alpha"
                     />
 
@@ -103,7 +102,8 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_transparent_menu_item_selector_color_trrb_selector">
+                    android:theme="@style/GreyHighlight"
+                    android:background="?attr/selectableItemBackground">
 
                     <ImageView
                         android:layout_width="30px"
@@ -142,11 +142,13 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/vDivFareEstimateConfirm"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginStart="5px"
-                android:layout_marginEnd="5px"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="-1dp"
+                android:tag="@string/dont_touch_me"
                 android:background="@color/stroke_light_grey_alpha" />
 
 
@@ -161,7 +163,7 @@
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
                 android:textSize="@dimen/text_size_26"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
 
             <LinearLayout
@@ -224,9 +226,8 @@
 
         <Button
             android:id="@+id/buttonConfirmRequest"
-            android:layout_width="@dimen/button_big_width"
-            android:layout_height="@dimen/button_big_height"
-            android:background="@drawable/background_theme_gradient_selector"
+            android:layout_width="500px"
+            style="@style/ButtonThemeCapsule"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_38"
             android:textAllCaps="true"

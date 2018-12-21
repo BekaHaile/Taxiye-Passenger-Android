@@ -53,7 +53,10 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
 
         holder.textViewVehicleName.setText(region.getRegionName());
         holder.relative.setTag(position);
-        holder.tvVehicleFare.setVisibility(showRegionFares && region.getRegionFare()!=null ?View.VISIBLE:View.GONE);
+        int visibility = showRegionFares && region.getRegionFare()!=null ?View.VISIBLE:View.GONE;
+        holder.tvVehicleFare.setVisibility(visibility);
+        holder.tvETA.setVisibility(visibility);
+        holder.tvETA.setText(region.getEta() + " " + activity.getString(R.string.min));
         if(region.getRegionFare()!=null){
             holder.tvVehicleFare.setText(region.getRegionFare().getFareString());
         }
@@ -72,7 +75,6 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         try {
             if(selected){
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
-                holder.tvVehicleFare.setTextColor(activity.getResources().getColor(R.color.theme_color));
                 holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
                 Picasso.with(activity)
                         .load(region.getImages().getTabHighlighted())
@@ -80,7 +82,6 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                         .into(holder.imageViewTab);
             } else{
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColorStateList(R.color.text_color_theme_color_selector));
-                holder.tvVehicleFare.setTextColor(activity.getResources().getColorStateList(R.color.text_color_theme_color_selector));
                 holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.white));
                 Picasso.with(activity)
                         .load(region.getImages().getTabNormal())
@@ -128,7 +129,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         public RelativeLayout relative;
         public ImageView imageViewSep, imageViewTab, imageViewMultipleSurge;
         public ImageView imageViewSelected;
-        public TextView textViewVehicleName,tvVehicleFare;
+        public TextView tvETA, textViewVehicleName,tvVehicleFare;
 
         public ViewHolder(View itemView, Activity activity,boolean showingConfirmLayout) {
             super(itemView);
@@ -139,8 +140,10 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             imageViewSelected = (ImageView) itemView.findViewById(R.id.imageViewSelected);
             textViewVehicleName = (TextView)itemView.findViewById(R.id.textViewVehicleName);
             textViewVehicleName.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+            tvETA = (TextView)itemView.findViewById(R.id.tvETA);
+            tvETA.setTypeface(Fonts.mavenMedium(activity));
             tvVehicleFare = (TextView)itemView.findViewById(R.id.tvVehicleFare);
-            tvVehicleFare.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+            tvVehicleFare.setTypeface(Fonts.mavenMedium(activity));
             View linearLayoutContainer= itemView.findViewById(R.id.linearLayoutContainer);
             if(showingConfirmLayout){
                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewSelected.getLayoutParams();

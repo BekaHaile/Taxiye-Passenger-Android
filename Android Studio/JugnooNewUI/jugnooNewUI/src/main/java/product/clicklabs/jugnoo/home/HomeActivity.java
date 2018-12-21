@@ -1085,8 +1085,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewSendInvites2.setText(Data.autoData.getInRideSendInviteTextNormalV2());
                 if (Data.autoData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")) {
                     textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
+                    findViewById(R.id.vDivFareEstimateConfirm).setVisibility(View.VISIBLE);
                 } else {
                     textVieGetFareEstimateConfirm.setVisibility(View.GONE);
+                    findViewById(R.id.vDivFareEstimateConfirm).setVisibility(View.GONE);
                 }
             }
         } catch (Exception e) {
@@ -3368,6 +3370,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 recyclerViewVehiclesConfirmRide.setVisibility(View.VISIBLE);
                                 relativeLayoutTotalFare.setVisibility(View.GONE);
                                 textVieGetFareEstimateConfirm.setVisibility(View.GONE);
+                                findViewById(R.id.vDivFareEstimateConfirm).setVisibility(View.GONE);
                                 try {
                                     if(recyclerViewVehiclesConfirmRide.getAdapter()==null){
                                         vehiclesTabAdapterConfirmRide = new VehiclesTabAdapter(HomeActivity.this, Data.autoData.getRegions(),true);
@@ -9966,14 +9969,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1) {
                 relativeLayoutTotalFare.setVisibility(View.VISIBLE);
                 textVieGetFareEstimateConfirm.setVisibility(View.GONE);
+                findViewById(R.id.vDivFareEstimateConfirm).setVisibility(View.VISIBLE);
                 padding = padding + 80f;
             } else {
                 relativeLayoutTotalFare.setVisibility(View.GONE);
                 if (Data.autoData.getConfirmScreenFareEstimateEnable().equalsIgnoreCase("1")) {
                     textVieGetFareEstimateConfirm.setVisibility(View.VISIBLE);
+                    findViewById(R.id.vDivFareEstimateConfirm).setVisibility(View.VISIBLE);
                     padding = padding + 80f;
                 } else {
                     textVieGetFareEstimateConfirm.setVisibility(View.GONE);
+                    findViewById(R.id.vDivFareEstimateConfirm).setVisibility(View.GONE);
                 }
             }
             setGoogleMapPadding(padding);

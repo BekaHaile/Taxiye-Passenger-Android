@@ -7,18 +7,32 @@
     android:theme="@style/GreyHighlight"
     android:background="?attr/selectableItemBackground">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/linearLayoutContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvETA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginStart="4px"
+            android:layout_marginEnd="4px"
+            android:layout_marginBottom="5px"
+            android:layout_marginTop="10px"
+            tools:text="23"
+            android:visibility="gone"
+            android:textColor="@color/text_color"
+            android:textSize="22px" />
 
         <ImageView
             android:id="@+id/imageViewTab"
             android:layout_width="81px"
             android:layout_height="62px"
-            android:layout_centerHorizontal="true"
             android:src="@drawable/ic_supply_placeholder"
             android:tag="mwar" />
 
@@ -26,53 +40,52 @@
             android:id="@+id/textViewVehicleName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/imageViewTab"
-            android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
             android:layout_marginStart="4px"
             android:layout_marginEnd="4px"
-            android:layout_marginTop="-3px"
-            android:layout_marginBottom="15px"
+            android:layout_marginTop="5px"
+            android:layout_marginBottom="10px"
             android:text="@string/auto"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_22" />
+            android:textSize="24px" />
         <TextView
             android:id="@+id/tvVehicleFare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textViewVehicleName"
-            android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
             android:layout_marginStart="4px"
             android:layout_marginEnd="4px"
-            android:layout_marginTop="-5px"
-            android:layout_marginBottom="15px"
+            android:layout_marginTop="0px"
+            android:layout_marginBottom="10px"
             tools:text="23"
             android:visibility="gone"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_20" />
+            android:textSize="22px" />
 
-        <ImageView
-            android:id="@+id/imageViewMultipleSurge"
-            android:layout_width="21px"
-            android:layout_height="33px"
-            android:visibility="visible"
-            android:layout_marginTop="15px"
-            android:layout_toStartOf="@+id/imageViewTab"
-            android:src="@drawable/ic_surge_multiple_supply"
-            android:tag="mwar" />
 
-    </RelativeLayout>
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/imageViewMultipleSurge"
+        android:layout_width="21px"
+        android:layout_height="33px"
+        android:visibility="visible"
+        android:layout_marginStart="10px"
+        android:src="@drawable/ic_surge_multiple_supply"
+        android:layout_centerVertical="true"
+        android:tag="mwar" />
 
     <ImageView
         android:id="@+id/imageViewSep"
-        android:layout_width="2px"
-        android:layout_height="60px"
+        android:layout_width="1dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
-        android:layout_centerInParent="true"
-        android:src="@color/text_color_hint" />
+        android:src="@color/text_color_hint"
+        android:tag="@string/dont_touch_me"/>
 
     <ImageView
         android:id="@+id/imageViewSelected"
