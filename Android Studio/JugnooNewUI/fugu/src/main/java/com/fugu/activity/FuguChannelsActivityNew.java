@@ -3,6 +3,7 @@ package com.fugu.activity;
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -588,7 +589,8 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
             Intent intent = new Intent();
             intent.putExtra(FUGU_CUSTOM_ACTION_PAYLOAD, jsonObject.toString());
             intent.setAction(FUGU_CUSTOM_ACTION_SELECTED);
-            sendBroadcast(intent);
+//            intent.setComponent(new ComponentName("product.clicklabs.jugnoo","com.sabkuchfresh.fatafatchatpay.ChatCustomActionBroadCastReceiver"));
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
         }
     }

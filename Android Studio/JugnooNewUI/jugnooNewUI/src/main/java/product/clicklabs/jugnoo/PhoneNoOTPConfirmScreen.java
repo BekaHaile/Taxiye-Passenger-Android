@@ -373,7 +373,11 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 	@Override
 	protected void onDestroy() {
-		unregisterReceiver(smsReceiver);
+		try {
+			if(smsReceiver != null) {
+				unregisterReceiver(smsReceiver);
+			}
+		} catch (Exception ignored) {}
 		ASSL.closeActivity(relative);
         System.gc();
 		super.onDestroy();
@@ -479,6 +483,7 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 		task.addOnSuccessListener(new OnSuccessListener<Void>() {
 			@Override
 			public void onSuccess(Void aVoid) {
+				smsReceiver = getSmsReceiver();
 				registerReceiver(smsReceiver, new IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION));
 			}
 		});
@@ -491,7 +496,8 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 
 	}
 
-	private BroadcastReceiver smsReceiver = new BroadcastReceiver() {
+	private BroadcastReceiver smsReceiver = null;
+	private BroadcastReceiver getSmsReceiver(){return new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (intent != null && intent.getExtras() != null
@@ -512,6 +518,6 @@ public class PhoneNoOTPConfirmScreen extends BaseActivity{
 					}
 			}
 		}
-	};
+	};}
 
 }

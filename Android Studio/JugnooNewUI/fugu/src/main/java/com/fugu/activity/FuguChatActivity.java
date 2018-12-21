@@ -2280,7 +2280,7 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
         Intent intent = new Intent();
         intent.putExtra(FUGU_CUSTOM_ACTION_PAYLOAD, payload);
         intent.setAction(FUGU_CUSTOM_ACTION_SELECTED);
-        sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
     }
 }
