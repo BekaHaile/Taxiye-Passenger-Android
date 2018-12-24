@@ -488,7 +488,11 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         }
         if(MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
                 Data.autoData.getPickupPaymentOption(), promoCoupon)){
+            boolean callFindADriverAtCouponChange = selectedCoupon == null || selectedCoupon.getId() != promoCoupon.getId();
             selectedCoupon = promoCoupon;
+            if(callFindADriverAtCouponChange) {
+                activity.callFindADriverAfterCouponSelect();
+            }
             return true;
         } else {
             return false;

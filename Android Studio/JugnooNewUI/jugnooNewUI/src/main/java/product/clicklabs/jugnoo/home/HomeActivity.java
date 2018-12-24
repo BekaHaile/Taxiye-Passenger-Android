@@ -8657,6 +8657,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
+    public void callFindADriverAfterCouponSelect(){
+        if(confirmedScreenOpened && showVehicleFaresBeforeConfirm) {
+            HashMap<String, String> params = new HashMap<>();
+            if (getApiFindADriver().getParams() != null) {
+                params.put(KEY_RIDE_DISTANCE, getApiFindADriver().getParams().get(KEY_RIDE_DISTANCE));
+                params.put(KEY_RIDE_TIME, getApiFindADriver().getParams().get(KEY_RIDE_TIME));
+            }
+            PromoCoupon pc = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
+            if (pc != null && pc.getId() > 0) {
+                params.put(pc instanceof CouponInfo ? Constants.KEY_COUPON_TO_APPLY : Constants.KEY_PROMO_TO_APPLY, String.valueOf(pc.getId()));
+            }
+            findDriversETACall(false, false, false, params);
+        }
+    }
 
     private void fareEstimateForPool() {
         if (Data.autoData.getDropLatLng() != null) {
@@ -9478,6 +9492,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         // if it exists for that vehicle type, if it cannot find anything it then sets the coupon to null
 
         PromoCoupon selectedCoupon = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
+
+        if(selectedCoupon != null && selectedCoupon.getId() > 0) {
+            callFindADriverAfterCouponSelect();
+        }
 
         if (!(userClicked && oldVehicleType == newVehicleType)) {//do not change promo if user clicked on same vehicle Type
             if (selectedCoupon == null || selectedCoupon.getId() == -1 || !selectedCoupon.isVehicleTypeExists(getVehicleTypeSelected(), getOperatorIdSelected())) {

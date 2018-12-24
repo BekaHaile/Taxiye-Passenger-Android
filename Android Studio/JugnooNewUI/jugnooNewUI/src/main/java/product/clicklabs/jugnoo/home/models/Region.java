@@ -213,16 +213,24 @@ public class Region {
 			return fareMandatory;
 		}
 
+		public String getDiscountText(){
+			if(fareMandatory == 1 && fareWithoutDiscount > 0 && fareWithoutDiscount != fare){
+				double percent = (fareWithoutDiscount - fare)*100.0/fare;
+				return ((int)percent)+"%\noff";
+			}
+			return "";
+		}
+
 		public CharSequence getFareString(){
 			if(fareMandatory == 1){
 				SpannableStringBuilder builder = new SpannableStringBuilder();
+				builder.append(Utils.formatCurrencyValue(currency, fare));
 				if(fareWithoutDiscount > 0 && fareWithoutDiscount != fare){
+					builder.append("\n");
 					String oldFare = Utils.formatCurrencyValue(currency, fareWithoutDiscount);
 					builder.append(oldFare);
 					builder.setSpan(new StrikethroughSpan(), 0, oldFare.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-					builder.append(" ");
 				}
-				builder.append(Utils.formatCurrencyValue(currency, fare));
 				return builder;
 
 			} else {

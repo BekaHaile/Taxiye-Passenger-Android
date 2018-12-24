@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.home.adapters;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,20 +52,27 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     public void onBindViewHolder(VehiclesTabAdapter.ViewHolder holder, int position) {
         Region region = regions.get(position);
 
+        boolean selected = region.getOperatorId() == activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getOperatorId()
+                && region.getVehicleType().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getVehicleType())
+                && region.getRegionId().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRegionId())
+                ;
+
         holder.textViewVehicleName.setText(region.getRegionName());
         holder.relative.setTag(position);
         int visibility = showRegionFares && region.getRegionFare()!=null ?View.VISIBLE:View.GONE;
         holder.tvVehicleFare.setVisibility(visibility);
         holder.tvETA.setVisibility(visibility);
         holder.tvETA.setText(region.getEta() + " " + activity.getString(R.string.min));
-        if(region.getRegionFare()!=null){
+        holder.tvOfferTag.setVisibility(View.GONE);
+        if(showRegionFares && region.getRegionFare() != null){
             holder.tvVehicleFare.setText(region.getRegionFare().getFareString());
+            String discount = region.getRegionFare().getDiscountText();
+            if (selected && !TextUtils.isEmpty(discount)) {
+                holder.tvOfferTag.setVisibility(View.VISIBLE);
+                holder.tvOfferTag.setText(region.getRegionFare().getDiscountText());
+            }
         }
 
-        boolean selected = region.getOperatorId() == activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getOperatorId()
-                && region.getVehicleType().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getVehicleType())
-                && region.getRegionId().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRegionId())
-                ;
 
         if(region.getCustomerFareFactor() > 1.0){
             holder.imageViewMultipleSurge.setVisibility(View.VISIBLE);
@@ -72,6 +80,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             holder.imageViewMultipleSurge.setVisibility(View.GONE);
         }
 
+        holder.imageViewSelected.setVisibility(showRegionFares ? View.INVISIBLE : View.VISIBLE);
         try {
             if(selected){
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
@@ -129,7 +138,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         public RelativeLayout relative;
         public ImageView imageViewSep, imageViewTab, imageViewMultipleSurge;
         public ImageView imageViewSelected;
-        public TextView tvETA, textViewVehicleName,tvVehicleFare;
+        public TextView tvETA, textViewVehicleName,tvVehicleFare, tvOfferTag;
 
         public ViewHolder(View itemView, Activity activity,boolean showingConfirmLayout) {
             super(itemView);
@@ -144,6 +153,8 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             tvETA.setTypeface(Fonts.mavenMedium(activity));
             tvVehicleFare = (TextView)itemView.findViewById(R.id.tvVehicleFare);
             tvVehicleFare.setTypeface(Fonts.mavenMedium(activity));
+            tvOfferTag = (TextView)itemView.findViewById(R.id.tvOfferTag);
+            tvOfferTag.setTypeface(Fonts.mavenRegular(activity));
             View linearLayoutContainer= itemView.findViewById(R.id.linearLayoutContainer);
             if(showingConfirmLayout){
                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewSelected.getLayoutParams();
