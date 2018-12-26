@@ -3400,8 +3400,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             topBar.imageViewBack.setVisibility(View.VISIBLE);
                         } else {
                             scheduleRideContainer.setVisibility(View.GONE);
-                            topBar.imageViewMenu.setVisibility(View.VISIBLE);
-                            topBar.imageViewBack.setVisibility(View.GONE);
                         }
                         searchedALocation = false;
 

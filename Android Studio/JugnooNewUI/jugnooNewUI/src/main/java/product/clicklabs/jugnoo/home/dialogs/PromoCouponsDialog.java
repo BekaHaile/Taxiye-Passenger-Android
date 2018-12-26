@@ -197,8 +197,6 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 
                     if(!"".equalsIgnoreCase(Data.userData.getInviteEarnScreenImage())){
                         Picasso.with(activity).load(Data.userData.getInviteEarnScreenImage())
-                                .placeholder(R.drawable.ic_logo_white_bg)
-                                .error(R.drawable.ic_logo_white_bg)
                                 .into(ivNoOffer);
                     }
 
