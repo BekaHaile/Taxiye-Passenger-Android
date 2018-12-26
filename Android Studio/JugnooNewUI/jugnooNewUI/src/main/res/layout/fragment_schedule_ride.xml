@@ -164,6 +164,22 @@
         android:textColor="@color/white"
         android:background="@drawable/capsule_theme_login_selector"
         android:text="@string/schedule"/>
+
+
+    <TextView
+        android:id="@+id/tvScheduleMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/btSchedule"
+        app:layout_constraintStart_toEndOf="@id/glsStart"
+        app:layout_constraintEnd_toStartOf="@id/glEnd"
+        android:layout_marginTop="15dp"
+        android:text="@string/schedule_ride_alert"
+        android:textColor="@color/text_color_light"
+        android:textSize="12sp"
+        />
+
     <android.support.constraint.Guideline
         android:id="@+id/glsStart"
         android:layout_width="match_parent"
