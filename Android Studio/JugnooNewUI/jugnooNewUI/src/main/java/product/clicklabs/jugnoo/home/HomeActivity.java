@@ -546,7 +546,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private GeoDataClient mGeoDataClient;
     private RecyclerView recyclerViewVehiclesConfirmRide;
     private VehiclesTabAdapter vehiclesTabAdapterConfirmRide;
-    private boolean showVehicleFaresBeforeConfirm;
     private boolean selectPickUpdropAtOnce = false;
     private Polyline polyline;
 
@@ -619,7 +618,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         showScheduleRideTut = Prefs.with(this).getBoolean(Constants.SHOW_TUT_SCHEDULE_RIDE, true);
         activityResumed = false;
         dropLocationSearched = false;
-        showVehicleFaresBeforeConfirm = (Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_SHOW_VEHICLE_SELECTION_FARE_ESTIMATE, 0) == 1);
 
         loggedOut = false;
         zoomedToMyLocation = false;
@@ -3366,7 +3364,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             updateConfirmedStateCoupon();
                             //fabView.setRelativeLayoutFABVisibility(mode);
                             setGoogleMapPadding(mapPaddingConfirm);
-                            if(showVehicleFaresBeforeConfirm){
+                            if(Data.autoData.showRegionSpecificFare()){
                                 recyclerViewVehiclesConfirmRide.setVisibility(View.VISIBLE);
                                 relativeLayoutTotalFare.setVisibility(View.GONE);
                                 textVieGetFareEstimateConfirm.setVisibility(View.GONE);
@@ -8658,7 +8656,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     public void callFindADriverAfterCouponSelect(){
-        if(confirmedScreenOpened && showVehicleFaresBeforeConfirm) {
+        if(confirmedScreenOpened && Data.autoData.showRegionSpecificFare()) {
             HashMap<String, String> params = new HashMap<>();
             if (getApiFindADriver().getParams() != null) {
                 params.put(KEY_RIDE_DISTANCE, getApiFindADriver().getParams().get(KEY_RIDE_DISTANCE));
@@ -8721,7 +8719,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         e.printStackTrace();
                     }
 
-                    if(showVehicleFaresBeforeConfirm){
+                    if(Data.autoData.showRegionSpecificFare()){
                         HashMap<String, String> params = new HashMap<>();
                         params.put(Constants.KEY_RIDE_DISTANCE, "" + (distanceValue/1000D));
                         params.put(Constants.KEY_RIDE_TIME, "" + (timeValue/60D));
@@ -8828,7 +8826,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         e.printStackTrace();
                     }
                 }
-            }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, showVehicleFaresBeforeConfirm ?false: callFareEstimate,
+            }).getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, Data.autoData.showRegionSpecificFare() ?false: callFareEstimate,
                     getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), promoCouponSelected);
         } else {
             textViewDestSearch.setText(getResources().getString(R.string.destination_required));

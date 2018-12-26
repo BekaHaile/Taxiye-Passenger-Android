@@ -58,6 +58,7 @@ public class AutoData {
     private ArrayList<BidInfo> bidInfos;
     private String distanceUnit;
     private int isTipEnabled;
+    private int showRegionSpecificFare;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -66,7 +67,7 @@ public class AutoData {
                     int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText, int referAllStatus, String referAllText,
                     String referAllTitle, int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin,
                     NearbyPickupRegions nearbyPickupRegionses, String inRideSendInviteTextBoldV2, String inRideSendInviteTextNormalV2,
-                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled) {
+                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare) {
         this.destinationHelpText = destinationHelpText;
         this.rideSummaryBadText = rideSummaryBadText;
         this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
@@ -92,6 +93,7 @@ public class AutoData {
         this.rideStartInviteTextDeepIndexV2 = rideStartInviteTextDeepIndexV2;
         this.isRazorpayEnabled = isRazorpayEnabled;
         this.isTipEnabled = isTipEnabled;
+        this.showRegionSpecificFare = showRegionSpecificFare;
     }
 
     public String getDestinationHelpText() {
@@ -557,5 +559,13 @@ public class AutoData {
 
     public boolean getIsTipEnabled() {
         return isTipEnabled==1;
+    }
+
+    public boolean showRegionSpecificFare() {
+        return showRegionSpecificFare == 1;
+    }
+
+    public void setShowRegionSpecificFare(int showRegionSpecificFare) {
+        this.showRegionSpecificFare = showRegionSpecificFare;
     }
 }

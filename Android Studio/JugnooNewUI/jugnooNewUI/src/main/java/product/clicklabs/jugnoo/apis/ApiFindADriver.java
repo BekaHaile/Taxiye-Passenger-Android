@@ -189,6 +189,7 @@ public class ApiFindADriver {
 			} else {
 				Data.autoData.setFarAwayCity(findADriverResponse.getFarAwayCity());
 			}
+			Data.autoData.setShowRegionSpecificFare(findADriverResponse.getShowRegionSpecificFare());
 
 			Data.autoData.setIsRazorpayEnabled(findADriverResponse.getIsRazorpayEnabled());
 

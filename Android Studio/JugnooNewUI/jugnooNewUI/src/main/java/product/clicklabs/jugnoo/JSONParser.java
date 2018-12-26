@@ -357,7 +357,8 @@ public class JSONParser implements Constants {
 					, cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
 					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
-                    , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2, isRazorpayEnabled,isTipEnabled);
+                    , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2,
+                    isRazorpayEnabled,isTipEnabled, autosData.getShowRegionSpecificFare());
 
             Data.autoData.setUseRecentLocAtRequest(autosData.getUseRecentLocAtRequest());
             Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());
@@ -464,8 +465,6 @@ public class JSONParser implements Constants {
 
 		Prefs.with(context).save(KEY_CUSTOMER_SHOW_INCLUDE_TOLL_IN_SUMMARY, autoData.optInt(KEY_CUSTOMER_SHOW_INCLUDE_TOLL_IN_SUMMARY,
 				context.getResources().getInteger(R.integer.customer_show_include_toll_in_summary)));
-        Prefs.with(context).save(KEY_CUSTOMER_SHOW_VEHICLE_SELECTION_FARE_ESTIMATE, autoData.optInt(KEY_CUSTOMER_SHOW_VEHICLE_SELECTION_FARE_ESTIMATE,
-                context.getResources().getInteger(R.integer.show_vehicle_selection_fare_estimate)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

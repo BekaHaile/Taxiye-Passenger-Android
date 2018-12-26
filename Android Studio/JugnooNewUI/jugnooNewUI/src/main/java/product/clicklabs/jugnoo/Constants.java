@@ -984,7 +984,6 @@ public interface Constants {
 
     String KEY_CUSTOMER_SHOW_INCLUDE_TOLL_IN_SUMMARY = "customer_show_include_toll_in_summary";
 
-    String KEY_CUSTOMER_SHOW_VEHICLE_SELECTION_FARE_ESTIMATE = "customer_show_vehicle_selection_fare_estimate";
     String KEY_RIDE_DISTANCE = "ride_distance";
     String KEY_RIDE_TIME = "ride_time";
     String KEY_COUPON_ID = "coupon_id";
