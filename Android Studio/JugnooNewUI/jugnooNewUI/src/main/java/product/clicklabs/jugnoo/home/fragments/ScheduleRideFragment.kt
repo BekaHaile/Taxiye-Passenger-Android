@@ -96,6 +96,7 @@ class ScheduleRideFragment : Fragment(), Constants {
             rvVehiclesList.layoutManager = LinearLayoutManager(activity)
             rvVehiclesList.isNestedScrollingEnabled = false
             tvPickup.typeface = Fonts.mavenRegular(activity)
+            tvScheduleMessage.typeface = Fonts.mavenRegular(activity)
             tvDestination.typeface = Fonts.mavenRegular(activity)
             tvPickupDateTime.setTypeface(Fonts.mavenRegular(activity),BOLD)
             tvSelectDateTime.typeface = Fonts.mavenMedium(activity)
