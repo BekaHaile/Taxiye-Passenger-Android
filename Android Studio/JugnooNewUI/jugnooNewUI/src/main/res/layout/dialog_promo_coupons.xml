@@ -55,17 +55,16 @@
 
             <ImageView
                 android:id="@+id/ivNoOffer"
-                android:layout_width="508px"
-                android:layout_height="233px"
+                android:layout_width="274dp"
+                android:layout_height="125dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/px_42"
-                android:src="@drawable/ic_logo_white_bg"
-                android:tag="mwar" />
+                android:layout_marginTop="16dp"
+                android:tag="@string/dont_touch_me" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50px"
+                android:layout_marginTop="30px"
                 android:background="@color/white"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
@@ -74,7 +73,6 @@
                     android:id="@+id/textViewNoCurrentOffers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/px_30"
                     android:gravity="center"
                     android:text="@string/no_current_offer_popup_text"
                     android:textColor="@color/text_color"
