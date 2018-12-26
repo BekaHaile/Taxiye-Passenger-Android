@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -134,6 +135,7 @@ public class ApiFindADriver {
 						callback.updateWalletConfig();
 						callback.onFinish();
 					}
+					DialogPopup.dismissLoadingDialog();
 				}
 
 				@Override
@@ -143,10 +145,12 @@ public class ApiFindADriver {
 						callback.onFailure();
 						callback.onFinish();
 					}
+					DialogPopup.dismissLoadingDialog();
 				}
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
+			DialogPopup.dismissLoadingDialog();
 		}
 	}
 

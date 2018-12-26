@@ -8668,6 +8668,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (pc != null && pc.getId() > 0) {
                 params.put(pc instanceof CouponInfo ? Constants.KEY_COUPON_TO_APPLY : Constants.KEY_PROMO_TO_APPLY, String.valueOf(pc.getId()));
             }
+            DialogPopup.showLoadingDialog(this, getString(R.string.loading));
             findDriversETACall(false, false, false, params);
         }
     }
@@ -9493,9 +9494,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         PromoCoupon selectedCoupon = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
 
-        if(selectedCoupon != null && selectedCoupon.getId() > 0) {
-            callFindADriverAfterCouponSelect();
-        }
 
         if (!(userClicked && oldVehicleType == newVehicleType)) {//do not change promo if user clicked on same vehicle Type
             if (selectedCoupon == null || selectedCoupon.getId() == -1 || !selectedCoupon.isVehicleTypeExists(getVehicleTypeSelected(), getOperatorIdSelected())) {
@@ -9507,6 +9505,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } else {
                     slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(-1, false);
                 }
+                updateConfirmedStateCoupon();
             }
         }
 
