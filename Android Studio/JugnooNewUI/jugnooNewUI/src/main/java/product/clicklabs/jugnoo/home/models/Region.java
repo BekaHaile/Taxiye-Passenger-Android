@@ -2,9 +2,6 @@ package product.clicklabs.jugnoo.home.models;
 
 import android.content.Context;
 import android.graphics.drawable.StateListDrawable;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.StrikethroughSpan;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -80,6 +77,9 @@ public class Region {
 	@SerializedName("region_fare")
 	@Expose
 	private RegionFare regionFare;
+	@SerializedName("fare_mandatory")
+	@Expose
+	private int fareMandatory;
 
 	private boolean isDefault = false;
 
@@ -192,28 +192,22 @@ public class Region {
 		@SerializedName("fare_without_discount")
 		@Expose
 		private double fareWithoutDiscount;
-		@SerializedName("max_fare")
-		@Expose
-		private double maxFare;
-		@SerializedName("min_fare")
-		@Expose
-		private double minFare;
 		@SerializedName("currency")
 		@Expose
 		private String currency;
-		@SerializedName("fare_mandatory")
+		@SerializedName("striked_fare_text")
 		@Expose
-		private int fareMandatory;
+		private String strikedFareText;
+		@SerializedName("fare_text")
+		@Expose
+		private String fareText;
 
 		public double getFare() {
 			return fare;
 		}
 
-		public int getFareMandatory() {
-			return fareMandatory;
-		}
 
-		public String getDiscountText(){
+		public String getDiscountText(int fareMandatory){
 			if(fareMandatory == 1 && fareWithoutDiscount > 0 && fareWithoutDiscount != fare){
 				double percent = (fareWithoutDiscount - fare)*100.0/fare;
 				return ((int)percent)+"%\noff";
@@ -221,24 +215,26 @@ public class Region {
 			return "";
 		}
 
-		public CharSequence getFareString(){
+		public CharSequence getFareText(int fareMandatory){
 			if(fareMandatory == 1){
-				SpannableStringBuilder builder = new SpannableStringBuilder();
-				builder.append(Utils.formatCurrencyValue(currency, fare));
-				if(fareWithoutDiscount > 0 && fareWithoutDiscount != fare){
-					builder.append("\n");
-					String oldFare = Utils.formatCurrencyValue(currency, fareWithoutDiscount);
-					builder.append(oldFare);
-					builder.setSpan(new StrikethroughSpan(), 0, oldFare.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-				}
-				return builder;
-
+				return Utils.formatCurrencyValue(currency, fare);
 			} else {
-				return Utils.formatCurrencyValue(currency, minFare) + " - " +
-						Utils.formatCurrencyValue(currency, maxFare);
+				return fareText;
 			}
-
 		}
+		public CharSequence getStrikedFareText(int fareMandatory){
+			if(fareMandatory == 1){
+				return Utils.formatCurrencyValue(currency, fareWithoutDiscount);
+			} else {
+				return strikedFareText;
+			}
+		}
+
+	}
+
+
+	public int getFareMandatory() {
+		return fareMandatory;
 	}
 
 	public class Images {

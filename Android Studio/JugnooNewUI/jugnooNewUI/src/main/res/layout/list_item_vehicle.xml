@@ -54,13 +54,24 @@
             android:gravity="center_horizontal"
             android:layout_marginStart="4px"
             android:layout_marginEnd="4px"
-            android:layout_marginTop="0px"
-            android:layout_marginBottom="10px"
             tools:text="23"
             android:visibility="gone"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
-            android:textSize="22px" />
+            android:textSize="24px" />
+        <com.sabkuchfresh.utils.DiscountedFareTextView
+            android:id="@+id/tvVehicleFareStrike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginStart="4px"
+            android:layout_marginEnd="4px"
+            android:layout_marginBottom="10px"
+            tools:text="23"
+            android:visibility="gone"
+            android:textAllCaps="true"
+            android:textColor="@color/text_color_light"
+            android:textSize="20px" />
 
 
     </LinearLayout>

@@ -7726,9 +7726,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(regionSelected.getRegionId()));
 
                                 if (regionSelected.getRideType() == RideTypeValue.POOL.getOrdinal()) {
-                                    nameValuePairs.put("pool_fare_id", "" + jugnooPoolFareId);
+                                    nameValuePairs.put(Constants.KEY_POOL_FARE_ID, "" + jugnooPoolFareId);
                                 }
-                                if(regionSelected.getRegionFare() != null && regionSelected.getRegionFare().getFareMandatory() == 1){
+                                if(regionSelected.getRegionFare() != null && regionSelected.getFareMandatory() == 1){
                                     nameValuePairs.put(Constants.KEY_FARE, "" + regionSelected.getRegionFare().getFare());
 
                                     if(getApiFindADriver() != null && getApiFindADriver().getParams() != null){

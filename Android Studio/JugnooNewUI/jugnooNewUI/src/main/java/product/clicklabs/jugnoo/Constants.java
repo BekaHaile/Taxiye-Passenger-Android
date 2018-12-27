@@ -991,4 +991,5 @@ public interface Constants {
     String KEY_COUPON_TO_APPLY = "coupon_to_apply";
     String KEY_PROMO_TO_APPLY = "promo_to_apply";
     String KEY_FARE = "fare";
+    String KEY_POOL_FARE_ID = "pool_fare_id";
 }

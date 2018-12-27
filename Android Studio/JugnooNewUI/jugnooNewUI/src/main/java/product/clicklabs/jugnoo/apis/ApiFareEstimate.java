@@ -198,10 +198,10 @@ public class ApiFareEstimate {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     String currency = jObj.optString(Constants.KEY_CURRENCY);
                                     double tollCharge = jObj.optDouble(Constants.KEY_TOLL_CHARGE, 0);
-                                    if(jObj.has("pool_fare_id")){
+                                    if(jObj.has(Constants.KEY_POOL_FARE_ID)){
                                         callback.onPoolSuccess(currency, jObj.optDouble("fare", 0), jObj.optDouble(Constants.KEY_RIDE_DISTANCE, 0),
                                                 jObj.optString("ride_distance_unit"), jObj.optDouble(Constants.KEY_RIDE_TIME, 0),
-                                                jObj.optString("ride_time_unit"), jObj.optInt("pool_fare_id", 0),
+                                                jObj.optString("ride_time_unit"), jObj.optInt(Constants.KEY_POOL_FARE_ID, 0),
                                                 jObj.optDouble(Constants.KEY_CONVENIENCE_CHARGE, 0), jObj.optString("text", ""), tollCharge);
                                     } else{
                                         String minFare = jObj.getString("min_fare");

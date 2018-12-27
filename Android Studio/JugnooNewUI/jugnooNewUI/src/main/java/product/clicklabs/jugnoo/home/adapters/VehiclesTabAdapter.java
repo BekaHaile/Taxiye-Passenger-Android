@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.utils.DiscountedFareTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -61,15 +62,17 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         holder.relative.setTag(position);
         int visibility = showRegionFares && region.getRegionFare()!=null ?View.VISIBLE:View.GONE;
         holder.tvVehicleFare.setVisibility(visibility);
+        holder.tvVehicleFareStrike.setVisibility(visibility);
         holder.tvETA.setVisibility(visibility);
         holder.tvETA.setText(region.getEta() + " " + activity.getString(R.string.min));
         holder.tvOfferTag.setVisibility(View.GONE);
         if(showRegionFares && region.getRegionFare() != null){
-            holder.tvVehicleFare.setText(region.getRegionFare().getFareString());
-            String discount = region.getRegionFare().getDiscountText();
+            holder.tvVehicleFare.setText(region.getRegionFare().getFareText(region.getFareMandatory()));
+            holder.tvVehicleFareStrike.setText(region.getRegionFare().getStrikedFareText(region.getFareMandatory()));
+            String discount = region.getRegionFare().getDiscountText(region.getFareMandatory());
             if (selected && !TextUtils.isEmpty(discount)) {
                 holder.tvOfferTag.setVisibility(View.VISIBLE);
-                holder.tvOfferTag.setText(region.getRegionFare().getDiscountText());
+                holder.tvOfferTag.setText(discount);
             }
         }
 
@@ -128,7 +131,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     }
 
     private int getItemWidth(){
-        int width = (int)((720f / (getItemCount() > 4 ? 4 : getItemCount())) * ASSL.Xscale());
+        int width = (int)((720f / (getItemCount() > 3 ? 3 : getItemCount())) * ASSL.Xscale());
         int minWidth = (int) (100f * ASSL.Xscale());
         return width >= minWidth ? width : minWidth;
     }
@@ -139,6 +142,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         public ImageView imageViewSep, imageViewTab, imageViewMultipleSurge;
         public ImageView imageViewSelected;
         public TextView tvETA, textViewVehicleName,tvVehicleFare, tvOfferTag;
+        public DiscountedFareTextView tvVehicleFareStrike;
 
         public ViewHolder(View itemView, Activity activity,boolean showingConfirmLayout) {
             super(itemView);
@@ -155,6 +159,8 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             tvVehicleFare.setTypeface(Fonts.mavenMedium(activity));
             tvOfferTag = (TextView)itemView.findViewById(R.id.tvOfferTag);
             tvOfferTag.setTypeface(Fonts.mavenRegular(activity));
+            tvVehicleFareStrike = (DiscountedFareTextView)itemView.findViewById(R.id.tvVehicleFareStrike);
+            tvVehicleFareStrike.setTypeface(Fonts.mavenRegular(activity));
             View linearLayoutContainer= itemView.findViewById(R.id.linearLayoutContainer);
             if(showingConfirmLayout){
                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewSelected.getLayoutParams();
