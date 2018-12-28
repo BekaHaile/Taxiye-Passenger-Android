@@ -13,7 +13,9 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="10px"
+        android:paddingTop="10px">
 
         <TextView
             android:id="@+id/tvETA"
@@ -22,8 +24,7 @@
             android:gravity="center_horizontal"
             android:layout_marginStart="4px"
             android:layout_marginEnd="4px"
-            android:layout_marginBottom="5px"
-            android:layout_marginTop="10px"
+            android:layout_marginBottom="2px"
             tools:text="23"
             android:visibility="gone"
             android:textColor="@color/text_color"
@@ -43,7 +44,7 @@
             android:gravity="center_horizontal"
             android:layout_marginStart="4px"
             android:layout_marginEnd="4px"
-            android:layout_marginBottom="10px"
+            android:layout_marginBottom="5px"
             android:text="@string/auto"
             android:textColor="@color/text_color"
             android:textSize="24px" />
@@ -66,7 +67,6 @@
             android:gravity="center_horizontal"
             android:layout_marginStart="4px"
             android:layout_marginEnd="4px"
-            android:layout_marginBottom="10px"
             tools:text="23"
             android:visibility="gone"
             android:textAllCaps="true"
