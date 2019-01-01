@@ -9444,7 +9444,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         return bounceScale;
     }
 
-    public void setVehicleTypeSelected(int position, boolean userClicked) {
+    public boolean setVehicleTypeSelected(int position, boolean userClicked) {
+        boolean changed = false;
         int oldVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
         int oldOperatorId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId();
         int oldRegionId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId();
@@ -9472,6 +9473,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
                 }
                 setRegionUI(false);
+                changed = true;
             } else {
                 if(!confirmedScreenOpened){
                     if (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -9507,6 +9509,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         showPoolInforBar(false);
         slidingBottomPanel.getRequestRideOptionsFragment().updateOffersCount();
+        return changed;
     }
 
     public void updateFareEstimateHoverButton() {

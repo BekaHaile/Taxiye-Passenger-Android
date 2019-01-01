@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_rounded"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        >
+
+
+        <ImageView
+            android:id="@+id/ivVehicleType"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="6dp"
+            android:contentDescription="@string/vehicle"/>
+
+        <TextView
+            android:id="@+id/tvVehicle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/theme_color"
+            android:textSize="16sp"
+            tools:text="Auto"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            />
+
+
+        <TextView
+            android:id="@+id/tvEstimate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/text_color"
+            android:textSize="14sp"
+            tools:text="Auto"
+            android:layout_marginTop="6dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            />
+
+
+        <TextView
+            android:id="@+id/tvInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:textColor="@color/text_color"
+            android:textSize="14sp"
+            tools:text="Auto"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/grey_ee"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            >
+
+            <TextView
+                android:id="@+id/tvFareDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:textSize="14sp"
+                android:text="@string/fare_details"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvBaseFare"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/theme_color"
+                        android:textSize="12sp"
+                        android:text="@string/base_fare"
+                        android:gravity="start"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/tvBaseFareValue"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/theme_color"
+                        android:textSize="12sp"
+                        tools:text="10"
+                        android:gravity="end"
+                        />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/divider_color"
+                    />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvPerKm"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color_light"
+                        android:textSize="12sp"
+                        android:text="@string/nl_per_km"
+                        android:gravity="start"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/tvPerKmValue"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+                        android:textSize="12sp"
+                        tools:text="10"
+                        android:gravity="end"
+                        />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp">
+
+                    <TextView
+                        android:id="@+id/tvPerMin"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color_light"
+                        android:textSize="12sp"
+                        android:text="@string/nl_per_min"
+                        android:gravity="start"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/tvPerMinValue"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+                        android:textSize="12sp"
+                        tools:text="10"
+                        android:gravity="end"
+                        />
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/textViewThreshold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/text_color"
+                    android:textSize="12sp"
+                    android:layout_marginTop="16dp"
+                    />
+
+                <TextView
+                    android:id="@+id/textViewPoolMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/text_color"
+                    android:textSize="12sp"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/imageViewClose"
+        android:contentDescription="@string/close"
+        style="@style/cross_popup"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignEnd="@+id/linearLayoutInner"
+        android:layout_alignTop="@+id/linearLayoutInner"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_cross_popup_selector"
+        android:paddingStart="5dp"
+        android:paddingBottom="5dp"
+        android:layout_marginEnd="-10dp"
+        android:layout_marginTop="-10dp"
+        />
+
+
+</RelativeLayout>

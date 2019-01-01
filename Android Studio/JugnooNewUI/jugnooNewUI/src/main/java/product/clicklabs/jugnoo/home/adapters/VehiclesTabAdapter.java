@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.dialogs.VehicleFareEstimateDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -30,11 +31,13 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     private HomeActivity activity;
     private ArrayList<Region> regions = new ArrayList<>();
     private boolean showRegionFares;
+    private VehicleFareEstimateDialog estimateDialog;
 
     public VehiclesTabAdapter(HomeActivity activity, ArrayList<Region> regions,boolean showFares) {
         this.regions = regions;
         this.activity = activity;
         this.showRegionFares = showFares;
+        this.estimateDialog = new VehicleFareEstimateDialog();
     }
 
     @Override
@@ -110,7 +113,10 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             @Override
             public void onClick(View v) {
                 int position = (int) v.getTag();
-                activity.setVehicleTypeSelected(position, true);
+                boolean changed = activity.setVehicleTypeSelected(position, true);
+                if(showRegionFares && !changed){
+                    estimateDialog.show(activity, regions.get(position));
+                }
                 try {
                     GAUtils.event(RIDES, HOME, regions.get(position).getRegionName()+" "+CLICKED);
                 } catch (Exception e) {
