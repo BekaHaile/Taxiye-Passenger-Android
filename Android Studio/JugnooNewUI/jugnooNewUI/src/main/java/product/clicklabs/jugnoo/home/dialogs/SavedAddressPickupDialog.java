@@ -60,6 +60,7 @@ public class SavedAddressPickupDialog implements GACategory, GAAction {
 			TextView textViewSearchAddress = (TextView) dialog.findViewById(R.id.textViewSearchAddress); textViewSearchAddress.setTypeface(Fonts.mavenRegular(activity));
 			TextView textViewAddressUsed = (TextView) dialog.findViewById(R.id.textViewAddressUsed); textViewAddressUsed.setVisibility(View.GONE);
 			ImageView imageViewSep = (ImageView) dialog.findViewById(R.id.imageViewSep); imageViewSep.setVisibility(View.GONE);
+			ImageView ivDeleteAddress = (ImageView) dialog.findViewById(R.id.ivDeleteAddress); ivDeleteAddress.setVisibility(View.GONE);
 			Button btnYes = (Button) dialog.findViewById(R.id.btnYes); btnYes.setTypeface(Fonts.mavenMedium(activity));
 			Button btnNo = (Button) dialog.findViewById(R.id.btnNo);btnNo.setTypeface(Fonts.mavenMedium(activity));
 			View viewSep = dialog.findViewById(R.id.viewSep);

@@ -30,6 +30,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
 import retrofit.client.Response;
@@ -224,7 +225,10 @@ public class MarkerAnimation {
         protected String doInBackground(String... strings) {
             try {
                 stopCurrentAsync = false;
-                if(list == null || list.size() == 0) {
+                if(Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CUSTOMER_DIRECTIONS_FOR_DRIVER_ENROUTE, 1) == 0){
+                    straightLineCase();
+                }
+                else if(list == null || list.size() == 0) {
                     Response response = GoogleRestApis.INSTANCE.getDirections(source.latitude + "," + source.longitude,
                             destination.latitude + "," + destination.longitude, false, "driving", false, "metric");
                     return new String(((TypedByteArray) response.getBody()).getBytes());

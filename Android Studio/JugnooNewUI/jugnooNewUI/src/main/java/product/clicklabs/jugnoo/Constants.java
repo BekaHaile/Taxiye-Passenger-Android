@@ -985,4 +985,17 @@ public interface Constants {
     String KEY_PATH_LAT_LONGS = "path_lat_longs";
 
     String KEY_CUSTOMER_SHOW_INCLUDE_TOLL_IN_SUMMARY = "customer_show_include_toll_in_summary";
+
+    String KEY_RIDE_DISTANCE = "ride_distance";
+    String KEY_RIDE_TIME = "ride_time";
+    String KEY_COUPON_ID = "coupon_id";
+    String KEY_PROMO_ID = "promo_id";
+    String KEY_COUPON_TO_APPLY = "coupon_to_apply";
+    String KEY_PROMO_TO_APPLY = "promo_to_apply";
+    String KEY_FARE = "fare";
+    String KEY_POOL_FARE_ID = "pool_fare_id";
+
+    String KEY_CUSTOMER_SETTLE_DEBT_AFTER_ADD_CARD = "customer_hit_settle_debt_after_add_card";
+    String KEY_CUSTOMER_DIRECTIONS_FOR_DRIVER_ENROUTE = "customer_directions_for_driver_enroute";
+    String KEY_CUSTOMER_HIT_GEOCODE_FREE_ROAM = "customer_hit_geocode_free_roam";
 }
