@@ -89,6 +89,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
 
         holder.imageViewSelected.setVisibility(showRegionFares ? View.INVISIBLE : View.VISIBLE);
         try {
+            holder.textViewVehicleName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
             if(selected){
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
                 holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
@@ -96,6 +97,9 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                         .load(region.getImages().getTabHighlighted())
                         .placeholder(region.getTabSelected())
                         .into(holder.imageViewTab);
+                if(showRegionFares){
+                    holder.textViewVehicleName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_info_grey, 0);
+                }
             } else{
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColorStateList(R.color.text_color_theme_color_selector));
                 holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.white));
