@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.stripe;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,7 +12,6 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +50,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
-import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
+import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 
 import static com.stripe.android.model.Card.AMERICAN_EXPRESS;
 import static com.stripe.android.model.Card.BRAND_RESOURCE_MAP;
@@ -296,7 +294,15 @@ public class StripeAddCardFragment extends Fragment {
                 if(stripeCardsStateListener!=null){
                     stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData(),message,true,paymentOption);
                 }
+                if(Data.userData != null
+                        && Prefs.with(requireActivity()).getInt(Constants.KEY_CUSTOMER_SETTLE_DEBT_AFTER_ADD_CARD, 0) == 1) {
+                    new UserDebtDialog(requireActivity(), Data.userData, new UserDebtDialog.Callback() {
+                        @Override
+                        public void successFullyDeducted(double userDebt) {
 
+                        }
+                    }).settleUserDebt(requireActivity(), false);
+                }
              }
 
             @Override

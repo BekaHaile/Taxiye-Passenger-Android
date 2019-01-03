@@ -5952,6 +5952,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             ivLikePickup.setTag("");
                         }
                         Data.autoData.setPickupAddress("", null);
+						if(Prefs.with(this).getInt(KEY_CUSTOMER_HIT_GEOCODE_FREE_ROAM, 1) == 0){
+							addressNeeded = false;
+							textView.setHint(R.string.enter_pickup);
+                            textView.setText("");
+						}
                     } else {
                         addressNeeded = false;
                         textView.setText(Data.autoData.getPickupAddress(currentLatLng));
@@ -6617,45 +6622,45 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                 firstPos = 0;
                                             }
                                             // sorting logic
-                                            if (firstPos > -1) {
-                                                List<RidePath> ridePathsSorted = new ArrayList<RidePath>();
-                                                ridePathsList.add(0, ridePathsList.remove(firstPos));
-
-                                                ridePathsSorted.add(ridePathsList.get(0));
-
-                                                while (ridePathsSorted.size() < ridePathsList.size()) {
-                                                    RidePath ridePath = ridePathsSorted.get(ridePathsSorted.size() - 1);
-                                                    RidePath ridePathNearest = null;
-                                                    double distFromCurr = Double.MAX_VALUE;
-                                                    for (RidePath ridePathI : ridePathsList) {
-                                                        if (ridePath.ridePathId != ridePathI.ridePathId && !ridePathsSorted.contains(ridePathI)) {
-                                                            double dist = MapUtils.distance(ridePath.getDestinationLatLng(), ridePathI.getSourceLatLng());
-                                                            if (dist < distFromCurr) {
-                                                                distFromCurr = dist;
-                                                                ridePathNearest = ridePathI;
-                                                            }
-                                                        }
-                                                    }
-                                                    if (ridePathNearest != null) {
-                                                        ridePathsSorted.add(ridePathNearest);
-                                                    }
-                                                }
-
-                                                if (ridePathsList.size() == ridePathsSorted.size()) {
-                                                    ridePathsList.clear();
-                                                    ridePathsList.addAll(ridePathsSorted);
-
-                                                    boolean sourceAdded = false;
-                                                    for (RidePath ridePathI : ridePathsList) {
-                                                        if (!sourceAdded) {
-                                                            latLngsList.add(ridePathI.getSourceLatLng());
-                                                            sourceAdded = true;
-                                                        }
-                                                        lastLatLng = ridePathI.getDestinationLatLng();
-                                                        latLngsList.add(lastLatLng);
-                                                    }
-                                                }
-                                            }
+//                                            if (firstPos > -1) {
+//                                                List<RidePath> ridePathsSorted = new ArrayList<RidePath>();
+//                                                ridePathsList.add(0, ridePathsList.remove(firstPos));
+//
+//                                                ridePathsSorted.add(ridePathsList.get(0));
+//
+//                                                while (ridePathsSorted.size() < ridePathsList.size()) {
+//                                                    RidePath ridePath = ridePathsSorted.get(ridePathsSorted.size() - 1);
+//                                                    RidePath ridePathNearest = null;
+//                                                    double distFromCurr = Double.MAX_VALUE;
+//                                                    for (RidePath ridePathI : ridePathsList) {
+//                                                        if (ridePath.ridePathId != ridePathI.ridePathId && !ridePathsSorted.contains(ridePathI)) {
+//                                                            double dist = MapUtils.distance(ridePath.getDestinationLatLng(), ridePathI.getSourceLatLng());
+//                                                            if (dist < distFromCurr) {
+//                                                                distFromCurr = dist;
+//                                                                ridePathNearest = ridePathI;
+//                                                            }
+//                                                        }
+//                                                    }
+//                                                    if (ridePathNearest != null) {
+//                                                        ridePathsSorted.add(ridePathNearest);
+//                                                    }
+//                                                }
+//
+//                                                if (ridePathsList.size() == ridePathsSorted.size()) {
+//                                                    ridePathsList.clear();
+//                                                    ridePathsList.addAll(ridePathsSorted);
+//
+//                                                    boolean sourceAdded = false;
+//                                                    for (RidePath ridePathI : ridePathsList) {
+//                                                        if (!sourceAdded) {
+//                                                            latLngsList.add(ridePathI.getSourceLatLng());
+//                                                            sourceAdded = true;
+//                                                        }
+//                                                        lastLatLng = ridePathI.getDestinationLatLng();
+//                                                        latLngsList.add(lastLatLng);
+//                                                    }
+//                                                }
+//                                            }
 
 
                                             if (lastLatLng != null) {
@@ -8670,6 +8675,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void fareEstimateForPool() {
+        jugnooPoolFareId = 0;
         if (Data.autoData.getDropLatLng() != null) {
             int isPooled = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() ? 1 : 0;
             boolean callFareEstimate = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()

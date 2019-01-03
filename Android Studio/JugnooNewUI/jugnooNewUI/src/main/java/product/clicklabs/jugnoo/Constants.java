@@ -992,4 +992,8 @@ public interface Constants {
     String KEY_PROMO_TO_APPLY = "promo_to_apply";
     String KEY_FARE = "fare";
     String KEY_POOL_FARE_ID = "pool_fare_id";
+
+    String KEY_CUSTOMER_SETTLE_DEBT_AFTER_ADD_CARD = "customer_hit_settle_debt_after_add_card";
+    String KEY_CUSTOMER_DIRECTIONS_FOR_DRIVER_ENROUTE = "customer_directions_for_driver_enroute";
+    String KEY_CUSTOMER_HIT_GEOCODE_FREE_ROAM = "customer_hit_geocode_free_roam";
 }

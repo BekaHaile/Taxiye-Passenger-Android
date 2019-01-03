@@ -465,6 +465,12 @@ public class JSONParser implements Constants {
 
 		Prefs.with(context).save(KEY_CUSTOMER_SHOW_INCLUDE_TOLL_IN_SUMMARY, autoData.optInt(KEY_CUSTOMER_SHOW_INCLUDE_TOLL_IN_SUMMARY,
 				context.getResources().getInteger(R.integer.customer_show_include_toll_in_summary)));
+		Prefs.with(context).save(KEY_CUSTOMER_SETTLE_DEBT_AFTER_ADD_CARD, autoData.optInt(KEY_CUSTOMER_SETTLE_DEBT_AFTER_ADD_CARD,
+				context.getResources().getInteger(R.integer.customer_hit_settle_debt_after_add_card)));
+		Prefs.with(context).save(KEY_CUSTOMER_DIRECTIONS_FOR_DRIVER_ENROUTE, autoData.optInt(KEY_CUSTOMER_DIRECTIONS_FOR_DRIVER_ENROUTE,
+				context.getResources().getInteger(R.integer.customer_directions_for_driver_enroute)));
+		Prefs.with(context).save(KEY_CUSTOMER_HIT_GEOCODE_FREE_ROAM, autoData.optInt(KEY_CUSTOMER_HIT_GEOCODE_FREE_ROAM,
+				context.getResources().getInteger(R.integer.customer_hit_geocode_free_roam)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

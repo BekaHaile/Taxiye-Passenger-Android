@@ -100,7 +100,7 @@ public class SearchListAdapter extends BaseAdapter{
 
     class ViewHolderSearchItem {
         TextView textViewSearchName, textViewSearchAddress, textViewAddressUsed;
-        ImageView imageViewType, imageViewSep;
+        ImageView imageViewType, imageViewSep, ivDeleteAddress;
         RelativeLayout relative;
         int id;
     }
@@ -203,7 +203,7 @@ public class SearchListAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             holder = new ViewHolderSearchItem();
-            convertView = mInflater.inflate(R.layout.list_item_search_item, null);
+            convertView = mInflater.inflate(R.layout.list_item_saved_place, null);
 
             holder.textViewSearchName = (TextView) convertView.findViewById(R.id.textViewSearchName);
             holder.textViewSearchName.setTypeface(Fonts.mavenMedium(context));
@@ -214,6 +214,7 @@ public class SearchListAdapter extends BaseAdapter{
             holder.relative = (RelativeLayout) convertView.findViewById(R.id.relative);
             holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
             holder.imageViewSep = (ImageView) convertView.findViewById(R.id.imageViewSep);
+            holder.ivDeleteAddress = (ImageView) convertView.findViewById(R.id.ivDeleteAddress);
 
             holder.relative.setTag(holder);
 
@@ -274,6 +275,7 @@ public class SearchListAdapter extends BaseAdapter{
 				holder.textViewAddressUsed.setVisibility(View.VISIBLE);
 			}
 
+			holder.ivDeleteAddress.setVisibility(View.GONE);
             if(position == getCount()-1){
                 holder.imageViewSep.setVisibility(View.GONE);
             } else{

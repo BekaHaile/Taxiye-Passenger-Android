@@ -73,7 +73,7 @@ public class UserDebtDialog {
 								+ (userData.getFreeChargeEnabled() == 1 ? userData.getFreeChargeBalance() : 0)
 								+ stripeBalance;
 						if (availableBalance >= UserDebtDialog.this.userDebt) {
-							settleUserDebt(activity);
+							settleUserDebt(activity, true);
 						} else {
 							Intent intent = new Intent(activity, PaymentActivity.class);
 							intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.WALLET.getOrdinal());
@@ -84,7 +84,7 @@ public class UserDebtDialog {
 				}, false);
 	}
 
-	private void settleUserDebt(final Activity activity) {
+	public void settleUserDebt(final Activity activity, final boolean showAlert) {
 		try {
 			if (MyApplication.getInstance().isOnline()) {
 
@@ -112,7 +112,7 @@ public class UserDebtDialog {
 									userData.updateWalletBalances(jObj, false);
 									MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(jObj);
 									callback.successFullyDeducted(userDebt);
-								} else {
+								} else if(showAlert){
 									DialogPopup.alertPopup(activity, "", message);
 								}
 							}

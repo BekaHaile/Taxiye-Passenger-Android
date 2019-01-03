@@ -57,7 +57,7 @@
                         android:layout_marginEnd="@dimen/px_46"
                         android:background="@color/bg_divider_saved_location" />
 
-                    <include layout="@layout/list_item_search_item" />
+                    <include layout="@layout/list_item_saved_place" />
 
 
                     <LinearLayout

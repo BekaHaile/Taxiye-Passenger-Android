@@ -318,6 +318,60 @@
                             android:orientation="vertical"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
+                            <TextView
+                                android:id="@+id/textViewSavedPlaces"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40px"
+                                android:layout_marginStart="30px"
+                                android:layout_marginTop="20px"
+                                android:gravity="center_vertical"
+                                android:singleLine="true"
+                                android:text="@string/saved_places"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color_less_light"
+                                android:textSize="@dimen/text_size_24"
+                                android:visibility="visible" />
+
+
+                            <product.clicklabs.jugnoo.utils.NonScrollListView
+                                android:id="@+id/listViewSavedLocations"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:divider="@color/transparent"
+                                android:dividerHeight="0px"
+                                android:splitMotionEvents="false" />
+
+                            <TextView
+                                android:id="@+id/textViewRecentAddresses"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40px"
+                                android:layout_marginStart="30px"
+                                android:layout_marginTop="20px"
+                                android:gravity="center_vertical"
+                                android:singleLine="true"
+                                android:text="@string/recent_locations"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color_less_light"
+                                android:textSize="@dimen/text_size_24"
+                                android:visibility="visible" />
+
+                            <product.clicklabs.jugnoo.utils.NonScrollListView
+                                android:id="@+id/listViewRecentAddresses"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:divider="@color/transparent"
+                                android:dividerHeight="0px"
+                                android:fadeScrollbars="true"
+                                android:scrollbars="vertical"
+                                android:splitMotionEvents="false"
+                                android:visibility="visible" />
+
+
+
+                            <View
+                                android:background="@color/grey_light_choose_destination"
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"/>
 
                             <LinearLayout
                                 android:id="@+id/ll_set_location_on_map"
@@ -350,58 +404,6 @@
                                     android:text="@string/set_location_on_map"
                                     android:layout_height="wrap_content" />
                             </LinearLayout>
-
-                            <View
-                                android:background="@color/grey_light_choose_destination"
-                                android:layout_width="match_parent"
-                                android:layout_height="2px"/>
-                            <TextView
-                                android:id="@+id/textViewSavedPlaces"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40px"
-                                android:layout_marginStart="30px"
-                                android:layout_marginTop="30px"
-                                android:gravity="center_vertical"
-                                android:singleLine="true"
-                                android:text="@string/saved_places"
-                                android:textAllCaps="true"
-                                android:textColor="@color/text_color_less_light"
-                                android:textSize="@dimen/text_size_24"
-                                android:visibility="visible" />
-
-
-                            <product.clicklabs.jugnoo.utils.NonScrollListView
-                                android:id="@+id/listViewSavedLocations"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:divider="@color/transparent"
-                                android:dividerHeight="0px"
-                                android:splitMotionEvents="false" />
-
-                            <TextView
-                                android:id="@+id/textViewRecentAddresses"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40px"
-                                android:layout_marginStart="30px"
-                                android:layout_marginTop="30px"
-                                android:gravity="center_vertical"
-                                android:singleLine="true"
-                                android:text="@string/recent_locations"
-                                android:textAllCaps="true"
-                                android:textColor="@color/text_color_less_light"
-                                android:textSize="@dimen/text_size_24"
-                                android:visibility="visible" />
-
-                            <product.clicklabs.jugnoo.utils.NonScrollListView
-                                android:id="@+id/listViewRecentAddresses"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:divider="@color/transparent"
-                                android:dividerHeight="0px"
-                                android:fadeScrollbars="true"
-                                android:scrollbars="vertical"
-                                android:splitMotionEvents="false"
-                                android:visibility="visible" />
 
 
                         </LinearLayout>
