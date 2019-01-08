@@ -82,8 +82,6 @@ public class ApiFareEstimate {
                                                 getFareEstimate((Activity) context, sourceLatLng, destLatLng,
                                                         distanceValue / 1000d, timeValue / 60d, isPooled, region, promoCoupon,
                                                         list);
-                                            } else{
-                                                DialogPopup.dismissLoadingDialog();
                                             }
                                         } else {
                                             DialogPopup.dismissLoadingDialog();

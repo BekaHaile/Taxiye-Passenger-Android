@@ -208,26 +208,26 @@ public class Region {
 
 
 		public String getDiscountText(int fareMandatory){
-			if(fareMandatory == 1 && fareWithoutDiscount > 0 && fareWithoutDiscount != fare){
-				double percent = (fareWithoutDiscount - fare)*100.0/fare;
-				return ((int)percent)+"%\noff";
-			}
+//			if(fareMandatory == 1 && fareWithoutDiscount > 0 && fareWithoutDiscount != fare){
+//				double percent = (fareWithoutDiscount - fare)*100.0/fare;
+//				return ((int)percent)+"%\noff";
+//			}
 			return "";
 		}
 
 		public CharSequence getFareText(int fareMandatory){
-			if(fareMandatory == 1){
-				return Utils.formatCurrencyValue(currency, fare);
-			} else {
+//			if(fareMandatory == 1){
+//				return Utils.formatCurrencyValue(currency, fare);
+//			} else {
 				return fareText;
-			}
+//			}
 		}
 		public CharSequence getStrikedFareText(int fareMandatory){
-			if(fareMandatory == 1){
-				return Utils.formatCurrencyValue(currency, fareWithoutDiscount);
-			} else {
+//			if(fareMandatory == 1){
+//				return Utils.formatCurrencyValue(currency, fareWithoutDiscount);
+//			} else {
 				return strikedFareText;
-			}
+//			}
 		}
 
 	}
