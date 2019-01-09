@@ -2542,4 +2542,8 @@
     <string name="your_safety_is_our_top_concern">Your safety is our top concern!</string>
     <string name="packages_not_available">Packages are not available</string>
     <string name="pls_select_a_package">Please select a Package</string>
+    <string name="payment_mode">payment mode</string>
+    <string name="search_merchants">Search Merchants</string>
+    <string name="special_instructions">Special Instructions</string>
+    <string name="special_instructions_hint">Add a note (extra sauce, no onions etc.)</string>
 </resources>

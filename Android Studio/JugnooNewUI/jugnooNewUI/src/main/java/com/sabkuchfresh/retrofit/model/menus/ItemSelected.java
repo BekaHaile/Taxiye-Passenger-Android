@@ -73,7 +73,8 @@ public class ItemSelected {
 						return false;
 					}
 				}
-				return true;
+
+				return this.getItemInstructions().equals(((ItemSelected) o).getItemInstructions());
 			} else {
 				return false;
 			}

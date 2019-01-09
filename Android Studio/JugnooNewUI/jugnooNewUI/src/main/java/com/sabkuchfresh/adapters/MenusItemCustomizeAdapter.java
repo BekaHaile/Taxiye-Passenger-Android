@@ -3,12 +3,18 @@ package com.sabkuchfresh.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.StyleSpan;
+import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,16 +51,20 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
     private ItemSelected itemSelected;
     private ArrayList<CustomizeOption> customizeOptions;
     private Callback callback;
+    private boolean showSpecialInstructions;
+    private String instructions;
     private String currencyCode, currency;
 
     private static final int ITEM = 0;
     private static final int CUSTOMIZE_ITEM = 1;
     private static final int CUSTOMIZE_OPTION = 2;
+    private static final int SPECIAL_INSTRUCTIONS = 3;
 
-    public MenusItemCustomizeAdapter(Activity context, Item item, Callback callback, String currencyCode, String currency) {
+    public MenusItemCustomizeAdapter(Activity context, Item item, Callback callback, String currencyCode, String currency,boolean showSpecialInstructions) {
         this.context = context;
         this.callback = callback;
         customizeOptions = new ArrayList<>();
+        this.showSpecialInstructions = showSpecialInstructions;
         this.currencyCode = currencyCode;
         this.currency = currency;
         setList(item);
@@ -127,6 +137,9 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             v.setLayoutParams(layoutParams);
             ASSL.DoMagic(v);
             return new ViewHolderCustomizeOption(v, context);
+        } else if (viewType == SPECIAL_INSTRUCTIONS) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_customize_special_instructions, parent, false);
+            return new SpecialInstructionsViewHolder(v);
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
@@ -135,7 +148,9 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemViewType(int position) {
-        if(customizeOptions.get(position).getIsItem() == 1){
+        if (position == customizeOptions.size()) {
+            return SPECIAL_INSTRUCTIONS;
+        } else if(customizeOptions.get(position).getIsItem() == 1){
             return ITEM;
         } else if(customizeOptions.get(position).getIsCustomizeItem() == 1){
             return CUSTOMIZE_ITEM;
@@ -147,13 +162,31 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        CustomizeOption customizeOption = customizeOptions.get(position);
-        if(holder instanceof ViewHolderItem) {
-            ViewHolderItem mHolder = (ViewHolderItem) holder;
-            mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
-            mHolder.imageViewFoodType.setVisibility(item.showFoodType() ? View.VISIBLE : View.GONE);
-            mHolder.textViewItemCategoryName.setText(item.getItemName());
-            mHolder.textViewItemCategoryName.setMinimumHeight(((int)(ASSL.Yscale() * 70f)));
+        if (holder instanceof SpecialInstructionsViewHolder) {
+            ((SpecialInstructionsViewHolder) (holder)).etInstructions.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    instructions = s.toString();
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+
+            });
+        } else {
+            CustomizeOption customizeOption = customizeOptions.get(position);
+            if (holder instanceof ViewHolderItem) {
+                ViewHolderItem mHolder = (ViewHolderItem) holder;
+                mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
+                mHolder.imageViewFoodType.setVisibility(item.showFoodType() ? View.VISIBLE : View.GONE);
+                mHolder.textViewItemCategoryName.setText(item.getItemName());
+                mHolder.textViewItemCategoryName.setMinimumHeight(((int) (ASSL.Yscale() * 70f)));
 
             int total = itemSelected.getQuantity();
             mHolder.textViewQuantity.setText(String.valueOf(total));
@@ -232,21 +265,22 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 }
             };
 
-            mHolder.imageViewPlus.setOnClickListener(plusClick);
-            mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try{
-                        if(itemSelected.getQuantity() > 1) {
-                            itemSelected.setQuantity(itemSelected.getQuantity() - 1);
-                            notifyDataSetChanged();
-                            callback.updateItemTotalPrice(itemSelected);
-                            callback.onItemMinusClick(false);
-                        } else {
-                            callback.onItemMinusClick(true);
+                mHolder.imageViewPlus.setOnClickListener(plusClick);
+                mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            if (itemSelected.getQuantity() > 1) {
+                                itemSelected.setQuantity(itemSelected.getQuantity() - 1);
+                                notifyDataSetChanged();
+                                callback.updateItemTotalPrice(itemSelected);
+                                callback.onItemMinusClick(false);
+                            } else {
+                                callback.onItemMinusClick(true);
+                            }
+                        } catch (Exception e) {
                         }
-                    } catch (Exception e){}
-                }
+                    }
             });
             mHolder.ivItemImage.setTag(position);
             mHolder.ivItemImage.setOnClickListener(new View.OnClickListener() {
@@ -357,12 +391,15 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 }
             });
 
+            }
         }
 	}
 
     @Override
     public int getItemCount() {
-        return customizeOptions == null ? 0 : customizeOptions.size();
+        if (customizeOptions == null) return 0;
+        else if (showSpecialInstructions) return customizeOptions.size() + 1;
+        else return customizeOptions.size();
     }
 
 //    private CustomizeItemSelected getCustomizeItemSelected(CustomizeItem customizeItem, boolean addSelected){
@@ -449,7 +486,22 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
+    class SpecialInstructionsViewHolder extends RecyclerView.ViewHolder {
+        private AppCompatEditText etInstructions;
+        private AppCompatEditText tvLabelInstructions;
+
+        SpecialInstructionsViewHolder(View itemView) {
+            super(itemView);
+            etInstructions = itemView.findViewById(R.id.etInstructions);
+            tvLabelInstructions = itemView.findViewById(R.id.tvLabelInstructions);
+
+            etInstructions.setTypeface(Fonts.mavenRegular(context));
+            tvLabelInstructions.setTypeface(Fonts.mavenRegular(context));
+        }
+    }
+
     public ItemSelected getItemSelected() {
+        itemSelected.setItemInstructions(instructions);
         return itemSelected;
     }
 

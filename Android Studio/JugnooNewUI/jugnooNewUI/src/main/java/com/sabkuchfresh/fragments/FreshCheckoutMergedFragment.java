@@ -1584,6 +1584,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         JSONObject jItem = new JSONObject();
                         jItem.put(Constants.KEY_ITEM_ID, itemSelected.getRestaurantItemId());
                         jItem.put(Constants.KEY_QUANTITY, itemSelected.getQuantity());
+                        jItem.put(Constants.KEY_NOTES, itemSelected.getItemInstructions());
                         JSONArray jCustomisations = new JSONArray();
                         for (CustomizeItemSelected customizeItemSelected : itemSelected.getCustomizeItemSelectedList()) {
                             JSONObject jCustomisation = new JSONObject();

@@ -109,7 +109,7 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 								public void onItemPlusClick(){
 										GAUtils.event(activity.getGaCategory(), GAAction.CUSTOMIZE_ITEM, GAAction.ITEM + GAAction.INCREASED);
 								}
-							}, currencyCode, currency);
+							}, currencyCode, currency,true);
 					rvCustomizeItem.setAdapter(menusItemCustomizeAdapter);
 
 					activity.rlAddToCart.setOnClickListener(new View.OnClickListener() {
