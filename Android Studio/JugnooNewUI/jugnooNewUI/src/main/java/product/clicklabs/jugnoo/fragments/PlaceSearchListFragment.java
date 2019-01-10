@@ -594,6 +594,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						@Override
 						public void onMapUnsettled() {
 							mapSettledCanForward=false;
+							setFetchedAddressToTextView("");
 							/*mapSettledCanForward = false;
 							searchResultNearPin = null;*/
 						}
@@ -717,7 +718,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}else{
 			editTextSearch.setText(address);
 		}
-
+		editTextSearch.clearFocus();
 
 	}
 	public void openSetLocationOnMapMode(){

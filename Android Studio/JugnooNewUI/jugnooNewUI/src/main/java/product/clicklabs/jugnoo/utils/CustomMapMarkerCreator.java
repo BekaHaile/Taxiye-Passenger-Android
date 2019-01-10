@@ -100,7 +100,7 @@ public class CustomMapMarkerCreator {
 
 
 		int width = (int)(95.0f * 0.85 * scale);
-		int height = (int)(160.0f * 0.85 * scale);
+		int height = (int)(166.0f * 0.85 * scale);
 
 		final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
 		final Bitmap bmpText = Bitmap.createBitmap(width, height, conf);
@@ -120,7 +120,8 @@ public class CustomMapMarkerCreator {
 			try{
 				minsText = Math.round(Double.parseDouble(text)) > 1 ? context.getString(R.string.mins).toUpperCase() : context.getString(R.string.min).toUpperCase();
 			} catch (Exception e){}
-			canvasText.drawText(minsText, canvasText.getWidth() / 2, (int)(37f*ASSL.Yscale()) + boundsText.height(), paint);
+			int extraMargin = text.equalsIgnoreCase("-") ? (int)(10f* ASSL.Yscale()):0;
+			canvasText.drawText(minsText, canvasText.getWidth() / 2, (int)(37f*ASSL.Yscale()) + boundsText.height() + extraMargin, paint);
 			canvasText.drawText(textToWrite, canvasText.getWidth() / 2, (31f*ASSL.Yscale()), paint);
 
 		}else{
