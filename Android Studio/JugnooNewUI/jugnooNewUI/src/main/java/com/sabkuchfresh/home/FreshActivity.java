@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -108,6 +109,9 @@ import com.sabkuchfresh.fragments.FreshFragment;
 import com.sabkuchfresh.fragments.FreshHomeFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
 import com.sabkuchfresh.fragments.GroceryFragment;
+import com.sabkuchfresh.fragments.ItemDetailFragment;
+
+import com.sabkuchfresh.fragments.ItemDetailFragment.ItemCallback;
 import com.sabkuchfresh.fragments.MealAddonItemsFragment;
 import com.sabkuchfresh.fragments.MealFragment;
 import com.sabkuchfresh.fragments.MealsBulkOrderFragment;
@@ -159,6 +163,7 @@ import com.squareup.otto.Subscribe;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -198,6 +203,7 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.fragments.AddressBookFragment;
 import product.clicklabs.jugnoo.home.DeepLinkAction;
 import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -227,8 +233,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends BaseAppCompatActivity implements PaymentResultWithDataListener, GAAction, GACategory, PaperDBKeys, FeedbackFragment.ParentActivityMethods,
-		SafetyInfoDialog.Callback {
+public class FreshActivity extends BaseAppCompatActivity implements PaymentResultWithDataListener, GAAction, GACategory, PaperDBKeys, FeedbackFragment.ParentActivityMethods, ItemCallback,SafetyInfoDialog.Callback {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -1738,6 +1743,14 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
                 topBar.title.setVisibility(View.VISIBLE);
                 topBar.title.setText(getString(R.string.customize_item));
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
+            } else if (fragment instanceof ItemDetailFragment) {
+                topBar.imageViewMenu.setVisibility(View.GONE);
+                topBar.imageViewBack.setVisibility(View.VISIBLE);
+                llSearchCartVis = View.GONE;
+				llAddToCartVis = View.GONE;
+                topBar.title.setVisibility(View.VISIBLE);
+                topBar.title.setText(getVendorOpened().getName());
                 drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, GravityCompat.START);
             } else if (fragment instanceof FreshCheckoutMergedFragment) {
                 topBar.imageViewMenu.setVisibility(View.GONE);
@@ -4516,6 +4529,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
 
+
     public static class OrderViaChatData{
         private LatLng destinationlatLng;
         private String destinationAddress;
@@ -6102,4 +6116,38 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 	public AutoData getAutoData() {
 		return Data.autoData;
 	}
+
+    public void openAddressFragemnt() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                .add(relativeLayoutContainer.getId(), new AddressBookFragment(),
+                        AddressBookFragment.class.getName())
+                .addToBackStack(AddressBookFragment.class.getName());
+
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            transaction.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+                    .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
+        }
+
+        transaction.commit();
+    }
+
+    private Item itemSelected;
+
+    @NotNull
+    @Override
+    public Item getItem() {
+        return itemSelected;
+    }
+
+    public void setItemSelected(final Item itemSelected) {
+        this.itemSelected = itemSelected;
+    }
+
+
+    public void openItemDetailFragment(int pos, Item item1) {
+        setItemSelected(item1);
+        appBarLayout.setExpanded(false, false);
+        getTransactionUtils().openItemDetailFragment(FreshActivity.this, getRelativeLayoutContainer(), pos);
+    }
 }

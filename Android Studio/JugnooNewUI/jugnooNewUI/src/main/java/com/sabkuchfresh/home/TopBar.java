@@ -1,6 +1,9 @@
 package com.sabkuchfresh.home;
 
 import android.app.Activity;
+
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -339,6 +342,10 @@ public class TopBar implements GAAction, GACategory {
 
     public TextView getTvAddressLayoutTitle() {
         return tvAddressLayoutTitle;
+    }
+
+    public void hide(boolean hide) {
+        topRl.setVisibility(hide ? View.GONE : View.VISIBLE);
     }
 }
 

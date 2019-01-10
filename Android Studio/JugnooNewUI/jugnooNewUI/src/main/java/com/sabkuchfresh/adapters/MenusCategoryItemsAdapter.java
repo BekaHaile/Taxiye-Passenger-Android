@@ -441,7 +441,12 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                                 callback.onMinusFailed(pos, item1);
                             }
                         } else {
-                            if(item1.getItemSelectedList().size() > 0){
+                            if (item1.getItemSelectedList().size() > 1) {
+                                // if multiple items are added for non customized items,
+                                // means special instructions for items are different
+                                callback.onMinusFailed(pos, item1);
+                            } else if(item1.getItemSelectedList().size() == 1 ) {
+                                // if only one item present for item, same type of customisation or instructions for item
                                 item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() - 1);
                                 notifyDataSetChanged();
                                 callback.onMinusClicked(pos, item1);

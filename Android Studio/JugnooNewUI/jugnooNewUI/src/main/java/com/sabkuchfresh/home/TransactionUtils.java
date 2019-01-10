@@ -18,6 +18,7 @@ import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
+import com.sabkuchfresh.fragments.ItemDetailFragment;
 import com.sabkuchfresh.fragments.MealAddonItemsFragment;
 import com.sabkuchfresh.fragments.MealsBulkOrderFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
@@ -289,6 +290,19 @@ public class TransactionUtils {
                     .add(container.getId(), MenusItemCustomizeFragment.newInstance(categoryPos, subCategoryPos, itemPos),
                             MenusItemCustomizeFragment.class.getName())
                     .addToBackStack(MenusItemCustomizeFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+
+    public void openItemDetailFragment(FragmentActivity activity, View container, int pos) {
+        if (!checkIfFragmentAdded(activity, ItemDetailFragment.TAG)) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                    .add(container.getId(), ItemDetailFragment.newInstance(pos), ItemDetailFragment.TAG)
+                    .addToBackStack(ItemDetailFragment.TAG)
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();

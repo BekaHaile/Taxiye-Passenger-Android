@@ -2546,4 +2546,5 @@
     <string name="search_merchants">Search Merchants</string>
     <string name="special_instructions">Special Instructions</string>
     <string name="special_instructions_hint">Add a note (extra sauce, no onions etc.)</string>
+    <string name="price_colon">Price: %s</string>
 </resources>
