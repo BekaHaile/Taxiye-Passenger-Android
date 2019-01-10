@@ -213,7 +213,7 @@
     </dimen>
 
     <dimen name="marker_eta_text_size">
-        24px
+        20px
     </dimen>
     <dimen name="map_padding_assigning">
         136px

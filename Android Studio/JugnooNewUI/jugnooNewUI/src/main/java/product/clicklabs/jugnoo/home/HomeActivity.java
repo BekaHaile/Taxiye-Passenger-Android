@@ -80,6 +80,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -2250,19 +2251,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     boolean refresh = false;
                     try {
                         checkForMyLocationButtonVisibility();
-                        if (Data.autoData.getLastRefreshLatLng() == null
-                                || (MapUtils.distance(Data.autoData.getLastRefreshLatLng(), map.getCameraPosition().target) > MIN_DISTANCE_FOR_REFRESH)) {
-                            Data.autoData.setLastRefreshLatLng(map.getCameraPosition().target);
-                            refresh = true;
-                        }
-                        if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened && !specialPickupSelected) {
-                            if (refresh && touchCalled && releaseCalled) {
-                                getAddressAsync(map.getCameraPosition().target, textViewInitialSearch, null);
-                            }
-                            if ((refresh && mapTouched) || addressPopulatedFromDifferentOffering) {
-                                addressPopulatedFromDifferentOffering = false;
-                                callMapTouchedRefreshDrivers();
-                            }
+                        if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 1) {
+                            refresh = findADriverAndGeocode(map.getCameraPosition().target, mapTouched, touchCalled, releaseCalled);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -3120,6 +3110,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 if (currentLocationMarker != null) {
                     currentLocationMarker.remove();
+                    currentLocationMarker = null;
                 }
 
                 try {
@@ -3256,7 +3247,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
                         requestFinalLayout.setVisibility(View.GONE);
-                        centreLocationRl.setVisibility(View.VISIBLE);
                         relativeLayoutInitialSearchBar.setVisibility(View.VISIBLE);
 
                         imageViewRideNow.setVisibility(View.VISIBLE);
@@ -3301,7 +3291,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             checkForMyLocationButtonVisibility();
                             imageViewRideNow.setVisibility(View.VISIBLE);
 //							genieLayout.setVisibility(View.VISIBLE);
-                            centreLocationRl.setVisibility(View.VISIBLE);
+                            showCenterPickupPin(!searchedALocation);
                         }
 
                         checkForFareAvailablity();
@@ -5325,6 +5315,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         @Override
                         public void onCompleteFindADriver() {
                             findADriverFinishing(true, false);
+                            addUserCurrentLocationAddressMarker();
                             try {
 
                                 if(getScheduleRideFragment()!=null){
@@ -5669,21 +5660,31 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    public void addUserCurrentLocationAddressMarker(LatLng latLng) {
+    public void addUserCurrentLocationAddressMarker() {
         try {
-            if (currentLocationMarker != null) {
-                currentLocationMarker.remove();
+            if(Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0) {
+                if (Data.autoData != null && Data.autoData.getPickupLatLng() == null && myLocation != null) {
+                    Data.autoData.setPickupLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                }
+                LatLng latLng = Data.autoData.getPickupLatLng();
+                BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+                        .getTextBitmap(HomeActivity.this,
+                                slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
+                                getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size)));
+                if (currentLocationMarker != null) {
+                    currentLocationMarker.setPosition(latLng);
+                    currentLocationMarker.setIcon(descriptor);
+                } else {
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    markerOptions.title("customer_current_location");
+                    markerOptions.snippet("");
+                    markerOptions.position(latLng);
+                    markerOptions.icon(descriptor);
+                    markerOptions.zIndex(1);
+                    currentLocationMarker = map.addMarker(markerOptions);
+                }
             }
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.title("customer_current_location");
-            markerOptions.snippet("");
-            markerOptions.position(latLng);
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                    .getTextBitmap(HomeActivity.this,
-                            slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
-                            getResources().getDimensionPixelSize(R.dimen.marker_eta_text_size))));
-            currentLocationMarker = map.addMarker(markerOptions);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -7561,7 +7562,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         relativeLayoutLocationError.setVisibility(View.GONE);
         checkForMyLocationButtonVisibility();
         imageViewRideNow.setVisibility(View.VISIBLE);
-        centreLocationRl.setVisibility(View.VISIBLE);
+        showCenterPickupPin(true);
+    }
+
+    private void showCenterPickupPin(boolean showMarker) {
+        if(Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 1){
+            centreLocationRl.setVisibility(View.VISIBLE);
+            if (currentLocationMarker != null) {
+                currentLocationMarker.remove();
+                currentLocationMarker = null;
+            }
+        } else {
+            if(showMarker){
+                addUserCurrentLocationAddressMarker();
+            }
+            centreLocationRl.setVisibility(View.GONE);
+        }
     }
 
 
@@ -9154,10 +9170,33 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0) {
+                    addUserCurrentLocationAddressMarker();
+                    findADriverAndGeocode(Data.autoData.getPickupLatLng(), true, true, true);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean findADriverAndGeocode(LatLng latLng, boolean mapTouched, boolean touchCalled, boolean releaseCalled) {
+        boolean refresh = false;
+        if (Data.autoData.getLastRefreshLatLng() == null
+                || (MapUtils.distance(Data.autoData.getLastRefreshLatLng(), latLng) > MIN_DISTANCE_FOR_REFRESH)) {
+            Data.autoData.setLastRefreshLatLng(latLng);
+            refresh = true;
+        }
+        if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened && !specialPickupSelected) {
+            if (refresh && touchCalled && releaseCalled) {
+                getAddressAsync(latLng, textViewInitialSearch, null);
+            }
+            if ((refresh && mapTouched) || addressPopulatedFromDifferentOffering) {
+                addressPopulatedFromDifferentOffering = false;
+                callMapTouchedRefreshDrivers();
+            }
+        }
+        return refresh;
     }
 
     @Override
@@ -9409,6 +9448,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         }
 
+        addUserCurrentLocationAddressMarker();
         updateFareEstimateHoverButton();
 
         // This code checks if the current Coupon selected is valid for the new Vehicle Type and if not it then checks for a default coupon
