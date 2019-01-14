@@ -48,12 +48,14 @@ import product.clicklabs.jugnoo.GeocodeCallback;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
+import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
@@ -77,9 +79,9 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private ImageView imageViewSearchCross, imageViewSearchGPSIcon;
 
 	private LinearLayout linearLayoutAddFav;
-	private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork;
+	private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutSavedPlaces;
 	private TextView textViewAddHome, textViewAddWork;
-	private ImageView imageViewSep, imageViewSep2;
+	private ImageView imageViewSep, imageViewSep2, ivDivSavedPlaces;
 
 	private ScrollView scrollViewSearch;
 	private NonScrollListView listViewSearch;
@@ -268,10 +270,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		linearLayoutAddFav = (LinearLayout) header.findViewById(R.id.linearLayoutAddFav);
 		relativeLayoutAddHome = (RelativeLayout)header.findViewById(R.id.relativeLayoutAddHome);
 		relativeLayoutAddWork = (RelativeLayout)header.findViewById(R.id.relativeLayoutAddWork);
+		relativeLayoutSavedPlaces = (RelativeLayout)header.findViewById(R.id.relativeLayoutSavedPlaces);
 		textViewAddHome = (TextView)header.findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(activity));
 		textViewAddWork = (TextView)header.findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(activity));
+		((TextView)header.findViewById(R.id.textViewSavedPlaces)).setTypeface(Fonts.mavenMedium(activity));
 		imageViewSep = (ImageView) header.findViewById(R.id.imageViewSep);
 		imageViewSep2 = (ImageView) header.findViewById(R.id.imageViewSep2);
+		ivDivSavedPlaces = (ImageView) header.findViewById(R.id.ivDivSavedPlaces);
 
 		listViewSearch.setAdapter(searchListAdapter);
 
@@ -295,6 +300,16 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_WORK);
 				intent.putExtra(Constants.KEY_ADDRESS, Prefs.with(activity).getString(SPLabels.ADD_WORK, ""));
 				startActivityForResult(intent, Constants.REQUEST_CODE_ADD_WORK);
+				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+		});
+		relativeLayoutSavedPlaces.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent intent=new Intent(activity, AddPlaceActivity.class);
+				intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+				intent.putExtra(Constants.KEY_ADDRESS, "");
+				startActivityForResult(intent, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
 				activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
@@ -371,6 +386,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			}
 		});
 		setMap();
+
+		searchListAdapter.addSavedLocationsToList();
+		updateSavedPlacesLists();
+		showSearchLayout();
+
         return rootView;
 	}
 
@@ -379,7 +399,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		String home = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
 		String work = Prefs.with(activity).getString(SPLabels.ADD_WORK, "");
 
-		if(home.equalsIgnoreCase("") || work.equalsIgnoreCase("")){
+		if(home.equalsIgnoreCase("") || work.equalsIgnoreCase("")
+				|| Prefs.with(activity).getInt(Constants.KEY_CUSTOMER_SHOW_ADD_SAVED_PLACE, 0) == 1){
 			linearLayoutAddFav.setVisibility(View.VISIBLE);
 			cardViewSavedPlaces.setVisibility(View.VISIBLE);
 		} else{
@@ -402,6 +423,14 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			imageViewSep2.setVisibility(View.GONE);
 		}
 
+		if(Prefs.with(activity).getInt(Constants.KEY_CUSTOMER_SHOW_ADD_SAVED_PLACE, 0) == 1){
+			relativeLayoutSavedPlaces.setVisibility(View.VISIBLE);
+			ivDivSavedPlaces.setVisibility(View.VISIBLE);
+		} else {
+			relativeLayoutSavedPlaces.setVisibility(View.GONE);
+			ivDivSavedPlaces.setVisibility(View.GONE);
+		}
+
 		if(savedPlacesAdapter != null && savedPlacesAdapter.getCount() == 0){
 			imageViewSep.setVisibility(View.GONE);
 		}
@@ -409,7 +438,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	}
 
 	private void hideSearchLayout(){
-		linearLayoutAddFav.setVisibility(View.GONE);
 		relativeLayoutAddHome.setVisibility(View.GONE);
 		relativeLayoutAddWork.setVisibility(View.GONE);
 		imageViewSep.setVisibility(View.GONE);
@@ -426,9 +454,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	@Override
 	public void onResume() {
 		super.onResume();
-		searchListAdapter.addSavedLocationsToList();
-		updateSavedPlacesLists();
-		showSearchLayout();
 		enableMapMyLocation(googleMap, true);
 	}
 
@@ -455,6 +480,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						showSearchLayout();
 					} else{
 						textViewAddWork.setText(R.string.add_work);
+					}
+				} else if (requestCode == Constants.REQUEST_CODE_ADD_NEW_LOCATION) {
+					String strResult = data.getStringExtra("PLACE");
+					SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
+					if(searchResult != null) {
+						updateSavedPlacesLists();
+						showSearchLayout();
 					}
 				}
 
@@ -507,17 +539,26 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			ArrayList<SearchResult> searchResults = homeUtil.getSavedPlacesWithHomeWork(activity);
 			int savedPlaces = searchResults.size();
 
-			savedPlacesAdapter = new SavedPlacesAdapter(activity, searchResults, new SavedPlacesAdapter.Callback() {
-				@Override
-				public void onItemClick(SearchResult searchResult) {
-					clickOnSavedItem(searchResult);
-				}
+			if(savedPlacesAdapter == null) {
+				savedPlacesAdapter = new SavedPlacesAdapter(activity, searchResults, new SavedPlacesAdapter.Callback() {
+					@Override
+					public void onItemClick(SearchResult searchResult) {
+						clickOnSavedItem(searchResult);
+					}
 
-				@Override
-				public void onDeleteClick(SearchResult searchResult) {
-				}
-			}, false, false, false);
-			listViewSavedLocations.setAdapter(savedPlacesAdapter);
+					@Override
+					public void onDeleteClick(SearchResult searchResult) {
+					}
+
+					@Override
+					public void onItemLongClick(SearchResult searchResult) {
+						deleteAddressDialog(searchResult);
+					}
+				}, false, false, false);
+				listViewSavedLocations.setAdapter(savedPlacesAdapter);
+			} else {
+				savedPlacesAdapter.setList(searchResults);
+			}
 			if(searchResults.size() > 0){
 				cardViewSavedPlaces.setVisibility(View.VISIBLE);
 				textViewSavedPlaces.setText(savedPlacesAdapter.getCount() == 1 ? R.string.saved_location : R.string.saved_locations);
@@ -525,17 +566,21 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				cardViewSavedPlaces.setVisibility(View.GONE);
 			}
 
-			savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
-				@Override
-				public void onItemClick(SearchResult searchResult) {
-					clickOnSavedItem(searchResult);
-				}
+			if(savedPlacesAdapterRecent == null) {
+				savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
+					@Override
+					public void onItemClick(SearchResult searchResult) {
+						clickOnSavedItem(searchResult);
+					}
 
-				@Override
-				public void onDeleteClick(SearchResult searchResult) {
-				}
-			}, false, false, false);
-			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
+					@Override
+					public void onDeleteClick(SearchResult searchResult) {
+					}
+				}, false, false, false);
+				listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
+			} else {
+				savedPlacesAdapterRecent.setList(Data.userData.getSearchResultsRecent());
+			}
 			if(Data.userData.getSearchResultsRecent().size() > 0){
 //				cvRecentAddresses.setVisibility(View.VISIBLE);
 				textViewRecentAddresses.setVisibility(View.VISIBLE);
@@ -755,6 +800,54 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void deleteAddressDialog(final SearchResult searchResult){
+		DialogPopup.alertPopupTwoButtonsWithListeners(activity, "",
+				getString(R.string.address_delete_confirm_message),
+				getString(R.string.delete), getString(R.string.cancel),
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						hitApiAddHomeWorkAddress(searchResult, true, 0, true, searchResult.getPlaceRequestCode());
+					}
+				},
+				new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+
+					}
+				}, false, false);
+	}
+
+	private ApiAddHomeWorkAddress apiAddHomeWorkAddress;
+	public void hitApiAddHomeWorkAddress(final SearchResult searchResult, final boolean deleteAddress, final int matchedWithOtherId,
+										 final boolean editThisAddress, final int placeRequestCode){
+		if(apiAddHomeWorkAddress == null){
+			apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(activity, new ApiAddHomeWorkAddress.Callback() {
+				@Override
+				public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
+					updateSavedPlacesLists();
+					showSearchLayout();
+				}
+
+				@Override
+				public void onFailure() {
+
+				}
+
+				@Override
+				public void onRetry(View view) {
+
+				}
+
+				@Override
+				public void onNoRetry(View view) {
+
+				}
+			});
+		}
+		apiAddHomeWorkAddress.addHomeAndWorkAddress(searchResult, deleteAddress, matchedWithOtherId, editThisAddress, placeRequestCode);
 	}
 
 }

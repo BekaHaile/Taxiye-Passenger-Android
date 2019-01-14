@@ -178,6 +178,20 @@ public class SavedPlacesAdapter extends BaseAdapter{
 					}
 				}
                   });
+            holder.relative.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View v) {
+					try {
+						holder = (ViewHolderSearchItem) v.getTag();
+                        final SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
+                        callback.onItemLongClick(autoCompleteSearchResult);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return true;
+				}
+                  });
 
             holder.ivDeleteAddress.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -199,9 +213,10 @@ public class SavedPlacesAdapter extends BaseAdapter{
         return convertView;
     }
 
-    public interface Callback{
-        void onItemClick(SearchResult searchResult);
-        void onDeleteClick(SearchResult searchResult);
+    public static abstract class Callback{
+        public abstract void onItemClick(SearchResult searchResult);
+        public void onItemLongClick(SearchResult searchResult){}
+        public abstract void onDeleteClick(SearchResult searchResult);
     }
 
 }
