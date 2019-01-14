@@ -1975,4 +1975,6 @@
     <string name="bid_fare">Bid Fare</string>
     <string name="expected_toll_charge">Expected Toll Charges</string>
     <string name="schedule_ride_alert">*We cannot always guarantee that a driver will be available</string>
+    <string name="choose_a_place">Choose a place</string>
+    <string name="add_saved_place">Add Saved Place</string>
 </resources>
