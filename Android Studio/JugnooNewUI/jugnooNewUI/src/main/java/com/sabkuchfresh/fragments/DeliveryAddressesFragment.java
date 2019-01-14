@@ -266,7 +266,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
                         @Override
                         public void onDeleteClick(SearchResult searchResult) {
                         }
-                    }, true, true, false);
+                    }, true, true, false, false);
                     listViewSavedLocations.setAdapter(savedPlacesAdapter);
 
                 } catch (Exception e) {
@@ -314,7 +314,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
                         @Override
                         public void onDeleteClick(SearchResult searchResult) {
                         }
-                    }, true, true, false);
+                    }, true, true, false, false);
 
                     listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
                 } catch (Exception e) {
