@@ -91,7 +91,7 @@ public class AddressBookFragment extends Fragment {
 				public void onDeleteClick(SearchResult searchResult) {
 					deleteAddressDialog(searchResult);
 				}
-			}, false, false, true);
+			}, false, false, true, false);
 			listViewSavedLocations.setAdapter(savedPlacesAdapter);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -114,7 +114,7 @@ public class AddressBookFragment extends Fragment {
 				public void onDeleteClick(SearchResult searchResult) {
 
 				}
-			}, false, false, false);
+			}, false, false, false, false);
 			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
 		} catch (Exception e) {
 			e.printStackTrace();

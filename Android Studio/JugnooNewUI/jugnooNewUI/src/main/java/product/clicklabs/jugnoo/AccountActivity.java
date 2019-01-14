@@ -286,7 +286,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 @Override
                 public void onDeleteClick(SearchResult searchResult) {
                 }
-            }, false, false, false);
+            }, false, false, false, false);
             listViewSavedLocations.setAdapter(savedPlacesAdapter);
         } catch (Exception e) {
             e.printStackTrace();

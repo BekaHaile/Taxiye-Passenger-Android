@@ -554,7 +554,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 					public void onItemLongClick(SearchResult searchResult) {
 						deleteAddressDialog(searchResult);
 					}
-				}, false, false, false);
+				}, false, false, false, false);
 				listViewSavedLocations.setAdapter(savedPlacesAdapter);
 			} else {
 				savedPlacesAdapter.setList(searchResults);
@@ -576,7 +576,12 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 					@Override
 					public void onDeleteClick(SearchResult searchResult) {
 					}
-				}, false, false, false);
+
+					@Override
+					public void onAddClick(SearchResult searchResult) {
+						onSavedLocationEdit(searchResult);
+					}
+				}, false, false, false, true);
 				listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
 			} else {
 				savedPlacesAdapterRecent.setList(Data.userData.getSearchResultsRecent());
@@ -848,6 +853,14 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			});
 		}
 		apiAddHomeWorkAddress.addHomeAndWorkAddress(searchResult, deleteAddress, matchedWithOtherId, editThisAddress, placeRequestCode);
+	}
+
+	private void onSavedLocationEdit(SearchResult searchResult){
+		Intent intent = new Intent(activity, AddPlaceActivity.class);
+		intent.putExtra(Constants.KEY_REQUEST_CODE, searchResult.getPlaceRequestCode());
+		intent.putExtra(Constants.KEY_ADDRESS, new Gson().toJson(searchResult, SearchResult.class));
+		startActivityForResult(intent, searchResult.getPlaceRequestCode());
+		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
 
 }
