@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
+import com.sabkuchfresh.widgets.LockableBottomSheetBehavior;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,7 +99,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
     private Activity activity;
 	private SearchListAdapter.SearchListActionsHandler searchListActionsHandler;
 	private SearchListAdapter searchListAdapter;
-	private BottomSheetBehavior<NestedScrollView> bottomSheetBehaviour;
+	private LockableBottomSheetBehavior<NestedScrollView> bottomSheetBehaviour;
 	private int newState;
 	private RelativeLayout rootLayout;
 	private GoogleMap googleMap;
@@ -338,10 +339,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			imageViewShadow.setVisibility(View.GONE);
 		}
 
-			bottomSheetBehaviour = BottomSheetBehavior.from(scrollViewSuggestions);
+		bottomSheetBehaviour = (LockableBottomSheetBehavior)BottomSheetBehavior.from(scrollViewSuggestions);
 
 		bottomSheetBehaviour.setPeekHeight(0);
 		bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
+		bottomSheetBehaviour.setLocked(true);
 		bottomSheetBehaviour.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
 			@Override
 			public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -859,6 +861,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		Intent intent = new Intent(activity, AddPlaceActivity.class);
 		intent.putExtra(Constants.KEY_REQUEST_CODE, searchResult.getPlaceRequestCode());
 		intent.putExtra(Constants.KEY_ADDRESS, new Gson().toJson(searchResult, SearchResult.class));
+		intent.putExtra(Constants.KEY_DIRECT_CONFIRM, true);
 		startActivityForResult(intent, searchResult.getPlaceRequestCode());
 		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}

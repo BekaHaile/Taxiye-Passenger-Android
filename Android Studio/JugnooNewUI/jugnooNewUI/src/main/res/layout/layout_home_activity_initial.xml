@@ -282,7 +282,7 @@
                 android:visibility="gone"
                 android:text="@string/label_show_fare_estimate"
                 android:textColor="@android:color/white"
-                android:background="@drawable/button_theme"
+                android:background="@drawable/capsule_theme_color_selector"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
