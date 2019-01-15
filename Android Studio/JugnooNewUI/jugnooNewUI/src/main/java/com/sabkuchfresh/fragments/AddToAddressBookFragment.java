@@ -116,21 +116,41 @@ public class AddToAddressBookFragment extends Fragment {
                     mapLite.getUiSettings().setZoomControlsEnabled(false);
                     mapLite.getUiSettings().setTiltGesturesEnabled(false);
                     mapLite.getUiSettings().setMyLocationButtonEnabled(false);
-                    LatLng latLng = new LatLng(current_latitude, current_longitude);
-                    mapLite.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                    mapLite.addMarker(new MarkerOptions().position(latLng));
+                    addMarker();
 
                     mapLite.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
+                        	if(activity instanceof AddPlaceActivity
+                                    && activity.getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName()) == null){
+								((AddPlaceActivity)activity).openDeliveryAddressFragment();
+							}
                             return true;
                         }
                     });
+					mapLite.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+						@Override
+						public void onMapClick(LatLng latLng) {
+							if(activity instanceof AddPlaceActivity
+                                && activity.getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName()) == null){
+								((AddPlaceActivity)activity).openDeliveryAddressFragment();
+							}
+						}
+					});
                 }
             }
         });
 
         return rootView;
+    }
+
+    public void addMarker() {
+        if(mapLite != null) {
+            mapLite.clear();
+            LatLng latLng = new LatLng(current_latitude, current_longitude);
+            mapLite.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+            mapLite.addMarker(new MarkerOptions().position(latLng));
+        }
     }
 
     private void fragmentUiSetup(){
@@ -389,6 +409,7 @@ public class AddToAddressBookFragment extends Fragment {
         }
         lastLabel = label;
         setAddressTypeUI(label);
+        addMarker();
     }
 
     public int getUpdatedPlaceRequestCode(int placeRequestCode) {
