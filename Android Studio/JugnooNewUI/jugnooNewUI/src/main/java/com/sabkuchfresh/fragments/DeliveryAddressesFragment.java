@@ -157,7 +157,8 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
             if (googleMap != null
 					&& MapUtils.distance(googleMap.getCameraPosition().target,
 					getCurrentLatLng()) > 10) {
-				googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(), 14), 300, null);
+				googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(getCurrentLatLng(),
+                        googleMap.getCameraPosition().zoom > 14 ? googleMap.getCameraPosition().zoom : 14), 300, null);
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -220,6 +221,11 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
             editTextDeliveryAddress = ((AddPlaceActivity)activity).getEditTextDeliveryAddress();
             progressWheelDeliveryAddressPin = ((AddPlaceActivity)activity).getProgressWheelDeliveryAddressPin();
             tvDeliveryAddress = ((AddPlaceActivity)activity).getTvDeliveryAddress();
+
+            AddPlaceActivity addPlaceActivity = (AddPlaceActivity)activity;
+            addPlaceActivity.getTextViewTitle().setVisibility(View.GONE);
+            addPlaceActivity.getRelativeLayoutSearch().setVisibility(View.VISIBLE);
+            ((AddPlaceActivity)activity).getImageViewDelete().setVisibility(View.GONE);
         }
 
         if(editTextDeliveryAddress != null){
