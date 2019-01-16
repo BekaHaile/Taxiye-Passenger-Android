@@ -121,27 +121,30 @@ public class AddToAddressBookFragment extends Fragment {
                     mapLite.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                         @Override
                         public boolean onMarkerClick(Marker marker) {
-                        	if(activity instanceof AddPlaceActivity
-                                    && activity.getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName()) == null){
-								((AddPlaceActivity)activity).openDeliveryAddressFragment();
-							}
+                            openDeliveryAddressFragment();
                             return true;
                         }
                     });
 					mapLite.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 						@Override
 						public void onMapClick(LatLng latLng) {
-							if(activity instanceof AddPlaceActivity
-                                && activity.getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName()) == null){
-								((AddPlaceActivity)activity).openDeliveryAddressFragment();
-							}
-						}
+                            openDeliveryAddressFragment();
+                        }
 					});
                 }
             }
         });
 
         return rootView;
+    }
+
+    public void openDeliveryAddressFragment() {
+        if (activity instanceof AddPlaceActivity
+                && activity.getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName()) == null) {
+            ((AddPlaceActivity) activity).getSearchResult().setLatitude(current_latitude);
+            ((AddPlaceActivity) activity).getSearchResult().setLongitude(current_longitude);
+            ((AddPlaceActivity) activity).openDeliveryAddressFragment();
+        }
     }
 
     public void addMarker() {
