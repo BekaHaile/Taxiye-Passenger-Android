@@ -34,6 +34,9 @@ public class Message {
     @SerializedName("message_status")
     @Expose
     private Integer messageStatus;
+    @SerializedName("message_state")
+    @Expose
+    private Integer messageState;
     @SerializedName("thumbnail_url")
     @Expose
     private String thumbnailUrl = "";
@@ -97,8 +100,21 @@ public class Message {
     @SerializedName("default_action_id")
     @Expose
     private String defaultActionId;
+    @SerializedName("video_call_duration")
+    @Expose
+    private int videoCallDuration;
 
+    public void setCallType(String callType) {
+        this.callType = callType;
+    }
 
+    @SerializedName("call_type")
+    @Expose
+    private String callType;
+
+    public String getCallType() {
+        return callType;
+    }
     public void setSentAtUtc(String sentAtUtc) {
         this.sentAtUtc = sentAtUtc;
     }
@@ -341,10 +357,6 @@ public class Message {
         this.message_id = message_id;
     }
 
-    public String getFromName() {
-        return fromName;
-    }
-
     public void setFromName(String fromName) {
         this.fromName = fromName;
     }
@@ -409,6 +421,22 @@ public class Message {
 
     public void setLocalImagePath(String localImagePath) {
         this.localImagePath = localImagePath;
+    }
+
+    public int getVideoCallDuration() {
+        return videoCallDuration;
+    }
+
+    public void setVideoCallDuration(int videoCallDuration) {
+        this.videoCallDuration = videoCallDuration;
+    }
+
+    public Integer getMessageState() {
+        return messageState;
+    }
+
+    public void setMessageState(Integer messageState) {
+        this.messageState = messageState;
     }
 
 }

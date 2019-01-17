@@ -85,6 +85,36 @@ public class FuguPutUserDetailsResponse {
         @SerializedName("is_faq_enabled")
         @Expose
         private Integer isFAQEnabled;
+        @SerializedName("is_video_call_enabled")
+        @Expose
+        private Integer isVideoCallEnabled;
+        @SerializedName("is_audio_call_enabled")
+        @Expose
+        private Integer isAudioCallEnabled;
+
+        public boolean isAudioCallEnabled() {
+            try {
+                return isAudioCallEnabled == 1;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        public void setisAudioCallEnabled(Integer isAudioCallEnabled) {
+            this.isAudioCallEnabled = isAudioCallEnabled;
+        }
+
+        public boolean isVideoCallEnabled() {
+            try {
+                return isVideoCallEnabled == 1;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        public void setIsVideoCallEnabled(Integer isVideoCallEnabled) {
+            this.isVideoCallEnabled = isVideoCallEnabled;
+        }
 
         public Long getUserId() {
             return userId;

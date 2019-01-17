@@ -91,6 +91,8 @@
     <string name="hippo_error_listener_not_set">Listener is not set you will not receive any callback for country picked!</string>
     <string name="hippo_error_no_countries_found">No Countries Found! Did you call build()</string>
     <string name="hippo_country_picker_header">Select country</string>
+    <string name="hippo_video_call">Incoming %s call...</string>
+    <string name="call_again">Call Again</string>
 
     <string-array name="FuguCountryCodes">
     <item>93,AF</item>

@@ -15,11 +15,15 @@ import android.widget.TextView;
 import com.fugu.R;
 import com.fugu.agent.Util.MessageMode;
 import com.fugu.agent.Util.Overlay;
+import com.fugu.agent.database.AgentCommonData;
 import com.fugu.agent.listeners.ItemClickListener;
 import com.fugu.agent.model.getConversationResponse.Conversation;
+import com.fugu.constant.FuguAppConstant;
 import com.fugu.utils.DateUtils;
 
 import java.util.ArrayList;
+
+import static com.fugu.constant.FuguAppConstant.VIDEO_CALL;
 
 /**
  * Created by gurmail on 18/06/18.
@@ -72,7 +76,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (viewholder instanceof ViewHolder) {
             ViewHolder holder = (ViewHolder) viewholder;
             Conversation conversation = (Conversation) conversationList.get(position);
-            if (!TextUtils.isEmpty(conversation.getMessage())) {
+            if(conversation.getMessage_type() == VIDEO_CALL) {
+                //holder.ivMessageState.setVisibility(View.GONE);
+                holder.tvMessage.setText(getMessageData(conversation));
+            } else if (!TextUtils.isEmpty(conversation.getMessage())) {
                 if (conversation.getLast_sent_by_user_type().equals(2) && conversation.getLast_sent_by_id().equals(userId)) {
                     holder.tvMessage.setText("You: " + Html.fromHtml(conversation.getMessage()));
                 } else if (conversation.getLast_sent_by_user_type().equals(2) && !conversation.getLast_sent_by_id().equals(userId)) {
@@ -278,4 +285,55 @@ public class ChatListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public interface Callback{
         void onClick(int position, int fragmentType, Conversation conversation);
     }
+
+    private String getMessageData(Conversation currentChannelItem) {
+        String message = "The video call ended";
+        String customerName = "Customer";
+        String callType = "video";
+        String agentName = "You";
+        if(!TextUtils.isEmpty(currentChannelItem.getCallType()) && currentChannelItem.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString())) {
+            callType = "Voice";
+        }
+
+        if(currentChannelItem.getMessageState() != null && currentChannelItem.getMessageState().intValue() == 2) {
+            if (currentChannelItem.getLast_sent_by_user_type().intValue() == 1) {
+                customerName = currentChannelItem.getLast_sent_by_full_name();
+
+                if (!isChatAssignToMe(currentChannelItem))
+                    agentName = currentChannelItem.getAgentName();
+
+                message = agentName + " missed a " + callType + " call with " + customerName;
+            } else {
+                if (currentChannelItem.getLast_sent_by_id().intValue() == AgentCommonData.getUserData().getUserId())
+                    agentName = "you";
+                else
+                    agentName = currentChannelItem.getLast_sent_by_full_name();
+
+                message = customerName + " missed a " + callType + " call with " + agentName;
+            }
+        } else {
+            message = "The "+ callType + " call ended";
+        }
+
+        return message;
+    }
+
+    private boolean isChatAssignToMe(Conversation currentChannelItem) {
+        return currentChannelItem.getAgentId().intValue() == AgentCommonData.getUserData().getUserId().intValue();
+    }
+    /*private String getMessageData(Conversation currentChannelItem) {
+        String message = "The video call ended";
+        if(currentChannelItem.getMessageState() != null && currentChannelItem.getMessageState().intValue() == 2) {
+            if (currentChannelItem.getLast_sent_by_id().equals(userId)) {
+                message = "OtherUser missed a video call with you";
+            } else {
+                message = "You missed a video call with "+currentChannelItem.getLast_sent_by_full_name();
+            }
+        } else {
+            message = "The video call ended";
+        }
+
+        return message;
+    }*/
+
 }

@@ -7,14 +7,10 @@ import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.fugu.FuguConfig;
-import com.fugu.adapter.ListItem;
-import com.fugu.agent.database.AgentCommonData;
 import com.fugu.constant.FuguAppConstant;
-import com.fugu.database.CommonData;
 import com.fugu.model.FuguFileDetails;
 import com.fugu.utils.DateUtils;
 import com.fugu.utils.FuguLog;
-import com.google.gson.Gson;
 
 import org.java_websocket.WebSocketImpl;
 import org.java_websocket.exceptions.WebsocketNotConnectedException;
@@ -27,7 +23,6 @@ import java.net.URI;
 import java.nio.channels.NotYetConnectedException;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.net.ssl.SSLContext;
@@ -285,7 +280,7 @@ public class FayeClient {
         try {
             //FuguLog.e("@@@@@@@@", "%%%%%%%%%%%%%%%%%%%%%%% "+data);
             String publish = mMetaMessage.publish(channel, data, ext, id);
-            FuguLog.e("@@@@@@@@", "*********************** "+publish);
+            //FuguLog.e("@@@@@@@@", "*********************** "+publish);
             mWebSocket.send(publish);
         } catch (Exception e) {
             FuguLog.e(LOG_TAG, "Build publish message to JSON error" + e);
@@ -508,6 +503,14 @@ public class FayeClient {
                     }
                     if(mNetworkListener != null)
                         mNetworkListener.onReceivedMessage(this, data, channel);
+                } else {
+                    try {
+                        if (obj.has("error")) {
+                            mListener.onErrorReceived(this, obj.getString("error"), channel);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             } else {
                 FuguLog.e(LOG_TAG, "Cannot handle this message: " + obj.toString());

@@ -83,6 +83,11 @@ public class ConnectionHelper implements FayeClientListener, HelperConnectionLis
     }
 
     @Override
+    public void onErrorReceived(FayeClient fc, String msg, String channel) {
+
+    }
+
+    @Override
     public void subscribeChannel(String subscribe) {
         if (fayeClient.isConnectedServer()) {
             fayeClient.subscribeChannel(subscribe);

@@ -7,11 +7,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -47,6 +45,7 @@ import com.fugu.FuguConfig;
 import com.fugu.FuguNotificationConfig;
 import com.fugu.FuguStringConfig;
 import com.fugu.R;
+import com.fugu.adapter.FuguMessageAdapter;
 import com.fugu.agent.Util.AgentType;
 import com.fugu.agent.Util.ConversationMode;
 import com.fugu.agent.Util.CustomRelative;
@@ -137,7 +136,7 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
     private int onSubscribe = 0;
     private Conversation conversation;
     private ProgressBar pbSendingImage;
-    private ImageView ivSend;
+    private ImageView ivSend, ivAudioView;
     private View vText;
     private DateUtils dateUtils;
     private String sentAtUTC = "", savedPrivateNote = "";
@@ -209,6 +208,9 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
         return mClient;
     }
 
+    private ImageView ivVideoView;
+    private boolean infoClickable = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -253,17 +255,48 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
         ivViewInfo.setVisibility(View.GONE);
         fuguColorConfig = CommonData.getColorConfig();
         stringConfig = CommonData.getStringConfig();
-        ivViewInfo.setImageResource(FuguConfig.getInstance().getInfoIcon() == -1
-                ? R.drawable.hippo_ic_icon_info : FuguConfig.getInstance().getInfoIcon());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            ivViewInfo.setBackground(FuguColorConfig.makeRoundedSelector(fuguColorConfig.getFuguActionBarBg()));
-        } else {
-            ivViewInfo.setBackgroundDrawable(FuguColorConfig.makeRoundedSelector(fuguColorConfig.getFuguActionBarBg()));
+//        ivViewInfo.setImageResource(FuguConfig.getInstance().getInfoIcon() == -1
+//                ? R.drawable.hippo_ic_icon_info : FuguConfig.getInstance().getInfoIcon());
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+//            ivViewInfo.setBackground(FuguColorConfig.makeRoundedSelector(fuguColorConfig.getFuguActionBarBg()));
+//        } else {
+//            ivViewInfo.setBackgroundDrawable(FuguColorConfig.makeRoundedSelector(fuguColorConfig.getFuguActionBarBg()));
+//        }
+
+        ivAudioView = (ImageView) findViewById(R.id.ivAudioView);
+        ivAudioView.setImageResource(FuguConfig.getInstance().getVideoCallDrawableId() == -1
+                ? R.drawable.hippo_ic_call_black : FuguConfig.getInstance().getVideoCallDrawableId());
+        if(FuguConfig.getInstance().getVideoCallDrawableId() != -1) {
+            ivAudioView.getDrawable().setColorFilter(fuguColorConfig.getFuguHomeColor(), PorterDuff.Mode.SRC_IN);
         }
-        ivViewInfo.setOnClickListener(new View.OnClickListener() {
+        ivAudioView.setVisibility(View.GONE);
+        /*ivAudioView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (conversation.getAgentId() == null)
+                videoCallInit(FuguAppConstant.AUDIO_CALL_VIEW);
+            }
+        });*/
+
+
+        ivVideoView = findViewById(R.id.ivVideoView);
+        ivVideoView.setImageResource(FuguConfig.getInstance().getVideoCallDrawableId() == -1
+                ? R.drawable.hippo_ic_videocam : FuguConfig.getInstance().getVideoCallDrawableId());
+        if(FuguConfig.getInstance().getVideoCallDrawableId() != -1) {
+            ivVideoView.getDrawable().setColorFilter(fuguColorConfig.getFuguHomeColor(), PorterDuff.Mode.SRC_IN);
+        }
+        ivVideoView.setVisibility(View.GONE);
+
+        /*ivVideoView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                videoCallInit(VIDEO_CALL_VIEW);
+            }
+        });*/
+
+        tvTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (conversation.getAgentId() == null || !infoClickable)
                     return;
                 if(!isNetworkAvailable()) {
                     Toast.makeText(AgentChatActivity.this, getString(R.string.fugu_unable_to_connect_internet), Toast.LENGTH_SHORT).show();
@@ -431,9 +464,30 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
         rvMessages.setAdapter(fuguMessageAdapter);
     }
 
+    private String videoCustomerName = "Customer";
+    private String videoAgentName = "Agent";
+    private boolean isChatAssignToMe = false;
+    private boolean isVideoCallEnable = false;
+
     private void setUpUI() {
         if (AgentCommonData.getAgentMessageResponse(conversation.getChannelId().intValue()) != null
                 && AgentCommonData.getAgentMessageResponse(conversation.getChannelId().intValue()).getData().getMessages().size() > 0) {
+            FuguAgentGetMessageResponse response = AgentCommonData.getAgentMessageResponse(conversation.getChannelId().intValue());
+            //customerName = response.getData().getCustomerName();
+
+            videoCustomerName = response.getData().getCustomerName();
+            videoAgentName = response.getData().getAgentName();
+            isChatAssignToMe = (response.getData().getUserId() == AgentCommonData.getUserData().getUserId().intValue()) ? true : false;
+
+            try {
+                if(AgentCommonData.getUserData().isVideoCallEnabled()
+                        && response != null && response.getData() != null && response.getData().isAllowVideoCall()) {
+                    isVideoCallEnable = true;
+                }
+            } catch (Exception e) {
+
+            }
+
 
             Log.e(TAG, "System.currentTimeMillis(): " + System.currentTimeMillis());
             showLoading = false;
@@ -502,6 +556,30 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
             }
 
             Log.e(TAG, "System.currentTimeMillis(): " + System.currentTimeMillis());
+
+            try {
+                if(userData.isVideoCallEnabled() && response.getData() != null) {
+                    if(response.getData().isAllowVideoCall() && response.getData().getUserId() > 0
+                            && userData.getUserId().intValue() == response.getData().getUserId()) {
+                        ivVideoView.setVisibility(View.VISIBLE);
+                    }
+                }
+            } catch (Exception e) {
+                if(FuguConfig.DEBUG)
+                    e.printStackTrace();
+            }
+
+            try {
+                if(AgentCommonData.getUserData().isAudioCallEnabled() && response.getData() != null) {
+                    if(response.getData().isAllowAudioCall() && response.getData().getUserId() > 0
+                            && AgentCommonData.getUserData().getUserId().intValue() == response.getData().getUserId()) {
+                        ivAudioView.setVisibility(View.VISIBLE);
+                    }
+                }
+            } catch (java.lang.Exception e) {
+                if(FuguConfig.DEBUG)
+                    e.printStackTrace();
+            }
 
             setRecyclerViewData();
             llRoot.setVisibility(View.VISIBLE);
@@ -864,6 +942,9 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
                             }
                         }
                     });
+                } else if(messageJson.optInt(IS_TYPING, 0) == TYPING_SHOW_MESSAGE &&
+                        messageJson.getInt(MESSAGE_TYPE) == VIDEO_CALL && messageJson.has("muid")) {
+                    // for video call
                 } else {
                     if (messageJson.optInt("is_typing") == 0 &&
                             (!messageJson.getString("message").isEmpty()
@@ -1454,7 +1535,7 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
     public void createConversation() {
         HashMap<String, Object> params = new HashMap<>();
         params.put(FuguAppConstant.ACCESS_TOKEN, String.valueOf(userData.getAccessToken()));
-        params.put("initiator_agent_id", String.valueOf(userData.getUserId()));
+        params.put("initiator_en_agent_id", String.valueOf(userData.getEnUserId()));
         if (fragmentType == FragmentType.USER_CHAT.getOrdinal()) {
             ArrayList<String> userUniqueKey = new ArrayList<>();
             userUniqueKey.add(conversation.getUserUniqueKeys());
@@ -1520,7 +1601,7 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
             FuguLog.v("statusArray......------", Arrays.toString(statusArray));
             FuguLog.v("typeArray......------", Arrays.toString(typeArray));
             HashMap<String, Object> params = new HashMap<>();
-            params.put(FuguAppConstant.USER_ID, String.valueOf(userData.getUserId()));
+            params.put(FuguAppConstant.EN_USER_ID, String.valueOf(userData.getEnUserId()));
             params.put(FuguAppConstant.ACCESS_TOKEN, String.valueOf(userData.getAccessToken()));
             params.put(FuguAppConstant.STATUS, Arrays.toString(statusArray));
             params.put(FuguAppConstant.DEVICE_TYPE, 1);
@@ -1665,7 +1746,7 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
                 if (!allMessagesFetched || isNetworkStateChanged || isFromOnResume) {
                     FuguAgentGetMessageParams commonParams = new FuguAgentGetMessageParams(userData.getAccessToken(),
                             conversation.getChannelId().intValue(),
-                            userData.getUserId(),
+                            userData.getEnUserId(),
                             isFromOnResume ? 1 : pageStart);
 
                     if (isFromOnResume && fuguMessageList.size() > 100)
@@ -1692,6 +1773,33 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
                                             llBottom.setVisibility(View.GONE);
                                         }
                                     }
+
+                                    try {
+                                        if(userData.isVideoCallEnabled()
+                                                && fuguGetMessageResponse != null && fuguGetMessageResponse.getData() != null) {
+                                            if(fuguGetMessageResponse.getData().isAllowVideoCall() && fuguGetMessageResponse.getData().getUserId() > 0
+                                                    && userData.getUserId().intValue() == fuguGetMessageResponse.getData().getUserId()) {
+                                                ivVideoView.setVisibility(View.VISIBLE);
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        if(FuguConfig.DEBUG)
+                                            e.printStackTrace();
+                                    }
+
+                                    try {
+                                        if(AgentCommonData.getUserData().isAudioCallEnabled()
+                                                && fuguGetMessageResponse != null && fuguGetMessageResponse.getData() != null) {
+                                            if(fuguGetMessageResponse.getData().isAllowAudioCall() && fuguGetMessageResponse.getData().getUserId() > 0
+                                                    && AgentCommonData.getUserData().getUserId().intValue() == fuguGetMessageResponse.getData().getUserId()) {
+                                                ivAudioView.setVisibility(View.VISIBLE);
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        if(FuguConfig.DEBUG)
+                                            e.printStackTrace();
+                                    }
+
                                     boolean flaghide = true;
                                     if (fuguGetMessageResponse.getData().getMessages() != null) {
                                         setAssignTaskLocaly(fuguGetMessageResponse);
@@ -1707,6 +1815,12 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
                                         String tempSentAtUtc = "";
 
                                         AgentData messageResponseData = fuguGetMessageResponse.getData();
+
+                                        if(userData == null)
+                                            userData = AgentCommonData.getUserData();
+
+                                        if(messageResponseData.getUserId() > 0 && userData.getUserId() == messageResponseData.getUserId())
+                                            ivVideoView.setVisibility(View.VISIBLE);
 
                                         if (conversation != null && conversation.getAgentId() == null)
                                             conversation.setAgentId(messageResponseData.getUserId());
@@ -1732,8 +1846,12 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
 
                                         conversation.setStatus(messageResponseData.getChannelStatus());
 
-                                        if (conversation.getUserId() > 0)
-                                            ivViewInfo.setVisibility(View.VISIBLE);
+                                        if (conversation.getUserId() > 0) {
+                                            //ivViewInfo.setVisibility(View.VISIBLE);
+                                            infoClickable = true;
+                                        }
+
+
                                         int dateCount = 0;
                                         try {
                                             for (int i = 0; i < messageResponseData.getMessages().size(); i++) {
@@ -1759,6 +1877,11 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
                                                     messageType = PRIVATE_NOTE;
                                                 } else if (messageObj.getMessageType() == ASSIGNMENT_MESSAGE) {
                                                     messageType = ASSIGNMENT_MESSAGE;
+                                                } else if(messageObj.getMessageType() == VIDEO_CALL) {
+                                                    if(isSelf)
+                                                        messageType = 18;
+                                                    else
+                                                        messageType = 19;
                                                 } else {
                                                     messageType = messageObj.getImageUrl().isEmpty() ? TEXT_MESSAGE : IMAGE_MESSAGE;
                                                 }
@@ -1936,6 +2059,23 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
                                             sentAtUTC = tempSentAtUtc;
                                             AgentCommonData.setAgentMessageResponse(conversation.getChannelId().intValue(), fuguGetMessageResponse);
                                             //setRecyclerViewData();
+
+                                            try {
+                                                videoCustomerName = fuguGetMessageResponse.getData().getCustomerName();
+                                                videoAgentName = fuguGetMessageResponse.getData().getAgentName();
+                                                isChatAssignToMe = (fuguGetMessageResponse.getData().getUserId() == AgentCommonData.getUserData().getUserId().intValue()) ? true : false;
+                                                try {
+                                                    if(AgentCommonData.getUserData().isVideoCallEnabled()
+                                                            && fuguGetMessageResponse != null && fuguGetMessageResponse.getData() != null && fuguGetMessageResponse.getData().isAllowVideoCall()) {
+                                                        isVideoCallEnable = true;
+                                                    }
+                                                } catch (Exception e) {
+
+                                                }
+                                            } catch (Exception e) {
+
+                                            }
+
                                             try {
                                                 flaghide = false;
                                                 setConnectionMessage(0);
@@ -2039,6 +2179,13 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
 
 //        rvMessages.setLayoutManager(layoutManager);
 
+        if(fuguMessageAdapter != null) {
+            fuguMessageAdapter.setCustomeName(videoCustomerName);
+            fuguMessageAdapter.setAgentName(videoAgentName);
+            fuguMessageAdapter.setIsChatAssignToMe(isChatAssignToMe);
+            fuguMessageAdapter.isVideoCallEnabled(isVideoCallEnable);
+        }
+
         try {
             fuguMessageAdapter.updateList(fuguMessageList);
             fuguMessageAdapter.notifyDataSetChanged();
@@ -2050,6 +2197,23 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
                 e.printStackTrace();
         }
 
+        fuguMessageAdapter.setOnVideoCallListener(new FuguMessageAdapter.onVideoCall() {
+            @Override
+            public void onVideoCallClicked(int callType) {
+                /*try {
+                    FuguAgentGetMessageResponse fuguGetMessageResponse = AgentCommonData.getAgentMessageResponse(conversation.getChannelId().intValue());
+                    if(userData.isVideoCallEnabled()
+                            && fuguGetMessageResponse != null && fuguGetMessageResponse.getData() != null) {
+                        if(fuguGetMessageResponse.getData().isAllowVideoCall() && fuguGetMessageResponse.getData().getUserId() > 0
+                                && userData.getUserId().intValue() == fuguGetMessageResponse.getData().getUserId()) {
+                            videoCallInit(callType);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }*/
+            }
+        });
 
         fuguMessageAdapter.setOnRetryListener(new FuguAgentMessageAdapter.OnRetryListener() {
             @Override

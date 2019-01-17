@@ -14,4 +14,5 @@ public interface FayeClientListener {
     public void onReceivedMessage(FayeClient fc, String msg, String channel);
     public void onPongReceived();
     public void onWebSocketError();
+    public void onErrorReceived(FayeClient fc, String msg, String channel);
 }

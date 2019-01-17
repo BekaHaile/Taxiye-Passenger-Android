@@ -1,12 +1,15 @@
 package com.fugu.agent;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -26,6 +29,7 @@ import android.widget.TextView;
 
 import com.fugu.FuguColorConfig;
 import com.fugu.FuguConfig;
+import com.fugu.FuguNotificationConfig;
 import com.fugu.FuguStringConfig;
 import com.fugu.R;
 import com.fugu.agent.Util.ConversationMode;
@@ -54,6 +58,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import static com.fugu.constant.FuguAppConstant.NETWORK_STATE_INTENT;
+import static com.fugu.constant.FuguAppConstant.NOTIFICATION_TAPPED;
 
 /**
  * Created by gurmail on 18/06/18.
@@ -258,10 +263,10 @@ public class AgentListActivity extends AgentBaseActivity implements AgentConnect
 
         LoadingBox.showOn(AgentListActivity.this);
 
-        String userID = String.valueOf(userData.getUserId());
+        String userID = String.valueOf(userData.getEnUserId());
         String accessToken = userData.getAccessToken();
         HashMap<String, Object> params = new HashMap<>();
-        params.put(FuguAppConstant.USER_ID, userID);
+        params.put(FuguAppConstant.EN_USER_ID, userID);
         params.put(FuguAppConstant.ACCESS_TOKEN, accessToken);
         params.put(FuguAppConstant.STATUS, "[1]");
         params.put(FuguAppConstant.DEVICE_TYPE, 1);

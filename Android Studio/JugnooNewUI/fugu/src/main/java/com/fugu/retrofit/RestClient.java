@@ -88,7 +88,7 @@ public class RestClient {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(30, TimeUnit.SECONDS);
 
-        // add_small your other interceptors …
+        // add_small your other interceptors
         // add_small logging as last interceptor
         httpClient.addInterceptor(logging);
         return httpClient;

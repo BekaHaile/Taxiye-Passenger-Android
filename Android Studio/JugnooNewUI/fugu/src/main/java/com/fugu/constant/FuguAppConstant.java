@@ -14,7 +14,7 @@ public interface FuguAppConstant {
 
     String DEV_SERVER = "https://alpha-api.fuguchat.com";
     //String TEST_SERVER = "https://beta-api.fuguchat.com"; // 13.126.0.203:3001
-    String TEST_SERVER = "https://hippo-api-dev.fuguchat.com:3002";
+    String TEST_SERVER = "https://hippo-api-dev.fuguchat.com:3011";
     String BETA_SERVER = "https://beta-hippo.fuguchat.com";
     String BETA_LIVE_SERVER = "https://api.fuguchat.com";
     String LIVE_SERVER = "https://api.fuguchat.com";
@@ -28,10 +28,13 @@ public interface FuguAppConstant {
 
     int SESSION_EXPIRE = 403;
     int DATA_UNAVAILABLE = 406;
+    int INVALID_VIDEO_CALL_CREDENTIALS = 413;
     String NETWORK_STATE_INTENT = "network_state_changed";
     String NOTIFICATION_INTENT = "notification_received";
     String NOTIFICATION_TAPPED = "notification_tapped";
     String FUGU_WEBSITE_URL = "https://fuguchat.com";
+    String VIDEO_CALL_INTENT = "hippo_video_call_intent";
+    String VIDEO_CALL_HUNGUP = "hippo_video_call_hungup";
 
     int IMAGE_MESSAGE = 10;
     int FILE_MESSAGE = 11;
@@ -40,6 +43,10 @@ public interface FuguAppConstant {
     int PRIVATE_NOTE = 3;
     int READ_MESSAGE = 6;
     int FEEDBACK_MESSAGE = 14;
+    int VIDEO_CALL = 18;
+
+    int VIDEO_CALL_VIEW = 1;
+    int AUDIO_CALL_VIEW = 2;
 
     int ANDROID_USER = 1;
 
@@ -155,6 +162,13 @@ public interface FuguAppConstant {
     String SUPPORT_TRANSACTION_ID = "support_transaction_id";
     String SUPPORT_IS_ACTIVE = "is_active";
     String SOURCE_KEY = "source";
+
+    String CHANNEL_NAME = "channel_name";
+    String MESSAGE_UNIQUE_ID = "muid";
+    String VIDEO_CALL_TYPE = "video_call_type";
+    String IS_SILENT = "is_silent";
+    String TITLE = "title";
+
     /**
      * The type of file being Saved
      */
@@ -197,5 +211,29 @@ public interface FuguAppConstant {
         String DATETIME_PAST = "Datetime-Past";
         String BARCODE = "Barcode";
 
+    }
+
+
+    public enum CallType {
+        AUDIO("AUDIO"),
+        VIDEO("VIDEO");
+
+        public final String type;
+
+
+        /**
+         * @param type
+         */
+        CallType(final String type) {
+            this.type = type;
+        }
+
+        /* (non-Javadoc)
+         * @see java.lang.Enum#toString()
+         */
+        @Override
+        public String toString() {
+            return type;
+        }
     }
 }

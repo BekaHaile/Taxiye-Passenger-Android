@@ -99,6 +99,9 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
     private String agentServerUrl = "";
     private String themeColor = "";
     private int homeUpIndicatorDrawableId = R.drawable.fugu_ic_arrow_back;
+    private int videoCallNotificationDrawable = R.drawable.hippo_default_notif_icon;
+    private int videoCallDrawableId = -1;//R.drawable.hippo_ic_info;
+    private int audioCallDrawableId = -1;
     public String appKey = "";
     private String appType = "1";
     private int READ_PHONE_PERMISSION = 101;
@@ -164,6 +167,10 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
     // Initinal FayeClient
     private static FayeClient mClient;
 
+    /**
+     * @deprecated
+     * @return
+     */
     public static FayeClient getClient() {
         if (mClient == null) {
             meta = new MetaMessage();
@@ -181,7 +188,7 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
             if (CommonData.getServerUrl().equals(LIVE_SERVER)) {
                 mClient = new FayeClient(CommonData.getServerUrl() + ":3002/faye", meta);
             } else if (CommonData.getServerUrl().equals(TEST_SERVER) || CommonData.getServerUrl().equals(BETA_LIVE_SERVER)) {
-                mClient = new FayeClient("https://hippo-api-dev.fuguchat.com:3002/faye", meta);
+                mClient = new FayeClient("https://hippo-api-dev.fuguchat.com:3012/faye", meta);
             } else if(CommonData.getServerUrl().equals(AGENT_BETA_SERVER)) {
                 mClient = new FayeClient("https://beta-hippo.fuguchat.com:3001/faye", meta);
             } else {
@@ -348,6 +355,18 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
 
     public void setHomeUpIndicatorDrawableId(int homeUpIndicatorDrawableId) {
         FuguConfig.getInstance().homeUpIndicatorDrawableId = homeUpIndicatorDrawableId;
+    }
+
+    public void setCallNotificationDrawable(int videoCallNotificationDrawable) {
+        FuguConfig.getInstance().videoCallNotificationDrawable = videoCallNotificationDrawable;
+    }
+
+    public void setVideoCallDrawableId(int videoCallDrawableId) {
+        FuguConfig.getInstance().videoCallDrawableId = videoCallDrawableId;
+    }
+
+    public void setAudioCallDrawableId(int audioCallDrawableId) {
+        FuguConfig.getInstance().audioCallDrawableId = audioCallDrawableId;
     }
 
     public void showConversations(final Activity activity, final String title) {
@@ -743,6 +762,18 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
         return FuguConfig.getInstance().homeUpIndicatorDrawableId;
     }
 
+    public int getVideoCallNotificationDrawable() {
+        return FuguConfig.getInstance().videoCallNotificationDrawable;
+    }
+
+    public int getVideoCallDrawableId() {
+        return FuguConfig.getInstance().videoCallDrawableId;
+    }
+
+    public int getAudioCallDrawableId() {
+        return FuguConfig.getInstance().audioCallDrawableId;
+    }
+
     public String getAppKey() {
         return FuguConfig.getInstance().appKey;
     }
@@ -1027,7 +1058,7 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
         if (FuguConfig.getInstance().getUserData() != null) {
             CommonParams commonParams = new CommonParams.Builder()
                     .add(APP_SECRET_KEY, FuguConfig.getInstance().getAppKey())
-                    .add(USER_ID, FuguConfig.getInstance().getUserData().getUserId())
+                    .add(EN_USER_ID, FuguConfig.getInstance().getUserData().getEnUserId())
                     .add(APP_VERSION, BuildConfig.VERSION_NAME)
                     .add("device_id", UniqueIMEIID.getUniqueIMEIId(activity))
                     .add(DEVICE_TYPE, 1)
@@ -1603,14 +1634,15 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
         } else {
             int[] typeIntArray = new int[]{ConversationMode.ALL.getOrdinal(), ConversationMode.DEFAULT.getOrdinal()};
             UserData userData = AgentCommonData.getUserData();
-            String userID = String.valueOf(userData.getUserId());
+            String userID = String.valueOf(userData.getEnUserId());
             String accessToken = userData.getAccessToken();
             HashMap<String, Object> params = new HashMap<>();
-            params.put(FuguAppConstant.USER_ID, userID);
+            params.put(FuguAppConstant.EN_USER_ID, userID);
             params.put(FuguAppConstant.ACCESS_TOKEN, accessToken);
             params.put(FuguAppConstant.STATUS, "[1]");
             params.put(FuguAppConstant.DEVICE_TYPE, 1);
             params.put(FuguAppConstant.TYPE, Arrays.toString(typeIntArray));
+
             RestClient.getAgentApiInterface().getConversation(params).enqueue(new ResponseResolver<GetConversationResponse>() {
                 @Override
                 public void success(GetConversationResponse getConversationResponse) {
@@ -1710,6 +1742,7 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
         }
     }
 
+
     /*public void unregisterNetworkListener(Context context, BroadcastReceiver broadcastReceiver) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             try {
@@ -1720,4 +1753,13 @@ public class FuguConfig extends FuguBaseActivity implements Parcelable {
         }
     }*/
 
+    private HashMap<String, Long> channelIds = new HashMap<>();
+
+    public void setChannelIds(String transactionId, Long channelId) {
+        channelIds.put(transactionId, channelId);
+    }
+
+    public Long getChannelId(String transactionId) {
+        return channelIds.get(transactionId);
+    }
 }

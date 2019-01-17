@@ -103,6 +103,17 @@ public class FuguConversation {
     @SerializedName("last_sent_by_id")
     @Expose
     private Long last_sent_by_id;
+    @SerializedName("call_type")
+    @Expose
+    private String callType;
+
+    public String getCallType() {
+        return callType;
+    }
+
+    public void setCallType(String callType) {
+        this.callType = callType;
+    }
 
     private int isTimeSet = 0;
 
@@ -177,6 +188,18 @@ public class FuguConversation {
     @SerializedName("disable_reply")
     @Expose
     private Integer disableReply;
+
+    @SerializedName("message_state")
+    @Expose
+    private Integer messageState;
+
+    public Integer getMessageState() {
+        return messageState;
+    }
+
+    public void setMessageState(Integer messageState) {
+        this.messageState = messageState;
+    }
 
     public boolean isDisableReply() {
         return disableReply != null && disableReply == 1;

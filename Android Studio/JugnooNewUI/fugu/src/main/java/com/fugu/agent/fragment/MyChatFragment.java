@@ -52,7 +52,6 @@ import com.fugu.utils.Utils;
 import com.fugu.utils.loadingBox.LoadingBox;
 import com.google.gson.Gson;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -209,10 +208,10 @@ public class MyChatFragment extends BaseFragment implements AgentServerListener,
 
         if (userData == null)
             userData = AgentCommonData.getUserData();
-        String userID = String.valueOf(userData.getUserId());
+        String userID = String.valueOf(userData.getEnUserId());
         String accessToken = userData.getAccessToken();
         HashMap<String, Object> params = new HashMap<>();
-        params.put(FuguAppConstant.USER_ID, userID);
+        params.put(FuguAppConstant.EN_USER_ID, userID);
         params.put(FuguAppConstant.ACCESS_TOKEN, accessToken);
         params.put(FuguAppConstant.STATUS, "[1]");//Arrays.toString(statusArray).equals("[]")?"[1]":Arrays.toString(statusArray));
         params.put(FuguAppConstant.DEVICE_TYPE, 1);

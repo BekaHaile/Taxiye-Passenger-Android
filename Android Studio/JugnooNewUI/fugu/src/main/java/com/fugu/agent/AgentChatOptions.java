@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -301,7 +300,7 @@ public class AgentChatOptions extends AgentBaseActivity {
             CommonParams.Builder builder = new CommonParams.Builder();
             builder.add(FuguAppConstant.ACCESS_TOKEN, AgentCommonData.getUserData().getAccessToken());
             builder.add(FuguAppConstant.CHANNEL_ID, String.valueOf(conversation.getChannelId()));
-            builder.add(FuguAppConstant.USER_ID, AgentCommonData.getUserData().getUserId());
+            builder.add(FuguAppConstant.EN_USER_ID, AgentCommonData.getUserData().getEnUserId());
             builder.add(FuguAppConstant.STATUS, String.valueOf(status));
             builder.add(FuguAppConstant.CREATED_BY, AgentCommonData.getUserData().getFullName());
 //            if(!TextUtils.isEmpty(dealId))

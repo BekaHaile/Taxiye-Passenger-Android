@@ -69,6 +69,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/FuguTheme" />
 
+        <activity android:name=".videoCall.FuguCallActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FuguTheme"
+            android:launchMode="singleTop"
+            />
+
         <service
             android:name="com.fugu.service.FuguPushIntentService"
             android:exported="false" />
@@ -76,6 +82,8 @@
         <service
             android:name=".service.FuguOnClearFromRecentService"
             android:stopWithTask="false" />
+
+        <service android:name=".videoCall.VideoCallService" />
         <!--<meta-data-->
         <!--android:name="io.fabric.ApiKey"-->
         <!--android:value="9a344ba4644c7661f8ee12e1e5573f21396bbaf0" />-->

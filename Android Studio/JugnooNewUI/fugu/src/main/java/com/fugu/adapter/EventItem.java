@@ -25,7 +25,11 @@ public class EventItem extends ListItem {
 
     @Override
     public int getType() {
-        if (event.getMessageType() == FUGU_FORUM_VIEW)
+        if(event.getMessageType() == FUGU_SELF_VIDEO_VIEW && event.isSelf())
+            return FUGU_SELF_VIDEO_VIEW;
+        else if(event.getMessageType() == FUGU_SELF_VIDEO_VIEW)
+            return FUGU_OTHER_VIDEO_VIEW;
+        else if (event.getMessageType() == FUGU_FORUM_VIEW)
             return FUGU_FORUM_VIEW;
         else if (event.getMessageType() == FUGU_GALLERY_VIEW)
             return FUGU_GALLERY_VIEW;

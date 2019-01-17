@@ -12,12 +12,56 @@
     app:contentInsetStartWithNavigation="0dp"
     app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <LinearLayout
+            android:id="@+id/llBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/fugu_margin_10">
+
+            <ImageView
+                android:id="@+id/ivVideoView"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/fugu_margin_10"
+                android:padding="@dimen/fugu_margin_5"
+                android:src="@drawable/hippo_ic_videocam"
+                android:onClick="onClick"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/ivAudioView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/fugu_margin_10"
+                android:padding="@dimen/fugu_margin_5"
+                android:onClick="onClick"
+                android:src="@drawable/hippo_ic_call_black"
+                android:visibility="gone" />
+
+
+
+        </LinearLayout>
+
     <TextView
         android:id="@+id/tv_toolbar_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
+        android:layout_centerVertical="true"
         android:singleLine="true"
+        android:layout_toLeftOf="@+id/llBtn"
         android:textSize="@dimen/fugu_text_size_very_large" />
+
+    </RelativeLayout>
 
 </android.support.v7.widget.Toolbar>

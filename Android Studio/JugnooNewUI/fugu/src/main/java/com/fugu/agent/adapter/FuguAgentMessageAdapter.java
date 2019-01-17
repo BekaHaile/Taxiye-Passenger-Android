@@ -30,15 +30,19 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.fugu.FuguColorConfig;
 import com.fugu.R;
+import com.fugu.adapter.FuguMessageAdapter;
 import com.fugu.agent.AgentChatActivity;
+import com.fugu.agent.database.AgentCommonData;
 import com.fugu.agent.model.EventItem;
 import com.fugu.agent.model.HeaderItem;
 import com.fugu.agent.model.ListItem;
 import com.fugu.agent.model.Message;
 import com.fugu.agent.model.getConversationResponse.Conversation;
+import com.fugu.constant.FuguAppConstant;
 import com.fugu.database.CommonData;
 import com.fugu.utils.DateUtils;
 import com.fugu.utils.RoundedCornersTransformation;
+import com.fugu.utils.zoomview.ZoomageView;
 
 import java.io.File;
 import java.util.Collections;
@@ -66,10 +70,19 @@ public class FuguAgentMessageAdapter extends RecyclerView.Adapter<RecyclerView.V
     private final int ITEM_TYPE_OTHER = 1;
     private final int ITEM_TYPE_SELF = 2;
     private final int ITEM_ASSIGNMENT = 3;
+    private final int FUGU_VIDEO_CALL_VIEW = 18;
+    private final int FUGU_OTHER_VIDEO_CALL_VIEW = 19;
     private DateUtils dateUtil = DateUtils.getInstance();
     private OnRetryListener mOnRetry;
     private FuguColorConfig fuguColorConfig;
     private Conversation conversation;
+    private FuguMessageAdapter.onVideoCall onVideoCall;
+
+    private String customerName;
+    private String agentName;
+    private boolean isChatAssignToMe = false;
+    private boolean isVideoCallEnabled = true;
+    private int agentId;
 
     @NonNull
     private List<ListItem> items = Collections.emptyList();
@@ -89,6 +102,26 @@ public class FuguAgentMessageAdapter extends RecyclerView.Adapter<RecyclerView.V
         //  removeDefaultMsgTime();
     }
 
+    public void setCustomeName(String customeName) {
+        this.customerName = customeName;
+    }
+
+    public void setAgentName(String agentName) {
+        this.agentName = agentName;
+    }
+
+    public void setIsChatAssignToMe(boolean isChatAssignToMe) {
+        this.isChatAssignToMe = isChatAssignToMe;
+    }
+
+    public void isVideoCallEnabled(boolean isVideoCallEnabled) {
+        this.isVideoCallEnabled = isVideoCallEnabled;
+    }
+
+    public void setOnVideoCallListener(FuguMessageAdapter.onVideoCall onVideoCall) {
+        this.onVideoCall = onVideoCall;
+    }
+
     public void setOnRetryListener(OnRetryListener OnRetryListener) {
         mOnRetry = OnRetryListener;
     }
@@ -99,6 +132,9 @@ public class FuguAgentMessageAdapter extends RecyclerView.Adapter<RecyclerView.V
         public void onMessageCancel(String muid, int position);
     }
 
+//    public void setAgentName(String agentName) {
+//        this.agentName = agentName;
+//    }
 
     private void removeDefaultMsgTime() {
         for (int i = 0; i < 2; i++) {
@@ -116,7 +152,6 @@ public class FuguAgentMessageAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         if (viewType == TYPE_HEADER) {
             View normalView = LayoutInflater.from(context).inflate(R.layout.fugu_item_message_date, parent, false);
             return new DateViewHolder(normalView);
@@ -129,8 +164,13 @@ public class FuguAgentMessageAdapter extends RecyclerView.Adapter<RecyclerView.V
         } else if (viewType == ITEM_TYPE_SELF) {
             View headerRow = LayoutInflater.from(context).inflate(R.layout.fugu_item_message_right, parent, false);
             return new SelfMessageViewHolder(headerRow);
+        } else if(viewType == FUGU_VIDEO_CALL_VIEW) {
+            View videoCallView = LayoutInflater.from(context).inflate(R.layout.hippo_video_self_side, parent, false);
+            return new SelfVideoViewHolder(videoCallView);
+        } else if(viewType == FUGU_OTHER_VIDEO_CALL_VIEW) {
+            View otherVideoCallView = LayoutInflater.from(context).inflate(R.layout.hippo_video_other_side, parent, false);
+            return new VideoViewHolder(otherVideoCallView);
         }
-
         return null;
     }
 
@@ -139,7 +179,87 @@ public class FuguAgentMessageAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final int itemType = getItemViewType(position);
 
-        if (itemType == TYPE_HEADER) {
+        if(itemType == FUGU_VIDEO_CALL_VIEW) {
+            final SelfVideoViewHolder videoViewHolder = (SelfVideoViewHolder) holder;
+            Message videoMessage = ((EventItem) items.get(position)).getEvent();
+            videoViewHolder.tvMsg.setText(getMessage(videoMessage, FUGU_VIDEO_CALL_VIEW));
+            /*if(videoMessage.getMessageState() != null && videoMessage.getMessageState().intValue() == 2) {
+                videoViewHolder.tvMsg.setText(agentName+" missed a video call with you");
+            } else {
+                videoViewHolder.tvMsg.setText("The video call ended");
+            }*/
+            if (videoMessage.getSentAtUtc().isEmpty()) {
+                videoViewHolder.tvTime.setVisibility(View.GONE);
+            } else {
+                videoViewHolder.tvTime.setText(DateUtils.getTime(dateUtil.convertToLocal(videoMessage.getSentAtUtc())));
+                videoViewHolder.tvTime.setVisibility(View.VISIBLE);
+            }
+            if(videoMessage.getVideoCallDuration()>0) {
+                videoViewHolder.ivCallIcon.setVisibility(View.VISIBLE);
+                videoViewHolder.tvDuration.setVisibility(View.VISIBLE);
+                videoViewHolder.tvDuration.setText(convertSeconds(videoMessage.getVideoCallDuration())+" at ");
+//                    videoViewHolder.tvDuration.setText(videoMessage.getVideoCallDuration()+"sec at ");
+
+            } else {
+                videoViewHolder.ivCallIcon.setVisibility(View.GONE);
+                videoViewHolder.tvDuration.setVisibility(View.GONE);
+            }
+
+            if(!isChatAssignToMe || !AgentCommonData.getUserData().isVideoCallEnabled()
+                    || !isVideoCallEnabled) {
+                videoViewHolder.callAgain.setVisibility(View.GONE);
+            }
+
+            videoViewHolder.callAgain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    /*if(onVideoCall != null) {
+                        int callType = FuguAppConstant.VIDEO_CALL_VIEW;
+                        if (!TextUtils.isEmpty(videoMessage.getCallType()) && videoMessage.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString())) {
+                            callType = FuguAppConstant.AUDIO_CALL_VIEW;
+                        }
+                        onVideoCall.onVideoCallClicked(callType);
+                    }*/
+                }
+            });
+        } else if(itemType == FUGU_OTHER_VIDEO_CALL_VIEW) {
+            final VideoViewHolder videoOtherViewHolder = (VideoViewHolder) holder;
+            Message videoOtherMessage = ((EventItem) items.get(position)).getEvent();
+            videoOtherViewHolder.tvMsg.setText(getMessage(videoOtherMessage, FUGU_OTHER_VIDEO_CALL_VIEW));
+            /*if(videoOtherMessage.getMessageState() != null && videoOtherMessage.getMessageState().intValue() == 2) {
+                videoOtherViewHolder.tvMsg.setText("You missed a video call with "+videoOtherMessage.getfromName());
+            } else {
+                videoOtherViewHolder.tvMsg.setText("The video call ended");
+            }*/
+            if (videoOtherMessage.getSentAtUtc().isEmpty()) {
+                videoOtherViewHolder.tvTime.setVisibility(View.GONE);
+            } else {
+                videoOtherViewHolder.tvTime.setText(DateUtils.getTime(dateUtil.convertToLocal(videoOtherMessage.getSentAtUtc())));
+                videoOtherViewHolder.tvTime.setVisibility(View.VISIBLE);
+            }
+
+            if(videoOtherMessage.getVideoCallDuration()>0) {
+                videoOtherViewHolder.ivCallIcon.setVisibility(View.VISIBLE);
+                videoOtherViewHolder.tvDuration.setVisibility(View.VISIBLE);
+                videoOtherViewHolder.tvDuration.setText(convertSeconds(videoOtherMessage.getVideoCallDuration())+" at ");
+//                    videoOtherViewHolder.tvDuration.setText(videoOtherMessage.getVideoCallDuration()+"sec at ");
+            } else {
+                videoOtherViewHolder.ivCallIcon.setVisibility(View.GONE);
+                videoOtherViewHolder.tvDuration.setVisibility(View.GONE);
+            }
+            videoOtherViewHolder.callAgain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    /*if(onVideoCall != null) {
+                        int callType = FuguAppConstant.VIDEO_CALL_VIEW;
+                        if (!TextUtils.isEmpty(videoOtherMessage.getCallType()) && videoOtherMessage.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString())) {
+                            callType = FuguAppConstant.AUDIO_CALL_VIEW;
+                        }
+                        onVideoCall.onVideoCallClicked(callType);
+                    }*/
+                }
+            });
+        } else if (itemType == TYPE_HEADER) {
             final DateViewHolder dateViewHolder = (DateViewHolder) holder;
             HeaderItem headerItem = (HeaderItem) items.get(position);
             if (headerItem.getDate().isEmpty()) {
@@ -669,6 +789,36 @@ public class FuguAgentMessageAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
+    class SelfVideoViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView tvMsg, tvTime, callAgain, tvDuration;
+        private ImageView ivCallIcon;
+        public SelfVideoViewHolder(View itemView) {
+            super(itemView);
+            tvMsg = itemView.findViewById(R.id.tvMsg);
+            tvTime = itemView.findViewById(R.id.tvTime);
+            callAgain = itemView.findViewById(R.id.callAgain);
+            tvDuration = itemView.findViewById(R.id.tvDuration);
+
+            ivCallIcon = itemView.findViewById(R.id.ivCallIcon);
+        }
+    }
+
+    class VideoViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView tvMsg, tvTime, callAgain, tvDuration;
+        private ImageView ivCallIcon;
+        public VideoViewHolder(View itemView) {
+            super(itemView);
+            tvMsg = itemView.findViewById(R.id.tvMsg);
+            tvTime = itemView.findViewById(R.id.tvTime);
+            callAgain = itemView.findViewById(R.id.callAgain);
+            tvDuration = itemView.findViewById(R.id.tvDuration);
+
+            ivCallIcon = itemView.findViewById(R.id.ivCallIcon);
+        }
+    }
+
     class AssignmentViewHolder extends RecyclerView.ViewHolder {
         private TextView tvAssignment;
 
@@ -703,7 +853,7 @@ public class FuguAgentMessageAdapter extends RecyclerView.Adapter<RecyclerView.V
             dialog.setCanceledOnTouchOutside(false);
 
             //adding text dynamically
-            ImageView ivImage = (ImageView) dialog.findViewById(R.id.ivImage);
+            ZoomageView ivImage = dialog.findViewById(R.id.ivImage);
             RequestOptions myOptions = RequestOptions
                     .bitmapTransform(new RoundedCornersTransformation(context, 7, 2))
                     .placeholder(ContextCompat.getDrawable(context, R.drawable.hippo_placeholder))
@@ -775,6 +925,53 @@ public class FuguAgentMessageAdapter extends RecyclerView.Adapter<RecyclerView.V
             }
         }
         vTime.setLayoutParams(layout);
+    }
+
+    private String convertSeconds(int seconds) {
+        int h = seconds / 3600;
+        int m = (seconds % 3600) / 60;
+        int s = seconds % 60;
+        String sh = (h > 0 ? String.valueOf(h) + " " + "h" : "");
+        String sm = (m < 10 && m > 0 && h > 0 ? "0" : "") + (m > 0 ? (h > 0 && s == 0 ? String.valueOf(m) : String.valueOf(m) + " " + "min") : "");
+        String ss = (s == 0 && (h > 0 || m > 0) ? "" : (s < 10 && (h > 0 || m > 0) ? "0" : "") + String.valueOf(s) + " " + "sec");
+        return sh + (h > 0 ? " " : "") + sm + (m > 0 ? " " : "") + ss;
+    }
+
+    private String getMessage(Message videoMessage, int userType) {
+        String message = "The video call ended";
+        String agentType = "you";
+        if(userType == FUGU_VIDEO_CALL_VIEW) {
+            if(videoMessage.getUserId().intValue() != AgentCommonData.getUserData().getUserId().intValue())
+                agentType = videoMessage.getfromName();
+            if (videoMessage.getMessageState() != null && videoMessage.getMessageState().intValue() == 2) {
+                if (!TextUtils.isEmpty(videoMessage.getCallType()) && videoMessage.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString()))
+                    message = customerName + " missed a voice call with "+agentType;
+                else
+                    message = customerName + " missed a video call with "+agentType;
+            } else {
+                if (!TextUtils.isEmpty(videoMessage.getCallType()) && videoMessage.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString()))
+                    message = "The voice call ended";
+                else
+                    message = "The video call ended";
+            }
+        } else {
+            agentType = "You";
+            if(!isChatAssignToMe)
+                agentType = agentName;
+
+            if(videoMessage.getMessageState() != null && videoMessage.getMessageState().intValue() == 2) {
+                if(!TextUtils.isEmpty(videoMessage.getCallType()) && videoMessage.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString()))
+                    message = agentType+" missed a voice call with "+videoMessage.getfromName();
+                else
+                    message = agentType+" missed a video call with "+videoMessage.getfromName();
+            } else {
+                if(!TextUtils.isEmpty(videoMessage.getCallType()) && videoMessage.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString()))
+                    message = "The voice call ended";
+                else
+                    message = "The video call ended";
+            }
+        }
+        return message;
     }
 
 }

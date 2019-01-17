@@ -28,6 +28,9 @@ public class UserData {
     @SerializedName("user_id")
     @Expose
     private Integer userId;
+    @SerializedName("en_user_id")
+    @Expose
+    private String enUserId;
     @SerializedName("business_id")
     @Expose
     private Integer businessId;
@@ -82,6 +85,12 @@ public class UserData {
     @SerializedName("agent_onboarding_completed")
     @Expose
     private Integer agentOnboardingComplete;
+    @SerializedName("is_video_call_enabled")
+    @Expose
+    private Integer isVideoCallEnabled;
+    @SerializedName("is_audio_call_enabled")
+    @Expose
+    private Integer isAudioCallEnabled;
 
     public UserProperties getUserProperties() {
         return userProperties;
@@ -121,6 +130,14 @@ public class UserData {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getEnUserId() {
+        return enUserId;
+    }
+
+    public void setEnUserId(String enUserId) {
+        this.enUserId = enUserId;
     }
 
     public Integer getBusinessId() {
@@ -266,6 +283,27 @@ public class UserData {
     public void setAgentOnboardingComplete(Integer agentOnboardingComplete) {
         this.agentOnboardingComplete = agentOnboardingComplete;
     }
+    public boolean isVideoCallEnabled() {
+        try {
+            return isVideoCallEnabled == 1;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
+    public void setIsVideoCallEnabled(Integer isVideoCallEnabled) {
+        this.isVideoCallEnabled = isVideoCallEnabled;
+    }
+    public boolean isAudioCallEnabled() {
+        try {
+            return isAudioCallEnabled == 1;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void setisAudioCallEnabled(Integer isAudioCallEnabled) {
+        this.isAudioCallEnabled = isAudioCallEnabled;
+    }
 
 }

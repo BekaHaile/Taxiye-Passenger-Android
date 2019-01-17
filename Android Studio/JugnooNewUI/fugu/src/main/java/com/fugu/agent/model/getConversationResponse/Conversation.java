@@ -3,7 +3,6 @@ package com.fugu.agent.model.getConversationResponse;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,6 +81,39 @@ public class Conversation {
     @SerializedName("disable_reply")
     @Expose
     private Integer disableReply;
+    @SerializedName("message_state")
+    @Expose
+    private Integer messageState;
+    @SerializedName("message_type")
+    @Expose
+    private int message_type;
+    @SerializedName("call_type")
+    @Expose
+    private String callType;
+
+    public String getCallType() {
+        return callType;
+    }
+
+    public void setCallType(String callType) {
+        this.callType = callType;
+    }
+
+
+    public Integer getMessageState() {
+        return messageState;
+    }
+    public int getMessage_type() {
+        return message_type;
+    }
+
+    public void setMessage_type(int message_type) {
+        this.message_type = message_type;
+    }
+
+    public void setMessageState(Integer messageState) {
+        this.messageState = messageState;
+    }
 
     public boolean isDisableReply() {
         return disableReply != null && disableReply == 1;

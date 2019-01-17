@@ -12,14 +12,11 @@ import android.text.TextUtils;
 import com.fugu.BuildConfig;
 import com.fugu.FuguConfig;
 import com.fugu.activity.FuguChannelsActivity;
-import com.fugu.activity.FuguChannelsActivityNew;
 import com.fugu.activity.FuguChatActivity;
 import com.fugu.adapter.EventItem;
 import com.fugu.adapter.HeaderItem;
 import com.fugu.adapter.ListItem;
 import com.fugu.agent.AgentChatActivity;
-import com.fugu.agent.AgentConnectionManager;
-import com.fugu.agent.AgentListActivity;
 import com.fugu.agent.database.AgentCommonData;
 import com.fugu.agent.model.LoginModel.UserData;
 import com.fugu.constant.FuguAppConstant;
@@ -32,6 +29,7 @@ import com.fugu.retrofit.ResponseResolver;
 import com.fugu.retrofit.RestClient;
 import com.fugu.utils.DateUtils;
 import com.fugu.utils.FuguLog;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,23 +88,6 @@ public class FuguNetworkStateReceiver extends BroadcastReceiver implements FuguA
         } catch (Exception e) {
 
         }
-//        try {
-//            FuguChatActivity.changeStatus(status);
-//        } catch (Exception e) {
-//
-//        }
-//        try {
-//            AgentListActivity.changeStatus(status);
-//        } catch (Exception e) {
-//
-//        }
-//        try {
-//            AgentChatActivity.changeStatus(status);
-//        } catch (Exception e) {
-//
-//        }
-
-
         try {
             FuguLog.d("app", "Network connectivity change");
             if (intent.getExtras() != null) {
@@ -131,10 +112,10 @@ public class FuguNetworkStateReceiver extends BroadcastReceiver implements FuguA
                                 unsentMessageMap = CommonData.getUnsentMessageMap();
                                 UNSENT_MESSAGES = CommonData.getUnsentMessages();
                                 setUpFayeConnection();
+                                FuguLog.e(TAG, "1111 >>>>>> "+new Gson().toJson(unsentMessageMap));
                             }
                         }
                     }
-                    //AgentConnectionManager.getInstance().setNetworkStatus(true);
                 } else {
                     isEnabled = false;
                 }
@@ -160,7 +141,7 @@ public class FuguNetworkStateReceiver extends BroadcastReceiver implements FuguA
 
     @Override
     public void onConnectedServer(FayeClient fc) {
-        try {
+        /*try {
             if(AgentCommonData.isAgentFlow()) {
                 setAgentDateExpireDate();
             } else {
@@ -169,7 +150,7 @@ public class FuguNetworkStateReceiver extends BroadcastReceiver implements FuguA
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
@@ -188,71 +169,6 @@ public class FuguNetworkStateReceiver extends BroadcastReceiver implements FuguA
         } else {
             onMessageReceived(msg, channel);
         }
-
-        /*Long channelid = null;
-        channelid = Long.parseLong(channel.substring(1));
-        try {
-            final JSONObject messageJson = new JSONObject(msg);
-
-            if ((messageJson.has("message") && !messageJson.getString("message").isEmpty()) ||
-                    (messageJson.has("image_url") && !messageJson.getString("image_url").isEmpty())) {
-
-                String muid = messageJson.getString("muid");
-
-                Long currentChannelId = -1L;
-                if (AgentCommonData.isAgentFlow()) {
-                    currentChannelId = AgentChatActivity.currentChannelId;
-                } else {
-                    currentChannelId = FuguChatActivity.currentChannelId;
-                }
-
-                if (currentChannelId != channelid) {
-
-                    if (channelid != channelId && messageJson.optInt("message_type") == 10) {
-                        // TODO: 08/08/18 Update the particular channel
-                        return;
-                    }
-
-                    ListItem listItem = sendingMessagesList.get(messageJson.getString("muid"));
-                    ((EventItem) listItem).getEvent().setMessageStatus(MESSAGE_SENT);
-
-
-                    String time = ((EventItem) listItem).getEvent().getSentAtUtc();
-                    String localDate = DateUtils.getInstance().convertToLocal(time, inputFormat, outputFormat);
-                    if (!tempDate.equalsIgnoreCase(localDate)) {
-                        sentMessages.put(localDate, new HeaderItem(localDate));
-                        //fuguMessageList.add(new HeaderItem(localDate));
-                    }
-
-
-                    sentMessages.put(messageJson.getString("muid"), listItem);
-
-                    sendingMessages.remove(muid);
-                    if (AgentCommonData.isAgentFlow()) {
-                        AGENTUNSENT_MESSAGES.remove(muid);
-                    } else {
-                        UNSENT_MESSAGES.remove(muid);
-                    }
-                    unsentMessageMap.remove(muid);
-                    sendingMessages();
-                } else {
-                    if (sentMessages != null || sentMessages.size() > 0) {
-                        if (AgentCommonData.isAgentFlow()) {
-                            AgentCommonData.addExistingMessages(channelid, sentMessages);
-                        } else {
-                            CommonData.addExistingMessages(channelid, sentMessages);
-                        }
-                    }
-                    allUnsentMessageMap.remove(channelid);
-                    sendMessages();
-                }
-
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
     }
 
     private void onMessageReceived(String msg, String channel) {
@@ -362,6 +278,11 @@ public class FuguNetworkStateReceiver extends BroadcastReceiver implements FuguA
 
     }
 
+    @Override
+    public void onErrorReceived(FayeClient fc, String msg, String channel) {
+
+    }
+
     private void setAgentDateExpireDate() throws Exception {
         Long currentChannelId = 0l;
         currentChannelId = AgentChatActivity.currentChannelId;
@@ -420,12 +341,15 @@ public class FuguNetworkStateReceiver extends BroadcastReceiver implements FuguA
             if (currentChannelId.compareTo(channelId) != 0) {
                 LinkedHashMap<String, ListItem> unsentMessage = UNSENT_MESSAGES.get(channelId);
                 LinkedHashMap<String, JSONObject> unsentMessageObj = unsentMessageMap.get(channelId);
+                FuguLog.e(TAG, "1111 >>>>>> "+channelId);
+                FuguLog.e(TAG, "22222 >>>>>> "+new Gson().toJson(unsentMessage));
                 if (unsentMessageObj != null && unsentMessageObj.size() == 0) {
                     CommonData.removeUnsentMessageChannel(channelId);
                     CommonData.removeUnsentMessageMapChannel(channelId);
+                    FuguLog.e("************************", "!!!!!!!!!!!!!!!!!!!!!!!");
                     continue;
                 }
-                LinkedHashMap<String, JSONObject> unsentMessageMapNew = new LinkedHashMap<>();
+                //LinkedHashMap<String, JSONObject> unsentMessageMapNew = new LinkedHashMap<>();
                 for (String key : unsentMessage.keySet()) {
                     ListItem listItem = unsentMessage.get(key);
                     Message message = ((EventItem) listItem).getEvent();
@@ -435,41 +359,31 @@ public class FuguNetworkStateReceiver extends BroadcastReceiver implements FuguA
                     if (message.getMessageType() != IMAGE_MESSAGE && expireTimeCheck == 0 && DateUtils.getTimeDiff(time)) {
                         message.setIsMessageExpired(1);
                         try {
-                            JSONObject messageJson = unsentMessageMapNew.get(key);
+                            JSONObject messageJson = unsentMessageObj.get(key);
                             if(messageJson != null) {
                                 messageJson.put("is_message_expired", 1);
-                                unsentMessageMapNew.put(key, messageJson);
+                                unsentMessageObj.put(key, messageJson);
                             }
                         } catch (Exception e) {
                             //e.printStackTrace();
                         }
                     } else if(message.getMessageType() == IMAGE_MESSAGE) {
-                        JSONObject messageJson = unsentMessageMapNew.get(key);
+                        JSONObject messageJson = unsentMessageObj.get(key);
                         if(messageJson == null) {
                             message.setMessageStatus(MESSAGE_IMAGE_RETRY);
                         }
                     }
-                    /*if (expireTimeCheck == 0 && DateUtils.getTimeDiff(time)) {
-                        ((EventItem) listItem).getEvent().setIsMessageExpired(1);
-                        try {
-                            JSONObject messageJson = unsentMessageObj.get(key);
-                            messageJson.put("is_message_expired", 1);
-                            unsentMessageObj.put(key, messageJson);
-                        } catch (Exception e) {
-                            //e.printStackTrace();
-                        }
-                    } else {
-                        unsentMessageMapNew.put(key, unsentMessageObj.get(key));
-                    }*/
                 }
 
-                allUnsentMessageMap.put(channelId, unsentMessageMapNew);
+                allUnsentMessageMap.put(channelId, unsentMessageObj);
 
                 if (FuguChatActivity.currentChannelId.compareTo(channelId) != 0) {
                     UNSENT_MESSAGES.put(channelId, unsentMessage);
                     unsentMessageMap.put(channelId, unsentMessageObj);
                     CommonData.setUnsentMessageByChannel(channelId, unsentMessage);
                     CommonData.setUnsentMessageMapByChannel(channelId, unsentMessageObj);
+
+                    FuguLog.e(TAG, "3333 >>>>>> "+new Gson().toJson(unsentMessage));
                 }
             }
         }
@@ -543,6 +457,9 @@ public class FuguNetworkStateReceiver extends BroadcastReceiver implements FuguA
                             sendingMessages = allUnsentMessageMap.get(key);
                             sendingMessagesList = UNSENT_MESSAGES.get(key);
 
+                            FuguLog.e(TAG, "444444 >>>>>> "+new Gson().toJson(sendingMessages));
+                            FuguLog.e(TAG, "channelID >>>>>> "+key);
+
                             List<String> reverseOrderedKeys = new ArrayList<>(sentMessages.keySet());
                             Collections.reverse(reverseOrderedKeys);
                             for (String key1 : reverseOrderedKeys) {
@@ -607,6 +524,7 @@ public class FuguNetworkStateReceiver extends BroadcastReceiver implements FuguA
             allUnsentMessageMap.remove(channelId);
             mClient.unsubscribeChannel(String.valueOf(channelId));
             CommonData.removeUnsentMessageMapChannel(channelId);
+            FuguLog.e("************************", "!!!!!!!!!!!!!!!!!!!!!!!>>>> "+channelId);
             CommonData.removeUnsentMessageChannel(channelId);
             if (sentMessages != null && sentMessages.size() > 0) {
                 CommonData.addExistingMessages(channelId, sentMessages);
@@ -683,6 +601,7 @@ public class FuguNetworkStateReceiver extends BroadcastReceiver implements FuguA
                                     AgentCommonData.removeUnsentMessageMapChannel(channelId);
                                 } else {
                                     CommonData.removeUnsentMessageMapChannel(channelId);
+                                    FuguLog.e("************************", "!!!!!!!!!!!!!!!!!!!!!!!>>>>2222");
                                 }
 
                             } else {

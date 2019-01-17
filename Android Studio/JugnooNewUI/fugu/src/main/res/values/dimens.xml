@@ -33,6 +33,7 @@
     <dimen name="fugu_padding_12">12dp</dimen>
     <dimen name="fugu_padding_15">15dp</dimen>
     <dimen name="fugu_padding_20">20dp</dimen>
+    <dimen name="fugu_padding_35">35dp</dimen>
 
     <dimen name="fugu_size_20">20dp</dimen>
     <dimen name="fugu_size_70">70dp</dimen>
@@ -92,4 +93,7 @@
     <dimen name="fugu_margin_40">40dp</dimen>
     <dimen name="fugu_text_size_14">14sp</dimen>
     <dimen name="fugu_margin_half">0.5dp</dimen>
+    <dimen name="fugu_margin_1">1dp</dimen>
+    <dimen name="rippleStrokeWidth">2dp</dimen>
+    <dimen name="rippleRadius">64dp</dimen>
 </resources>

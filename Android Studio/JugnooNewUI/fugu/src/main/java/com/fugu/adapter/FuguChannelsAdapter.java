@@ -22,6 +22,7 @@ import com.fugu.FuguColorConfig;
 import com.fugu.FuguConfig;
 import com.fugu.FuguFontConfig;
 import com.fugu.R;
+import com.fugu.constant.FuguAppConstant;
 import com.fugu.database.CommonData;
 import com.fugu.datastructure.ChannelStatus;
 import com.fugu.model.FuguConversation;
@@ -35,6 +36,7 @@ import static com.fugu.constant.FuguAppConstant.IMAGE_MESSAGE;
 import static com.fugu.constant.FuguAppConstant.MESSAGE_IMAGE_RETRY;
 import static com.fugu.constant.FuguAppConstant.MESSAGE_READ;
 import static com.fugu.constant.FuguAppConstant.MESSAGE_UNSENT;
+import static com.fugu.constant.FuguAppConstant.VIDEO_CALL;
 
 /**
  * Created by Bhavya Rattan on 08/05/17
@@ -88,7 +90,10 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             channelViewHolder.tvChannelName.setTextColor(fuguColorConfig.getFuguTextColorPrimary());
             channelViewHolder.tvMessage.setTextColor(fuguColorConfig.getFuguTextColorPrimary());
             channelViewHolder.viewDivider.setBackgroundColor(fuguColorConfig.getFuguBorderColor());
-            if (TextUtils.isEmpty(currentChannelItem.getMessage())) {
+            if(currentChannelItem.getMessage_type() == VIDEO_CALL) {
+                channelViewHolder.ivMessageState.setVisibility(View.GONE);
+                channelViewHolder.tvMessage.setText(getMessageData(currentChannelItem));
+            } else if (TextUtils.isEmpty(currentChannelItem.getMessage())) {
                 if (!TextUtils.isEmpty(currentChannelItem.getLast_sent_by_full_name())) {
                     if (currentChannelItem.getUserId().equals(FuguConfig.getInstance().getUserData().getUserId())) {
                         if (FuguConfig.getInstance().getUserData().getUserId().compareTo(currentChannelItem.getLast_sent_by_id()) == 0) {
@@ -327,5 +332,26 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public interface Callback {
         void onClick(FuguConversation conversation);
     }
+
+    private String getMessageData(FuguConversation currentChannelItem) {
+        String message = "The video call ended";
+        String callType = "video";
+        if(!TextUtils.isEmpty(currentChannelItem.getCallType()) && currentChannelItem.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString())) {
+            callType = "voice";
+        }
+        if(currentChannelItem.getMessageState() != null && currentChannelItem.getMessageState().intValue() == 2) {
+            if (currentChannelItem.getLast_sent_by_id().equals(FuguConfig.getInstance().getUserData().getUserId())) {
+                message = "Customer missed a " + callType + " call with you";
+            } else {
+                message = "You missed a " + callType + " call with "+currentChannelItem.getLast_sent_by_full_name();
+            }
+        } else {
+            message = "The " + callType + " call ended";
+        }
+
+        return message;
+    }
+
+
 }
 

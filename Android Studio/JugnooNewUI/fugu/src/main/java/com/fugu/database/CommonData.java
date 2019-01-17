@@ -73,6 +73,7 @@ public final class CommonData implements PaperDbConstant {
     public static HashMap<Long, LinkedHashMap<String, ListItem>> SENT_MESSAGES = new HashMap<>();
     public static HashMap<Long, LinkedHashMap<String, ListItem>> UNSENT_MESSAGES = new HashMap<>();
 
+
     /**
      * Empty Constructor
      * not called
@@ -721,4 +722,62 @@ public final class CommonData implements PaperDbConstant {
         return SENT_MESSAGES;
     }
     //Sent messages ended
+
+
+    public static String getCallStatus() {
+        return Paper.book().read(PAPER_CALL_STATUS);
+    }
+
+    public static void setCallStatus(String callStatus) {
+        Paper.book().write(PAPER_CALL_STATUS, callStatus);
+    }
+
+    public static String getCallType() {
+        return Paper.book().read(PAPER_CALL_TYPE);
+    }
+
+    public static void setCallType(String callType) {
+        Paper.book().write(PAPER_CALL_TYPE, callType);
+    }
+
+    public static boolean getVideoCallStatus() {
+        try {
+            return getUserDetails().getData().isVideoCallEnabled();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean getAudioCallStatus() {
+        try {
+            return getUserDetails().getData().isAudioCallEnabled();
+        } catch (java.lang.Exception e) {
+            return false;
+        }
+    }
+
+    //public HashMap<Long, FuguGetMessageResponse> agentNameData = new HashMap<>();
+
+    public static HashMap<Long, FuguGetMessageResponse> getAgentData() {
+        return Paper.book().read("agent_name_data", new HashMap<Long, FuguGetMessageResponse>());
+    }
+
+    public static FuguGetMessageResponse getSingleAgentData(Long channelId) {
+        HashMap<Long, FuguGetMessageResponse> agentNameData = getAgentData();
+        return agentNameData.get(channelId);
+    }
+
+    public static void saveVideoCallAgent(Long channelId, FuguGetMessageResponse agentName) {
+        HashMap<Long, FuguGetMessageResponse> agentNameData = getAgentData();
+        agentNameData.put(channelId, agentName);
+        Paper.book().write("agent_name_data", agentNameData);
+    }
+
+    public static void setCallAnswered(boolean b) {
+        Paper.book().write("hippo_call_answer", b);
+    }
+
+    public static boolean isCallAnswered() {
+        return Paper.book().read("hippo_call_answer", false);
+    }
 }

@@ -26,6 +26,27 @@
             android:paddingLeft="@dimen/fugu_margin_10">
 
             <ImageView
+                android:id="@+id/ivVideoView"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/fugu_margin_10"
+                android:padding="@dimen/fugu_margin_5"
+                android:src="@drawable/hippo_ic_videocam"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/ivAudioView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/fugu_margin_10"
+                android:padding="@dimen/fugu_margin_5"
+                android:src="@drawable/hippo_ic_call_black"
+                android:visibility="gone" />
+
+            <ImageView
                 android:id="@+id/ivViewInfo"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
@@ -45,7 +66,6 @@
                 android:src="@drawable/hippo_ic_info"
                 android:visibility="gone" />
 
-
         </LinearLayout>
 
         <LinearLayout
@@ -64,8 +84,6 @@
                 android:textSize="@dimen/fugu_text_size_very_large" />
 
         </LinearLayout>
-
     </RelativeLayout>
-
 
 </android.support.v7.widget.Toolbar>

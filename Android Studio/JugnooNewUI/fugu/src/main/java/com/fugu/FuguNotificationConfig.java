@@ -38,7 +38,6 @@ import com.fugu.service.FuguPushIntentService;
 import com.fugu.utils.DateUtils;
 import com.fugu.utils.FuguLog;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -160,11 +159,20 @@ public class FuguNotificationConfig implements FuguAppConstant {
     }
 
     private void showAgentNotification(final Context context, final Map<String, String> data) {
-        FuguLog.e(TAG, "Init time: "+new Date());
+        FuguLog.e(TAG, "Init time: " + new Date());
         Paper.init(context);
         try {
             JSONObject messageJson = new JSONObject(data.get("message"));
-            FuguLog.e(TAG, "Push message: "+data.get("message"));
+            FuguLog.e(TAG, "Push message: " + data.get("message"));
+
+            try {
+                if(messageJson.optInt("notification_type") == 14) {
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             Intent mIntent = new Intent(NOTIFICATION_INTENT);
             Bundle dataBundle = new Bundle();
             for (String key : data.keySet()) {
@@ -194,7 +202,7 @@ public class FuguNotificationConfig implements FuguAppConstant {
                 mBundle.putString(key, data.get(key));
             }
             notificationIntent.putExtra("data", mBundle);
-            if(CommonData.getPushFlags() != -1)
+            if (CommonData.getPushFlags() != -1)
                 notificationIntent.setFlags(CommonData.getPushFlags());
             PendingIntent pi = PendingIntent.getService(context, channelId.intValue()
                     , notificationIntent, 0);
@@ -219,15 +227,15 @@ public class FuguNotificationConfig implements FuguAppConstant {
 
             String dateTime = messageJson.optString("date_time", "");
 
-            String channelOneId = CHANNEL_ONE_ID +"."+ channelId;
-            String channelOneName = CHANNEL_ONE_NAME +""+channelId;
+            String channelOneId = CHANNEL_ONE_ID + "." + channelId;
+            String channelOneName = CHANNEL_ONE_NAME + "" + channelId;
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelOneId);
             builder.setAutoCancel(true);
             builder.setContentTitle(messageJson.getString("title"));
             builder.setContentIntent(pi);
             builder.setDefaults(Notification.DEFAULT_SOUND);
             builder.setStyle(new NotificationCompat.BigTextStyle().bigText(messageJson.getString("new_message")));
-            if(!TextUtils.isEmpty(dateTime))
+            if (!TextUtils.isEmpty(dateTime))
                 builder.setWhen(getTimeMilliSec(DateUtils.getInstance().convertToLocal(dateTime)));
 
             builder.setSmallIcon(smallIcon == -1 ? R.drawable.hippo_default_notif_icon : smallIcon);
@@ -305,7 +313,7 @@ public class FuguNotificationConfig implements FuguAppConstant {
                 notificationManager.createNotificationChannel(notificationChannel);
             }
         }
-        FuguLog.e(TAG, "Creation at: "+new Date());
+        FuguLog.e(TAG, "Creation at: " + new Date());
     }
 
     /**
@@ -318,6 +326,14 @@ public class FuguNotificationConfig implements FuguAppConstant {
             CommonData.setNotificationFirstClick(true);
         try {
             JSONObject messageJson = new JSONObject(data.get("message"));
+
+            try {
+                if(messageJson.optInt("notification_type") == 14) {
+                    return;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             Intent mIntent = new Intent(NOTIFICATION_INTENT);
             Bundle dataBundle = new Bundle();
@@ -352,7 +368,7 @@ public class FuguNotificationConfig implements FuguAppConstant {
 
             if (pushChannelId != null && channelId > 0 && pushChannelId.compareTo(channelId) == 0) {
                 return;
-            } else if(pushLabelId != null && labelId > 0 && pushLabelId.compareTo(labelId) == 0) {
+            } else if (pushLabelId != null && labelId > 0 && pushLabelId.compareTo(labelId) == 0) {
                 return;
             }
 
@@ -369,7 +385,7 @@ public class FuguNotificationConfig implements FuguAppConstant {
                 mBundle.putString(key, data.get(key));
             }
             notificationIntent.putExtra("data", mBundle);
-            if(CommonData.getPushFlags() != -1)
+            if (CommonData.getPushFlags() != -1)
                 notificationIntent.setFlags(CommonData.getPushFlags());
             PendingIntent pi = PendingIntent.getService(context, (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE)
                     , notificationIntent, 0);
@@ -422,8 +438,8 @@ public class FuguNotificationConfig implements FuguAppConstant {
                             e.printStackTrace();
                         }
                     }*/
-                    if((messageJson.has("channel_id") && FuguNotificationConfig.pushChannelId.compareTo(messageJson.getLong("channel_id")) != 0)
-                        || (messageJson.has("label_id") && FuguNotificationConfig.pushLabelId.compareTo(messageJson.getLong("label_id")) != 0)) {
+                    if ((messageJson.has("channel_id") && FuguNotificationConfig.pushChannelId.compareTo(messageJson.getLong("channel_id")) != 0)
+                            || (messageJson.has("label_id") && FuguNotificationConfig.pushLabelId.compareTo(messageJson.getLong("label_id")) != 0)) {
                         try {
                             final long channelid = channelId;
                             final long labelid = labelId;
@@ -466,13 +482,13 @@ public class FuguNotificationConfig implements FuguAppConstant {
             if (!FuguConfig.getInstance().isChannelActivity()) {
                 ArrayList<UnreadCountModel> unreadCountModels;
                 int index = -1;
-                if(channelId > 0) {
+                if (channelId > 0) {
                     index = CommonData.getUnreadCountModel().indexOf(new UnreadCountModel(channelId));
-                } else if(labelId > 0) {
-                    if(CommonData.getUnreadCountModel() != null) {
+                } else if (labelId > 0) {
+                    if (CommonData.getUnreadCountModel() != null) {
                         ArrayList<UnreadCountModel> unreadCountModel = CommonData.getUnreadCountModel();
-                        for(int i=0;i<unreadCountModel.size();i++) {
-                            if(unreadCountModel.get(i).getLabelId().compareTo(labelId) == 0) {
+                        for (int i = 0; i < unreadCountModel.size(); i++) {
+                            if (unreadCountModel.get(i).getLabelId().compareTo(labelId) == 0) {
                                 index = i;
                                 break;
                             }
@@ -518,8 +534,8 @@ public class FuguNotificationConfig implements FuguAppConstant {
     // Clears notification tray messages
     public static void clearNotifications(Context context, ArrayList<Integer> ids) {
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if(ids != null && ids.size()>0) {
-            for(Integer integer : ids) {
+        if (ids != null && ids.size() > 0) {
+            for (Integer integer : ids) {
                 notificationManager.cancel(integer);
             }
         }
@@ -566,5 +582,6 @@ public class FuguNotificationConfig implements FuguAppConstant {
             }
         }).start();
     }
+
 
 }

@@ -26,5 +26,9 @@ public interface PaperDbConstant {
     String PAPER_UNSENT_MESSAGES = "hippo_unsent_messages";
     String PAPER_SENT_MESSAGES = "hippo_sent_messages";
     String PAPER_NOTIFICATION = "hippo_sdk_notifications";
+
+    String PAPER_CALL_STATUS = "hippo_call_status";
+    String PAPER_VIDEO_CALL = "hippo_video_call_cred";
+    String PAPER_CALL_TYPE = "hippo_call_type";
     String PAPER_FONT_CONFIG = "fugu_font_config";
 }

@@ -22,6 +22,10 @@ public class EventItem extends ListItem {
     public int getType() {
         if(event.getMessageType() == ASSIGNMENT_MESSAGE)
             return ITEM_ASSIGNMENT;
+        else if(event.getMessageType() == 18)
+            return 18;
+        else if(event.getMessageType() == 19)
+            return 19;
         else if (event.isSelf())
             return ITEM_TYPE_SELF;
         else if(event.getUserType() == 0 || event.getUserType() == 2)

@@ -138,6 +138,26 @@ public class Message {
     @SerializedName("id")
     @Expose
     private String id;
+    @SerializedName("video_call_duration")
+    @Expose
+    private int videoCallDuration;
+    @SerializedName("message_state")
+    @Expose
+    private Integer messageState;
+
+    @SerializedName("call_type")
+    @Expose
+    private String callType;
+
+    public String getCallType() {
+        return callType;
+    }
+
+    public void setCallType(String callType) {
+        this.callType = callType;
+    }
+
+
     private int isMessageExpired = 0;
     private String localImagePath;
 
@@ -249,6 +269,22 @@ public class Message {
 
     public void setLineAfterFeedback_2(String lineAfterFeedback_2) {
         this.lineAfterFeedback_2 = lineAfterFeedback_2;
+    }
+
+    public int getVideoCallDuration() {
+        return videoCallDuration;
+    }
+
+    public void setVideoCallDuration(int videoCallDuration) {
+        this.videoCallDuration = videoCallDuration;
+    }
+
+    public Integer getMessageState() {
+        return messageState;
+    }
+
+    public void setMessageState(Integer messageState) {
+        this.messageState = messageState;
     }
 
     public void setTaggedUsers(ArrayList<Integer> taggedUsers) {

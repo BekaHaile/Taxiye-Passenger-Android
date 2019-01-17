@@ -20,14 +20,14 @@ public class FuguAgentGetMessageParams {
     @SerializedName(FuguAppConstant.CHANNEL_ID)
     @Expose
     private Integer channelId;
-    @SerializedName(FuguAppConstant.USER_ID)
+    @SerializedName(FuguAppConstant.EN_USER_ID)
     @Expose
-    private Integer userId;
+    private String userId;
     @SerializedName(FuguAppConstant.PAGE_END)
     @Expose
     private Integer pageEnd;
 
-    public FuguAgentGetMessageParams(String appSecretKey, Integer channelId, Integer userId, Integer pageStart){
+    public FuguAgentGetMessageParams(String appSecretKey, Integer channelId, String userId, Integer pageStart){
         this.appSecretKey = appSecretKey;
         this.channelId = channelId;
         this.userId = userId;

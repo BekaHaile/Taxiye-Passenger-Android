@@ -1,14 +1,9 @@
 package com.fugu;
 
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
-import android.os.Build;
-import android.support.v4.content.ContextCompat;
-
-import com.fugu.activity.FuguBaseActivity;
 
 /**
  * Created by bhavya on 01/08/17.
@@ -166,6 +161,13 @@ public class FuguColorConfig {
         return Color.parseColor(fuguConnected);
     }
 
+    public int getFuguVideoCallBg() {
+        return Color.parseColor(fuguVideoCallBg);
+    }
+
+    public int getFuguAudioCallBg() {
+        return Color.parseColor(fuguAudioCallBg);
+    }
 
     private String fuguActionBarBg = "#627de3";
     private String fuguActionBarText = "#ffffff";
@@ -207,9 +209,21 @@ public class FuguColorConfig {
 //    private String fuguConnecting = "#FFA500";
     private String fuguNotConnected = "#FF0000";
     private String fuguConnected = "#00AA00";
+    private String fuguVideoCallBg = "#FFFFFF";
+    private String fuguAudioCallBg = "#FFFFFF";
 
     public static class Builder {
         private FuguColorConfig fuguColorConfig = new FuguColorConfig();
+
+        public Builder fuguVideoCallBg(String fuguVideoCallBg) {
+            fuguColorConfig.fuguVideoCallBg = fuguVideoCallBg;
+            return this;
+        }
+
+        public Builder fuguAudioCallBg(String fuguAudioCallBg) {
+            fuguColorConfig.fuguAudioCallBg = fuguAudioCallBg;
+            return this;
+        }
 
         public Builder fuguActionBarBg(String fuguActionBarBg) {
             fuguColorConfig.fuguActionBarBg = fuguActionBarBg;

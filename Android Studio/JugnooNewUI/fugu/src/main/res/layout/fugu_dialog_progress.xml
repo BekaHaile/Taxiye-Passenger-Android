@@ -36,7 +36,7 @@
         android:layout_below="@id/progress_wheel"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/fugu_margin_30"
-        android:text="@string/loading"
+        android:text="Loading..."
         android:textColor="@android:color/white"
         android:textSize="@dimen/fugu_text_size_large" />
 

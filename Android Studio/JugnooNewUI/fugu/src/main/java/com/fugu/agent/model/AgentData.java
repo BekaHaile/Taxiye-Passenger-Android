@@ -170,7 +170,32 @@ public class AgentData {
     @SerializedName("line_after_feedback_2")
     @Expose
     String lineAfterFeedback_2;
+    @SerializedName("allow_video_call")
+    @Expose
+    private Integer allowVideoCall;
+    @SerializedName("allow_audio_call")
+    @Expose
+    private Integer allowAudioCall;
 
+    public boolean isAllowAudioCall() {
+        try {
+            return allowAudioCall == 1;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void setAllowAudioCall(Integer allowAudioCall) {
+        this.allowAudioCall = allowAudioCall;
+    }
+
+    public boolean isAllowVideoCall() {
+        try {
+            return allowVideoCall == 1;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     public ArrayList<Message> getMessages() {
         return messages;
     }

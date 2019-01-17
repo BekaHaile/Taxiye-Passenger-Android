@@ -143,7 +143,7 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
     private ProgressBar pbPeerChat;
     private FuguGetMessageResponse mFuguGetMessageResponse;
 
-
+    private String AgentName = "";
     private String sentAtUTC = "";
     private Long channelId = -1L;
     public static Long currentChannelId = -1L;
@@ -196,6 +196,7 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
     private ProgressWheel progressWheel;
     private int messageIndex = -1;
     private FuguStringConfig stringConfig;
+    private ImageView ivVideoView, ivAudioView;
 
 
     @Override
@@ -289,6 +290,22 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
         btnRetry = findViewById(R.id.btnRetry);
         retryLayout = findViewById(R.id.retry_layout);
         progressWheel = findViewById(R.id.retry_loader);
+        ivVideoView = findViewById(R.id.ivVideoView);
+        ivAudioView = findViewById(R.id.ivAudioView);
+
+        ivAudioView.setImageResource(FuguConfig.getInstance().getAudioCallDrawableId() == -1
+                ? R.drawable.hippo_ic_call_black : FuguConfig.getInstance().getAudioCallDrawableId());
+        if(FuguConfig.getInstance().getAudioCallDrawableId() == -1) {
+            ivAudioView.getDrawable().setColorFilter(fuguColorConfig.getFuguAudioCallBg(), PorterDuff.Mode.SRC_IN);
+        }
+        ivAudioView.setVisibility(View.GONE);
+
+        ivVideoView.setImageResource(FuguConfig.getInstance().getVideoCallDrawableId() == -1
+                ? R.drawable.hippo_ic_videocam : FuguConfig.getInstance().getVideoCallDrawableId());
+        if(FuguConfig.getInstance().getVideoCallDrawableId() == -1) {
+            ivVideoView.getDrawable().setColorFilter(fuguColorConfig.getFuguVideoCallBg(), PorterDuff.Mode.SRC_IN);
+        }
+        ivVideoView.setVisibility(View.GONE);
         configColors();
         /*if (!isNetworkAvailable()) {
             llInternet.setVisibility(View.VISIBLE);
@@ -416,12 +433,18 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
         }
         setToolbar(myToolbar, label);
 
+        mFuguGetMessageResponse = CommonData.getSingleAgentData(channelId);
+
     }
 
     private void setRecyclerViewData1() {
         rvMessages = (RecyclerView) findViewById(R.id.rvMessages);
         fuguMessageAdapter = new FuguMessageAdapter(FuguChatActivity.this, fuguMessageList,
                 labelId, conversation, this, this, getSupportFragmentManager());
+        if(mFuguGetMessageResponse != null) {
+            setAgentName();
+        }
+
         layoutManager = new CustomLinearLayoutManager(FuguChatActivity.this);
         layoutManager.setStackFromEnd(true);
         rvMessages.setHasFixedSize(false);
@@ -1309,6 +1332,13 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                     }
                 }
             }
+        } else if(v.getId() == R.id.ivVideoView) {
+//            if(CommonData.getVideoCallStatus())
+//                videoCallInit(VIDEO_CALL_VIEW);
+//            else
+//                Toast.makeText(FuguChatActivity.this, "This feature not supported", Toast.LENGTH_SHORT).show();
+        } else if(v.getId() == R.id.ivAudioView) {
+            //videoCallInit(AUDIO_CALL_VIEW);
         } else if (v.getId() == R.id.ivAttachment) {
             if (isNetworkAvailable()) {
                 selectImage();
@@ -1599,6 +1629,10 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                     }
 
                     mFuguGetMessageResponse = fuguGetMessageResponse;
+
+                    if(mFuguGetMessageResponse != null && mFuguGetMessageResponse.getData() != null && mFuguGetMessageResponse.getData().getChannelId() != null)
+                        CommonData.saveVideoCallAgent(mFuguGetMessageResponse.getData().getChannelId(), mFuguGetMessageResponse);
+
 //                    if(!isFromOnResume)
 //                        LoadingBox.showOn(FuguChatActivity.this);
                     FuguLog.e("size of list--->", fuguGetMessageResponse.getData().getMessages().size() + "");
@@ -1675,6 +1709,10 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                                 message.setCustomAction(messageObj.getCustomAction());
                             }
 
+                            if(!TextUtils.isEmpty(messageObj.getCallType())) {
+                                message.setCallType(messageObj.getCallType());
+                            }
+
                             if (messageObj.getMessageType() == FILE_MESSAGE) {
                                 message.setFileExtension(messageObj.getFileExtension());
                                 message.setFileName(messageObj.getFileName());
@@ -1699,6 +1737,9 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                                 message.setValues(messageObj.getValues());
                                 message.setId(messageObj.getId());
                             }
+
+                            message.setVideoCallDuration(messageObj.getVideoCallDuration());
+                            message.setMessageState(messageObj.getMessageState());
 
                             tempMessages.put(muid, new EventItem(message));
                             tempSentMessages.remove(muid);
@@ -1797,6 +1838,24 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                         if (conversation.getUnreadCount() > 0) {
                             rvMessages.setAlpha(0);
                         }
+
+                        if(CommonData.getVideoCallStatus() && fuguGetMessageResponse.getData() != null) {
+                            if((fuguGetMessageResponse.getData().isAllowVideoCall() && fuguGetMessageResponse.getData().getAgentId() != null && fuguGetMessageResponse.getData().getAgentId().intValue() > 0)
+                                && (fuguGetMessageResponse.getData().isAllowVideoCall()))
+                                ivVideoView.setVisibility(View.VISIBLE);
+                        } else {
+                            ivVideoView.setVisibility(View.GONE);
+                        }
+
+                        if(CommonData.getAudioCallStatus() && fuguGetMessageResponse.getData() != null) {
+                            if((fuguGetMessageResponse.getData().isAllowAudioCall() && fuguGetMessageResponse.getData().getAgentId() != null && fuguGetMessageResponse.getData().getAgentId().intValue() > 0)
+                                    && (fuguGetMessageResponse.getData().isAllowAudioCall()))
+                                ivAudioView.setVisibility(View.VISIBLE);
+                        } else {
+                            ivAudioView.setVisibility(View.GONE);
+                        }
+
+                        setAgentName();
                         if (pageStart == 1) {
                             showLoading = false;
                             sentAtUTC = tempSentAtUtc;
@@ -1862,6 +1921,29 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
         }
     }
 
+    private void setAgentName() {
+        String agentName = "";
+
+        if(mFuguGetMessageResponse != null && mFuguGetMessageResponse.getData() !=null &&
+                !TextUtils.isEmpty(mFuguGetMessageResponse.getData().getAgentName())) {
+            agentName = mFuguGetMessageResponse.getData().getAgentName();
+        }
+        if(mFuguGetMessageResponse != null && mFuguGetMessageResponse.getData() != null && mFuguGetMessageResponse.getData().getOtherUsers() != null
+                && mFuguGetMessageResponse.getData().getOtherUsers().size()>0) {
+            agentName = mFuguGetMessageResponse.getData().getOtherUsers().get(0).getFullName();
+        }
+
+        //fullname = agentName;
+        if(fuguMessageAdapter != null) {
+            fuguMessageAdapter.setAgentName(agentName);
+            if(mFuguGetMessageResponse != null && mFuguGetMessageResponse.getData() !=null &&
+                    mFuguGetMessageResponse.getData().getAgentId() != null && mFuguGetMessageResponse.getData().getAgentId().intValue() > 0) {
+                fuguMessageAdapter.isAudioCallEnabled(mFuguGetMessageResponse.getData().isAllowAudioCall());
+                fuguMessageAdapter.isVideoCallEnabled(mFuguGetMessageResponse.getData().isAllowVideoCall());
+            }
+        }
+    }
+
     private void getByLabelId() {
         if (isNetworkAvailable()) {
             CommonData.clearQuickReplyData();
@@ -1886,6 +1968,8 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                                     fuguMessageList.clear();
                                     dateItemCount = 0;
                                 }
+
+                                mFuguGetMessageResponse = fuguGetMessageResponse;
                                 if (!TextUtils.isEmpty(fuguGetMessageResponse.getData().getLabel())) {
                                     label = fuguGetMessageResponse.getData().getLabel();
                                 } else if (!TextUtils.isEmpty(conversation.getLabel())) {
@@ -1895,6 +1979,15 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                                 setToolbar(myToolbar, label);
                                 if (fuguGetMessageResponse.getData().isDisableReply()) {
                                     llMessageLayout.setVisibility(View.GONE);
+                                }
+
+                                if(CommonData.getVideoCallStatus() && fuguGetMessageResponse.getData() != null
+                                        && fuguGetMessageResponse.getData().isAllowVideoCall()
+                                        && fuguGetMessageResponse.getData().getAgentId() != null
+                                        && fuguGetMessageResponse.getData().getAgentId().intValue() > 0){
+                                        ivVideoView.setVisibility(View.VISIBLE);
+                                } else {
+                                    ivVideoView.setVisibility(View.GONE);
                                 }
 
                                 if (fuguGetMessageResponse.getData() != null && fuguGetMessageResponse.getData().getMessages() != null) {
@@ -1962,7 +2055,9 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                                         if (messageObj.getCustomAction() != null) {
                                             message.setCustomAction(messageObj.getCustomAction());
                                         }
-
+                                        if(!TextUtils.isEmpty(messageObj.getCallType())) {
+                                            message.setCallType(messageObj.getCallType());
+                                        }
                                         if (messageObj.getMessageType() == FILE_MESSAGE) {
                                             message.setFileExtension(messageObj.getFileExtension());
                                             message.setFileName(messageObj.getFileName());
@@ -1986,6 +2081,13 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                                             message.setContentValue(messageObj.getContentValue());
                                             message.setValues(messageObj.getValues());
                                             message.setId(messageObj.getId());
+                                        }
+
+                                        try {
+                                            message.setMessageState(messageObj.getMessageState());
+                                            message.setVideoCallDuration(messageObj.getVideoCallDuration());
+                                        } catch (Exception e) {
+
                                         }
 
                                         tempMessages.put(muid, new EventItem(message));
@@ -2223,6 +2325,46 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
             }
         });
 
+        fuguMessageAdapter.setOnVideoCallListener(new FuguMessageAdapter.onVideoCall() {
+            @Override
+            public void onVideoCallClicked(int callType) {
+                //videoCallInit(callType);
+//                if(mFuguGetMessageResponse != null && mFuguGetMessageResponse.getData() != null
+//                        && !mFuguGetMessageResponse.getData().isAllowVideoCall()) {
+//                    Toast.makeText(FuguChatActivity.this, "", Toast.LENGTH_SHORT).show();
+//                } else
+//                    {
+                    //if (CommonData.getVideoCallStatus() && isAllowVideoCall())
+                        //videoCallInit();
+//                }
+            }
+        });
+
+
+
+        String agentName = "";
+        if(mFuguGetMessageResponse != null && mFuguGetMessageResponse.getData() !=null &&
+                !TextUtils.isEmpty(mFuguGetMessageResponse.getData().getAgentName())) {
+            agentName = mFuguGetMessageResponse.getData().getAgentName();
+        }
+        if(mFuguGetMessageResponse != null && mFuguGetMessageResponse.getData() != null && mFuguGetMessageResponse.getData().getOtherUsers() != null
+                && mFuguGetMessageResponse.getData().getOtherUsers().size()>0) {
+            agentName = mFuguGetMessageResponse.getData().getOtherUsers().get(0).getFullName();
+        }
+
+        if(fuguMessageAdapter != null)
+            fuguMessageAdapter.setAgentName(agentName);
+    }
+
+    private boolean isAllowVideoCall() {
+        try {
+            if(mFuguGetMessageResponse != null && mFuguGetMessageResponse.getData().isAllowVideoCall())
+                return true;
+            else
+                return false;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
@@ -2756,7 +2898,39 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                     isFayeChannelActive = true;
                     readFunctionality(messageJson);
                 }
-                if (messageJson.optInt(IS_TYPING, 0) == TYPING_SHOW_MESSAGE &&
+                if(messageJson.optInt(IS_TYPING, 0) == TYPING_SHOW_MESSAGE &&
+                        messageJson.getInt(MESSAGE_TYPE) == VIDEO_CALL && messageJson.has("muid")) {
+
+                    /*String localDate = dateUtils.convertToLocal(messageJson.getString("date_time"), inputFormat, outputFormat);
+                    if (!sentAtUTC.equalsIgnoreCase(localDate)) {
+                        sentMessages.put(localDate, new HeaderItem(localDate));
+                        fuguMessageList.add(new HeaderItem(localDate));
+                        sentAtUTC = localDate;
+                        dateItemCount = dateItemCount + 1;
+                    }
+
+                    Message message = new Message(0, messageJson.getString(FULL_NAME),
+                            Long.parseLong(messageJson.getString(USER_ID)),
+                            messageJson.optString(MESSAGE),
+                            messageJson.optString(DATE_TIME),
+                            isSelf,
+                            onSubscribe == 1 ? MESSAGE_READ : MESSAGE_SENT,
+                            fuguMessageList.size(),
+                            "",
+                            messageJson.has("thumbnail_url") ? messageJson.getString("thumbnail_url") : "",
+                            messageJson.getInt(MESSAGE_TYPE),
+                            messageJson.optString("muid", ""));
+
+                    message.setMuid(messageJson.optString("muid", ""));
+
+                    if(!sentMessages.containsValue(messageJson.optString("muid", ""))) {
+                        fuguMessageList.add(new EventItem(message));
+                        sentMessages.put(messageJson.optString("muid", ""), new EventItem(message));
+                        pageStart = pageStart + 1;
+                    }*/
+
+                    //12345
+                } else if (messageJson.optInt(IS_TYPING, 0) == TYPING_SHOW_MESSAGE &&
                         (!messageJson.getString(MESSAGE).isEmpty() ||
                                 (messageJson.has("image_url") && !messageJson.getString("image_url").isEmpty()) ||
                                 (messageJson.has("url") && !messageJson.getString("url").isEmpty()) || messageJson.has(CUSTOM_ACTION))
@@ -2788,7 +2962,8 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                                             .getEvent().setMessageStatus(MESSAGE_SENT);
                                 }
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                if(FuguConfig.DEBUG)
+                                    e.printStackTrace();
 
                                 try {
                                     for(int i = fuguMessageList.size()-1; i>=0; i--) {
@@ -2817,7 +2992,8 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                                         }
                                     }
                                 } catch (Exception e1) {
-                                    e1.printStackTrace();
+                                    if(FuguConfig.DEBUG)
+                                        e1.printStackTrace();
                                 }
 
 
@@ -3018,6 +3194,12 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                             message.setLineAfterFeedback_2(messageJson.getString("line_after_feedback_2"));
                         }
 
+                        try {
+                            message.setMessageState(messageJson.optInt("message_state"));
+                            message.setVideoCallDuration(messageJson.optInt("video_call_duration"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
                         //fuguMessageList.add(new EventItem(message));
                         if(!sentMessages.containsValue(messageJson.optString("muid", ""))) {
@@ -3472,7 +3654,8 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
             isFirstTimeDisconnected = false;
 
         } catch (Exception e) {
-
+            if(FuguConfig.DEBUG)
+                e.printStackTrace();
         }
     }
 
@@ -3508,8 +3691,14 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
             setConnectionMessage(2);
 
         } catch (Exception e) {
-
+            if(FuguConfig.DEBUG)
+                e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onErrorReceived(FayeClient fc, String msg, String channel) {
+
     }
 
     Runnable runnable = new Runnable() {
@@ -3561,12 +3750,20 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
     private void uploadFileServerCall(String file, String fileType, final int messageIndex, final String muid) {
         try {
             if (isNetworkAvailable()) {
+                //File file1;
+                /*try {
+                    file1 = new Compressor(this).compressToFile(new File(file));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    file1 = new File(file);
+                }*/
                 MultipartParams.Builder multipartBuilder = new MultipartParams.Builder();
                 MultipartParams multipartParams = multipartBuilder
                         .add(APP_SECRET_KEY, FuguConfig.getInstance().getAppKey())
                         .add(APP_VERSION, BuildConfig.VERSION_NAME)
                         .add(DEVICE_TYPE, 1)
-                        .addFile("file", new File(file)).build();
+                        .addFile("file", new File(file))
+                        .build();
 
                 FuguLog.v("map = ", multipartParams.getMap().toString());
                 FuguLog.v("app_secret_key", "---> " + FuguConfig.getInstance().getAppKey());
@@ -3705,5 +3902,4 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
             e.printStackTrace();
         }
     }
-
 }

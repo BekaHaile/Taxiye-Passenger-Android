@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#343434"
+    android:orientation="horizontal"
+    >
+
+
+    <!-- Outgoing call layout -->
+    <RelativeLayout
+        android:id="@+id/outgoingCallLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <org.webrtc.SurfaceViewRenderer
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/remoteSurfaceview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="visible" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tvCallStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:paddingLeft="5dp"
+                android:visibility="gone"
+                android:text="Connection..."
+                android:textColor="@color/fugu_white"
+                android:textSize="18sp" />
+
+            <com.fugu.utils.RippleBackground
+                android:id="@+id/callerRippleView"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:visibility="visible"
+                app:rb_color="@color/fugu_theme_color_primary"
+                app:rb_duration="3500"
+                app:rb_radius="25dp"
+                app:rb_rippleAmount="6"
+                app:rb_scale="4">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ivCalledPersonImage"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_marginTop="95dp"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone"
+                        android:src="@drawable/hippo_man" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tvCalledPersonName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="45dp"
+                        android:gravity="center"
+                        android:textColor="@color/fugu_white"
+                        android:textSize="22sp"
+                        tools:text="" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tvCallingStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:gravity="center"
+                        android:paddingLeft="5dp"
+                        android:text="Ringing..."
+                        android:textColor="@color/fugu_white"
+                        android:textSize="18sp" />
+                </LinearLayout>
+            </com.fugu.utils.RippleBackground>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/llDialingCallActions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/fugu_padding_20"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:id="@+id/rlLocalView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/lowerCallOptions"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="@dimen/fugu_padding_20"
+                android:layout_marginRight="@dimen/fugu_padding_20">
+
+                <org.webrtc.SurfaceViewRenderer
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/localSurfaceView"
+                    android:layout_width="100dp"
+                    android:layout_height="150dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginEnd="@dimen/fugu_padding_5"
+                    android:layout_marginRight="@dimen/fugu_padding_5"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivHangUp"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_above="@+id/lowerCallOptions"
+                android:layout_centerHorizontal="true"
+                android:background="@color/hippo_transparent"
+                android:paddingBottom="@dimen/fugu_padding_10"
+                android:paddingTop="@dimen/fugu_padding_10"
+                android:visibility="gone"
+                app:srcCompat="@drawable/hippo_ic_hung_up_call" />
+
+            <LinearLayout
+                android:id="@+id/lowerCallOptions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/ivMuteAudio"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:background="@color/hippo_transparent"
+                    android:paddingBottom="@dimen/fugu_padding_10"
+                    android:paddingTop="@dimen/fugu_padding_10"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/hippo_ic_mute_microphone_disabled" />
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/ivSwitchCamera"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:background="@color/hippo_transparent"
+                    android:paddingBottom="@dimen/fugu_padding_10"
+                    android:paddingTop="@dimen/fugu_padding_10"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/hippo_ic_switch_camera" />
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/ivMuteVideo"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:background="@color/hippo_transparent"
+                    android:paddingBottom="@dimen/fugu_padding_10"
+                    android:paddingTop="@dimen/fugu_padding_10"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/hippo_ic_mute_video_disabled" />
+            </LinearLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <!-- Incoming call layout -->
+    <RelativeLayout
+        android:id="@+id/incomingCallLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/fugu_padding_35"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/llVideoCall"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="70dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:visibility="gone"
+                android:src="@drawable/hippo_launcher" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/call_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/fugu_padding_10"
+                android:layout_marginStart="@dimen/fugu_padding_10"
+                android:text="@string/hippo_video_call"
+                android:textColor="@color/fugu_white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <com.fugu.utils.RippleBackground xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/incomingRippleView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/llIncomingCallActions"
+            android:visibility="visible"
+            app:rb_color="@color/fugu_theme_color_primary"
+            app:rb_duration="3500"
+            app:rb_radius="32dp"
+            app:rb_rippleAmount="6"
+            app:rb_scale="4">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/ivIncomingPersonImage"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="100dp"
+                    android:scaleType="fitCenter"
+                    android:visibility="visible"
+                    android:src="@drawable/hippo_man" />
+
+                <TextView
+                    android:id="@+id/tvIncomingPersonName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="70dp"
+                    android:gravity="center"
+                    android:textColor="@color/fugu_white"
+                    android:textSize="26sp"
+                    tools:text="" />
+
+            </LinearLayout>
+        </com.fugu.utils.RippleBackground>
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvConnecting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/llIncomingCallActions"
+            android:layout_marginTop="70dp"
+            android:gravity="center"
+            android:textColor="@color/fugu_white"
+            android:textSize="16sp"
+            android:visibility="visible"
+            tools:text="Connecting ..." />
+
+        <LinearLayout
+            android:id="@+id/llIncomingCallActions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivRejectCall"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.33"
+                android:visibility="visible"
+                app:srcCompat="@drawable/hippo_ic_hung_up_call" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.33" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivAnswerCall"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.33"
+                android:rotation="135"
+                android:visibility="visible"
+                app:srcCompat="@drawable/hippo_ic_pick_up_call" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/audioLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.fugu.utils.RippleBackground
+                android:id="@+id/audioCallerRippleView"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:visibility="visible"
+                app:rb_color="@color/fugu_theme_color_primary"
+                app:rb_duration="3500"
+                app:rb_radius="25dp"
+                app:rb_rippleAmount="6"
+                app:rb_scale="4">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ivCalledPersonImageAudio"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:scaleType="centerCrop"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+            </com.fugu.utils.RippleBackground>
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tvCalledPersonNameAudio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/fugu_white"
+                android:textSize="22sp"
+                tools:text="" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tvCallingStatusAudio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:textColor="@color/fugu_white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/fugu_padding_20"
+            >
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/ivHangUpAudio"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_centerHorizontal="true"
+                android:layout_above="@+id/lowerCallOptionsAudio"
+                android:paddingBottom="@dimen/fugu_padding_10"
+                android:paddingTop="@dimen/fugu_padding_10"
+                android:visibility="visible"
+                app:srcCompat="@drawable/hippo_ic_hung_up_call" />
+
+            <LinearLayout
+                android:id="@+id/lowerCallOptionsAudio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:visibility="gone"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/ivMuteAudio1"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:paddingBottom="@dimen/fugu_padding_10"
+                    android:paddingTop="@dimen/fugu_padding_10"
+                    app:srcCompat="@drawable/hippo_ic_mute_microphone_disabled" />
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/ivSpeakerAudio"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:paddingBottom="@dimen/fugu_padding_10"
+                    android:paddingTop="@dimen/fugu_padding_10"
+                    app:srcCompat="@drawable/hippo_ic_volume_disable" />
+
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/ivBack"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:padding="10dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/fugu_ic_arrow_back" />
+</RelativeLayout>
