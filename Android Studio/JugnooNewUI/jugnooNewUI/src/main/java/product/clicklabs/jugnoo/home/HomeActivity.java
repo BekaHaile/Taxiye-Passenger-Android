@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -549,6 +550,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private TextView tvTipFirst, tvTipSecond, tvTipThird, tvSkipTip;
     private PrefixedEditText etTipOtherValue;
     private Button bPayTip;
+    private double tipSelected;
+    private TextWatcher textWatcherOtherTip;
 
     @SuppressLint("NewApi")
     @Override
@@ -936,6 +939,70 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         tvPayOnlineIn = (TextView) findViewById(R.id.tvPayOnlineIn);
         llFeedbackMain = findViewById(R.id.llFeedbackMain);
         llAddTip = findViewById(R.id.llAddTip);
+        ((TextView)findViewById(R.id.tvTipDriver)).setTypeface(((TextView)findViewById(R.id.tvTipDriver)).getTypeface(), Typeface.BOLD);
+        tvTipFirst = findViewById(R.id.tvTipFirst);
+        tvTipSecond = findViewById(R.id.tvTipSecond);
+        tvTipThird = findViewById(R.id.tvTipThird);
+        tvSkipTip = findViewById(R.id.tvSkipTip);
+        etTipOtherValue = findViewById(R.id.etTipOtherValue);
+        bPayTip = findViewById(R.id.bPayTip);
+        etTipOtherValue.clearFocus();
+
+        tvTipFirst.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tipSelected = (double) v.getTag();
+                onTipSelected(true);
+            }
+        });
+        tvTipSecond.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tipSelected = (double) v.getTag();
+                onTipSelected(true);
+            }
+        });
+        tvTipThird.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tipSelected = (double) v.getTag();
+                onTipSelected(true);
+            }
+        });
+        tvSkipTip.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Data.autoData.getEndRideData().setDriverTipAmount(1);
+                updateDriverTipUI(passengerScreenMode);
+            }
+        });
+        bPayTip.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getDriverTipInteractor().addTip(tipSelected);
+            }
+        });
+        textWatcherOtherTip = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try{
+                    tipSelected = Double.parseDouble(s.toString());
+                    onTipSelected(false);
+                } catch(Exception ignored){}
+            }
+        };
+        etTipOtherValue.addTextChangedListener(textWatcherOtherTip);
+
 
         rlChatDriver = (RelativeLayout) findViewById(R.id.rlChatDriver);
         bChatDriver = (TextView) findViewById(R.id.bChatDriver);
@@ -3211,6 +3278,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } else {
                     mapLayout.setVisibility(View.VISIBLE);
                     endRideReviewRl.setVisibility(View.GONE);
+                    tipSelected = 0;
                 }
 
 
@@ -3856,15 +3924,54 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }else if(mode==PassengerScreenMode.P_RIDE_END && Data.autoData!=null  &&
                 Data.autoData.getIsTipEnabled()  &&  Data.autoData.getEndRideData()!=null &&
                 Data.autoData.getEndRideData().getDriverTipAmount()<=0){
-           buttonAddTipEndRide.setVisibility(View.VISIBLE);
+           buttonAddTipEndRide.setVisibility(View.GONE);
+           llFeedbackMain.setVisibility(View.GONE);
+           llAddTip.setVisibility(View.VISIBLE);
+           tvTipFirst.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), 10.0)); tvTipFirst.setTag(10.0);
+           tvTipSecond.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), 20.0)); tvTipSecond.setTag(20.0);
+           tvTipThird.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), 30.0)); tvTipThird.setTag(30.0);
+            etTipOtherValue.setPrefixTextColor(ContextCompat.getColor(this, R.color.theme_color));
+            etTipOtherValue.setPrefix(Data.autoData.getEndRideData().getCurrency());
 
         }else{
             driverTipInteractor = null;
             buttonAddTipEndRide.setVisibility(View.GONE);
             layoutAddedTip.setVisibility(View.GONE);
             buttonTipDriver.setVisibility(View.GONE);
+            llFeedbackMain.setVisibility(View.VISIBLE);
+            llAddTip.setVisibility(View.GONE);
         }
 
+    }
+
+    private void onTipSelected(boolean clearText){
+        tvTipFirst.setTextColor(ContextCompat.getColor(this, R.color.text_color));
+        tvTipSecond.setTextColor(ContextCompat.getColor(this, R.color.text_color));
+        tvTipThird.setTextColor(ContextCompat.getColor(this, R.color.text_color));
+
+        tvTipFirst.setBackgroundResource(R.drawable.circle_white_grey_selector);
+        tvTipSecond.setBackgroundResource(R.drawable.circle_white_grey_selector);
+        tvTipThird.setBackgroundResource(R.drawable.circle_white_grey_selector);
+
+        if(tipSelected == (double)tvTipFirst.getTag()){
+            tvTipFirst.setBackgroundResource(R.drawable.circle_theme);
+            tvTipFirst.setTextColor(ContextCompat.getColor(this, R.color.white));
+        }
+        else if(tipSelected == (double)tvTipSecond.getTag()){
+            tvTipSecond.setBackgroundResource(R.drawable.circle_theme);
+            tvTipSecond.setTextColor(ContextCompat.getColor(this, R.color.white));
+        }
+        else if(tipSelected == (double)tvTipThird.getTag()){
+            tvTipThird.setBackgroundResource(R.drawable.circle_theme);
+            tvTipThird.setTextColor(ContextCompat.getColor(this, R.color.white));
+        }
+        if(clearText){
+            etTipOtherValue.clearFocus();
+            etTipOtherValue.removeTextChangedListener(textWatcherOtherTip);
+            etTipOtherValue.setText("");
+            etTipOtherValue.addTextChangedListener(textWatcherOtherTip);
+            Utils.hideSoftKeyboard(this, etTipOtherValue);
+        }
     }
 
     public int updateRideEndPayment() {
