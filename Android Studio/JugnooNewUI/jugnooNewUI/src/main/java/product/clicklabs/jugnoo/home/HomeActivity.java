@@ -244,6 +244,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 import product.clicklabs.jugnoo.widgets.MySpinner;
+import product.clicklabs.jugnoo.widgets.PrefixedEditText;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -544,6 +545,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private GeoDataClient mGeoDataClient;
 
     private ImageView ivLikePickup, ivLikeDrop;
+    private LinearLayout llFeedbackMain, llAddTip;
+    private TextView tvTipFirst, tvTipSecond, tvTipThird, tvSkipTip;
+    private PrefixedEditText etTipOtherValue;
+    private Button bPayTip;
 
     @SuppressLint("NewApi")
     @Override
@@ -929,6 +934,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         tvPayOnline = (TextView) findViewById(R.id.tvPayOnline);
         tvPayOnline.setTypeface(tvPayOnline.getTypeface(), Typeface.BOLD);
         tvPayOnlineIn = (TextView) findViewById(R.id.tvPayOnlineIn);
+        llFeedbackMain = findViewById(R.id.llFeedbackMain);
+        llAddTip = findViewById(R.id.llAddTip);
 
         rlChatDriver = (RelativeLayout) findViewById(R.id.rlChatDriver);
         bChatDriver = (TextView) findViewById(R.id.bChatDriver);
